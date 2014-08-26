@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
     public class MacHunspell : Hunspell
     {
-       
+
         private IntPtr _hunspellHandle = IntPtr.Zero;
 
         public MacHunspell(string affDirectory, string dicDictory)

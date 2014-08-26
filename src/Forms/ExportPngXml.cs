@@ -1025,7 +1025,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         if (param.VideoResolution.StartsWith("NTSC"))
                         {
-                            template = template.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");                            
+                            template = template.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");
                         }
                         template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
