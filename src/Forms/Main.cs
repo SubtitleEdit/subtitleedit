@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = true;
 
         Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
-        Keys _mainGeneralGoToFirstEmptyLine = Keys.None;        
+        Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         Keys _mainGeneralMergeSelectedLines = Keys.None;
         Keys _mainGeneralToggleTranslationMode = Keys.None;
         Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
@@ -6150,7 +6150,7 @@ namespace Nikse.SubtitleEdit.Forms
                         toolStripMenuItemMergeLines.Visible = false;
                     }
                     else if (SubtitleListview1.SelectedItems.Count > 2)
-                    { // only allow merge is text is not way too long 
+                    { // only allow merge is text is not way too long
                         try
                         {
                             int totalLength = 0;
@@ -10850,7 +10850,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 GoToFirstEmptyLine();
                 e.SuppressKeyPress = true;
-            }                
+            }
             else if (_mainGeneralMergeSelectedLines == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
@@ -11421,7 +11421,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(index);
                     return;
                 }
-            }                
+            }
         }
 
         private void PlayFirstSelectedSubtitle()
