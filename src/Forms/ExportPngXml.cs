@@ -37,6 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             public byte[] Buffer { get; set; }
             public int ScreenWidth { get; set; }
             public int ScreenHeight { get; set; }
+            public string VideoResolution { get; set; }
             public int Type3D { get; set; }
             public int Depth3D { get; set; }
             public double FramesPerSeconds { get; set; }
@@ -256,6 +257,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     AlignRight = comboBoxHAlign.SelectedIndex == 2,
                                     ScreenWidth = screenWidth,
                                     ScreenHeight = screenHeight,
+                                    VideoResolution = comboBoxResolution.Text,
                                     Bitmap = null,
                                     FramesPerSeconds = FrameRate,
                                     BottomMargin =  comboBoxBottomMargin.SelectedIndex,
@@ -770,6 +772,64 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
 
             string text = comboBoxResolution.Text.Trim();
+
+            if (_exportType == "FCP")
+            {
+                if (text == "NTSC-601")
+                {
+                    width = 720;
+                    height = 480;
+                }
+                if (text == "PAL-601")
+                {
+                    width = 720;
+                    height = 576;
+                }
+
+                if (text == "square")
+                {
+                    width = 640;
+                    height = 480;
+                }
+
+                if (text == "DVCPROHD-720P")
+                {
+                    width = 1280;
+                    height = 720;
+                }
+
+                if (text == "HD-(960x720)")
+                {
+                    width = 960;
+                    height = 720;
+                }
+
+                if (text == "DVCPROHD-1080i60")
+                {
+                    width = 1920;
+                    height = 1080;
+                }
+
+                if (text == "HD-(1280x1080)")
+                {
+                    width = 1280;
+                    height = 1080;
+                }
+
+                if (text == "DVCPROHD-1080i50")
+                {
+                    width = 1920;
+                    height = 1080;
+                }
+
+                if (text == "HD-(1440x1080)")
+                {
+                    width = 1440;
+                    height = 1080;
+                }
+                return;
+            }
+
             if (text.Contains("("))
                 text = text.Remove(0, text.IndexOf("(")).Trim();
             text = text.TrimStart('(').TrimEnd(')').Trim();
@@ -889,6 +949,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string fileNameNoPath = Path.GetFileName(fileName);
                         string fileNameNoExt = Path.GetFileNameWithoutExtension(fileNameNoPath);
                         string template = " <clipitem id=\"" + fileNameNoPath + "\">" + Environment.NewLine +
+
+//              <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
+
 @"            <name>" + fileNameNoPath + @"</name>
             <duration>[DURATION]</duration>
             <rate>
@@ -899,14 +962,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             <out>[OUT]</out>
             <start>[START]</start>
             <end>[END]</end>
-            <pixelaspectratio>PAL-601</pixelaspectratio>
+            <pixelaspectratio>" + param.VideoResolution + @"</pixelaspectratio>
             <stillframe>TRUE</stillframe>
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
             <masterclipid>" + fileNameNoPath + @"1</masterclipid>" + Environment.NewLine +
 "           <file id=\"" + fileNameNoExt + "\">" + @"
               <name>" + fileNameNoPath + @"</name>
-              <pathurl>file://localhost/" + fileNameNoPath + @"</pathurl>
+              <pathurl>" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
               <rate>
                 <timebase>25</timebase>
               </rate>
@@ -918,8 +981,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                   <duration>[DURATION]</duration>
                   <stillframe>TRUE</stillframe>
                   <samplecharacteristics>
-                    <width>720</width>
-                    <height>576</height>
+                    <width>" + param.ScreenWidth + @"</width>
+                    <height>" + param.ScreenHeight + @"</height>
                   </samplecharacteristics>
                 </video>
               </media>
@@ -960,6 +1023,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int start = (int)Math.Round(param.P.StartTime.TotalSeconds * 25.0);
                         int end = (int)Math.Round(param.P.EndTime.TotalSeconds * 25.0);
 
+                        if (param.VideoResolution.StartsWith("NTSC"))
+                        {
+                            template = template.Replace("<ntsc>FALSE</ntsc>", "<ntsc>TRUE</ntsc>");                            
+                        }
                         template = template.Replace("[DURATION]", duration.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[IN]", start.ToString(CultureInfo.InvariantCulture));
                         template = template.Replace("[OUT]", end.ToString(CultureInfo.InvariantCulture));
@@ -1353,6 +1420,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             GetResolution(ref width, ref height);
             mbp.ScreenWidth = width;
             mbp.ScreenHeight = height;
+            mbp.VideoResolution = comboBoxResolution.Text;
             mbp.Type3D = comboBox3D.SelectedIndex;
             mbp.Depth3D = (int)numericUpDownDepth3D.Value;
             mbp.BottomMargin = comboBoxBottomMargin.SelectedIndex;
@@ -2621,6 +2689,21 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 labelDepth.Enabled = true;
                 if (!string.IsNullOrEmpty(Configuration.Settings.Language.DCinemaProperties.ZPosition))
                     labelDepth.Text = Configuration.Settings.Language.DCinemaProperties.ZPosition;
+            }
+
+            if (_exportType == "FCP")
+            {
+                comboBoxResolution.Items.Clear();
+                comboBoxResolution.Items.Add("NTSC-601");
+                comboBoxResolution.Items.Add("PAL-601");
+                comboBoxResolution.Items.Add("square");
+                comboBoxResolution.Items.Add("DVCPROHD-720P");
+                comboBoxResolution.Items.Add("HD-(960x720)");
+                comboBoxResolution.Items.Add("DVCPROHD-1080i60");
+                comboBoxResolution.Items.Add("HD-(1280x1080)");
+                comboBoxResolution.Items.Add("DVCPROHD-1080i50");
+                comboBoxResolution.Items.Add("HD-(1440x1080)");
+                comboBoxResolution.SelectedIndex = 3; // 720p
             }
 
             subtitleListView1.Fill(_subtitle);
