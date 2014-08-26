@@ -4518,6 +4518,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/GoToFirstSelectedLine":
                     language.Settings.GoToFirstSelectedLine = reader.Value;
                     break;
+                case "Settings/GoToNextEmptyLine":
+                    language.Settings.GoToNextEmptyLine = reader.Value;
+                    break;
                 case "Settings/MergeSelectedLines":
                     language.Settings.MergeSelectedLines = reader.Value;
                     break;

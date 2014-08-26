@@ -104,6 +104,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _cancelWordSpellCheck = true;
 
         Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
+        Keys _mainGeneralGoToFirstEmptyLine = Keys.None;        
         Keys _mainGeneralMergeSelectedLines = Keys.None;
         Keys _mainGeneralToggleTranslationMode = Keys.None;
         Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
@@ -10852,6 +10853,11 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectedItems[0].EnsureVisible();
                 e.SuppressKeyPress = true;
             }
+            else if (_mainGeneralGoToFirstEmptyLine == e.KeyData) //Go to first empty line - if any
+            {
+                GoToFirstEmptyLine();
+                e.SuppressKeyPress = true;
+            }                
             else if (_mainGeneralMergeSelectedLines == e.KeyData)
             {
                 if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
@@ -11410,6 +11416,19 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void GoToFirstEmptyLine()
+        {
+            var index = FirstSelectedIndex +1;
+            for (; index < _subtitle.Paragraphs.Count; index++)
+            {
+                if (string.IsNullOrWhiteSpace(_subtitle.Paragraphs[index].Text))
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(index);
+                    return;
+                }
+            }                
         }
 
         private void PlayFirstSelectedSubtitle()
@@ -14621,6 +14640,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void SetShortcuts()
         {
             _mainGeneralGoToFirstSelectedLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
+            _mainGeneralGoToFirstEmptyLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
             _mainGeneralMergeSelectedLines = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
             _mainGeneralToggleTranslationMode = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             _mainGeneralSwitchTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);

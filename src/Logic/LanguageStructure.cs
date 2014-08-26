@@ -1807,6 +1807,7 @@
             public string SyntaxColorOverlap { get; set; }
             public string SyntaxErrorColor { get; set; }
             public string GoToFirstSelectedLine { get; set; }
+            public string GoToNextEmptyLine { get; set; }
             public string MergeSelectedLines { get; set; }
             public string ToggleTranslationMode { get; set; }
             public string SwitchOriginalAndTranslation { get; set; }
