@@ -126,6 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(_paragraph);
                         _paragraph = new Paragraph();
                         _expecting = ExpectingLine.TimeCodes;
+                        _text = new StringBuilder();
                     }
                     break;
             }
