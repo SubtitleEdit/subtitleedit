@@ -3,20 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
     public class VoikkoSpellCheck : Hunspell
     {
-        // Win32 API functions for loading dlls dynamic
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr LoadLibrary(string dllToLoad);
-
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
-
-        [DllImport("kernel32.dll")]
-        private static extern bool FreeLibrary(IntPtr hModule);
 
         // Voikko functions in dll
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -81,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = GetProcAddress(_libDll, name);
+            IntPtr address = NativeMethods.GetProcAddress(_libDll, name);
             if (address != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(address, type);
@@ -100,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 dllFile = Path.Combine(baseFolder, "Voikkox64.dll");
             if (!File.Exists(dllFile))
                 throw new FileNotFoundException(dllFile);
-            _libDll = LoadLibrary(dllFile);
+            _libDll = NativeMethods.LoadLibrary(dllFile);
             if (_libDll == IntPtr.Zero)
                 throw new FileLoadException("Unable to load " + dllFile);
 
@@ -157,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                     _voikkoTerminate(_libVoikko);
 
                 if (_libDll != IntPtr.Zero)
-                    FreeLibrary(_libDll);
+                    NativeMethods.FreeLibrary(_libDll);
             }
             catch
             {

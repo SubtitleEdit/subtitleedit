@@ -219,10 +219,10 @@ namespace Nikse.SubtitleEdit.Logic
                     throw new RiffParserException("Error. Not a valid RIFF file " + FileName);
                 }
             }
-            catch (RiffParserException ex)
+            catch (RiffParserException)
             {
                 errorOccured = true;
-                throw ex;
+                throw;
             }
             catch (Exception exception)
             {

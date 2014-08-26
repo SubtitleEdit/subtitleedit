@@ -3,6 +3,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
@@ -18,20 +19,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private System.Windows.Forms.Control _ownerControl;
         private System.Windows.Forms.Form _parentForm;
         private double? _pausePosition = null; // Hack to hold precise seeking when paused
-
-        [DllImport("user32")]
-        private static extern short GetKeyState(int vKey);
-
-        // Win32 API functions for loading dlls dynamic
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr LoadLibrary(string dllToLoad);
-
-        [DllImport("kernel32.dll")]
-        private static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
-
-        [DllImport("kernel32.dll")]
-        private static extern bool FreeLibrary(IntPtr hModule);
-
 
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -198,7 +185,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private object GetDllType(Type type, string name)
         {
-            IntPtr address = GetProcAddress(_libVlcDLL, name);
+            IntPtr address = NativeMethods.GetProcAddress(_libVlcDLL, name);
             if (address != IntPtr.Zero)
             {
                 return Marshal.GetDelegateForFunctionPointer(address, type);
@@ -604,7 +591,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return false;
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
-            _libVlcDLL = LoadLibrary(dllFile);
+            _libVlcDLL = NativeMethods.LoadLibrary(dllFile);
             LoadLibVlcDynamic();
             string[] initParameters = new string[] { "--no-skip-frames" };
             _libVlc = _libvlc_new(initParameters.Length, initParameters);
@@ -632,7 +619,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (File.Exists(dllFile))
             {
                 Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
-                _libVlcDLL = LoadLibrary(dllFile);
+                _libVlcDLL = NativeMethods.LoadLibrary(dllFile);
                 LoadLibVlcDynamic();
             }
             else if (!Directory.Exists(videoFileName))
@@ -690,7 +677,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             const int KEY_PRESSED = 0x8000;
             const int VK_LBUTTON = 0x1;
-            return Convert.ToBoolean(GetKeyState(VK_LBUTTON) & KEY_PRESSED);
+            return Convert.ToBoolean(NativeMethods.GetKeyState(VK_LBUTTON) & KEY_PRESSED);
         }
 
         void MouseTimerTick(object sender, EventArgs e)

@@ -256,13 +256,6 @@ namespace Nikse.SubtitleEdit.Forms
             SetCurrentFormat(new SubRip());
         }
 
-        [System.Runtime.InteropServices.DllImport("kernel32.dll")]
-        static extern bool AttachConsole(int dwProcessId);
-
-        [System.Runtime.InteropServices.DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
-        static extern bool FreeConsole();
-
-
         public Main()
         {
             try
@@ -572,7 +565,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             const int ATTACH_PARENT_PROCESS = -1;
             if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
-                AttachConsole(ATTACH_PARENT_PROCESS);
+                NativeMethods.AttachConsole(ATTACH_PARENT_PROCESS);
 
             Console.WriteLine();
             Console.WriteLine();
@@ -614,7 +607,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Console.WriteLine();
                 Console.Write(currentDir + ">");
                 if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
-                    FreeConsole();
+                    NativeMethods.FreeConsole();
                 Environment.Exit(1);
             }
 
@@ -949,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.Write(currentDir + ">");
 
             if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
-                FreeConsole();
+                NativeMethods.FreeConsole();
 
             if (count == converted && errors == 0)
                 Environment.Exit(0);

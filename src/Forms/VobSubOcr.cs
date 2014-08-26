@@ -900,7 +900,6 @@ namespace Nikse.SubtitleEdit.Forms
                             m.AppendToStream(f);
                         }
                     }
-                    f.Close();
                 }
                 _compareDoc.Save(path + "Images.xml");
                 string text = File.ReadAllText(path + "Images.xml");

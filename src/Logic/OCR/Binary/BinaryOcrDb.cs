@@ -36,8 +36,6 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                         foreach (var expandedBob in bob.ExpandedList)
                             expandedBob.Save(gz);
                     }
-                    gz.Flush();
-                    gz.Close();
                 }
             }
         }
