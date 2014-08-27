@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("libhunspell")]
         internal static extern void Hunspell_free_list(IntPtr hunspellHandle, IntPtr slst, int n);
-        #endregion 
+        #endregion
 
 
         #region structures
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic
             ///   The dw processor revision.
             /// </summary>
             internal ushort dwProcessorRevision;
-        }      
+        }
         #endregion
 
         #region Win32 API
