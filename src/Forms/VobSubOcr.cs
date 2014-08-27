@@ -7017,7 +7017,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ComboBoxOcrMethodSelectedIndexChanged(object sender, EventArgs e)
         {
+            _icThreadsStop = true;
             _binaryOcrDb = null;
+            _nOcrDb = null;
             if (comboBoxOcrMethod.SelectedIndex == 0)
             {
                 ShowOcrMethodGroupBox(GroupBoxTesseractMethod);
@@ -7856,10 +7858,11 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
-
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            _icThreadsStop = true;
             _abort = true;
+            _nocrThreadsStop = true;
             if (_mainOcrTimer != null)
                 _mainOcrTimer.Stop();
 
