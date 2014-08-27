@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return SampleRate * (BitsPerSample / 8) * NumberOfChannels;
+                return (long)SampleRate * (BitsPerSample / 8) * NumberOfChannels;
             }
         }
 
