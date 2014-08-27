@@ -4,10 +4,10 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class MPlayer : VideoPlayer
+    public class MPlayer : VideoPlayer, IDisposable
     {
         private Process _mplayer;
-        private System.Windows.Forms.Timer timer;
+        private System.Windows.Forms.Timer _timer;
         private TimeSpan _lengthInSeconds;
         private TimeSpan _lastLengthInSeconds = TimeSpan.FromDays(0);
         private bool _paused;
@@ -173,10 +173,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 GetProperty("volume", true);
 
                 // start timer to collect variable properties
-                timer = new System.Windows.Forms.Timer();
-                timer.Interval = 1000;
-                timer.Tick += new EventHandler(timer_Tick);
-                timer.Start();
+                _timer = new System.Windows.Forms.Timer();
+                _timer.Interval = 1000;
+                _timer.Tick += new EventHandler(timer_Tick);
+                _timer.Start();
 
                 OnVideoLoaded = onVideoLoaded;
                 OnVideoEnded = onVideoEnded;
@@ -201,11 +201,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (OnVideoLoaded != null && _loaded == true)
             {
-                timer.Stop();
+                _timer.Stop();
                 _loaded = false;
                 OnVideoLoaded.Invoke(this, null);
-                timer.Interval = 100;
-                timer.Start();
+                _timer.Interval = 100;
+                _timer.Start();
             }
 
             if (_lengthInSeconds != _lastLengthInSeconds)
@@ -375,7 +375,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void DisposeVideoPlayer()
         {
-            timer.Stop();
+            _timer.Stop();
             if (_mplayer != null)
             {
                 _mplayer.OutputDataReceived -= MPlayerOutputDataReceived;
@@ -386,5 +386,30 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public override event EventHandler OnVideoLoaded;
 
         public override event EventHandler OnVideoEnded;
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_mplayer != null)
+                {
+                    _mplayer.Dispose();
+                    _mplayer = null;
+                }
+
+                if (_timer != null)
+                {
+                    _timer.Dispose();
+                    _timer = null;
+                }                
+            }
+        }
+
     }
 }

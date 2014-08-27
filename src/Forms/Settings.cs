@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
                 numericUpDownMinGapMs.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
 
-            if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0 && LibVlc11xDynamic.IsInstalled)
+            if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0 && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
             else if (string.Compare(gs.VideoPlayer.Trim(), "MPlayer", true) == 0 && Utilities.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
@@ -127,10 +127,10 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerDirectShow.Checked = true;
             else if (Utilities.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
-            else if (LibVlc11xDynamic.IsInstalled)
+            else if (LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
 
-            if (!LibVlc11xDynamic.IsInstalled)
+            if (!LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Enabled = false;
             if (!Utilities.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Enabled = false;
@@ -2711,7 +2711,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFMPEG.FileName);
                 Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
                 Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
-                radioButtonVideoPlayerVLC.Enabled = LibVlc11xDynamic.IsInstalled;
+                radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
             }
         }
 

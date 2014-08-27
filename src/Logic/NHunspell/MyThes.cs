@@ -303,14 +303,11 @@ namespace NHunspell
             }
 
             byte[] dictionaryData;
-            using (FileStream stream = File.OpenRead(dictionaryFile))
+            FileStream stream = File.OpenRead(dictionaryFile);
+            using (var reader = new BinaryReader(stream))
             {
-                using (var reader = new BinaryReader(stream))
-                {
-                    dictionaryData = reader.ReadBytes((int)stream.Length);
-                }
+                dictionaryData = reader.ReadBytes((int)stream.Length);
             }
-
             Load(dictionaryData);
         }
 

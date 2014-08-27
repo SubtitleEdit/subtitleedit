@@ -170,23 +170,6 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             get { return selectedColor; }
         }
 
-        #region IDisposable Members
-
-        void IDisposable.Dispose()
-        {
-            // Dispose of graphic resources
-            if (colorImage != null)
-                colorImage.Dispose();
-            if (colorRegion != null)
-                colorRegion.Dispose();
-            if (brightnessRegion != null)
-                brightnessRegion.Dispose();
-            if (g != null)
-                g.Dispose();
-        }
-
-        #endregion
-
         protected void OnColorChanged(ColorHandler.ARGB argb, ColorHandler.HSV HSV)
         {
             var e = new ColorChangedEventArgs(argb, HSV);
@@ -593,5 +576,28 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             Points[2] = new Point(pt.X + WIDTH, pt.Y - HEIGHT/2);
             g.FillPolygon(Brushes.Black, Points);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                // Dispose of graphic resources
+                if (colorImage != null)
+                    colorImage.Dispose();
+                if (colorRegion != null)
+                    colorRegion.Dispose();
+                if (brightnessRegion != null)
+                    brightnessRegion.Dispose();
+                if (g != null)
+                    g.Dispose();
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
     }
 }

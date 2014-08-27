@@ -2,12 +2,10 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Threading;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class LibVlc11xDynamic : VideoPlayer
+    public class LibVlcDynamic : VideoPlayer, IDisposable
     {
         private System.Windows.Forms.Timer _videoLoadedTimer;
         private System.Windows.Forms.Timer _videoEndTimer;
@@ -261,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                LibVlc11xDynamic vlc = new LibVlc11xDynamic();
+                LibVlcDynamic vlc = new LibVlcDynamic();
                 try
                 {
                     vlc.Initialize(null, null, null, null);
@@ -424,9 +422,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return _libvlc_video_take_snapshot(_mediaPlayer, 0, Encoding.UTF8.GetBytes(fileName + "\0"), width, height) == 1;
         }
 
-        public LibVlc11xDynamic MakeSecondMediaPlayer(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public LibVlcDynamic MakeSecondMediaPlayer(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
-            LibVlc11xDynamic newVlc = new LibVlc11xDynamic();
+            LibVlcDynamic newVlc = new LibVlcDynamic();
             newVlc._libVlc = this._libVlc;
             newVlc._libVlcDLL = this._libVlcDLL;
             newVlc._ownerControl = ownerControl;
@@ -720,18 +718,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void DisposeVideoPlayer()
         {
+            Dispose();
+        }
+
+        public override event EventHandler OnVideoLoaded;
+
+        public override event EventHandler OnVideoEnded;
+
+        private void ReleaseUnmangedResources()
+        {
             try
             {
-                if (_videoLoadedTimer != null)
-                    _videoLoadedTimer.Stop();
-
-                if (_videoEndTimer != null)
-                    _videoEndTimer.Stop();
-
-                if (_mouseTimer != null)
-                    _mouseTimer.Stop();
-
-                //ThreadPool.QueueUserWorkItem(DisposeVLC, this);
                 lock (this)
                 {
                     if (_mediaPlayer != IntPtr.Zero)
@@ -760,30 +757,39 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        //private void DisposeVLC(object player)
-        //{
-        //    try
-        //    {
-        //        if (_mediaPlayer != IntPtr.Zero)
-        //        {
-        //            _libvlc_media_player_stop(_mediaPlayer);
-        //           // _libvlc_media_list_player_release(_mediaPlayer);
-        //        }
+        ~LibVlcDynamic()
+        {
+            Dispose(false);
+        }
 
-        //        if (_libvlc_release != null && _libVlc != IntPtr.Zero)
-        //            _libvlc_release(_libVlc);
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-        //        if (_libVlcDLL != IntPtr.Zero)
-        //            FreeLibrary(_libVlcDLL);
-        //    }
-        //    catch
-        //    {
-        //    }
-        //}
-
-        public override event EventHandler OnVideoLoaded;
-
-        public override event EventHandler OnVideoEnded;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_videoLoadedTimer != null)
+                {
+                    _videoLoadedTimer.Dispose();
+                    _videoLoadedTimer = null;
+                }
+                if (_videoEndTimer != null)
+                {
+                    _videoEndTimer.Dispose();
+                    _videoEndTimer = null;
+                }
+                if (_mouseTimer != null)
+                {
+                    _mouseTimer.Dispose();
+                    _mouseTimer = null;
+                }
+            }
+            ReleaseUnmangedResources();
+        }        
 
     }
 }

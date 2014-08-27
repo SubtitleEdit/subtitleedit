@@ -151,9 +151,9 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
-            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)
             {
-                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)videoPlayerContainer1.VideoPlayer;
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
                 libVlc.AudioTrackNumber = _audioTrackNumber;
             }
         }

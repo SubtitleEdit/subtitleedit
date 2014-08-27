@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public class VoikkoSpellCheck : Hunspell
+    public class VoikkoSpellCheck : Hunspell, IDisposable
     {
 
         // Voikko functions in dll
@@ -32,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         VoikkoFreeCstrArray _voikkoFreeCstrArray;
 
         private IntPtr _libDll = IntPtr.Zero;
-        private readonly IntPtr _libVoikko = IntPtr.Zero;
+        private IntPtr _libVoikko = IntPtr.Zero;
 
         private static string N2S(IntPtr ptr)
         {
@@ -143,18 +142,44 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         ~VoikkoSpellCheck()
         {
-            try
+            Dispose(false);
+        }
+
+        private void ReleaseUnmangedResources()
+        {
+             try
             {
                 if (_libVoikko != IntPtr.Zero)
+                {
                     _voikkoTerminate(_libVoikko);
+                    _libVoikko = IntPtr.Zero;
+                }
 
                 if (_libDll != IntPtr.Zero)
+                {
                     NativeMethods.FreeLibrary(_libDll);
+                    _libDll = IntPtr.Zero;
+                }
             }
             catch
             {
             }
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                //ReleaseManagedResources();
+            }
+            ReleaseUnmangedResources();
+        }        
 
     }
 }

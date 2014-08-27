@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic
     /// <summary>
     /// Summary description for RiffParser
     /// </summary>
-    public class RiffParser
+    public class RiffParser : IDisposable
     {
         #region CONSTANTS
 
@@ -473,5 +473,23 @@ namespace Nikse.SubtitleEdit.Logic
         }
         #endregion
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (m_stream != null)
+                {
+                    m_stream.Dispose();
+                    m_stream = null;
+                }
+            }
+        }    
+    
     }
 }

@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic
 
 	[Serializable, HostProtection (SecurityAction.LinkDemand, MayLeakOnAbort = true)]
 	[DebuggerDisplay ("Count={Count}")]
-	public class HashSet<T> : ICollection<T>, ISerializable, IDeserializationCallback
+	public sealed class HashSet<T> : ICollection<T>, ISerializable, IDeserializationCallback
 #if NET_4_0 || MOONLIGHT || MOBILE
 							, ISet<T>
 #endif
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic
 				Add (item);
 		}
 
-		protected HashSet (SerializationInfo info, StreamingContext context)
+		private HashSet (SerializationInfo info, StreamingContext context)
 		{
 			si = info;
 		}
@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Logic
 		}
 
 		[SecurityPermission (SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
-		public virtual void GetObjectData (SerializationInfo info, StreamingContext context)
+		public void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
 			if (info == null) {
 				throw new ArgumentNullException("info");
@@ -585,7 +585,7 @@ namespace Nikse.SubtitleEdit.Logic
 			}
 		}
 
-		public virtual void OnDeserialization (object sender)
+		public void OnDeserialization (object sender)
 		{
 			if (si != null)
 			{

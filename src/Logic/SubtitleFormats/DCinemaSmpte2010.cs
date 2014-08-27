@@ -463,16 +463,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     var xmld = new XmlDocument();
                     var rdr = new StreamReader(strm);
-                    using (var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress))
+                    var zip = new GZipStream(rdr.BaseStream, CompressionMode.Decompress);
+                    xmld.LoadXml(result);
+                    using (var xr = XmlReader.Create(zip))
                     {
-                        xmld.LoadXml(result);
-                        var xr = XmlReader.Create(zip);
                         xmld.Schemas.Add(null, xr);
                         xmld.Validate(ValidationCallBack);
-                        xr.Close();
-                        strm.Close();
                     }
-                    rdr.Close();
                 }
                 catch (Exception exception)
                 {

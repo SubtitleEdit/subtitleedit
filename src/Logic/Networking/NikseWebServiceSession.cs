@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.Networking
 {
-    public class NikseWebServiceSession
+    public class NikseWebServiceSession : IDisposable
     {
         public class ChatEntry
         {
@@ -358,6 +358,29 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
             return message;
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_timerWebService != null)
+                {
+                    _timerWebService.Dispose();
+                    _timerWebService = null;
+                }
+                if (_seWs != null)
+                {
+                    _seWs.Dispose();
+                    _seWs = null;
+                }
+            }
+        }    
 
     }
 }

@@ -201,13 +201,11 @@ namespace Nikse.SubtitleEdit.Forms
                         List<ZipExtractor.ZipFileEntry> innerDir = innerZip.ReadCentralDir();
                         ExtractDic(dictionaryFolder, innerZip, innerDir, ref found);
                         innerZip.Close();
-                        innerMs.Close();
                     }
                 }
             }
 
             zip.Close();
-            ms.Close();
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;

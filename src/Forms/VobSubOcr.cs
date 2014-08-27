@@ -3972,7 +3972,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine(null, LanguageString);
 
-            string threadText = null;
+            const string threadText = null;
             //if (_icThreadResults != null && !string.IsNullOrEmpty(_icThreadResults[listViewIndex]))
             //    threadText = _icThreadResults[listViewIndex];
 
@@ -4106,10 +4106,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 line = GetStringWithItalicTags(matches);
             }
-            else
-            {
-                line = threadText;
-            }
+            //else
+            //{
+            //    line = threadText;
+            //}
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
                 line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
 
@@ -5697,7 +5697,7 @@ namespace Nikse.SubtitleEdit.Forms
             // change yellow color to white - easier for Tesseract
             var nbmp = new NikseBitmap(bmp);
             nbmp.ReplaceYellowWithWhite(); // optimized replace
-            bool useHocr = true;
+            const bool useHocr = true;
 
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
             var b = nbmp.GetBitmap();
@@ -5760,22 +5760,22 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                 }
             }
-            else
-            {
-                string outputFileName = tempTextFileName + ".txt";
-                try
-                {
-                    if (File.Exists(outputFileName))
-                    {
-                        result = File.ReadAllText(outputFileName);
-                        File.Delete(outputFileName);
-                    }
-                    File.Delete(tempTiffFileName);
-                }
-                catch
-                {
-                }
-            }
+            //else
+            //{
+            //    string outputFileName = tempTextFileName + ".txt";
+            //    try
+            //    {
+            //        if (File.Exists(outputFileName))
+            //        {
+            //            result = File.ReadAllText(outputFileName);
+            //            File.Delete(outputFileName);
+            //        }
+            //        File.Delete(tempTiffFileName);
+            //    }
+            //    catch
+            //    {
+            //    }
+            //}
             return result;
         }
 

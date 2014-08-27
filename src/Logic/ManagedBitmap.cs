@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Logic
             try
             {
                 byte[] buffer = new byte[1024];
-                using (MemoryStream fd = new MemoryStream())
-                using (Stream fs = File.OpenRead(fileName))
+                MemoryStream fd = new MemoryStream();
+                Stream fs = File.OpenRead(fileName);
                 using (Stream csStream = new GZipStream(fs, CompressionMode.Decompress))
                 {
                     int nRead;
@@ -105,8 +105,7 @@ namespace Nikse.SubtitleEdit.Logic
                     WriteColor(outFile, c);
                 }
                 buffer = outFile.ToArray();
-                using (FileStream f2 = new FileStream(fileName, FileMode.Create))
-                using (GZipStream gz = new GZipStream(f2, CompressionMode.Compress, false))
+                using (GZipStream gz = new GZipStream(new FileStream(fileName, FileMode.Create), CompressionMode.Compress, false))
                 {
                     gz.Write(buffer, 0, buffer.Length);
                 }

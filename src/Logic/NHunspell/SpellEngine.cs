@@ -36,7 +36,7 @@ namespace NHunspell
 
         #endregion
 
-        #region Constructors and Destructors
+        #region Constructor
 
         /// <summary>
         ///   Initializes a new instance of the <see cref="SpellEngine" /> class.
@@ -134,21 +134,26 @@ namespace NHunspell
             lock (this.dictionaryLock) this.languages.Add(languageCode, factory);
         }
 
-        /// <summary>
-        ///   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
         public void Dispose()
         {
-            if (!this.IsDisposed)
-            {
-                lock (this.dictionaryLock)
-                {
-                    foreach (var factory in this.languages.Values)
-                    {
-                        factory.Dispose();
-                    }
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-                    this.languages = null;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (!this.IsDisposed)
+                {
+                    lock (this.dictionaryLock)
+                    {
+                        foreach (var factory in this.languages.Values)
+                        {
+                            factory.Dispose();
+                        }
+                        this.languages = null;
+                    }
                 }
             }
         }

@@ -155,7 +155,6 @@ namespace Nikse.SubtitleEdit.Forms
                 string fn = Path.Combine(dictionaryFolder, Path.GetFileName(th.FileName.Trim()));
                 th.WriteData(fn);
             }
-            ms.Close();
             tr.Close();
             File.Delete(tempFileName);
 

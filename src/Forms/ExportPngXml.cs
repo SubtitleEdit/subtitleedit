@@ -539,8 +539,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_exportType == "VOBSUB")
                 {
-                    vobSubWriter.CloseSubFile();
                     vobSubWriter.WriteIdxFile();
+                    vobSubWriter.Dispose();
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Main.SavedSubtitleX, saveFileDialog1.FileName));
                 }
                 else if (_exportType == "FAB")

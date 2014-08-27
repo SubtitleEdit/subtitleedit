@@ -411,13 +411,19 @@ namespace System.IO.Compression
         #endregion
 
         #region IDisposable Members
-        /// <summary>
-        /// Closes the Zip file stream
-        /// </summary>
         public void Dispose()
         {
-            this.Close();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.Close();
+            }
+        }    
         #endregion
     }
 }
