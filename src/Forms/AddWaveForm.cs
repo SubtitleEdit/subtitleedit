@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
             else // windows
             {
                 runningOnWindows = true;
-                exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic.GetVlcPath("vlc.exe");
+                exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
                 if (!System.IO.File.Exists(exeFilePath))
                 {
                     if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))

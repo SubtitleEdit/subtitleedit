@@ -10,7 +10,7 @@ using System.ComponentModel;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    public class QuartsPlayer : VideoPlayer
+    public class QuartsPlayer : VideoPlayer, IDisposable
     {
         public override event EventHandler OnVideoLoaded;
         public override event EventHandler OnVideoEnded;
@@ -282,6 +282,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void DisposeQuarts(object player)
         {
+            Dispose();
+        }
+
+        ~QuartsPlayer()
+        {
+            Dispose(false);
+        }
+
+        private void ReleaseUnmangedResources()
+        {
             try
             {
                 if (_quartzVideo != null)
@@ -297,14 +307,38 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     _quartzFilgraphManager.Stop();
                     Marshal.ReleaseComObject(_quartzFilgraphManager);
+                    _quartzFilgraphManager = null;
                 }
                 catch
                 {
                 }
             }
-
-            _quartzFilgraphManager = null;
             _quartzVideo = null;
         }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_videoEndTimer != null)
+                {
+                    _videoEndTimer.Dispose();
+                    _videoEndTimer = null;
+                }
+                if (_videoLoader != null)
+                {
+                    _videoLoader.Dispose();
+                    _videoLoader = null;
+                }                
+            }
+            ReleaseUnmangedResources();
+        }
+
     }
 }

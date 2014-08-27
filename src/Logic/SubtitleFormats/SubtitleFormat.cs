@@ -377,13 +377,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             settings.Indent = true;
             settings.OmitXmlDeclaration = omitXmlDeclaration;
 
-            using (StringWriter textWriter = new StringWriter())
+            StringWriter textWriter = null;
+            XmlWriter xmlWriter = null;
+            try
             {
-                using (XmlWriter xmlWriter = XmlWriter.Create(textWriter, settings))
-                {
-                    xml.Save(xmlWriter);
-                }
+                textWriter = new StringWriter();
+                xmlWriter = XmlWriter.Create(textWriter, settings);
+                xml.Save(xmlWriter);
+                xmlWriter.Flush();
                 return textWriter.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
+            }
+            finally
+            {
+                if (textWriter != null)
+                {
+                    textWriter.Dispose();
+                    textWriter = null;
+                }
             }
         }
 

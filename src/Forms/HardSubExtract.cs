@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
 //        HardExtractCapture cam = null;
         private string _videoFileName;
-        private LibVlc11xDynamic _libVlc;
+        private LibVlcDynamic _libVlc;
         private VideoInfo _videoInfo;
         //long startMilliseconds = 0;
         Subtitle _subtitle;
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.VideoPlayer = "VLC";
                 Utilities.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, null);
                 Configuration.Settings.General.VideoPlayer = oldPlayer;
-                _libVlc = mediaPlayer.VideoPlayer as LibVlc11xDynamic;
+                _libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
 
                 _subtitle = new Subtitle();
             }

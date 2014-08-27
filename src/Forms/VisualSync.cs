@@ -183,9 +183,9 @@ namespace Nikse.SubtitleEdit.Forms
             _startStopPosition = _startGoBackPosition + 0.1;
             MediaPlayerStart.Play();
 
-            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic))
+            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic))
             {
-                MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
+                MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
             }
             else
             {
@@ -194,9 +194,9 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             timerProgressBarRefresh.Start();
 
-            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)
             {
-                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)MediaPlayerStart.VideoPlayer;
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)MediaPlayerStart.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
         }
@@ -215,9 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
             _endStopPosition = _endGoBackPosition + 0.1;
             MediaPlayerEnd.Play();
 
-            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)
+            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)
             {
-                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlc11xDynamic)MediaPlayerEnd.VideoPlayer;
+                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
         }

@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         public string Language { get; set; }
     }
 
-    public class Matroska
+    public class Matroska : IDisposable
     {
         private const uint Ebml = 0x1A45DFA3;
 
@@ -1532,5 +1532,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             return _subtitleRip;
         }
 
-     }
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_f != null)
+                {
+                    _f.Dispose();
+                    _f = null;
+                }
+            }
+        }
+
+    }
 }

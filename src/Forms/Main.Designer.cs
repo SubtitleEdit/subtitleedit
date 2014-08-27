@@ -17,6 +17,14 @@
             {
                 components.Dispose();
             }
+            if (disposing)
+            {
+                if (_networkSession != null)
+                {
+                    _networkSession.Dispose();
+                    _networkSession = null;
+                }
+            }
             base.Dispose(disposing);
         }
 

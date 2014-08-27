@@ -1,10 +1,11 @@
+using System;
 using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public class WindowsHunspell: Hunspell
+    public class WindowsHunspell : Hunspell, IDisposable
     {
-        private readonly NHunspell.Hunspell _hunspell;
+        private NHunspell.Hunspell _hunspell;
 
         public WindowsHunspell (string affDictionary, string dicDictionary)
         {
@@ -19,13 +20,23 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         public override List<string> Suggest(string word)
         {
             return _hunspell.Suggest(word);
+        }        
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        ~WindowsHunspell()
+        protected virtual void Dispose(bool disposing)
         {
-            if (_hunspell != null && !_hunspell.IsDisposed)
-                _hunspell.Dispose();
-        }
+            if (disposing)
+            {
+                if (_hunspell != null && !_hunspell.IsDisposed)
+                    _hunspell.Dispose();
+                _hunspell = null;
+            }
+        }        
 
     }
 }

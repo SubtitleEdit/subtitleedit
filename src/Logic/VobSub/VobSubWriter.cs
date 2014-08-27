@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
-    public class VobSubWriter
+    public class VobSubWriter : IDisposable
     {
 
         private class MemWriter
@@ -336,13 +336,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             stream.WriteByte((pattern << 4) | background); // pattern + background
         }
 
-        public void CloseSubFile()
-        {
-            if (_subFile != null)
-                _subFile.Close();
-            _subFile = null;
-        }
-
         public void WriteIdxFile()
         {
             string idxFileName = _subFileName.Substring(0, _subFileName.Length - 3) + "idx";
@@ -422,6 +415,29 @@ id: " + _languageNameShort + @", index: 0
         {
             return (c.R.ToString("X2") + c.G.ToString("X2") + c.B.ToString("X2")).ToLower();
         }
+
+        private void ReleaseManagedResources()
+        {
+            if (_subFile != null)
+            {
+                _subFile.Dispose();
+                _subFile = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ReleaseManagedResources();
+            }
+        }        
 
     }
 }

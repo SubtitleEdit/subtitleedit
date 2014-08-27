@@ -5435,7 +5435,6 @@ namespace Nikse.SubtitleEdit.Forms
             string responseFromServer = reader.ReadToEnd();
             string result = responseFromServer;
             reader.Close();
-            dataStream.Close();
             response.Close();
             return result;
         }
@@ -9418,7 +9417,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         finally
                         {
-                            outStream.Close();
                             outZStream.Close();
                             inStream.Close();
                         }
@@ -9518,7 +9516,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         finally
                         {
-                            outStream.Close();
                             outZStream.Close();
                             inStream.Close();
                         }
@@ -15608,7 +15605,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (ext != ".wav")
             {
-                MessageBox.Show(string.Format(".Wav only!", fileName));
+                MessageBox.Show(".wav only!");
                 return;
             }
 
@@ -16950,9 +16947,9 @@ namespace Nikse.SubtitleEdit.Forms
             setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
 
             toolStripMenuItemSetAudioTrack.Visible = false;
-            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlc11xDynamic)
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlcDynamic)
             {
-                var libVlc = (Logic.VideoPlayers.LibVlc11xDynamic)mediaPlayer.VideoPlayer;
+                var libVlc = (Logic.VideoPlayers.LibVlcDynamic)mediaPlayer.VideoPlayer;
                 int numberOfTracks = libVlc.AudioTrackCount;
                 _videoAudioTrackNumber = libVlc.AudioTrackNumber;
                 if (numberOfTracks > 1)
@@ -16982,9 +16979,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChooseAudioTrack(object sender, EventArgs e)
         {
-            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlc11xDynamic)
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlcDynamic)
             {
-                var libVlc = (Logic.VideoPlayers.LibVlc11xDynamic)mediaPlayer.VideoPlayer;
+                var libVlc = (Logic.VideoPlayers.LibVlcDynamic)mediaPlayer.VideoPlayer;
                 var item = sender as ToolStripItem;
 
                 int number = int.Parse(item.Text);

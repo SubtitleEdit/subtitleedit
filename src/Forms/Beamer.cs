@@ -176,9 +176,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private Bitmap GenerateImageFromTextWithStyle(string text)
         {
-            bool subtitleFontBold = false;
+            const bool subtitleFontBold = false;
             bool subtitleAlignLeft = comboBoxHAlign.SelectedIndex == 0;
-            bool subtitleAlignRight = false;
 
             // remove styles for display text (except italic)
             text = RemoveSubStationAlphaFormatting(text);
@@ -195,8 +194,6 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 var fontStyle = FontStyle.Regular;
-                if (subtitleFontBold)
-                    fontStyle = FontStyle.Bold;
                 font = new Font(_subtitleFontName, _subtitleFontSize, fontStyle);
             }
             catch (Exception exception)
@@ -227,8 +224,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (subtitleAlignLeft)
                     lefts.Add(5);
-                else if (subtitleAlignRight)
-                    lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, subtitleFontBold) + 15));
                 else
                     lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8 + 15) / 2);
             }

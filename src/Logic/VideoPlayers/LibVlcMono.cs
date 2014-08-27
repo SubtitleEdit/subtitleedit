@@ -1,22 +1,18 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    class LibVlcMono : VideoPlayer
+    class LibVlcMono : VideoPlayer, IDisposable
     {
         private System.Windows.Forms.Timer _videoLoadedTimer;
         private System.Windows.Forms.Timer _videoEndTimer;
-
         private IntPtr _libVlcDLL;
         private IntPtr _libVlc;
         private IntPtr _mediaPlayer;
         private System.Windows.Forms.Control _ownerControl;
         private System.Windows.Forms.Form _parentForm;
-
 
         private static byte[] StringToCharPointer(string s)
         {
@@ -246,25 +242,63 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void DisposeVLC(object player)
         {
+            ReleaseUnmangedResources();
+        }
+
+        public override event EventHandler OnVideoLoaded;
+
+        public override event EventHandler OnVideoEnded;
+
+        ~LibVlcMono()
+        {
+            Dispose(false);
+        }
+
+        private void ReleaseUnmangedResources()
+        {
             try
             {
                 if (_mediaPlayer != IntPtr.Zero)
                 {
                     NativeMethods.libvlc_media_player_stop(_mediaPlayer);
                     NativeMethods.libvlc_media_list_player_release(_mediaPlayer);
+                    _mediaPlayer = IntPtr.Zero;
                 }
 
                 if (_libVlc != IntPtr.Zero)
+                {
                     NativeMethods.libvlc_release(_libVlc);
+                    _libVlc = IntPtr.Zero;
+                }
             }
             catch
             {
             }
         }
 
-        public override event EventHandler OnVideoLoaded;
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
 
-        public override event EventHandler OnVideoEnded;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                if (_videoLoadedTimer != null)
+                {
+                    _videoLoadedTimer.Dispose();
+                    _videoLoadedTimer = null;
+                }
+                if (_videoEndTimer != null)
+                {
+                    _videoEndTimer.Dispose();
+                    _videoEndTimer = null;
+                }
+            }
+            ReleaseUnmangedResources();
+        }        
 
     }
 }

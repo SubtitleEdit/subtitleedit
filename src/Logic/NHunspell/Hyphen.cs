@@ -103,6 +103,7 @@ namespace NHunspell
         public void Dispose()
         {
             this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -111,7 +112,7 @@ namespace NHunspell
         /// <param name="callFromDispose">
         /// The call From Dispose.
         /// </param>
-        public void Dispose(bool callFromDispose)
+        protected virtual void Dispose(bool callFromDispose)
         {
             if (this.IsDisposed)
             {
@@ -130,11 +131,6 @@ namespace NHunspell
             {
                 MarshalHunspellDll.UnReferenceNativeHunspellDll();
                 this.nativeDllIsReferenced = false;
-            }
-
-            if (callFromDispose)
-            {
-                GC.SuppressFinalize(this);
             }
         }
 
@@ -218,12 +214,10 @@ namespace NHunspell
             }
 
             byte[] dictionaryData;
-            using (FileStream stream = File.OpenRead(dictFile))
+            FileStream stream = File.OpenRead(dictFile);
+            using (var reader = new BinaryReader(stream))
             {
-                using (var reader = new BinaryReader(stream))
-                {
-                    dictionaryData = reader.ReadBytes((int)stream.Length);
-                }
+                dictionaryData = reader.ReadBytes((int)stream.Length);
             }
 
             Load(dictionaryData);

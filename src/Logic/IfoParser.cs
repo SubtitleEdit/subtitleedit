@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public class IfoParser
+    public class IfoParser: IDisposable
     {
         public struct AudioStream
         {
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private VtsVobs _vtsVobs = new VtsVobs();
         private VtsPgci _vtsPgci = new VtsPgci();
-        FileStream _fs;
+        private FileStream _fs;
 
         public IfoParser(string fileName)
         {
@@ -398,6 +398,29 @@ namespace Nikse.SubtitleEdit.Logic
             TimeSpan ts = new TimeSpan(0, h, m, s, milliseconds);
             return MsToTime(ts.TotalMilliseconds);
         }
+
+        private void ReleaseManagedResources()
+        {
+            if (_fs != null)
+            {
+                _fs.Dispose();
+                _fs = null;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ReleaseManagedResources();
+            }
+        }        
 
     }
 }

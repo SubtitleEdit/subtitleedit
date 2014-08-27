@@ -22,15 +22,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
         public void Save()
         {
-            using (Stream fs = File.OpenWrite(FileName))
+            using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
-                using (Stream gz = new GZipStream(fs, CompressionMode.Compress))
-                {
-                    foreach (var ocrChar in OcrCharacters)
-                        ocrChar.Save(gz);
-                    foreach (var ocrChar in OcrCharactersExpanded)
-                        ocrChar.Save(gz);
-                }
+                foreach (var ocrChar in OcrCharacters)
+                    ocrChar.Save(gz);
+                foreach (var ocrChar in OcrCharactersExpanded)
+                    ocrChar.Save(gz);
             }
         }
 
@@ -46,25 +43,22 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 return;
             }
 
-            using (Stream fs = File.OpenRead(FileName))
+            using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
             {
-                using (Stream gz = new GZipStream(fs, CompressionMode.Decompress))
+                bool done = false;
+                while (!done)
                 {
-                    bool done = false;
-                    while (!done)
+                    var ocrChar = new NOcrChar(gz);
+                    if (ocrChar.LoadedOk)
                     {
-                        var ocrChar = new NOcrChar(gz);
-                        if (ocrChar.LoadedOk)
-                        {
-                            if (ocrChar.ExpandCount > 0)
-                                listExpanded.Add(ocrChar);
-                            else
-                                list.Add(ocrChar);
-                        }
+                        if (ocrChar.ExpandCount > 0)
+                            listExpanded.Add(ocrChar);
                         else
-                        {
-                            done = true;
-                        }
+                            list.Add(ocrChar);
+                    }
+                    else
+                    {
+                        done = true;
                     }
                 }
             }

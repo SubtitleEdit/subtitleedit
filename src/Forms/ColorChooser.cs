@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
     /// <summary>
     ///   Summary description for ColorChooser.
     /// </summary>
-    public class ColorChooser : Form
+    public class ColorChooser : Form, IDisposable
     {
         /// <summary>
         ///   Required designer variable.
@@ -129,14 +129,6 @@ namespace Nikse.SubtitleEdit.Forms
                 argb = new ColorHandler.ARGB(value.A, value.R, value.G, value.B);
                 hsv = ColorHandler.RGBtoHSV(argb);
             }
-        }
-
-        /// <summary>
-        ///   Clean up any resources being used.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
         }
 
         private void ColorChooserLoad(object sender, EventArgs e)
@@ -757,6 +749,19 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                base.Dispose(disposing);
+                if (myColorWheel != null)
+                {
+                    myColorWheel.Dispose();
+                    myColorWheel = null;
+                }
+            }
+        }       
 
     }
 }

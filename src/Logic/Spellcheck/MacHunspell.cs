@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public class MacHunspell : Hunspell
+    public class MacHunspell : Hunspell, IDisposable
     {
 
         private IntPtr _hunspellHandle = IntPtr.Zero;
@@ -42,8 +41,32 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         ~MacHunspell()
         {
-            if (_hunspellHandle != IntPtr.Zero)
-                NativeMethods.Hunspell_destroy(_hunspellHandle);
+            Dispose(false);
         }
+
+        private void ReleaseUnmangedResources()
+        {
+            if (_hunspellHandle != IntPtr.Zero)
+            {
+                NativeMethods.Hunspell_destroy(_hunspellHandle);
+                _hunspellHandle = IntPtr.Zero;
+            }
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                //ReleaseManagedResources();
+            }
+            ReleaseUnmangedResources();
+        }        
+
     }
 }

@@ -1875,8 +1875,8 @@ namespace Nikse.SubtitleEdit.Logic
             //if (Utilities.IsRunningOnMac())
             //    return new LibVlcMono();
 
-            if (gs.VideoPlayer == "VLC" && LibVlc11xDynamic.IsInstalled)
-                return new LibVlc11xDynamic();
+            if (gs.VideoPlayer == "VLC" && LibVlcDynamic.IsInstalled)
+                return new LibVlcDynamic();
 
             //if (gs.VideoPlayer == "WindowsMediaPlayer" && IsWmpAvailable)
             //    return new WmpPlayer();

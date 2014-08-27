@@ -153,7 +153,7 @@ namespace NHunspell
             myThesSemaphore.Release();
         }
 
-        #region Constructors and Destructors
+        #region Constructor
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SpellFactory"/> class.
@@ -243,76 +243,6 @@ namespace NHunspell
             finally
             {
                 this.HunspellsPush(hunspell);
-            }
-        }
-
-        /// <summary>
-        ///   Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Semaphore currentHunspellSemaphore = this.hunspellSemaphore;
-
-            if (!this.IsDisposed)
-            {
-                this.disposed = true; // Alle Threads werden ab jetzt mit Disposed Exception abgewiesen
-
-                for (int semaphoreCount = 0; semaphoreCount < this.processors; ++ semaphoreCount)
-                {
-                    this.hunspellSemaphore.WaitOne();
-
-                    // Complete Ownership will be taken, to guarrantee other threads are completed
-                }
-
-                if (this.hunspells != null)
-                {
-                    foreach (var hunspell in this.hunspells)
-                    {
-                        hunspell.Dispose();
-                    }
-                }
-
-                this.hunspellSemaphore.Release(this.processors);
-                this.hunspellSemaphore = null;
-                this.hunspells = null;
-
-                for (int semaphoreCount = 0; semaphoreCount < this.processors; ++semaphoreCount)
-                {
-                    this.hyphenSemaphore.WaitOne();
-
-                    // Complete Ownership will be taken, to guarrantee other threads are completed
-                }
-
-                if (this.hyphens != null)
-                {
-                    foreach (var hyphen in this.hyphens)
-                    {
-                        hyphen.Dispose();
-                    }
-                }
-
-                this.hyphenSemaphore.Release(this.processors);
-                this.hyphenSemaphore = null;
-                this.hyphens = null;
-
-                for (int semaphoreCount = 0; semaphoreCount < this.processors; ++semaphoreCount)
-                {
-                    this.myThesSemaphore.WaitOne();
-
-                    // Complete Ownership will be taken, to guarrantee other threads are completed
-                }
-
-                if (this.myTheses != null)
-                {
-                    foreach (var myThes in this.myTheses)
-                    {
-                        // myThes.Dispose();
-                    }
-                }
-
-                this.myThesSemaphore.Release(this.processors);
-                this.myThesSemaphore = null;
-                this.myTheses = null;
             }
         }
 
@@ -477,5 +407,85 @@ namespace NHunspell
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {                
+                Semaphore currentHunspellSemaphore = this.hunspellSemaphore;
+
+                if (!this.IsDisposed)
+                {
+                    this.disposed = true; // Alle Threads werden ab jetzt mit Disposed Exception abgewiesen
+
+                    for (int semaphoreCount = 0; semaphoreCount < this.processors; ++semaphoreCount)
+                    {
+                        this.hunspellSemaphore.WaitOne();
+
+                        // Complete Ownership will be taken, to guarrantee other threads are completed
+                    }
+
+                    if (this.hunspells != null)
+                    {
+                        foreach (var hunspell in this.hunspells)
+                        {
+                            hunspell.Dispose();
+                        }
+                    }
+
+                    this.hunspellSemaphore.Release(this.processors);
+                    this.hunspellSemaphore.Dispose();
+                    this.hunspellSemaphore = null;
+                    this.hunspells = null;
+
+                    for (int semaphoreCount = 0; semaphoreCount < this.processors; ++semaphoreCount)
+                    {
+                        this.hyphenSemaphore.WaitOne();
+
+                        // Complete Ownership will be taken, to guarrantee other threads are completed
+                    }
+
+                    if (this.hyphens != null)
+                    {
+                        foreach (var hyphen in this.hyphens)
+                        {
+                            hyphen.Dispose();
+                        }
+                    }
+
+                    this.hyphenSemaphore.Release(this.processors);
+                    this.hyphenSemaphore.Dispose();
+                    this.hyphenSemaphore = null;
+                    this.hyphens = null;
+
+                    for (int semaphoreCount = 0; semaphoreCount < this.processors; ++semaphoreCount)
+                    {
+                        this.myThesSemaphore.WaitOne();
+
+                        // Complete Ownership will be taken, to guarrantee other threads are completed
+                    }
+
+                    if (this.myTheses != null)
+                    {
+                        foreach (var myThes in this.myTheses)
+                        {
+                            // myThes.Dispose();
+                        }
+                    }
+
+                    this.myThesSemaphore.Release(this.processors);
+                    this.myThesSemaphore.Dispose();
+                    this.myThesSemaphore = null;
+                    this.myTheses = null;
+                }
+            }
+        }
+
     }
 }

@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                           UserDefinedArea;
                 if (result.Length == 1024)
                     return result;
-                throw new Exception("Length must be 1024");
+                return "Length must be 1024 but is " + result.Length;
             }
 
         }
