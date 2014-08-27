@@ -4,7 +4,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 {
     public class SpHeader
     {
-        public static int SpHeaderLength = 14;
+        public const int SpHeaderLength = 14;
 
         public string Identifier { get; private set; }
         public TimeSpan StartTime { get; private set; }
