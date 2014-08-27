@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                 //ReleaseManagedResources();
             }
             ReleaseUnmangedResources();
-        }        
+        }
 
     }
 }

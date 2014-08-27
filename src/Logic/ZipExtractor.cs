@@ -423,7 +423,7 @@ namespace System.IO.Compression
             {
                 this.Close();
             }
-        }    
+        }
         #endregion
     }
 }

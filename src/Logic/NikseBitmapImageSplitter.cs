@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return different;
         }
-     
+
         private static List<ImageSplitterItem> SplitHorizontal(ImageSplitterItem verticalItem, int xOrMorePixelsMakesSpace)
         { // split line into letters
             NikseBitmap bmp = verticalItem.NikseBitmap;
@@ -545,7 +545,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             return true;
-        }    
+        }
 
         private static bool IsVerticalLineTransparentAlphaOnly(NikseBitmap bmp, ref int y, int x)
         {

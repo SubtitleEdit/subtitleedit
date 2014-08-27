@@ -437,7 +437,7 @@ id: " + _languageNameShort + @", index: 0
             {
                 ReleaseManagedResources();
             }
-        }        
+        }
 
     }
 }

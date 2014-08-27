@@ -407,7 +407,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     _timer.Dispose();
                     _timer = null;
-                }                
+                }
             }
         }
 

@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
             }
             ReleaseUnmangedResources();
-        }        
+        }
 
     }
 }
