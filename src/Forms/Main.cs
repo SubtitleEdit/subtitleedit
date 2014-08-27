@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _splitDualSami = false;
         bool _openFileDialogOn = false;
         bool _resetVideo = true;
-
+        private static object _syncUndo = new object();
         string[] _dragAndDropFiles = null;
         Timer _dragAndDropTimer = new Timer(); // to prevent locking windows explorer
 
@@ -753,11 +753,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if (x.CodecId.ToUpper() == "S_VOBSUB")
                                         {
-                                            Console.WriteLine(string.Format("{0}: {1} - Cannot convert from VobSub image based format!", count, fileName, toFormat));
+                                            Console.WriteLine(string.Format("{0}: {1} - Cannot convert from VobSub image based format!", fileName, toFormat));
                                         }
                                         else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
                                         {
-                                            Console.WriteLine(string.Format("{0}: {1} - Cannot convert from Blu-ray image based format!", count, fileName, toFormat));
+                                            Console.WriteLine(string.Format("{0}: {1} - Cannot convert from Blu-ray image based format!", fileName, toFormat));
                                         }
                                         else
                                         {
@@ -913,9 +913,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (format == null)
                         {
                             if (fi.Length < 1024 * 1024) // max 1 mb
-                                Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", count, fileName, toFormat));
+                                Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", fileName, toFormat));
                             else
-                                Console.WriteLine(string.Format("{0}: {1} - input file too large!", count, fileName, toFormat));
+                                Console.WriteLine(string.Format("{0}: {1} - input file too large!", fileName, toFormat));
                         }
                         else if (!done)
                         {
@@ -3567,12 +3567,21 @@ namespace Nikse.SubtitleEdit.Forms
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
                     }
-                    using (var fs = System.IO.File.Open(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read))
+
+                    FileStream fs = null;
+                    try
                     {
+                        fs = System.IO.File.Open(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
                         using (StreamWriter sw = new StreamWriter(fs, currentEncoding))
                         {
+                            fs = null;
                             sw.Write(allText);
                         }
+                    }
+                    finally
+                    {
+                        if (fs != null)
+                            fs.Dispose();
                     }
                 }
 
@@ -5518,7 +5527,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_networkSession != null)
                 return;
 
-            lock (this)
+            lock (_syncUndo)
             {
                 if (!undo && _undoIndex >= _subtitle.HistoryItems.Count - 1)
                     return;
