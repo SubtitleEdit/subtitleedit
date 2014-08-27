@@ -88,19 +88,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
+            string text = string.Empty;
             var rtBox = new System.Windows.Forms.RichTextBox();
             try
             {
                 rtBox.Rtf = rtf;
+                text = rtBox.Text.Replace("\r\n", "\n");
             }
             catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 return;
             }
+            finally
+            {
+                rtBox.Dispose();
+            }
 
             lines = new List<string>();
-            string text = rtBox.Text.Replace("\r\n", "\n");
             foreach (string line in text.Split('\n'))
                 lines.Add(line);
 

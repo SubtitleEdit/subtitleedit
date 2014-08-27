@@ -59,7 +59,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text = sb.ToString();
-            return rtBox.Rtf;
+            string rtf = rtBox.Rtf;
+            rtBox.Dispose();
+            return rtf;
         }
 
         private TimeCode DecodeTimeCode(string timeCode)

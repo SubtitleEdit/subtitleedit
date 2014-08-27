@@ -53,7 +53,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text = sb.ToString();
-            return rtBox.Rtf;
+            string rtf = rtBox.Rtf;
+            rtBox.Dispose();
+            return rtf;
         }
 
         private string EncodeTimeCode(TimeCode time)
@@ -72,22 +74,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
+            string[] arr = null;
             var rtBox = new System.Windows.Forms.RichTextBox();
             try
             {
                 rtBox.Rtf = rtf;
+                arr = rtBox.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
             }
             catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 return;
             }
-
+            finally
+            {
+                rtBox.Dispose();
+            }
 
             bool expectStartTime = true;
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
-            foreach (string line in rtBox.Text.Replace("\r", "").Split('\n'))
+            foreach (string line in arr)
             {
                 string s = line.Trim().Replace("*", string.Empty);
                 var match = regexTimeCodes.Match(s);

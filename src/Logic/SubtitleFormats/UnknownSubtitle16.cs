@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var lines2 = new List<string>();
             foreach (string line in rtBox.Lines)
                 lines2.Add(line);
+            rtBox.Dispose();
             text = new StringBuilder();
-
             var u52 = new UnknownSubtitle52();
             u52.LoadSubtitle(subtitle, lines2, fileName);
             _errorCount = u52.ErrorCount;

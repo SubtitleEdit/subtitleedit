@@ -35,7 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text =  base.ToText(subtitle, title);
-            return rtBox.Rtf;
+            string rtf = rtBox.Rtf;
+            rtBox.Dispose();
+            return rtf;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -49,18 +51,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
+            string[] arr = null;
             var rtBox = new System.Windows.Forms.RichTextBox();
             try
             {
                 rtBox.Rtf = rtf;
+                arr = rtBox.Text.Replace("\r", string.Empty).Split('\n');
             }
             catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 return;
             }
+            finally
+            {
+                rtBox.Dispose();
+            }
 
-            var arr = rtBox.Text.Replace("\r", string.Empty).Split('\n');
             lines = new List<string>();
             foreach (string s in arr)
                 lines.Add(s);
