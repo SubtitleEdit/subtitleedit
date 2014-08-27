@@ -12010,7 +12010,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 string s2 = Utilities.AutoBreakLineMoreThanTwoLines(original.Text, Configuration.Settings.General.SubtitleLineMaximumLength, languageOriginal);
                                 if (s2 != original.Text)
                                 {
-                                    original.Text = s;
+                                    original.Text = s2;
                                     SubtitleListview1.SetAlternateText(item.Index, original.Text);
                                 }
                             }
