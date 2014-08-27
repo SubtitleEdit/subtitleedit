@@ -44,8 +44,8 @@ namespace UpdateAssemblyInfo
 
             if (args.Length != 2)
             {
-                Console.WriteLine("UpdateAssemblyDescription 0.9");
-                Console.WriteLine("UpdateAssemblyDescription <template with [GITHASH]> <target file>");
+                Console.WriteLine("UpdateAssemblyInfo 0.9");
+                Console.WriteLine("UpdateAssemblyInfo <template with [GITHASH]> <target file>");
                 File.WriteAllText(errorFileName, "Wrong number of arguments: " + args.Length);
                 return 1;
             }
