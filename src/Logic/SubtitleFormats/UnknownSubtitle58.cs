@@ -49,7 +49,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text = sb.ToString();
-            return rtBox.Rtf;
+            string rtf = rtBox.Rtf;
+            rtBox.Dispose();
+            return rtf;
         }
 
         private string EncodeTimeCode(TimeCode time)
@@ -68,20 +70,26 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!rtf.StartsWith("{\\rtf"))
                 return;
 
+            string[] arr = null;
             var rtBox = new System.Windows.Forms.RichTextBox();
             try
             {
                 rtBox.Rtf = rtf;
+                arr = rtBox.Text.Replace("\r", "").Split('\n');
             }
             catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 return;
             }
+            finally
+            {
+                rtBox.Dispose();
+            }
 
             var p = new Paragraph();
             subtitle.Paragraphs.Clear();
-            foreach (string line in rtBox.Text.Replace("\r", "").Split('\n'))
+            foreach (string line in arr)
             {
                 string s = line.Trim();
                 if (s.StartsWith("[") && s.EndsWith(">") && s.Length > 13 && s.Substring(12, 1) == "]")

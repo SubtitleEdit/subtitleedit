@@ -35,7 +35,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text = ToF4Text(subtitle, title);
-            return rtBox.Rtf;
+            string rtf = rtBox.Rtf;
+            rtBox.Dispose();
+            return rtf;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -59,8 +61,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 return;
             }
-
-            LoadF4TextSubtitle(subtitle, rtBox.Text);
+            string text = rtBox.Text;
+            rtBox.Dispose();
+            LoadF4TextSubtitle(subtitle, text);
         }
     }
 }

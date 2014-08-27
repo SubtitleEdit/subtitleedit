@@ -212,6 +212,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 {
                                     System.Diagnostics.Debug.WriteLine(exception.Message);
                                 }
+                                rtBox.Dispose();
                             }
                             else if (italic)
                             {
