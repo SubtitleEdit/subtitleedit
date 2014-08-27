@@ -328,8 +328,6 @@ namespace Nikse.SubtitleEdit.Controls
                 int letterCount = 0;
                 var italicLookups = new System.Collections.Generic.Dictionary<int, int>();
                 var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
-                System.Collections.Generic.Stack<Color> colorStack = new System.Collections.Generic.Stack<Color>();
-                System.Collections.Generic.Stack<int> fontIndices = new System.Collections.Generic.Stack<int>();
                 Color fontColor = Color.White;
                 while  (i < text.Length)
                 {

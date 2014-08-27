@@ -11651,7 +11651,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var pre = new StringBuilder();
                 var post = new StringBuilder();
-                var text = new StringBuilder();
 
                 int i = 0;
                 while (i < s2.Length && "- !?.\"،,():;[]".Contains(s2[i].ToString()))

@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Main _main;
         private bool _noTimerAction;
         private long _videoStartTick;
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        //Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public Beamer(Main main, Subtitle subtitle, int index)

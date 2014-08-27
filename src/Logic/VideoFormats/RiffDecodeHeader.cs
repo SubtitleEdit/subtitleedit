@@ -233,18 +233,6 @@ namespace Nikse.SubtitleEdit.Logic
         #region Default element processing
 
         /// <summary>
-        /// Defaulkt chunk handler - skip chunk data
-        /// </summary>
-        /// <param name="rp"></param>
-        /// <param name="FourCC"></param>
-        /// <param name="unpaddedLength"></param>
-        /// <param name="paddedLength"></param>
-        private static void ProcessChunk(RiffParser rp, int FourCC, int unpaddedLength, int paddedLength)
-        {
-            rp.SkipData(paddedLength);
-        }
-
-        /// <summary>
         /// Default list element handler - skip the entire list
         /// </summary>
         /// <param name="rp"></param>

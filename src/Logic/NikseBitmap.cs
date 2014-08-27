@@ -869,29 +869,6 @@ namespace Nikse.SubtitleEdit.Logic
             return bitmap;
         }
 
-
-        internal int RemoveAloneColors()
-        {
-            int count = 0;
-            byte[] bufferTransparent = new byte[4];
-            bufferTransparent[0] = 0;
-            bufferTransparent[1] = 0;
-            bufferTransparent[2] = 0;
-            bufferTransparent[3] = 0;
-            for (int i = 4; i < _bitmapData.Length-4; i += 4)
-            {
-                if ((_bitmapData[i + 3]  > 250 && _bitmapData[i + 3 + 4] > 250) || (_bitmapData[i - 1] > 250 && _bitmapData[i + 3] > 250))
-                {
-                    count++;
-                }
-                else
-                {
-                    Buffer.BlockCopy(bufferTransparent, 0, _bitmapData, i, 4);
-                }
-            }
-            return count;
-        }
-
         private static int FindBestMatch(Color color, List<Color> palette, out int maxDiff)
         {
             int smallestDiff = 1000;

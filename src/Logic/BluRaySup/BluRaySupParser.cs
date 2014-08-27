@@ -112,43 +112,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 return palette;
             }
 
-            unsafe static void FillData(byte* pixData, int index, int width, int stride, int value, int count)
-            {
-                byte b = (byte)value;
-                int y = index / width;
-                int x = index % width;
-                byte* pixLineStart = pixData + (y * stride);
-                byte* pixStart = pixLineStart + x;
-                int writeLen = Math.Min(count, width - x);
-                count -= writeLen;
-                while (writeLen > 0)
-                {
-                    *pixStart++ = b;
-                    writeLen--;
-                }
-                while (count > width)
-                {
-                    pixLineStart += stride;
-                    pixStart = pixLineStart;
-                    writeLen = width;
-                    count -= writeLen;
-                    while (writeLen > 0)
-                    {
-                        *pixStart++ = b;
-                        writeLen--;
-                    }
-                }
-                if (count > 0)
-                {
-                    pixStart = pixLineStart + stride;
-                    writeLen = count;
-                    while (count > 0)
-                    {
-                        *pixStart++ = b;
-                        count--;
-                    }
-                }
-            }
 
             /// <summary>
             /// Decode caption from the input stream

@@ -5139,63 +5139,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        static string NocrThreadDoItalicWork(NOcrThreadParameter p)
-        {
-            var unItalicedBmp = UnItalic(p.Picture, p.UnItalicFactor);
-            var nbmp = new NikseBitmap(unItalicedBmp);
-//            nbmp.ReplaceNonWhiteWithTransparent();
-           // Bitmap bitmap = nbmp.GetBitmap();
-            unItalicedBmp.Dispose();
-
-            var matches = new List<CompareMatch>();
-            int minLineHeight = p.NOcrLastLowercaseHeight;
-            if (minLineHeight < 10)
-                minLineHeight = 22;
-            int maxLineHeight = p.NOcrLastUppercaseHeight;
-            if (maxLineHeight < 10)
-                minLineHeight = 80;
-
-            List<ImageSplitterItem> lines = NikseBitmapImageSplitter.SplitVertical(nbmp, minLineHeight);
-            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(lines, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
-
-            foreach (ImageSplitterItem item in list)
-            {
-                if (item.NikseBitmap != null)
-                {
-                    item.NikseBitmap.ReplaceTransparentWith(Color.Black);
-                }
-            }
-
-            int index = 0;
-            while (index < list.Count)
-            {
-                ImageSplitterItem item = list[index];
-                if (item.NikseBitmap == null)
-                {
-                    matches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
-                }
-                else
-                {
-                    bool old = p.AdvancedItalicDetection;
-                    p.AdvancedItalicDetection = false;
-                    CompareMatch match = GetNOcrCompareMatch(item, nbmp, p);
-                    p.AdvancedItalicDetection = old;
-                    if (match == null)
-                    {
-                       return string.Empty;
-                    }
-                    else // found image match
-                    {
-                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
-                        if (match.ExpandCount > 0)
-                            index += match.ExpandCount - 1;
-                    }
-                }
-                index++;
-            }
-            return "<i>" + Utilities.RemoveHtmlTags(GetStringWithItalicTags(matches)) + "</i>";
-        }
-
         public string NocrFastCheck(Bitmap bitmap)
         {
             var nbmpInput = new NikseBitmap(bitmap);
@@ -5212,7 +5155,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             int index = 0;
-            var expandSelectionList = new List<ImageSplitterItem>();
+
             while (index < list.Count)
             {
                 ImageSplitterItem item = list[index];

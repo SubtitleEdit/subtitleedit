@@ -145,7 +145,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
                                 pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
                                 pictureBoxCompareBitmapDouble.Image = bitmap;
-                                var matchBob = new BinaryOcrBitmap(new NikseBitmap(_imageSources[listBoxInspectItems.SelectedIndex]));
                                 buttonAddBetterMatch.Enabled = false; // exact match
                                 labelExpandCount.Text = string.Format("Expand count: {0}", bob.ExpandCount);
                                 break;

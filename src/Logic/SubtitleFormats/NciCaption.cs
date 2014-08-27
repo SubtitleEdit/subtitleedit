@@ -27,10 +27,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Close();
         }
 
-        private static void WriteTime(FileStream fs, TimeCode timeCode)
-        {
-        }
-
         public override bool IsMine(List<string> lines, string fileName)
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))

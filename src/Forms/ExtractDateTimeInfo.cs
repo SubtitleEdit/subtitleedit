@@ -60,11 +60,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonGenerateTimeInfo_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
-
         private void buttonOpenVideo_Click(object sender, EventArgs e)
         {
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)

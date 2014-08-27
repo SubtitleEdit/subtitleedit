@@ -62,7 +62,6 @@ namespace Nikse.SubtitleEdit.Logic
             switch (name)
             {");
 
-            var language = new Language();
             var newObjectsString = new StringBuilder();
             sb.AppendLine(SubElementDeserializer(typeof(Language), "language", string.Empty, newObjectsString));
             sb.AppendLine("\t\t\t}");

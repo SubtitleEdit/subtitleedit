@@ -208,12 +208,6 @@ namespace Nikse.SubtitleEdit.Forms
             _loading = false;
         }
 
-        private void FormSplitSubtitle_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-                DialogResult = DialogResult.Cancel;
-        }
-
         private void buttonBasic_Click(object sender, EventArgs e)
         {
             ShowBasic = true;
