@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string MakeTimeCode(TimeCode tc)
+        private static string MakeTimeCode(TimeCode tc)
         {
             return string.Format("{0:0.00}", tc.TotalSeconds);
         }
@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timeCode)
         {
             return TimeCode.FromSeconds(double.Parse(timeCode.Trim()));
         }

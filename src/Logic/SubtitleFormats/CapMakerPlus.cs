@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Close();
         }
 
-        private void WriteTime(FileStream fs, TimeCode timeCode)
+        private static void WriteTime(FileStream fs, TimeCode timeCode)
         {
             fs.WriteByte(0xb);
             byte[] buffer = Encoding.ASCII.GetBytes(timeCode.ToHHMMSSFF());
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "Not supported!";
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
             string hour = parts[0];

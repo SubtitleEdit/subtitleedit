@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string EncodeText(string text)
+        private static string EncodeText(string text)
         {
             if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
                 return Utilities.HtmlEncode(text);

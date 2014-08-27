@@ -1231,7 +1231,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-        private string FormatFabTime(TimeCode time, MakeBitmapParameter param)
+        private static string FormatFabTime(TimeCode time, MakeBitmapParameter param)
         {
             if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
                 return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
@@ -3246,7 +3246,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1_SelectedIndexChanged(null, null);
         }
 
-        private string RemoveSsaStyle(string text)
+        private static string RemoveSsaStyle(string text)
         {
             int indexOfBegin = text.IndexOf("{");
             while (indexOfBegin >= 0 && text.IndexOf("}") > indexOfBegin)

@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode GetTimeCode(string code)
+        private static TimeCode GetTimeCode(string code)
         {
             code = code.Trim().Trim('"');
             var arr = code.Split(":.,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

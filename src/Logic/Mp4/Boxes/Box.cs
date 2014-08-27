@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         internal string Name;
         internal UInt64 Size;
 
-        public uint GetUInt(byte[] buffer, int index)
+        public static uint GetUInt(byte[] buffer, int index)
         {
             return (uint)((buffer[index] << 24) + (buffer[index + 1] << 16) + (buffer[index + 2] << 8) + buffer[index + 3]);
         }
@@ -26,13 +26,13 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                    (UInt64)Buffer[index + 4] << 24 | (UInt64)Buffer[index + 5] << 16 | (UInt64)Buffer[index + 6] << 8 | Buffer[index+7];
         }
 
-        public UInt64 GetUInt64(byte[] buffer, int index)
+        public static UInt64 GetUInt64(byte[] buffer, int index)
         {
             return (UInt64)buffer[index] << 56 | (UInt64)buffer[index + 1] << 48 | (UInt64)buffer[index + 2] << 40 | (UInt64)buffer[index + 3] << 32 |
                    (UInt64)buffer[index + 4] << 24 | (UInt64)buffer[index + 5] << 16 | (UInt64)buffer[index + 6] << 8 | buffer[index + 7];
         }
 
-        public int GetWord(byte[] buffer, int index)
+        public static int GetWord(byte[] buffer, int index)
         {
             return (buffer[index] << 8) + buffer[index + 1];
         }
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             return Encoding.UTF8.GetString(Buffer, index, count);
         }
 
-        public string GetString(byte[] buffer, int index, int count)
+        public static string GetString(byte[] buffer, int index, int count)
         {
             if (count <= 0)
                 return string.Empty;

@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private double GetMilliseconds(string start)
+        private static double GetMilliseconds(string start)
         {
             while (start.Length > 1 && !start.StartsWith(":"))
                 start = start.Remove(0, 1);

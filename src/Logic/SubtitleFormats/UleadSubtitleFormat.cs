@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //00;04;27;05
             int frames = time.Milliseconds / (1000 / 25);
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string time)
         {
             //00;04;26;04
 

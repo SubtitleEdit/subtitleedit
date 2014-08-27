@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public int ClutEntryCb { get; set; }
         public int ClutEntryT { get; set; }
 
-        private int BoundByteRange(int i)
+        private static int BoundByteRange(int i)
         {
             if (i < byte.MinValue)
                 return byte.MinValue;

@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetTagValue(string tag, string line)
+        private static string GetTagValue(string tag, string line)
         {
             int start = line.IndexOf(tag + "=\"");
             if (start > 0 && line.Length > start + 4)
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Empty;
         }
 
-        private TimeCode DecodeTimeCode(string s)
+        private static TimeCode DecodeTimeCode(string s)
         {
             return TimeCode.FromSeconds(double.Parse(s, CultureInfo.InvariantCulture));
         }

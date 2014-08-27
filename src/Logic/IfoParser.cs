@@ -202,17 +202,17 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private int BinToInt(string p)
+        private static int BinToInt(string p)
         {
             return Convert.ToInt32(p, 2);
         }
 
-        private string MidStr(string data, int start, int count)
+        private static string MidStr(string data, int start, int count)
         {
             return data.Substring(start, count);
         }
 
-        private string IntToBin(int value, int digits)
+        private static string IntToBin(int value, int digits)
         {
             string result = string.Empty;
             result = Convert.ToString(value, 2);
@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Logic
             return result;
         }
 
-        private string InterpretLangageCode(string code)
+        private static string InterpretLangageCode(string code)
         {
             int i = 0;
             while (ArrayOfLanguageCode[i] != code && i < 143)
@@ -343,7 +343,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private int TimeToMs(int time)
+        private static int TimeToMs(int time)
         {
             int result;
             string temp;
@@ -361,31 +361,31 @@ namespace Nikse.SubtitleEdit.Logic
             return result;
         }
 
-        private double StrToFloat(string p)
+        private static double StrToFloat(string p)
         {
             return Convert.ToDouble(p, System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        private int StrToInt(string p)
+        private static int StrToInt(string p)
         {
             return int.Parse(p);
         }
 
-        private string IntToHex(int value, int digits)
+        private static string IntToHex(int value, int digits)
         {
             string hex = value.ToString("X");
 
             return hex.PadLeft(digits, '0');
         }
 
-        private string MsToTime(double milliseconds)
+        private static string MsToTime(double milliseconds)
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(milliseconds);
             string s = string.Format("{0:#0}:{1:00}:{2:00}.{3:000}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
             return s;
         }
 
-        private string InterpretTime(int timeNumber)
+        private static string InterpretTime(int timeNumber)
         {
             string timeBytes = IntToBin(timeNumber, 32);
             int h = StrToInt(IntToHex(BinToInt(timeBytes.Substring(0,8)),1));

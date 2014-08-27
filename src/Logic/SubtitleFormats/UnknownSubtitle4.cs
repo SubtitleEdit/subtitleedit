@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private int RoundTo2Cifres(int milliseconds)
+        private static int RoundTo2Cifres(int milliseconds)
         {
             int rounded = (int)Math.Round((double)milliseconds / 10);
             return rounded;

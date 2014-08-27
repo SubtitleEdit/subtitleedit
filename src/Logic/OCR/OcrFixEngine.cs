@@ -614,7 +614,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return sb.ToString();
         }
 
-        private string RemoveSpaceBetweenNumbers(string text)
+        private static string RemoveSpaceBetweenNumbers(string text)
         {
             Match match = RegexSpaceBetweenNumbers.Match(text);
             while (match.Success)
@@ -1705,7 +1705,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return line;
         }
 
-        private string GetDashedWordBefore(string word, string line, string[] words, int index)
+        private static string GetDashedWordBefore(string word, string line, string[] words, int index)
         {
             if (index > 0 && line.Contains(words[index - 1] + "-" + word))
                 return (words[index - 1] + "-" + word).Replace("<i>", string.Empty).Replace("</i>", string.Empty);
@@ -1713,7 +1713,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return null;
         }
 
-        private string GetDashedWordAfter(string word, string line, string[] words, int index)
+        private static string GetDashedWordAfter(string word, string line, string[] words, int index)
         {
             if (index < words.Length - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty)))
                 return (word + "-" + words[index + 1]).Replace("<i>", string.Empty).Replace("</i>", string.Empty);
@@ -1721,7 +1721,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return null;
         }
 
-        private string GetWordWithDominatedCasing(string word)
+        private static string GetWordWithDominatedCasing(string word)
         {
             int lowercase = 0;
             int uppercase = 0;
@@ -1843,7 +1843,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return result;
         }
 
-        private string ReplaceWord(string text, string word, string newWord)
+        private static string ReplaceWord(string text, string word, string newWord)
         {
             var sb = new StringBuilder();
             if (word != null && text != null && text.Contains(word))

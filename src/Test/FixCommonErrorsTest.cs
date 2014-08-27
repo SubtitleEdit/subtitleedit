@@ -20,7 +20,7 @@ namespace Test
         ///</summary>
         public TestContext TestContext { get; set; }
 
-        private Nikse.SubtitleEdit.Forms.FixCommonErrors GetFixCommonErrorsLib()
+        private static Nikse.SubtitleEdit.Forms.FixCommonErrors GetFixCommonErrorsLib()
         {
             return new Nikse.SubtitleEdit.Forms.FixCommonErrors();
         }

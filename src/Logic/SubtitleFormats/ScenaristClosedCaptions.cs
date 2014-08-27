@@ -624,7 +624,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private int GetLastIndexOfSpace(string s, int endCount)
+        private static int GetLastIndexOfSpace(string s, int endCount)
         {
             int end = endCount;
             if (end >= s.Length)
@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return -1;
         }
 
-        private string AutoBreakLineMax4Lines(string text, int maxLength)
+        private static string AutoBreakLineMax4Lines(string text, int maxLength)
         {
             string s = text.Replace(Environment.NewLine, " ");
             s = s.Replace("  ", " ");
@@ -797,7 +797,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        public string GetCenterCodes(string text, int lineNumber, int totalLines)
+        public static string GetCenterCodes(string text, int lineNumber, int totalLines)
         {
             int row = 14 - (totalLines - lineNumber);
 
@@ -1741,7 +1741,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return _letters[index];
         }
 
-        private TimeCode ParseTimeCode(string start)
+        private static TimeCode ParseTimeCode(string start)
         {
             string[] arr = start.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 

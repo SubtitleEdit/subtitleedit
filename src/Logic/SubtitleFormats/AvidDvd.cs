@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string MakeTimeCode(TimeCode tc)
+        private static string MakeTimeCode(TimeCode tc)
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds));
         }
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timeCode)
         {
             string[] arr = timeCode.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));

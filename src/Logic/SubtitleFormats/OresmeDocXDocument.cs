@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return s;
         }
 
-        private XmlNode CreateXmlParagraph(XmlDocument xml, Paragraph p)
+        private static XmlNode CreateXmlParagraph(XmlDocument xml, Paragraph p)
         {
             XmlNode paragraph = xml.CreateElement("w:tr", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
             var tc1 = xml.CreateElement("w:tc", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return paragraph;
         }
 
-        private string ToTimeCode(TimeCode timeCode)
+        private static string ToTimeCode(TimeCode timeCode)
         {
             return timeCode.ToHHMMSSFF(); //10:00:07:27
         }

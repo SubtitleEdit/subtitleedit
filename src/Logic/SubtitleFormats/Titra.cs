@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private int GetMaxCharsForDuration(double durationSeconds)
+        private static int GetMaxCharsForDuration(double durationSeconds)
         {
             return (int)Math.Round(15.7 * durationSeconds);
         }
@@ -70,7 +70,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             return sb.ToString();
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15:22 (last is frame)
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));

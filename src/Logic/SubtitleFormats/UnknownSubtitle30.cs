@@ -152,12 +152,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             string hour = parts[0];
             string minutes = parts[1];

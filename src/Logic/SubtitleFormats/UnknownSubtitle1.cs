@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string code)
+        private static TimeCode DecodeTimeCode(string code)
         {
             //68:20  (minutes:seconds)
             var parts = code.Trim().Split(':');

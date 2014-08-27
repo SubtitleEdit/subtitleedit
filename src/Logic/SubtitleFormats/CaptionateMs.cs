@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return ToUtf8XmlString(xml, true);
         }
 
-        private void AddParagraph(XmlDocument xml, Paragraph p)
+        private static void AddParagraph(XmlDocument xml, Paragraph p)
         {
             XmlNode paragraph = xml.CreateElement("caption");
 
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string EncodeTime(TimeCode time)
+        private static string EncodeTime(TimeCode time)
         {
             return time.TotalMilliseconds.ToString();
         }

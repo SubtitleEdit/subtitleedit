@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private double GetMillisecondsFromTimeCode(string time)
+        private static double GetMillisecondsFromTimeCode(string time)
         {
             string[] parts = time.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 

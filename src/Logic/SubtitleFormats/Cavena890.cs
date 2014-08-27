@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return buffer;
         }
 
-        private void WriteTime(FileStream fs, TimeCode timeCode)
+        private static void WriteTime(FileStream fs, TimeCode timeCode)
         {
             double totalMilliseconds = timeCode.TotalMilliseconds;
             int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.CurrentFrameRate));
@@ -710,7 +710,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetLanguage(byte[] buffer)
+        private static string GetLanguage(byte[] buffer)
         {
             if (buffer.Length < 200)
                 return null;
@@ -718,7 +718,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return Encoding.ASCII.GetString(buffer, 187, 6);
         }
 
-        private string FixText(byte[] buffer, int start, int textLength, int languageId)
+        private static string FixText(byte[] buffer, int start, int textLength, int languageId)
         {
             string text;
 

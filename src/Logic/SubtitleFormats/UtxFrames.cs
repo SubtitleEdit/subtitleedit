@@ -89,13 +89,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             long frames = (long)(time.TotalMilliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
             return frames.ToString();
         }
 
-        private TimeCode DecodeTimeCode(string timePart)
+        private static TimeCode DecodeTimeCode(string timePart)
         {
             int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(timePart));
             return new TimeCode(milliseconds);

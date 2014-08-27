@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetText(string s)
+        private static string GetText(string s)
         {
             s = s.Replace("{N}", Environment.NewLine);
             var sb = new StringBuilder();
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private TimeCode DecodeTimeCode(string part)
+        private static TimeCode DecodeTimeCode(string part)
         {
             string[] parts = part.Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 

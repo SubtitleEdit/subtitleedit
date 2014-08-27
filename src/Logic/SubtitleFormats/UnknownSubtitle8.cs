@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             string[] parts = line.Split(':', '.');
             try

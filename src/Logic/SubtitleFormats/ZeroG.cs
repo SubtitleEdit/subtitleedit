@@ -82,13 +82,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //0:50:05.42
             return string.Format("{0:0}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10);
         }
 
-        private TimeCode DecodeTimeCode(string timePart)
+        private static TimeCode DecodeTimeCode(string timePart)
         {
             string[] parts = timePart.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int hours = int.Parse(parts[0]);

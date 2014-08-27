@@ -508,7 +508,7 @@ namespace Nikse.SubtitleEdit.Logic
             return bitmaps;
         }
 
-        private Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
+        private static Bitmap DrawSpectrogram(int nfft, double[] samples, Fourier f, Color[] palette)
         {
             const int overlap = 0;
             int numSamples = samples.Length;
@@ -593,7 +593,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// Maps magnitudes in the range [-rangedB .. 0] dB to palette index values in the range [0 .. rangeIndex-1]
         /// and computes and returns the index value which corresponds to passed-in magnitude
         /// </summary>
-        private int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
+        private static int MapToPixelIndex(double magnitude, double rangedB, int rangeIndex)
         {
             const double log10 = 2.30258509299405;
 
@@ -607,7 +607,7 @@ namespace Nikse.SubtitleEdit.Logic
             return (int)(rangeIndex * (levelIndB + rangedB) / rangedB);
         }
 
-        private List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
+        private static List<Color> SmoothColors(int fromR, int fromG, int fromB, int toR, int toG, int toB, int count)
         {
             while (toR < 255 && toG < 255 && toB < 255)
             {

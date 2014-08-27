@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
         }
 
-        private List<NOcrPoint> ReadPoints(Stream stream)
+        private static List<NOcrPoint> ReadPoints(Stream stream)
         {
             var list = new List<NOcrPoint>();
             int length = stream.ReadByte() << 8 | stream.ReadByte();
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             WritePoints(stream, LinesBackground);
         }
 
-        private void WritePoints(Stream stream, List<NOcrPoint> points)
+        private static void WritePoints(Stream stream, List<NOcrPoint> points)
         {
             WriteInt16(stream, (ushort)points.Count);
             foreach (var nOcrPoint in points)

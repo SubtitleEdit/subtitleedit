@@ -1448,7 +1448,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private bool IsParagrapHit(int milliseconds, Paragraph paragraph)
+        private static bool IsParagrapHit(int milliseconds, Paragraph paragraph)
         {
             if (paragraph == null)
                 return false;

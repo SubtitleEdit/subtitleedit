@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string AddSpaces(string text)
+        private static string AddSpaces(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return " ";
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string RemoveSpaces(string text)
+        private static string RemoveSpaces(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return AddSpaces(s);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             string hour = parts[0];
             string minutes = parts[1];

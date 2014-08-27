@@ -140,13 +140,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             int frames = MillisecondsToFrames(time.TotalMilliseconds) + 1;
             return frames.ToString();
         }
 
-        private TimeCode DecodeTimeCode(string timePart)
+        private static TimeCode DecodeTimeCode(string timePart)
         {
             int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(timePart));
             return new TimeCode(milliseconds);

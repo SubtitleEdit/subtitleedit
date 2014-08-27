@@ -65,7 +65,7 @@ namespace Test
         #region Subrip (.srt)
 
 
-        private List<string> GetSrtLines(string text)
+        private static List<string> GetSrtLines(string text)
         {
             var lines = new List<string>();
             string[] arr = text.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r');
@@ -164,7 +164,7 @@ Line 3";
         #region Advanced Sub Station alpha (.ass)
 
 
-        private List<string> GetAssLines(string lineOneText)
+        private static List<string> GetAssLines(string lineOneText)
         {
             var text =
 @"[Script Info]
@@ -331,7 +331,7 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
 
         #region Sub Station Alpha (.ssa)
 
-        private List<string> GetSsaLines(string lineOneText)
+        private static List<string> GetSsaLines(string lineOneText)
         {
             var text =
 @"[Script Info]

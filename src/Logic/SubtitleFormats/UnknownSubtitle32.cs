@@ -145,13 +145,13 @@ Sony,Sony DVD/UMD,1:85,16x9
             subtitle.Renumber(1);
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //00:03:15.22 (last is frame)
             return string.Format("{0:00}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timeCode)
         {
             string[] arr = timeCode.Split(":;,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));

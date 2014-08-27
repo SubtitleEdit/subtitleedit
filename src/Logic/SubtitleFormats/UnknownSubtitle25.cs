@@ -55,7 +55,7 @@ NOTE=
             return sb.ToString().Trim().Replace(Environment.NewLine, "\n");
         }
 
-        private string MakeTimeCode(TimeCode timeCode, Paragraph last)
+        private static string MakeTimeCode(TimeCode timeCode, Paragraph last)
         {
             double start = 0;
             if (last != null)

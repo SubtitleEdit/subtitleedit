@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Close();
         }
 
-        private void WriteTime(FileStream fs, TimeCode timeCode)
+        private static void WriteTime(FileStream fs, TimeCode timeCode)
         {
         }
 
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "Not supported!";
         }
 
-        private TimeCode DecodeTimeCode(byte[] buffer, int index)
+        private static TimeCode DecodeTimeCode(byte[] buffer, int index)
         {
             int hour = buffer[index];
             int minutes = buffer[index+1];

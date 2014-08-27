@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private bool IsText(string text)
+        private static bool IsText(string text)
         {
             if (text.Trim().Length == 0)
                 return false;
@@ -202,13 +202,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return true;
         }
 
-        private string RemoveBadChars(string line)
+        private static string RemoveBadChars(string line)
         {
             line = line.Replace("\0", " ");
             return line;
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Replace("،", ",");
             line = line.Replace("", ",");

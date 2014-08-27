@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //00:50:39:13 (last is frame)
             int frames = MillisecondsToFramesMaxFrameRate(time.Milliseconds);
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00:00:07:12
             string hour = parts[0];

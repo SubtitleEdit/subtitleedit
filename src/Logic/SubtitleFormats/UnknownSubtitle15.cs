@@ -30,13 +30,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        private string ToTimeCode(TimeCode tc)
+        private static string ToTimeCode(TimeCode tc)
         {
             int last = (int)(tc.Milliseconds / 10 + 0.5);
             return tc.ToString().Substring(0, 8) + ":" + string.Format("{0:0#}", last);
         }
 
-        private TimeCode DecodeTimeCode(string s)
+        private static TimeCode DecodeTimeCode(string s)
         {
             var parts = s.Split(";:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             TimeCode tc = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]) * 100);

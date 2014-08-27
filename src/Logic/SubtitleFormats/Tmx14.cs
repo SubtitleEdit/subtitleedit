@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(XmlNode node)
+        private static TimeCode DecodeTimeCode(XmlNode node)
         {
             var tc = new TimeCode(0, 0, 0, 0);
             if (node != null)

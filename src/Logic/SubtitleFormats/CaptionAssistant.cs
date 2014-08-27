@@ -29,12 +29,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        private string ToTimeCode(TimeCode time)
+        private static string ToTimeCode(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private TimeCode DecodeTimeCode(string s)
+        private static TimeCode DecodeTimeCode(string s)
         {
             var parts = s.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             string hour = parts[0];

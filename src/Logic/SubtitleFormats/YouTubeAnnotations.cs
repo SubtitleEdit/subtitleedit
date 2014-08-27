@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string time)
         {
             string[] arr = time.Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length == 3)
@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
         }
 
-        private string EncodeTime(TimeCode timeCode)
+        private static string EncodeTime(TimeCode timeCode)
         {
             //0:01:08.0
             return string.Format("{0}:{1:00}:{2:00}.{3}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);

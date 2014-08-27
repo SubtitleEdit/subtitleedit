@@ -4620,7 +4620,7 @@ namespace Nikse.SubtitleEdit.Forms
             return line;
         }
 
-        private string ReverseNumberStrings(string line)
+        private static string ReverseNumberStrings(string line)
         {
             Regex regex = new Regex(@"\b\d+\b");
             var matches = regex.Matches(line);
@@ -5666,7 +5666,7 @@ namespace Nikse.SubtitleEdit.Forms
             SaveNOcr(GetNOcrLanguageFileName());
         }
 
-        private Bitmap ResizeBitmap(Bitmap b, int width, int height)
+        private static Bitmap ResizeBitmap(Bitmap b, int width, int height)
         {
             var result = new Bitmap(width, height);
             using (Graphics g = Graphics.FromImage(result))
@@ -5779,7 +5779,7 @@ namespace Nikse.SubtitleEdit.Forms
             return result;
         }
 
-        private string ParseHocr(string html)
+        private static string ParseHocr(string html)
         {
             string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
 
@@ -6807,7 +6807,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixVerticalScrollBars(textBoxCurrentText);
         }
 
-        private void FixVerticalScrollBars(TextBox tb)
+        private static void FixVerticalScrollBars(TextBox tb)
         {
             var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine) + 1;
             if (lineCount > 5)
