@@ -58,7 +58,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!all.Contains("class=\"caption\""))
                 return;
 
-            Paragraph paragraph = new Paragraph();
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             for (int i = 0; i < lines.Count; i++)

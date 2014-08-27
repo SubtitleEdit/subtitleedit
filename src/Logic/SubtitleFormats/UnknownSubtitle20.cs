@@ -33,11 +33,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private static string MakeTimeCode(TimeCode tc)
-        {
-            return string.Format("{0:0.00}", tc.TotalSeconds);
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();

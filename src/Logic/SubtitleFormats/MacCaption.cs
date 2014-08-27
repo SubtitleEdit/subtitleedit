@@ -32,65 +32,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string FixMax4LinesAndMax32CharsPerLine(string text, string language)
-        {
-            var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            bool allOk = true;
-            foreach (string line in lines)
-            {
-                if (line.Length > 32)
-                    allOk = false;
-            }
-            if (lines.Length > 4)
-                allOk = false;
-
-            if (allOk)
-                return text;
-
-            text = Utilities.AutoBreakLine(text, 1, 32, 4, language);
-            lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            allOk = true;
-            foreach (string line in lines)
-            {
-                if (line.Length > 32)
-                    allOk = false;
-            }
-            if (lines.Length > 4)
-                allOk = false;
-
-            if (allOk)
-                return text;
-
-            text = AutoBreakLineMax4Lines(text, 32);
-            lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-            allOk = true;
-            foreach (string line in lines)
-            {
-                if (line.Length > 32)
-                    allOk = false;
-            }
-            if (lines.Length > 4)
-                allOk = false;
-
-            if (allOk)
-                return text;
-
-            var sb = new StringBuilder();
-            int count = 0;
-            foreach (string line in lines)
-            {
-                if (count < 4)
-                {
-                    if (line.Length > 32)
-                        sb.AppendLine(line.Substring(0, 32));
-                    else
-                        sb.AppendLine(line);
-                }
-                count++;
-            }
-            return sb.ToString().Trim();
-        }
-
         private static int GetLastIndexOfSpace(string s, int endCount)
         {
             int end = endCount;

@@ -841,21 +841,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private static void CompareNode(XmlNode node, string name, XmlDocument localLanguage, StringBuilder sb)
-        {
-            if (name.EndsWith("/#text"))
-                name = name.Substring(0, name.Length - 6);
-            if (localLanguage.SelectSingleNode(name) == null)
-            {
-                sb.AppendLine(name + " not found!");
-            }
-            else if (node.ChildNodes.Count > 0)
-            {
-                foreach (XmlNode childNode in node.ChildNodes)
-                    CompareNode(childNode, name + "/" + childNode.Name, localLanguage, sb);
-            }
-        }
-
         private void GoogleTranslate_Resize(object sender, EventArgs e)
         {
             int width = (this.Width / 2) - (subtitleListViewFrom.Left * 3) + 19;

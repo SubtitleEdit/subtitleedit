@@ -108,11 +108,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LinkLabel3LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            System.Diagnostics.Process.Start("http://nhunspell.sourceforge.net/");
-        }
-
         private void LinkLabel4LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             string dictionaryFolder = Utilities.DictionaryFolder;

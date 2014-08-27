@@ -129,12 +129,12 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private int ReadInt16(Stream stream)
-        {
-            byte b0 = (byte)stream.ReadByte();
-            byte b1 = (byte)stream.ReadByte();
-            return b0 << 8 | b1;
-        }
+        //private static int ReadInt16(Stream stream)
+        //{
+        //    byte b0 = (byte)stream.ReadByte();
+        //    byte b1 = (byte)stream.ReadByte();
+        //    return b0 << 8 | b1;
+        //}
 
         private static void WriteInt16(Stream stream, short val)
         {
@@ -142,11 +142,6 @@ namespace Nikse.SubtitleEdit.Logic
             buffer[0] = (byte)((val & 0xFF00) >> 8);
             buffer[1] = (byte)(val & 0x00FF);
             stream.Write(buffer, 0, buffer.Length);
-        }
-
-        private Color ReadColor(Stream stream)
-        {
-            return Color.FromArgb((byte)stream.ReadByte(), (byte)stream.ReadByte(), (byte)stream.ReadByte(), (byte)stream.ReadByte());
         }
 
         private static void WriteColor(Stream stream, Color c)
@@ -210,24 +205,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             return nbmp.GetBitmap();
-        }
-
-
-        internal void DrawImage(ManagedBitmap bmp, Point point)
-        {
-            for (int y = 0; y < bmp.Height; y++)
-            {
-                int newY = point.Y + y;
-                if (newY >= 0 && newY < Height)
-                {
-                    for (int x = 0; x < bmp.Width; x++)
-                    {
-                        int newX = point.X + x;
-                        if (newX >= 0 && newX < Width)
-                            this.SetPixel(newX, newY, bmp.GetPixel(x, y));
-                    }
-                }
-            }
         }
 
     }

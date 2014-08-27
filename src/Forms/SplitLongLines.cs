@@ -305,48 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
             return splittedSubtitle;
         }
 
-        private static string GetEndTag(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-            text = text.Trim();
-            if (!text.EndsWith(">"))
-                return string.Empty;
-
-            string endTag = string.Empty;
-            int start = text.LastIndexOf("</");
-            if (start > 0 && start >= text.Length - 8)
-            {
-                endTag = text.Substring(start);
-            }
-            return endTag;
-        }
-
-        private static string GetStartTag(string text)
-        {
-            if (string.IsNullOrEmpty(text))
-                return string.Empty;
-            text = text.Trim();
-            if (!text.StartsWith("<"))
-                return string.Empty;
-
-            string startTag = string.Empty;
-            int end = text.IndexOf(">");
-            if (end > 0 && end < 25)
-            {
-                startTag = text.Substring(0, end + 1);
-            }
-            return startTag;
-        }
-
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            GeneratePreview(true);
-            Cursor = Cursors.Default;
-        }
-
-        private void NumericUpDownMaxMillisecondsBetweenLinesValueChanged(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
             GeneratePreview(true);

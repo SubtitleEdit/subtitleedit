@@ -1706,32 +1706,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void TextBoxAjustSecondsKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.D0 ||
-                e.KeyCode == Keys.D1 ||
-                e.KeyCode == Keys.D2 ||
-                e.KeyCode == Keys.D3 ||
-                e.KeyCode == Keys.D4 ||
-                e.KeyCode == Keys.D5 ||
-                e.KeyCode == Keys.D6 ||
-                e.KeyCode == Keys.D7 ||
-                e.KeyCode == Keys.D8 ||
-                e.KeyCode == Keys.D9 ||
-                e.KeyCode == Keys.Delete ||
-                e.KeyCode == Keys.Left ||
-                e.KeyCode == Keys.Right ||
-                e.KeyCode == Keys.Back ||
-                (e.KeyValue >= 96 && e.KeyValue <= 105))
-            {
-            }
-            else
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-            }
-        }
-
         private void ComboBoxWordListLanguageSelectedIndexChanged(object sender, EventArgs e)
         {
             buttonRemoveNameEtc.Enabled = false;

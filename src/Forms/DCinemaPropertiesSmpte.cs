@@ -106,12 +106,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void DCinemaProperties_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Escape)
-                DialogResult = DialogResult.Cancel;
-        }
-
         private void buttonFontColor_Click(object sender, EventArgs e)
         {
             colorDialog1.Color = panelFontColor.BackColor;

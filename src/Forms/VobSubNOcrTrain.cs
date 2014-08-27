@@ -223,8 +223,6 @@ namespace Nikse.SubtitleEdit.Forms
             float leftMargin = left;
             int newLinePathPoint = -1;
             Color c = _subtitleColor;
-            var colorStack = new Stack<Color>();
-            var lastText = new StringBuilder();
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith(Environment.NewLine))

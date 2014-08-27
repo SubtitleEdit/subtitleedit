@@ -302,13 +302,6 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
         }
 
-        private void checkBoxOnlyContinuationLines_CheckedChanged(object sender, EventArgs e)
-        {
-            Cursor = Cursors.WaitCursor;
-            GeneratePreview();
-            Cursor = Cursors.Default;
-        }
-
         private void MergeDoubleLines_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

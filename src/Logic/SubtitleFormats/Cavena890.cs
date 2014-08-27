@@ -769,7 +769,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else if (languageId == LanguageIdChinese) //  (_language == "CCKM44" || _language == "TVB000")
             {
-                var sb = new StringBuilder();
                 int index = start;
 
                 while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength-1] == 0))

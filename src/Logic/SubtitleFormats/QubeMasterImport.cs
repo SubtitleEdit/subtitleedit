@@ -52,7 +52,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index != 0) sb.AppendLine();
                 index++;
 
-                StringBuilder text = new StringBuilder();
                 sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));

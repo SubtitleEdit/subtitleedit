@@ -31,15 +31,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        private string IsNtsc()
-        {
-            if (FrameRate >= 29.976 && FrameRate <= 30.0)
-                return "TRUE";
-            if (FrameRate < 29.976)
-                return "FALSE";
-            return "TRUE";
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             if (Configuration.Settings.General.CurrentFrameRate > 26)

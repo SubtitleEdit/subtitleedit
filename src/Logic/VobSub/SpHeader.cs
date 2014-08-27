@@ -8,8 +8,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         public string Identifier { get; private set; }
         public TimeSpan StartTime { get; private set; }
-        public int Unknown1 { get; private set; }
-        public int Unknown2 { get; private set; }
         public int NextBlockPosition { get; private set; }
         public int ControlSequencePosition { get; private set; }
         public SubPicture Picture { get; private set; }

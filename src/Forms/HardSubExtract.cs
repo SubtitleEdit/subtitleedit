@@ -98,10 +98,6 @@ namespace Nikse.SubtitleEdit.Forms
         //    return bmp;
         //}
 
-        private void pictureBoxBackground_Click(object sender, EventArgs e)
-        {
-        }
-
         private void pictureBox2_MouseClick(object sender, MouseEventArgs e)
         {
             if (pictureBox2.Image != null)
@@ -203,8 +199,8 @@ namespace Nikse.SubtitleEdit.Forms
             //StartStop.Enabled = true;
         }
 
-        private void timer1_Tick(object sender, System.EventArgs e)
-        {
+       //private void timer1_Tick(object sender, System.EventArgs e)
+       //{
             //if (cam != null)
             //{
             //    tbFrameNum.Text = cam.count.ToString();
@@ -217,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
             //            old.Dispose();
             //    }
             //}
-        }
+       //}
 
         private void pictureBoxCustomColor_Click(object sender, EventArgs e)
         {
