@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic
         //public static readonly int ckidAVIOldIndex = RiffParser.ToFourCC("idx1");
         public static readonly int ckidINFOList = RiffParser.ToFourCC("INFO");
         public static readonly int ckidAVIISFT = RiffParser.ToFourCC("ISFT");
-        public static readonly int ckidMP3 = 0x0055;
+        public const int ckidMP3 = 0x0055;
         public static readonly int ckidWaveFMT = RiffParser.ToFourCC("fmt ");
 
         #endregion

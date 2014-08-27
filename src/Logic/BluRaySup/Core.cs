@@ -33,19 +33,19 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         private const int MergePtSdiff = 18000;
 
         /** Frames per seconds for 24p (23.976) */
-        public static double Fps24P = 24000.0 / 1001;
+        public const double Fps24P = 24000.0 / 1001;
         /** Frames per seconds for wrong 24P (23.975) */
-        public static double Fps23975 = 23.975;
+        public const double Fps23975 = 23.975;
         /** Frames per seconds for 24Hz (24.0) */
-        public static double Fps24Hz = 24.0;
+        public const double Fps24Hz = 24.0;
         /** Frames per seconds for PAL progressive (25.0) */
-        public static double FpsPal = 25.0;
+        public const double FpsPal = 25.0;
         /** Frames per seconds for NTSC progressive (29.97) */
-        public static double FpsNtsc = 30000.0 / 1001;
+        public const double FpsNtsc = 30000.0 / 1001;
         /** Frames per seconds for PAL interlaced (50.0) */
-        public static double FpsPalI = 50.0;
+        public const double FpsPalI = 50.0;
         /** Frames per seconds for NTSC interlaced (59.94) */
-        public static double FpsNtscI = 60000.0 / 1001;
+        public const double FpsNtscI = 60000.0 / 1001;
 
         /**
          * Get maximum time difference for merging captions.
