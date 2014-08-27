@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -10,22 +7,21 @@ namespace Nikse.SubtitleEdit.Logic
     {
 
         #region Hunspell
-        [DllImport("libhunspell")]
+        [DllImport("libhunspell", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern IntPtr Hunspell_create(string affpath, string dpath);
 
         [DllImport("libhunspell")]
         internal static extern IntPtr Hunspell_destroy(IntPtr hunspellHandle);
 
-        [DllImport("libhunspell")]
+        [DllImport("libhunspell", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern int Hunspell_spell(IntPtr hunspellHandle, string word);
 
-        [DllImport("libhunspell")]
+        [DllImport("libhunspell", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern int Hunspell_suggest(IntPtr hunspellHandle, IntPtr slst, string word);
 
         [DllImport("libhunspell")]
         internal static extern void Hunspell_free_list(IntPtr hunspellHandle, IntPtr slst, int n);
         #endregion
-
 
         #region structures
 
@@ -150,10 +146,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         #region Win32 API
         // Win32 API functions for loading dlls dynamic
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern IntPtr LoadLibrary(string dllToLoad);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping=false)]
         internal static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
 
         [DllImport("kernel32.dll")]
@@ -175,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
         #endregion
 
-
+        #region VLC
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
         [DllImport("libvlc")]
         internal static extern IntPtr libvlc_new(int argc, [MarshalAs(UnmanagedType.LPArray)] string[] argv);
@@ -257,6 +253,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("libvlc")]
         internal static extern int libvlc_media_player_set_rate(IntPtr mediaPlayer, float rate);
+        #endregion
 
     }
 
