@@ -414,10 +414,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 if (pes.ObjectDataList.Count > 0)
                 {
                     var sub = new TransportStreamSubtitle();
-                    sub.StartMilliseconds = (ulong)(seconds * 1000);
+                    sub.StartMilliseconds = (ulong)seconds * 1000UL;
                     seconds += pes.PageCompositions[0].PageTimeOut;
                     if (pes.PageCompositions.Count > 0)
-                        sub.EndMilliseconds = sub.StartMilliseconds + (ulong)(pes.PageCompositions[0].PageTimeOut * 1000);
+                        sub.EndMilliseconds = sub.StartMilliseconds + (ulong)pes.PageCompositions[0].PageTimeOut * 1000UL;
                     else
                         sub.EndMilliseconds = sub.StartMilliseconds + 2500;
                     sub.Pes = pes;
