@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             CurrentPosition = 0;
             Pause();
-            _mplayer.StandardInput.WriteLine(string.Format("pausing_keep_force seek 0 2", 0));
+            _mplayer.StandardInput.WriteLine("pausing_keep_force seek 0 2");
             _pauseCounts = 0;
             _paused = true;
             _lastLengthInSeconds = _lengthInSeconds;

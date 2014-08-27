@@ -24,18 +24,15 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
 
         public void Save()
         {
-            using (Stream fs = File.OpenWrite(FileName))
+            using (Stream gz = new GZipStream(File.OpenWrite(FileName), CompressionMode.Compress))
             {
-                using (Stream gz = new GZipStream(fs, CompressionMode.Compress))
+                foreach (var bob in CompareImages)
+                    bob.Save(gz);
+                foreach (var bob in CompareImagesExpanded)
                 {
-                    foreach (var bob in CompareImages)
-                        bob.Save(gz);
-                    foreach (var bob in CompareImagesExpanded)
-                    {
-                        bob.Save(gz);
-                        foreach (var expandedBob in bob.ExpandedList)
-                            expandedBob.Save(gz);
-                    }
+                    bob.Save(gz);
+                    foreach (var expandedBob in bob.ExpandedList)
+                        expandedBob.Save(gz);
                 }
             }
         }
@@ -51,38 +48,35 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
                 return;
             }
 
-            using (Stream fs = File.OpenRead(FileName))
+            using (Stream gz = new GZipStream(File.OpenRead(FileName), CompressionMode.Decompress))
             {
-                using (Stream gz = new GZipStream(fs, CompressionMode.Decompress))
+                bool done = false;
+                while (!done)
                 {
-                    bool done = false;
-                    while (!done)
+                    var bob = new BinaryOcrBitmap(gz);
+                    if (bob.LoadedOk)
                     {
-                        var bob = new BinaryOcrBitmap(gz);
-                        if (bob.LoadedOk)
+                        if (bob.ExpandCount > 0)
                         {
-                            if (bob.ExpandCount > 0)
+                            expandList.Add(bob);
+                            bob.ExpandedList = new List<BinaryOcrBitmap>();
+                            for (int i = 1; i < bob.ExpandCount; i++)
                             {
-                                expandList.Add(bob);
-                                bob.ExpandedList = new List<BinaryOcrBitmap>();
-                                for (int i = 1; i < bob.ExpandCount; i++)
-                                {
-                                    var expandedBob = new BinaryOcrBitmap(gz);
-                                    if (expandedBob.LoadedOk)
-                                        bob.ExpandedList.Add(expandedBob);
-                                    else
-                                        break;
-                                }
-                            }
-                            else
-                            {
-                                list.Add(bob);
+                                var expandedBob = new BinaryOcrBitmap(gz);
+                                if (expandedBob.LoadedOk)
+                                    bob.ExpandedList.Add(expandedBob);
+                                else
+                                    break;
                             }
                         }
                         else
                         {
-                            done = true;
+                            list.Add(bob);
                         }
+                    }
+                    else
+                    {
+                        done = true;
                     }
                 }
             }

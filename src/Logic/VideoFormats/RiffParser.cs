@@ -10,8 +10,10 @@ namespace Nikse.SubtitleEdit.Logic
 {
     #region RiffParserException
 
+    [Serializable]
     public class RiffParserException : ApplicationException
     {
+
         public RiffParserException()
             : base()
         {
