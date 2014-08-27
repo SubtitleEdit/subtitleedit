@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
                    numericUpDownFadeDown.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)
                     numericUpDownFadeDown.Value = Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime;
                 else
-                    numericUpDownFadeUp.Value = 5;
+                    numericUpDownFadeDown.Value = 5;
 
                 decimal zPosition = (decimal)Configuration.Settings.SubtitleSettings.DCinemaZPosition;
                 if (numericUpDownZPosition.Minimum <= zPosition &&
