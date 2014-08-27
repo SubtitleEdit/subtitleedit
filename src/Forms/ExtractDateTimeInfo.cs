@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string DecodeFormat(DateTime dateTime, string format)
+        private static string DecodeFormat(DateTime dateTime, string format)
         {
             try
             {

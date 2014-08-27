@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return ToUtf8XmlString(xml);
         }
 
-        private TimeCode DecodeTimeCode(string code)
+        private static TimeCode DecodeTimeCode(string code)
         {
             string[] parts = code.Split(":.,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 

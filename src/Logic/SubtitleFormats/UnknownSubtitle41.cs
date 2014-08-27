@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             Configuration.Settings.General.CurrentFrameRate = 24.0;
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0}.{1:0}", footage, rest);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             Configuration.Settings.General.CurrentFrameRate = 24.0;
             string frames16 = parts[0];

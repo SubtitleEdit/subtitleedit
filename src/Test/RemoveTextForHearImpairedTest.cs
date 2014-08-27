@@ -31,7 +31,7 @@ namespace Test
             }
         }
 
-        private Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI GetRemoveTextForHiLib()
+        private static Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI GetRemoveTextForHiLib()
         {
             var hiSettings = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHISettings();
             return new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI(hiSettings);

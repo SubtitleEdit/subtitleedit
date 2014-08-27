@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Forms
             VerifyDragEnter(e);
         }
 
-        private void VerifyDragEnter(DragEventArgs e)
+        private static void VerifyDragEnter(DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;

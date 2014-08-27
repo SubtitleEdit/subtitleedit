@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return ToUtf8XmlString(xml);
         }
 
-        private string ToTimeCode(double totalMilliseconds)
+        private static string ToTimeCode(double totalMilliseconds)
         {
             return string.Format("{0:0##}", totalMilliseconds / 1000.0);
         }
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Header = xmlString;
         }
 
-        private double ParseTimeCode(string s)
+        private static double ParseTimeCode(string s)
         {
             return Convert.ToDouble(s) * 1000.0;
         }

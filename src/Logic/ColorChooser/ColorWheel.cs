@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
         }
 
-        private int CalcDegrees(Point pt)
+        private static int CalcDegrees(Point pt)
         {
             int degrees;
 
@@ -512,7 +512,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
         }
 
-        private Color[] GetColors()
+        private static Color[] GetColors()
         {
             // Create an array of COLOR_COUNT
             // colors, looping through all the
@@ -528,7 +528,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             return Colors;
         }
 
-        private Point[] GetPoints(double radius, Point centerPoint)
+        private static Point[] GetPoints(double radius, Point centerPoint)
         {
             // Generate the array of points that describe
             // the locations of the COLOR_COUNT colors to be
@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             return Points;
         }
 
-        private Point GetPoint(double degrees, double radius, Point centerPoint)
+        private static Point GetPoint(double degrees, double radius, Point centerPoint)
         {
             // Given the center of a circle and its radius, along
             // with the angle corresponding to the point, find the coordinates.

@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         bool _updatingAllPlugins = false;
         int _updatingAllPluginsCount = 0;
 
-        private string GetPluginXmlFileUrl()
+        private static string GetPluginXmlFileUrl()
         {
             if (Environment.Version.Major < 4)
                 return "https://raw.github.com/SubtitleEdit/plugins/master/Plugins2.xml"; // .net 2-3.5

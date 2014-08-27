@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetTextAfterTimeCodes(string s)
+        private static string GetTextAfterTimeCodes(string s)
         {
             while (_timeCode.IsMatch(s))
                 s = s.Remove(0, 10).Trim();

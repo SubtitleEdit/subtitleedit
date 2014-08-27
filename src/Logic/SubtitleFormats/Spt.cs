@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Close();
         }
 
-        private void WriteParagraph(FileStream fs, Paragraph p, int number)
+        private static void WriteParagraph(FileStream fs, Paragraph p, int number)
         {
             WriteTimeCode(fs, p.StartTime);
             WriteTimeCode(fs, p.EndTime);
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private void WriteTimeCode(FileStream fs, TimeCode timeCode)
+        private static void WriteTimeCode(FileStream fs, TimeCode timeCode)
         {
             // write 8 bytes time code
         }
@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private TimeCode GetTimeCode(string timeCode)
+        private static TimeCode GetTimeCode(string timeCode)
         {
             int hour = int.Parse(timeCode.Substring(0, 2));
             int minute = int.Parse(timeCode.Substring(2, 2));

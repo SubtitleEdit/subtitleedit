@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        string GetRelativePath(string fileName)
+        static string GetRelativePath(string fileName)
         {
             string folder = Configuration.BaseDirectory;
 
@@ -850,7 +850,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
 
-        private string GetShortcutText(string shortcut)
+        private static string GetShortcutText(string shortcut)
         {
             if (string.IsNullOrEmpty(shortcut))
                 shortcut = Configuration.Settings.Language.General.None;
@@ -2575,7 +2575,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string GetShortcut(string text)
+        private static string GetShortcut(string text)
         {
             string shortcut = text.Substring(text.IndexOf("["));
             shortcut = shortcut.TrimEnd(']').TrimStart('[');

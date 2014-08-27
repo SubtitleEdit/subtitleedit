@@ -29,12 +29,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        private string ToTimeCode(TimeCode time)
+        private static string ToTimeCode(TimeCode time)
         {
             return string.Format("{0:0.0}", time.TotalSeconds);
         }
 
-        private TimeCode DecodeTimeCode(string s)
+        private static TimeCode DecodeTimeCode(string s)
         {
             return TimeCode.FromSeconds(double.Parse(s));
         }

@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string EncodeTimeCode(TimeCode timeCode)
+        private static string EncodeTimeCode(TimeCode timeCode)
         {
             int seconds = (int)(timeCode.Seconds + timeCode.Milliseconds / 1000 + 0.5);
             return string.Format("{0:00}:{1:00}:{2:00}", timeCode.Hours, timeCode.Minutes, seconds);

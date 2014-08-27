@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic
             return b0 << 8 | b1;
         }
 
-        private void WriteInt16(Stream stream, short val)
+        private static void WriteInt16(Stream stream, short val)
         {
             byte[] buffer = new byte[2];
             buffer[0] = (byte)((val & 0xFF00) >> 8);
@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic
             return Color.FromArgb((byte)stream.ReadByte(), (byte)stream.ReadByte(), (byte)stream.ReadByte(), (byte)stream.ReadByte());
         }
 
-        private void WriteColor(Stream stream, Color c)
+        private static void WriteColor(Stream stream, Color c)
         {
             byte[] buffer = new byte[4];
             buffer[0] = (byte)c.A;

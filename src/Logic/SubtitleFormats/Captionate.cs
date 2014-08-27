@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return ToUtf8XmlString(xml, true);
         }
 
-        private void AddParagraph(XmlDocument xml, Paragraph p)
+        private static void AddParagraph(XmlDocument xml, Paragraph p)
         {
             XmlNode paragraph = xml.CreateElement("caption");
 
@@ -160,14 +160,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private double DecodeTimeToMilliseconds(string time)
+        private static double DecodeTimeToMilliseconds(string time)
         {
             string[] parts = time.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), (int)(int.Parse(parts[3]) * 10.0));
             return ts.TotalMilliseconds;
         }
 
-        private string EncodeTime(TimeCode time)
+        private static string EncodeTime(TimeCode time)
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10.0);
         }

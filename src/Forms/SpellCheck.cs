@@ -878,7 +878,7 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        private string ReplaceHtmlTagsWithBlanks(string s)
+        private static string ReplaceHtmlTagsWithBlanks(string s)
         {
             int start = s.IndexOf("<");
             while (start >= 0)

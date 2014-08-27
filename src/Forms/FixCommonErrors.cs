@@ -2183,7 +2183,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.AddPeriods, string.Format(_language.XPeriodsAdded, missigPeriodsAtEndOfLine));
         }
 
-        private bool IsOneLineUrl(string s)
+        private static bool IsOneLineUrl(string s)
         {
             if (s.Contains(" ") || s.Contains(Environment.NewLine))
                 return false;
@@ -3438,7 +3438,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
 
-        private string FixMissingOpenBracket(string text, string openB)
+        private static string FixMissingOpenBracket(string text, string openB)
         {
             string pre = string.Empty;
             string closeB = openB == "(" ? ")" : "]";
@@ -4602,7 +4602,7 @@ namespace Nikse.SubtitleEdit.Forms
             System.Diagnostics.Process.Start(htmlFileName);
         }
 
-        private string[] MakeDiffHtml(string before, string after)
+        private static string[] MakeDiffHtml(string before, string after)
         {
 
             before = before.Replace("<br />", "↲");

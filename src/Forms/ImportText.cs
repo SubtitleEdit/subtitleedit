@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SplitSingle(sb);
         }
 
-        private bool CanMakeThreeLiner(out string text, string input)
+        private static bool CanMakeThreeLiner(out string text, string input)
         {
             text = string.Empty;
             if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
@@ -548,7 +548,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool ContainsLetters(string line)
+        private static bool ContainsLetters(string line)
         {
             if (line.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).Replace("6", string.Empty)
                 .Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(":", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).

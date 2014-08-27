@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timeCode)
         {
             string[] arr = timeCode.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             int hours = int.Parse(arr[0]);

@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private int GetLastIndexOfSpace(string s, int endCount)
+        private static int GetLastIndexOfSpace(string s, int endCount)
         {
             int end = endCount;
             if (end >= s.Length)
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return -1;
         }
 
-        private string AutoBreakLineMax4Lines(string text, int maxLength)
+        private static string AutoBreakLineMax4Lines(string text, int maxLength)
         {
             string s = text.Replace(Environment.NewLine, " ");
             s = s.Replace("  ", " ");
@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string ToTimeCode(double totalMilliseconds)
+        private static string ToTimeCode(double totalMilliseconds)
         {
             TimeSpan ts = TimeSpan.FromMilliseconds(totalMilliseconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", ts.Hours, ts.Minutes, ts.Seconds, MillisecondsToFramesMaxFrameRate(ts.Milliseconds));
@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return list;
         }
 
-        private TimeCode ParseTimeCode(string start)
+        private static TimeCode ParseTimeCode(string start)
         {
             string[] arr = start.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 

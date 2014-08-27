@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private void CleanUp(Subtitle subtitle)
+        private static void CleanUp(Subtitle subtitle)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -656,7 +656,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private TimeCode DecodeTime(string[] parts)
+        private static TimeCode DecodeTime(string[] parts)
         {
             try
             {

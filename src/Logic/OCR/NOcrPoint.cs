@@ -22,12 +22,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             End = new Point(end.X, end.Y);
         }
 
-        public PointF PointPixelsToPercent(Point p, int pixelWidth, int pixelHeight)
+        public static PointF PointPixelsToPercent(Point p, int pixelWidth, int pixelHeight)
         {
             return new PointF((float)(p.X * 100.0 / pixelWidth), (float)(p.Y * 100.0 / pixelHeight));
         }
 
-        public Point PointPercentToPixels(PointF p, int pixelWidth, int pixelHeight)
+        public static Point PointPercentToPixels(PointF p, int pixelWidth, int pixelHeight)
         {
             return new Point((int)Math.Round(p.X / 100.0 * pixelWidth), (int)Math.Round(p.Y / 100.0 * pixelHeight));
         }

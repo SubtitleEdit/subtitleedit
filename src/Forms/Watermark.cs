@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonCurrentLine.Enabled = false;
         }
 
-        private string ReadWaterMark(string input)
+        private static string ReadWaterMark(string input)
         {
             if (input.IndexOf(zeroWhiteSpace) == -1)
                 return string.Empty;
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveWaterMark(subtitle);
         }
 
-        private void RemoveWaterMark(Subtitle subtitle)
+        private static void RemoveWaterMark(Subtitle subtitle)
         {
             foreach (Paragraph p in subtitle.Paragraphs)
                 p.Text = p.Text.Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);

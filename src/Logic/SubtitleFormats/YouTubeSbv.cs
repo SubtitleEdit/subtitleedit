@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string FormatTime(TimeCode timeCode)
+        private static string FormatTime(TimeCode timeCode)
         {
             return string.Format("{0}:{1:00}:{2:00}.{3:000}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, timeCode.Milliseconds);
         }
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private bool IsText(string text)
+        private static bool IsText(string text)
         {
             if (text.Trim().Length == 0)
                 return false;
@@ -148,14 +148,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return true;
         }
 
-        private string RemoveBadChars(string line)
+        private static string RemoveBadChars(string line)
         {
             line = line.Replace("\0", " ");
 
             return line;
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Replace(".", ":");
             line = line.Replace("،", ",");

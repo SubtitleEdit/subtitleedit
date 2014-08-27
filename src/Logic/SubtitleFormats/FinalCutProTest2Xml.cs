@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > 0;
         }
 
-        public string GetFrameRateAsString()
+        public static string GetFrameRateAsString()
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
                 return "24"; // ntsc 23.976
@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "60";
         }
 
-        public string GetNtsc()
+        public static string GetNtsc()
         {
             if (Configuration.Settings.General.CurrentFrameRate < 24)
                 return "TRUE"; // ntsc 23.976

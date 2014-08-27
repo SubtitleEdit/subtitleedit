@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             return index;
         }
 
-        private int CalculateSize(byte[] buffer, int index, ref int dataType, int start, ref int x, ref int y, int length, ref int runLength, ref int width)
+        private static int CalculateSize(byte[] buffer, int index, ref int dataType, int start, ref int x, ref int y, int length, ref int runLength, ref int width)
         {
             int pixelCode;
             if (dataType == PixelDecoding2Bit)

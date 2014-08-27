@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             int frames = MillisecondsToFrames(time.TotalMilliseconds);
             int footage = frames / 16;
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0:00},{1:00}", footage, rest).PadLeft(8);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             string frames16 = parts[0];
             string frames = parts[1];

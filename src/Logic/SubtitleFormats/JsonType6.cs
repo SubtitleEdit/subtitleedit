@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim().TrimEnd(',') + "],\"paragraphs\":[],\"speakers\":{}}";
         }
 
-        private List<string> GenerateTimes(string[] words, string text, TimeCode start, TimeCode end)
+        private static List<string> GenerateTimes(string[] words, string text, TimeCode start, TimeCode end)
         {
             var list = new List<string>();
 

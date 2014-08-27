@@ -61,7 +61,7 @@ ST 0 EB 3.10
             return rtf;
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             return string.Format("{0:00000}.{1:00}", time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
@@ -136,7 +136,7 @@ ST 0 EB 3.10
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             //00119.12
             string seconds = parts[0];

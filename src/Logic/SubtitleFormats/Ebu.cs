@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return buffer;
             }
 
-            private string GetNearestEbuColorCode(string color, Encoding encoding)
+            private static string GetNearestEbuColorCode(string color, Encoding encoding)
             {
                 color = color.ToLower();
                 if (color == "black" || color == "000000")
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return string.Empty;
             }
 
-            private string ReplaceSpecialCharactersWithTwoByteEncoding(string text, string specialCharacter, string originalCharacters, string newCharacters)
+            private static string ReplaceSpecialCharactersWithTwoByteEncoding(string text, string specialCharacter, string originalCharacters, string newCharacters)
             {
                 if (originalCharacters.Length != newCharacters.Length)
                     throw new ArgumentException("originalCharacters and newCharacters must have equal length");
@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// <param name="buffer">data buffer</param>
         /// <param name="index">index to current byte in buffer</param>
         /// <returns>Character at index</returns>
-        private string GetCharacter(out bool skipNext, EbuGeneralSubtitleInformation header, byte[] buffer, int index)
+        private static string GetCharacter(out bool skipNext, EbuGeneralSubtitleInformation header, byte[] buffer, int index)
         {
             skipNext = false;
             if (header.CharacterCodeTableNumber == "00")

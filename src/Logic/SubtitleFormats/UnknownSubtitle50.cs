@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string FormatTime(TimeCode timeCode)
+        private static string FormatTime(TimeCode timeCode)
         {
             return string.Format("{0:00}.{1:00}.{2:00}.{3:00}", timeCode.Hours, timeCode.Minutes, timeCode.Seconds, MillisecondsToFramesMaxFrameRate(timeCode.Milliseconds));
         }
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             string[] parts = line.Replace("-", ".").Split('.');
             try

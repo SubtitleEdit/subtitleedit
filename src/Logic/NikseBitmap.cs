@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Logic
             return twoParts;
         }
 
-        private void WriteRLE(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
+        private static void WriteRLE(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
         {
             if (count <= Nikse.SubtitleEdit.Logic.VobSub.Helper.B00000011) // 1-3 repetitions
             {
@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private void WriteFourNibbles(byte[] buffer, int count, int color, ref int index, bool indexHalfNibble)
+        private static void WriteFourNibbles(byte[] buffer, int count, int color, ref int index, bool indexHalfNibble)
         {
             int n = (count << 2) + color;
             if (indexHalfNibble)
@@ -469,7 +469,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private void WriteThreeNibbles(byte[] buffer, int count, int color, ref int index, ref bool indexHalfNibble)
+        private static void WriteThreeNibbles(byte[] buffer, int count, int color, ref int index, ref bool indexHalfNibble)
         {
             //Value     Bits   n=length, c=color
             //16-63     12     0 0 0 0 n n n n n n c c           (one and a half byte)
@@ -490,7 +490,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        private void WriteTwoNibbles(byte[] buffer, int count, int color, ref int index, bool indexHalfNibble)
+        private static void WriteTwoNibbles(byte[] buffer, int count, int color, ref int index, bool indexHalfNibble)
         {
             //Value      Bits   n=length, c=color
             //4-15       8      0 0 n n n n c c                   (one byte)
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private void WriteOneNibble(byte[] buffer, int count, int color, ref int index, ref bool indexHalfNibble)
+        private static void WriteOneNibble(byte[] buffer, int count, int color, ref int index, ref bool indexHalfNibble)
         {
             byte n = (byte)((count << 2) + color);
             if (indexHalfNibble)
@@ -1019,7 +1019,7 @@ namespace Nikse.SubtitleEdit.Logic
             return brightest;
         }
 
-        private bool IsColorClose(Color color1, Color color2, int maxDiff)
+        private static bool IsColorClose(Color color1, Color color2, int maxDiff)
         {
             if (Math.Abs(color1.R - color2.R) < maxDiff && Math.Abs(color1.G - color2.G) < maxDiff && Math.Abs(color1.B - color2.B) < maxDiff)
                 return true;

@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Close();
         }
 
-        private void WriteTime(FileStream fs, TimeCode timeCode)
+        private static void WriteTime(FileStream fs, TimeCode timeCode)
         {
             fs.WriteByte((byte)timeCode.Hours);
             fs.WriteByte((byte)timeCode.Minutes);
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "Not supported!";
         }
 
-        private TimeCode DecodeTimeStamp(byte[] buffer, int index)
+        private static TimeCode DecodeTimeStamp(byte[] buffer, int index)
         {
             return new TimeCode(buffer[index], buffer[index + 1], buffer[index + 2], FramesToMillisecondsMax999(buffer[index + 3]));
         }

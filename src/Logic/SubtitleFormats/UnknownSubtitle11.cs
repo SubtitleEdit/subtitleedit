@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return trimmedLines.Count > errors;
         }
 
-        private string RemoveIllegalSpacesAndFixEmptyCodes(string line)
+        private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
             int index = line.IndexOf("}");
             if (index >= 0 && index < line.Length)
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return line;
         }
 
-        private string MakeTimeCode(TimeCode tc)
+        private static string MakeTimeCode(TimeCode tc)
         {
             return string.Format("{0}:{1:00}:{2:00}", tc.Hours, tc.Minutes, tc.Seconds);
         }
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timeCode)
         {
             string[] arr = timeCode.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);

@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return trimmedLines.Count > errors;
         }
 
-        private string RemoveIllegalSpacesAndFixEmptyCodes(string line)
+        private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
             int index = line.IndexOf("}");
             if (index >= 0 && index < line.Length)

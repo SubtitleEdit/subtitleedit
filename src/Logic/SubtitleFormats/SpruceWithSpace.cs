@@ -67,7 +67,7 @@ $TapeOffset         =   FALSE
             return sb.ToString();
         }
 
-        private string EncodeText(string text)
+        private static string EncodeText(string text)
         {
             text = text.Replace("<b>", "^B");
             text = text.Replace("</b>", string.Empty);
@@ -78,7 +78,7 @@ $TapeOffset         =   FALSE
             return text.Replace(Environment.NewLine, "|");
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
@@ -115,7 +115,7 @@ $TapeOffset         =   FALSE
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string time)
         {
             //00:01:54:19
 
@@ -128,7 +128,7 @@ $TapeOffset         =   FALSE
             return tc;
         }
 
-        private string DecodeText(string text)
+        private static string DecodeText(string text)
         { //TODO: improve end tags
             text = text.Replace("|", Environment.NewLine);
             if (text.Contains("^B"))

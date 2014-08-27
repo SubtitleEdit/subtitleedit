@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Forms
             return mergedSubtitle;
         }
 
-        private bool QualifiesForMerge(Paragraph p, Paragraph next, int maxMsBetween)
+        private static bool QualifiesForMerge(Paragraph p, Paragraph next, int maxMsBetween)
         {
             if (p == null || next == null)
                 return false;

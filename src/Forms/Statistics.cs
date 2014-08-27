@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
+        private static void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
         {
             lastLine = lastLine.Trim('\'');
             lastLine = lastLine.Replace("\"", "");
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void MostUsedLinesAdd(Dictionary<string, string> hashtable, string lastLine)
+        private static void MostUsedLinesAdd(Dictionary<string, string> hashtable, string lastLine)
         {
             lastLine = lastLine.Trim('\'');
             lastLine = lastLine.Replace("\"", "");

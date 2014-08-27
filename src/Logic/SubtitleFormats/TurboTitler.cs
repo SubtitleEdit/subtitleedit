@@ -89,13 +89,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //0:01:37.89
             return string.Format("{0:0}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds / 10);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
             string hour = parts[0];
             string minutes = parts[1];

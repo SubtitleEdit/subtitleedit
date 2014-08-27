@@ -703,7 +703,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetColorStringForDCinema(string p)
+        private static string GetColorStringForDCinema(string p)
         {
             string s = p.ToUpper().Trim();
             if (s.Replace("#", string.Empty).
@@ -732,7 +732,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private string GetColorStringFromDCinema(string p)
+        private static string GetColorStringFromDCinema(string p)
         {
             string s = p.ToLower().Trim();
             if (s.Replace("#", string.Empty).

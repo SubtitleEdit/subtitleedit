@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)
+        private static void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)
         {
             for (int i = comboBox.Items.Count-1; i>0; i--)
             {
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string FixMsLocale(string from)
+        private static string FixMsLocale(string from)
         {
             if ("ar bg zh-CHS zh-CHT cs da nl en et fi fr de el ht he hu id it ja ko lv lt no pl pt ro ru sk sl es sv th tr uk vi".Contains(from))
                 return from;

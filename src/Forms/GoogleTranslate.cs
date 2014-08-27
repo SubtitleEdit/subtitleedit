@@ -486,13 +486,13 @@ namespace Nikse.SubtitleEdit.Forms
             FillComboWithGoogleLanguages(comboBox);
         }
 
-        private string[] GetMsLocales()
+        private static string[] GetMsLocales()
         {
             string[] locales = { "ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
             return locales;
         }
 
-        private string[] GetMsNames()
+        private static string[] GetMsNames()
         {
             string[] names = { "Arabic", "Bulgarian", "Chinese Simplified", "Chinese Traditional", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French", "German", "Greek", "Haitian Creole", "Hebrew", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Latvian", "Lithuanian", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Spanish", "Swedish", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
             return names;

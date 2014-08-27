@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private string EncodeTime(TimeCode time)
+        private static string EncodeTime(TimeCode time)
         {
             //3:15:22
             if (time.Hours > 0)
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0}:{1:00}.{2:00}", time.Minutes, time.Seconds, time.Milliseconds / 10);
         }
 
-        private TimeCode DecodeTimeCode(string[] s)
+        private static TimeCode DecodeTimeCode(string[] s)
         {
             if (s.Length == 3)
                 return new TimeCode(0, int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]) * 10);

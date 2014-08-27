@@ -849,7 +849,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private string MakePacItalicsAndRemoveOtherTags(string text)
+        private static string MakePacItalicsAndRemoveOtherTags(string text)
         {
             text = Utilities.RemoveHtmlFontTag(text).Trim();
             text = text.Replace("<u>", string.Empty);
@@ -884,7 +884,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString().Trim();
         }
 
-        private void WriteTimeCode(FileStream fs, TimeCode timeCode)
+        private static void WriteTimeCode(FileStream fs, TimeCode timeCode)
         {
             // write four bytes time code
             string highPart = string.Format("{0:00}", timeCode.Hours) + string.Format("{0:00}", timeCode.Minutes);
@@ -1146,7 +1146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// <summary>
         /// Fix italic tags, lines starting with ">" - whole line is italic, words between <> is italic
         /// </summary>
-        private string FixItalics(string text)
+        private static string FixItalics(string text)
         {
             int index = text.IndexOf("<", StringComparison.Ordinal);
             if (index < 0)
@@ -1256,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private byte[] GetLatinBytes(Encoding encoding, string text, byte alignment)
+        private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment)
         {
             int i = 0;
             byte[] buffer = new byte[text.Length * 2];
@@ -1314,22 +1314,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
 
-        private byte[] GetArabicBytes(string text, byte alignment)
+        private static byte[] GetArabicBytes(string text, byte alignment)
         {
             return GetBytesViaLists(text, ArabicLetters, ArabicCodes, alignment);
         }
 
-        private byte[] GetHebrewBytes(string text, byte alignment)
+        private static byte[] GetHebrewBytes(string text, byte alignment)
         {
             return GetBytesViaLists(text, HebrewLetters, HebrewCodes, alignment);
         }
 
-        private byte[] GetCyrillicBytes(string text, byte alignment)
+        private static byte[] GetCyrillicBytes(string text, byte alignment)
         {
             return GetBytesViaLists(text, CyrillicLetters, CyrillicCodes, alignment);
         }
 
-        private byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes, byte alignment)
+        private static byte[] GetBytesViaLists(string text, List<string> letters, List<int> codes, byte alignment)
         {
             int i = 0;
             byte[] buffer = new byte[text.Length * 2];
@@ -1492,7 +1492,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("({0})", b);
         }
 
-        private TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)
+        private static TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)
         {
             if (timeCodeIndex > 0)
             {

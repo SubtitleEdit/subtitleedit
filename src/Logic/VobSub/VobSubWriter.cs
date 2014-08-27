@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _subFile = new FileStream(subFileName, FileMode.Create);
         }
 
-        public void WriteEndianWord(int i, Stream stream)
+        public static void WriteEndianWord(int i, Stream stream)
         {
             stream.WriteByte((byte)(i / 256));
             stream.WriteByte((byte)(i % 256));
@@ -270,7 +270,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             _subFile.Write(mwsub.GetBuf(), 0, (int)endPosition);
         }
 
-        private void WritePixelDataAddress(Stream stream, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
+        private static void WritePixelDataAddress(Stream stream, int imageTopFieldDataAddress, int imageBottomFieldDataAddress)
         {
             stream.WriteByte(6);
             WriteEndianWord(imageTopFieldDataAddress, stream);
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <summary>
         /// provides four indices into the CLUT for the current PGC to associate with the four pixel values. One nibble per pixel value for a total of 2 bytes.
         /// </summary>
-        private void WriteColors(Stream stream)
+        private static void WriteColors(Stream stream)
         {
             // Index to palette
             const byte emphasis2 = 3;

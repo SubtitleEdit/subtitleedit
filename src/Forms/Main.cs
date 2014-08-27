@@ -3074,7 +3074,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool IsTransportStream(string fileName)
+        private static bool IsTransportStream(string fileName)
         {
             try
             {
@@ -3093,7 +3093,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private bool IsM2TransportStream(string fileName)
+        private static bool IsM2TransportStream(string fileName)
         {
             try
             {
@@ -3796,7 +3796,7 @@ namespace Nikse.SubtitleEdit.Forms
             ShowHideTextBasedFeatures(format);
         }
 
-        private List<string> GetNuendoStyles()
+        private static List<string> GetNuendoStyles()
         {
             if (!string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.NuendoCharacterListFile) && File.Exists(Configuration.Settings.SubtitleSettings.NuendoCharacterListFile))
             {
@@ -4035,7 +4035,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Utilities.ShowSubtitle(_subtitle.Paragraphs, mediaPlayer);
         }
 
-        private void TryLoadIcon(ToolStripButton button, string iconName)
+        private static void TryLoadIcon(ToolStripButton button, string iconName)
         {
             string fullPath = Configuration.IconsFolder + iconName + ".png";
             if (File.Exists(fullPath))
@@ -6934,7 +6934,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string RemoveSsaStyle(string text)
+        private static string RemoveSsaStyle(string text)
         {
             int indexOfBegin = text.IndexOf("{");
             while (indexOfBegin >= 0 && text.IndexOf("}") > indexOfBegin)
@@ -7030,7 +7030,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FixVerticalScrollBars(TextBox tb)
+        private static void FixVerticalScrollBars(TextBox tb)
         {
             var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine)+1;
             if (lineCount > 3)
@@ -8787,7 +8787,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetFontColor(Paragraph p, string color)
+        private static void SetFontColor(Paragraph p, string color)
         {
             if (p == null)
                 return;
@@ -9713,7 +9713,7 @@ namespace Nikse.SubtitleEdit.Forms
             return n;
         }
 
-        private string GetTeletext(byte[] _buffer, int offset)
+        private static string GetTeletext(byte[] _buffer, int offset)
         {
             string text = string.Empty;
             bool ascii = false;
@@ -9964,7 +9964,7 @@ namespace Nikse.SubtitleEdit.Forms
             return count > 0;
         }
 
-        private Subtitle LoadMp4SubtitleForSync(string fileName, Logic.Mp4.Boxes.Trak mp4SubtitleTrack)
+        private static Subtitle LoadMp4SubtitleForSync(string fileName, Logic.Mp4.Boxes.Trak mp4SubtitleTrack)
         {
             var subtitle = new Subtitle();
             if (mp4SubtitleTrack.Mdia.IsVobSubSubtitle)
@@ -10422,7 +10422,7 @@ namespace Nikse.SubtitleEdit.Forms
             return buffer[0] == 0x50 && buffer[1] == 0x4B && buffer[2] == 0x03 && buffer[3] == 0x04;
         }
 
-        private bool IsSpDvdSupFile(string subFileName)
+        private static bool IsSpDvdSupFile(string subFileName)
         {
             byte[] buffer = new byte[SpHeader.SpHeaderLength];
             var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
@@ -13010,7 +13010,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.AutoSizeAllColumns(this);
         }
 
-        private void InsertMissingParagraphs(Subtitle masterSubtitle, Subtitle insertIntoSubtitle)
+        private static void InsertMissingParagraphs(Subtitle masterSubtitle, Subtitle insertIntoSubtitle)
         {
             int index = 0;
             foreach (Paragraph p in masterSubtitle.Paragraphs)
@@ -13142,7 +13142,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Pause();
         }
 
-        private VideoInfo ShowVideoInfo(string fileName)
+        private static VideoInfo ShowVideoInfo(string fileName)
         {
             return Utilities.GetVideoInfo(fileName, delegate { Application.DoEvents(); });
         }
@@ -15200,7 +15200,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Convert.ToBase64String(hash, 0, hash.Length);
         }
 
-        private string GetPeakWaveFileName(string videoFileName)
+        private static string GetPeakWaveFileName(string videoFileName)
         {
             string dir = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
@@ -15213,7 +15213,7 @@ namespace Nikse.SubtitleEdit.Forms
             return wavePeakName;
         }
 
-        private string GetSpectrogramFolder(string videoFileName)
+        private static string GetSpectrogramFolder(string videoFileName)
         {
             string dir = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
@@ -18535,7 +18535,7 @@ namespace Nikse.SubtitleEdit.Forms
             _formPositionsAndSizes.SavePositionAndSize(properties);
         }
 
-        private void SetAlignTag(Paragraph p, string tag)
+        private static void SetAlignTag(Paragraph p, string tag)
         {
             if (p.Text.StartsWith("{\\a") && p.Text.Length > 5 && p.Text[5] == '}')
                 p.Text = p.Text.Remove(0, 6);

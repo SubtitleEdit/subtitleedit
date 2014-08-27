@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         }
 
-        private TimeCode DecodeTime(XmlAttribute duration)
+        private static TimeCode DecodeTime(XmlAttribute duration)
         {
             // 220220/60000s
             if (duration != null)

@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
             line = line.Trim();
             if (RegexTimeCodes.IsMatch(line))

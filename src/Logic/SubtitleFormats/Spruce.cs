@@ -77,7 +77,7 @@ $ColorIndex4    = 3
             return sb.ToString();
         }
 
-        private string EncodeText(string text)
+        private static string EncodeText(string text)
         {
             text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
             bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
@@ -92,7 +92,7 @@ $ColorIndex4    = 3
             return text.Replace(Environment.NewLine, "|");
         }
 
-        private string EncodeTimeCode(TimeCode time)
+        private static string EncodeTimeCode(TimeCode time)
         {
             //00:01:54:19
 
@@ -134,7 +134,7 @@ $ColorIndex4    = 3
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string time)
         {
             //00:01:54:19
 
@@ -151,7 +151,7 @@ $ColorIndex4    = 3
             return tc;
         }
 
-        private string DecodeText(string text)
+        private static string DecodeText(string text)
         { //TODO: improve end tags
             text = text.Replace("|", Environment.NewLine);
             if (text.Contains("^B"))

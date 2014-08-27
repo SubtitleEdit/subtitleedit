@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             Process.Start(GetGitHubHashLink());
         }
 
-        private string GetGitHubHashLink()
+        private static string GetGitHubHashLink()
         {
             try
             {
