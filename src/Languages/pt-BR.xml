@@ -5,7 +5,8 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -160,6 +161,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Analisando {0} e subpastas por legendas...</ScanningFolder>
     <Recursive>Incluir subpastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir milisegundos entre legendas</SetMinMsBetweenSubtitles>
+    <PlainText>Texto simples</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Projetor</Title>
@@ -192,6 +194,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Ajustar velocidade em porcentagem</Title>
     <Info>Alterar velocidade da legenda em porcentagem</Info>
+    <Custom>Personalizado</Custom>
+    <ToDropFrame>Para drop frame</ToDropFrame>
+    <FromDropFrame>De drop frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Verificar atualizações</Title>
@@ -314,33 +319,33 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <EbuSaveOptions>
     <Title>Opções de salvamento EBU</Title>
     <GeneralSubtitleInformation>Informação geral da legenda</GeneralSubtitleInformation>
-    <CodePageNumber>Número da página de códigos</CodePageNumber>
-    <DiskFormatCode>Código do formato do disco</DiskFormatCode>
-    <DisplayStandardCode>Exibir código padrão</DisplayStandardCode>
+    <CodePageNumber>Número code page</CodePageNumber>
+    <DiskFormatCode>Código formato de  disco</DiskFormatCode>
+    <DisplayStandardCode>Código de exibição padrão</DisplayStandardCode>
     <CharacterCodeTable>Tabela de caracteres</CharacterCodeTable>
-    <LanguageCode>Código de idioma</LanguageCode>
+    <LanguageCode>Código de idiomas</LanguageCode>
     <OriginalProgramTitle>Título original do programa</OriginalProgramTitle>
     <OriginalEpisodeTitle>Título original do episódio</OriginalEpisodeTitle>
     <TranslatedProgramTitle>Título traduzido do programa</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>Título traduzido do episódio</TranslatedEpisodeTitle>
     <TranslatorsName>Nome dos tradutores</TranslatorsName>
-    <SubtitleListReferenceCode>Código de referencia de la lista de subtítulos</SubtitleListReferenceCode>
+    <SubtitleListReferenceCode>Código de referência da lista da legenda</SubtitleListReferenceCode>
     <CountryOfOrigin>País de origem</CountryOfOrigin>
-    <RevisionNumber>Revisão número</RevisionNumber>
-    <MaxNoOfDisplayableChars>Máx# de caracteres por quadro</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows>Máx# de quadros</MaxNumberOfDisplayableRows>
-    <DiskSequenceNumber>Número de sequencia do disco</DiskSequenceNumber>
+    <RevisionNumber>Número da revisão</RevisionNumber>
+    <MaxNoOfDisplayableChars> Nº máx. caracteres por linha</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows> Nº máx. linhas</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Número de sequência do disco</DiskSequenceNumber>
     <TotalNumberOfDisks>Número total de discos</TotalNumberOfDisks>
     <Import>Importar...</Import>
-    <TextAndTimingInformation>Informacão do texto e cronometragem</TextAndTimingInformation>
-    <JustificationCode>Código de justificação</JustificationCode>
+    <TextAndTimingInformation>Informação de texto e temporização</TextAndTimingInformation>
+    <JustificationCode>Código de justificativa</JustificationCode>
     <Errors>Erros</Errors>
     <ErrorsX>Erros: {0}</ErrorsX>
-    <MaxLengthError>Linha {0} excede ao comprimento máximo ({1}) em {2}: {3}</MaxLengthError>
-    <TextUnchangedPresentation>Apresentação original</TextUnchangedPresentation>
-    <TextLeftJustifiedText>Justificado à esquerda</TextLeftJustifiedText>
-    <TextCentredText>Centralizado</TextCentredText>
-    <TextRightJustifiedText>Justificado à direita</TextRightJustifiedText>
+    <MaxLengthError>Linha {0} excede compr. máx. ({1}) por {2}: {3}</MaxLengthError>
+    <TextUnchangedPresentation>Apresentação inalterada</TextUnchangedPresentation>
+    <TextLeftJustifiedText>Texto justificado à esquerda</TextLeftJustifiedText>
+    <TextCentredText>Texto centralizado</TextCentredText>
+    <TextRightJustifiedText>Texto justificado à direita</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
@@ -688,6 +693,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restaurar backup automático...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Propriedades Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Propriedades Sub Station Alpha...</SubStationAlphaProperties>
+        <EbuProperties>Propriedades EBU stl...</EbuProperties>
+        <PacProperties>Propriedades PAC...</PacProperties>
         <OpenOriginal>Abrir legenda original (modo trandutor)...</OpenOriginal>
         <SaveOriginal>Salvar legenda original</SaveOriginal>
         <CloseOriginal>Fechar legenda original</CloseOriginal>
@@ -1064,6 +1071,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NothingToUndo>Nada para desfazer</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Não é possível alterar o idioma!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Não exibir novamente</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras corretas: {0}</NumberOfCorrectWords>
@@ -1292,6 +1300,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ImportRulesTitle>Importar regra(s) de substituição de...</ImportRulesTitle>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Exportar regras</Rules>
+    <MoveToTop>Mover para o início</MoveToTop>
+    <MoveToBottom>Mover para o final</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1626,7 +1636,9 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor de erro</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para primeira linha selecionda</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Ir para próxima linha vazia</GoToNextEmptyLine>
     <MergeSelectedLines>Unir linhas seleciondas</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Juntar linhas selecionadas, manter apenas o primeiro texto não-vazio</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Alternar para o modo tradução</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Inverter original e traduzido</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Unir original e traduzido</MergeOriginalAndTranslation>
@@ -1648,6 +1660,11 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Usar lista não-quebrar-após (para auto-br)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Definir deslocamento do vídeo</Title>
+    <Description>Definir deslocamento do vídeo (legendas não devem seguir o tempo real do vídeo, mas, por exemplo: +10 horas)</Description>
+    <RelativeToCurrentVideoPosition>Relativo à posição atual do vídeo</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostrar linhas selec. antes/depois</Title>
     <TitleAll>Mostrar todas as linhas antes/depois</TitleAll>
@@ -1760,13 +1777,16 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <LineLengthMinimum>Tamanho da legenda - mínimo: {0}</LineLengthMinimum>
     <LineLengthMaximum>Tamanho da legenda - máximo: {0}</LineLengthMaximum>
     <LineLengthAverage>Tamanho da legenda - média: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Legenda, número de linhas - média: {0:0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>Tamanho da legenda - mínimo: {0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>Tamanho linha simples - mínimo: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>Tamanho linha simples - máximo: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>Tamanho linha simples - média: {0}</SingleLineLengthAverage>
     <DurationMinimum>Duração - mínimo: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máximo: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
+    <CharactersPerSecondMinimum>Caracteres/seg. - mínimo: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Caracteres/seg. - máximo: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Caracteres/seg. - média: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propriedades Advanced Sub Station Alpha</Title>
@@ -1926,6 +1946,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Auto correção OCR / revisão ortográfica</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importar novos códigos de tempo</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Salvar imagem de legenda  como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Salvar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Salvar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
