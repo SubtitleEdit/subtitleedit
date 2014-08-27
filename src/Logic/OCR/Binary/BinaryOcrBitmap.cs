@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             }
             Hash = MurMurHash3.Hash(_colors);
             CalcuateNumberOfColoredPixels();
-        }       
+        }
 
         private void CalcuateNumberOfColoredPixels()
         {

@@ -761,7 +761,7 @@ namespace Nikse.SubtitleEdit.Forms
                     myColorWheel = null;
                 }
             }
-        }       
+        }
 
     }
 }

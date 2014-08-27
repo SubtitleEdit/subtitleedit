@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.Logic
                     m_stream = null;
                 }
             }
-        }    
-    
+        }
+
     }
 }

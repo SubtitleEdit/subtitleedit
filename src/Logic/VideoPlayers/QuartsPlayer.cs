@@ -335,7 +335,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     _videoLoader.Dispose();
                     _videoLoader = null;
-                }                
+                }
             }
             ReleaseUnmangedResources();
         }

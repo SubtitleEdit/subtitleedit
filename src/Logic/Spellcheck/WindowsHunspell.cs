@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         public override List<string> Suggest(string word)
         {
             return _hunspell.Suggest(word);
-        }        
+        }
 
         public void Dispose()
         {
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
                     _hunspell.Dispose();
                 _hunspell = null;
             }
-        }        
+        }
 
     }
 }

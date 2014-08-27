@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                     _seWs = null;
                 }
             }
-        }    
+        }
 
     }
 }
