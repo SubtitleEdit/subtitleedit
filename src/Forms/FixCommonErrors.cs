@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
                 j++;
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
-            AddFixActions(subtitle, threeLetterISOLanguageName);
+            AddFixActions(threeLetterISOLanguageName);
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
             _subtitle = new Subtitle(subtitle); // copy constructor
             _format = format;
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
 
-            AddFixActions(subtitle, threeLetterISOLanguageName);
+            AddFixActions(threeLetterISOLanguageName);
 
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
             _subtitle = new Subtitle(subtitle); // copy constructor
@@ -278,7 +278,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
 
-            AddFixActions(subtitle, threeLetterISOLanguageName);
+            AddFixActions(threeLetterISOLanguageName);
 
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
             _subtitle = new Subtitle(subtitle); // copy constructor
@@ -340,7 +340,7 @@ namespace Nikse.SubtitleEdit.Forms
             Activate();
         }
 
-        private void AddFixActions(Subtitle subtitle, string threeLetterISOLanguageName)
+        private void AddFixActions(string threeLetterISOLanguageName)
         {
             _turkishAnsiIndex = -1;
             _danishLetterIIndex = -1;
@@ -4225,8 +4225,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = p.Text;
 
-                FixSpanishInvertedLetter("?", "¿", p, last, ref wasLastLineClosed, i, fixAction, ref fixCount);
-                FixSpanishInvertedLetter("!", "¡", p, last, ref wasLastLineClosed, i, fixAction, ref fixCount);
+                FixSpanishInvertedLetter("?", "¿", p, last, ref wasLastLineClosed, fixAction, ref fixCount);
+                FixSpanishInvertedLetter("!", "¡", p, last, ref wasLastLineClosed, fixAction, ref fixCount);
 
                 if (p.Text != oldText)
                 {
@@ -4240,7 +4240,7 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString());
         }
 
-        private void FixSpanishInvertedLetter(string mark, string inverseMark, Paragraph p, Paragraph last, ref bool wasLastLineClosed, int i, string fixAction, ref int fixCount)
+        private void FixSpanishInvertedLetter(string mark, string inverseMark, Paragraph p, Paragraph last, ref bool wasLastLineClosed, string fixAction, ref int fixCount)
         {
             if (p.Text.Contains(mark))
             {
@@ -5385,7 +5385,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.General.SubtitleLineMaximumLength * 2, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
+                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
                     lines = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Length == 2)
                     {
@@ -5449,7 +5449,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
                 _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
-                AddFixActions(_subtitle, ci.ThreeLetterISOLanguageName);
+                AddFixActions(ci.ThreeLetterISOLanguageName);
             }
         }
 

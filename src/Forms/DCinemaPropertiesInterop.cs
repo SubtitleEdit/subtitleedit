@@ -8,11 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class DCinemaPropertiesInterop : Form
     {
-
-        private Logic.Subtitle _subtitle;
-        private string _videoFileName;
-
-        public DCinemaPropertiesInterop(Subtitle _subtitle, string _videoFileName)
+        public DCinemaPropertiesInterop()
         {
             InitializeComponent();
 
@@ -43,9 +39,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelFadeUpTime.Text = l.FadeUpTime;
                 labelFadeDownTime.Text = l.FadeDownTime;
             }
-
-            this._subtitle = _subtitle;
-            this._videoFileName = _videoFileName;
 
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {

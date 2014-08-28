@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 for (int x = 0; x < Width; x++)
                 {
-                    int color = GetDvdColor(x, y, backgroundBuffer, patternBuffer, emphasis1Buffer, emphasis2Buffer);
+                    int color = GetDvdColor(patternBuffer, emphasis1Buffer, emphasis2Buffer);
 
                     if (lastColor == -1)
                     {
@@ -525,7 +525,7 @@ namespace Nikse.SubtitleEdit.Logic
             indexHalfNibble = !indexHalfNibble;
         }
 
-        private int GetDvdColor(int x, int y, byte[] background, byte[] pattern, byte[] emphasis1, byte[] emphasis2)
+        private int GetDvdColor(byte[] pattern, byte[] emphasis1, byte[] emphasis2)
         {
             _pixelAddress += 4;
             int a = _bitmapData[_pixelAddress + 3];
@@ -1033,7 +1033,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void MakeTwoColor(int minAlpha, int minRgb)
+        internal void MakeTwoColor(int minRgb)
         {
             byte[] buffer = new byte[4];
             buffer[0] = 0; // B

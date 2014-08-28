@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, true, checkBoxAutoBreakOn.Checked, true, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
+            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, true, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
             NumberOfMerges = count;
 
             SubtitleListview1.Fill(_subtitle);
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
             int count;
-            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, false, checkBoxAutoBreakOn.Checked, true, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
+            _mergedSubtitle = MergeLinesWithSameTimeCodes(_subtitle, mergedIndexes, out count, false, checkBoxAutoBreakOn.Checked, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
             NumberOfMerges = count;
             SubtitleListview1.Fill(_subtitle);
             foreach (var index in mergedIndexes)
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergeTextWithSameTimeCodes.NumberOfMergesX, NumberOfMerges);
         }
 
-        public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, bool lineAfterNext, int maxMsBetween)
+        public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, int maxMsBetween)
         {
             listViewFixes.BeginUpdate();
             List<int> removed = new List<int>();

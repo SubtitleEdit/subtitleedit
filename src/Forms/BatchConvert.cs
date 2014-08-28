@@ -775,7 +775,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             item.SubItems[3].Text = "OCR...";
                             var vobSubOcr = new VobSubOcr();
-                            vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr, true);
+                            vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr);
                             sub = vobSubOcr.SubtitleFromOcr;
                         }
 
@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (checkBoxRemoveTextForHI.Checked)
                             {
-                                p.Text = _removeForHI.RemoveTextFromHearImpaired(p.Text, prevText);
+                                p.Text = _removeForHI.RemoveTextFromHearImpaired(p.Text);
                             }
                             if (checkBoxRemoveFormatting.Checked)
                             {

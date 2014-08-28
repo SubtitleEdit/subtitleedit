@@ -580,7 +580,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (allOk)
                 return text;
 
-            text = Utilities.AutoBreakLine(text, 1, 32, 4, language);
+            text = Utilities.AutoBreakLine(text, 1, 4, language);
             lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             allOk = true;
             foreach (string line in lines)

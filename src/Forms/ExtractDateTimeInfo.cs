@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var fi = new FileInfo(VideoFileName);
                     start = fi.CreationTime;
-                    VideoInfo vi = Utilities.GetVideoInfo(VideoFileName, null);
+                    VideoInfo vi = Utilities.GetVideoInfo(VideoFileName);
                     durationInSeconds = vi.TotalMilliseconds / 1000.0;
                     if (durationInSeconds < 1)
                     {

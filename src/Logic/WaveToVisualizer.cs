@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        internal void WriteHeader(Stream fromStream, Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
+        internal void WriteHeader(Stream toStream, int sampleRate, int numberOfChannels, int bitsPerSample, int dataSize)
         {
             const int fmtChunckSize = 16;
             const int headerSize = 44;
@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void WritePeakSamples(Stream stream)
         {
-            Header.WriteHeader(_stream, stream, PeaksPerSecond, 1, 16, PeakSamples.Count * 2);
+            Header.WriteHeader(stream, PeaksPerSecond, 1, 16, PeakSamples.Count * 2);
             WritePeakData(stream);
             stream.Flush();
         }

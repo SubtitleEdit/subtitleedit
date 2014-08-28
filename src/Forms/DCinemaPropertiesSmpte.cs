@@ -8,15 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class DCinemaPropertiesSmpte : Form
     {
-        private Subtitle _subtitle;
-        private string _videoFileName;
-
         public DCinemaPropertiesSmpte()
-        {
-
-        }
-
-        public DCinemaPropertiesSmpte(Subtitle _subtitle, string _videoFileName)
         {
             InitializeComponent();
 
@@ -43,9 +35,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelFontSize.Text = l.FontSize;
             buttonGenerateID.Text = l.Generate;
             buttonGenFontUri.Text = l.Generate;
-
-            this._subtitle = _subtitle;
-            this._videoFileName = _videoFileName;
 
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {

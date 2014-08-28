@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nbmp.ReplaceTransparentWith(Color.Black);
 
                     //get nocr matches
-                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, _unItalicFactor, false, false);
+                    Nikse.SubtitleEdit.Forms.VobSubOcr.CompareMatch match = vobSubOcr.GetNOcrCompareMatchNew(item, nbmp, nOcrDb, false, false);
                     if (match == null)
                     {
                         listBoxInspectItems.Items.Add("?");
@@ -233,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
             var match = _matchList[index];
 
             var vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
-            vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), false, expandSelectionList.Count > 1, null, null, _vobSubOcr);
+            vobSubOcrNOcrCharacter.Initialize(_bitmap, img, new Point(0, 0), false, expandSelectionList.Count > 1);
             DialogResult result = vobSubOcrNOcrCharacter.ShowDialog(this);
             bool expandSelection = false;
             bool shrinkSelection = false;
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                     img = VobSubOcr.GetExpandedSelection(new NikseBitmap(_bitmap), expandSelectionList, false); // true
                 }
 
-                vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), false, expandSelectionList.Count > 1, null, null, _vobSubOcr);
+                vobSubOcrNOcrCharacter.Initialize(_bitmap2, img, new Point(0, 0), false, expandSelectionList.Count > 1);
                 result = vobSubOcrNOcrCharacter.ShowDialog(this);
 
                 if (result == DialogResult.OK && vobSubOcrNOcrCharacter.ShrinkSelection)
