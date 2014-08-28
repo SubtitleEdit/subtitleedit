@@ -16,6 +16,10 @@ namespace UpdateAssemblyInfo
             if (File.Exists(p))
                 return p;
 
+            p = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles (x86)"), @"Git\bin\git.exe");
+            if (File.Exists(p))
+                return p;
+
             p = @"C:\Program Files\Git\bin\git.exe";
             if (File.Exists(p))
                 return p;
@@ -28,6 +32,7 @@ namespace UpdateAssemblyInfo
             if (File.Exists(p))
                 return p;
 
+            Console.WriteLine("Warning: Might not be able to find git command line tool!");
             return "git";
         }
 
@@ -40,13 +45,11 @@ namespace UpdateAssemblyInfo
 
         static int Main(string[] args)
         {
-            string errorFileName = System.Reflection.Assembly.GetEntryAssembly().Location.Replace(".exe", "_error.txt");
-
             if (args.Length != 2)
             {
                 Console.WriteLine("UpdateAssemblyInfo 0.9");
                 Console.WriteLine("UpdateAssemblyInfo <template with [GITHASH]> <target file>");
-                File.WriteAllText(errorFileName, "Wrong number of arguments: " + args.Length);
+                Console.WriteLine("Wrong number of arguments: " + args.Length);
                 return 1;
             }
 
@@ -71,7 +74,6 @@ namespace UpdateAssemblyInfo
                 catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
-                    File.WriteAllText(errorFileName, e.Message);
                 }
             }
             else
@@ -90,9 +92,6 @@ namespace UpdateAssemblyInfo
                 Console.WriteLine(" - git folder: " + workingFolder);
                 Console.WriteLine(" - template: " + template);
                 Console.WriteLine(" - target: " + target);
-                File.WriteAllText(errorFileName, " - git folder: " + workingFolder + Environment.NewLine +
-                                                 " - template: " + template + Environment.NewLine +
-                                                 " - target: " + target);
             }
             return 1;
         }
