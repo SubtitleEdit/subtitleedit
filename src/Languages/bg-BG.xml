@@ -1515,9 +1515,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpectrogramAppearance>Изглед на спектрограмата</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Преливане в един цвят</SpectrogramOneColorGradient>
     <SpectrogramClassic>Класически</SpectrogramClassic>
-    <WaveformUseFFMPEG>Използване на FFMPEG</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Път до FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Разлистване до FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Използване на FFmpeg</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Път до FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Разлистване до FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Прелистване за VLC портабъл</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Стил на Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Избор на шрифт</ChooseFont>

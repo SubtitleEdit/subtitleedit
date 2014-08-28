@@ -1521,9 +1521,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpectrogramAppearance>스펙트로그램의 모양</SpectrogramAppearance>
     <SpectrogramOneColorGradient>단색 그라데이션</SpectrogramOneColorGradient>
     <SpectrogramClassic>클래식</SpectrogramClassic>
-    <WaveformUseFFMPEG>파형 추출을 위해 FFMPEG 사용</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>- FFMPEG 경로</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>FFMPEG 찾기...</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>파형 추출을 위해 FFmpeg 사용</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>- FFmpeg 경로</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>FFmpeg 찾기...</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC 포터블 찾기...</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha의 스타일</SubStationAlphaStyle>
     <ChooseFont>글꼴 선택</ChooseFont>

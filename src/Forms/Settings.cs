@@ -385,10 +385,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonWaveFormsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
-            if (!string.IsNullOrEmpty(language.WaveformFFMPEGPath)) //TODO: Remove in SE 3.4
+            if (!string.IsNullOrEmpty(language.WaveformFFmpegPath)) //TODO: Remove in SE 3.4
             {
-                checkBoxUseFFMPEG.Text = language.WaveformUseFFMPEG;
-                labelFFMPEGPath.Text = language.WaveformFFMPEGPath;
+                checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
+                labelFFmpegPath.Text = language.WaveformFFmpegPath;
             }
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
@@ -620,8 +620,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
-            checkBoxUseFFMPEG.Checked = Configuration.Settings.General.UseFFMPEGForWaveExtraction;
-            textBoxFFMPEGPath.Text = Configuration.Settings.General.FFMPEGLocation;
+            checkBoxUseFFmpeg.Checked = Configuration.Settings.General.UseFFmpegForWaveExtraction;
+            textBoxFFmpegPath.Text = Configuration.Settings.General.FFmpegLocation;
 
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.MergeSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
@@ -1210,8 +1210,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveFormListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
-            Configuration.Settings.General.UseFFMPEGForWaveExtraction = checkBoxUseFFMPEG.Checked;
-            Configuration.Settings.General.FFMPEGLocation = textBoxFFMPEGPath.Text;
+            Configuration.Settings.General.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
+            Configuration.Settings.General.FFmpegLocation = textBoxFFmpegPath.Text;
 
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
@@ -2655,16 +2655,16 @@ namespace Nikse.SubtitleEdit.Forms
             UpdateSsaExample();
         }
 
-        private void buttonBrowseToFFMPEG_Click(object sender, EventArgs e)
+        private void buttonBrowseToFFmpeg_Click(object sender, EventArgs e)
         {
-            openFileDialogFFMPEG.FileName = string.Empty;
-            openFileDialogFFMPEG.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFMPEG;
+            openFileDialogFFmpeg.FileName = string.Empty;
+            openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFmpeg;
             if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
             {
-                openFileDialogFFMPEG.Filter = "FFMPEG.exe|FFMPEG.exe";
+                openFileDialogFFmpeg.Filter = "FFmpeg.exe|FFmpeg.exe";
             }
-            if (openFileDialogFFMPEG.ShowDialog(this) == DialogResult.OK)
-                textBoxFFMPEGPath.Text = openFileDialogFFMPEG.FileName;
+            if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
+                textBoxFFmpegPath.Text = openFileDialogFFmpeg.FileName;
         }
 
         private void checkBoxWaveformHoverFocus_CheckedChanged(object sender, EventArgs e)
@@ -2674,15 +2674,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonVlcPathBrowse_Click(object sender, EventArgs e)
         {
-            openFileDialogFFMPEG.FileName = string.Empty;
-            openFileDialogFFMPEG.Title = Configuration.Settings.Language.Settings.WaveformBrowseToVLC;
+            openFileDialogFFmpeg.FileName = string.Empty;
+            openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToVLC;
             if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
             {
-                openFileDialogFFMPEG.Filter = "vlc.exe|vlc.exe";
+                openFileDialogFFmpeg.Filter = "vlc.exe|vlc.exe";
             }
-            if (openFileDialogFFMPEG.ShowDialog(this) == DialogResult.OK)
+            if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
-                textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFMPEG.FileName);
+                textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFmpeg.FileName);
                 Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
                 Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
                 radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;

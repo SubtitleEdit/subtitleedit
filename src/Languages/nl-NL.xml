@@ -1511,9 +1511,9 @@ Suggesties zijn van harte welkom
     <SpectrogramAppearance>Spectrogram uitvoering</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Een kleurverloop</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassiek</SpectrogramClassic>
-    <WaveformUseFFMPEG>Gebruik FFMPEG voor golfvorm extractie</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Pad naar FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Ga naar FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Gebruik FFmpeg voor golfvorm extractie</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Pad naar FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Ga naar FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Blader naar VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha stijl</SubStationAlphaStyle>
     <ChooseFont>Kies lettertype</ChooseFont>

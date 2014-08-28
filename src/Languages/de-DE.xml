@@ -1518,9 +1518,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SpectrogramAppearance>Spektogramm Darstellung</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Einfarbiger Verlauf</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisch</SpectrogramClassic>
-    <WaveformUseFFMPEG>FFMPEG für Wellenformdaten verwenden</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>FFMPEG Pfad</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>FFMPEG suchen</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>FFmpeg für Wellenformdaten verwenden</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>FFmpeg Pfad</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>FFmpeg suchen</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC Portable suchen</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Substation Alpha Formatierung</SubStationAlphaStyle>
     <ChooseFont>Schriftart wählen</ChooseFont>

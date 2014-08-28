@@ -1524,9 +1524,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpectrogramAppearance>Spektrogram udseende</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Enkelt farve gradient</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassisk</SpectrogramClassic>
-    <WaveformUseFFMPEG>Benyt FFMPEG til at udtrække lydfiler</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Sti til FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Vælg sti stil FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Benyt FFmpeg til at udtrække lydfiler</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Sti til FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Vælg sti stil FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Gå til VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha Style</SubStationAlphaStyle>
     <ChooseFont>Vælg skrifttype</ChooseFont>

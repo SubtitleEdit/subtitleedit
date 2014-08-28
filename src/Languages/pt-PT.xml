@@ -1530,9 +1530,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
-    <WaveformUseFFMPEG>Usar o FFMPEG para extrair o áudio no formato "wav"</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Directoria do FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Procurar por FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Usar o FFmpeg para extrair o áudio no formato "wav"</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>

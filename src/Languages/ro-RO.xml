@@ -1521,9 +1521,9 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <SpectrogramAppearance>Aspectul spectrogramei</SpectrogramAppearance>
     <SpectrogramOneColorGradient>În culoare degradé</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clasic</SpectrogramClassic>
-    <WaveformUseFFMPEG>Folosește FFMPEG ptr. extragerea formei audio</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Calea spre FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Caută FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Folosește FFmpeg ptr. extragerea formei audio</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Calea spre FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Caută FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Caută VLC portabil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Avansat) stilul Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Alege fontul</ChooseFont>

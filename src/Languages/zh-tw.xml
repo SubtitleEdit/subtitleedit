@@ -1521,9 +1521,9 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SpectrogramAppearance>頻譜圖外觀</SpectrogramAppearance>
     <SpectrogramOneColorGradient>單色漸層</SpectrogramOneColorGradient>
     <SpectrogramClassic>經典</SpectrogramClassic>
-    <WaveformUseFFMPEG>使用 FFMPEG 進行波形提取</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>FFMPEG 路徑</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>瀏覽 FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>使用 FFmpeg 進行波形提取</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>FFmpeg 路徑</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>瀏覽 FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>瀏覽 VLC 便攜式版本</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Advanced) Sub Station Alpha 樣式</SubStationAlphaStyle>
     <ChooseFont>選擇字型</ChooseFont>

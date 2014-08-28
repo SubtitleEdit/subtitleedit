@@ -1514,9 +1514,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SpectrogramAppearance>频谱图外观</SpectrogramAppearance>
     <SpectrogramOneColorGradient>单色梯度</SpectrogramOneColorGradient>
     <SpectrogramClassic>经典</SpectrogramClassic>
-    <WaveformUseFFMPEG>使用 FFMPEG 进行音频波形提取</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>FFMPEG 文件路径</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>浏览至 FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>使用 FFmpeg 进行音频波形提取</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>FFmpeg 文件路径</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>浏览至 FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>浏览至VLC便携版安装路径</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(高级) Sub Station Alpha 样式</SubStationAlphaStyle>
     <ChooseFont>选择字体</ChooseFont>

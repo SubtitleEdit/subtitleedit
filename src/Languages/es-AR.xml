@@ -1463,9 +1463,9 @@ pueden editar el mismo archivo de subtítulo (colaboración)</Information>
     <SpectrogramAppearance>Apariencia del Espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradado de color</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clásico</SpectrogramClassic>
-    <WaveformUseFFMPEG>Usar FFMPEG para la extracción de onda</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Ruta hacia FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Buscar FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Usar FFmpeg para la extracción de onda</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Ruta hacia FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Buscar FFmpeg</WaveformBrowseToFFmpeg>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Elegir fuente</ChooseFont>
     <ChooseColor>Elegir color</ChooseColor>

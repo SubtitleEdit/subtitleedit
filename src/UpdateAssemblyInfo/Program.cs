@@ -28,7 +28,7 @@ namespace UpdateAssemblyInfo
             if (File.Exists(p))
                 return p;
 
-            Console.WriteLine("Warning: Might not be able to find git command line tool!");
+            Console.WriteLine("Warning: Might not be able to find Git command line tool!");
             return "git";
         }
 
@@ -76,7 +76,7 @@ namespace UpdateAssemblyInfo
             {
                 try
                 {
-                    // allow for compile without git
+                    // allow to compile without git
                     DoUpdateAssembly("[GITHASH]", string.Empty, template, target);
                     DoUpdateAssembly("[REVNO]", "0", target, target);
                 }
@@ -85,9 +85,9 @@ namespace UpdateAssemblyInfo
                 }
 
                 Console.WriteLine("Error running Git");
-                Console.WriteLine(" - git folder: " + workingFolder);
-                Console.WriteLine(" - template: " + template);
-                Console.WriteLine(" - target: " + target);
+                Console.WriteLine(" - Git folder: " + workingFolder);
+                Console.WriteLine(" - Template: " + template);
+                Console.WriteLine(" - Target: " + target);
             }
             return 1;
         }

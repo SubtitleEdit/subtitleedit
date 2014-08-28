@@ -1514,9 +1514,9 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SpectrogramAppearance>Argilitzaeraren itxura:</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Margo gradiente bat</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasikoa</SpectrogramClassic>
-    <WaveformUseFFMPEG>Erabili FFMPEG uhinera aterapenerako</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>FFMPEG helburua</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Bilatu FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Erabili FFmpeg uhinera aterapenerako</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>FFmpeg helburua</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Bilatu FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Bilatu VLC eramangarria</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha Estiloa</SubStationAlphaStyle>
     <ChooseFont>Hautatu hizkia</ChooseFont>

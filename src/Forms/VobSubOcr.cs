@@ -7454,7 +7454,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       Configuration.Settings.Language.Main.ContinueAnyway,
                                                       fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -8391,7 +8391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fi = new FileInfo(fileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       Configuration.Settings.Language.Main.ContinueAnyway,
                                                       fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)

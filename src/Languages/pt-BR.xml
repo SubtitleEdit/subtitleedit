@@ -1527,9 +1527,9 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
-    <WaveformUseFFMPEG>Usar FFmepg para extração Wave</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Caminho para FFmepg</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Procurar FFmpeg</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Usar FFmepg para extração Wave</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Caminho para FFmepg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Procurar FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Estilo Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Escolher fonte</ChooseFont>

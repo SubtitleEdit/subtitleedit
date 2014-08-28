@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int Height { get; private set; }
 
         private Color[] _colors;
-        public bool LoadedOK { get; private set; }
+        public bool LoadedOk { get; private set; }
 
         public ManagedBitmap(string fileName)
         {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch
             {
-                LoadedOK = false;
+                LoadedOk = false;
             }
         }
 

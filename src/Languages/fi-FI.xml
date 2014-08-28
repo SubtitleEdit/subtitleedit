@@ -1523,12 +1523,12 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <SpectrogramAppearance>Spektrogrammin ulkoasu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Yksivärinen liukuvärjäys</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassinen</SpectrogramClassic>
-    <WaveformUseFFMPEG>
-    </WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>
-    </WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>
-    </WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>
+    </WaveformUseFFmpeg>
+    <WaveformFFmpegPath>
+    </WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>
+    </WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>
     </WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha -tyyli</SubStationAlphaStyle>

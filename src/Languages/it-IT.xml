@@ -1521,9 +1521,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SpectrogramAppearance>Apparenza spettrogramma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Una sfumatura di colore</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classico</SpectrogramClassic>
-    <WaveformUseFFMPEG>Usa FFMPEG per estrarre l'audio</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Percorso di FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Sfoglia per FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Usa FFmpeg per estrarre l'audio</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Percorso di FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Sfoglia per FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Sfoglia per VLC portatile</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Stile Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Scegli font</ChooseFont>

@@ -2328,7 +2328,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
 
-                    if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       _language.ContinueAnyway,
                                                       fileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -12689,7 +12689,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (fi.Length > 1024 * 1024 * 10 && sub.Paragraphs.Count == 0) // max 10 mb
                 {
-                    if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       _language.ContinueAnyway,
                                                       fileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -12847,7 +12847,7 @@ namespace Nikse.SubtitleEdit.Forms
             var fi = new FileInfo(fileName);
             if (fi.Length > 1024 * 1024 * 10) // max 10 mb
             {
-                if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine +
                                                     Environment.NewLine +
                                                     _language.ContinueAnyway,
                                                     fileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -16832,7 +16832,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fi = new FileInfo(openFileDialog1.FileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       _language.ContinueAnyway,
                                                       openFileDialog1.FileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
@@ -19087,7 +19087,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var fi = new FileInfo(openFileDialog1.FileName);
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
-                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10Mb + Environment.NewLine +
+                    if (MessageBox.Show(string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       _language.ContinueAnyway,
                                                       openFileDialog1.FileName), Title, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)

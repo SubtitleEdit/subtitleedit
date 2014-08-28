@@ -1517,9 +1517,9 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <SpectrogramAppearance>Spektrogram utseende</SpectrogramAppearance>
     <SpectrogramOneColorGradient>En färgövertoning</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classic</SpectrogramClassic>
-    <WaveformUseFFMPEG>Använd FFMPEG för wave extraktion</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Sökväg till FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Bläddra till FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Använd FFmpeg för wave extraktion</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Sökväg till FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Bläddra till FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Bläddra till VLC bärbar</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha style</SubStationAlphaStyle>
     <ChooseFont>Välj teckensnitt</ChooseFont>

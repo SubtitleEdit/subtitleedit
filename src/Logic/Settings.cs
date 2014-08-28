@@ -502,8 +502,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string VlcWaveTranscodeSettings { get; set; }
         public string VlcLocation { get; set; }
         public string VlcLocationRelative { get; set; }
-        public bool UseFFMPEGForWaveExtraction { get; set; }
-        public string FFMPEGLocation { get; set; }
+        public bool UseFFmpegForWaveExtraction { get; set; }
+        public string FFmpegLocation { get; set; }
         public bool UseTimeFormatHHMMSSFF { get; set; }
         public int ClearStatusBarAfterSeconds { get; set; }
         public string Company { get; set; }
@@ -1434,12 +1434,12 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("VlcLocationRelative");
             if (subNode != null)
                 settings.General.VlcLocationRelative = subNode.InnerText.Trim();
-            subNode = node.SelectSingleNode("UseFFMPEGForWaveExtraction");
+            subNode = node.SelectSingleNode("UseFFmpegForWaveExtraction");
             if (subNode != null)
-                settings.General.UseFFMPEGForWaveExtraction = Convert.ToBoolean(subNode.InnerText.Trim());
-            subNode = node.SelectSingleNode("FFMPEGLocation");
+                settings.General.UseFFmpegForWaveExtraction = Convert.ToBoolean(subNode.InnerText.Trim());
+            subNode = node.SelectSingleNode("FFmpegLocation");
             if (subNode != null)
-                settings.General.FFMPEGLocation = subNode.InnerText.Trim();
+                settings.General.FFmpegLocation = subNode.InnerText.Trim();
             subNode = node.SelectSingleNode("UseTimeFormatHHMMSSFF");
             if (subNode != null)
                 settings.General.UseTimeFormatHHMMSSFF = Convert.ToBoolean(subNode.InnerText.Trim());
@@ -2692,8 +2692,8 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("VlcWaveTranscodeSettings", settings.General.VlcWaveTranscodeSettings);
                 textWriter.WriteElementString("VlcLocation", settings.General.VlcLocation);
                 textWriter.WriteElementString("VlcLocationRelative", settings.General.VlcLocationRelative);
-                textWriter.WriteElementString("UseFFMPEGForWaveExtraction", settings.General.UseFFMPEGForWaveExtraction.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("FFMPEGLocation", settings.General.FFMPEGLocation);
+                textWriter.WriteElementString("UseFFmpegForWaveExtraction", settings.General.UseFFmpegForWaveExtraction.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("FFmpegLocation", settings.General.FFmpegLocation);
                 textWriter.WriteElementString("UseTimeFormatHHMMSSFF", settings.General.UseTimeFormatHHMMSSFF.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ClearStatusBarAfterSeconds", settings.General.ClearStatusBarAfterSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("Company", settings.General.Company);
