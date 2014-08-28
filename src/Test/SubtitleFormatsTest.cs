@@ -656,7 +656,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void LineCount()
         {
-             var target = new SubStationAlpha();
              var subtitle = new Subtitle();
              subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
              subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
@@ -685,7 +684,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
          [DeploymentItem("SubtitleEdit.exe")]
          public void LineContent()
          {
-             var target = new SubStationAlpha();
              var subtitle = new Subtitle();
              subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
              subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
@@ -717,7 +715,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 //         [DeploymentItem("SubtitleEdit.exe")]
 //         public void FormatReload()
 //         {
-//             var target = new SubStationAlpha();
 //             var subtitle = new Subtitle();
 //             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
 //             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
