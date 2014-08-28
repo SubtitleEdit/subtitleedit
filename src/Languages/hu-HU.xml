@@ -1519,9 +1519,9 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <SpectrogramAppearance>Spektrogram megjelenés</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Egy színátmenetes</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasszikus</SpectrogramClassic>
-    <WaveformUseFFMPEG>FFMPEG használata a wav kiemelésre</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>FFMPEG helye</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>FFMPEG keresése</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>FFmpeg használata a wav kiemelésre</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>FFmpeg helye</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>FFmpeg keresése</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>VLC hordozható keresése</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Speciális) Sub Station Alpha stílus</SubStationAlphaStyle>
     <ChooseFont>Válasszon betűtípust</ChooseFont>

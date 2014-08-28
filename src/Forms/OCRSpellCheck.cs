@@ -106,10 +106,10 @@ namespace Nikse.SubtitleEdit.Forms
                             startOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i - 1, 1));
                         if (startOk)
                         {
-                            bool endOK = (i + word.Length == richTextBoxParagraph.Text.Length);
-                            if (!endOK)
-                                endOK = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i + word.Length, 1));
-                            if (endOK)
+                            bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
+                            if (!endOk)
+                                endOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i + word.Length, 1));
+                            if (endOk)
                             {
                                 richTextBoxParagraph.SelectionStart = i+ 1;
                                 richTextBoxParagraph.SelectionLength = word.Length;

@@ -1528,9 +1528,9 @@ Kontynuować?</SubtitleAppendPrompt>
     <SpectrogramAppearance>Wygląd spektrogramu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Wypełnienie gradientem w jednym kolorze</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasyczny</SpectrogramClassic>
-    <WaveformUseFFMPEG>Użyj FFMPEG do ekstrakcji audio</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Ścieżka do FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Przejdź do FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Użyj FFmpeg do ekstrakcji audio</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Ścieżka do FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Przejdź do FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Przejdź do VLC Portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Wybierz czcionkę</ChooseFont>

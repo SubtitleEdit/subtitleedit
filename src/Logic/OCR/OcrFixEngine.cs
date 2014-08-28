@@ -1860,12 +1860,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             startOk = true;
                         if (startOk)
                         {
-                            bool endOK = (i + word.Length == text.Length);
-                            if (!endOK)
-                                endOK = (" ¡¿<>-\"”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
-                            if (!endOK)
-                                endOK = newWord.EndsWith(" ");
-                            if (endOK)
+                            bool endOk = (i + word.Length == text.Length);
+                            if (!endOk)
+                                endOk = (" ¡¿<>-\"”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i + word.Length, 1));
+                            if (!endOk)
+                                endOk = newWord.EndsWith(" ");
+                            if (endOk)
                             {
                                 sb.Append(newWord);
                                 appendFrom = i + word.Length;

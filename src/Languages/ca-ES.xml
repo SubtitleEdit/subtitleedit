@@ -1511,9 +1511,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpectrogramAppearance>Aparença espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Color degradat</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clàsic</SpectrogramClassic>
-    <WaveformUseFFMPEG>Empra FFMPEG per extreure ona</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Ruta de FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Navega a FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Empra FFmpeg per extreure ona</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Ruta de FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Navega a FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Navega a VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Estil subtítol Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Escolliu font</ChooseFont>

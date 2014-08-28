@@ -1537,9 +1537,9 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpectrogramAppearance>Внешний вид спектрограммы</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Градиентная заливка одним цветом</SpectrogramOneColorGradient>
     <SpectrogramClassic>Классический</SpectrogramClassic>
-    <WaveformUseFFMPEG>Использовать FFMPEG для извлечения звука</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Путь к FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Обзор FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Использовать FFmpeg для извлечения звука</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Путь к FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Обзор FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Обзор VLC portable</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(Дополнительно) Sub Station Alpha стиль</SubStationAlphaStyle>
     <ChooseFont>Выбрать шрифт</ChooseFont>

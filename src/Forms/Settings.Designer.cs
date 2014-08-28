@@ -160,10 +160,10 @@
             this.radioButtonVideoPlayerManagedDirectX = new System.Windows.Forms.RadioButton();
             this.tabPageWaveForm = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.buttonBrowseToFFMPEG = new System.Windows.Forms.Button();
-            this.textBoxFFMPEGPath = new System.Windows.Forms.TextBox();
-            this.labelFFMPEGPath = new System.Windows.Forms.Label();
-            this.checkBoxUseFFMPEG = new System.Windows.Forms.CheckBox();
+            this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
+            this.textBoxFFmpegPath = new System.Windows.Forms.TextBox();
+            this.labelFFmpegPath = new System.Windows.Forms.Label();
+            this.checkBoxUseFFmpeg = new System.Windows.Forms.CheckBox();
             this.groupBoxSpectrogram = new System.Windows.Forms.GroupBox();
             this.labelSpectrogramAppearance = new System.Windows.Forms.Label();
             this.comboBoxSpectrogramAppearance = new System.Windows.Forms.ComboBox();
@@ -281,7 +281,7 @@
             this.colorDialogSSAStyle = new System.Windows.Forms.ColorDialog();
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
-            this.openFileDialogFFMPEG = new System.Windows.Forms.OpenFileDialog();
+            this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
             this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
@@ -1857,52 +1857,52 @@
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.buttonBrowseToFFMPEG);
-            this.groupBox3.Controls.Add(this.textBoxFFMPEGPath);
-            this.groupBox3.Controls.Add(this.labelFFMPEGPath);
-            this.groupBox3.Controls.Add(this.checkBoxUseFFMPEG);
+            this.groupBox3.Controls.Add(this.buttonBrowseToFFmpeg);
+            this.groupBox3.Controls.Add(this.textBoxFFmpegPath);
+            this.groupBox3.Controls.Add(this.labelFFmpegPath);
+            this.groupBox3.Controls.Add(this.checkBoxUseFFmpeg);
             this.groupBox3.Location = new System.Drawing.Point(406, 325);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(416, 116);
             this.groupBox3.TabIndex = 3;
             this.groupBox3.TabStop = false;
             // 
-            // buttonBrowseToFFMPEG
+            // buttonBrowseToFFmpeg
             // 
-            this.buttonBrowseToFFMPEG.Location = new System.Drawing.Point(381, 65);
-            this.buttonBrowseToFFMPEG.Name = "buttonBrowseToFFMPEG";
-            this.buttonBrowseToFFMPEG.Size = new System.Drawing.Size(29, 21);
-            this.buttonBrowseToFFMPEG.TabIndex = 23;
-            this.buttonBrowseToFFMPEG.Text = "...";
-            this.buttonBrowseToFFMPEG.UseVisualStyleBackColor = true;
-            this.buttonBrowseToFFMPEG.Click += new System.EventHandler(this.buttonBrowseToFFMPEG_Click);
+            this.buttonBrowseToFFmpeg.Location = new System.Drawing.Point(381, 65);
+            this.buttonBrowseToFFmpeg.Name = "buttonBrowseToFFmpeg";
+            this.buttonBrowseToFFmpeg.Size = new System.Drawing.Size(29, 21);
+            this.buttonBrowseToFFmpeg.TabIndex = 23;
+            this.buttonBrowseToFFmpeg.Text = "...";
+            this.buttonBrowseToFFmpeg.UseVisualStyleBackColor = true;
+            this.buttonBrowseToFFmpeg.Click += new System.EventHandler(this.buttonBrowseToFFmpeg_Click);
             // 
-            // textBoxFFMPEGPath
+            // textBoxFFmpegPath
             // 
-            this.textBoxFFMPEGPath.Location = new System.Drawing.Point(9, 65);
-            this.textBoxFFMPEGPath.MaxLength = 1000;
-            this.textBoxFFMPEGPath.Name = "textBoxFFMPEGPath";
-            this.textBoxFFMPEGPath.Size = new System.Drawing.Size(366, 21);
-            this.textBoxFFMPEGPath.TabIndex = 22;
+            this.textBoxFFmpegPath.Location = new System.Drawing.Point(9, 65);
+            this.textBoxFFmpegPath.MaxLength = 1000;
+            this.textBoxFFmpegPath.Name = "textBoxFFmpegPath";
+            this.textBoxFFmpegPath.Size = new System.Drawing.Size(366, 21);
+            this.textBoxFFmpegPath.TabIndex = 22;
             // 
-            // labelFFMPEGPath
+            // labelFFmpegPath
             // 
-            this.labelFFMPEGPath.AutoSize = true;
-            this.labelFFMPEGPath.Location = new System.Drawing.Point(6, 49);
-            this.labelFFMPEGPath.Name = "labelFFMPEGPath";
-            this.labelFFMPEGPath.Size = new System.Drawing.Size(71, 13);
-            this.labelFFMPEGPath.TabIndex = 2;
-            this.labelFFMPEGPath.Text = "FFMPEG path";
+            this.labelFFmpegPath.AutoSize = true;
+            this.labelFFmpegPath.Location = new System.Drawing.Point(6, 49);
+            this.labelFFmpegPath.Name = "labelFFmpegPath";
+            this.labelFFmpegPath.Size = new System.Drawing.Size(71, 13);
+            this.labelFFmpegPath.TabIndex = 2;
+            this.labelFFmpegPath.Text = "FFmpeg path";
             // 
-            // checkBoxUseFFMPEG
+            // checkBoxUseFFmpeg
             // 
-            this.checkBoxUseFFMPEG.AutoSize = true;
-            this.checkBoxUseFFMPEG.Location = new System.Drawing.Point(6, 20);
-            this.checkBoxUseFFMPEG.Name = "checkBoxUseFFMPEG";
-            this.checkBoxUseFFMPEG.Size = new System.Drawing.Size(201, 17);
-            this.checkBoxUseFFMPEG.TabIndex = 1;
-            this.checkBoxUseFFMPEG.Text = "Use FFMPEG for wave file extraction";
-            this.checkBoxUseFFMPEG.UseVisualStyleBackColor = true;
+            this.checkBoxUseFFmpeg.AutoSize = true;
+            this.checkBoxUseFFmpeg.Location = new System.Drawing.Point(6, 20);
+            this.checkBoxUseFFmpeg.Name = "checkBoxUseFFmpeg";
+            this.checkBoxUseFFmpeg.Size = new System.Drawing.Size(201, 17);
+            this.checkBoxUseFFmpeg.TabIndex = 1;
+            this.checkBoxUseFFmpeg.Text = "Use FFmpeg for wave file extraction";
+            this.checkBoxUseFFmpeg.UseVisualStyleBackColor = true;
             // 
             // groupBoxSpectrogram
             // 
@@ -3285,9 +3285,9 @@
             this.labelStatus.TabIndex = 3;
             this.labelStatus.Text = "labelStatus";
             // 
-            // openFileDialogFFMPEG
+            // openFileDialogFFmpeg
             // 
-            this.openFileDialogFFMPEG.FileName = "openFileDialog1";
+            this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
             // checkBoxVideoPlayerPreviewFontBold
             // 
@@ -3639,11 +3639,11 @@
         private System.Windows.Forms.CheckBox checkBoxSpellCheckOneLetterWords;
         private System.Windows.Forms.CheckBox checkBoxTreatINQuoteAsING;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.Button buttonBrowseToFFMPEG;
-        private System.Windows.Forms.TextBox textBoxFFMPEGPath;
-        private System.Windows.Forms.Label labelFFMPEGPath;
-        private System.Windows.Forms.CheckBox checkBoxUseFFMPEG;
-        private System.Windows.Forms.OpenFileDialog openFileDialogFFMPEG;
+        private System.Windows.Forms.Button buttonBrowseToFFmpeg;
+        private System.Windows.Forms.TextBox textBoxFFmpegPath;
+        private System.Windows.Forms.Label labelFFmpegPath;
+        private System.Windows.Forms.CheckBox checkBoxUseFFmpeg;
+        private System.Windows.Forms.OpenFileDialog openFileDialogFFmpeg;
         private System.Windows.Forms.CheckBox checkBoxWaveformHoverFocus;
         private System.Windows.Forms.CheckBox checkBoxListViewMouseEnterFocus;
         private System.Windows.Forms.NumericUpDown numericUpDownMinGapMs;

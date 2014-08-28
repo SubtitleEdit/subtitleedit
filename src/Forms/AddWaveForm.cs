@@ -67,9 +67,9 @@ namespace Nikse.SubtitleEdit.Forms
                 exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
                 if (!System.IO.File.Exists(exeFilePath))
                 {
-                    if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
+                    if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
                     {
-                        // We will run FFMPEG
+                        // We will run FFmpeg
                     }
                     else
                     {
@@ -88,9 +88,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelInfo.Text = "VLC";
-            if (Configuration.Settings.General.UseFFMPEGForWaveExtraction && File.Exists(Configuration.Settings.General.FFMPEGLocation))
+            if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
             {
-                string FFMPEGWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
+                string FFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.
@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Forms
                 //-vol 448 will boot volume... 256 is normal
                 //-ac 2 means 2 channels
 
-                exeFilePath = Configuration.Settings.General.FFMPEGLocation;
-                parameters = string.Format(FFMPEGWaveTranscodeSettings, SourceVideoFileName, targetFile);
-                labelInfo.Text = "FFMPEG";
+                exeFilePath = Configuration.Settings.General.FFmpegLocation;
+                parameters = string.Format(FFmpegWaveTranscodeSettings, SourceVideoFileName, targetFile);
+                labelInfo.Text = "FFmpeg";
             }
 
             labelPleaseWait.Visible = true;
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
             FileInfo fi = new FileInfo(targetFile);
             if (fi.Length <= 200)
             {
-                MessageBox.Show("Sorry! VLC/FFMPEG was unable to extract audio to wave file via this command line:" + Environment.NewLine +
+                MessageBox.Show("Sorry! VLC/FFmpeg was unable to extract audio to wave file via this command line:" + Environment.NewLine +
                                 Environment.NewLine +
                                 "Command line: " + exeFilePath + " " + parameters + Environment.NewLine +
                                 Environment.NewLine +
@@ -291,8 +291,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (Configuration.Settings.General.UseFFMPEGForWaveExtraction)
-                { // don't know how to extract audio number x via FFMPEG...
+                if (Configuration.Settings.General.UseFFmpegForWaveExtraction)
+                { // don't know how to extract audio number x via FFmpeg...
                     numberOfAudioTracks = 1;
                     _audioTrackNumber = 0;
                 }

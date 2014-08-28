@@ -1487,9 +1487,9 @@ Poursuivre?</SubtitleAppendPrompt>
     <SpectrogramAppearance>Apparence :</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Gradient d'une seule couleur</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classique</SpectrogramClassic>
-    <WaveformUseFFMPEG>Utiliser FFmpeg pour extraire l'audio</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Chemin de FFmpeg :</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Rechercher FFmpeg.exe...</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Utiliser FFmpeg pour extraire l'audio</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Chemin de FFmpeg :</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Rechercher FFmpeg.exe...</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Rechercher VLC portable...</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Style du SSA (SubStation Alpha)</SubStationAlphaStyle>
     <ChooseFont>Choisir fonte</ChooseFont>

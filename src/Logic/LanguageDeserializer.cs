@@ -1931,8 +1931,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ImportThisVobSubSubtitle":
                     language.Main.ImportThisVobSubSubtitle = reader.Value;
                     break;
-                case "Main/FileXIsLargerThan10Mb":
-                    language.Main.FileXIsLargerThan10Mb = reader.Value;
+                case "Main/FileXIsLargerThan10MB":
+                    language.Main.FileXIsLargerThan10MB = reader.Value;
                     break;
                 case "Main/ContinueAnyway":
                     language.Main.ContinueAnyway = reader.Value;
@@ -4190,14 +4190,14 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/SpectrogramClassic":
                     language.Settings.SpectrogramClassic = reader.Value;
                     break;
-                case "Settings/WaveformUseFFMPEG":
-                    language.Settings.WaveformUseFFMPEG = reader.Value;
+                case "Settings/WaveformUseFFmpeg":
+                    language.Settings.WaveformUseFFmpeg = reader.Value;
                     break;
-                case "Settings/WaveformFFMPEGPath":
-                    language.Settings.WaveformFFMPEGPath = reader.Value;
+                case "Settings/WaveformFFmpegPath":
+                    language.Settings.WaveformFFmpegPath = reader.Value;
                     break;
-                case "Settings/WaveformBrowseToFFMPEG":
-                    language.Settings.WaveformBrowseToFFMPEG = reader.Value;
+                case "Settings/WaveformBrowseToFFmpeg":
+                    language.Settings.WaveformBrowseToFFmpeg = reader.Value;
                     break;
                 case "Settings/WaveformBrowseToVLC":
                     language.Settings.WaveformBrowseToVLC = reader.Value;

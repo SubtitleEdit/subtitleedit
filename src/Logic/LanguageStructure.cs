@@ -787,7 +787,7 @@
             public string VisualSyncPerformedOnSelectedLines { get; set; }
             public string VisualSyncPerformed { get; set; }
             public string ImportThisVobSubSubtitle { get; set; }
-            public string FileXIsLargerThan10Mb { get; set; }
+            public string FileXIsLargerThan10MB { get; set; }
             public string ContinueAnyway { get; set; }
             public string BeforeLoadOf { get; set; }
             public string LoadedSubtitleX { get; set; }
@@ -1698,9 +1698,9 @@
             public string SpectrogramAppearance { get; set; }
             public string SpectrogramOneColorGradient { get; set; }
             public string SpectrogramClassic { get; set; }
-            public string WaveformUseFFMPEG { get; set; }
-            public string WaveformFFMPEGPath { get; set; }
-            public string WaveformBrowseToFFMPEG { get; set; }
+            public string WaveformUseFFmpeg { get; set; }
+            public string WaveformFFmpegPath { get; set; }
+            public string WaveformBrowseToFFmpeg { get; set; }
             public string WaveformBrowseToVLC { get; set; }
             public string SubStationAlphaStyle { get; set; }
             public string ChooseFont { get; set; }

@@ -1522,9 +1522,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpectrogramAppearance>Όψη φασματογράμματος</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Διαβάθμιση ενός χρώματος</SpectrogramOneColorGradient>
     <SpectrogramClassic>Κλασσικό</SpectrogramClassic>
-    <WaveformUseFFMPEG>Χρησιμοποίησε το FFMPEG για εξαγωγή της κυματομορφής</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Διαδρομή για το FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Περιήγηση στο FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Χρησιμοποίησε το FFmpeg για εξαγωγή της κυματομορφής</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Διαδρομή για το FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Περιήγηση στο FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Περιηγηθείτε στον φορητό VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Στυλ Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Επιλέξτε γραμματοσειρά</ChooseFont>
