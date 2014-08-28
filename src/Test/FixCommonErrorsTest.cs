@@ -66,7 +66,6 @@ namespace Test
             Stream strm = asm.GetManifestResourceStream("Test.Hunspellx86.dll");
             if (strm != null)
             {
-                var rdr = new StreamReader(strm);
                 using (Stream file = File.OpenWrite("Hunspellx86.dll"))
                 {
                     CopyStream(strm, file);
@@ -75,7 +74,6 @@ namespace Test
             strm = asm.GetManifestResourceStream("Test.Hunspellx64.dll");
             if (strm != null)
             {
-                var rdr = new StreamReader(strm);
                 using (Stream file = File.OpenWrite("Hunspellx64.dll"))
                 {
                     CopyStream(strm, file);

@@ -66,56 +66,6 @@ namespace Test
         //    }
         //}
 
-        private void checkFields(string cultureName, object completeLang, object cultureLang, FieldInfo[] fields)
-        {
-            foreach (FieldInfo fieldInfo in fields)
-            {
-                if (fieldInfo.IsPublic && fieldInfo.FieldType.Namespace.Equals("Nikse.SubtitleEdit.Logic")) {
-                    object completeLangatt = fieldInfo.GetValue(completeLang);
-                    object cultureLangatt = fieldInfo.GetValue(cultureLang);
-
-                    if ((cultureLangatt == null) || (completeLangatt == null))
-                    {
-                        Assert.Fail(fieldInfo.Name + " is mssing");
-                    }
-                    //Console.Out.WriteLine("Field: " + fieldInfo.Name + " checked of type:" + fieldInfo.FieldType.FullName);
-                    if (!fieldInfo.FieldType.FullName.Equals("System.String"))
-                    {
-                        checkFields(cultureName, completeLang, cultureLang, fieldInfo.FieldType.GetFields());
-                        checkProperty(cultureName, completeLangatt, cultureLangatt, fieldInfo.FieldType.GetProperties());
-                    }
-                    else
-                    {
-                        Assert.Fail("no expecting a string here");
-                    }
-                }
-            }
-        }
-
-        private void checkProperty(string cultureName, object completeLang, object cultureLang, PropertyInfo[] properties)
-        {
-            foreach (PropertyInfo propertie in properties)
-            {
-                if (propertie.CanRead && propertie.Name != "HelpFile")
-                {
-                    object completeLangValue = propertie.GetValue(completeLang, null);
-                    object cultureLangValue = propertie.GetValue(cultureLang, null);
-                    //If the translated version is null there is a error (also the english version is not allowed to be null)
-                    if ((cultureLangValue == null) || (completeLangValue == null) || (String.IsNullOrWhiteSpace(completeLangValue.ToString())))
-                    {
-                        Assert.Fail(propertie.Name + " is mssing in language " + cultureName);
-                        propertie.SetValue(cultureLang, completeLangValue, null);
-                        //Console.Out.WriteLine(propertie.Name + " inserted");
-                    }
-                    //Console.Out.WriteLine("propertie: " + propertie.Name + " checked of type:" + propertie.PropertyType.FullName);
-                    if (!propertie.PropertyType.FullName.Equals("System.String"))
-                    {
-                        checkFields(cultureName, completeLangValue, cultureLangValue, propertie.PropertyType.GetFields());
-                        checkProperty(cultureName, completeLangValue, cultureLangValue, propertie.PropertyType.GetProperties());
-                    }
-                }
-            }
-        }
 
     }
 
