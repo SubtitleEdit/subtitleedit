@@ -19,6 +19,19 @@ namespace Nikse.SubtitleEdit.Logic
             return diff < tolerance && diff > -tolerance;
         }
 
+        public static bool IsColorClose(byte aa, byte ar, byte ag, byte ab, Color b, int tolerance)
+        {
+            if (aa < 120 && b.A < 120)
+                return true; // transparent
+
+            if (aa > 250 && ar > 90 && ag > 90 && ab > 90 &&
+                b.A > 250 && b.R > 90 && b.G > 90 && b.B > 90)
+                return true; // dark, non transparent
+
+            int diff = (ar + ag + ab) - (b.R + b.G + b.B);
+            return diff < tolerance && diff > -tolerance;
+        }
+
         public static NikseBitmap CropTopAndBottom(NikseBitmap bmp, out int topCropping)
         {
             int startTop = 0;
@@ -318,24 +331,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return different;
         }
-
-        public static int IsBitmapsAlike(FastBitmap bmp1, Bitmap bmp2)
-        {
-            int different = 0;
-
-            for (int x = 1; x < bmp1.Width; x++)
-            {
-                for (int y = 1; y < bmp1.Height; y++)
-                {
-                    Color c1 = bmp1.GetPixel(x, y);
-                    Color c2 = bmp1.GetPixel(x, y);
-                    if (!IsColorClose(c1, c2, 20))
-                        different++;
-                }
-            }
-            return different;
-        }
-
+     
         private static List<ImageSplitterItem> SplitHorizontal(ImageSplitterItem verticalItem, int xOrMorePixelsMakesSpace)
         { // split line into letters
             NikseBitmap bmp = verticalItem.NikseBitmap;
@@ -367,7 +363,7 @@ namespace Nikse.SubtitleEdit.Logic
                         for (int j = lastEndX; j < startX; j++)
                         {
                             int y1 = j;
-                            if (IsVerticalLineTransparent2(bmp, ref y1, j))
+                            if (IsVerticalLineTransparentAlphaOnly(bmp, ref y1, j))
                                 cleanCount++;
                         }
                         if (cleanCount > 0 && !spaceJustAdded)
@@ -429,7 +425,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     for (int j = lastEndX; j < startX; j++)
                                     {
                                         int y1=j;
-                                        if (IsVerticalLineTransparent2(bmp, ref y1, j))
+                                        if (IsVerticalLineTransparentAlphaOnly(bmp, ref y1, j))
                                             cleanCount++;
                                     }
                                     if (cleanCount > 2 && !spaceJustAdded)
@@ -487,10 +483,10 @@ namespace Nikse.SubtitleEdit.Logic
             int xRemoveBlackBar = bmp.Width-1;
             for (int yRemoveBlackBar = 0; yRemoveBlackBar < bmp.Height; yRemoveBlackBar++)
             {
-                Color c = bmp.GetPixel(xRemoveBlackBar, yRemoveBlackBar);
-                if (c.A == 0 || IsColorClose(c, Color.Black, 280))
+                byte[] c = bmp.GetPixelColors(xRemoveBlackBar, yRemoveBlackBar);
+                if (c[0] == 0 || IsColorClose(c[0], c[1], c[2], c[3], Color.Black, 280))
                 {
-                    if (bmp.GetPixel(xRemoveBlackBar - 1, yRemoveBlackBar).A == 0)
+                    if (bmp.GetAlpha(xRemoveBlackBar - 1, yRemoveBlackBar) == 0)
                         bmp.SetPixel(xRemoveBlackBar, yRemoveBlackBar, Color.Transparent);
                 }
             }
@@ -510,10 +506,10 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 else
                 {
-                    Color c1 = bmp.GetPixel(newX - 1, newY - 1);
-                    Color c2 = bmp.GetPixel(newX - 1, newY);
-                    if ((c1.A == 0 || IsColorClose(c1, Color.Black, 280)) && // still dark color...
-                        (c2.A == 0 || IsColorClose(c2, Color.Black, 280)))
+                    byte[] c1 = bmp.GetPixelColors(newX - 1, newY - 1);
+                    byte[] c2 = bmp.GetPixelColors(newX - 1, newY);
+                    if ((c1[0] == 0 || IsColorClose(c1[0], c1[1], c1[2], c1[3], Color.Black, 280)) && // still dark color...
+                        (c2[0] == 0 || IsColorClose(c2[0], c2[1], c2[2], c2[3], Color.Black, 280)))
                     {
                         cursivePoints.Add(new Point(newX, newY));
                         if (newX > 1)
@@ -537,23 +533,21 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsVerticalLineTransparent(NikseBitmap bmp, ref int y, int x)
         {
-            bool allTransparent = true;
             for (y = 0; y < bmp.Height - 1; y++)
             {
-                Color c = bmp.GetPixel(x, y);
-                if (c.A == 0 || IsColorClose(c, Color.Black, 280)) // still dark color...
+                var argb = bmp.GetPixelColors(x, y);
+                if (argb[0] < 10 || IsColorClose(argb[0], argb[1], argb[2], argb[3], Color.Black, 280)) // still dark color...
                 {
                 }
                 else
                 {
-                    allTransparent = false;
-                    break;
+                    return false;
                 }
             }
-            return allTransparent;
-        }
+            return true;
+        }    
 
-        private static bool IsVerticalLineTransparent2(NikseBitmap bmp, ref int y, int x)
+        private static bool IsVerticalLineTransparentAlphaOnly(NikseBitmap bmp, ref int y, int x)
         {
             bool allTransparent = true;
             for (y = 0; y < bmp.Height - 1; y++)

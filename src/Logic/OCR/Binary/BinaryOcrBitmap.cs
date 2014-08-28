@@ -119,12 +119,12 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
             {
                 for (int x = 0; x < Width; x++)
                 {
-                    SetPixel(x, y, nbmp.GetPixel(x, y));
+                    SetPixelViaAlpha(x, y, nbmp.GetAlpha(x, y));
                 }
             }
             Hash = MurMurHash3.Hash(_colors);
             CalcuateNumberOfColoredPixels();
-        }
+        }       
 
         private void CalcuateNumberOfColoredPixels()
         {
@@ -198,6 +198,14 @@ namespace Nikse.SubtitleEdit.Logic.OCR.Binary
         public void SetPixel(int x, int y, Color c)
         {
             if (c.A < 100)
+                _colors[Width * y + x] = 0;
+            else
+                _colors[Width * y + x] = 1;
+        }
+
+        public void SetPixelViaAlpha(int x, int y, int alpha)
+        {
+            if (alpha < 100)
                 _colors[Width * y + x] = 0;
             else
                 _colors[Width * y + x] = 1;
