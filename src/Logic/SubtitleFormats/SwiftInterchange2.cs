@@ -7,8 +7,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SwiftInterchange2 : SubtitleFormat
     {
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d \d\d:\d\d:\d\d.\d\d\d .*$", RegexOptions.Compiled);
-
         public override string Extension
         {
             get { return ".sif"; }

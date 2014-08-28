@@ -8003,7 +8003,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     text = text.Substring(text.IndexOf(":") + 1).Trim().ToLower();
                     var form = new AddToUserDic();
-                    form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
+                    form.Initialize(comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
