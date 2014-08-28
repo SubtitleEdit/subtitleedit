@@ -6660,6 +6660,8 @@ namespace Nikse.SubtitleEdit.Forms
                         tesseractName = "chi_tra";
                     if (tesseractName == "fas" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
                         tesseractName = "per";
+                    if (tesseractName == "nob" && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
+                        tesseractName = "nor";
                     string trainDataFileName = dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata";
                     if (!list.Contains(culture.ThreeLetterISOLanguageName) && File.Exists(trainDataFileName))
                     {
