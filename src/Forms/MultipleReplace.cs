@@ -458,6 +458,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewReplaceList.Items[index].Selected = false;
             listViewReplaceList.Items[index2].Selected = true;
             SaveReplaceList(false);
+            GeneratePreview();
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
