@@ -826,7 +826,13 @@ namespace Nikse.SubtitleEdit.Logic
         public Color GetPixel(int x, int y)
         {
             _pixelAddress = (x * 4) + (y * 4 * Width);
-            return Color.FromArgb(_bitmapData[_pixelAddress+3], _bitmapData[_pixelAddress+2], _bitmapData[_pixelAddress+1], _bitmapData[_pixelAddress]);
+            return Color.FromArgb(_bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress]);
+        }
+
+        public byte[] GetPixelColors(int x, int y)
+        {
+            _pixelAddress = (x * 4) + (y * 4 * Width);
+            return new byte[4] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
         public Color GetPixelNext()
