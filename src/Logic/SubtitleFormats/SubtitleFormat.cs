@@ -240,8 +240,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     try
                                     {
                                         object pluginObject = System.Activator.CreateInstance(exportedType);
-                                        if (pluginObject is SubtitleFormat)
-                                            _allSubtitleFormats.Insert(1, pluginObject as SubtitleFormat);
+                                        var po = pluginObject as SubtitleFormat;
+                                        if (po != null)
+                                            _allSubtitleFormats.Insert(1, po);
                                     }
                                     catch
                                     {
