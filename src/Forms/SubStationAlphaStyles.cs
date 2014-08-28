@@ -1067,9 +1067,13 @@ namespace Nikse.SubtitleEdit.Forms
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
             }
-            numericUpDownOutline.Enabled = (sender as RadioButton).Checked;
-            labelShadow.Enabled = (sender as RadioButton).Checked;
-            numericUpDownShadowWidth.Enabled = (sender as RadioButton).Checked;
+            var rb = (sender as RadioButton);
+            if (rb != null)
+            {
+                numericUpDownOutline.Enabled = rb.Checked;
+                labelShadow.Enabled = rb.Checked;
+                numericUpDownShadowWidth.Enabled = rb.Checked;
+            }
         }
 
         private void radioButtonOpaqueBox_CheckedChanged(object sender, EventArgs e)
@@ -1082,9 +1086,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
             }
-            numericUpDownOutline.Enabled = !(sender as RadioButton).Checked;
+            var rb = (sender as RadioButton);
+            numericUpDownOutline.Enabled = !rb.Checked;
             labelShadow.Enabled = !(sender as RadioButton).Checked;
-            numericUpDownShadowWidth.Enabled = !(sender as RadioButton).Checked;
+            numericUpDownShadowWidth.Enabled = !rb.Checked;
         }
 
         private void listViewStyles_KeyDown(object sender, KeyEventArgs e)

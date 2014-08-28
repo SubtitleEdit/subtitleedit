@@ -198,11 +198,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 info.Width = width;
                 info.Height = height;
-                if ((quartzFilgraphManager as IBasicVideo2).AvgTimePerFrame > 0)
-                    info.FramesPerSecond = 1 / (quartzFilgraphManager as IBasicVideo2).AvgTimePerFrame;
+                var basicVideo2 = (quartzFilgraphManager as IBasicVideo2);
+                if (basicVideo2.AvgTimePerFrame > 0)
+                    info.FramesPerSecond = 1 / basicVideo2.AvgTimePerFrame;
                 info.Success = true;
-                info.TotalMilliseconds = (quartzFilgraphManager as IMediaPosition).Duration * 1000;
-                info.TotalSeconds = (quartzFilgraphManager as IMediaPosition).Duration;
+                var iMediaPosition = (quartzFilgraphManager as IMediaPosition);
+                info.TotalMilliseconds = iMediaPosition.Duration * 1000;
+                info.TotalSeconds = iMediaPosition.Duration;
                 info.TotalFrames = info.TotalSeconds * info.FramesPerSecond;
                 info.VideoCodec = string.Empty; // TODO... get real codec names from quartzFilgraphManager.FilterCollection;
 

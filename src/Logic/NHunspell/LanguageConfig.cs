@@ -151,7 +151,7 @@ namespace NHunspell
                     throw new ArgumentNullException("LanguageCode cannot be null");
                 }
 
-                if (value == string.Empty)
+                if (value.Length == 0)
                 {
                     throw new ArgumentException("LanguageCode cannot be empty");
                 }

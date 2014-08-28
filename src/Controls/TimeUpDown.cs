@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (maskedTextBox1.Text.Replace(".", string.Empty).Replace(",", string.Empty).Replace(":", string.Empty).Trim() == string.Empty)
+                if (maskedTextBox1.Text.Replace(".", string.Empty).Replace(",", string.Empty).Replace(":", string.Empty).Trim().Length == 0)
                    return TimeCode.MaxTime;
 
                 string startTime = maskedTextBox1.Text;

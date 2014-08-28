@@ -165,12 +165,12 @@ namespace NHunspell
         {
             this.processors = config.Processors;
 
-            if (config.HunspellAffFile != null && config.HunspellAffFile != string.Empty)
+            if (config.HunspellAffFile != null && config.HunspellAffFile.Length > 0)
             {
                 this.hunspells = new Stack<Hunspell>(this.processors);
                 for (int count = 0; count < this.processors; ++count)
                 {
-                    if (config.HunspellKey != null && config.HunspellKey != string.Empty)
+                    if (config.HunspellKey != null && config.HunspellKey.Length > 0)
                     {
                         this.hunspells.Push(new Hunspell(config.HunspellAffFile, config.HunspellDictFile, config.HunspellKey));
                     }
@@ -181,7 +181,7 @@ namespace NHunspell
                 }
             }
 
-            if (config.HyphenDictFile != null && config.HyphenDictFile != string.Empty)
+            if (config.HyphenDictFile != null && config.HyphenDictFile.Length > 0)
             {
                 this.hyphens = new Stack<Hyphen>(this.processors);
                 for (int count = 0; count < this.processors; ++count)
@@ -190,7 +190,7 @@ namespace NHunspell
                 }
             }
 
-            if (config.MyThesIdxFile != null && config.MyThesIdxFile != string.Empty)
+            if (config.MyThesIdxFile != null && config.MyThesIdxFile.Length > 0)
             {
                 this.myTheses = new Stack<MyThes>(this.processors);
                 for (int count = 0; count < this.processors; ++count)

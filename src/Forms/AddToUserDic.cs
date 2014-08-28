@@ -9,8 +9,6 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class AddToUserDic : Form
     {
 
-        Subtitle _subtitle;
-
         public AddToUserDic()
         {
             InitializeComponent();
@@ -70,10 +68,8 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Cancel;
         }
 
-        internal void Initialize(Subtitle subtitle, string hunspellName, string text)
+        internal void Initialize(string hunspellName, string text)
         {
-            _subtitle = subtitle;
-
             if (!string.IsNullOrEmpty(text))
                 textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
 
