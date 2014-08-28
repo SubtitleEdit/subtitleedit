@@ -150,7 +150,7 @@ namespace NHunspell
                 throw new InvalidOperationException("Dictionary is not loaded");
             }
 
-            if (word == null || word.Length == 0)
+            if (string.IsNullOrEmpty(word))
             {
                 return null;
             }
