@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return true; }
         }
 
-        public void Save(string fileName, Subtitle subtitle)
+        public void Save(string fileName)
         {
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             fs.Close();

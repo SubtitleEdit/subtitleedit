@@ -177,9 +177,6 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern IntPtr libvlc_new(int argc, [MarshalAs(UnmanagedType.LPArray)] string[] argv);
 
         [DllImport("libvlc")]
-        internal static extern IntPtr libvlc_get_version();
-
-        [DllImport("libvlc")]
         internal static extern void libvlc_release(IntPtr libVlc);
 
         // LibVLC Media - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media.html
@@ -193,10 +190,7 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern void libvlc_media_release(IntPtr media);
 
 
-        // LibVLC Video Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__video.html#g8f55326b8b51aecb59d8b8a446c3f118
-        [DllImport("libvlc")]
-        internal static extern void libvlc_video_get_size(IntPtr mediaPlayer, UInt32 number, out UInt32 x, out UInt32 y);
-
+        // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
         [DllImport("libvlc")]
         internal static extern int libvlc_audio_get_track_count(IntPtr mediaPlayer);
 
@@ -228,16 +222,10 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern void libvlc_media_player_set_hwnd(IntPtr mediaPlayer, IntPtr windowsHandle);
 
         [DllImport("libvlc")]
-        internal static extern int libvlc_media_player_is_playing(IntPtr mediaPlayer);
-
-        [DllImport("libvlc")]
         internal static extern Int64 libvlc_media_player_get_time(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
         internal static extern void libvlc_media_player_set_time(IntPtr mediaPlayer, Int64 position);
-
-        [DllImport("libvlc")]
-        internal static extern float libvlc_media_player_get_fps(IntPtr mediaPlayer);
 
         [DllImport("libvlc")]
         internal static extern byte libvlc_media_player_get_state(IntPtr mediaPlayer);

@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Bitmap bmp = GenerateImageFromTextWithStyle(s, bold);
             var nbmp = new NikseBitmap(bmp);
-            nbmp.MakeTwoColor(210, 280);
+            nbmp.MakeTwoColor(280);
             var list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, 10, false, false, 25);
             if (list.Count == 1)
             {

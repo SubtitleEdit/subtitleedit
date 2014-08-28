@@ -10,19 +10,17 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class TimedTextProperties : Form
     {
         private Subtitle _subtitle;
-        private string _videoFileName;
         private XmlDocument _xml;
         private XmlNode _xmlHead;
         private XmlNamespaceManager _nsmgr;
         private string _NA;
 
-        public TimedTextProperties(Subtitle subtitle, string videoFileName)
+        public TimedTextProperties(Subtitle subtitle)
         {
             InitializeComponent();
 
             this._subtitle = subtitle;
-            this._videoFileName = videoFileName;
-            _NA = "[" + Configuration.Settings.Language.General.NotAvailable + "]";
+                 _NA = "[" + Configuration.Settings.Language.General.NotAvailable + "]";
             comboBoxDropMode.Items[0] = _NA;
             comboBoxTimeBase.Items[0] = _NA;
             comboBoxDefaultStyle.Items.Add(_NA);

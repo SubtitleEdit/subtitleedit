@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int number = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                WriteParagraph(fs, p, number);
+                WriteParagraph(p);
                 number++;
             }
 
@@ -51,10 +51,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Close();
         }
 
-        private static void WriteParagraph(FileStream fs, Paragraph p, int number)
+        private static void WriteParagraph(Paragraph p)
         {
-            WriteTimeCode(fs, p.StartTime);
-            WriteTimeCode(fs, p.EndTime);
+            WriteTimeCode();
+            WriteTimeCode();
 
             string text = p.Text;
             if (Utilities.CountTagInText(text, Environment.NewLine)> 1)
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private static void WriteTimeCode(FileStream fs, TimeCode timeCode)
+        private static void WriteTimeCode()
         {
             // write 8 bytes time code
         }

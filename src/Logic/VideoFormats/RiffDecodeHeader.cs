@@ -259,12 +259,12 @@ namespace Nikse.SubtitleEdit.Logic
             if (AviRiffData.ckidMainAVIHeader == FourCC)
             {
                 // Main AVI header
-                DecodeAVIHeader(rp, unpaddedLength, paddedLength);
+                DecodeAVIHeader(rp, paddedLength);
             }
             else if (AviRiffData.ckidAVIStreamHeader == FourCC)
             {
                 // Stream header
-                DecodeAVIStream(rp, unpaddedLength, paddedLength);
+                DecodeAVIStream(rp, paddedLength);
             }
             else if (AviRiffData.ckidAVIISFT == FourCC)
             {
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private unsafe void DecodeAVIHeader(RiffParser rp, int unpaddedLength, int length)
+        private unsafe void DecodeAVIHeader(RiffParser rp, int length)
         {
             //if (length < sizeof(AVIMAINHEADER))
             //{
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        private unsafe void DecodeAVIStream(RiffParser rp, int unpaddedLength, int length)
+        private unsafe void DecodeAVIStream(RiffParser rp, int length)
         {
             byte[] ba = new byte[length];
 

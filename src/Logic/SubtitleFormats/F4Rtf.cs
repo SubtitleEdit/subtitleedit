@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Text = ToF4Text(subtitle, title);
+            rtBox.Text = ToF4Text(subtitle);
             string rtf = rtBox.Rtf;
             rtBox.Dispose();
             return rtf;

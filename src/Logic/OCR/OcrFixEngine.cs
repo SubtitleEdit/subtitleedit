@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-"))
                                 doFixWord = false;
                             if (doFixWord)
-                                fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                                fixedWord = FixCommonWordErrors(word.ToString());
                             else
                                 fixedWord = word.ToString();
                         }
@@ -453,7 +453,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-"))
                     doFixWord = false;
                 if (doFixWord)
-                    fixedWord = FixCommonWordErrors(word.ToString(), lastWord);
+                    fixedWord = FixCommonWordErrors(word.ToString());
                 else
                     fixedWord = word.ToString();
 
@@ -594,7 +594,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
                             fixedWord = word.ToString();
                         else
-                            fixedWord = FixCommonWordErrorsQuick(word.ToString(), lastWord);
+                            fixedWord = FixCommonWordErrorsQuick(word.ToString());
                         sb.Append(fixedWord);
                         lastWord = fixedWord;
                         word = new StringBuilder();
@@ -608,7 +608,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             }
             if (word.Length > 0) // last word
             {
-                string fixedWord = FixCommonWordErrorsQuick(word.ToString(), lastWord);
+                string fixedWord = FixCommonWordErrorsQuick(word.ToString());
                 sb.Append(fixedWord);
             }
             return sb.ToString();
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return text;
         }
 
-        private string FixCommonWordErrors(string word, string lastWord)
+        private string FixCommonWordErrors(string word)
         {
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
@@ -820,7 +820,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return pre + word + post;
         }
 
-        private string FixCommonWordErrorsQuick(string word, string lastWord)
+        private string FixCommonWordErrorsQuick(string word)
         {
             //always replace list
             foreach (string letter in _partialWordReplaceListAlways.Keys)
@@ -1488,7 +1488,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             if (promptForFixingErrors && line.Length == 1 && !IsWordKnownOrNumber(line, line))
             {
-                SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, new string[1] { line}, 0, line, localIgnoreWords);
+                SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, line, localIgnoreWords);
                 if (res.FixedWholeLine || res.Fixed)
                     return res.Line;
                 wordsNotFound++;
@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                             if (word.EndsWith("</i>"))
                                 word = word.Remove(word.Length-4, 4);
 
-                            SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, words, i, word, suggestions);
+                            SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, word, suggestions);
 
                             if (res.FixedWholeLine)
                             {
@@ -1741,10 +1741,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
         /// Spellcheck for OCR
         /// </summary>
         /// <returns>True, if word is fixed</returns>
-        private SpellcheckOcrTextResult SpellcheckOcrText(string line, Bitmap bitmap, string[] words, int i, string word, List<string> suggestions)
+        private SpellcheckOcrTextResult SpellcheckOcrText(string line, Bitmap bitmap, string word, List<string> suggestions)
         {
             var result = new SpellcheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
-            _spellCheck.Initialize(word, suggestions, line, words, i, bitmap);
+            _spellCheck.Initialize(word, suggestions, line, bitmap);
             _spellCheck.ShowDialog(_parentForm);
             switch (_spellCheck.ActionResult)
             {

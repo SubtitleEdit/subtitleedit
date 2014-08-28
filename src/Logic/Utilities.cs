@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic
             return bytes;
         }
 
-        public static VideoInfo GetVideoInfo(string fileName, EventHandler event1)
+        public static VideoInfo GetVideoInfo(string fileName)
         {
             VideoInfo info = TryReadVideoInfoViaAviHeader(fileName);
             if (info.Success)
@@ -351,7 +351,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text, string language)
         {
-            return AutoBreakLine(text, 5, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+            return AutoBreakLine(text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, language);
         }
 
         public static string AutoBreakLine(string text)
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text == null || text.Length < 3)
                 return text;
 
-            string s = AutoBreakLine(text, 0, maximumLineLength, 0, language);
+            string s = AutoBreakLine(text, 0, 0, language);
 
             var arr = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
 
-        public static string AutoBreakLine(string text, int mininumLength, int maximumLength, int mergeLinesShorterThan, string language)
+        public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
             if (text == null || text.Length < 3)
                 return text;

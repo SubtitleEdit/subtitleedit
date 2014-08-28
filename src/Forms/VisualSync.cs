@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private VideoInfo ShowVideoInfo(string fileName)
         {
-            _videoInfo = Utilities.GetVideoInfo(fileName, delegate { Application.DoEvents(); });
+            _videoInfo = Utilities.GetVideoInfo(fileName);
             var info = new FileInfo(fileName);
             long fileSizeInBytes = info.Length;
 

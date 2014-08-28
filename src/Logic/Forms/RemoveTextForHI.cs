@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return newText;
         }
 
-        public string RemoveColon(string text, string prevText)
+        public string RemoveColon(string text)
         {
             if (!Settings.RemoveTextBeforeColon)
                 return text;
@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return newText;
         }
 
-        public string RemoveTextFromHearImpaired(string text, string prevText)
+        public string RemoveTextFromHearImpaired(string text)
         {
             if (Settings.RemoveWhereContains && Settings.RemoveIfTextContains.Length > 0 && text.Contains(Settings.RemoveIfTextContains))
             {
@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             string oldText = text;
-            text = RemoveColon(text, prevText);
+            text = RemoveColon(text);
             string pre = " >-\"'‘`´♪¿¡.…—";
             string post = " -\"'`´♪.!?:…—";
             if (Settings.RemoveTextBetweenCustomTags)
@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             text = st.Pre + sb.ToString().Trim() + st.Post;
             text = text.Replace("<i></i>", string.Empty).Trim();
-            text = RemoveColon(text, prevText);
+            text = RemoveColon(text);
             text = RemoveLineIfAllUppercase(text);
             text = RemoveHearImpairedtagsInsideLine(text);
             if (Settings.RemoveInterjections)

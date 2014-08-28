@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        public static string ToF4Text(Subtitle subtitle, string title)
+        public static string ToF4Text(Subtitle subtitle)
         {
             var sb = new StringBuilder();
             double lastEndTimeMilliseconds = -1;
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            return ToF4Text(subtitle, title);
+            return ToF4Text(subtitle);
         }
 
         private static string EncodeTimeCode(TimeCode time)

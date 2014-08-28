@@ -83,7 +83,7 @@ namespace Test
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "Man over P.A.:\r\nGive back our homes.";
             string expected = "Give back our homes.";
-            string actual = target.RemoveColon(text, string.Empty);
+            string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -101,7 +101,7 @@ namespace Test
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             string text = "GIOVANNI: <i>Number 9: I never look for a scapegoat.</i>";
             string expected = "<i>I never look for a scapegoat.</i>";
-            string actual = target.RemoveColon(text, string.Empty);
+            string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -119,7 +119,7 @@ namespace Test
             target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
             string text = "GIOVANNI: <i>Number 9: I never look for a scapegoat.</i>";
             string expected = "<i>Number 9: I never look for a scapegoat.</i>";
-            string actual = target.RemoveColon(text, string.Empty);
+            string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -159,7 +159,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "- Aw, save it. Storm?\r\n- [Storm]\r\nWe're outta here.";
             string expected = "- Aw, save it. Storm?\r\n- We're outta here.";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -178,7 +178,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "[Chuckles,\r\nCoughing]\r\nBut we lived through it.";
             string expected = "But we lived through it.";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -196,7 +196,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "is the body of a mutant kid\r\non the 6:00 news.";
             string expected = "is the body of a mutant kid\r\non the 6:00 news.";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -217,7 +217,7 @@ namespace Test
             string text = "<i>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</i>";
             string expected = "<i>Previously on NCIS</i>";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -237,7 +237,7 @@ namespace Test
             string text = "<b>NARRATOR:" + Environment.NewLine +
                           "Previously on NCIS</b>";
             string expected = "<b>Previously on NCIS</b>";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -257,7 +257,7 @@ namespace Test
             string text = "- JOHN: Hey." + Environment.NewLine +
                           "- ...hey.";
             string expected = "- Hey."+ Environment.NewLine +"- ...hey.";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -288,7 +288,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "[MAN]Where?![MAN]";
             string expected = "Where?!";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -305,7 +305,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "HECTOR: Hi." + Environment.NewLine + "-Oh, hey, Hector.";
             string expected = "- Hi." + Environment.NewLine + "- Oh, hey, Hector.";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -322,7 +322,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "<b>HECTOR: Hi.</b>";
             string expected = "<b>Hi.</b>";
-            string actual = target.RemoveTextFromHearImpaired(text, string.Empty);
+            string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -564,7 +564,7 @@ namespace Test
             target.Settings.ColonSeparateLine = true;
             string text = "HECTOR: Hi.";
             string expected = "HECTOR: Hi.";
-            string actual = target.RemoveColon(text, string.Empty);
+            string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
 
@@ -652,7 +652,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "- even if it was one week." + Environment.NewLine  + "CANNING: Objection.";
             string expected = "- even if it was one week." + Environment.NewLine + "- Objection.";
-            string actual = target.RemoveColon(text, string.Empty);
+            string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
 
