@@ -515,7 +515,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 }
             }
 
-            int start = text.IndexOf(tag);
+            int start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
                 lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
@@ -534,11 +534,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         text = text.Remove(start + 1, 1).Insert(start + 1, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1);
+                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
             }
 
             tag = Environment.NewLine + tag.Trim();
-            start = text.IndexOf(tag);
+            start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
                 lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
@@ -554,11 +554,11 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         text = text.Remove(start + Environment.NewLine.Length, 1).Insert(start + Environment.NewLine.Length, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1);
+                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
             }
 
             tag = Environment.NewLine + "<i>" + tag.Trim();
-            start = text.IndexOf(tag);
+            start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
                 lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         text = text.Remove(start + Environment.NewLine.Length + 3, 1).Insert(start + Environment.NewLine.Length + 3, "l");
                     }
                 }
-                start = text.IndexOf(tag, start + 1);
+                start = text.IndexOf(tag, start + 1, StringComparison.Ordinal);
             }
             return text;
         }
@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             if (HexNumber.IsMatch(word))
                 return word;
 
-            if (word.LastIndexOf('0') > 0)
+            if (word.LastIndexOf("0", StringComparison.Ordinal) > 0)
             {
                 Match match = RegExTime1.Match(word);
                 if (match.Success)
@@ -1209,7 +1209,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 if (input.StartsWith(". . <i>."))
                     input = "<i>..." + input.Remove(0, 8);
 
-                if (input.StartsWith("...<i>") && (input.IndexOf("</i>") > input.IndexOf(" ")))
+                if (input.StartsWith("...<i>") && (input.IndexOf("</i>", StringComparison.Ordinal) > input.IndexOf(" ", StringComparison.Ordinal)))
                     input = "<i>..." + input.Remove(0, 6);
 
                 if (input.EndsWith(". .."))
@@ -1267,13 +1267,13 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 input = input.Insert(4, " ");
             }
 
-            int idx = input.IndexOf(Environment.NewLine + "-");
+            int idx = input.IndexOf(Environment.NewLine + "-", StringComparison.Ordinal);
             if (idx > 0 && idx + Environment.NewLine.Length + 1 < input.Length && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 1].ToString()))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 1, " ");
             }
 
-            idx = input.IndexOf(Environment.NewLine + "<i>-");
+            idx = input.IndexOf(Environment.NewLine + "<i>-", StringComparison.Ordinal);
             if (idx > 0 && Utilities.UppercaseLetters.Contains(input[idx + Environment.NewLine.Length + 4].ToString()))
             {
                 input = input.Insert(idx + Environment.NewLine.Length + 4, " ");
@@ -1313,7 +1313,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
             if ((lastLine == null || !lastLine.Contains("\"")) && input != null &&
-                input.EndsWith("\".") && input.IndexOf("\"") == input.LastIndexOf("\"") && input.Length > 3)
+                input.EndsWith("\".") && input.IndexOf("\"", StringComparison.Ordinal) == input.LastIndexOf("\"", StringComparison.Ordinal) && input.Length > 3)
             {
                 string lastChar = input.Substring(input.Length - 3, 1);
                 if (!"0123456789".Contains(lastChar))
@@ -1515,7 +1515,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
 
             foreach (string name in _namesEtcMultiWordList)
             {
-                int start = tempLine.IndexOf(name);
+                int start = tempLine.IndexOf(name, StringComparison.Ordinal);
                 if (start >= 0)
                 {
                     if (start == 0 || (Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"”“#&%…—♪").Contains(tempLine[start - 1].ToString()))
@@ -2041,7 +2041,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 int i = 0;
                 while (s.Contains(letter) && i < 10)
                 {
-                    int index = s.IndexOf(letter);
+                    int index = s.IndexOf(letter, StringComparison.Ordinal);
                     s = AddToGuessList(list, s, index, letter, _partialWordReplaceList[letter]);
                     AddToGuessList(list, word, index, letter, _partialWordReplaceList[letter]);
                     i++;
@@ -2050,7 +2050,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                 i = 0;
                 while (s.Contains(letter) && i < 10)
                 {
-                    int index = s.LastIndexOf(letter);
+                    int index = s.LastIndexOf(letter, StringComparison.Ordinal);
                     s = AddToGuessList(list, s, index, letter, _partialWordReplaceList[letter]);
                     AddToGuessList(list, word, index, letter, _partialWordReplaceList[letter]);
                     i++;
