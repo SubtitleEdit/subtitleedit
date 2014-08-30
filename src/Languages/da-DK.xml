@@ -161,6 +161,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Scanner {0} og undermapper for undertekster...</ScanningFolder>
     <Recursive>Medtag undermapper</Recursive>
     <SetMinMsBetweenSubtitles>Indstil min. msek mellem undertekster</SetMinMsBetweenSubtitles>
+    <PlainText>Almindelig tekst</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Undertekst fremviser</Title>
@@ -193,6 +194,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Juster hastighed i procent</Title>
     <Info>Skift hastighed for undertekst i procent</Info>
+    <Custom>Brugerdefineret</Custom>
+    <ToDropFrame>Til drop-frame</ToDropFrame>
+    <FromDropFrame>Fra drop-frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Tjek for opdateringer</Title>
@@ -982,7 +986,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Visual synkronisering udføres på udvalgte linjer</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuel synkronisering udført</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importer denne VobSub undertekst?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Filen er større end 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Filen er større end 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Fortsæt alligevel?</ContinueAnyway>
     <BeforeLoadOf>Før indlæsning af {0}</BeforeLoadOf>
     <LoadedSubtitleX>Underteksten {0} indlæst</LoadedSubtitleX>
@@ -1633,7 +1637,9 @@ Fortsæt?</SubtitleAppendPrompt>
     <SyntaxColorOverlap>Farve - tidskode overlapper</SyntaxColorOverlap>
     <SyntaxErrorColor>Fejl farve</SyntaxErrorColor>
     <GoToFirstSelectedLine>Gå til første valgte linje</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Gå til næste tomme linje</GoToNextEmptyLine>
     <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Flet markerede linjer, beholde første ikke-tomme tekst</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Toggle oversættelses-tilstand</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Byt original og oversættelse</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Flet original og oversættelse</MergeOriginalAndTranslation>

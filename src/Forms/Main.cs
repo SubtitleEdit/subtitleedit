@@ -14240,9 +14240,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (format.GetType() == typeof(Ebu))
             {
                 toolStripMenuItemEbuProperties.Text = Configuration.Settings.Language.Main.Menu.File.EbuProperties;
-                toolStripMenuItemEbuProperties.Visible = true;
+                toolStripMenuItemEbuProperties.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.Main.Menu.File.EbuProperties);
             }
-            else if (format.GetType() == typeof(SubStationAlpha))
+            else 
             {
                 toolStripMenuItemEbuProperties.Visible = false;
             }
