@@ -45,19 +45,19 @@ namespace Nikse.SubtitleEdit.Logic
 
                     if (text.StartsWith("{\\"))
                     {
-                        int endIndex = text.IndexOf("}");
-                        if (endIndex > 0 && (text.IndexOf("{", 1) == -1 || text.IndexOf("{", 1) > endIndex))
+                        int endIndex = text.IndexOf("}", StringComparison.Ordinal);
+                        if (endIndex > 0 && (text.IndexOf("{", 1, StringComparison.Ordinal) == -1 || text.IndexOf("{", 1, StringComparison.Ordinal) > endIndex))
                         {
-                            int index = text.IndexOf("}") + 1;
+                            int index = text.IndexOf("}", StringComparison.Ordinal) + 1;
                             Pre += text.Substring(0, index);
                             text = text.Substring(index);
                         }
                     }
 
                     // tags like <i> or <font color="#ff0000">
-                    if (text.StartsWith("<") && text.IndexOf(">") <= 21)
+                    if (text.StartsWith("<") && text.IndexOf(">", StringComparison.Ordinal) <= 21)
                     {
-                        int index = text.IndexOf(">") + 1;
+                        int index = text.IndexOf(">", StringComparison.Ordinal) + 1;
                         Pre += text.Substring(0, index);
                         text = text.Substring(index);
                     }
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (string name in namesEtc)
             {
-                int start = lower.IndexOf(name.ToLower());
+                int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (start + 3 > lower.Length)
                         start = lower.Length + 1;
                     else
-                        start = lower.IndexOf(name.ToLower(), start +3);
+                        start = lower.IndexOf(name.ToLower(), start + 3, StringComparison.Ordinal);
                 }
             }
 
@@ -263,9 +263,9 @@ namespace Nikse.SubtitleEdit.Logic
                         sb.Append(s);
                         if (".!?:;)]}([{".Contains(s))
                         {
-                            if (s == "]" && sb.ToString().IndexOf("[") > 1)
+                            if (s == "]" && sb.ToString().IndexOf("[", StringComparison.Ordinal) > 1)
                             { // I [Motor roaring] love you!
-                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf("[") - 1).Trim();
+                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf("[", StringComparison.Ordinal) - 1).Trim();
                                 if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1].ToString()))
                                     lastWasBreak = true;
                             }

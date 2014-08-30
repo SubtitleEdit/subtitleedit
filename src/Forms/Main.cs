@@ -18473,7 +18473,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += ultech130.Extension;
                 }
-                ultech130.Save(fileName, _subtitle);
+                Ultech130.Save(fileName, _subtitle);
             }
         }
 

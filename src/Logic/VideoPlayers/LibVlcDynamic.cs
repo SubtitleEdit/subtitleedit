@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 finally
                 {
-                    vlc.DisposeVideoPlayer();
+                    vlc.Dispose();
                 }
             }
         }

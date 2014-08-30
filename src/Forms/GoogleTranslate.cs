@@ -250,9 +250,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
-                    int indexOfP = cleanText.IndexOf(_splitterString.Trim());
+                    int indexOfP = cleanText.IndexOf(_splitterString.Trim(), StringComparison.Ordinal);
                     if (indexOfP >= 0 && indexOfP < 4)
-                        cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString.Trim()));
+                        cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString.Trim(), StringComparison.Ordinal));
                     cleanText = cleanText.Replace(_splitterString.Trim(), string.Empty).Trim();
                     if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
@@ -336,8 +336,8 @@ namespace Nikse.SubtitleEdit.Forms
             string key = "{\"translatedText\":";
             if (content.Contains(key))
             {
-                int start = content.IndexOf(key) + key.Length + 1;
-                int end = content.IndexOf("\"}", start);
+                int start = content.IndexOf(key, StringComparison.Ordinal) + key.Length + 1;
+                int end = content.IndexOf("\"}", start, StringComparison.Ordinal);
                 string translatedText = content.Substring(start, end - start);
                 string test = translatedText.Replace("\\u003c", "<");
                 test = test.Replace("\\u003e", ">");
@@ -361,14 +361,12 @@ namespace Nikse.SubtitleEdit.Forms
         private static string RemovePStyleParameters(string test)
         {
             string key = "<p style";
-            while (test.Contains(key))
+            int startPosition = test.IndexOf(key, StringComparison.Ordinal);
+            while (startPosition >= 0)
             {
-                int startPosition = test.IndexOf(key);
-                int endPosition = test.IndexOf(">", startPosition + key.Length);
-                if (endPosition == -1)
-                    return test;
-                test = test.Remove(startPosition + 2, endPosition - startPosition - 2);
-
+                int endPosition = test.IndexOf(">", startPosition + key.Length, StringComparison.Ordinal);
+                if (endPosition > 0)
+                    return test.Remove(startPosition + 2, endPosition - startPosition - 2);
             }
             return test;
         }

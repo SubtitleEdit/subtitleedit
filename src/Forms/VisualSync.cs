@@ -12,7 +12,6 @@ namespace Nikse.SubtitleEdit.Forms
     {
         List<Paragraph> _paragraphs;
         VideoInfo _videoInfo;
-        string _totalPositionString = string.Empty;
         string _subtitleFileName;
         Subtitle _originalSubtitle;
         double _oldFramerate;
@@ -236,9 +235,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoInfo.Text += string.Format(_languageGeneral.TotalFramesX + "         ", (int)_videoInfo.TotalFrames);
             if (!string.IsNullOrEmpty(_videoInfo.VideoCodec))
                 labelVideoInfo.Text += string.Format(_languageGeneral.VideoEncodingX, _videoInfo.VideoCodec) + "        ";
-
-            TimeSpan span = TimeSpan.FromMilliseconds(_videoInfo.TotalMilliseconds);
-            _totalPositionString = " / " + string.Format("{0:00}:{1:00}:{2:00},{3:000}", span.Hours, span.Minutes, span.Seconds, span.Milliseconds);
 
             return _videoInfo;
         }
