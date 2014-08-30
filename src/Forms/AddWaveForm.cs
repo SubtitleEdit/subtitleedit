@@ -206,6 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);
             this.DialogResult = DialogResult.OK;
+            process.Dispose();
         }
 
         private void ReadWaveFile(string targetFile, int delayInMilliseconds)
@@ -262,6 +263,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
+                        mkv.Dispose();
                     }
                     catch
                     {
@@ -310,6 +312,7 @@ namespace Nikse.SubtitleEdit.Forms
                         DialogResult = DialogResult.Cancel;
                         return;
                     }
+                    form.Dispose();
                 }
 
                 // check for delay in matroska files
@@ -322,6 +325,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _delayInMilliseconds = (int)mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
                         }
+                        mkv.Dispose();
                     }
                     catch
                     {

@@ -234,7 +234,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesOnAloneLines(string[] lines)
+        private static Subtitle ImportTimeCodesOnAloneLines(string[] lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesAndTextOnSameLine(string[] lines)
+        private static Subtitle ImportTimeCodesAndTextOnSameLine(string[] lines)
         {
             Regex regexTimeCodes1 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
             Regex regexTimeCodes2 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeperator(string[] lines)
+        private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeperator(string[] lines)
         {
             Regex regexTimeCodes1 = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
             Regex regexTimeCodes2 = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);
@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesOnSameSeperateLineNoMilliseconds(string[] lines)
+        private static Subtitle ImportTimeCodesOnSameSeperateLineNoMilliseconds(string[] lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();

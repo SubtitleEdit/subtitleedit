@@ -4479,7 +4479,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string FixNocrHardcodedStuff(string line)
         {
             // fix I/l
-            int start = line.IndexOf("I");
+            int start = line.IndexOf("I", StringComparison.Ordinal);
             while (start > 0)
             {
                 if (start > 0 && line[start - 1].ToString() != line[start - 1].ToString().ToUpper())
@@ -4495,7 +4495,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (start < line.Length - 1 && line[start + 1].ToString() != line[start + 1].ToString().ToLower())
                     line = line.Remove(start, 1).Insert(start, "I");
                 start++;
-                start = line.IndexOf("l", start);
+                start = line.IndexOf("l", start, StringComparison.Ordinal);
             }
             if (line.Contains("l"))
             {
@@ -5720,14 +5720,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
 
-            int first = s.IndexOf("<");
+            int first = s.IndexOf("<", StringComparison.Ordinal);
             while (first >= 0)
             {
-                int last = s.IndexOf(">", first);
+                int last = s.IndexOf(">", first, StringComparison.Ordinal);
                 if (last > 0)
                 {
                     s = s.Remove(first, last - first + 1);
-                    first = s.IndexOf("<");
+                    first = s.IndexOf("<", StringComparison.Ordinal);
                 }
                 else
                 {
@@ -6468,7 +6468,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (s.StartsWith("I <i>"))
                 s = ("<i>I " + s.Remove(0, 5)).Replace("  ", " ");
             else if (italicStartCount == 1 && s.Length > 20 &&
-                     s.IndexOf("<i>") > 1 && s.IndexOf("<i>") < 10 && s.EndsWith("</i>"))
+                     s.IndexOf("<i>", StringComparison.Ordinal) > 1 && s.IndexOf("<i>", StringComparison.Ordinal) < 10 && s.EndsWith("</i>"))
                 s = "<i>" + s.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
             s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
             return s;
@@ -7038,7 +7038,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = lb.Items[lb.SelectedIndex].ToString();
                 if (text.Contains(":"))
                 {
-                    string number = text.Substring(1, text.IndexOf(":") - 1);
+                    string number = text.Substring(1, text.IndexOf(":", StringComparison.Ordinal) - 1);
                     subtitleListView1.SelectIndexAndEnsureVisible(int.Parse(number) - 1);
                 }
             }
@@ -7972,7 +7972,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_ocrFixEngine == null)
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
 
-                    text = text.Substring(text.IndexOf(":") + 1).Trim();
+                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
                     var form = new AddToNamesList();
                     form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7995,7 +7995,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(":"))
                 {
-                    text = text.Substring(text.IndexOf(":") + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
                     var form = new AddToUserDic();
                     form.Initialize(comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -8018,7 +8018,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(":"))
                 {
-                    text = text.Substring(text.IndexOf(":") + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
                     var form = new AddToOcrReplaceList();
                     form.Initialize(_languageId, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -8041,7 +8041,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(":"))
                 {
-                    text = text.Substring(text.IndexOf(":") + 1).Trim();
+                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
                     System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
                 }
             }
