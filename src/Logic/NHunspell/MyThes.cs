@@ -213,7 +213,7 @@ namespace NHunspell
             }
 
             int currentPos = 0;
-            int currentLength = this.GetLineLength(dictionaryBytes, currentPos);
+            int currentLength = GetLineLength(dictionaryBytes, currentPos);
 
             string fileEncoding = Encoding.ASCII.GetString(dictionaryBytes, currentPos, currentLength);
             Encoding enc = GetEncoding(fileEncoding);
@@ -224,8 +224,8 @@ namespace NHunspell
 
             while (currentPos < dictionaryBytes.Length)
             {
-                currentPos += this.GetCrLfLength(dictionaryBytes, currentPos);
-                currentLength = this.GetLineLength(dictionaryBytes, currentPos);
+                currentPos += GetCrLfLength(dictionaryBytes, currentPos);
+                currentLength = GetLineLength(dictionaryBytes, currentPos);
                 string lineText = enc.GetString(dictionaryBytes, currentPos, currentLength).Trim();
 
                 if (lineText != null && lineText.Length > 0)
@@ -425,7 +425,7 @@ namespace NHunspell
         /// </returns>
         /// <exception cref="ArgumentException">
         /// </exception>
-        private int GetCrLfLength(byte[] buffer, int pos)
+        private static int GetCrLfLength(byte[] buffer, int pos)
         {
             if (buffer[pos] == 10)
             {
@@ -462,7 +462,7 @@ namespace NHunspell
         /// <returns>
         /// The get line length. 
         /// </returns>
-        private int GetLineLength(byte[] buffer, int start)
+        private static int GetLineLength(byte[] buffer, int start)
         {
             for (int i = start; i < buffer.Length; ++i)
             {

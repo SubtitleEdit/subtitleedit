@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return true; }
         }
 
-        public void Save(string fileName, Subtitle subtitle)
+        public static void Save(string fileName, Subtitle subtitle)
         {
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
             byte[] buffer = new byte[] { 0x38, 0x35, 0x30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x30, 0x30, 0x30, 0x39 };

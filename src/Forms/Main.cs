@@ -1041,7 +1041,7 @@ namespace Nikse.SubtitleEdit.Forms
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                    ebu.Save(outputFileName, sub, true);
+                    Ebu.Save(outputFileName, sub, true);
                     Console.WriteLine(" done.");
                 }
             }
@@ -1080,7 +1080,7 @@ namespace Nikse.SubtitleEdit.Forms
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                    cheetahCaption.Save(outputFileName, sub);
+                    CheetahCaption.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
             }
@@ -1092,7 +1092,7 @@ namespace Nikse.SubtitleEdit.Forms
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                    capMakerPlus.Save(outputFileName, sub);
+                    CapMakerPlus.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
             }
@@ -18374,7 +18374,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += capMakerPlus.Extension;
                 }
-                capMakerPlus.Save(fileName, _subtitle);
+                CapMakerPlus.Save(fileName, _subtitle);
             }
         }
 
@@ -18407,7 +18407,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += cheetahCaption.Extension;
                 }
-                cheetahCaption.Save(fileName, _subtitle);
+                CheetahCaption.Save(fileName, _subtitle);
             }
         }
 
@@ -18440,7 +18440,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += captionInc.Extension;
                 }
-                captionInc.Save(fileName, _subtitle);
+                CaptionsInc.Save(fileName, _subtitle);
             }
         }
 
@@ -19227,7 +19227,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += avidStl.Extension;
                 }
-                avidStl.Save(fileName, _subtitle);
+                AvidStl.Save(fileName, _subtitle);
             }
         }
 
