@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine))
                 {
-                    string text = Utilities.AutoBreakLine(p.Text, 5, minLength, MergeLinesShorterThan, language);
+                    string text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
                     if (text != p.Text)
                     {
                         AddToListView(p, text);

@@ -18,7 +18,6 @@ namespace Nikse.SubtitleEdit.Forms
         private LibVlcDynamic _libVlc;
         private VideoInfo _videoInfo;
         //long startMilliseconds = 0;
-        Subtitle _subtitle;
         public Subtitle SubtitleFromOcr;
         //private System.Windows.Forms.Timer timer1;
         private const int lineChecksWidth = 50;
@@ -43,14 +42,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _videoFileName = openFileDialogVideo.FileName;
                 tbFileName.Text = openFileDialogVideo.FileName;
-                _videoInfo = Utilities.GetVideoInfo(_videoFileName, null);
+                _videoInfo = Utilities.GetVideoInfo(_videoFileName);
                 var oldPlayer = Configuration.Settings.General.VideoPlayer;
                 Configuration.Settings.General.VideoPlayer = "VLC";
                 Utilities.InitializeVideoPlayerAndContainer(_videoFileName, _videoInfo, mediaPlayer, VideoLoaded, null);
                 Configuration.Settings.General.VideoPlayer = oldPlayer;
                 _libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
 
-                _subtitle = new Subtitle();
             }
             else
             {

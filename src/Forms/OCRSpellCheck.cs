@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.Abort;
         }
 
-        internal void Initialize(string word, List<string> suggestions, string line, string[] words, int i, Bitmap bitmap)
+        internal void Initialize(string word, List<string> suggestions, string line, Bitmap bitmap)
         {
             _originalWord = word;
             OriginalWholeText = line;

@@ -32,71 +32,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private static int GetLastIndexOfSpace(string s, int endCount)
-        {
-            int end = endCount;
-            if (end >= s.Length)
-                end = s.Length - 1;
-
-            int i = end;
-            while (i > 0)
-            {
-                if (s[i] == ' ')
-                    return i;
-                i--;
-            }
-            return -1;
-        }
-
-        private static string AutoBreakLineMax4Lines(string text, int maxLength)
-        {
-            string s = text.Replace(Environment.NewLine, " ");
-            s = s.Replace("  ", " ");
-            var sb = new StringBuilder();
-            int i = GetLastIndexOfSpace(s, maxLength);
-            if (i > 0)
-            {
-                sb.AppendLine(s.Substring(0, i));
-                s = s.Remove(0, i).Trim();
-                if (s.Length <= maxLength)
-                    i = s.Length;
-                else
-                    i = GetLastIndexOfSpace(s, maxLength);
-                if (i > 0)
-                {
-                    sb.AppendLine(s.Substring(0, i));
-                    s = s.Remove(0, i).Trim();
-                    if (s.Length <= maxLength)
-                        i = s.Length;
-                    else
-                        i = GetLastIndexOfSpace(s, maxLength);
-                    if (i > 0)
-                    {
-                        sb.AppendLine(s.Substring(0, i));
-                        s = s.Remove(0, i).Trim();
-                        if (s.Length <= maxLength)
-                            i = s.Length;
-                        else
-                            i = GetLastIndexOfSpace(s, maxLength);
-                        if (i > 0)
-                        {
-                            sb.AppendLine(s.Substring(0, i));
-                        }
-                        else
-                        {
-                            sb.Append(s);
-                        }
-                    }
-                    else
-                    {
-                        sb.Append(s);
-                    }
-                }
-                return sb.ToString().Trim();
-            }
-            return text;
-        }
-
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
@@ -186,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (match.Success)
                     {
                         TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
-                        string text = GetSccText(s.Substring(match.Index), ref _errorCount);
+                        string text = GetSccText(s.Substring(match.Index));
 
                         if (text == "942c 942c" || text == "942c")
                         {
@@ -216,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        public static string GetSccText(string s, ref int errorCount)
+        public static string GetSccText(string s)
         {
             string[] parts = s.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();

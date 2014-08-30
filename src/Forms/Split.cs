@@ -11,8 +11,6 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class Split : Form
     {
         Subtitle _subtitle;
-        SubtitleFormat _format;
-        Encoding _encoding;
         public bool ShowBasic { get; private set; }
         int _totalNumberOfCharacters;
         bool _loading = true;
@@ -63,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format, Encoding encoding, double lengthInSeconds)
+        public void Initialize(Subtitle subtitle, string fileName, SubtitleFormat format)
         {
             ShowBasic = false;
             _subtitle = subtitle;
@@ -72,8 +70,6 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 textBoxFileName.Text = fileName;
             _fileName = fileName;
-            _format = format;
-            _encoding = encoding;
             foreach (Paragraph p in _subtitle.Paragraphs)
                 _totalNumberOfCharacters += p.Text.Length;
             labelLines.Text = string.Format(Configuration.Settings.Language.Split.NumberOfLinesX, _subtitle.Paragraphs.Count);

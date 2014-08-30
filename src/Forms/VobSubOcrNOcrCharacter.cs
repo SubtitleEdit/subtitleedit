@@ -9,9 +9,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VobSubOcrNOcrCharacter : Form
     {
-
-        VobSubOcr _vobSubForm;
-        List<VobSubOcr.ImageCompareAddition> _additions;
         NOcrChar _nocrChar = null;
         bool _drawLineOn;
         bool _startDone;
@@ -72,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink, VobSubOcr.CompareMatch bestGuess, List<VobSubOcr.ImageCompareAddition> additions, VobSubOcr vobSubForm)
+        internal void Initialize(Bitmap vobSubImage, ImageSplitterItem character, Point position, bool italicChecked, bool showShrink)
         {
             listBoxLinesForeground.Items.Clear();
             listBoxlinesBackground.Items.Clear();
@@ -85,8 +82,6 @@ namespace Nikse.SubtitleEdit.Forms
             ExpandSelection = false;
 
             textBoxCharacters.Text = string.Empty;
-            _vobSubForm = vobSubForm;
-            _additions = additions;
             _nocrChar = new NOcrChar();
             _nocrChar.MarginTop = character.Y - character.ParentY;
             _imageWidth = character.NikseBitmap.Width;
@@ -162,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             foreach (NOcrPoint op in _nocrChar.LinesBackground)
             {
-                foreach (Point point in op.GetPoints(nbmp.Width, nbmp.Height))
+                foreach (Point point in op.GetPoints())
                 {
                     if (point.X >= 0 && point.Y >= 0 && point.X < nbmp.Width && point.Y < nbmp.Height)
                     {

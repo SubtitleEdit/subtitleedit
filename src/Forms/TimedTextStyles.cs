@@ -14,7 +14,6 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class TimedTextStyles : Form
     {
         private Subtitle _subtitle = null;
-        private SubtitleFormat _format = null;
         private XmlDocument _xml;
         private XmlNode _xmlHead;
         private XmlNamespaceManager _nsmgr;
@@ -22,12 +21,11 @@ namespace Nikse.SubtitleEdit.Forms
         private Timer _previewTimer = new Timer();
         public string Header { get { return _xml.OuterXml; } }
 
-        public TimedTextStyles(Subtitle subtitle, SubtitleFormat format)
+        public TimedTextStyles(Subtitle subtitle)
         {
             InitializeComponent();
 
             _subtitle = subtitle;
-            _format = format;
             _xml = new XmlDocument();
             try
             {
@@ -199,13 +197,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (node.Attributes["tts:fontSize"] != null)
                     fontSize = node.Attributes["tts:fontSize"].Value;
 
-                AddStyle(name, fontFamily, fontWeight, fontStyle, fontColor, fontSize);
+                AddStyle(name, fontFamily, fontColor, fontSize);
             }
             if (listViewStyles.Items.Count > 0)
                 listViewStyles.Items[0].Selected = true;
         }
 
-        private void AddStyle(string name, string fontFamily, string fontWeight, string fontStyle, string color, string fontSize)
+        private void AddStyle(string name, string fontFamily, string color, string fontSize)
         {
             var item = new ListViewItem(name.Trim());
             item.UseItemStyleForSubItems = false;
@@ -401,7 +399,7 @@ namespace Nikse.SubtitleEdit.Forms
                 name = "new" + count;
                 count++;
             }
-            AddStyle(name, "Arial", "normal", "normal", "white", "100%");
+            AddStyle(name, "Arial", "white", "100%");
             AddStyleToXml(name, "Arial", "normal", "normal", "white", "100%");
             listViewStyles.Items[listViewStyles.Items.Count - 1].Selected = true;
         }

@@ -1795,7 +1795,7 @@ namespace Nikse.SubtitleEdit.Controls
             return v / count;
         }
 
-        internal void GenerateTimeCodes(Subtitle subtitle, double startFromSeconds, int blockSizeMilliseconds, int mininumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
+        internal void GenerateTimeCodes(double startFromSeconds, int mininumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
         {
             int begin = SecondsToXPosition(startFromSeconds);
 

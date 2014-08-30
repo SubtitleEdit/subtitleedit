@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <summary>
         /// Convert a long integer to a C-style hex string with leading zeroes
         /// </summary>
-        public static string ToHex(int number, int index, int digits)
+        public static string ToHex(int number, int digits)
         {
             string s = string.Format("{0:X}", number);
             if (s.Length < digits)

@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
                 prevIndex++;
 
                 _removeTextForHILib.WarningIndex = prevIndex;
-                string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text, prevText);
+                string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                 bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
                 if (hit)
                 {
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
                         prevText = prev.Text;
 
                     _removeTextForHILib.Settings = GetSettings();
-                    string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text, prevText);
+                    string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                     if (string.IsNullOrEmpty(newText))
                     {
                         _subtitle.Paragraphs.RemoveAt(i);
