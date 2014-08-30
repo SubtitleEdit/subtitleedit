@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return segment;
         }
 
-        private static SupSegment ParseSegmentHeaderFromMatroska(byte[] buffer, StringBuilder log)
+        private static SupSegment ParseSegmentHeaderFromMatroska(byte[] buffer)
         {
             var segment = new SupSegment();
             segment.Type = buffer[0];
@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <param name="pic">SubPicture object containing info about the current caption</param>
         /// <param name="msg">reference to message string</param>
         /// <param name="buffer">Raw data buffer, starting right after segment</param>
-        private static PcsObject ParsePcs(byte[] buffer, SupSegment segment, int offset)
+        private static PcsObject ParsePcs(byte[] buffer, int offset)
         {
             var pcs = new PcsObject();
             // composition_object:
@@ -432,7 +432,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 pcs.PcsObjects = new List<PcsObject>();
                 for (int compObjIndex = 0; compObjIndex < compositionObjectCount; compObjIndex++)
                 {
-                    PcsObject pcsObj = ParsePcs(buffer, segment, offset);
+                    PcsObject pcsObj = ParsePcs(buffer, offset);
                     pcs.PcsObjects.Add(pcsObj);
                     sb.AppendLine();
                     sb.AppendFormat("ObjId: {0}, WinId: {1}, Forced: {2}, X: {3}, Y: {4}",
@@ -575,7 +575,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 // Read segment header
                 ms.Read(headerBuffer, 0, headerBuffer.Length);
                 if (fromMatroskaFile)
-                    segment = ParseSegmentHeaderFromMatroska(headerBuffer, log);
+                    segment = ParseSegmentHeaderFromMatroska(headerBuffer);
                 else
                     segment = ParseSegmentHeader(headerBuffer, log);
                 position += headerBuffer.Length;

@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                VideoInfo info = Utilities.GetVideoInfo(openFileDialog1.FileName, delegate { Application.DoEvents(); });
+                VideoInfo info = Utilities.GetVideoInfo(openFileDialog1.FileName);
                 if (info != null && info.Success)
                 {
                     numericUpDownVideoWidth.Value = info.Width;

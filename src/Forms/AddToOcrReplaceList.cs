@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string NewSource { get; set; }
         public string NewTarget { get; set; }
 
-        internal void Initialize(Subtitle subtitle, string languageId, string hunspellName, string source)
+        internal void Initialize(string languageId, string hunspellName, string source)
         {
             if (!string.IsNullOrEmpty(source))
                 textBoxOcrFixKey.Text = source;

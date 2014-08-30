@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
                     videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
                 }
 
-                VideoInfo videoInfo = Utilities.GetVideoInfo(fileName, delegate { Application.DoEvents(); });
+                VideoInfo videoInfo = Utilities.GetVideoInfo(fileName);
 
                 Utilities.InitializeVideoPlayerAndContainer(fileName, videoInfo, videoPlayerContainer1, VideoStartLoaded, VideoStartEnded);
             }

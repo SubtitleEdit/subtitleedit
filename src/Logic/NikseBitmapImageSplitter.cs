@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (size == bmp.Height)
                 {
                     if (size > 100)
-                        return SplitVerticalTransparentOrBlack(bmp, 8);
+                        return SplitVerticalTransparentOrBlack(bmp);
                     else
                         parts.Add(new ImageSplitterItem(0, startY, bmp));
                 }
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic
             return parts;
         }
 
-        public static List<ImageSplitterItem> SplitVerticalTransparentOrBlack(NikseBitmap bmp, int lineMinHeight)
+        public static List<ImageSplitterItem> SplitVerticalTransparentOrBlack(NikseBitmap bmp)
         {
             int startY = 0;
             int size = 0;
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (size == bmp.Height)
                 {
                     if (size > 100)
-                        return SplitVerticalTransparentOrBlack(bmp, minLineHeight);
+                        return SplitVerticalTransparentOrBlack(bmp);
                     else
                         parts.Add(new ImageSplitterItem(0, startY, bmp));
                 }
@@ -832,24 +832,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             return list;
-        }
-
-        internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, NikseBitmap bmp2)
-        {
-            int different = 0;
-            int maxDiff = bmp1.Width * bmp1.Height / 5;
-
-            for (int x = 1; x < bmp1.Width; x++)
-            {
-                for (int y = 1; y < bmp1.Height; y++)
-                {
-                    if (!IsColorClose(bmp1.GetPixel(x, y), bmp2.GetPixel(x, y), 20))
-                        different++;
-                }
-                if (different > maxDiff)
-                    return different + 10;
-            }
-            return different;
         }
 
         internal static unsafe int IsBitmapsAlike(ManagedBitmap bmp1, NikseBitmap bmp2)

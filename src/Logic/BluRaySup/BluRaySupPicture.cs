@@ -105,24 +105,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         public List<List<PaletteInfo>> Palettes;
 
-        internal ImageObject ObjectIdImage
-        {
-            get
-            {
-                if (ImageObjects == null)
-                {
-                    System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture - ImageObjects is null - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
-                    return null;
-                }
-                if (ObjectId < ImageObjects.Count)
-                {
-                    return ImageObjects[ObjectId];
-                }
-                System.Diagnostics.Debug.WriteLine("Invalid Blu-ray SupPicture index - BluRaySupPictures.cs: internal ImageObject ObjectIdImage");
-                return ImageObjects[ImageObjects.Count - 1];
-            }
-        }
-
         /// <summary>
         /// Create RLE buffer from bitmap
         /// </summary>

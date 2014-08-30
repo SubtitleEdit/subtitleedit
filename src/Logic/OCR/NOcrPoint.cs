@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             return PointPixelsToPercent(End, width, height);
         }
 
-        public List<Point> GetPoints(int width, int height)
+        public List<Point> GetPoints()
         {
             return GetPoints(Start, End);
         }

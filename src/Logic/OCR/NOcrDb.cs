@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.OCR
             OcrCharactersExpanded = listExpanded;
         }
 
-        public static int FindExactMatch(NOcrChar ocrChar)
+        public static int FindExactMatch()
         {
             return -1;
         }

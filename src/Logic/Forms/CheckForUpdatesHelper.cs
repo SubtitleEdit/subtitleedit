@@ -24,10 +24,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 return _successCount == 1;
             }
-            private set
-            {
-                Done = value;
-            }
         }
         public string LatestVersionNumber { get; set; }
         public string LatestChangeLog { get; set; }

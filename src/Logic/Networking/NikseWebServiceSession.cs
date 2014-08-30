@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             AddToWsUserLog(CurrentUser, index, "UPD", true);
         }
 
-        public void CheckForAndSubmitUpdates(IEnumerable<SeNetworkService.SeUpdate> updates)
+        public void CheckForAndSubmitUpdates()
         {
             // check for changes in text/time codes (not insert/delete)
             if (LastSubtitle != null)

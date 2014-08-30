@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Forms
         string _prefix = string.Empty;
         string _postfix = string.Empty;
         Hunspell _hunspell;
-        string _dictionaryFolder;
         Paragraph _currentParagraph;
         int _currentIndex;
         string _currentWord;
@@ -1009,7 +1008,6 @@ namespace Nikse.SubtitleEdit.Forms
         public void DoSpellCheck(bool autoDetect, Subtitle subtitle, string dictionaryFolder, Main mainWindow, int startLine)
         {
             _subtitle = subtitle;
-            _dictionaryFolder = dictionaryFolder;
             LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
             _mainWindow = mainWindow;
 

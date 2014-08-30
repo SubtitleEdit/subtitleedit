@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public List<double> SceneChangesInSeconds = new List<double>();
         private double _frameRate = 25;
-        public ImportSceneChanges(VideoInfo videoInfo, string videoFileName)
+        public ImportSceneChanges(VideoInfo videoInfo)
         {
             InitializeComponent();
             if (videoInfo != null && videoInfo.FramesPerSecond > 1)

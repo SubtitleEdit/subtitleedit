@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     </style>
 </transcript>".Replace("'", "\"");
             xml.LoadXml(template);
-            xml.DocumentElement.SelectSingleNode("content").Attributes["content"].Value = ToF4Text(subtitle, title);
+            xml.DocumentElement.SelectSingleNode("content").Attributes["content"].Value = ToF4Text(subtitle);
 
             return ToUtf8XmlString(xml);
         }
