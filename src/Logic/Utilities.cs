@@ -351,7 +351,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoBreakLine(string text, string language)
         {
-            return AutoBreakLine(text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+            return AutoBreakLine(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, language);
         }
 
         public static string AutoBreakLine(string text)
@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
                 int endIndex = -1;
                 if (tagFound)
-                    endIndex = s.IndexOf(">", six + 1);
+                    endIndex = s.IndexOf(">", six + 1, StringComparison.Ordinal);
 
                 if (tagFound && endIndex > 0)
                 {
@@ -604,7 +604,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
                 int endIndex = -1;
                 if (tagFound)
-                    endIndex = s.IndexOf(">", six + 1);
+                    endIndex = s.IndexOf(">", six + 1, StringComparison.Ordinal);
 
                 if (tagFound && endIndex > 0)
                 {
@@ -860,15 +860,15 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveSsaTags(string s)
         {
-            int k = s.IndexOf("{");
+            int k = s.IndexOf("{", StringComparison.Ordinal);
             while (k >= 0)
             {
-                int l = s.IndexOf("}", k);
+                int l = s.IndexOf("}", k, StringComparison.Ordinal);
                 if (l > k)
                 {
                     s = s.Remove(k, l - k + 1);
                     if (s.Length > 1 && s.Length > k)
-                        k = s.IndexOf("{", k);
+                        k = s.IndexOf("{", k, StringComparison.Ordinal);
                     else
                         k = -1;
                 }
@@ -890,8 +890,8 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("<Font>", string.Empty);
             while (s.ToLower().Contains("<font"))
             {
-                int startIndex = s.ToLower().IndexOf("<font");
-                int endIndex = Math.Max(s.IndexOf(">"), startIndex + 4);
+                int startIndex = s.ToLower().IndexOf("<font", StringComparison.Ordinal);
+                int endIndex = Math.Max(s.IndexOf(">", StringComparison.Ordinal), startIndex + 4);
                 s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
@@ -905,8 +905,8 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("<P>", string.Empty);
             while (s.ToLower().Contains("<p "))
             {
-                int startIndex = s.ToLower().IndexOf("<p ");
-                int endIndex = Math.Max(s.IndexOf(">"), startIndex + 4);
+                int startIndex = s.IndexOf("<p ", StringComparison.OrdinalIgnoreCase);
+                int endIndex = Math.Max(s.IndexOf(">", StringComparison.Ordinal), startIndex + 4);
                 s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
@@ -1510,8 +1510,8 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (string name in dictionaryNames)
             {
                 string shortName = string.Empty;
-                int start = name.IndexOf("[");
-                int end = name.IndexOf("]");
+                int start = name.IndexOf("[", StringComparison.Ordinal);
+                int end = name.IndexOf("]", StringComparison.Ordinal);
                 if (start > 0 && end > start)
                 {
                     start++;
@@ -2436,10 +2436,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string GetRegExGroup(string regEx)
         {
-            int start = regEx.IndexOf("(?<");
-            if (start >= 0 && regEx.IndexOf(")", start) > start)
+            int start = regEx.IndexOf("(?<", StringComparison.Ordinal);
+            if (start >= 0 && regEx.IndexOf(")", start, StringComparison.Ordinal) > start)
             {
-                int end = regEx.IndexOf(">", start);
+                int end = regEx.IndexOf(">", start, StringComparison.Ordinal);
                 if (end > start)
                 {
                     start += 3;
@@ -2480,13 +2480,13 @@ namespace Nikse.SubtitleEdit.Logic
         public static int CountTagInText(string text, string tag)
         {
             int count = 0;
-            int index = text.IndexOf(tag);
+            int index = text.IndexOf(tag, StringComparison.Ordinal);
             while (index >= 0)
             {
                 count++;
                 if (index == text.Length)
                     return count;
-                index = text.IndexOf(tag, index + 1);
+                index = text.IndexOf(tag, index + 1, StringComparison.Ordinal);
             }
             return count;
         }
@@ -2535,7 +2535,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (italicBeginTagCount == 1 && italicEndTagCount == 1)
                 {
-                    if (text.IndexOf(beginTag) > text.IndexOf(endTag))
+                    if (text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
                     {
                         text = text.Replace(beginTag, "___________@");
                         text = text.Replace(endTag, beginTag);
@@ -2545,8 +2545,8 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 0)
                 {
-                    int firstIndex = text.IndexOf(beginTag);
-                    int lastIndex = text.LastIndexOf(beginTag);
+                    int firstIndex = text.IndexOf(beginTag, StringComparison.Ordinal);
+                    int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
                     int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
                     if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
                         text = text.Replace(Environment.NewLine, "</i>" + Environment.NewLine) + "</i>";
@@ -2558,7 +2558,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 1 && italicEndTagCount == 2)
                 {
-                    int firstIndex = text.IndexOf(endTag);
+                    int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
                     if (text.StartsWith("</i>-<i>-"))
                         text = text.Remove(0, 5);
                     else if (text.StartsWith("</i>- <i>-"))
@@ -2583,7 +2583,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        int lastIndex = text.LastIndexOf(beginTag);
+                        int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
                         if (text.Length > lastIndex + endTag.Length)
                             text = text.Substring(0, lastIndex) + text.Substring(lastIndex - 1 + endTag.Length);
                         else
@@ -2624,7 +2624,7 @@ namespace Nikse.SubtitleEdit.Logic
                     // - Bar.    | - Foo.</i>
                     if (!isFixed && CountTagInText(cleanText, Environment.NewLine) == 1)
                     {
-                        int newLineIndex = text.IndexOf(Environment.NewLine);
+                        int newLineIndex = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                         if (newLineIndex > 0)
                         {
                             var firstLine = text.Substring(0, newLineIndex).Trim();
@@ -2656,7 +2656,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.StartsWith("</i>") && text.EndsWith("</i>"))
                 {
-                    int firstIndex = text.IndexOf(endTag);
+                    int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
                     text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, "<i>");
                 }
 
@@ -2664,7 +2664,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // <i>Bar</i>
                 if(italicBeginTagCount == 2 && italicEndTagCount == 2 && CountTagInText(text, Environment.NewLine) == 1)
                 {
-                    int index = text.IndexOf(Environment.NewLine);
+                    int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
                     {
                         var firstLine = text.Substring(0, index).Trim();
@@ -3359,7 +3359,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (i < len)
             {
                 char c = text[i];
-                int nextSemiColon = text.IndexOf(';', i+1);
+                int nextSemiColon = text.IndexOf(';', i + 1);
                 if (c == '&' && nextSemiColon > 0 && nextSemiColon <= i + 8)
                 {
                     string code = text.Substring(i + 1, nextSemiColon - (i+1));
@@ -3695,7 +3695,7 @@ namespace Nikse.SubtitleEdit.Logic
                             newText = textBox.Text;
                     }
 
-                    int autobreakIndex = newText.IndexOf(Environment.NewLine);
+                    int autobreakIndex = newText.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     if (autobreakIndex > 0)
                     {
                         int selectionStart = textBox.SelectionStart;
