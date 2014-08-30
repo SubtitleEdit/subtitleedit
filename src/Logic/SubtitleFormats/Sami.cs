@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (textToLower.Contains(" class="))
                 {
                     var className = new StringBuilder();
-                    int startClass = textToLower.IndexOf(" class=");
+                    int startClass = textToLower.IndexOf(" class=", StringComparison.Ordinal);
                     int indexClass = startClass + 7;
                     while (indexClass < textToLower.Length && (Utilities.LowercaseLettersWithNumbers + "'\"").Contains(textToLower[indexClass].ToString()))
                     {

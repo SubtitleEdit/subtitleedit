@@ -151,9 +151,9 @@ namespace Nikse.SubtitleEdit.Forms
             string textToLower = text.ToLower();
             foreach (string name in namesEtcList)
             {
-                if (textToLower.Contains(name.ToLower())) // Optimization - Contains is much faster than IndexOf
-                {
-                    int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
+                int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
+                if (startIndex >= 0) 
+                {                    
                     while (startIndex >= 0 && startIndex < text.Length &&
                            textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {

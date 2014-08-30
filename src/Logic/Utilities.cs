@@ -2296,7 +2296,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (string s in namesEtcMultiWordList)
             {
-                if (s.Contains(word) && text.Contains(s))
+                if (s.IndexOf(word, StringComparison.Ordinal) >= 0 && text.IndexOf(s, StringComparison.Ordinal) >= 0)
                 {
                     if (s.StartsWith(word + " ") || s.EndsWith(" " + word) || s.Contains(" " + word + " "))
                         return true;
