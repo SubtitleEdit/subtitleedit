@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
@@ -160,6 +160,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Durchsuche {0} und Unterordner nach Untertiteldateien...</ScanningFolder>
     <Recursive>Unterordner einschließen</Recursive>
     <SetMinMsBetweenSubtitles>Min. Millisekunden zwischen Untertitel</SetMinMsBetweenSubtitles>
+    <PlainText>Text</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -192,6 +193,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Geschwindigkeit prozentual ändern</Title>
     <Info>Geschwindigeit der Untertitel prozentual ändern</Info>
+    <Custom>Benutzerdefiniert</Custom>
+    <ToDropFrame>Bis ausgewählten Bild</ToDropFrame>
+    <FromDropFrame>Ab ausgewählten Bild</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Nach Aktualisierungen suchen</Title>
@@ -688,6 +692,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Automatische Sicherung wiederherstellen...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Erweiterte SSA Eigenschaften...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>SSA Eigenschaften...</SubStationAlphaProperties>
+        <EbuProperties>EBU STL Eigenschaften...</EbuProperties>
+        <PacProperties>PAC Eigenschaften...</PacProperties>
         <OpenOriginal>Original Untertitel öffnen (Übersetzer Modus)...</OpenOriginal>
         <SaveOriginal>Original Untertitel speichern</SaveOriginal>
         <CloseOriginal>Original Untertitel schließen</CloseOriginal>
@@ -709,7 +715,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Text...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB Image Script...</ExportAdobeEncoreFabImageScript>
@@ -978,7 +984,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Visuelle Anpassung für ausgewählten Text ausgeführt</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visuelle Anpassung ausgeführt</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Diesen VobSub Untertitel importieren?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Datei ist größer als 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Datei ist größer als 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Trotzdem fortfahren?</ContinueAnyway>
     <BeforeLoadOf>Vor Laden von {0}</BeforeLoadOf>
     <LoadedSubtitleX>Untertitel {0} geladen</LoadedSubtitleX>
@@ -1065,6 +1071,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <NothingToUndo>Nichts rückgängig zu machen</NothingToUndo>
     <InvalidLanguageNameX>Ungültiger Sprachname: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Konnte Sprache nicht wechseln!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Diese Meldung nicht mehr anzeigen</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Korrigierte Wörter: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Übersprungene Wörter: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Richtige Wörter: {0}</NumberOfCorrectWords>
@@ -1293,6 +1300,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <ImportRulesTitle>Importiere Korrekturregeln aus...</ImportRulesTitle>
     <ExportRulesTitle>Exportiere Korrekturregeln nach...</ExportRulesTitle>
     <Rules>Exportregeln</Rules>
+    <MoveToTop>Zum Anfang</MoveToTop>
+    <MoveToBottom>Zum Ende</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1627,7 +1636,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SyntaxColorOverlap>Farbe Zeitstempel Überlappung</SyntaxColorOverlap>
     <SyntaxErrorColor>Farbe Fehler</SyntaxErrorColor>
     <GoToFirstSelectedLine>Zur ersten ausgewählten Zeile</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Zur nächsten leeren Zeile</GoToNextEmptyLine>
     <MergeSelectedLines>Ausgewählten Text verbinden</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Ausgewählten Text verbinden, nur ersten nicht leeren Text behalten</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Wechsel zum Übersetzungsmodus</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Original/Übersetzung umschalten</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Original/Übersetzung verbinden</MergeOriginalAndTranslation>
@@ -1649,6 +1660,11 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Miscellaneous>Sonstiges</Miscellaneous>
     <UseDoNotBreakAfterList>Nicht nach Liste umbrechen (für Auto Umbruch)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Video Ausgleich</Title>
+    <Description>Video Ausgleich einstellen (Falls Untertitel nicht der Videozeit folgen, z.B. +10 Sekunden)</Description>
+    <RelativeToCurrentVideoPosition>Relativ zur aktuellen Videoposition</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Ausgewählte Texte früher/später anzeigen</Title>
     <TitleAll>Alle Texte früher/später anzeigen</TitleAll>
@@ -1749,25 +1765,28 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MostUsedLines>Meistgenutzte Zeilen</MostUsedLines>
     <MostUsedWords>Meistgenutzte Wörter</MostUsedWords>
     <NothingFound>Nichts gefunden</NothingFound>
-    <NumberOfLinesX>Untertitel Zeilen: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Zeichen als {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Zeichen in Text: {0:#,###,##0}</NumberOfCharactersInTextOnly>
-    <TotalCharsPerSecond>Gesamtanzahl Zeichen/s: {0:0.0} s</TotalCharsPerSecond>
-    <NumberOfItalicTags>Kursiv Tags: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Fett Tags: {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Uterstrichen Tags: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Schrift Tags: {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Ausrichtungs Tags: {0}</NumberOfAlignmentTags>
-    <LineLengthMinimum>Untertitellänge - Minimum:      {0}</LineLengthMinimum>
-    <LineLengthMaximum>Untertitellänge - Maximum:      {0}</LineLengthMaximum>
-    <LineLengthAverage>Untertitellänge - Durchschnitt: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>Untertitel, Zeilen - Durchschnitt: {0:0.0}</LinesPerSubtitleAverage>
-    <SingleLineLengthMinimum>Einzelzeilenlänge - Minimum:      {0}</SingleLineLengthMinimum>
-    <SingleLineLengthMaximum>Einzelzeilenlänge - Maximum:      {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Einzelzeilenlänge - Durchschnitt: {0}</SingleLineLengthAverage>
-    <DurationMinimum>Dauer - Minimum:      {0:0.000} seconds</DurationMinimum>
-    <DurationMaximum>Dauer - Maximum:      {0:0.000} seconds</DurationMaximum>
-    <DurationAverage>Dauer - Durchschnitt: {0:0.000} seconds</DurationAverage>
+    <NumberOfLinesX>Untertitel Zeilen:               {0:#,###}</NumberOfLinesX>
+    <LengthInFormatXinCharactersY>Zeichen in {0}:   {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Zeichen im Text:              {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Zeichen/Sekunde:          {0:0.0}</TotalCharsPerSecond>
+    <NumberOfItalicTags>Kursiv Tags:                    {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Fett Tags:                        {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Unterstrichen Tags:         {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Schrift Tags:                    {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Ausrichtung Tags:           {0}</NumberOfAlignmentTags>
+    <LineLengthMinimum>Untertitellänge - Minimum:              {0}</LineLengthMinimum>
+    <LineLengthMaximum>Untertitellänge - Maximum:             {0}</LineLengthMaximum>
+    <LineLengthAverage>Untertitellänge - Durchschnitt:        {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>Zeilenanzahl - Durchschnitt:          {0:0.0}</LinesPerSubtitleAverage>
+    <SingleLineLengthMinimum>Einzelzeilenlänge - Minimum:          {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Einzelzeilenlänge - Maximum:         {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>Einzelzeilenlänge - Durchschnitt:    {0}</SingleLineLengthAverage>
+    <DurationMinimum>Dauer - Minimum:                            {0:0.000} Sekunden</DurationMinimum>
+    <DurationMaximum>Dauer - Maximum:                           {0:0.000} Sekunden</DurationMaximum>
+    <DurationAverage>Dauer - Durchschnitt:                      {0:0.000} Sekunden</DurationAverage>
+    <CharactersPerSecondMinimum>Zeichen/Sek - Minimum:          {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Zeichen/Sek - Maximum:          {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Zeichen/Sek - Durchschnitt:     {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Erweiterte SSA Eigenschaften</Title>
@@ -1863,9 +1882,9 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Synchronize>Anpassen</Synchronize>
     <HalfASecondBack>&lt; ½ Sek</HalfASecondBack>
     <ThreeSecondsBack>&lt; 3 Sek</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Spiele {0} Sek und zurück</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>{0} Sek. und zurück</PlayXSecondsAndBack>
     <FindText>Suche Text</FindText>
-    <GoToSubPosition>Zu Text Pos springen</GoToSubPosition>
+    <GoToSubPosition>Zur Text Pos.</GoToSubPosition>
     <KeepChangesTitle>Änderungen speichern?</KeepChangesTitle>
     <KeepChangesMessage>Es wurden Änderungen am Untertitel mit 'Visueller Anpassung' vorgenommen.
 
@@ -1927,6 +1946,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <OcrAutoCorrectionSpellchecking>OCR Auto Korrektur / Rechtschreibprüfung</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Korrigiere OCR Fehler</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importiere Text mit passenden Zeitstempeln...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importiere neue Zeitstempel</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Untertitel Bild speichern als...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Alle Bilder speichern (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Alle Bilder speichern mit HTML Index...</SaveAllSubtitleImagesWithHtml>
