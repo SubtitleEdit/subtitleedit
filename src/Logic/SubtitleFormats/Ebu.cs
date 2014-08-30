@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Save(fileName, subtitle, false);
         }
 
-        public void Save(string fileName, Subtitle subtitle, bool batchMode)
+        public static void Save(string fileName, Subtitle subtitle, bool batchMode)
         {
             var header = new EbuGeneralSubtitleInformation();
             var saveOptions = new EbuSaveOptions();

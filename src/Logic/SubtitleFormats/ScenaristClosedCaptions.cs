@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return subtitle.Paragraphs.Count > _errorCount;
         }
 
-        private string FixMax4LinesAndMax32CharsPerLine(string text, string language)
+        private static string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {
             var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             bool allOk = true;
