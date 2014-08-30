@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private Subtitle ImportTimeCodesOnSameSeperateLine(string[] lines)
+        private static Subtitle ImportTimeCodesOnSameSeperateLine(string[] lines)
         {
             Paragraph p = null;
             var subtitle = new Subtitle();
