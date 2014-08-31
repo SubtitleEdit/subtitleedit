@@ -158,6 +158,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ScanningFolder>{0} 및 자막 파일에 대한 하위 폴더 찾아보기...</ScanningFolder>
     <Recursive>하위 폴더 포함</Recursive>
     <SetMinMsBetweenSubtitles>자막 사이의 분과 밀리초 설정</SetMinMsBetweenSubtitles>
+    <PlainText>일반 텍스트</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -181,15 +182,18 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </ChangeCasingNames>
   <ChangeFrameRate>
     <Title>* 프레임 속도 변경</Title>
-    <ConvertFrameRateOfSubtitle>자막의 초당 프레임 수를 변경합니다.</ConvertFrameRateOfSubtitle>
+    <ConvertFrameRateOfSubtitle>자막의 초당 프레임 수를 변경합니다</ConvertFrameRateOfSubtitle>
     <FromFrameRate>변경 전 (fps)</FromFrameRate>
     <ToFrameRate>변경 후 (fps)</ToFrameRate>
     <FrameRateNotCorrect>프레임 속도가 올바르지 않음!</FrameRateNotCorrect>
     <FrameRateNotChanged>프레임 속도가 동일함 - 변환된 것 없음!</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>* 비율로 자막 속도 조정</Title>
-    <Info>비율로 자막 속도를 조정합니다.</Info>
+    <Title>* 비율로 속도 조정</Title>
+    <Info>비율로 자막 속도를 변경합니다</Info>
+    <Custom>사용자 지정</Custom>
+    <ToDropFrame>To drop frame</ToDropFrame>
+    <FromDropFrame>From drop frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>* 업데이트 확인</Title>
@@ -312,13 +316,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <EbuSaveOptions>
     <Title>EBU 저장 옵션</Title>
     <GeneralSubtitleInformation>일반적인 자막 정보</GeneralSubtitleInformation>
-    <CodePageNumber>코드 페이지 번호</CodePageNumber>
+    <CodePageNumber>코드 페이지</CodePageNumber>
     <DiskFormatCode>디스크 포맷 코드</DiskFormatCode>
     <DisplayStandardCode>표준 코드 표시</DisplayStandardCode>
-    <CharacterCodeTable>문자 테이블</CharacterCodeTable>
+    <CharacterCodeTable>문자 코드 테이블</CharacterCodeTable>
     <LanguageCode>언어 코드</LanguageCode>
-    <OriginalProgramTitle>오리지널 프로그램 제목</OriginalProgramTitle>
-    <OriginalEpisodeTitle>오리지널 에피소드 제목</OriginalEpisodeTitle>
+    <OriginalProgramTitle>원본 프로그램 제목</OriginalProgramTitle>
+    <OriginalEpisodeTitle>원본 에피소드 제목</OriginalEpisodeTitle>
     <TranslatedProgramTitle>번역된 프로그램 제목</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>번역된 에피소드 제목</TranslatedEpisodeTitle>
     <TranslatorsName>번역자 이름</TranslatorsName>
@@ -328,7 +332,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MaxNoOfDisplayableChars>줄 당 최대 문자수</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>최대 줄 수</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>디스크 시퀀스 번호</DiskSequenceNumber>
-    <TotalNumberOfDisks>디스크의 총 수</TotalNumberOfDisks>
+    <TotalNumberOfDisks>총 디스크 수</TotalNumberOfDisks>
     <Import>가져오기...</Import>
     <TextAndTimingInformation>텍스트 및 타이밍 정보</TextAndTimingInformation>
     <JustificationCode>배치 코드</JustificationCode>
@@ -464,11 +468,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Fixes>수정</Fixes>
     <Log>기록</Log>
     <Function>수정 항목</Function>
-    <RemovedEmptyLine>빈 줄을 삭제했습니다.</RemovedEmptyLine>
-    <RemovedEmptyLineAtTop>첫번째 빈 줄을 삭제했습니다.</RemovedEmptyLineAtTop>
-    <RemovedEmptyLineAtBottom>마지막 빈 줄을 삭제했습니다.</RemovedEmptyLineAtBottom>
-    <RemovedEmptyLinesUnsedLineBreaks>빈 줄 및 불필요한 줄의 줄바꿈 삭제하기</RemovedEmptyLinesUnsedLineBreaks>
-    <EmptyLinesRemovedX>삭제한 빈 줄: {0}</EmptyLinesRemovedX>
+    <RemovedEmptyLine>빈 줄 제거</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>첫번째 빈 줄 제거</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>마지막 빈 줄 제거</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLinesUnsedLineBreaks>빈 줄 및 불필요한 줄의 줄바꿈 제거</RemovedEmptyLinesUnsedLineBreaks>
+    <EmptyLinesRemovedX>제거한 빈 줄: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>중복된 표시시간 수정하기</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>짧은 표시시간 수정하기</FixShortDisplayTimes>
     <FixLongDisplayTimes>긴 표시시간 수정하기</FixLongDisplayTimes>
@@ -687,7 +691,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <RestoreAutoBackup>자동 백업된 자막 불러오기</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha(.ass)의 속성...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
-        <OpenOriginal>원본 자막 열기 (번역 모드)...</OpenOriginal>
+        <EbuProperties>EBU stl 속성...</EbuProperties>
+        <PacProperties>PAC 속성...</PacProperties>
+        <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
         <CloseOriginal>원본 자막 닫기</CloseOriginal>
         <OpenContainingFolder>현재 폴더 열기</OpenContainingFolder>
@@ -738,7 +744,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ReverseRightToLeftStartEnd>LTR 모드 (선택한 줄)...</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>오디오/비디오 미리 보기에 원본 텍스트 표시</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>줄 선택 바꾸기</ModifySelection>
-        <InverseSelection>역 선택</InverseSelection>
+        <InverseSelection>선택 반전</InverseSelection>
       </Edit>
       <Tools>
         <Title>도구</Title>
@@ -1063,6 +1069,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NothingToUndo>취소할 것이 없습니다!</NothingToUndo>
     <InvalidLanguageNameX>잘못된 언어 이름: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>언어를 변경할 수 없습니다!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>다시 표시하지 않음</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>수정된 단어: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>무시한 단어: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>올바른 단어: {0}</NumberOfCorrectWords>
@@ -1630,7 +1637,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SyntaxColorOverlap>표시시간이 중복될 때</SyntaxColorOverlap>
     <SyntaxErrorColor>오류색 선택</SyntaxErrorColor>
     <GoToFirstSelectedLine>첫번째 선택한 줄로 이동</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>다음 빈 줄로 이동</GoToNextEmptyLine>
     <MergeSelectedLines>선택한 줄 병합</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>선택한 줄 병합, 첫번째 있는 텍스트만 유지</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>번역 모드 전환</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>원본과 번역본 바꾸기</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>원본과 번역본 병합</MergeOriginalAndTranslation>
@@ -1652,6 +1661,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Miscellaneous>기타</Miscellaneous>
     <UseDoNotBreakAfterList>'뒤에 줄바꿈을 배제하는 목록' 사용 (자동 줄바꿈 用)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>비디오 오프셋 설정</Title>
+    <Description>비디오 오프셋 설정 (자막이 실제 비디오 시간을 따를 필요는 없다. 하지만 +10시간이라면...)</Description>
+    <RelativeToCurrentVideoPosition>현재 비디오 위치 기준</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>* 선택한 줄 빠르게/느리게 표시</Title>
     <TitleAll>* 모든 줄 빠르게/느리게 표시</TitleAll>
@@ -1771,6 +1785,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DurationMinimum>표시시간 - 최소: {0:0.000}초</DurationMinimum>
     <DurationMaximum>표시시간 - 최대: {0:0.000}초</DurationMaximum>
     <DurationAverage>표시시간 - 평균: {0:0.000}초</DurationAverage>
+    <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>* Advanced Sub Station Alpha(.ass)의 속성</Title>
@@ -1927,6 +1944,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GuessesUsed>추측 사용</GuessesUsed>
     <UnknownWords>알 수 없는 단어</UnknownWords>
     <OcrAutoCorrectionSpellchecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellchecking>
+    <ImportNewTimeCodes>새로운 타임코드 가져오기</ImportNewTimeCodes>
     <FixOcrErrors>OCR 오류 수정</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>타임코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>다른 이름으로 이미지 자막 저장...</SaveSubtitleImageAs>
