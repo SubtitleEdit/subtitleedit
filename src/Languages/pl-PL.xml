@@ -5,11 +5,11 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
-    <HelpFile>http://www.potplayer.pl/storage/SubtitleEdit/Help/PL/</HelpFile>
+    <HelpFile>http://potplayer.pl/ccount/click.php?id=10</HelpFile>
     <OK>&amp;OK</OK>
     <Cancel>&amp;Anuluj</Cancel>
     <Apply>Zastosuj</Apply>
-    <None>Nie</None>
+    <None>Brak</None>
     <All>Wszystko</All>
     <Preview>Podgląd</Preview>
     <SubtitleFiles>Pliki napisów</SubtitleFiles>
@@ -920,7 +920,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Previous>&lt; Wróć</Previous>
       <Next>Dalej &gt;</Next>
       <AutoBreak>Przełam linię</AutoBreak>
-      <Unbreak>Cofnij łamanie</Unbreak>
+      <Unbreak>Cofnij łamanie linii</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Tłumacz</Translate>
@@ -985,7 +985,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Wykonano synchronizację wizualną zaznaczonych linii</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Wykonano synchronizację wizualną</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importować te napisy VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Rozmiar pliku {0} jest większy, niż 10 MB</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Rozmiar pliku {0} jest większy, niż 10 MB</FileXIsLargerThan10MB>
     <ContinueAnyway>Kontynuować?</ContinueAnyway>
     <BeforeLoadOf>Przed wczytaniem {0}</BeforeLoadOf>
     <LoadedSubtitleX>Wczytane napisy {0}</LoadedSubtitleX>
@@ -1528,7 +1528,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <SpectrogramAppearance>Wygląd spektrogramu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Wypełnienie gradientem w jednym kolorze</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasyczny</SpectrogramClassic>
-    <WaveformUseFFmpeg>Użyj FFmpeg do ekstrakcji audio</WaveformUseFFmpeg>
+    <WaveformUseFFmpeg>Użyj FFmpeg do wydobycia wykresu falowego</WaveformUseFFmpeg>
     <WaveformFFmpegPath>Ścieżka do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Przejdź do FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Przejdź do VLC Portable</WaveformBrowseToVLC>
@@ -1571,7 +1571,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-    (z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+	(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
     <Control>Ctrl</Control>
@@ -1692,7 +1692,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <WordNotFound>Nie znaleziono słowa</WordNotFound>
     <Language>Język</Language>
     <Change>Zmień</Change>
-    <ChangeAll>Zmień wszystkie</ChangeAll>
+    <ChangeAll>Zmień wszystko</ChangeAll>
     <SkipOnce>Pomiń &amp;raz</SkipOnce>
     <SkipAll>Pomiń w&amp;szystko</SkipAll>
     <AddToUserDictionary>Dodaj do słownika użytkownika</AddToUserDictionary>
@@ -1706,7 +1706,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <EditWholeText>Edytuj cały tekst</EditWholeText>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
     <AddXToNamesEtc>Dodaj "{0}" do listy nazw własnych</AddXToNamesEtc>
-    <AutoFixNames>Popraw pisownię nazw własnych, tylko gdy różnią się budową</AutoFixNames>
+    <AutoFixNames>Popraw pisownię nazw własnych, 
+tylko gdy różnią się budową</AutoFixNames>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>
     <ImageText>Obraz tekstu</ImageText>
