@@ -711,7 +711,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private string ToSccText(string text, string language)
+        private static string ToSccText(string text, string language)
         {
             text = FixMax4LinesAndMax32CharsPerLine(text, language);
             //text = text.Replace("ã", "aã");
