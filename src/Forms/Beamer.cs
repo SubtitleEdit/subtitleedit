@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_noTimerAction)
                 return;
 
-            double positionInMilliseconds = (DateTime.Now.Ticks - _videoStartTick) / 10000; // 10,000 ticks = 1 millisecond
+            double positionInMilliseconds = (DateTime.Now.Ticks - _videoStartTick) / 10000.0D; // 10,000 ticks = 1 millisecond
             positionInMilliseconds *= _millisecondsFactor;
             int index = 0;
             foreach (Paragraph p in _subtitle.Paragraphs)
