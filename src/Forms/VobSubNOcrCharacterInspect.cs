@@ -18,7 +18,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap _bitmap;
         private Bitmap _bitmap2;
         private double _zoomFactor = 3.0;
-        private double _unItalicFactor;
 
         public VobSubNOcrCharacterInspect()
         {
@@ -31,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr, double unItalicFactor)
+        internal void Initialize(Bitmap bitmap, int pixelsIsSpace, bool rightToLeft, NOcrDb nOcrDb, VobSubOcr vobSubOcr)
         {
             _bitmap = bitmap;
             var nbmp = new NikseBitmap(bitmap);
@@ -41,7 +40,6 @@ namespace Nikse.SubtitleEdit.Forms
             _nocrChars = nOcrDb.OcrCharacters;
             _matchList = new List<VobSubOcr.CompareMatch>();
             _vobSubOcr = vobSubOcr;
-            _unItalicFactor = unItalicFactor;
 
             int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);

@@ -8133,7 +8133,7 @@ namespace Nikse.SubtitleEdit.Forms
             var inspect = new VobSubNOcrCharacterInspect();
             bool oldCorrect = checkBoxNOcrCorrect.Checked;
             checkBoxNOcrCorrect.Checked = false;
-            inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this, _unItalicFactor);
+            inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this);
             if (inspect.ShowDialog(this) == DialogResult.OK)
             {
                 Cursor = Cursors.WaitCursor;
