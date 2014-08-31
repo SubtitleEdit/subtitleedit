@@ -1300,10 +1300,10 @@ namespace Nikse.SubtitleEdit.Logic.OCR
                         if ((st.StrippedText.StartsWith("k ") || st.StrippedText.StartsWith("m ") || st.StrippedText.StartsWith("n ") || st.StrippedText.StartsWith("r ") || st.StrippedText.StartsWith("s ") || st.StrippedText.StartsWith("t ")) &&
                             st.Pre.EndsWith("'") && _threeLetterIsoLanguageName == "nld")
                             uppercaseLetter = st.StrippedText.Substring(0, 1);
-                        if ((st.StrippedText.StartsWith("l-I'll ") || st.StrippedText == "l-l'll ") && _threeLetterIsoLanguageName == "eng")
+                        if ((st.StrippedText.StartsWith("l-I'll ") || st.StrippedText.StartsWith("l-l'll ")) && _threeLetterIsoLanguageName == "eng")
                         {
                             uppercaseLetter = "I";
-                            input = "I-I" + input.Remove(0, 3);
+                            st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
                         }
                         st.StrippedText = st.StrippedText.Remove(0, 1).Insert(0, uppercaseLetter);
                         input = st.Pre + st.StrippedText + st.Post;

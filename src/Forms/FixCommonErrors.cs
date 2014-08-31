@@ -1004,7 +1004,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         LogStatus(_language.FixShortDisplayTimes, string.Format(_language.UnableToFixTextXY, i + 1, p));
                         _totalErrors++;
-                        skip = true;
                     }
                 }
                 skip = false;
