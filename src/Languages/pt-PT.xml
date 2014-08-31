@@ -197,7 +197,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Info>Alterar a velocidade da legenda em percentagem</Info>
     <Custom>Personalizado</Custom>
     <ToDropFrame>Para descer fotograma</ToDropFrame>
-    <FromDropFrame>Da descida fotograma</FromDropFrame>
+    <FromDropFrame>Da descida fotograma</FromDropFrame>	
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Verificar se há actualizações</Title>
@@ -695,7 +695,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha propriedades...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
         <EbuProperties>EBU stl propriedades...</EbuProperties>
-        <PacProperties>PAC propriedades...</PacProperties>
+        <PacProperties>PAC propriedades...</PacProperties>		
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
         <CloseOriginal>Fechar legenda original</CloseOriginal>
@@ -986,7 +986,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Sincronia visual concluída nas linhas seleccionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronia visual concluída</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importar esta legenda VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>O ficheiro é maior que 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>O ficheiro é maior que 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuar mesmo assim?</ContinueAnyway>
     <BeforeLoadOf>Antes de carregar {0}</BeforeLoadOf>
     <LoadedSubtitleX>Legenda carregada {0}</LoadedSubtitleX>
@@ -1073,7 +1073,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NothingToUndo>Nada para anular</NothingToUndo>
     <InvalidLanguageNameX>Nome de idioma inválido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Não é possível alterar o idioma!</UnableToChangeLanguage>
-    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>
+    <DoNotDisplayMessageAgain>Não exibir esta mensagem novamente</DoNotDisplayMessageAgain>	
     <NumberOfCorrectedWords>Número de palavras corrigidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palavras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palavras correctas: {0}</NumberOfCorrectWords>
@@ -1303,7 +1303,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
     <Rules>Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
-    <MoveToBottom>Mover para o fim</MoveToBottom>
+    <MoveToBottom>Mover para o fim</MoveToBottom>	
   </MultipleReplace>
   <NetworkChat>
     <Title>Conversação</Title>
@@ -1530,9 +1530,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SpectrogramAppearance>Aparência do espectrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Degradê de cor</SpectrogramOneColorGradient>
     <SpectrogramClassic>Clássico</SpectrogramClassic>
-    <WaveformUseFFmpeg>Usar o FFmpeg para extrair o áudio no formato "wav"</WaveformUseFFmpeg>
-    <WaveformFFmpegPath>Directoria do FFmpeg</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Procurar por FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformUseFFmpeg>Usar o FFMPEG para extrair o áudio no formato "wav"</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Directoria do FFMPEG</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Procurar por FFMPEG</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
@@ -1639,9 +1639,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SyntaxColorOverlap>Cor do código de tempo sobreposto</SyntaxColorOverlap>
     <SyntaxErrorColor>Cor dos erros</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir para a primeira linha seleccionada</GoToFirstSelectedLine>
-    <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>
+    <GoToNextEmptyLine>Ir para a próxima linha em branco</GoToNextEmptyLine>	
     <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
-    <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter só o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesOnlyFirstText>Combinar as linhas seleccionadas, manter só o primeiro texto que não esteja em branco</MergeSelectedLinesOnlyFirstText>	
     <ToggleTranslationMode>Alternar o modo de tradução</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Mudar entre original e tradução</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar o orginal com o traduzido</MergeOriginalAndTranslation>
@@ -1663,11 +1663,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Miscellaneous>Diversos</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar "não quebrar linha depois da lista" (para o ajuste-auto)</UseDoNotBreakAfterList>
   </Settings>
-   <SetVideoOffset>
+  <SetVideoOffset>
     <Title>Definir o deslocamento do vídeo</Title>
     <Description>Definir o deslocamento do vídeo (A legenda não deve seguir o tempo real do vídeo, mas por ex. +10 horas)</Description>
-    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>
-  </SetVideoOffset>
+    <RelativeToCurrentVideoPosition>Em relação à posição do vídeo actual</RelativeToCurrentVideoPosition>	
+  </SetVideoOffset> 
   <ShowEarlierLater>
     <Title>Mostrar linhas seleccionadas antes/depois</Title>
     <TitleAll>Mostrar todas as linhas antes/depois</TitleAll>
@@ -1713,6 +1713,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ImageText>Imagem de texto</ImageText>
     <SpellCheckCompleted>Verificação ortográfica terminada.</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
+    <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Divisão</Title>
@@ -1786,9 +1787,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DurationMinimum>Duração - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duração - máxima: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duração - média: {0:0.000} segundos</DurationAverage>
-    <ChararactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</ChararactersPerSecondMinimum>
-    <ChararactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</ChararactersPerSecondMaximum>
-    <ChararactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</ChararactersPerSecondAverage>
+    <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</CharactersPerSecondAverage>	
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propriedades</Title>
@@ -1797,7 +1798,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ScriptTitle>Titulo</ScriptTitle>
     <OriginalScript>Script original</OriginalScript>
     <Translation>Tradução</Translation>
-    <Editing>Editando</Editing>
+    <Editing>Edição</Editing>
     <Timing>Tempo</Timing>
     <SyncPoint>Ponto de sincronia</SyncPoint>
     <UpdatedBy>Actualizado por</UpdatedBy>
@@ -1948,7 +1949,7 @@ Manter as alterações?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>
+    <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>	
     <SaveSubtitleImageAs>Guardar imagem da legenda como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
