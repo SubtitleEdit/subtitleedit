@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string ToTimeCode(TimeCode tc)
         {
-            int last = (int)(tc.Milliseconds / 10 + 0.5);
+            int last = (int)(tc.Milliseconds / 10.0D + 0.5D);
             return tc.ToString().Substring(0, 8) + ":" + string.Format("{0:0#}", last);
         }
 

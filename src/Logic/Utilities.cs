@@ -2415,7 +2415,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case 17: return Color.LightBlue;
                 case 18: return Color.DarkGoldenrod;
                 case 19: return Color.Magenta;
-                case 20: return Color.Maroon;
                 default:
                     return Color.Black;
             }
