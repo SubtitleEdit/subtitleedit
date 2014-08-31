@@ -73,6 +73,13 @@
   <ItemGroup>
     <EmbeddedResource Include="Hunspellx64.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dictionaries\en_US.aff" />
+    <EmbeddedResource Include="Dictionaries\en_US.dic" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Dictionaries\names_etc.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

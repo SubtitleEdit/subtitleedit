@@ -229,18 +229,6 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                         Instance._baseDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-                    // C:\Data\subtitleedit\subtitleedit\src\TestResults
-                    string tag = @"\SubtitleEdit\src\TestResults\";
-                    int start = Instance._baseDir.ToLower().IndexOf(tag.ToLower());
-                    if (start > 0)
-                    {
-                        string s = Instance._baseDir.Substring(0, start + tag.Length - 12) + "bin\\Release";
-                        Instance._baseDir = s;
-                    }
-
-
-                    if (Instance._baseDir.EndsWith("Test\\bin\\Release"))
-                        Instance._baseDir = Instance._baseDir.Replace("Test\\bin\\Release", "bin\\Release");
                     if (!Instance._baseDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
                         Instance._baseDir += Path.DirectorySeparatorChar;
                 }

@@ -71,6 +71,7 @@ namespace Test
                     CopyStream(strm, file);
                 }
             }
+            
             strm = asm.GetManifestResourceStream("Test.Hunspellx64.dll");
             if (strm != null)
             {
@@ -79,6 +80,37 @@ namespace Test
                     CopyStream(strm, file);
                 }
             }
+
+            if (!System.IO.Directory.Exists("Directories"))
+                System.IO.Directory.CreateDirectory("Dictionaries");
+            strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
+            if (strm != null)
+            {
+                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "en_US.aff")))
+                {
+                    CopyStream(strm, file);
+                }
+            }
+
+            strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.dic");
+            if (strm != null)
+            {
+                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "en_US.dic")))
+                {
+                    CopyStream(strm, file);
+                }
+            }
+
+            strm = asm.GetManifestResourceStream("Test.Dictionaries.names_etc.xml");
+            if (strm != null)
+            {
+                using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "names_etc.xml")))
+                {
+                    CopyStream(strm, file);
+                }
+            }
+
+
         }
 
         //Use ClassCleanup to run code after all tests in a class have run
