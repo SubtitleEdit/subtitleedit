@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.4.2 (xth August 2014)
+3.4.2 (xth September 2014)
 * NEW:
    * Added new subtitle format (200+ formats supported)
    * Added "Plain text" to target format in "Batch convert" - thx Leon
@@ -10,9 +10,15 @@
    * Updated Dutch language file - thx Quetsbeek
    * Updated Romanian language file - thx Mircea
    * Updated Portuguese language file - thx moob
-   * Added ".mxf" to list of known video formats - thx Haroldo
+   * Updated Brazilian language file - thx Igor
+   * Updated German language file - thx Siegwarth
+   * Updated Korean language file - thx domddol
+   * Updated Polish language file - thx admas
+   * Multiple replace - moving rules up/down now has effect instantly
    * Allow "Merge selected lines" for more lines
    * Save does not create a new hard link - thx xylographe/XhmikosR
+   * Minor performance improvements
+   * Added ".mxf" to list of known video formats - thx Haroldo
 * FIXED:
    * Reverted "Framerate conversion" fix from 3.4.1
    * Fixed "Split line" button appear wrongly - thx Quetsbeek
@@ -28,6 +34,7 @@
    * Fixed "MicroDvd" sub compare - thx SimplyTheBOSS
    * Fixed regular expression replace in main window - thx ivandrofly
    * Fixed bug in "Fix invalid italic tags" - thx XhmikosR
+   * Can now load Norwegian Tesseract dic - thx Stian
 
 
 3.4.1 (8th August 2014)
