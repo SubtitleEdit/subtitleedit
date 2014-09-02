@@ -925,7 +925,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var fi = new FileInfo(fileName);
                     if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
                     {
-                        byte[] buffer = File.ReadAllBytes(fileName);
+                        byte[] buffer = Utilities.ReadAllBytes(fileName);
 
                         if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
                             buffer[01] == 0 &&
@@ -973,7 +973,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _fileName = fileName;
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = File.ReadAllBytes(fileName);
+            byte[] buffer = Utilities.ReadAllBytes(fileName);
 
             int index = 0;
             while (index < buffer.Length)
