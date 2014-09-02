@@ -610,7 +610,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     e.Graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }
-            }           
+            }
         }
 
         private void DrawBackground(Graphics graphics)

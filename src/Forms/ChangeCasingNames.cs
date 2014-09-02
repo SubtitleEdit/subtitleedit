@@ -152,8 +152,8 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string name in namesEtcList)
             {
                 int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
-                if (startIndex >= 0) 
-                {                    
+                if (startIndex >= 0)
+                {
                     while (startIndex >= 0 && startIndex < text.Length &&
                            textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {
