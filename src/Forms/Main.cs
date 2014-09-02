@@ -14242,7 +14242,7 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemEbuProperties.Text = Configuration.Settings.Language.Main.Menu.File.EbuProperties;
                 toolStripMenuItemEbuProperties.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.Main.Menu.File.EbuProperties);
             }
-            else 
+            else
             {
                 toolStripMenuItemEbuProperties.Visible = false;
             }
