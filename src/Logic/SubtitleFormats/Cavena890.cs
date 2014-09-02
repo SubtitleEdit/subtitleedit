@@ -7,10 +7,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Cavena890 : SubtitleFormat
     {
-        const int LanguageIdHebrew = 20;
-        const int LanguageIdLatin = 68;
-        const int LanguageIdChinese = 84;
-        const int LanguageIdRussian = 9999;
+
+        const int LanguageIdEnglish = 0x01;
+        const int LanguageIdDanish = 0x07;
+        const int LanguageIdAlbanian = 0x09;
+        const int LanguageIdSwedish = 0x28;
+        const int LanguageIdHebrew = 0x56;
+        const int LanguageIdArabic = 0x80;
+        const int LanguageIdRussian = 0x8f;
+        const int LanguageIdChineseTraditional = 0x90;
+        const int LanguageIdChineseSimplified = 0x91;
 
         static List<int> _hebrewCodes = new List<int> {
             0x40, // א
@@ -181,19 +187,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return false; }
         }
 
-        private string _language;
+        private string _fontNameLine1;
+        private string _fontNameLine2;
+        private int _languageIdLine1 = LanguageIdEnglish;
+        private int _languageIdLine2 = LanguageIdEnglish;
 
         public void Save(string fileName, Subtitle subtitle)
         {
-            _language = null;
-            if (subtitle.Header != null && subtitle.Header.StartsWith("890-language:"))
-                _language = subtitle.Header.Remove(0, "890-language:".Length);
+            _fontNameLine1 = "HLV23N";
+            _fontNameLine2 = "HLV23N";
 
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
-            int languageId = LanguageIdLatin;
-            if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId >= 0)
-                languageId = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (p.Text.Contains("的") ||
@@ -209,125 +214,64 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text.Contains("上") ||
                     p.Text.Contains(""))
                 {
-                    languageId = LanguageIdChinese;
-                    _language = "CCKM44";
+                    _languageIdLine1 = LanguageIdChineseSimplified;
+                    _languageIdLine2 = LanguageIdChineseSimplified;
+                    _fontNameLine1 = "CCKM44";
+                    _fontNameLine2 = "CCKM44";
                     break;
                 }
             }
+            if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 >= 0)
+                _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1;
+            if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
+                _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
 
-            if (languageId == LanguageIdChinese)
-            {
-                byte[] buffer = new byte[388];
-                for (int i = 0; i < buffer.Length; i++)
-                    buffer[i] = 0;
+         
+            //header
+            for (int i = 0; i < 22; i++)
+                fs.WriteByte(0);
 
-                buffer[32] = 0x3A;
-                buffer[33] = 0x30;
-                buffer[34] = 0x30;
+            byte[] buffer = ASCIIEncoding.ASCII.GetBytes("Subtitle Edit");
+            fs.Write(buffer, 0, buffer.Length);
+            for (int i = 0; i < 18 - buffer.Length; i++)
+                fs.WriteByte(0);
 
-                buffer[134] = 0x09;
-                buffer[135] = 0x07;
-                buffer[136] = 0x15;
-                buffer[137] = 0x13;
-                buffer[138] = 0x56;
-                buffer[139] = 0x56;
-                buffer[140] = 0x08;
-                buffer[141] = 0x90;
+            string title = Path.GetFileNameWithoutExtension(fileName);
+            if (title.Length > 25)
+                title = title.Substring(0, 25);
+            buffer = ASCIIEncoding.ASCII.GetBytes(title);
+            fs.Write(buffer, 0, buffer.Length);
+            for (int i = 0; i < 28 - title.Length; i++)
+                fs.WriteByte(0);
 
-                buffer[146] = 0x09;
-                buffer[147] = 0x8f;
+            buffer = ASCIIEncoding.ASCII.GetBytes("NV");
+            fs.Write(buffer, 0, buffer.Length);
+            for (int i = 0; i < 66 - buffer.Length; i++)
+                fs.WriteByte(0);
 
-                buffer[172] = 0x08;
-                buffer[173] = 0x90;
+            buffer = new byte[] { 0xA0, 0x05, 0x04, 0x03, 0x06, 0x06, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, (byte)_languageIdLine1, (byte)_languageIdLine2, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            fs.Write(buffer, 0, buffer.Length);
 
-                buffer[179] = 0xF6;
-                buffer[180] = 0x01;
+            buffer = GetFontBytesFromLanguageId(_languageIdLine1);
+            fs.Write(buffer, 0, buffer.Length);
 
-                buffer[187] = 0x48; // HEBNOA.V
-                buffer[188] = 0x45;
-                buffer[189] = 0x42;
-                buffer[190] = 0x4E;
-                buffer[191] = 0x4F;
-                buffer[192] = 0x41;
-
-
-                if (languageId == LanguageIdChinese)
-                {
-                    buffer[187] = 0x43; // CCKM44
-                    buffer[188] = 0x43;
-                    buffer[189] = 0x4B;
-                    buffer[190] = 0x4D;
-                    buffer[191] = 0x34;
-                    buffer[192] = 0x34;
-                }
-
-                buffer[193] = 0x2E;
-                buffer[194] = 0x56;
+            buffer = new byte[] {  0x2E, 0x56, 0x44, 0x46, 0x4F, 0x4E, 0x54, 0x4C, 0x2E, 0x44,
+            0x01, 0x07, 0x01, 0x08, 0x00, 0xBF, 0x02, 0xBF, 0x02, 0x00, 0x00, 0x0D, 0xBF, 0x62, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+            fs.Write(buffer, 0, buffer.Length);
 
 
-                buffer[208] = 0xf6;
-                buffer[209] = 0x01;
-                buffer[210] = 0xf3;
-                buffer[211] = 0x01;
-                buffer[213] = 0x03;
+            buffer = GetFontBytesFromLanguageId(_languageIdLine2);
+            fs.Write(buffer, 0, buffer.Length);
 
-                buffer[246] = 0x56;
-                buffer[247] = 0x46;
-                buffer[248] = 0x4F;
-                buffer[249] = 0x4E;
-                buffer[250] = 0x54;
-                buffer[251] = 0x4C;
-                buffer[252] = 0x2E;
-                buffer[253] = 0x56;
-                buffer[254] = 0x4B;
-                buffer[255] = 0x02;
-                buffer[256] = 0x30;
-                buffer[257] = 0x30;
-                buffer[258] = 0x3A;
-                buffer[259] = 0x30;
-                buffer[260] = 0x30;
-                buffer[261] = 0x3A;
-                buffer[262] = 0x30;
-                buffer[263] = 0x30;
-                buffer[264] = 0x3A;
-                buffer[265] = 0x30;
-                buffer[266] = 0x30;
+            buffer = new byte[] { 0x2E, 0x56, 0x14, 0x56, 0x31, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44 };
+            fs.Write(buffer, 0, buffer.Length);
 
-                fs.Write(buffer, 0, buffer.Length);
-            }
-            else
-            {
-                //header
-                for (int i = 0; i < 22; i++)
-                    fs.WriteByte(0);
-
-                byte[] buffer = ASCIIEncoding.ASCII.GetBytes("Subtitle Edit");
-                fs.Write(buffer, 0, buffer.Length);
-                for (int i = 0; i < 18 - buffer.Length; i++)
-                    fs.WriteByte(0);
-
-                string title = Path.GetFileNameWithoutExtension(fileName);
-                if (title.Length > 25)
-                    title = title.Substring(0, 25);
-                buffer = ASCIIEncoding.ASCII.GetBytes(title);
-                fs.Write(buffer, 0, buffer.Length);
-                for (int i = 0; i < 28 - title.Length; i++)
-                    fs.WriteByte(0);
-
-                buffer = ASCIIEncoding.ASCII.GetBytes("NV");
-                fs.Write(buffer, 0, buffer.Length);
-                for (int i = 0; i < 66 - buffer.Length; i++)
-                    fs.WriteByte(0);
-
-                buffer = new byte[] { 0xA0, 0x05, 0x04, 0x03, 0x06, 0x06, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x07, 0x07, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x4E, 0xBF, 0x02, 0x45, 0x54, 0x4C, 0x35, 0x30, 0x35, 0x56, 0x46, 0x4F, 0x4E, 0x54, 0x4C, 0x2E, 0x56, 0x44, 0x46, 0x4F, 0x4E, 0x54, 0x4C, 0x2E, 0x44,
-                0x01, 0x07, 0x01, 0x08, 0x00, 0xBF, 0x02, 0xBF, 0x02, 0x00, 0x00, 0x0D, 0xBF, 0x62, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x56, 0x46, 0x4F, 0x4E, 0x54, 0x4C, 0x2E, 0x56, 0x14, 0x56, 0x31, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44 };
-                fs.Write(buffer, 0, buffer.Length);
-                for (int i = 0; i < 92; i++)
-                    fs.WriteByte(0);
-            }
+            for (int i = 0; i < 92; i++)
+                fs.WriteByte(0);
+            
 
             // paragraphs
             int number = 16;
@@ -340,19 +284,38 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 WriteTime(fs, p.StartTime);
                 WriteTime(fs, p.EndTime);
 
-                fs.WriteByte((byte)languageId);
+                if (p.Text.StartsWith("{\\an1}"))
+                    fs.WriteByte(0x50); // left
+                else if (p.Text.StartsWith("{\\an3}"))
+                    fs.WriteByte(0x52); // left
+                else
+                    fs.WriteByte(0x54);  // center
 
-                var buffer = new byte[] { 00, 00, 00, 00, 00, 00, 0x16 };
+                buffer = new byte[] { 0, 0, 0, 0, 0, 0, 0 }; // 0x16 }; -- the last two bytes might be something with vertical alignment...
                 fs.Write(buffer, 0, buffer.Length);
 
-                WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count-1], languageId);
+                WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, _languageIdLine2);
 
                 number += 16;
             }
             fs.Close();
         }
 
-        private void WriteText(FileStream fs, string text, bool isLast, int languageId)
+        private static byte[] GetFontBytesFromLanguageId(int languageId)
+        {
+            var buffer = System.Text.Encoding.ASCII.GetBytes("HLV23N");
+            if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
+                buffer = System.Text.Encoding.ASCII.GetBytes("CCKM44");
+            else if (languageId == LanguageIdArabic)
+                buffer = System.Text.Encoding.ASCII.GetBytes("ARA19N");
+            else if (languageId == LanguageIdRussian)
+                buffer = System.Text.Encoding.ASCII.GetBytes("KYRIL2");
+            else if (languageId == LanguageIdHebrew)
+                buffer = System.Text.Encoding.ASCII.GetBytes("HEBNOA");            
+            return buffer;
+        }
+
+        private void WriteText(FileStream fs, string text, bool isLast, int languageIdLine1, int languageIdLine2)
         {
             string line1 = string.Empty;
             string line2 = string.Empty;
@@ -369,13 +332,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 line2 = lines[0];
             }
 
-            var buffer = GetTextAsBytes(line1, languageId);
+            var buffer = GetTextAsBytes(line1, languageIdLine1);
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = new byte[] { 00, 00, 00, 00, 00, 00 };
             fs.Write(buffer, 0, buffer.Length);
 
-            buffer = GetTextAsBytes(line2, languageId);
+            buffer = GetTextAsBytes(line2, languageIdLine2);
             fs.Write(buffer, 0, buffer.Length);
 
             buffer = new byte[] { 00, 00, 00, 00 };
@@ -390,7 +353,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = 0x7F;
 
-            if (languageId == LanguageIdChinese)
+            if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
             {
                 for (int i = 0; i < buffer.Length; i++)
                     buffer[i] = 0;
@@ -405,7 +368,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     skipCount--;
                 }
-                else if (languageId == LanguageIdHebrew && _language == "HEBNOA")
+                else if (languageId == LanguageIdHebrew)
                 {
                     int letterIndex = _hebrewLetters.IndexOf(current);
                     if (letterIndex >= 0)
@@ -428,7 +391,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     index++;
                 }
-                else if (languageId == LanguageIdChinese || languageId == LanguageIdHebrew)
+                else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
                 {
                     encoding = Encoding.GetEncoding(1201);
                     if (index < 49)
@@ -656,9 +619,60 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Header = null;
             byte[] buffer = File.ReadAllBytes(fileName);
 
-            _language = GetLanguage(buffer);
-            if (_language != null)
-                subtitle.Header = "890-language:" + _language;
+            _languageIdLine1 = buffer[146];
+            if (_languageIdLine1 == 0)
+                _languageIdLine1 = 1;
+            Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 = _languageIdLine1;
+
+            _languageIdLine2 = buffer[147];
+            if (_languageIdLine2 == 0)
+                _languageIdLine2 = 1;
+            Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 = _languageIdLine2;
+
+            _fontNameLine1 = System.Text.Encoding.ASCII.GetString(buffer, 187, 6);
+            _fontNameLine2 = System.Text.Encoding.ASCII.GetString(buffer, 246, 6);
+
+            // Hebrew
+            if (!string.IsNullOrEmpty(_fontNameLine1) && _fontNameLine1 == "HEBNOA")
+                _languageIdLine1 = LanguageIdHebrew;
+            if (!string.IsNullOrEmpty(_fontNameLine2) && _fontNameLine1 == "HEBNOA")
+                _languageIdLine2 = LanguageIdHebrew;
+            if ((_fontNameLine1 == "HEBNOA" || _languageIdLine1 == LanguageIdHebrew) && _fontNameLine2 == "NOFONT")
+            {
+                _languageIdLine2 = LanguageIdHebrew;
+                _fontNameLine2 = "HEBNOA";
+            }
+            if ((_fontNameLine2 == "HEBNOA" || _languageIdLine2 == LanguageIdHebrew) && _fontNameLine1 == "NOFONT")
+            {
+                _languageIdLine1 = LanguageIdHebrew;
+                _fontNameLine1 = "HEBNOA";
+            }
+
+            // Chinese
+            if (!string.IsNullOrEmpty(_fontNameLine1) && _fontNameLine1 == "CCKM44")
+                _languageIdLine1 = LanguageIdChineseSimplified;
+            if (!string.IsNullOrEmpty(_fontNameLine2) && _fontNameLine1 == "CCKM44")
+                _languageIdLine2 = LanguageIdChineseSimplified;
+            if ((_fontNameLine1 == "CCKM44" || _languageIdLine1 == LanguageIdChineseSimplified) && _fontNameLine2 == "NOFONT")
+            {
+                _languageIdLine2 = LanguageIdChineseSimplified;
+                _fontNameLine2 = "CCKM44";
+            }
+            else if ((_fontNameLine1 == "CCKM44" || _languageIdLine1 == LanguageIdChineseTraditional) && _fontNameLine2 == "NOFONT")
+            {
+                _languageIdLine2 = LanguageIdChineseTraditional;
+                _fontNameLine2 = "CCKM44";
+            }
+            if ((_fontNameLine2 == "CCKM44" || _languageIdLine2 == LanguageIdChineseSimplified) && _fontNameLine1 == "NOFONT")
+            {
+                _languageIdLine1 = LanguageIdChineseSimplified;
+                _fontNameLine1 = "CCKM44";
+            }
+            else if ((_fontNameLine2 == "CCKM44" || _languageIdLine2 == LanguageIdChineseTraditional) && _fontNameLine1 == "NOFONT")
+            {
+                _languageIdLine1 = LanguageIdChineseTraditional;
+                _fontNameLine1 = "CCKM44";
+            }            
 
             int i = 455;
             int lastNumber = -1;
@@ -668,24 +682,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 int number = buffer[start - 16] * 256 + buffer[start - 15];
 
-                Paragraph p = new Paragraph();
+                var p = new Paragraph();
                 double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
                 double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
 
-                int languageId = buffer[start - 8];
-                if (languageId == LanguageIdHebrew && _language != "HEBNOA")
-                    languageId = LanguageIdChinese;
-                if ((_language == "VFONTL" || _language == "SFN804") && languageId == 84)
-                    languageId = 80;
-
-                Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageId = languageId;
-                if (_language.StartsWith("KYRIL"))
-                    languageId = LanguageIdRussian;
-                else if (_language.StartsWith("HEBNOA") && languageId == LanguageIdChinese)
-                    languageId = LanguageIdHebrew;
-
-                string line1 = FixText(buffer, start, TextLength, languageId);
-                string line2 = FixText(buffer, start + TextLength + 6, TextLength, languageId);
+                string line1 = FixText(buffer, start, TextLength, _languageIdLine1);
+                string line2 = FixText(buffer, start + TextLength + 6, TextLength, _languageIdLine2);
 
                 if (lastNumber == number)
                 {
@@ -708,14 +710,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             subtitle.Renumber(1);
-        }
-
-        private static string GetLanguage(byte[] buffer)
-        {
-            if (buffer.Length < 200)
-                return null;
-
-            return Encoding.ASCII.GetString(buffer, 187, 6);
         }
 
         private static string FixText(byte[] buffer, int start, int textLength, int languageId)
@@ -767,7 +761,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 text = Utilities.FixEnglishTextInRightToLeftLanguage(text, ",.?-'/\"0123456789abcdefghijklmnopqrstuvwxyz");
             }
-            else if (languageId == LanguageIdChinese) //  (_language == "CCKM44" || _language == "TVB000")
+            else if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified) //  (_language == "CCKM44" || _language == "TVB000")
             {
                 int index = start;
 
