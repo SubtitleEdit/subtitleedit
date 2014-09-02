@@ -979,7 +979,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <VisualSyncPerformedOnSelectedLines>已对所选行执行视觉同步</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>视觉同步已执行</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>导入这个 VobSub 字幕吗？</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>文件大于 10MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>文件大于 10MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>仍要继续吗？</ContinueAnyway>
     <BeforeLoadOf>加载 "{0}" 之前</BeforeLoadOf>
     <LoadedSubtitleX>已加载字幕 "{0}"</LoadedSubtitleX>

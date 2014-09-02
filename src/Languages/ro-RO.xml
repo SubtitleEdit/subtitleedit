@@ -979,7 +979,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Sincronizare vizuală realizată pe liniile selectate</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronizare vizuală realizată</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Se importă această subtitrare VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Fișierul este mai mare decât 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Fișierul este mai mare decât 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continui oricum?</ContinueAnyway>
     <BeforeLoadOf>Înaintea încărcării {0}</BeforeLoadOf>
     <LoadedSubtitleX>Subtitrare încărcată {0}</LoadedSubtitleX>
