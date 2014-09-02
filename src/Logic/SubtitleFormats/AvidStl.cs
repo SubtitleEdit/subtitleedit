@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var fi = new FileInfo(fileName);
                     if (fi.Length > 1150 && fi.Length < 1024000) // not too small or too big
                     {
-                        byte[] buffer = File.ReadAllBytes(fileName);
+                        byte[] buffer = Utilities.ReadAllBytes(fileName);
                         if (buffer[0] == 0x38 &&
                             buffer[1] == 0x35 &&
                             buffer[2] == 0x30 &&
@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = File.ReadAllBytes(fileName);
+            byte[] buffer = Utilities.ReadAllBytes(fileName);
 
             int index = 1024;
             while (index <= buffer.Length - 128)

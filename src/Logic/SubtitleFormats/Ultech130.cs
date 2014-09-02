@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (fileName.ToLower().EndsWith(".ult") || fileName.ToLower().EndsWith(".uld")) //  drop frame is often named uld, and ult for non-drop
                     {
-                        byte[] buffer = File.ReadAllBytes(fileName);
+                        byte[] buffer = Utilities.ReadAllBytes(fileName);
                         string id = Encoding.ASCII.GetString(buffer, 0, UltechId.Length);
                         return id == UltechId;
                     }
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = File.ReadAllBytes(fileName);
+            byte[] buffer = Utilities.ReadAllBytes(fileName);
 
             int i = 512;
             Paragraph last = null;

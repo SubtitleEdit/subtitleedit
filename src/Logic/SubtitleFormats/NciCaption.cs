@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (fileName.ToLower().EndsWith(".cap"))
                     {
-                        byte[] buffer = File.ReadAllBytes(fileName);
+                        byte[] buffer = Utilities.ReadAllBytes(fileName);
 
 
                         return ((buffer[0] == 0x43 &&  // CAPT.2.0
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = File.ReadAllBytes(fileName);
+            byte[] buffer = Utilities.ReadAllBytes(fileName);
 
             string title = Encoding.ASCII.GetString(buffer, 82, 66);
 
