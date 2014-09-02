@@ -979,7 +979,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Ikus aldeberetzea eginda hautaturiko lerroetan</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Ikus aldiberetzea eginda</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Inportatu VobSub azpidatzi hau?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Agiria 10 MB baino handiagoa da: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Agiria 10 MB baino handiagoa da: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Jarraitu horrela ere?</ContinueAnyway>
     <BeforeLoadOf>Gertatu aurretik {0}</BeforeLoadOf>
     <LoadedSubtitleX>Gertaturiko azpidatzia: {0}</LoadedSubtitleX>

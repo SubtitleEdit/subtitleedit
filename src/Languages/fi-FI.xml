@@ -979,7 +979,7 @@ Siirrytäänkö VLC Media Playerin kotisivulle?
     <VisualSyncPerformedOnSelectedLines>Visuaalinen tahdistus tehty valituille riveille</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visualinen tahdistus valmis</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Tuodaanko tämä VobSub tekstitys?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Tiedosto on suurempi kuin 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Tiedosto on suurempi kuin 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Haluatko jatkaa?</ContinueAnyway>
     <BeforeLoadOf>Ennen {0} latausta</BeforeLoadOf>
     <LoadedSubtitleX>Ladattu tekstitys {0}</LoadedSubtitleX>

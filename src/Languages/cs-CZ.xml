@@ -979,7 +979,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Provedena vizuální synchronizace na vybraných řádcích</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Provedena vizuální synchronizace</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importovat tyto titulky VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Soubor je větší než 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Soubor je větší než 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Přesto pokračovat?</ContinueAnyway>
     <BeforeLoadOf>Před načtením {0}</BeforeLoadOf>
     <LoadedSubtitleX>Načteny titulky {0}</LoadedSubtitleX>

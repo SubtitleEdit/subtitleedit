@@ -982,7 +982,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Εκτελέστηκε οπτικός συγχρονισμός στις επιλεγμένες γραμμές</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Εκτελέστηκε οπτικός συγχρονισμός</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Εισαγωγή αυτού του υπότιτλου VobSub;</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Το αρχείο {0} είναι μεγαλύτερο από 10 MB</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Το αρχείο {0} είναι μεγαλύτερο από 10 MB</FileXIsLargerThan10MB>
     <ContinueAnyway>Θέλετε να συνεχίσετε;</ContinueAnyway>
     <BeforeLoadOf>Πριν από τη φόρτωση του {0}</BeforeLoadOf>
     <LoadedSubtitleX>Φορτώθηκε υπότιτλος {0}</LoadedSubtitleX>

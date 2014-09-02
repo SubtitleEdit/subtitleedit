@@ -978,7 +978,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Визуалната синхронизация се отнася за избраните редове</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Визуалната синхронизация е направена</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Да се внесат ли тези VobSub субтитри?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Файлът е по-голям от 10 МВ: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Файлът е по-голям от 10 МВ: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <BeforeLoadOf>Преди зареждането на {0}</BeforeLoadOf>
     <LoadedSubtitleX>Заредени субтитри {0}</LoadedSubtitleX>

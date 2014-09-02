@@ -977,7 +977,7 @@ Suggesties zijn van harte welkom
     <VisualSyncPerformedOnSelectedLines>Visual sync uitgevoerd op geselecteerde regels</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visual sync uitgevoerd</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importeer deze VobSub ondertiteling?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Bestand is groter dan 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Bestand is groter dan 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Toch doorgaan?</ContinueAnyway>
     <BeforeLoadOf>Voor laden van {0}</BeforeLoadOf>
     <LoadedSubtitleX>Geladen ondertitel {0}</LoadedSubtitleX>

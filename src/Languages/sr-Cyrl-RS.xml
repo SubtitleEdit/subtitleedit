@@ -664,7 +664,7 @@
     <VisualSyncPerformedOnSelectedLines>Извршено је визуелно усклађивање на изабраним линијама</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Визуелно усклађивање је извршено.</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Увести овај Вобсаб титл?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Датотека је већа од 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Датотека је већа од 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Ипак наставити?</ContinueAnyway>
     <BeforeLoadOf>Пре учитавања {0}</BeforeLoadOf>
     <LoadedSubtitleX>Учитан је титл {0}.</LoadedSubtitleX>

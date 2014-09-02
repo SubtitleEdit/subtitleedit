@@ -979,7 +979,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>A vizuális szinkronizálás végre lett hajtva a kiválasztott soroknál</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Vizuális szinkronizálás végrehajtva</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importálja ezt a VobSub feliratot?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Fájl nagyobb, mint 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Fájl nagyobb, mint 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Folytatja mindenképp?</ContinueAnyway>
     <BeforeLoadOf>A(z) {0} betöltése előtti állapotra</BeforeLoadOf>
     <LoadedSubtitleX>Betöltött felirat {0}</LoadedSubtitleX>
