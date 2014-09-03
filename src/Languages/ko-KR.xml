@@ -983,7 +983,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <VisualSyncPerformedOnSelectedLines>시각 동기화가 선택한 줄에서 실행되었습니다.</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>시각 동기화가 실행되었습니다.</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>이 VobSub 자막을 가져오시겠습니까?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>파일이 10MB보다 큼: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>파일이 10MB보다 큼: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>계속하시겠습니까?</ContinueAnyway>
     <BeforeLoadOf>{0} 로드 전</BeforeLoadOf>
     <LoadedSubtitleX>{0} 자막을 불러왔습니다.</LoadedSubtitleX>

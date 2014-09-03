@@ -822,7 +822,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <VisualSyncPerformedOnSelectedLines>視覚同期が選択された行で実行されました</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>視覚同期が実行されました</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>この VobSub 字幕をインポートしますか?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>ファイルが 10 MB より大きいです: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>ファイルが 10 MB より大きいです: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>そのまま続行しますか?</ContinueAnyway>
     <BeforeLoadOf>{0} の読み込み前</BeforeLoadOf>
     <LoadedSubtitleX>字幕 {0} を読み込みました</LoadedSubtitleX>

@@ -226,7 +226,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
                 _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
 
-         
+
             //header
             for (int i = 0; i < 22; i++)
                 fs.WriteByte(0);
@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             for (int i = 0; i < 92; i++)
                 fs.WriteByte(0);
-            
+
 
             // paragraphs
             int number = 16;
@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else if (languageId == LanguageIdRussian)
                 buffer = System.Text.Encoding.ASCII.GetBytes("KYRIL2");
             else if (languageId == LanguageIdHebrew)
-                buffer = System.Text.Encoding.ASCII.GetBytes("HEBNOA");            
+                buffer = System.Text.Encoding.ASCII.GetBytes("HEBNOA");
             return buffer;
         }
 
@@ -672,7 +672,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 _languageIdLine1 = LanguageIdChineseTraditional;
                 _fontNameLine1 = "CCKM44";
-            }            
+            }
 
             int i = 455;
             int lastNumber = -1;

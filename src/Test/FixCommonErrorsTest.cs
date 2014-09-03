@@ -71,7 +71,7 @@ namespace Test
                     CopyStream(strm, file);
                 }
             }
-            
+
             strm = asm.GetManifestResourceStream("Test.Hunspellx64.dll");
             if (strm != null)
             {
