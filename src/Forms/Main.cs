@@ -2535,6 +2535,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var chk = new Chk();
+                    if (chk.IsMine(null, fileName))
+                    {
+                        chk.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = chk;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
                     try
                     {
                         var bdnXml = new BdnXml();
