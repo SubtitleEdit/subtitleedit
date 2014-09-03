@@ -843,7 +843,7 @@ Rất hân hạnh được chào đón.
     <VisualSyncPerformedOnSelectedLines>Xem đồng bộ thực hiện trên các dòng được lựa chọn</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Thực hiện đồng bộ hiển thị</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Nhập vào phụ đề VobSub này?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Tập tin lớn hơn 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Tập tin lớn hơn 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Tiếp tục không?</ContinueAnyway>
     <BeforeLoadOf>Trước khi tải trọng của {0}</BeforeLoadOf>
     <LoadedSubtitleX>{0}</LoadedSubtitleX>

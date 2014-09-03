@@ -989,7 +989,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <VisualSyncPerformedOnSelectedLines>Выполнена визуальная синхронизация для выбранных строк</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Выполнена визуальная синхронизация</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Импортировать выбранные субтитры VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Размер файла больше, чем 10 Mб: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Размер файла больше, чем 10 Mб: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Все равно продолжить?</ContinueAnyway>
     <BeforeLoadOf>Перед загрузкой {0}</BeforeLoadOf>
     <LoadedSubtitleX>Загружен файл субтитров {0}</LoadedSubtitleX>

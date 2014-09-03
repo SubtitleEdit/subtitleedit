@@ -985,7 +985,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Sincronização visual aplicada nas linhas selecionadas</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronização visual realizada</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importar esta legenda VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>O arquivo é maior que 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>O arquivo é maior que 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuar assim mesmo?</ContinueAnyway>
     <BeforeLoadOf>Antes de carregar {0}</BeforeLoadOf>
     <LoadedSubtitleX>Legenda carregada {0}</LoadedSubtitleX>

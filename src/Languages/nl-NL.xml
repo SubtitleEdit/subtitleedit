@@ -2,14 +2,14 @@
 <Language Name="Nederlands">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.0</Version>
+    <Version>3.4.1</Version>
     <TranslatedBy>Vertaald door: Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
     <HelpFile>
     </HelpFile>
     <OK>&amp;Oké</OK>
     <Cancel>Afbreken</Cancel>
-    <Apply>Voer uit</Apply>
+    <Apply>Toepassen</Apply>
     <None>Geen</None>
     <All>Alle</All>
     <Preview>Voorbeeld</Preview>
@@ -159,6 +159,7 @@ Suggesties zijn van harte welkom
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitel bestanden</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
     <SetMinMsBetweenSubtitles>Bepaal min. millisec. tussen regels</SetMinMsBetweenSubtitles>
+    <PlainText>Platte tekst</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -191,6 +192,9 @@ Suggesties zijn van harte welkom
   <ChangeSpeedInPercent>
     <Title>Pas de snelheid aan in procenten</Title>
     <Info>Verander de snelheid van de ondertiteling in procenten</Info>
+    <Custom>Aangepast</Custom>
+    <ToDropFrame>Naar drop-frame</ToDropFrame>
+    <FromDropFrame>Vanaf drop-frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Controleer op updates</Title>
@@ -687,6 +691,8 @@ Suggesties zijn van harte welkom
         <RestoreAutoBackup>Herstellen autoback-up...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Geavanceerde Sub Station Alpha eigenschappen...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha eigenschappen...</SubStationAlphaProperties>
+        <EbuProperties>EBU stl eigenschappen</EbuProperties>
+        <PacProperties>PAC eigenschappen</PacProperties>
         <OpenOriginal>Open originele ondertitel (vertaalmodus)</OpenOriginal>
         <SaveOriginal>Sla originele ondertitel op</SaveOriginal>
         <CloseOriginal>Sluit oorspronkelijke ondertitel</CloseOriginal>
@@ -977,7 +983,7 @@ Suggesties zijn van harte welkom
     <VisualSyncPerformedOnSelectedLines>Visual sync uitgevoerd op geselecteerde regels</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Visual sync uitgevoerd</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importeer deze VobSub ondertiteling?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>Bestand is groter dan 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>Bestand is groter dan 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Toch doorgaan?</ContinueAnyway>
     <BeforeLoadOf>Voor laden van {0}</BeforeLoadOf>
     <LoadedSubtitleX>Geladen ondertitel {0}</LoadedSubtitleX>
@@ -1620,7 +1626,9 @@ Suggesties zijn van harte welkom
     <SyntaxColorOverlap>Kleur tijdcode overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Fout kleur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ga naar eerste geselecteerde regel</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Ga naar volgende lege regel</GoToNextEmptyLine>
     <MergeSelectedLines>Samenvoegen geselecteerde regels</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Samenvoegen geselecteerde regels, behoud alleen eerste tekst</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Verander vertaling modus</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Wijzig tussen origineel en vertaling</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Samenvoegen origineel en vertaling</MergeOriginalAndTranslation>
@@ -1766,9 +1774,9 @@ Suggesties zijn van harte welkom
     <DurationMinimum>Duur - minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur - maximum: {0:0.000} seconden</DurationMaximum>
     <DurationAverage>Duur - gemiddelde: {0:0.000} seconden</DurationAverage>
-    <ChararactersPerSecondMinimum>Karakters/sec - minimum: {0:0.000}</ChararactersPerSecondMinimum>
-    <ChararactersPerSecondMaximum>Karakters/sec - maximum: {0:0.000}</ChararactersPerSecondMaximum>
-    <ChararactersPerSecondAverage>Karakters/sec - gemiddeld: {0:0.000}</ChararactersPerSecondAverage>
+    <CharactersPerSecondMinimum>Karakters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Karakters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Karakters/sec - gemiddeld: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Geavanceerde Sub Station Alpha eigenschappen</Title>
