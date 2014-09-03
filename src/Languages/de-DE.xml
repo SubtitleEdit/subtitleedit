@@ -132,7 +132,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <TitleUnbreak>Entferne Zeilenumbrüche aus ausgewählten Texten</TitleUnbreak>
     <LinesFoundX>Texte gefunden: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Nur Texte umbrechen, die länger sind als</OnlyBreakLinesLongerThan>
-    <OnlyUnbreakLinesShorterThan>Umbrüche nur entfernen wenn Texte kürzer als</OnlyUnbreakLinesShorterThan>
+    <OnlyUnbreakLinesLongerThan>Umbrüche nur entfernen wenn Texte länger als</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
     <BatchConvert>
     <Title>Stapelkonvertierung</Title>
@@ -1416,7 +1416,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <PreviewLinesModifiedX>Vorschau - geänderte Texte: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Nur geänderte Texte anzeigen</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimale Millisekunden zwischen Texten</MinimumMillisecondsBetweenParagraphs>
-   <FrameInfo />
+    <FrameInfo>Bildfrequenz Info</FrameInfo>
     <OneFrameXisYMilliseconds>Ein Bild mit {0:0.00} fps sind {1} Millisekunden</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
@@ -1672,7 +1672,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ShowLater>Später anzeigen</ShowLater>
     <TotalAdjustmentX>Gesamte Anpassung: {0}</TotalAdjustmentX>
     <AllLines>Alle Texte</AllLines>
-    <SelectedLinesonly>Nur ausgewählte Zeilen</SelectedLinesonly>
+    <SelectedLinesOnly>Nur ausgewählte Zeilen</SelectedLinesOnly>
     <SelectedLinesAndForward>Ausgewählte Zeile(n) und weiter</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
