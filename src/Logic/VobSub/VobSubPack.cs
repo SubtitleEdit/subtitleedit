@@ -3,8 +3,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 {
     public class VobSubPack
     {
-        public readonly PacketizedElementaryStream PacketizedElementaryStream;
-        public readonly Mpeg2Header Mpeg2Header;
+        public PacketizedElementaryStream PacketizedElementaryStream;
+        public Mpeg2Header Mpeg2Header;
         public IdxParagraph IdxLine { get; private set; }
 
         readonly byte[] _buffer;

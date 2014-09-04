@@ -5,8 +5,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Mdia : Box
     {
-        public readonly Mdhd Mdhd;
-        public readonly Minf Minf;
+        public Mdhd Mdhd;
+        public Minf Minf;
         public readonly string HandlerType = null;
         public readonly string HandlerName = string.Empty;
 

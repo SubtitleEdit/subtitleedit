@@ -5,8 +5,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Moov : Box
     {
-        public readonly Mvhd Mvhd;
-        public readonly List<Trak> Tracks;
+        public Mvhd Mvhd;
+        public List<Trak> Tracks;
 
         public Moov(FileStream fs, ulong maximumLength)
         {
