@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <returns>byte ID for the given frame rate</returns>
         private static int GetFpsId(double fps)
         {
-            if (fps == Core.Fps24Hz)
+            if (fps == Core.Fps24HZ)
                 return 0x20;
             if (fps == Core.FpsPal)
                 return 0x30;

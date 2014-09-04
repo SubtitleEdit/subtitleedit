@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
 
             Text = "YouTube Annotations";
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             //listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = string.Empty; // style //TODO: Add better text + help text

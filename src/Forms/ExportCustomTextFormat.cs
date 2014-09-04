@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class ExportCustomTextFormat : Form
     {
 
-        public string FormatOK { get; set; }
+        public string FormatOk { get; set; }
         public const string EnglishDoNoModify = "[Do not modify]";
 
         public ExportCustomTextFormat(string format)
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelHeader.Text = l.Header;
             labelTextLine.Text = l.TextLine;
             labelFooter.Text = l.Footer;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
         }
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            FormatOK = textBoxName.Text+ "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" +   comboBoxTimeCode.Text + "Æ" +  comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify) + "Æ" + textBoxFooter.Text;
+            FormatOk = textBoxName.Text+ "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" +   comboBoxTimeCode.Text + "Æ" +  comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify) + "Æ" + textBoxFooter.Text;
             DialogResult = DialogResult.OK;
         }
 

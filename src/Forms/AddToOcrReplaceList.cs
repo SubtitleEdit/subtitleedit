@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.AddToOcrReplaceList.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToOcrReplaceList.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             FixLargeFonts();
         }
 
@@ -60,8 +60,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var xml = new XmlDocument();
                 xml.Load(replaceListXmlFileName);
-                ocrFixWords = Logic.OCR.OcrFixEngine.LoadReplaceList(xml, "WholeWords");
-                ocrFixPartialLines = Logic.OCR.OcrFixEngine.LoadReplaceList(xml, "PartialLines");
+                ocrFixWords = Logic.Ocr.OcrFixEngine.LoadReplaceList(xml, "WholeWords");
+                ocrFixPartialLines = Logic.Ocr.OcrFixEngine.LoadReplaceList(xml, "PartialLines");
             }
             Dictionary<string, string> dictionary = ocrFixWords;
             string elementName = "Word";

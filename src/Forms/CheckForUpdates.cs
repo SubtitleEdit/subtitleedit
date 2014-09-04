@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDownloadAndInstall.Text = Configuration.Settings.Language.CheckForUpdates.InstallUpdate;
             buttonDownloadAndInstall.Visible = false;
             textBoxChangeLog.Visible = false;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonOK.Visible = false;
             buttonDontCheckUpdates.Text = Configuration.Settings.Language.CheckForUpdates.NoUpdates;
             buttonDontCheckUpdates.Visible = false;

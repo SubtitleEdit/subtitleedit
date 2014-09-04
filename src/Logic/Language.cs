@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic
                 TranslatedBy = " ",
                 CultureName = "en-US",
                 HelpFile = string.Empty,
-                OK = "&OK",
+                Ok = "&OK",
                 Cancel = "C&ancel",
                 Apply = "Apply",
                 None = "None",

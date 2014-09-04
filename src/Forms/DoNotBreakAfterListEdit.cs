@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit
             buttonAddNoBreakAfter.Text = Configuration.Settings.Language.DvdSubRip.Add;
             radioButtonText.Text = Configuration.Settings.Language.General.Text;
             radioButtonRegEx.Text = Configuration.Settings.Language.MultipleReplace.RegularExpression;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;

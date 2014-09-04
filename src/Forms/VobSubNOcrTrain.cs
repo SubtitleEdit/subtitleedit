@@ -1,5 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.OCR;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
-        internal void Initialize(Logic.OCR.NOcrDb _nOcrDb)
+        internal void Initialize(Logic.Ocr.NOcrDb _nOcrDb)
         {
             if (_nOcrDb != null)
             {

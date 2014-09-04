@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonDownload.Text = _language.Download;
             buttonRemove.Text = _language.Remove;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             linkLabelOpenPluginFolder.Text = _language.OpenPluginsFolder;
             labelDescription1.Text = _language.GetPluginsInfo1;
             labelClickDownload.Text = _language.GetPluginsInfo2;

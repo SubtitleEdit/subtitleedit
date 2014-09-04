@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class Utilities
     {
-        public const string WinXp2kUnicodeFontName = "Times New Roman";
+        public const string WinXP2KUnicodeFontName = "Times New Roman";
 
         public static byte[] ReadAllBytes(String path)
         {
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                var mp4Parser = new Mp4.Mp4Parser(fileName);
+                var mp4Parser = new Mp4.MP4Parser(fileName);
                 if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
                 {
                     info.Width = mp4Parser.VideoResolution.X;

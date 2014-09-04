@@ -1,6 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.OCR;
-using Nikse.SubtitleEdit.Logic.OCR.Binary;
+using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
@@ -320,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelStatus.Text = language.LoadingVobSubImages;
             groupBoxSubtitleImage.Text = language.SubtitleImage;
             labelSubtitleText.Text = language.SubtitleText;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView1.Columns[0].Width = 45;

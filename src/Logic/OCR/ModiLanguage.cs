@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Nikse.SubtitleEdit.Logic.OCR
+namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class ModiLanguage
     {

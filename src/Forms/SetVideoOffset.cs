@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.SetVideoOffset.Title;
             labelDescription.Text = Configuration.Settings.Language.SetVideoOffset.Description;
             checkBoxFromCurrentPosition.Text = Configuration.Settings.Language.SetVideoOffset.RelativeToCurrentVideoPosition;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

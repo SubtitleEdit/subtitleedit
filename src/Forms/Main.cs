@@ -1499,7 +1499,7 @@ namespace Nikse.SubtitleEdit.Forms
                 CenterFormOnCurrentScreen();
             }
 
-            if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+            if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
             {
                 //const string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
                 //Configuration.Settings.General.SubtitleFontName = unicodeFontName;
@@ -5284,7 +5284,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     var visualSync = new VisualSync();
                                     visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
                                     visualSync.ShowDialog(this);
-                                    if (visualSync.OKPressed)
+                                    if (visualSync.OkPressed)
                                     {
                                         if (MessageBox.Show(_language.AppendSynchronizedSubtitlePrompt, _language.SubtitleAppendPromptTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                                         {
@@ -9099,7 +9099,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (isSsa)
                 {
-                    foreach (Paragraph p in LoadMatroskaSSa(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
+                    foreach (Paragraph p in LoadMatroskaSSA(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
                     {
                         subtitle.Paragraphs.Add(p);
                     }
@@ -9177,7 +9177,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (isSsa)
                 {
-                    foreach (Paragraph p in LoadMatroskaSSa(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
+                    foreach (Paragraph p in LoadMatroskaSSA(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
                     {
                         _subtitle.Paragraphs.Add(p);
                     }
@@ -9258,7 +9258,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public static Subtitle LoadMatroskaSSa(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<SubtitleSequence> sub)
+        public static Subtitle LoadMatroskaSSA(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<SubtitleSequence> sub)
         {
             var subtitle = new Subtitle();
             subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
@@ -9654,7 +9654,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.ParsingTransportStream);
             Refresh();
             var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
-            tsParser.ParseTsFile(fileName);
+            tsParser.ParseTSFile(fileName);
             ShowStatus(string.Empty);
 
             if (tsParser.SubtitlePacketIds.Count == 0)
@@ -9720,7 +9720,7 @@ namespace Nikse.SubtitleEdit.Forms
         "{\\c&HFFFFFF&}",   // white
         };
 
-        public static byte bytereverse(byte n)
+        public static byte ByteReverse(byte n)
         {
             n = (byte)(((n >> 1) & 0x55) | ((n << 1) & 0xaa));
             n = (byte)(((n >> 2) & 0x33) | ((n << 2) & 0xcc));
@@ -9738,7 +9738,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 //var char_value = _buffer[c];
 
-                var char_value = 0x7F & bytereverse(_buffer[c]);
+                var char_value = 0x7F & ByteReverse(_buffer[c]);
 
             if (char_value >> 3 == 0)  //0x0..7
             {
@@ -9853,7 +9853,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromMp4(string fileName)
         {
-            var mp4Parser = new Logic.Mp4.Mp4Parser(fileName);
+            var mp4Parser = new Logic.Mp4.MP4Parser(fileName);
             var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
             if (mp4SubtitleTracks.Count == 0)
             {
@@ -12433,8 +12433,8 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (string s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                     {
                         toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Add(s, null, InsertUnicodeGlyph);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                            toolStripMenuItemInsertUnicodeCharacter.DropDownItems[toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count - 1].Font = new Font(Utilities.WinXp2kUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
+                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+                            toolStripMenuItemInsertUnicodeCharacter.DropDownItems[toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
                     }
                 }
                 toolStripMenuItemInsertUnicodeCharacter.Visible = toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count > 0;
@@ -12680,7 +12680,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if ((Path.GetExtension(fileName).ToLower() == ".mp4" || Path.GetExtension(fileName).ToLower() == ".m4v" || Path.GetExtension(fileName).ToLower() == ".3gp")
                     && fi.Length > 10000)
                 {
-                    var mp4Parser = new Logic.Mp4.Mp4Parser(fileName);
+                    var mp4Parser = new Logic.Mp4.MP4Parser(fileName);
                     var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
                     if (mp4SubtitleTracks.Count == 0)
                     {
@@ -17458,8 +17458,8 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (string s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                     {
                         toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Add(s, null, InsertUnicodeGlyph);
-                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXp2kUnicodeFontName) // 6 == Vista/Win2008Server/Win7
-                            toolStripMenuItemInsertUnicodeSymbol.DropDownItems[toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count - 1].Font = new Font(Utilities.WinXp2kUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
+                        if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
+                            toolStripMenuItemInsertUnicodeSymbol.DropDownItems[toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
                     }
                 }
                 toolStripMenuItemInsertUnicodeSymbol.Visible = toolStripMenuItemInsertUnicodeSymbol.DropDownItems.Count > 0;

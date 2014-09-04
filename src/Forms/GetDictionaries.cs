@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
             labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetDictionaries.ChooseLanguageAndClickDownload;
             buttonDownload.Text = Configuration.Settings.Language.GetDictionaries.Download;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             labelPleaseWait.Text = string.Empty;
 
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.gz");

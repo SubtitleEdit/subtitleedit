@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxMostUsed.Text = _l.MostUsed;
             labelMostUsedWords.Text = _l.MostUsedWords;
             labelMostUsedLines.Text = _l.MostUsedLines;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             FixLargeFonts();
 
             CalculateGeneralStatistics();

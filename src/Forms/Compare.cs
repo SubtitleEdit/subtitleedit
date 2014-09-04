@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             else
                 checkBoxOnlyListDifferencesInText.Visible = false;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);

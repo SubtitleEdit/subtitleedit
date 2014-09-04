@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize()
         {
             Text = _language.Title + " - " + (IntPtr.Size * 8) + "-bit";
-            okButton.Text = _languageGeneral.OK;
+            okButton.Text = _languageGeneral.Ok;
             string[] versionInfo = Utilities.AssemblyVersion.Split('.');
             labelProduct.Text = String.Format("{0} {1}.{2}.{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;

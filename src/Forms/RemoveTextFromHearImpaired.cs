@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
-                string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
+                string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
                 float fontSize = comboBoxCustomStart.Font.Size;
                 comboBoxCustomStart.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 comboBoxCustomEnd.Font = new System.Drawing.Font(unicodeFontName, fontSize);

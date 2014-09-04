@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonSetSyncPoint.Text = Configuration.Settings.Language.PointSync.SetSyncPoint;
             buttonRemoveSyncPoint.Text = Configuration.Settings.Language.PointSync.RemoveSyncPoint;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonApplySync.Text = Configuration.Settings.Language.PointSync.ApplySync;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, 0);

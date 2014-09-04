@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelConvertFrom.Text = l.ConvertFrom;
             labelConvertTo.Text = l.ConvertTo;
             linkLabel1.Text = l.CopyToClipboard;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
 
             _defaultBackColor = textBoxInput.BackColor;
             textBoxInput.Text = "1";

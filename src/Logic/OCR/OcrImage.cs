@@ -1,6 +1,6 @@
 ﻿using System.Drawing;
 
-namespace Nikse.SubtitleEdit.Logic.OCR
+namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class OcrImage
     {

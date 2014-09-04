@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxOnlyAllUpper.Text = language.OnlyChangeAllUppercaseLines;
             radioButtonUppercase.Text = language.AllUppercase;
             radioButtonLowercase.Text = language.AllLowercase;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
 

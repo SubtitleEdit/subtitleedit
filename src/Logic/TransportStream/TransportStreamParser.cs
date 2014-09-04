@@ -24,10 +24,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }
 
-        public void ParseTsFile(string fileName)
+        public void ParseTSFile(string fileName)
         {
             var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            ParseTsFile(fs);
+            ParseTSFile(fs);
             fs.Close();
         }
 
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         /// Can be used with e.g. MemoryStream or FileStream
         /// </summary>
         /// <param name="ms">Input stream</param>
-        public void ParseTsFile(Stream ms)
+        public void ParseTSFile(Stream ms)
         {
             bool firstVideoPtsFound = false;
             IsM2TransportStream = false;

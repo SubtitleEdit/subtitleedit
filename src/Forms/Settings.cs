@@ -543,7 +543,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
-                string unicodeFontName = Utilities.WinXp2kUnicodeFontName;
+                string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
                 listBoxNamesEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 listBoxUserWordLists.Font = new System.Drawing.Font(unicodeFontName, fontSize);
                 listBoxOcrFixList.Font = new System.Drawing.Font(unicodeFontName, fontSize);
@@ -595,7 +595,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxTreatINQuoteAsING.Checked = toolsSettings.SpellCheckEnglishAllowInQuoteAsIng;
             checkBoxUseDoNotBreakAfterList.Checked = toolsSettings.UseNoLineBreakAfter;
 
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             ListWordListLanguages();
@@ -932,14 +932,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image SaveFileAs, Image find, Image replace, Image fixCommonErrors,
+        public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors,
                                Image visualSync, Image spellCheck, Image settings, Image help)
         {
             this.Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
             pictureBoxOpen.Image = (Image)openFile.Clone();
             pictureBoxSave.Image = (Image)saveFile.Clone();
-            pictureBoxSaveAs.Image = (Image)SaveFileAs.Clone();
+            pictureBoxSaveAs.Image = (Image)saveFileAs.Clone();
             pictureBoxFind.Image = (Image)find.Clone();
             pictureBoxReplace.Image = (Image)replace.Clone();
             pictureBoxTBFixCommonErrors.Image = (Image)fixCommonErrors.Clone();
@@ -1753,8 +1753,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var doc = new XmlDocument();
                 doc.Load(replaceListXmlFileName);
-                _ocrFixWords = Logic.OCR.OcrFixEngine.LoadReplaceList(doc, "WholeWords");
-                _ocrFixPartialLines = Logic.OCR.OcrFixEngine.LoadReplaceList(doc, "PartialLines");
+                _ocrFixWords = Logic.Ocr.OcrFixEngine.LoadReplaceList(doc, "WholeWords");
+                _ocrFixPartialLines = Logic.Ocr.OcrFixEngine.LoadReplaceList(doc, "PartialLines");
 
                 if (reloadListBox)
                 {

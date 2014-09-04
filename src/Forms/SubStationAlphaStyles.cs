@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxFontUnderline.Visible = false;
             }
 
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             InitializeListView();

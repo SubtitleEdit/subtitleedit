@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             columnHeaderStartTime.Text = Configuration.Settings.Language.General.StartTime;
             columnHeaderEndTime.Text = Configuration.Settings.Language.General.EndTime;
             columnHeaderDuration.Text = Configuration.Settings.Language.General.Duration;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.OCR;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Forms;
 
@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Text = string.Empty;
             buttonBack.Visible = false;
             buttonNextFinish.Visible = false;
-            buttonCancel.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
         }
 
         public string Language
@@ -4458,7 +4458,7 @@ namespace Nikse.SubtitleEdit.Forms
             RunSelectedActions();
 
             buttonBack.Enabled = true;
-            buttonNextFinish.Text = _languageGeneral.OK;
+            buttonNextFinish.Text = _languageGeneral.Ok;
             buttonNextFinish.Enabled = _hasFixesBeenMade;
             groupBoxStep1.Visible = false;
             groupBox2.Visible = true;

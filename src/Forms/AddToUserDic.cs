@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.AddToUserDictionary.Title;
             labelDescription.Text = Configuration.Settings.Language.AddToUserDictionary.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             FixLargeFonts();
         }
 

@@ -2484,7 +2484,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
-            buttonCancel.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
             labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;

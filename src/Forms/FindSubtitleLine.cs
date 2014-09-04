@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.FindSubtitleLine.Title;
             buttonFind.Text = Configuration.Settings.Language.FindSubtitleLine.Find;
             buttonFindNext.Text = Configuration.Settings.Language.FindSubtitleLine.FindNext;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             FixLargeFonts();
