@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 {
     public class Stbl : Box
     {
-        public readonly List<string> Texts = new List<string>();
-        public readonly List<SubPicture> SubPictures = new List<SubPicture>();
-        public readonly List<double> StartTimeCodes = new List<double>();
-        public readonly List<double> EndTimeCodes = new List<double>();
+        public List<string> Texts = new List<string>();
+        public List<SubPicture> SubPictures = new List<SubPicture>();
+        public List<double> StartTimeCodes = new List<double>();
+        public List<double> EndTimeCodes = new List<double>();
         Mdia _mdia;
 
         public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)

@@ -6,7 +6,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
     public class Minf : Box
     {
 
-        public readonly Stbl Stbl;
+        public Stbl Stbl;
 
         public Minf(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
         {

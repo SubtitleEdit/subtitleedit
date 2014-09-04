@@ -5,8 +5,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
     public class Trak : Box
     {
 
-        public readonly Mdia Mdia;
-        public readonly Tkhd Tkhd;
+        public Mdia Mdia;
+        public Tkhd Tkhd;
 
         public Trak(FileStream fs, ulong maximumLength)
         {
