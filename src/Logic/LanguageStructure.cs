@@ -10,7 +10,7 @@
             public string TranslatedBy { get; set; }
             public string CultureName { get; set; }
             public string HelpFile { get; set; }
-            public string OK { get; set; }
+            public string Ok { get; set; }
             public string Cancel { get; set; }
             public string Apply { get; set; }
             public string None { get; set; }

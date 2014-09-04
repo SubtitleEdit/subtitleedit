@@ -5,7 +5,7 @@ using System.Drawing;
 using System.IO;
 using System.IO.Compression;
 
-namespace Nikse.SubtitleEdit.Logic.OCR
+namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class NOcrDb
     {

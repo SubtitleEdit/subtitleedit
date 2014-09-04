@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Forms
             linkLabelOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
             buttonSearchFolder.Text = l.ScanFolder;
             buttonConvert.Text = l.Convert;
-            buttonCancel.Text = Configuration.Settings.Language.General.OK;
+            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
             checkBoxScanFolderRecursive.Text = l.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
 
@@ -744,7 +744,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                                 if (isSsa)
                                                 {
-                                                    foreach (Paragraph p in Main.LoadMatroskaSSa(x, fileName, format, mkvSub).Paragraphs)
+                                                    foreach (Paragraph p in Main.LoadMatroskaSSA(x, fileName, format, mkvSub).Paragraphs)
                                                     {
                                                         sub.Paragraphs.Add(p);
                                                     }

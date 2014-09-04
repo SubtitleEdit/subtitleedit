@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRefresh.Text = Configuration.Settings.Language.ImportText.Refresh;
             groupBoxTimeCodes.Text = Configuration.Settings.Language.ImportText.TimeCodes;
             groupBoxImportResult.Text = Configuration.Settings.Language.General.Preview;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);

@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             listView1.Columns[0].Text = language.CodePage;
             listView1.Columns[1].Text = Configuration.Settings.Language.General.Name;
             listView1.Columns[2].Text = language.DisplayName;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

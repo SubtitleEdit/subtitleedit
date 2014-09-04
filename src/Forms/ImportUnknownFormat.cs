@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
 
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);

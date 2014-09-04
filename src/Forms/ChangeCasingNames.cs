@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
             buttonInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
 
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

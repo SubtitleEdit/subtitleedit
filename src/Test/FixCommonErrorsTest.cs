@@ -839,7 +839,7 @@ namespace Test
             Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
             //string input = "i'I'll see you.";
             string input = "l-l'll see you.";
-            Nikse.SubtitleEdit.Logic.OCR.OcrFixEngine ofe = new Nikse.SubtitleEdit.Logic.OCR.OcrFixEngine("eng", "us_en", form);
+            Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
             var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
             Assert.AreEqual(res, "I-I'll see you.");
         }

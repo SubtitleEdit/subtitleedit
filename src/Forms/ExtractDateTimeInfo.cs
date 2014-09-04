@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string ext = Path.GetExtension(VideoFileName).ToLower();
                 if (ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                 {
-                    Logic.Mp4.Mp4Parser mp4Parser = new Logic.Mp4.Mp4Parser(VideoFileName);
+                    Logic.Mp4.MP4Parser mp4Parser = new Logic.Mp4.MP4Parser(VideoFileName);
                     start = mp4Parser.CreationDate;
                     durationInSeconds = mp4Parser.Duration.TotalSeconds;
                 }

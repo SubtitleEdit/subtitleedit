@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonTranslate.Text = Configuration.Settings.Language.GoogleTranslate.Translate;
             labelPleaseWait.Text = Configuration.Settings.Language.GoogleTranslate.PleaseWait;
             linkLabelPoweredByGoogleTranslate.Text = Configuration.Settings.Language.GoogleTranslate.PoweredByGoogleTranslate;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             subtitleListViewFrom.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);

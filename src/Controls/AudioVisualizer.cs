@@ -360,10 +360,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndices)
+        public void SetPosition(double startPositionSeconds, Subtitle subtitle, double currentVideoPositionSeconds, int subtitleIndex, ListView.SelectedIndexCollection selectedIndexes)
         {
             StartPositionSeconds = startPositionSeconds;
-            _selectedIndices = selectedIndices;
+            _selectedIndices = selectedIndexes;
             _subtitle = subtitle;
             _currentVideoPositionSeconds = currentVideoPositionSeconds;
             _selectedParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex);

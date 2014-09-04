@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.StartNumberingFrom.Title;
             label1.Text = Configuration.Settings.Language.StartNumberingFrom.StartFromNumber;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

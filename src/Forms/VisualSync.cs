@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
         public string VideoFileName { get; set; }
         public int AudioTrackNumber { get; set; }
 
-        public bool OKPressed { get; set; }
+        public bool OkPressed { get; set; }
 
         public bool FrameRateChanged
         {
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFindTextStart.Text = _language.FindText;
             buttonFindTextEnd.Text = _language.FindText;
             buttonSync.Text = _language.Synchronize;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelTip.Text = _language.Tip;
             FixLargeFonts();
@@ -733,7 +733,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            OKPressed = true;
+            OkPressed = true;
         }
 
         private void timerProgressBarRefresh_Tick(object sender, EventArgs e)

@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = language.ConvertFrameRateOfSubtitle;
             labelFromFrameRate.Text = language.FromFrameRate;
             labelToFrameRate.Text = language.ToFrameRate;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

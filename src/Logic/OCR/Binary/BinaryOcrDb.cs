@@ -2,7 +2,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Nikse.SubtitleEdit.Logic.OCR.Binary
+namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
 {
     public class BinaryOcrDb
     {

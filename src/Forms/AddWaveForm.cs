@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Forms
                 { // Choose for number of audio tracks in mp4 files
                     try
                     {
-                        var mp4 = new Nikse.SubtitleEdit.Logic.Mp4.Mp4Parser(labelVideoFileName.Text);
+                        var mp4 = new Nikse.SubtitleEdit.Logic.Mp4.MP4Parser(labelVideoFileName.Text);
                         var tracks = mp4.GetAudioTracks();
                         int i=0;
                         foreach (var track in tracks)

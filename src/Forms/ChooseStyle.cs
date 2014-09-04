@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewStyles.Columns[3].Text = l.UseCount;
             listViewStyles.Columns[4].Text = l.Primary;
             listViewStyles.Columns[5].Text = l.Outline;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             InitializeListView();

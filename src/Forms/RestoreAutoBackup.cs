@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewBackups.Columns[3].Text = Configuration.Settings.Language.General.Size;
             labelInfo.Text = l.Information;
 
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             FixLargeFonts();

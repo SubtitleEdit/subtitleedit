@@ -173,8 +173,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/HelpFile":
                     language.General.HelpFile = reader.Value;
                     break;
-                case "General/OK":
-                    language.General.OK = reader.Value;
+                case "General/Ok":
+                    language.General.Ok = reader.Value;
                     break;
                 case "General/Cancel":
                     language.General.Cancel = reader.Value;

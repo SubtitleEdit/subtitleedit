@@ -6,7 +6,7 @@ using System.IO;
 using System.Windows.Forms;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.OCR.Binary;
+using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonDelete.Text = Configuration.Settings.Language.VobSubEditCharacters.Delete;
             buttonAddBetterMatch.Text = Configuration.Settings.Language.VobSubOcrCharacterInspect.AddBetterMatch;
             labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

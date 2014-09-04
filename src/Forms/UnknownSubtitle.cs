@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = Configuration.Settings.Language.UnknownSubtitle.Title;
             labelTitle.Text = Configuration.Settings.Language.UnknownSubtitle.Title;
             richTextBoxMessage.Text = Configuration.Settings.Language.UnknownSubtitle.Message;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             FixLargeFonts();
         }
 

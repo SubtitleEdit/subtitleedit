@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelUserName.Text = Configuration.Settings.Language.General.UserName;
             labelWebServiceUrl.Text = Configuration.Settings.Language.General.WebServiceUrl;
             labelLog.Text = Configuration.Settings.Language.NetworkLogAndInfo.Log;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
         }
 
         internal void Initialize(Logic.Networking.NikseWebServiceSession _networkSession)

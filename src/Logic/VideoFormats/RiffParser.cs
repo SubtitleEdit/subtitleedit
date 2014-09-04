@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <summary>
         /// Return the general file type (RIFF or RIFX);
         /// </summary>
-        public int FileRIFF
+        public int FileRiff
         {
             get
             {

@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelErrors.Text = language.Errors;
 
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
         }
 
         internal void Initialize(Ebu.EbuGeneralSubtitleInformation header, byte justificationCode, string fileName, Subtitle subtitle)
@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxJustificationCode.SelectedIndex = justificationCode;
 
             this.Text = Configuration.Settings.Language.EbuSaveOptions.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 

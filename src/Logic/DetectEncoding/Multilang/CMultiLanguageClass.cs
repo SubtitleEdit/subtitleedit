@@ -60,13 +60,13 @@ namespace MultiLanguage
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void EnumCodePages([In] uint grfFlags, [MarshalAs(UnmanagedType.Interface)] out IEnumCodePage ppEnumCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void EnumCodePages([In] uint grfFlags, [In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumCodePage ppEnumCodePage);
+        public virtual extern void EnumCodePages([In] uint grfFlags, [In] ushort langId, [MarshalAs(UnmanagedType.Interface)] out IEnumCodePage ppEnumCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void EnumRfc1766([MarshalAs(UnmanagedType.Interface)] out IEnumRfc1766 ppEnumRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void EnumRfc1766([In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumRfc1766 ppEnumRfc1766);
+        public virtual extern void EnumRfc1766([In] ushort langId, [MarshalAs(UnmanagedType.Interface)] out IEnumRfc1766 ppEnumRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void EnumScripts([In] uint dwFlags, [In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumScript ppEnumScript);
+        public virtual extern void EnumScripts([In] uint dwFlags, [In] ushort langId, [MarshalAs(UnmanagedType.Interface)] out IEnumScript ppEnumScript);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void GetCharCodePages([In] ushort chSrc, out uint pdwCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
@@ -76,7 +76,7 @@ namespace MultiLanguage
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void GetCodePageInfo([In] uint uiCodePage, out tagMIMECPINFO pCodePageInfo);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void GetCodePageInfo([In] uint uiCodePage, [In] ushort LangId, out tagMIMECPINFO pCodePageInfo);
+        public virtual extern void GetCodePageInfo([In] uint uiCodePage, [In] ushort langId, out tagMIMECPINFO pCodePageInfo);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void GetFamilyCodePage([In] uint uiCodePage, out uint puiFamilyCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
@@ -94,109 +94,109 @@ namespace MultiLanguage
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void GetRfc1766Info([In] uint locale, out tagRFC1766INFO pRfc1766Info);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void GetRfc1766Info([In] uint locale, [In] ushort LangId, out tagRFC1766INFO pRfc1766Info);
+        public virtual extern void GetRfc1766Info([In] uint locale, [In] ushort langId, out tagRFC1766INFO pRfc1766Info);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void GetScriptFontInfo([In] byte sid, [In] uint dwFlags, [In, Out] ref uint puiFonts, out tagSCRIPFONTINFO pScriptFont);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void GetStrCodePages([In] ref ushort pszSrc, [In] int cchSrc, [In] uint dwPriorityCodePages, out uint pdwCodePages, out int pcchCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink_CodePagesToCodePage([In] uint dwCodePages, [In] uint uDefaultCodePage, out uint puCodePage);
+        public virtual extern void IMLangFontLinkCodePagesToCodePage([In] uint dwCodePages, [In] uint uDefaultCodePage, out uint puCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink_CodePageToCodePages([In] uint uCodePage, out uint pdwCodePages);
+        public virtual extern void IMLangFontLinkCodePageToCodePages([In] uint uCodePage, out uint pdwCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink_GetCharCodePages([In] ushort chSrc, out uint pdwCodePages);
+        public virtual extern void IMLangFontLinkGetCharCodePages([In] ushort chSrc, out uint pdwCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink_GetStrCodePages([In] ref ushort pszSrc, [In] int cchSrc, [In] uint dwPriorityCodePages, out uint pdwCodePages, out int pcchCodePages);
+        public virtual extern void IMLangFontLinkGetStrCodePages([In] ref ushort pszSrc, [In] int cchSrc, [In] uint dwPriorityCodePages, out uint pdwCodePages, out int pcchCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_CodePagesToCodePage([In] uint dwCodePages, [In] uint uDefaultCodePage, out uint puCodePage);
+        public virtual extern void IMLangFontLink2CodePagesToCodePage([In] uint dwCodePages, [In] uint uDefaultCodePage, out uint puCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_CodePageToCodePages([In] uint uCodePage, out uint pdwCodePages);
+        public virtual extern void IMLangFontLink2CodePageToCodePages([In] uint uCodePage, out uint pdwCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_GetCharCodePages([In] ushort chSrc, out uint pdwCodePages);
+        public virtual extern void IMLangFontLink2GetCharCodePages([In] ushort chSrc, out uint pdwCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_GetFontCodePages([In, ComAliasName("MultiLanguage.wireHDC")] ref _RemotableHandle hDC, [In, ComAliasName("MultiLanguage.wireHFONT")] ref _RemotableHandle hFont, out uint pdwCodePages);
+        public virtual extern void IMLangFontLink2GetFontCodePages([In, ComAliasName("MultiLanguage.wireHDC")] ref _RemotableHandle hDC, [In, ComAliasName("MultiLanguage.wireHFONT")] ref _RemotableHandle hFont, out uint pdwCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_GetStrCodePages([In] ref ushort pszSrc, [In] int cchSrc, [In] uint dwPriorityCodePages, out uint pdwCodePages, out int pcchCodePages);
+        public virtual extern void IMLangFontLink2GetStrCodePages([In] ref ushort pszSrc, [In] int cchSrc, [In] uint dwPriorityCodePages, out uint pdwCodePages, out int pcchCodePages);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_ReleaseFont([In, ComAliasName("MultiLanguage.wireHFONT")] ref _RemotableHandle hFont);
+        public virtual extern void IMLangFontLink2ReleaseFont([In, ComAliasName("MultiLanguage.wireHFONT")] ref _RemotableHandle hFont);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMLangFontLink2_ResetFontMapping();
+        public virtual extern void IMLangFontLink2ResetFontMapping();
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_ConvertString([In, Out] ref uint pdwMode, [In] uint dwSrcEncoding, [In] uint dwDstEncoding, [In] ref byte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref byte pDstStr, [In, Out] ref uint pcDstSize);
+        public virtual extern void IMultiLanguage2ConvertString([In, Out] ref uint pdwMode, [In] uint dwSrcEncoding, [In] uint dwDstEncoding, [In] ref byte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref byte pDstStr, [In, Out] ref uint pcDstSize);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_ConvertStringFromUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize);
+        public virtual extern void IMultiLanguage2ConvertStringFromUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_ConvertStringReset();
+        public virtual extern void IMultiLanguage2ConvertStringReset();
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_ConvertStringToUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize);
+        public virtual extern void IMultiLanguage2ConvertStringToUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_CreateConvertCharset([In] uint uiSrcCodePage, [In] uint uiDstCodePage, [In] uint dwProperty, [MarshalAs(UnmanagedType.Interface)] out CMLangConvertCharset ppMLangConvertCharset);
+        public virtual extern void IMultiLanguage2CreateConvertCharset([In] uint uiSrcCodePage, [In] uint uiDstCodePage, [In] uint dwProperty, [MarshalAs(UnmanagedType.Interface)] out CMLangConvertCharset ppMLangConvertCharset);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_GetCharsetInfo([In, MarshalAs(UnmanagedType.BStr)] string Charset, out tagMIMECSETINFO pCharsetInfo);
+        public virtual extern void IMultiLanguage2GetCharsetInfo([In, MarshalAs(UnmanagedType.BStr)] string charset, out tagMIMECSETINFO pCharsetInfo);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_GetFamilyCodePage([In] uint uiCodePage, out uint puiFamilyCodePage);
+        public virtual extern void IMultiLanguage2GetFamilyCodePage([In] uint uiCodePage, out uint puiFamilyCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_GetLcidFromRfc1766(out uint plocale, [In, MarshalAs(UnmanagedType.BStr)] string bstrRfc1766);
+        public virtual extern void IMultiLanguage2GetLcidFromRfc1766(out uint plocale, [In, MarshalAs(UnmanagedType.BStr)] string bstrRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_GetNumberOfCodePageInfo(out uint pcCodePage);
+        public virtual extern void IMultiLanguage2GetNumberOfCodePageInfo(out uint pcCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_GetRfc1766FromLcid([In] uint locale, [MarshalAs(UnmanagedType.BStr)] out string pbstrRfc1766);
+        public virtual extern void IMultiLanguage2GetRfc1766FromLcid([In] uint locale, [MarshalAs(UnmanagedType.BStr)] out string pbstrRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage2_IsConvertible([In] uint dwSrcEncoding, [In] uint dwDstEncoding);
+        public virtual extern void IMultiLanguage2IsConvertible([In] uint dwSrcEncoding, [In] uint dwDstEncoding);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertString([In, Out] ref uint pdwMode, [In] uint dwSrcEncoding, [In] uint dwDstEncoding, [In] ref byte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref byte pDstStr, [In, Out] ref uint pcDstSize);
+        public virtual extern void IMultiLanguage3ConvertString([In, Out] ref uint pdwMode, [In] uint dwSrcEncoding, [In] uint dwDstEncoding, [In] ref byte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref byte pDstStr, [In, Out] ref uint pcDstSize);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertStringFromUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize);
+        public virtual extern void IMultiLanguage3ConvertStringFromUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertStringFromUnicodeEx([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize, [In] uint dwFlag, [In] ref ushort lpFallBack);
+        public virtual extern void IMultiLanguage3ConvertStringFromUnicodeEx([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref ushort pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref sbyte pDstStr, [In, Out] ref uint pcDstSize, [In] uint dwFlag, [In] ref ushort lpFallBack);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertStringInIStream([In, Out] ref uint pdwMode, [In] uint dwFlag, [In] ref ushort lpFallBack, [In] uint dwSrcEncoding, [In] uint dwDstEncoding, [In, MarshalAs(UnmanagedType.Interface)] IStream pstmIn, [In, MarshalAs(UnmanagedType.Interface)] IStream pstmOut);
+        public virtual extern void IMultiLanguage3ConvertStringInIStream([In, Out] ref uint pdwMode, [In] uint dwFlag, [In] ref ushort lpFallBack, [In] uint dwSrcEncoding, [In] uint dwDstEncoding, [In, MarshalAs(UnmanagedType.Interface)] IStream pstmIn, [In, MarshalAs(UnmanagedType.Interface)] IStream pstmOut);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertStringReset();
+        public virtual extern void IMultiLanguage3ConvertStringReset();
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertStringToUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize);
+        public virtual extern void IMultiLanguage3ConvertStringToUnicode([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ConvertStringToUnicodeEx([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize, [In] uint dwFlag, [In] ref ushort lpFallBack);
+        public virtual extern void IMultiLanguage3ConvertStringToUnicodeEx([In, Out] ref uint pdwMode, [In] uint dwEncoding, [In] ref sbyte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref ushort pDstStr, [In, Out] ref uint pcDstSize, [In] uint dwFlag, [In] ref ushort lpFallBack);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_CreateConvertCharset([In] uint uiSrcCodePage, [In] uint uiDstCodePage, [In] uint dwProperty, [MarshalAs(UnmanagedType.Interface)] out CMLangConvertCharset ppMLangConvertCharset);
+        public virtual extern void IMultiLanguage3CreateConvertCharset([In] uint uiSrcCodePage, [In] uint uiDstCodePage, [In] uint dwProperty, [MarshalAs(UnmanagedType.Interface)] out CMLangConvertCharset ppMLangConvertCharset);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_DetectCodepageInIStream([In] uint dwFlag, [In] uint dwPrefWinCodePage, [In, MarshalAs(UnmanagedType.Interface)] IStream pstmIn, [In, Out] ref DetectEncodingInfo lpEncoding, [In, Out] ref int pnScores);
+        public virtual extern void IMultiLanguage3DetectCodepageInIStream([In] uint dwFlag, [In] uint dwPrefWinCodePage, [In, MarshalAs(UnmanagedType.Interface)] IStream pstmIn, [In, Out] ref DetectEncodingInfo lpEncoding, [In, Out] ref int pnScores);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_DetectInputCodepage([In] uint dwFlag, [In] uint dwPrefWinCodePage, [In] ref sbyte pSrcStr, [In, Out] ref int pcSrcSize, [In, Out] ref DetectEncodingInfo lpEncoding, [In, Out] ref int pnScores);
+        public virtual extern void IMultiLanguage3DetectInputCodepage([In] uint dwFlag, [In] uint dwPrefWinCodePage, [In] ref sbyte pSrcStr, [In, Out] ref int pcSrcSize, [In, Out] ref DetectEncodingInfo lpEncoding, [In, Out] ref int pnScores);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_EnumCodePages([In] uint grfFlags, [In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumCodePage ppEnumCodePage);
+        public virtual extern void IMultiLanguage3EnumCodePages([In] uint grfFlags, [In] ushort langId, [MarshalAs(UnmanagedType.Interface)] out IEnumCodePage ppEnumCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_EnumRfc1766([In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumRfc1766 ppEnumRfc1766);
+        public virtual extern void IMultiLanguage3EnumRfc1766([In] ushort langId, [MarshalAs(UnmanagedType.Interface)] out IEnumRfc1766 ppEnumRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_EnumScripts([In] uint dwFlags, [In] ushort LangId, [MarshalAs(UnmanagedType.Interface)] out IEnumScript ppEnumScript);
+        public virtual extern void IMultiLanguage3EnumScripts([In] uint dwFlags, [In] ushort langId, [MarshalAs(UnmanagedType.Interface)] out IEnumScript ppEnumScript);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetCharsetInfo([In, MarshalAs(UnmanagedType.BStr)] string Charset, out tagMIMECSETINFO pCharsetInfo);
+        public virtual extern void IMultiLanguage3GetCharsetInfo([In, MarshalAs(UnmanagedType.BStr)] string charset, out tagMIMECSETINFO pCharsetInfo);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetCodePageDescription([In] uint uiCodePage, [In] uint lcid, [In, Out, MarshalAs(UnmanagedType.LPWStr)] string lpWideCharStr, [In] int cchWideChar);
+        public virtual extern void IMultiLanguage3GetCodePageDescription([In] uint uiCodePage, [In] uint lcid, [In, Out, MarshalAs(UnmanagedType.LPWStr)] string lpWideCharStr, [In] int cchWideChar);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetCodePageInfo([In] uint uiCodePage, [In] ushort LangId, out tagMIMECPINFO pCodePageInfo);
+        public virtual extern void IMultiLanguage3GetCodePageInfo([In] uint uiCodePage, [In] ushort langId, out tagMIMECPINFO pCodePageInfo);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetFamilyCodePage([In] uint uiCodePage, out uint puiFamilyCodePage);
+        public virtual extern void IMultiLanguage3GetFamilyCodePage([In] uint uiCodePage, out uint puiFamilyCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetLcidFromRfc1766(out uint plocale, [In, MarshalAs(UnmanagedType.BStr)] string bstrRfc1766);
+        public virtual extern void IMultiLanguage3GetLcidFromRfc1766(out uint plocale, [In, MarshalAs(UnmanagedType.BStr)] string bstrRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetNumberOfCodePageInfo(out uint pcCodePage);
+        public virtual extern void IMultiLanguage3GetNumberOfCodePageInfo(out uint pcCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetNumberOfScripts(out uint pnScripts);
+        public virtual extern void IMultiLanguage3GetNumberOfScripts(out uint pnScripts);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetRfc1766FromLcid([In] uint locale, [MarshalAs(UnmanagedType.BStr)] out string pbstrRfc1766);
+        public virtual extern void IMultiLanguage3GetRfc1766FromLcid([In] uint locale, [MarshalAs(UnmanagedType.BStr)] out string pbstrRfc1766);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_GetRfc1766Info([In] uint locale, [In] ushort LangId, out tagRFC1766INFO pRfc1766Info);
+        public virtual extern void IMultiLanguage3GetRfc1766Info([In] uint locale, [In] ushort langId, out tagRFC1766INFO pRfc1766Info);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_IsCodePageInstallable([In] uint uiCodePage);
+        public virtual extern void IMultiLanguage3IsCodePageInstallable([In] uint uiCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_IsConvertible([In] uint dwSrcEncoding, [In] uint dwDstEncoding);
+        public virtual extern void IMultiLanguage3IsConvertible([In] uint dwSrcEncoding, [In] uint dwDstEncoding);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_SetMimeDBSource([In] tagMIMECONTF dwSource);
+        public virtual extern void IMultiLanguage3SetMimeDBSource([In] tagMIMECONTF dwSource);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ValidateCodePage([In] uint uiCodePage, [In, ComAliasName("MultiLanguage.wireHWND")] ref _RemotableHandle hwnd);
+        public virtual extern void IMultiLanguage3ValidateCodePage([In] uint uiCodePage, [In, ComAliasName("MultiLanguage.wireHWND")] ref _RemotableHandle hwnd);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
-        public virtual extern void IMultiLanguage3_ValidateCodePageEx([In] uint uiCodePage, [In, ComAliasName("MultiLanguage.wireHWND")] ref _RemotableHandle hwnd, [In] uint dwfIODControl);
+        public virtual extern void IMultiLanguage3ValidateCodePageEx([In] uint uiCodePage, [In, ComAliasName("MultiLanguage.wireHWND")] ref _RemotableHandle hwnd, [In] uint dwfIODControl);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]
         public virtual extern void IsCodePageInstallable([In] uint uiCodePage);
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType=MethodCodeType.Runtime)]

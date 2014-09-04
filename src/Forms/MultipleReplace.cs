@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
             buttonImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
             buttonExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
             buttonReplacesInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;

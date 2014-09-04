@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.Title;
             labelChooseLanguage.Text = Configuration.Settings.Language.DvdSubRipChooseLanguage.ChooseLanguageStreamId;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonSaveAs.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
             FixLargeFonts();

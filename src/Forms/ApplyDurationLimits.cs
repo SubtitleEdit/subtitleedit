@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelNote.Text = Configuration.Settings.Language.AdjustDisplayDuration.Note;
             numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
             numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;

@@ -1,6 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.OCR;
+using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 

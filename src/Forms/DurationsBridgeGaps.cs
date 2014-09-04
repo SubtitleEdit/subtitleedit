@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
 
             Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);

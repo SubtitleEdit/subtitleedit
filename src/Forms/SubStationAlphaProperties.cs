@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelWrapStyle.Text = l.WrapStyle;
             checkBoxScaleBorderAndShadow.Text = l.ScaleBorderAndShadow;
 
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             FixLargeFonts();

@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.VobSubOcrNewFolder.Title;
             label1.Text = Configuration.Settings.Language.VobSubOcrNewFolder.Message;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

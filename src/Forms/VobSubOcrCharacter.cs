@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelItalicOn.Text = language.Italic.Replace("&", string.Empty);
             labelItalicOn.Visible = false;
             buttonAbort.Text = language.Abort;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = language.Skip;
             nordicToolStripMenuItem.Text = language.Nordic;
             spanishToolStripMenuItem.Text = language.Spanish;

@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelNote.Text = language.Note;
             comboBoxSeconds.Items[0] = language.PleaseChoose;
             comboBoxPercent.Items[0] = language.PleaseChoose;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

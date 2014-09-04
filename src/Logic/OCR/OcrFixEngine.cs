@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
 
-namespace Nikse.SubtitleEdit.Logic.OCR
+namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class OcrFixEngine
     {

@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.ChooseLanguage.Title;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

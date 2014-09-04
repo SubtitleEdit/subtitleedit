@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelBlue.Text = Configuration.Settings.Language.ColorChooser.Blue;
                 labelAlpha1.Text = Configuration.Settings.Language.ColorChooser.Alpha;
             }
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 

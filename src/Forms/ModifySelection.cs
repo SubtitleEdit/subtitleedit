@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = string.Empty;
             comboBoxRule.SelectedIndex = 0;
             Text = Configuration.Settings.Language.ModifySelection.Title;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonApply.Text = Configuration.Settings.Language.General.Apply;
             groupBoxRule.Text = Configuration.Settings.Language.ModifySelection.Rule;

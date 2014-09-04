@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVolumeBelow.Text = Configuration.Settings.Language.SeekSilence.MaxVolume;
             numericUpDownSeconds.Value = (decimal)Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds;
             numericUpDownVolume.Value = Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume;
-            buttonOK.Text = Configuration.Settings.Language.General.OK;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();
         }

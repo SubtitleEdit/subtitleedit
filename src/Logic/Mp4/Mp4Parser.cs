@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
     /// <summary>
     /// http://wiki.multimedia.cx/index.php?title=QuickTime_container
     /// </summary>
-    public class Mp4Parser : Box
+    public class MP4Parser : Box
     {
         public string FileName { get; private set; }
         public Moov Moov { get; private set; }
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             }
         }
 
-        public Mp4Parser(string fileName)
+        public MP4Parser(string fileName)
         {
             FileName = fileName;
             var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             fs.Close();
         }
 
-        public Mp4Parser(FileStream fs)
+        public MP4Parser(FileStream fs)
         {
             FileName = null;
             ParseMp4(fs);
