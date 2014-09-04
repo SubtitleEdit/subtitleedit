@@ -4253,7 +4253,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NOCRIntialize(Bitmap bitmap)
         {
-            var matches = new List<CompareMatch>();
             var nikseBitmap = new NikseBitmap(bitmap);
             List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(nikseBitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom);
 
