@@ -79,9 +79,9 @@ zaščitena z GNU Public License.
 
 Lahko jo delite, spreminjate in uporabljate brezplačno.
 
-C # izvorna coda je na razpolago na: http://code.google.com/p/subtitleedit
+C # izvorna coda je na razpolago na: https://github.com/SubtitleEdit/subtitleedit
 
-Za novejšo verzijo obiščite: www.nikse.dk.
+Za novejšo verzijo obiščite: http://www.nikse.dk
 
 Predlogi zelo dobrodošli.
 
@@ -267,7 +267,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <ProlongEndTime>Prejšnje besedilo prevzame ves čas intervala</ProlongEndTime>
     <DivideEven>Besedilo deli čase intervala</DivideEven>
   </DurationsBridgeGaps>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Kopiraj besedilo iz ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD datoteke/info</DvdGroupTitle>
     <IfoFile>IFO datoteka</IfoFile>
@@ -288,7 +288,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <ReadingSubtitleData>Berem podnapis datoteko...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Kopiram vob datoteko {1} of {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO tip je '{0}' in nič 'DVDVIDEO-VTS'.{1} poskusi drugo datoteko {2}</WrongIfoType>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Izberi jezik</Title>
     <ChooseLanguageStreamId>Izberi jezik (pretok-id)</ChooseLanguageStreamId>
@@ -296,7 +296,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <SubtitleImageXofYAndWidthXHeight>Slika podnapisa {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Slika podnapisa</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
+  <EbuSaveOptions>
     <Title>Shrani možnosti za EBU</Title>
     <GeneralSubtitleInformation>Splošne informacije podnapisa</GeneralSubtitleInformation>
     <CodePageNumber>Številka kode strani</CodePageNumber>
@@ -326,7 +326,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <TextLeftJustifiedText>Levo pravilno besedilo</TextLeftJustifiedText>
     <TextCentredText>Besedilo na sredini</TextCentredText>
     <TextRightJustifiedText>Desno pravilno besedilo</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>Karaoke učinek</Title>
     <ChooseColor>Izberi barvo:</ChooseColor>
@@ -1464,9 +1464,9 @@ popravlja enak podnapis (sodelovanje)</Information>
     <SpectrogramAppearance>Izgled spektrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Enobarvni gradnik</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasik</SpectrogramClassic>
-    <WaveformUseFFMPEG>Uporabi FFMPEG za wave izlužitev</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>Pot do FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>Brskaj do FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>Uporabi FFMPEG za wave izlužitev</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Pot do FFMPEG</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Brskaj do FFMPEG</WaveformBrowseToFFmpeg>
     <SubStationAlphaStyle>(Napredno) Stil Sub postaje Alpha</SubStationAlphaStyle>
     <ChooseFont>Izberi pisavo</ChooseFont>
     <ChooseColor>Izberi barvo</ChooseColor>
