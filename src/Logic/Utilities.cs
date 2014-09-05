@@ -2361,11 +2361,11 @@ namespace Nikse.SubtitleEdit.Logic
             return userWordListXmlFileName;
         }
 
-        public static string UppercaseLetters = GetLetters(true, false, false);
-        public static string LowercaseLetters = GetLetters(false, true, false);
-        public static string LowercaseLettersWithNumbers = GetLetters(false, true, true);
-        public static string AllLetters = GetLetters(true, true, false);
-        public static string AllLettersAndNumbers = GetLetters(true, true, true);
+        public static readonly string UppercaseLetters = GetLetters(true, false, false);
+        public static readonly string LowercaseLetters = GetLetters(false, true, false);
+        public static readonly string LowercaseLettersWithNumbers = GetLetters(false, true, true);
+        public static readonly string AllLetters = GetLetters(true, true, false);
+        public static readonly string AllLettersAndNumbers = GetLetters(true, true, true);
 
         private static string GetLetters(bool uppercase, bool lowercase, bool numbers)
         {
