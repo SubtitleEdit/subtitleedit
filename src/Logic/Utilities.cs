@@ -1778,10 +1778,11 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, new Spt().Extension);
             AddExtension(sb, new Wsb().Extension);
             AddExtension(sb, new CheetahCaption().Extension);
+            AddExtension(sb, ".chk");
             AddExtension(sb, new CaptionsInc().Extension);
             AddExtension(sb, new Ultech130().Extension);
             AddExtension(sb, new ELRStudioClosedCaption().Extension);
-            AddExtension(sb, "uld"); // Ultech drop frame
+            AddExtension(sb, ".uld"); // Ultech drop frame
             AddExtension(sb, new SonicScenaristBitmaps().Extension);
             AddExtension(sb, ".mks");
             AddExtension(sb, ".sup");
