@@ -24,7 +24,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         private class Nested
         {
-            static Nested() { }
             internal static readonly Configuration instance = new Configuration();
         }
 

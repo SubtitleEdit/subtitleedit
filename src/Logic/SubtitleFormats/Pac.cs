@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class Pac : SubtitleFormat
     {
-        public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
+        public static TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
