@@ -594,7 +594,8 @@ namespace Nikse.SubtitleEdit.Forms
                     Console.WriteLine("    " + new Captionate().FriendlyName);
                     Console.WriteLine("    " + new Cavena890().FriendlyName);
                     Console.WriteLine("    " + new CheetahCaption().FriendlyName);
-//                    Console.WriteLine("    " + new Ebu().FriendlyName);
+                    Console.WriteLine("    " + new Chk().FriendlyName);
+                    //                    Console.WriteLine("    " + new Ebu().FriendlyName);
                     Console.WriteLine("    Matroska (.mkv)");
                     Console.WriteLine("    Matroska subtitle (.mks)");
                     Console.WriteLine("    " + new NciCaption().FriendlyName);
@@ -847,6 +848,15 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             if (format == null)
                             {
+                                var chk = new Chk();
+                                if (chk.IsMine(null, fileName))
+                                {
+                                    chk.LoadSubtitle(sub, null, fileName);
+                                    format = chk;
+                                }
+                            }
+                            if (format == null)
+                            {
                                 var capMakerPlus = new CapMakerPlus();
                                 if (capMakerPlus.IsMine(null, fileName))
                                 {
@@ -1083,7 +1093,7 @@ namespace Nikse.SubtitleEdit.Forms
                     CheetahCaption.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
-            }
+            }           
             if (!targetFormatFound)
             {
                 var capMakerPlus = new CapMakerPlus();

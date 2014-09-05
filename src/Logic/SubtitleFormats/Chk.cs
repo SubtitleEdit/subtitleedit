@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 for (int i = 0; i < 15; i++)
                 {
                     int start = index + 2 + (i * 8);
-                    int totalFrameNumber = buffer[start + 3] << 16 + buffer[start + 5] << 8+ buffer[start + 4];                   
+                    int totalFrameNumber = (buffer[start + 3] << 16) + (buffer[start + 5] << 8) + buffer[start + 4];                   
                     int durationInFrames = buffer[start + 6];
                     var p = new Paragraph(string.Empty, FramesToMilliseconds(totalFrameNumber), FramesToMilliseconds(totalFrameNumber + durationInFrames));
                     _timeCodeQueue.Enqueue(p);

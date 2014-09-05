@@ -311,6 +311,14 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (format == null)
                     {
+                        var chk = new Chk();
+                        if (chk.IsMine(null, fileName))
+                        {
+                            format = chk;
+                        }
+                    }
+                    if (format == null)
+                    {
                         var capMakerPlus = new CapMakerPlus();
                         if (capMakerPlus.IsMine(null, fileName))
                         {
