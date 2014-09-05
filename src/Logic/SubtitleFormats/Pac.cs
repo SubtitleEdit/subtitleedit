@@ -1027,6 +1027,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return null;
             }
             int textLength = buffer[timeStartIndex + 9] + buffer[timeStartIndex + 10] * 256;
+            if (textLength > 500)
+                return null; // probably not correct index
             int maxIndex = timeStartIndex + 10 + textLength;
 
             if (_codePage == -1)
