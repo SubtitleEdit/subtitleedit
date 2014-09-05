@@ -4,7 +4,6 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
     /// <summary>
     /// .CHK subtitle file format - 128 bytes blocks, first byte in block is id (01==text)
     /// </summary>
@@ -116,14 +115,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 for (int i = 0; i < 15; i++)
                 {
                     int start = index + 2 + (i * 8);
-
-                    int totalFrameNumber = buffer[start + 4];
-                    totalFrameNumber = buffer[start + 4];
-                    totalFrameNumber += buffer[start + 5] << 8;
-                    totalFrameNumber += buffer[start + 3] << 16; // ??
-                    
+                    int totalFrameNumber = buffer[start + 3] << 16 + buffer[start + 5] << 8+ buffer[start + 4];                   
                     int durationInFrames = buffer[start + 6];
-
                     var p = new Paragraph(string.Empty, FramesToMilliseconds(totalFrameNumber), FramesToMilliseconds(totalFrameNumber + durationInFrames));
                     _timeCodeQueue.Enqueue(p);
                 }
@@ -142,55 +135,46 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
             {
                 if (end - start > 0)
-                    text = _codePage.GetString(buffer, start, end - start );
+                    text = _codePage.GetString(buffer, start, end - start);
             }
 
-            //if (_languageId == "DSP" || _languageId == "DFR")
-            {
-                text = text.Replace("ÔA", "Á");
-                text = text.Replace("ÔE", "É");
-                text = text.Replace("ÔI", "Í");
-                text = text.Replace("ÓN", "Ñ");
-                text = text.Replace("ÔO", "Ó");
-                text = text.Replace("ÔU", "Ú");
+            // special language codes...
+            text = text.Replace("ÔA", "Á");
+            text = text.Replace("ÔE", "É");
+            text = text.Replace("ÔI", "Í");
+            text = text.Replace("ÓN", "Ñ");
+            text = text.Replace("ÔO", "Ó");
+            text = text.Replace("ÔU", "Ú");
+            text = text.Replace("Ôa", "á");
+            text = text.Replace("Ôe", "é");
+            text = text.Replace("Ôi", "í");
+            text = text.Replace("Ón", "ñ");
+            text = text.Replace("Ôo", "ó");
+            text = text.Replace("Ôu", "ú");
 
-                text = text.Replace("Ôa", "á");
-                text = text.Replace("Ôe", "é");
-                text = text.Replace("Ôi", "í");
-                text = text.Replace("Ón", "ñ");
-                text = text.Replace("Ôo", "ó");
-                text = text.Replace("Ôu", "ú");
+            text = text.Replace("ÒA", "À");
+            text = text.Replace("ÒE", "È");
+            text = text.Replace("ÒU", "Ù");
+            text = text.Replace("Òa", "à");
+            text = text.Replace("Òe", "è");
+            text = text.Replace("Òu", "ù");
 
+            text = text.Replace("ÕU", "Ü");
+            text = text.Replace("ÕA", "Ä");
+            text = text.Replace("ÕO", "Ö");
+            text = text.Replace("Õu", "ü");
+            text = text.Replace("Õa", "ä");
+            text = text.Replace("Õo", "ö");
 
-                text = text.Replace("ÒA", "À");
-                text = text.Replace("ÒE", "È");
-                text = text.Replace("ÒU", "Ù");
+            text = text.Replace("õa", "â");
+            text = text.Replace("õe", "ê");
+            text = text.Replace("õi", "î");
+            text = text.Replace("õu", "û");
+            text = text.Replace("õA", "Â");
+            text = text.Replace("õE", "Ê");
+            text = text.Replace("õI", "Î");
+            text = text.Replace("õU", "Û");
 
-                text = text.Replace("Òa", "à");
-                text = text.Replace("Òe", "è");
-                text = text.Replace("Òu", "ù");                
-            }
-            //if (_languageId == "DGE")
-            {
-                text = text.Replace("ÕU", "Ü");
-                text = text.Replace("ÕA", "Ä");
-                text = text.Replace("ÕO", "Ö");
-
-                text = text.Replace("Õu", "ü");
-                text = text.Replace("Õa", "ä");
-                text = text.Replace("Õo", "ö");
-
-
-                text = text.Replace("õa", "â");
-                text = text.Replace("õe", "ê");
-                text = text.Replace("õi", "î");
-                text = text.Replace("õu", "û");
-
-                text = text.Replace("õA", "Â");
-                text = text.Replace("õE", "Ê");
-                text = text.Replace("õI", "Î");
-                text = text.Replace("õU", "Û");
-            }
             return text;
         }
 
