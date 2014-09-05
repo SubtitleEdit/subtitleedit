@@ -1697,8 +1697,13 @@
     <Content Include="Languages\pt-PT.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Languages\sl-SI.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Languages\sr-Cyrl-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="Languages\sr-Latn-RS.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
