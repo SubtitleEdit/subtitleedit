@@ -31,6 +31,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.Serialization;
+using System.Security;
 using System.Security.Permissions;
 
 // HashSet is basically implemented as a reduction of Dictionary<K, V>
@@ -569,7 +570,7 @@ namespace Nikse.SubtitleEdit.Logic
 			return setComparer;
 		}
 
-		[SecurityPermission (SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]
+        [SecurityCritical]
 		public void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
 			if (info == null) {
