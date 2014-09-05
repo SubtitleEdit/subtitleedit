@@ -11,13 +11,13 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
     public static class EncodingTools
     {
         // this only contains ascii, default windows code page and unicode
-        public static int[] PreferredEncodingsForStream;
+        static int[] PreferredEncodingsForStream;
 
         // this contains all codepages, sorted by preference and byte usage
-        public static int[] PreferredEncodings;
+        static int[] PreferredEncodings;
 
         // this contains all codepages, sorted by preference and byte usage
-        public static int[] AllEncodings;
+        static int[] AllEncodings;
 
 
         /// <summary>
