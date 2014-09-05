@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -117,7 +118,26 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _subtitle1 = new Subtitle();
                 Encoding encoding;
-                _subtitle1.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                var format = _subtitle1.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                if (format == null)
+                {
+                    var pac = new Pac();
+                    if (pac.IsMine(null, openFileDialog1.FileName))
+                    {
+                        pac.BatchMode = true;
+                        pac.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = pac;
+                    }
+                }
+                if (format == null)
+                {
+                    var cavena890 = new Cavena890();
+                    if (cavena890.IsMine(null, openFileDialog1.FileName))
+                    {
+                        cavena890.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
+                        format = cavena890;
+                    }
+                }
                 subtitleListView1.Fill(_subtitle1);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
@@ -141,7 +161,27 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 _subtitle2 = new Subtitle();
                 Encoding encoding;
-                _subtitle2.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                var format = _subtitle2.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
+                if (format == null)
+                {
+                    var pac = new Pac();
+                    if (pac.IsMine(null, openFileDialog1.FileName))
+                    {
+                        pac.BatchMode = true;
+                        pac.LoadSubtitle(_subtitle2, null, openFileDialog1.FileName);
+                        format = pac;
+                    }
+                }
+                if (format == null)
+                {
+                    var cavena890 = new Cavena890();
+                    if (cavena890.IsMine(null, openFileDialog1.FileName))
+                    {
+                        cavena890.LoadSubtitle(_subtitle2, null, openFileDialog1.FileName);
+                        format = cavena890;
+                    }
+                }
+             
                 subtitleListView2.Fill(_subtitle2);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
