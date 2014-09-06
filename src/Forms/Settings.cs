@@ -622,9 +622,10 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
             checkBoxUseFFmpeg.Checked = Configuration.Settings.General.UseFFmpegForWaveExtraction;
             textBoxFFmpegPath.Text = Configuration.Settings.General.FFmpegLocation;
-
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.MergeSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText))
+                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
             generalNode.Nodes.Add(language.MergeOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation));
             generalNode.Nodes.Add(language.ToggleTranslationMode + GetShortcutText(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode));
             generalNode.Nodes.Add(language.SwitchOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation));
@@ -1225,6 +1226,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.MergeSelectedLines.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralMergeSelectedLines = GetShortcut(node.Text);
+                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText) && text == Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleTranslationMode.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralToggleTranslationMode = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.SwitchOriginalAndTranslation.Replace("&", string.Empty))
