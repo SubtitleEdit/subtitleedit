@@ -79,7 +79,7 @@ namespace NHunspell
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException("Processors", "Processors must be greater than 0");
+                    throw new ArgumentOutOfRangeException("value", "Processors must be greater than 0");
                 }
 
                 this.processors = value;

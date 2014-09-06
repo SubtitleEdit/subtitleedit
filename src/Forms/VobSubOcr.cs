@@ -525,8 +525,6 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             for (int i = 0; i < max; i++)
             {
-                var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
-                var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
                 Application.DoEvents();
                 if (_abort)
                 {
@@ -695,8 +693,6 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
             for (int i = 0; i < max; i++)
             {
-                var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
-                var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
                 Application.DoEvents();
                 if (_abort)
                 {

@@ -16,10 +16,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         // this contains all codepages, sorted by preference and byte usage
         static int[] PreferredEncodings;
 
-        // this contains all codepages, sorted by preference and byte usage
-        static int[] AllEncodings;
-
-
         /// <summary>
         /// Static constructor that fills the default preferred codepages
         /// </summary>
@@ -109,7 +105,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 
 
             PreferredEncodings = mimeEcodings.ToArray();
-            AllEncodings = allEncodings.ToArray();
         }
 
 
@@ -394,7 +389,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         {
 
             if (maxEncodings < 1)
-                throw new ArgumentOutOfRangeException("at least one encoding must be returend", "maxEncodings");
+                throw new ArgumentOutOfRangeException("maxEncodings", "at least one encoding must be returned");
 
             if (input == null)
                 throw new ArgumentNullException("input");

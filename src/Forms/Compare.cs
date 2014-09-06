@@ -181,7 +181,7 @@ namespace Nikse.SubtitleEdit.Forms
                         format = cavena890;
                     }
                 }
-             
+
                 subtitleListView2.Fill(_subtitle2);
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);

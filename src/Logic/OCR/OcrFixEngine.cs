@@ -333,7 +333,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             set
             {
-                string _spellCheckDictionaryName = Path.Combine(Utilities.DictionaryFolder, value);
+                string spellCheckDictionaryName = Path.Combine(Utilities.DictionaryFolder, value);
                 CultureInfo ci;
                 try
                 {
@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     ci = CultureInfo.CurrentCulture;
                 }
-                LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, _spellCheckDictionaryName, false);
+                LoadSpellingDictionariesViaDictionaryFileName(ci.ThreeLetterISOLanguageName, ci, spellCheckDictionaryName, false);
             }
         }
 

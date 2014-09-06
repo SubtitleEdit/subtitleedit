@@ -297,7 +297,7 @@ namespace NHunspell
                         {
                             case NativeMethods.PROCESSOR_ARCHITECTURE.Intel:
                                 string pathx86 = NativeDLLPath;
-                                if (pathx86 != string.Empty && !pathx86.EndsWith("\\"))
+                                if (!String.IsNullOrEmpty(pathx86) && !pathx86.EndsWith("\\"))
                                 {
                                     pathx86 += "\\";
                                 }
@@ -314,7 +314,7 @@ namespace NHunspell
 
                             case NativeMethods.PROCESSOR_ARCHITECTURE.Amd64:
                                 string pathx64 = NativeDLLPath;
-                                if (pathx64 != string.Empty && !pathx64.EndsWith("\\"))
+                                if (!String.IsNullOrEmpty(pathx64) && !pathx64.EndsWith("\\"))
                                 {
                                     pathx64 += "\\";
                                 }
