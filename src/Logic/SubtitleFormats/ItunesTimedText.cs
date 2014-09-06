@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (line.Substring(i).StartsWith("<font "))
                         {
-                            int endIndex = line.Substring(i + 1).IndexOf(">");
+                            int endIndex = line.Substring(i + 1).IndexOf('>');
                             if (endIndex > 0)
                             {
                                 skipCount = endIndex + 1;

@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer = new byte[] { 0x14, 0x2F, 0x0D, 0x0A, 0xFE, 0x30, 0x30, 0x32, 0x30 };
                 fs.Write(buffer, 0, buffer.Length);
                 WriteTime(fs, p.EndTime, true);
-                buffer = new byte[] { 0x14, 0x2C };
+//                buffer = new byte[] { 0x14, 0x2C };
             }
             fs.Close();
         }

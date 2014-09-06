@@ -222,11 +222,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(l.Replace("<SYNC Start= \"", "<SYNC Start=\"").Replace("<SYNC Start = \"", "<SYNC Start=\"").Replace("<SYNC Start =\"", "<SYNC Start=\"").Replace("<SYNC  Start=\"", "<SYNC Start=\""));
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
+            if (allInputLower.IndexOf("<sync ", StringComparison.Ordinal) == -1)
+                return;
 
-            int styleStart = allInputLower.IndexOf("<style");
+            int styleStart = allInputLower.IndexOf("<style", StringComparison.Ordinal);
             if (styleStart > 0)
             {
-                int styleEnd = allInputLower.IndexOf("</style>");
+                int styleEnd = allInputLower.IndexOf("</style>", StringComparison.Ordinal);
                 if (styleEnd > 0)
                 {
                     subtitle.Header = allInput.Substring(styleStart, styleEnd - styleStart + 8);
@@ -235,10 +237,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             const string syncTag = "<sync start=";
             const string syncTagEnc = "<sync encrypted=\"true\" start=";
-            int syncStartPos = allInputLower.IndexOf(syncTag);
+            int syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
             int index = syncStartPos + syncTag.Length;
 
-            int syncStartPosEnc = allInputLower.IndexOf(syncTagEnc);
+            int syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, StringComparison.Ordinal);
             if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncStartPos == -1)
             {
                 syncStartPos = syncStartPosEnc;
@@ -261,8 +263,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index < allInput.Length && allInput[index] == '>')
                     index++;
 
-                int syncEndPos = allInputLower.IndexOf(syncTag, index);
-                int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index);
+                int syncEndPos = allInputLower.IndexOf(syncTag, index, StringComparison.Ordinal);
+                int syncEndPosEnc = allInputLower.IndexOf(syncTagEnc, index, StringComparison.Ordinal);
                 if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncEndPos == -1)
                     syncEndPos = syncEndPosEnc;
 
@@ -288,9 +290,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (text.Contains("ID=\"Source\"") || text.Contains("ID=Source"))
                 {
-                    int sourceIndex = text.IndexOf("ID=\"Source\"");
+                    int sourceIndex = text.IndexOf("ID=\"Source\"", StringComparison.Ordinal);
                     if (sourceIndex < 0)
-                        sourceIndex = text.IndexOf("ID=Source");
+                        sourceIndex = text.IndexOf("ID=Source", StringComparison.Ordinal);
                     int st = sourceIndex -1;
                     while (st > 0 && text.Substring(st, 2).ToUpper() != "<P")
                     {
@@ -321,15 +323,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Replace("  ", " ");
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
 
-                int endSyncPos = text.ToUpper().IndexOf("</SYNC>");
-                if (text.IndexOf(">") > 0 && (text.IndexOf(">") < endSyncPos || endSyncPos == -1))
-                    text = text.Remove(0, text.IndexOf(">")+1);
+                int endSyncPos = text.ToUpper().IndexOf("</SYNC>", StringComparison.Ordinal);
+                if (text.IndexOf('>') > 0 && (text.IndexOf('>') < endSyncPos || endSyncPos == -1))
+                    text = text.Remove(0, text.IndexOf('>')+1);
                 text = text.TrimEnd();
 
-                if (text.ToLower().EndsWith("</sync>"))
+                if (text.ToLower().EndsWith("</sync>", StringComparison.Ordinal))
                     text = text.Substring(0, text.Length - 7).TrimEnd();
 
-                if (text.EndsWith("</p>") || text.EndsWith("</P>"))
+                if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.Ordinal))
                     text = text.Substring(0, text.Length - 4).TrimEnd();
 
                 text = text.Replace("&nbsp;", " ").Replace("&NBSP;", " ");
@@ -339,27 +341,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (text.StartsWith("<FONT COLOR=") && !text.Contains("</font>") && !text.Contains("</FONT>"))
                     text += "</FONT>";
 
-
-                if (text.Contains("<") && text.Contains(">"))
+                if (text.IndexOf('<') >= 0 && text.IndexOf('>') >= 0)
                 {
                     var total = new StringBuilder();
                     var partial = new StringBuilder();
                     bool tagOn = false;
                     for (int i = 0; i < text.Length; i++)
                     {
-                        if (text.Substring(i).StartsWith("<font") ||
-                            text.Substring(i).StartsWith("<div") ||
-                            text.Substring(i).StartsWith("<i") ||
-                            text.Substring(i).StartsWith("<b") ||
-                            text.Substring(i).StartsWith("<s") ||
-                            text.Substring(i).StartsWith("</"))
+                        string tmp = text.Substring(i);
+                        if (tmp.StartsWith("<", StringComparison.Ordinal) &&
+                            (tmp.StartsWith("<font", StringComparison.Ordinal) ||
+                             tmp.StartsWith("<div", StringComparison.Ordinal) ||
+                             tmp.StartsWith("<i", StringComparison.Ordinal) ||
+                             tmp.StartsWith("<b", StringComparison.Ordinal) ||
+                             tmp.StartsWith("<s", StringComparison.Ordinal) ||
+                             tmp.StartsWith("</", StringComparison.Ordinal)))
                         {
                             total.Append(Utilities.HtmlDecode(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
                             total.Append("<");
                         }
-                        else if (text.Substring(i).StartsWith(">") && tagOn)
+                        else if (text.Substring(i).StartsWith(">", StringComparison.Ordinal) && tagOn)
                         {
                             tagOn = false;
                             total.Append(">");
@@ -408,10 +411,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos);
+                    syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos, StringComparison.Ordinal);
                     index = syncStartPos + syncTag.Length;
 
-                    syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, syncEndPos);
+                    syncStartPosEnc = allInputLower.IndexOf(syncTagEnc, syncEndPos, StringComparison.Ordinal);
                     if ((syncStartPosEnc >= 0 && syncStartPosEnc < syncStartPos) || syncStartPos == -1)
                     {
                         syncStartPos = syncStartPosEnc;

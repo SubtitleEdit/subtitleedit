@@ -563,11 +563,6 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixEllipsesStart>말머리에 쓰인 '...' 제거하기</FixEllipsesStart>
     <FixMissingOpenBracket>줄 안에 누락된 '[' 수정하기</FixMissingOpenBracket>
     <FixMusicNotation>음표(예: âTª)를 기본으로 바꾸기</FixMusicNotation>
-    <FixDoubleDashs>'--' -&gt; '...' 로 바꾸기</FixDoubleDashs>
-    <FixDoubleGreaterThans>말머리에 쓰인 &gt;&gt; 제거하기</FixDoubleGreaterThans>
-    <FixEllipsesStarts>말머리에 쓰인 ... 제거하기</FixEllipsesStarts>
-    <FixMissingOpenBrackets>누락된 '[' 수정하기</FixMissingOpenBrackets>
-    <FixMusicNotations>음표 [âTª]를 [*]로 바꾸기</FixMusicNotations>
     <XFixDoubleDash>{0} '--'을 수정했습니다.</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; 을 제거했습니다.</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} 말머리의 '...' 을 제거합니다.</XFixEllipsesStart>

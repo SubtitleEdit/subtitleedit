@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int start = line.IndexOf(tag + "=\"");
             if (start > 0 && line.Length > start + 4)
             {
-                int end = line.IndexOf("\"", start + 3);
+                int end = line.IndexOf('"', start + 3);
                 if (end > 0 && line.Length > end + 3)
                 {
                     string value = line.Substring(start + 3, end - start - 3);

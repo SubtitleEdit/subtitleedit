@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 foreach (string namesItem in _namesEtcList)
                 {
-                    if (!namesItem.EndsWith("s"))
+                    if (!namesItem.EndsWith("s", StringComparison.Ordinal))
                         _namesEtcListWithApostrophe.Add(namesItem + "'s");
                     else
                         _namesEtcListWithApostrophe.Add(namesItem + "'");
@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _abbreviationList = new HashSet<string>();
             foreach (string name in _namesEtcList)
             {
-                if (name.EndsWith("."))
+                if (name.EndsWith(".", StringComparison.Ordinal))
                     _abbreviationList.Add(name);
             }
             if (threeLetterIsoLanguageName.ToLower() == "eng")
@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             foreach (string name in _userWordList)
             {
-                if (name.EndsWith("."))
+                if (name.EndsWith(".", StringComparison.Ordinal))
                     _abbreviationList.Add(name);
             }
 
@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         else
                         {
                             bool doFixWord = true;
-                            if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-"))
+                            if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-", StringComparison.Ordinal))
                                 doFixWord = false;
                             if (doFixWord)
                                 fixedWord = FixCommonWordErrors(word.ToString());
@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 string fixedWord;
                 bool doFixWord = true;
-                if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-"))
+                if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith("-", StringComparison.Ordinal))
                     doFixWord = false;
                 if (doFixWord)
                     fixedWord = FixCommonWordErrors(word.ToString());
@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
-                if (SpellCheckDictionaryName.StartsWith("en_") || _threeLetterIsoLanguageName == "eng")
+                if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || string.Compare(_threeLetterIsoLanguageName, "eng", StringComparison.Ordinal) == 0)
                 {
                     string oldText = text;
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');
@@ -492,7 +492,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             bool endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith(".") || lastLine.EndsWith("!") || lastLine.EndsWith("?") ||
                                     lastLine.EndsWith(".</i>") || lastLine.EndsWith("!</i>") || lastLine.EndsWith("?</i>") ||
                                     lastLine.EndsWith(".</font>") || lastLine.EndsWith("!</font>") || lastLine.EndsWith("?</font>");
-            if (text.StartsWith(tag.TrimStart()) && text.Length > 3)
+            if (text.StartsWith(tag.TrimStart(), StringComparison.Ordinal) && text.Length > 3)
             {
                 if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(2, 1)))
                 {
@@ -503,7 +503,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     text = text.Remove(0, 1).Insert(0, "l");
                 }
             }
-            else if (text.StartsWith("<i>" + tag.TrimStart()) && text.Length > 6)
+            else if (text.StartsWith("<i>" + tag.TrimStart(), StringComparison.Ordinal) && text.Length > 6)
             {
                 if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(5, 1)))
                 {
@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith(".") || lastLine.EndsWith("!") || lastLine.EndsWith("?");
                 if (start < text.Length - 4)
                 {
-                    if (start == 1 && text.StartsWith("-"))
+                    if (start == 1 && text.StartsWith("-", StringComparison.Ordinal))
                         endingBeforeThis = true;
 
                     if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(start + 3, 1)))
@@ -680,38 +680,38 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string pre = string.Empty;
             string post = string.Empty;
 
-            if (word.StartsWith("<i>"))
+            if (word.StartsWith("<i>", StringComparison.Ordinal))
             {
                 pre += "<i>";
                 word = word.Remove(0, 3);
             }
-            while (word.Length > 2 && word.StartsWith(Environment.NewLine))
+            while (word.Length > 2 && word.StartsWith(Environment.NewLine, StringComparison.Ordinal))
             {
                 pre += Environment.NewLine;
                 word = word.Substring(2);
             }
 
-            while (word.Length > 1 && word.StartsWith("-"))
+            while (word.Length > 1 && word[0] == '-')
             {
                 pre += "-";
                 word = word.Substring(1);
             }
-            while (word.Length > 1 && word.StartsWith("."))
+            while (word.Length > 1 && word[0] == '.')
             {
                 pre += ".";
                 word = word.Substring(1);
             }
-            while (word.Length > 1 && word.StartsWith("\""))
+            while (word.Length > 1 && word[0] == '"')
             {
                 pre += "\"";
                 word = word.Substring(1);
             }
-            if (word.Length > 1 && word.StartsWith("("))
+            if (word.Length > 1 && word[0] == '(')
             {
                 pre += "(";
                 word = word.Substring(1);
             }
-            if (word.StartsWith("<i>"))
+            if (word.StartsWith("<i>", StringComparison.Ordinal))
             {
                 pre += "<i>";
                 word = word.Remove(0, 3);
@@ -721,43 +721,44 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 post += Environment.NewLine;
                 word = word.Substring(0, word.Length - 2);
             }
-            while (word.Length > 1 && word.EndsWith("\""))
+            while (word.Length > 1 && word.EndsWith("\"", StringComparison.Ordinal))
             {
                 post = post + "\"";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.Length > 1 && word.EndsWith("."))
+            while (word.Length > 1 && word.EndsWith(".", StringComparison.Ordinal))
             {
                 post = post + ".";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith(",") && word.Length > 1)
+            while (word.EndsWith(",", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + ",";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith("?") && word.Length > 1)
+            while (word.EndsWith("?", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + "?";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith("!") && word.Length > 1)
+            while (word.EndsWith("!", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + "!";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith(")") && word.Length > 1)
+            while (word.EndsWith(")", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + ")";
                 word = word.Substring(0, word.Length - 1);
             }
-            if (word.EndsWith("</i>"))
+            if (word.EndsWith("</i>", StringComparison.Ordinal))
             {
                 post = post + "</i>";
                 word = word.Remove(word.Length - 4, 4);
             }
+            string preWordPost = pre + word + post;
             if (word.Length == 0)
-                return pre + word + post;
+                return preWordPost;
 
             if (word.Contains("?"))
             {
@@ -775,10 +776,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 else if (word.Length + post.Length == from.Length)
                 {
-                    if (word + post == from)
+                    if (string.CompareOrdinal(word + post, from) == 0)
                         return pre + _wordReplaceList[from];
                 }
-                if (pre.Length + word.Length + post.Length == from.Length && pre + word + post == from)
+                if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
                 {
                     return _wordReplaceList[from];
                 }
@@ -803,21 +804,21 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 if (word.Length == from.Length)
                 {
-                    if (word == from)
+                    if (string.CompareOrdinal(word, from) == 0)
                         return pre + _wordReplaceList[from] + post;
                 }
                 else if (word.Length + post.Length == from.Length)
                 {
-                    if (word + post == from)
+                    if (string.CompareOrdinal(word + post, from) == 0)
                         return pre + _wordReplaceList[from];
                 }
-                if (pre.Length + word.Length + post.Length == from.Length && pre + word + post == from)
+                if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
                 {
                     return _wordReplaceList[from];
                 }
             }
 
-            return pre + word + post;
+            return preWordPost;
         }
 
         private string FixCommonWordErrorsQuick(string word)
@@ -829,7 +830,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string pre = string.Empty;
             string post = string.Empty;
 
-            if (word.StartsWith("<i>"))
+            if (word.StartsWith("<i>", StringComparison.Ordinal))
             {
                 pre += "<i>";
                 word = word.Remove(0, 3);
@@ -840,27 +841,27 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 word = word.Substring(2);
             }
 
-            while (word.StartsWith("-") && word.Length > 1)
+            while (word.Length > 1 && word[0] == '-')
             {
                 pre += "-";
                 word = word.Substring(1);
             }
-            while (word.StartsWith(".") && word.Length > 1)
+            while (word.Length > 1 && word[0] == '.')
             {
                 pre += ".";
                 word = word.Substring(1);
             }
-            while (word.StartsWith("\"") && word.Length > 1)
+            while (word.Length > 1 && word[0] == '"')
             {
                 pre += "\"";
                 word = word.Substring(1);
             }
-            if (word.StartsWith("(") && word.Length > 1)
+            if (word.Length > 1 && word[0] == '(')
             {
                 pre += "(";
                 word = word.Substring(1);
             }
-            if (word.StartsWith("<i>"))
+            if (word.StartsWith("<i>", StringComparison.Ordinal))
             {
                 pre += "<i>";
                 word = word.Remove(0, 3);
@@ -870,63 +871,65 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 post += Environment.NewLine;
                 word = word.Substring(0, word.Length - 2);
             }
-            while (word.EndsWith("\"") && word.Length > 1)
+            while (word.EndsWith("\"", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + "\"";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith(".") && word.Length > 1)
+            while (word.EndsWith(".", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + ".";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith(",") && word.Length > 1)
+            while (word.EndsWith(",", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + ",";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith("?") && word.Length > 1)
+            while (word.EndsWith("?", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + "?";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith("!") && word.Length > 1)
+            while (word.EndsWith("!", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + "!";
                 word = word.Substring(0, word.Length - 1);
             }
-            while (word.EndsWith(")") && word.Length > 1)
+            while (word.EndsWith(")", StringComparison.Ordinal) && word.Length > 1)
             {
                 post = post + ")";
                 word = word.Substring(0, word.Length - 1);
             }
-            if (word.EndsWith("</i>"))
+            if (word.EndsWith("</i>", StringComparison.Ordinal))
             {
                 post = post + "</i>";
                 word = word.Remove(word.Length - 4, 4);
             }
+
+            string preWordPost = pre + word + post;
             if (word.Length == 0)
-                return pre + word + post;
+                return preWordPost;
 
             foreach (string from in _wordReplaceList.Keys)
             {
                 if (word.Length == from.Length)
                 {
-                    if (word == from)
+                    if (string.CompareOrdinal(word, from) == 0)
                         return pre + _wordReplaceList[from] + post;
                 }
                 else if (word.Length + post.Length == from.Length)
                 {
-                    if (word + post == from)
+                    if (string.CompareOrdinal(word + post, from) == 0)
                         return pre + _wordReplaceList[from];
                 }
-                if (pre.Length + word.Length + post.Length == from.Length && pre + word + post == from)
+                if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
                 {
                     return _wordReplaceList[from];
                 }
             }
 
-            return pre + word + post;
+            return preWordPost;
         }
 
         public static string Fix0InsideLowerCaseWord(string word)
@@ -943,10 +946,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 word.Contains("7") ||
                 word.Contains("8") ||
                 word.Contains("9") ||
-                word.EndsWith("a.m") ||
-                word.EndsWith("p.m") ||
-                word.EndsWith("am") ||
-                word.EndsWith("pm"))
+                word.EndsWith("a.m", StringComparison.Ordinal) ||
+                word.EndsWith("p.m", StringComparison.Ordinal) ||
+                word.EndsWith("am", StringComparison.Ordinal) ||
+                word.EndsWith("pm", StringComparison.Ordinal))
                 return word;
 
             if (HexNumber.IsMatch(word))
@@ -1061,7 +1064,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                if (input.StartsWith("~"))
+                if (input.StartsWith("~", StringComparison.Ordinal))
                     input = ("- " + input.Remove(0, 1)).Replace("  ", " ");
 
                 input = input.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
@@ -1072,7 +1075,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 // e.g. "selectionsu." -> "selections..."
-                if (input.EndsWith("u.") && _hunspell != null )
+                if (input.EndsWith("u.", StringComparison.Ordinal) && _hunspell != null)
                 {
                     string[] words = input.Split(" .".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (words.Length > 0)
@@ -1087,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
 
                 // music notes
-                if (input.StartsWith(".'") && input.EndsWith(".'"))
+                if (input.StartsWith(".'", StringComparison.Ordinal) && input.EndsWith(".'", StringComparison.Ordinal))
                 {
                     input = input.Replace(".'", Configuration.Settings.Tools.MusicSymbol);
                 }
@@ -1110,14 +1113,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 lastLine = Utilities.RemoveHtmlTags(lastLine);
 
                 if (string.IsNullOrEmpty(lastLine) ||
-                    lastLine.EndsWith(".") ||
-                    lastLine.EndsWith("!") ||
-                    lastLine.EndsWith("?"))
+                    lastLine.EndsWith(".", StringComparison.Ordinal) ||
+                    lastLine.EndsWith("!", StringComparison.Ordinal) ||
+                    lastLine.EndsWith("?", StringComparison.Ordinal))
                 {
                     var st = new StripableText(l);
-                    if (st.StrippedText.StartsWith("i") && !st.Pre.EndsWith("[") && !st.Pre.EndsWith("(") && !st.Pre.EndsWith("..."))
+                    if (st.StrippedText.StartsWith("i", StringComparison.Ordinal) && !st.Pre.EndsWith("[", StringComparison.Ordinal) && !st.Pre.EndsWith("(", StringComparison.Ordinal) && !st.Pre.EndsWith("...", StringComparison.Ordinal))
                     {
-                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, _abbreviationList)))
+                        if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
                             l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
                     }
                 }
@@ -1155,12 +1158,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 input = "." + input;
 
             string pre = string.Empty;
-            if (input.StartsWith("- "))
+            if (input.StartsWith("- ", StringComparison.Ordinal))
             {
                 pre = "- ";
                 input = input.Remove(0, 2);
             }
-            else if (input.StartsWith("-"))
+            else if (input.StartsWith("-", StringComparison.Ordinal))
             {
                 pre = "-";
                 input = input.Remove(0, 1);
@@ -1313,7 +1316,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
             if ((lastLine == null || !lastLine.Contains("\"")) && input != null &&
-                input.EndsWith("\".") && input.IndexOf("\"", StringComparison.Ordinal) == input.LastIndexOf("\"", StringComparison.Ordinal) && input.Length > 3)
+                input.EndsWith("\".") && input.IndexOf('"') == input.LastIndexOf('"') && input.Length > 3)
             {
                 string lastChar = input.Substring(input.Length - 3, 1);
                 if (!"0123456789".Contains(lastChar))

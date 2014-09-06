@@ -9,7 +9,7 @@
     Cảm ơn rất nhiều
     </TranslatedBy>
     <CultureName>vn-VN</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;Đồng ý</Ok>
     <Cancel>H&amp;ủy bỏ</Cancel>
     <Apply>Áp dụng</Apply>
@@ -443,7 +443,7 @@ Rất hân hạnh được chào đón.
     <FixInvalidItalicTag>Sửa lỗi thẻ in nghiêng không hợp lệ</FixInvalidItalicTag>
     <FixShortDisplayTime>Sữa lỗi hiển thị trong thời gian ngắn</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Sửa lỗi hiển thị bị trùng lặp thời gian</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Này   cậu , ở đây. -&gt; Này cậu, ở đây.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -478,11 +478,6 @@ Rất hân hạnh được chào đón.
     <FixEllipsesStart>Gỡ bỏ bắt đầu '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Sửa lỗi thiếu [trong dòng</FixMissingOpenBracket>
     <FixMusicNotation>Thay thế các ký hiệu âm nhạc (ví dụ như âTª) với biểu tượng ưa thích</FixMusicNotation>
-    <FixDoubleDashs>Sữa chửa '--'s -&gt; '...'s</FixDoubleDashs>
-    <FixDoubleGreaterThans>Gỡ bỏ &gt;&gt; từ đầu</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Gỡ bỏ ... từ đầu</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Sữa chữa bị thiếu ['s</FixMissingOpenBrackets>
-    <FixMusicNotations>Thay thế âTª's bằng *'s</FixMusicNotations>
     <XFixDoubleDash>{0} sửa lỗi '--' </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} gỡ bỏ &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} gỡ bỏ bắt đầu '...'</XFixEllipsesStart>

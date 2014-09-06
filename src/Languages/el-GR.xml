@@ -565,11 +565,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Αφαίρεση αρχικού '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Επιδιόρθωση [ που λείπει από γραμμή</FixMissingOpenBracket>
     <FixMusicNotation>Αντικατάσταση συμβόλου μουσικής (π.χ. âTª) με προτιμώμενο σύμβολο</FixMusicNotation>
-    <FixDoubleDashs>Επιδιόρθωση πολλαπλών '--' -&gt; '...' </FixDoubleDashs>
-    <FixDoubleGreaterThans>Αφαίρεση &gt;&gt; από αρχή γραμμής</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Αφαίρεση ... από αρχή γραμμής</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Επιδιόρθωση [ που λείπουν </FixMissingOpenBrackets>
-    <FixMusicNotations>Αντικατάσταση των âTª με *</FixMusicNotations>
     <XFixDoubleDash>{0} '--' επιδιορθώθηκαν </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; αφαιρέθηκαν </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' αφαιρέθηκαν από αρχή γραμμής</XFixEllipsesStart>

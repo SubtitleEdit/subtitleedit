@@ -27,10 +27,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override bool IsMine(List<string> lines, string fileName)
         {
             int errors = 0;
-            List<string> trimmedLines = new List<string>();
+            var trimmedLines = new List<string>();
             foreach (string line in lines)
             {
-                int indexOfStartBracket = line.IndexOf("[");
+                int indexOfStartBracket = line.IndexOf('[');
                 if (line.Trim().Length > 0 && line.Length < 250 && indexOfStartBracket >= 0 && indexOfStartBracket < 10)
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);

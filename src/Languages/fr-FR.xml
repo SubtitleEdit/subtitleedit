@@ -540,11 +540,6 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Effacer les '...' en début de ligne</FixEllipsesStart>
     <FixMissingOpenBracket>Apparier les [ dans une ligne</FixMissingOpenBracket>
     <FixMusicNotation>Remplacer les symboles musicaux (i.e. âTª) par le symbole préféré</FixMusicNotation>
-    <FixDoubleDashs>Correction des '--' -&gt; '...'</FixDoubleDashs>
-    <FixDoubleGreaterThans>Enlever les &gt;&gt; depuis le début</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Enlever les ... depuis le début</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Correction des [ manquants</FixMissingOpenBrackets>
-    <FixMusicNotations>Remplacer les âTª par des *</FixMusicNotations>
     <XFixDoubleDash>{0} '--' corrigé(s) </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; effacé(s) </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' en début de ligne enlevé(s)</XFixEllipsesStart>

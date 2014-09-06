@@ -131,12 +131,12 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if ((name.Length > 0 || reader.Name != "Language") && !reader.IsEmptyElement)
+                        if ((name.Length > 0 || string.CompareOrdinal(reader.Name, "Language") != 0) && !reader.IsEmptyElement)
                           name = (name + "/" + reader.Name).TrimStart('/');
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {
-                        int idx = name.LastIndexOf("/");
+                        int idx = name.LastIndexOf("/", System.StringComparison.Ordinal);
                         if (idx > 0)
                             name = name.Remove(idx);
                         else
@@ -1606,21 +1606,6 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "FixCommonErrors/FixMusicNotation":
                     language.FixCommonErrors.FixMusicNotation = reader.Value;
-                    break;
-                case "FixCommonErrors/FixDoubleDashs":
-                    language.FixCommonErrors.FixDoubleDashs = reader.Value;
-                    break;
-                case "FixCommonErrors/FixDoubleGreaterThans":
-                    language.FixCommonErrors.FixDoubleGreaterThans = reader.Value;
-                    break;
-                case "FixCommonErrors/FixEllipsesStarts":
-                    language.FixCommonErrors.FixEllipsesStarts = reader.Value;
-                    break;
-                case "FixCommonErrors/FixMissingOpenBrackets":
-                    language.FixCommonErrors.FixMissingOpenBrackets = reader.Value;
-                    break;
-                case "FixCommonErrors/FixMusicNotations":
-                    language.FixCommonErrors.FixMusicNotations = reader.Value;
                     break;
                 case "FixCommonErrors/XFixDoubleDash":
                     language.FixCommonErrors.XFixDoubleDash = reader.Value;

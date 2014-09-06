@@ -313,9 +313,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         currentStyle.Attributes.Append(attr);
                         skipCount = 2;
                     }
-                    else if (line.Substring(i).StartsWith("<font "))
+                    else if (line.Substring(i).StartsWith("<font ", StringComparison.Ordinal))
                     {
-                        int endIndex = line.Substring(i + 1).IndexOf(">");
+                        int endIndex = line.Substring(i + 1).IndexOf('>');
                         if (endIndex > 0)
                         {
                             skipCount = endIndex + 1;

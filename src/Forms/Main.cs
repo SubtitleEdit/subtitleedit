@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
         Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         Keys _mainGeneralMergeSelectedLines = Keys.None;
+        Keys _mainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;        
         Keys _mainGeneralToggleTranslationMode = Keys.None;
         Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
         Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
@@ -7303,16 +7304,16 @@ namespace Nikse.SubtitleEdit.Forms
                         if (firstWord.StartsWith("<") && firstWord.Contains(">"))
                         {
                             // Save the start tag.
-                            startTag = firstWord.Substring(firstWord.IndexOf("<"), firstWord.IndexOf(">") + 1);
+                            startTag = firstWord.Substring(firstWord.IndexOf('<'), firstWord.IndexOf('>') + 1);
                             // Remove the start tag from the first word.
-                            firstWord = firstWord.Remove(0, firstWord.IndexOf(">") + 1);
+                            firstWord = firstWord.Remove(0, firstWord.IndexOf('>') + 1);
                         }
 
                         // If the second subtitle ends with a tag and there's only one word in it:
                         if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(" ") < 0)
                         {
                             // Remove the end tag.
-                            next.Text = next.Text.Remove(next.Text.LastIndexOf("<"));
+                            next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
                         }
 
                         // If the second subtitle (next) starts with a dialogue ("-"):
@@ -7420,9 +7421,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (next.Text.StartsWith("<") && next.Text.Contains(">"))
                         {
                             // Save the start tag.
-                            startTag = next.Text.Substring(next.Text.IndexOf("<"), next.Text.IndexOf(">") + 1);
+                            startTag = next.Text.Substring(next.Text.IndexOf('<'), next.Text.IndexOf('>') + 1);
                             // Remove the start tag from next subtitle.
-                            next.Text = next.Text.Remove(0, next.Text.IndexOf(">") + 1);
+                            next.Text = next.Text.Remove(0, next.Text.IndexOf('>') + 1);
                         }
 
                         // If the second subtitle (next) starts with a dialogue ("-"):
@@ -8855,8 +8856,8 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (f.Contains(" color="))
                         {
                             int colorStart = f.IndexOf(" color=");
-                            if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
-                                end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
                             s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
                             p.Text = s;
                             done = true;
@@ -8927,8 +8928,8 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (f.Contains(" face="))
                         {
                             int faceStart = f.IndexOf(" face=");
-                            if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
-                                end = s.IndexOf("\"", faceStart + " face=".Length + 1);
+                            if (s.IndexOf('"', faceStart + " face=".Length + 1) > 0)
+                                end = s.IndexOf('"', faceStart + " face=".Length + 1);
                             s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
                             p.Text = s;
                             done = true;
@@ -10691,13 +10692,13 @@ namespace Nikse.SubtitleEdit.Forms
         private static string SerializeSubtitle(Subtitle subtitle)
         {
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                sb.Append(p.StartTime.TotalMilliseconds);
-                sb.Append(p.EndTime.TotalMilliseconds);
+                Paragraph p = subtitle.Paragraphs[i];
+                sb.Append(p.StartTime.TotalMilliseconds + p.EndTime.TotalMilliseconds);
                 sb.Append(p.Text);
             }
-            return sb.ToString().Trim();
+            return sb.ToString().TrimEnd();
         }
 
         internal void MainKeyDown(object sender, KeyEventArgs e)
@@ -10907,6 +10908,14 @@ namespace Nikse.SubtitleEdit.Forms
                         MergeAfterToolStripMenuItemClick(null, null);
                     else
                         MergeSelectedLines();
+                }
+            }
+            else if (_mainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    MergeSelectedLinesOnlyFirstText();
                 }
             }
             else if (_mainGeneralToggleTranslationMode == e.KeyData)
@@ -11456,6 +11465,96 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void MergeSelectedLinesOnlyFirstText()
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
+            {
+                var sb = new StringBuilder();
+                var deleteIndices = new List<int>();
+                bool first = true;
+                int firstIndex = 0;
+                int next = 0;
+                string text = string.Empty;
+                double endTime = 0;
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    if (first)
+                    {
+                        firstIndex = index;
+                        next = index + 1;
+                    }
+                    else
+                    {
+                        deleteIndices.Add(index);
+                        if (next != index)
+                            return;
+                        next++;
+                    }
+                    first = false;
+                    if (string.IsNullOrEmpty(text))
+                        text = _subtitle.Paragraphs[index].Text.Trim();
+                    endTime = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                }
+
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(_language.BeforeMergeLines);
+
+                Paragraph currentParagraph = _subtitle.Paragraphs[firstIndex];
+                currentParagraph.Text = text;
+                currentParagraph.EndTime.TotalMilliseconds = endTime;
+
+                Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(next);
+                if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+                {
+                    currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
+                }
+
+                // original subtitle
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    Paragraph original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        string originalText = string.Empty;
+                        for (int i = 0; i < deleteIndices.Count; i++)
+                        {
+                            Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
+                            if (originalNext != null && string.IsNullOrEmpty(originalText))
+                                originalText = originalNext.Text;
+                        }
+                        for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                        {
+                            Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
+                            if (originalNext != null)
+                                _subtitleAlternate.Paragraphs.Remove(originalNext);
+                        }
+                        original.Text = originalText;
+                        original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                        _subtitleAlternate.Renumber(1);
+                    }
+                }
+
+                if (_networkSession != null)
+                {
+                    _networkSession.TimerStop();
+                    _networkSession.UpdateLine(firstIndex, currentParagraph);
+                    NetworkGetSendUpdates(deleteIndices, 0, null);
+                }
+                else
+                {
+                    for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                        _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
+                    _subtitle.Renumber(1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+                ShowSource();
+                ShowStatus(_language.LinesMerged);
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                RefreshSelectedParagraph();
+            }
         }
 
         private void GoToFirstEmptyLine()
@@ -14681,6 +14780,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralGoToFirstSelectedLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
             _mainGeneralGoToFirstEmptyLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
             _mainGeneralMergeSelectedLines = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
+            _mainGeneralMergeSelectedLinesOnlyFirstText = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
             _mainGeneralToggleTranslationMode = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             _mainGeneralSwitchTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             _mainGeneralMergeTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
@@ -15993,8 +16093,8 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (f.Contains(" color="))
                             {
                                 int colorStart = f.IndexOf(" color=");
-                                if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
-                                    end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                                if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                                    end = s.IndexOf('"', colorStart + " color=".Length + 1);
                                 s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
                                 text = s;
                                 done = true;
@@ -16048,8 +16148,8 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (f.Contains(" face="))
                             {
                                 int faceStart = f.IndexOf(" face=");
-                                if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
-                                    end = s.IndexOf("\"", faceStart + " face=".Length + 1);
+                                if (s.IndexOf('"', faceStart + " face=".Length + 1) > 0)
+                                    end = s.IndexOf('"', faceStart + " face=".Length + 1);
                                 s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
                                 text = s;
                                 done = true;

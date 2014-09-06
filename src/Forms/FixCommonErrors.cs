@@ -1749,9 +1749,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                         }
-                        else if (line.Contains("\"") && line.IndexOf("\"", StringComparison.Ordinal) > 2 && line.IndexOf("\"", StringComparison.Ordinal) < line.Length - 3)
+                        else if (line.Contains("\"") && line.IndexOf('"') > 2 && line.IndexOf("\"", StringComparison.Ordinal) < line.Length - 3)
                         {
-                            int index = line.IndexOf("\"", StringComparison.Ordinal);
+                            int index = line.IndexOf('"');
                             if (line[index - 1] == ' ')
                             {
                                 p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
@@ -1774,9 +1774,9 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                             }
-                            else if (line.Contains("\"") && line.IndexOf("\"", StringComparison.Ordinal) > 2 && line.IndexOf("\"", StringComparison.Ordinal) < line.Length - 3)
+                            else if (line.Contains("\"") && line.IndexOf('"') > 2 && line.IndexOf("\"", StringComparison.Ordinal) < line.Length - 3)
                             {
-                                int index = line.IndexOf("\"", StringComparison.Ordinal);
+                                int index = line.IndexOf('"');
                                 if (line[index - 1] == ' ')
                                 {
                                     p.Text = p.Text.Trim() + "\"";
@@ -1830,10 +1830,10 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (p.Text.Contains("\""))
                         {
                             string text = p.Text;
-                            int indexOfQuote = p.Text.IndexOf("\"");
+                            int indexOfQuote = p.Text.IndexOf('"');
                             if (text.Contains("\"") && indexOfQuote > 2 && indexOfQuote < text.Length - 3)
                             {
-                                int index = text.IndexOf("\"");
+                                int index = text.IndexOf('"');
                                 if (text[index - 1] == ' ')
                                 {
                                     if (p.Text.EndsWith(","))
@@ -2230,7 +2230,7 @@ namespace Nikse.SubtitleEdit.Forms
             _abbreviationList = new List<string>();
             foreach (string name in _namesEtcList)
             {
-                if (name.EndsWith("."))
+                if (name.EndsWith(".", StringComparison.Ordinal))
                     _abbreviationList.Add(name);
             }
             return _abbreviationList;

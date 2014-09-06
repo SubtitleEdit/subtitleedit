@@ -110,8 +110,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (syncEndPos > 0)
                 {
                     string s = allInput.Substring(syncStartPos+2, syncEndPos - syncStartPos -2);
-                    int indexOfBegin = s.IndexOf(" data-begin=");
-                    int indexOfAttributesEnd = s.IndexOf(">");
+                    int indexOfBegin = s.IndexOf(" data-begin=", StringComparison.Ordinal);
+                    int indexOfAttributesEnd = s.IndexOf('>');
                     if (indexOfBegin >= 0 && indexOfAttributesEnd > indexOfBegin)
                     {
                         string text = s.Substring(indexOfAttributesEnd).Remove(0, 1).Trim();
