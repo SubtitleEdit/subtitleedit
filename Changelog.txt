@@ -21,7 +21,7 @@
    * Minor performance improvements
    * Added ".mxf" to list of known video formats - thx Haroldo
 * FIXED:
-   * Reverted "Framerate conversion" fix from 3.4.1
+   * Reverted "Framerate conversion fix" from 3.4.1
    * Fixed "Split line" button appear wrongly - thx Quetsbeek
    * Changes to interjections now work instantly
    * Detection of SSA/ASS tags in remove text for HI - thx Thunderbolt8
@@ -31,12 +31,12 @@
    * Fixed issue with "..." in "Fix common OCR errors" - thx XhmikosR
    * Fixed issue regarding "Fix start with uppercase after paragraph" - thx XhmikosR
    * Fixed PAC reading (regarding W16)
+   * Fixed PAC reading (stopped before end of file in some files) - thx Massimo
    * Fixed bad xml tag in spanish ocr fix list - thx DavidGDFC
    * Fixed "MicroDvd" sub compare - thx SimplyTheBOSS
    * Fixed regular expression replace in main window - thx ivandrofly
    * Fixed bug in "Fix invalid italic tags" - thx XhmikosR
    * Can now load Norwegian Tesseract dic - thx Stian
-   * Fixed reading of some pac files - thx Massimo
 
 
 3.4.1 (8th August 2014)
