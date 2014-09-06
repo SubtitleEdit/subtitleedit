@@ -4,6 +4,7 @@
 3.4.2 (xth September 2014)
 * NEW:
    * Added new subtitle format (200+ formats supported)
+   * Added some read support for CHK files
    * Added "Plain text" to target format in "Batch convert" - thx Leon
    * Added "Bold" checkbox to subtitle preview settings in video player
 * IMPROVED:
@@ -35,6 +36,7 @@
    * Fixed regular expression replace in main window - thx ivandrofly
    * Fixed bug in "Fix invalid italic tags" - thx XhmikosR
    * Can now load Norwegian Tesseract dic - thx Stian
+   * Fixed reading of some pac files - thx Massimo
 
 
 3.4.1 (8th August 2014)
