@@ -531,7 +531,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Fix invalid italic tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Fix short display time</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fix overlapping display time</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -561,18 +561,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Apply selected fixes</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Unbreak</Unbreak>
-    <FixDoubleDash>Fix '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Remove &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Fix '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Remove '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fix missing [ in line</FixMissingOpenBracket>
     <FixMusicNotation>Replace music symbols (e.g. âTª) with preferred symbol</FixMusicNotation>
-    <FixDoubleDashs>Fix '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Remove &gt;&gt; from start</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Remove ... from start</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Fix missing ['s </FixMissingOpenBrackets>
-    <FixMusicNotations>Replace âTª's with *'s</FixMusicNotations>
-    <XFixDoubleDash>{0} fixed '--' </XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} removed &gt;&gt; </XFixDoubleGreaterThan>
+    <XFixDoubleDash>{0} fixed '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} removed '&gt;&gt;'</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} remove starting '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} fixed missing [ in line</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} fix music notation in line</XFixMusicNotation>
@@ -807,7 +802,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Find double words</FindDoubleWords>
         <FindDoubleLines>Find double lines</FindDoubleLines>
         <GetDictionaries>Get dictionaries...</GetDictionaries>
-        <AddToNamesEtcList>Add word to names/ect list</AddToNamesEtcList>
+        <AddToNamesEtcList>Add word to names/etc list</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronization</Title>

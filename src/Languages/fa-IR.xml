@@ -367,11 +367,6 @@ http://soft98.ir
     <FixEllipsesStart> حذف  '...'</FixEllipsesStart>
     <FixMissingOpenBracket>گذاشتن [ فراموش شده</FixMissingOpenBracket>
     <FixMusicNotation>جابجایی علائم موسیقی</FixMusicNotation>
-    <FixDoubleDashs>اصلاح  '--'ها به '...'ها</FixDoubleDashs>
-    <FixDoubleGreaterThans>حذف &lt;&lt; از ابتدا</FixDoubleGreaterThans>
-    <FixEllipsesStarts>حذف... از آغاز</FixEllipsesStarts>
-    <FixMissingOpenBrackets>گذاشتن [های فراموش شده</FixMissingOpenBrackets>
-    <FixMusicNotations>اون که با * 'به جای ª در ثانیه</FixMusicNotations>
     <XFixDoubleDash>{0} ثابت '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} حذف&gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} حذف شروع '...'</XFixEllipsesStart>

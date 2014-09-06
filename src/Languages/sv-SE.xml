@@ -526,7 +526,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Fixa inaktuell kursiv tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Fixa kort visad tid</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fixa överlappad visad tid</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -561,11 +561,6 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Ta bort inledande '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fixa saknade [</FixMissingOpenBracket>
     <FixMusicNotation>Byt symboler (t.ex. âTª) med önskad musik symbol</FixMusicNotation>
-    <FixDoubleDashs>Fixa '--'  -&gt; '...'</FixDoubleDashs>
-    <FixDoubleGreaterThans>Ta bort&gt;&gt; från start</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Ta bort ...  från start</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Fixa saknad [</FixMissingOpenBrackets>
-    <FixMusicNotations>Ersätt âTª' med ♫</FixMusicNotations>
     <XFixDoubleDash>{0} Fixa '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} Ta bort&gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} Ta bort start '... '</XFixEllipsesStart>

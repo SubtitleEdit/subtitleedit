@@ -562,11 +562,6 @@ Siirrytäänkö VLC Media Playerin kotisivulle?
     <FixEllipsesStart>Poista alusta '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Korjaa riviltä puuttuva [ </FixMissingOpenBracket>
     <FixMusicNotation>Korvaa musiikkisymbolit  (e.g. âTª't) suositellulla tunnuksella</FixMusicNotation>
-    <FixDoubleDashs>Korjaa '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Poista &gt;&gt; alusta</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Poista ... alusta</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Korjaa puuttuvat [ merkit</FixMissingOpenBrackets>
-    <FixMusicNotations>Korvaa âTª't merkillä *</FixMusicNotations>
     <XFixDoubleDash>Korjattu {0} '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>Poistettu {0} &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} alkupistetä '...' poistettu</XFixEllipsesStart>

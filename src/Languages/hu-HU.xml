@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.1</Version>
     <TranslatedBy>Fordító: ZityiSoft Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
-    <HelpFile/>
+    <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Mégse</Cancel>
     <Apply>Alkalmaz</Apply>
@@ -527,7 +527,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Érvénytelen dőlt-betűs címke javítása</FixInvalidItalicTag>
     <FixShortDisplayTime>Rövid megjelenítési idő javítása</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Megjelenítési idő átfedés javítása</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -562,11 +562,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>A kezdő '...' jel eltávolítása</FixEllipsesStart>
     <FixMissingOpenBracket>Hiányzó [ jel pótlása a sorban</FixMissingOpenBracket>
     <FixMusicNotation>Zenei szimbólumok cseréje (pl. âTª) jobban kedvelt szimbólumra</FixMusicNotation>
-    <FixDoubleDashs>Javítás '--'s -&gt; '...'s</FixDoubleDashs>
-    <FixDoubleGreaterThans>A &gt;&gt; jel eltávolítása a kezdésről</FixDoubleGreaterThans>
-    <FixEllipsesStarts>A ... jel eltávolítása a kezdésről</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Hiányzó [ jelek pótlása</FixMissingOpenBrackets>
-    <FixMusicNotations>âTª's cseréje erre: *'s</FixMusicNotations>
     <XFixDoubleDash>{0} javítva '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; jel eltávolítva</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} indító '...' jel eltávolítása</XFixEllipsesStart>

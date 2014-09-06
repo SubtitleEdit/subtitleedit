@@ -1607,21 +1607,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixMusicNotation":
                     language.FixCommonErrors.FixMusicNotation = reader.Value;
                     break;
-                case "FixCommonErrors/FixDoubleDashs":
-                    language.FixCommonErrors.FixDoubleDashs = reader.Value;
-                    break;
-                case "FixCommonErrors/FixDoubleGreaterThans":
-                    language.FixCommonErrors.FixDoubleGreaterThans = reader.Value;
-                    break;
-                case "FixCommonErrors/FixEllipsesStarts":
-                    language.FixCommonErrors.FixEllipsesStarts = reader.Value;
-                    break;
-                case "FixCommonErrors/FixMissingOpenBrackets":
-                    language.FixCommonErrors.FixMissingOpenBrackets = reader.Value;
-                    break;
-                case "FixCommonErrors/FixMusicNotations":
-                    language.FixCommonErrors.FixMusicNotations = reader.Value;
-                    break;
                 case "FixCommonErrors/XFixDoubleDash":
                     language.FixCommonErrors.XFixDoubleDash = reader.Value;
                     break;

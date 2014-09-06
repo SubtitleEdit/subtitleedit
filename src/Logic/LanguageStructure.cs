@@ -632,11 +632,6 @@
             public string FixEllipsesStart { get; set; }
             public string FixMissingOpenBracket { get; set; }
             public string FixMusicNotation { get; set; }
-            public string FixDoubleDashs { get; set; }
-            public string FixDoubleGreaterThans { get; set; }
-            public string FixEllipsesStarts { get; set; }
-            public string FixMissingOpenBrackets { get; set; }
-            public string FixMusicNotations { get; set; }
             public string XFixDoubleDash { get; set; }
             public string XFixDoubleGreaterThan { get; set; }
             public string XFixEllipsesStart { get; set; }
