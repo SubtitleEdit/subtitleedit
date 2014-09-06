@@ -110,9 +110,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string s in lines)
                 sb.Append(s);
 
-            var times = Json.ReadArray(sb.ToString(), "text_tees");
-            var texts = Json.ReadArray(sb.ToString(), "text_content");
-            var targets = Json.ReadArray(sb.ToString(), "text_target");
+            string allText = sb.ToString();
+            if (allText.IndexOf("text_tees", StringComparison.Ordinal) == -1)
+                return;
+
+            var times = Json.ReadArray(allText, "text_tees");
+            var texts = Json.ReadArray(allText, "text_content");
+            var targets = Json.ReadArray(allText, "text_target");
 
             for (int i = 0; i < Math.Min(times.Count, texts.Count); i++)
             {

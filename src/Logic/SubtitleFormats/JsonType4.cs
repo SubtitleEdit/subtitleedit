@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            int startIndex = sb.ToString().IndexOf("[{\"hitType");
+            int startIndex = sb.ToString().IndexOf("[{\"hitType", StringComparison.Ordinal);
             if (startIndex == -1)
                 return;
 
