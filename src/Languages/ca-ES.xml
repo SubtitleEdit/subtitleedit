@@ -526,7 +526,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Fixa etiqueta itàlica invàlida</FixInvalidItalicTag>
     <FixShortDisplayTime>Fixa durada massa curta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fixa temps pantalla sobrepossat</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -561,11 +561,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Suprimeix marcat '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fixa [ omés en línia</FixMissingOpenBracket>
     <FixMusicNotation>Substitueix símbols musicals (e.g. âTª) amb símbols preferits</FixMusicNotation>
-    <FixDoubleDashs>Fixa '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Suprimeix &gt;&gt; de l'inici</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Suprimeix ... de l'inici</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Fixa [ omesos</FixMissingOpenBrackets>
-    <FixMusicNotations>Substitueix âTª's amb *'s</FixMusicNotations>
     <XFixDoubleDash>{0} '--' fixats</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; eliminats</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0}  '...' inicials eliminats</XFixEllipsesStart>
@@ -800,7 +795,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Cerca mots dobles</FindDoubleWords>
         <FindDoubleLines>Cerca línies dobles</FindDoubleLines>
         <GetDictionaries>Obtén diccionaris...</GetDictionaries>
-        <AddToNamesEtcList>Afegeix mot a llista names/ect</AddToNamesEtcList>
+        <AddToNamesEtcList>Afegeix mot a llista names/etc</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Sincronització</Title>

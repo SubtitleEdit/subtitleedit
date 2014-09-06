@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
@@ -553,11 +553,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Eliminar «...» al inicio</FixEllipsesStart>
     <FixMissingOpenBracket>Corregir «[» omitido en la línea</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicales (ej. âTª) con símbolos adecuados</FixMusicNotation>
-    <FixDoubleDashs>Corregir «--»s  --&gt;  «...»s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Eliminar «&gt;&gt;» del inicio</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Eliminar «...» del inicio</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Corregir «[» omitidos </FixMissingOpenBrackets>
-    <FixMusicNotations>Sustituir «âTª's» por «*'s»</FixMusicNotations>
     <XFixDoubleDash>{0} «--» corregidos</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} «&gt;&gt;» eliminados</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} «...» iniciales eliminados</XFixEllipsesStart>

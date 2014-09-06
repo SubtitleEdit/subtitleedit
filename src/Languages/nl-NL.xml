@@ -5,8 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Vertaald door: Quetsbeek en minouhse 11082014</TranslatedBy>
     <CultureName>nl-NL</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;Oké</Ok>
     <Cancel>Afbreken</Cancel>
     <Apply>Toepassen</Apply>
@@ -529,7 +528,7 @@ Suggesties zijn van harte welkom
     <FixInvalidItalicTag>Herstel ongeldig cursief tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Herstel korte weergave tijd</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Herstel overlappende weergavetijd</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>He  jij , daar. -&gt; He jij daar.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -564,11 +563,6 @@ Suggesties zijn van harte welkom
     <FixEllipsesStart>Verwijder beginpunten '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Herstel missende [ in regel</FixMissingOpenBracket>
     <FixMusicNotation>Vervang muziek symbolen (bijv.ª) door voorkeur symbool</FixMusicNotation>
-    <FixDoubleDashs>herstel '-' s -&gt; '. .. 's</FixDoubleDashs>
-    <FixDoubleGreaterThans>Verwijder &gt;&gt; van start</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Verwijderen... van start</FixEllipsesStarts>
-    <FixMissingOpenBrackets>herstel ontbrekende ['s</FixMissingOpenBrackets>
-    <FixMusicNotations>vervang ª' s met een * 's</FixMusicNotations>
     <XFixDoubleDash>{0} gerepareerd - '</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} verwijderd &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} verwijderen  begin'... "</XFixEllipsesStart>

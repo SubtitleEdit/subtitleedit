@@ -5,7 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Abbrechen</Cancel>
     <Apply>Auswahl</Apply>
@@ -565,11 +565,6 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Entferne '...' am Anfang</FixEllipsesStart>
     <FixMissingOpenBracket>Korrigiere fehlende [</FixMissingOpenBracket>
     <FixMusicNotation>Musikzeichen âTª mit bevorzugten Zeichen korrigieren</FixMusicNotation>
-    <FixDoubleDashs>Korrigiere '--' -&gt; '...'</FixDoubleDashs>
-    <FixDoubleGreaterThans>Entferne &gt;&gt; am Anfang</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Entferne ... am Anfang</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Korrigiere fehlende [</FixMissingOpenBrackets>
-    <FixMusicNotations>Ersetze âTª durch *</FixMusicNotations>
     <XFixDoubleDash>{0} korrigierte '--' </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} entfernte &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} entfernte '...' am Anfang</XFixEllipsesStart>

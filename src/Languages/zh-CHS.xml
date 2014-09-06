@@ -527,7 +527,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FixInvalidItalicTag>修复无效的斜体</FixInvalidItalicTag>
     <FixShortDisplayTime>修复过短的显示时间</FixShortDisplayTime>
     <FixOverlappingDisplayTime>修复重叠的显示时间</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -562,11 +562,6 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FixEllipsesStart>删除开头的 '...'</FixEllipsesStart>
     <FixMissingOpenBracket>修复行内丢失的 '['</FixMissingOpenBracket>
     <FixMusicNotation>用自己喜欢的符号替换音符 (如 âTª)</FixMusicNotation>
-    <FixDoubleDashs>将 '--' 修改为 '...'</FixDoubleDashs>
-    <FixDoubleGreaterThans>删除开头的 '&gt;&gt;'</FixDoubleGreaterThans>
-    <FixEllipsesStarts>删除开头的 '...'</FixEllipsesStarts>
-    <FixMissingOpenBrackets>修复丢失的 '['</FixMissingOpenBrackets>
-    <FixMusicNotations>用 '*' 替换 'âTª'</FixMusicNotations>
     <XFixDoubleDash>{0} 个 '--' 已修复</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} 个 '&gt;&gt; 已删除'</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} 个开头的 '...' 已删除</XFixEllipsesStart>

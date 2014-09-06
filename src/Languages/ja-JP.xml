@@ -425,7 +425,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixInvalidItalicTag>無効な斜体タグを修正する</FixInvalidItalicTag>
     <FixShortDisplayTime>短い表示時間を修正する</FixShortDisplayTime>
     <FixOverlappingDisplayTime>重複する表示時間を修正する</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -460,11 +460,6 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixEllipsesStart>先頭の '...' を削除する</FixEllipsesStart>
     <FixMissingOpenBracket>行中の足りない [ を修正する</FixMissingOpenBracket>
     <FixMusicNotation>音符 (âTª など) を置換する</FixMusicNotation>
-    <FixDoubleDashs>'--' -&gt; '...' の修正 </FixDoubleDashs>
-    <FixDoubleGreaterThans>先頭の &gt;&gt; を削除する</FixDoubleGreaterThans>
-    <FixEllipsesStarts>先頭の ... を削除する</FixEllipsesStarts>
-    <FixMissingOpenBrackets>足りない [ を修正する</FixMissingOpenBrackets>
-    <FixMusicNotations>âTª を * に置換する</FixMusicNotations>
     <XFixDoubleDash>{0} '--' を修正しました </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; を削除しました</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} 先頭の '...' を削除します</XFixEllipsesStart>
@@ -650,7 +645,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <FindDoubleWords>重複語の検索</FindDoubleWords>
         <FindDoubleLines>重複行の検索</FindDoubleLines>
         <GetDictionaries>辞書の取得...</GetDictionaries>
-        <AddToNamesEtcList>単語を names/ect の一覧に追加</AddToNamesEtcList>
+        <AddToNamesEtcList>単語を names/etc の一覧に追加</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>同期</Title>

@@ -279,7 +279,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <BridgeGapsSmallerThanXPart1>橋接時間小於</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>毫秒的間隔</BridgeGapsSmallerThanXPart2>
     <MinMsBetweenLines>各行之間最小毫秒數</MinMsBetweenLines>
-    <ProlongEndTime>>間隔時間分配給上一行文字</ProlongEndTime>
+    <ProlongEndTime>&gt;間隔時間分配給上一行文字</ProlongEndTime>
     <DivideEven>間隔時間均分給前後兩行文字</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
@@ -527,7 +527,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <FixInvalidItalicTag>修復無效的斜體標籤</FixInvalidItalicTag>
     <FixShortDisplayTime>修復過短的顯示時間</FixShortDisplayTime>
     <FixOverlappingDisplayTime>修復重疊的顯示時間</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -562,11 +562,6 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <FixEllipsesStart>移除開頭的 '...'</FixEllipsesStart>
     <FixMissingOpenBracket>修復行內遺失的 '['</FixMissingOpenBracket>
     <FixMusicNotation>用自己偏好的符號取代音符 (例如 âTª)</FixMusicNotation>
-    <FixDoubleDashs>修復 '--' -&gt; '...'</FixDoubleDashs>
-    <FixDoubleGreaterThans>移除開頭的 '&gt;&gt;'</FixDoubleGreaterThans>
-    <FixEllipsesStarts>移除開頭的 '...'</FixEllipsesStarts>
-    <FixMissingOpenBrackets>修復遺失的 '['</FixMissingOpenBrackets>
-    <FixMusicNotations>用 '*' 取代 'âTª'</FixMusicNotations>
     <XFixDoubleDash>{0} 個 '--' 已修復</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} 個 '&gt;&gt;' 已移除</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} 個開頭的 '...' 已移除</XFixEllipsesStart>
@@ -1318,7 +1313,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
 多人編輯同一個字幕檔案 (協同)。</Information>
     <Start>開始</Start>
   </NetworkStart>
-    <OpenVideoDvd>
+  <OpenVideoDvd>
     <Title>使用 VLC 開啟 DVD</Title>
     <OpenDvdFrom>開啟 DVD 來源...</OpenDvdFrom>
     <Disc>碟片</Disc>

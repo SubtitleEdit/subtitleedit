@@ -5,8 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>C&amp;ancelar</Cancel>
     <Apply>Aplicar</Apply>
@@ -531,7 +530,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Corrigir tag itálica inválida</FixInvalidItalicTag>
     <FixShortDisplayTime>Corrigir duração curta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corrigir tempo sobreposto</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -566,11 +565,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
     <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicais (ex.: âTª) por símbolos adequados</FixMusicNotation>
-    <FixDoubleDashs>Corrigir '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Remover &gt;&gt; do início</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Remover ... do início</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Corrigir [ omitidos </FixMissingOpenBrackets>
-    <FixMusicNotations>Sustituir âTª's por *'s</FixMusicNotations>
     <XFixDoubleDash>{0} '--' corrigidos</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; removidos</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' iniciais eliminadas</XFixEllipsesStart>

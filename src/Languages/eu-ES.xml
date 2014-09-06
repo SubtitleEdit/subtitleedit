@@ -562,11 +562,6 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Kendu  '...' ezaugarria</FixEllipsesStart>
     <FixMissingOpenBracket>Zuzendu lerroan galdutako [ </FixMissingOpenBracket>
     <FixMusicNotation>Ordeztu musika ikurrak (adib. âTª) hobetsitako ikur batekin</FixMusicNotation>
-    <FixDoubleDashs>Zuzendu '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Kendu &gt;&gt; hasieratik</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Kendu ... hasieratik</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Zuzendu galdutako [-ak </FixMissingOpenBrackets>
-    <FixMusicNotations>Ordeztu âTª's honekin *'s</FixMusicNotations>
     <XFixDoubleDash>{0} galdutako '--' </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} kendutako &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} kendu hasierako '...'</XFixEllipsesStart>
