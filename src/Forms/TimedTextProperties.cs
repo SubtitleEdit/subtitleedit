@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private XmlDocument _xml;
-        private XmlNode _xmlHead;
         private XmlNamespaceManager _nsmgr;
         private string _NA;
 
@@ -38,7 +37,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _nsmgr = new XmlNamespaceManager(_xml.NameTable);
             _nsmgr.AddNamespace("ttml", "http://www.w3.org/ns/ttml");
-            _xmlHead = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
 
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
             if (node != null)

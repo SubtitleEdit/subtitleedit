@@ -1059,17 +1059,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void radioButtonOutline_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            var rb = (sender as RadioButton);
+            if (rb != null && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
                 numericUpDownShadowWidth.Value = 2;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
                 SetSsaStyle(name, "borderstyle", "1");
                 GeneratePreview();
-            }
-            var rb = (sender as RadioButton);
-            if (rb != null)
-            {
+
                 numericUpDownOutline.Enabled = rb.Checked;
                 labelShadow.Enabled = rb.Checked;
                 numericUpDownShadowWidth.Enabled = rb.Checked;
@@ -1078,18 +1076,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void radioButtonOpaqueBox_CheckedChanged(object sender, EventArgs e)
         {
-            if (listViewStyles.SelectedItems.Count == 1 && _doUpdate && (sender as RadioButton).Checked)
+            var rb = (sender as RadioButton);
+            if (rb != null && listViewStyles.SelectedItems.Count == 1 && _doUpdate && rb.Checked)
             {
                 numericUpDownShadowWidth.Value = 0;
                 string name = listViewStyles.SelectedItems[0].Text;
                 SetSsaStyle(name, "outline", numericUpDownOutline.Value.ToString());
                 SetSsaStyle(name, "borderstyle", "3");
                 GeneratePreview();
+
+                numericUpDownOutline.Enabled = !rb.Checked;
+                labelShadow.Enabled = !rb.Checked;
+                numericUpDownShadowWidth.Enabled = !rb.Checked;
             }
-            var rb = (sender as RadioButton);
-            numericUpDownOutline.Enabled = !rb.Checked;
-            labelShadow.Enabled = !(sender as RadioButton).Checked;
-            numericUpDownShadowWidth.Enabled = !rb.Checked;
         }
 
         private void listViewStyles_KeyDown(object sender, KeyEventArgs e)

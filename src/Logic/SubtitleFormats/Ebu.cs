@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return true; }
         }
 
-        public void Save(string fileName, Subtitle subtitle)
+        public static void Save(string fileName, Subtitle subtitle)
         {
             Save(fileName, subtitle, false);
         }

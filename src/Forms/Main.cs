@@ -3506,7 +3506,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (format.GetType() == typeof(Ebu))
                     {
                         var ebu = new Ebu();
-                        ebu.Save(_fileName, _subtitle);
+                        Ebu.Save(_fileName, _subtitle);
                     }
                     return DialogResult.OK;
                 }
@@ -13116,8 +13116,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         void MediaPlayer_OnButtonClicked(object sender, EventArgs e)
         {
-            PictureBox pb = (PictureBox)(sender as PictureBox);
-            if (pb != null && (sender as PictureBox).Name == "_pictureBoxFullscreenOver")
+            var pb = (PictureBox)(sender as PictureBox);
+            if (pb != null && pb.Name == "_pictureBoxFullscreenOver")
             {
                 if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed && _videoPlayerUnDocked.IsFullscreen)
                     _videoPlayerUnDocked.NoFullscreen();
@@ -17806,7 +17806,7 @@ namespace Nikse.SubtitleEdit.Forms
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += ebu.Extension;
                 }
-                ebu.Save(fileName, _subtitle);
+                Ebu.Save(fileName, _subtitle);
             }
         }
 

@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.Write(buffer, 0, buffer.Length);
         }
 
-        private byte[] GetTextAsBytes(string text, int languageId)
+        private static byte[] GetTextAsBytes(string text, int languageId)
         {
             byte[] buffer = new byte[51];
             int skipCount = 0;

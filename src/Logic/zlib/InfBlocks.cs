@@ -129,7 +129,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			read = write = 0;
 			
 			if (checkfn != null)
-				z.adler = check = z._adler.adler32(0L, null, 0, 0);
+                z.adler = check = Adler32.adler32(0L, null, 0, 0);
 		}
 		
 		internal int proc(ZStream z, int r)
@@ -673,7 +673,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			
 			// update check information
 			if (checkfn != null)
-				z.adler = check = z._adler.adler32(check, window, q, n);
+                z.adler = check = Adler32.adler32(check, window, q, n);
 			
 			// copy as far as end of window
 			Array.Copy(window, q, z.next_out, p, n);
@@ -701,7 +701,7 @@ namespace ComponentAce.Compression.Libs.zlib
 				
 				// update check information
 				if (checkfn != null)
-					z.adler = check = z._adler.adler32(check, window, q, n);
+                    z.adler = check = Adler32.adler32(check, window, q, n);
 				
 				// copy
 				Array.Copy(window, q, z.next_out, p, n);
