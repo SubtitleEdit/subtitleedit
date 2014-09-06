@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         public WindowsHunspell (string affDictionary, string dicDictionary)
         {
-            _hunspell = new NHunspell.Hunspell(affDictionary,dicDictionary);
+            _hunspell = new NHunspell.Hunspell(affDictionary, dicDictionary);
         }
 
         public override bool Spell(string word)

@@ -148,7 +148,7 @@ namespace NHunspell
             {
                 if (value == null)
                 {
-                    throw new ArgumentNullException("LanguageCode cannot be null");
+                    throw new ArgumentNullException("value", "LanguageCode cannot be null");
                 }
 
                 if (value.Length == 0)
@@ -221,7 +221,7 @@ namespace NHunspell
             {
                 if (value < 1)
                 {
-                    throw new ArgumentOutOfRangeException("Processors", "Processors must be greater than 0");
+                    throw new ArgumentOutOfRangeException("value", "Processors must be greater than 0");
                 }
 
                 this.processors = value;

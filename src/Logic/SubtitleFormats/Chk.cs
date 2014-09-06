@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int skipCount = 0;
                 int textLength = buffer[index + 2] - 11;
                 int start = index + 13;
-               
+
                 for (int i = 0; i <= textLength; i++)
                 {
                     if (skipCount > 0)
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb.Append(GetText(buffer, start, index + i + 13 + 1));
                     }
                 }
-                
+
                 Paragraph p;
                 if (_timeCodeQueue.Count > 0)
                     p = _timeCodeQueue.Dequeue();
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 for (int i = 0; i < 15; i++)
                 {
                     int start = index + 2 + (i * 8);
-                    int totalFrameNumber = (buffer[start + 3] << 16) + (buffer[start + 5] << 8) + buffer[start + 4];                   
+                    int totalFrameNumber = (buffer[start + 3] << 16) + (buffer[start + 5] << 8) + buffer[start + 4];
                     int durationInFrames = buffer[start + 6];
                     var p = new Paragraph(string.Empty, FramesToMilliseconds(totalFrameNumber), FramesToMilliseconds(totalFrameNumber + durationInFrames));
                     _timeCodeQueue.Enqueue(p);

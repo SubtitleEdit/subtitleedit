@@ -153,6 +153,7 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
 
         [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool FreeLibrary(IntPtr hModule);
 
         [DllImport("user32.dll")]
@@ -162,9 +163,11 @@ namespace Nikse.SubtitleEdit.Logic
         internal static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
 
         [DllImport("kernel32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool AttachConsole(int dwProcessId);
 
         [DllImport("kernel32.dll", SetLastError = true, ExactSpelling = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool FreeConsole();
 
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]

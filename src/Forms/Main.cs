@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
         Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         Keys _mainGeneralMergeSelectedLines = Keys.None;
-        Keys _mainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;        
+        Keys _mainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;
         Keys _mainGeneralToggleTranslationMode = Keys.None;
         Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
         Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
@@ -1094,7 +1094,7 @@ namespace Nikse.SubtitleEdit.Forms
                     CheetahCaption.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
-            }           
+            }
             if (!targetFormatFound)
             {
                 var capMakerPlus = new CapMakerPlus();
@@ -3506,7 +3506,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (format.GetType() == typeof(Ebu))
                     {
-                        var ebu = new Ebu();
                         Ebu.Save(_fileName, _subtitle);
                     }
                     return DialogResult.OK;
@@ -6738,7 +6737,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     _subtitleAlternate.InsertParagraphInCorrectTimeOrder(new Paragraph(newParagraph));
-                }                
+                }
                 _subtitleAlternate.Renumber(1);
             }
 
