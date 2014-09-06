@@ -160,6 +160,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Scansiona {0} e sottocartelle per file di sottotitoli...</ScanningFolder>
     <Recursive>Includi sottocartelle</Recursive>
     <SetMinMsBetweenSubtitles>Imposta millisec. minimi tra i sottotitoli</SetMinMsBetweenSubtitles>
+    <PlainText>Testo normale</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -192,6 +193,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Cambia velocità in percentuale</Title>
     <Info>Cambia la velocità del sottotitolo in percentuale</Info>
+    <Custom>Personalizzato</Custom>
+    <ToDropFrame>Al drop frame</ToDropFrame>
+    <FromDropFrame>Dal drop frame</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Controllo aggiornamenti...</Title>
@@ -314,7 +318,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EbuSaveOptions>
     <Title>Opzioni salvataggio EBU</Title>
     <GeneralSubtitleInformation>Informazioni generali sottotitolo</GeneralSubtitleInformation>
-    <CodePageNumber>Numero tabella codici</CodePageNumber>
+    <CodePageNumber>Numero tabella dei codici</CodePageNumber>
     <DiskFormatCode>Codice formato disco</DiskFormatCode>
     <DisplayStandardCode>Mostra codice standard</DisplayStandardCode>
     <CharacterCodeTable>Tabella caratteri</CharacterCodeTable>
@@ -323,23 +327,23 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OriginalEpisodeTitle>Titolo episodio originale</OriginalEpisodeTitle>
     <TranslatedProgramTitle>Titolo programma tradotto</TranslatedProgramTitle>
     <TranslatedEpisodeTitle>Titolo episodio tradotto</TranslatedEpisodeTitle>
-    <TranslatorsName>Nomi dei traduttori</TranslatorsName>
-    <SubtitleListReferenceCode>Codice riferimento lista sottotitoli</SubtitleListReferenceCode>
+    <TranslatorsName>Nome traduttore</TranslatorsName>
+    <SubtitleListReferenceCode>Codice di riferimento lista sottotitolo</SubtitleListReferenceCode>
     <CountryOfOrigin>Paese di origine</CountryOfOrigin>
     <RevisionNumber>Revisione numero</RevisionNumber>
-    <MaxNoOfDisplayableChars>Massimo # di caratteri per riga</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows>Massimo # di righe</MaxNumberOfDisplayableRows>
-    <DiskSequenceNumber>Numero sequenza disco</DiskSequenceNumber>
+    <MaxNoOfDisplayableChars>Max# caratteri per fila</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Max# di fila</MaxNumberOfDisplayableRows>
+    <DiskSequenceNumber>Numero sequenza dischi</DiskSequenceNumber>
     <TotalNumberOfDisks>Numero totale dischi</TotalNumberOfDisks>
     <Import>Importa...</Import>
-    <TextAndTimingInformation>Testo e informazioni durata</TextAndTimingInformation>
-    <JustificationCode>Codice giustificazione</JustificationCode>
+    <TextAndTimingInformation>Informazioni testo e timing</TextAndTimingInformation>
+    <JustificationCode>Codice di giustificazione</JustificationCode>
     <Errors>Errori</Errors>
     <ErrorsX>Errori: {0}</ErrorsX>
-    <MaxLengthError>La linea {0} eccede la lunghezza massima ({1}) di {2}: {3}</MaxLengthError>
+    <MaxLengthError>Linea {0} supera lungezza max ({1}) di {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Presentazione non modificata</TextUnchangedPresentation>
     <TextLeftJustifiedText>Testo giustificato a sinistra</TextLeftJustifiedText>
-    <TextCentredText>Testo centrato </TextCentredText>
+    <TextCentredText>Testo centrato</TextCentredText>
     <TextRightJustifiedText>Testo giustificato a destra</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -690,6 +694,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Ripristina da backup automatico...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Proprietà Avanzate Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Proprietà Sub Station Alpha...</SubStationAlphaProperties>
+        <EbuProperties>Proprietà EBU...</EbuProperties>
+        <PacProperties>Proprietà PAC...</PacProperties>
         <OpenOriginal>Apri sottotitolo originale (modo traduzione)...</OpenOriginal>
         <SaveOriginal>Salva sottotitolo originale</SaveOriginal>
         <CloseOriginal>Chiudi sottotitolo originale</CloseOriginal>
@@ -980,7 +986,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VisualSyncPerformedOnSelectedLines>Sincronizzazione visiva eseguita sulle linee selezionate</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Sincronizzazione visiva eseguita</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>Importare questo sottotitolo VobSub?</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10MB>Il file è più grande di 10 MB: {0}</FileXIsLargerThan10MB>
+    <FileXIsLargerThan10MB>Il file è più grande di10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>Continuare ugualmente?</ContinueAnyway>
     <BeforeLoadOf>Prima di caricare {0}</BeforeLoadOf>
     <LoadedSubtitleX>Caricato sottotitolo {0}</LoadedSubtitleX>
@@ -1066,6 +1072,7 @@ Continuare?</SubtitleAppendPrompt>
     <NothingToUndo>Niente da annullare</NothingToUndo>
     <InvalidLanguageNameX>Nome lingua non valido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Impossibile cambiare lingua!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Non visualizzare più questo messsaggio</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Numero di parole corrette: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Numero di parole saltate: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Numero di parole giuste: {0}</NumberOfCorrectWords>
@@ -1296,6 +1303,8 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <ImportRulesTitle>Importa regole di sostituzione da...</ImportRulesTitle>
     <ExportRulesTitle>Esporta regole di sostituzione su...</ExportRulesTitle>
     <Rules>Esporta regole</Rules>
+    <MoveToTop>Sposta in alto</MoveToTop>
+    <MoveToBottom>Sposta in basso</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1521,9 +1530,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SpectrogramAppearance>Apparenza spettrogramma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Una sfumatura di colore</SpectrogramOneColorGradient>
     <SpectrogramClassic>Classico</SpectrogramClassic>
-    <WaveformUseFFmpeg>Usa FFmpeg per estrarre l'audio</WaveformUseFFmpeg>
-    <WaveformFFmpegPath>Percorso di FFmpeg</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Sfoglia per FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformUseFFmpeg>Usa FFMPEG per l'estrazione dell'audio</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Percorso di FFMPEG</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Sfoglia per FFMPEG</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Sfoglia per VLC portatile</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Stile Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Scegli font</ChooseFont>
@@ -1630,7 +1639,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <SyntaxColorOverlap>Colora sovrapposizione time code</SyntaxColorOverlap>
     <SyntaxErrorColor>Colore per errore</SyntaxErrorColor>
     <GoToFirstSelectedLine>Vai alla prima linea selezionata</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Vai alla prima linea vuota</GoToNextEmptyLine>
     <MergeSelectedLines>Unisci linee selezionate</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Unisci linee selezionate, mantieni solo il primo testo non-vuoto</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Alterna modo di traduzione</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Passa da originale a traduzione</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Unisci originale e traduzione</MergeOriginalAndTranslation>
@@ -1652,6 +1663,11 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Non usare lista non-andare-a-capo (per autoaccapo)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Imposta offset video</Title>
+    <Description>Imposta offset video (i sottotitoli non dovrebbero seguire il tempo reale del video, ma per esempio +10 ore)</Description>
+    <RelativeToCurrentVideoPosition>Relativo alla posizione video corrente</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostra linee selezionate prima/dopo</Title>
     <TitleAll>Mostra tutte le linee prima/dopo</TitleAll>
@@ -1771,6 +1787,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <DurationMinimum>Durata - minima: {0:0.000} secondi</DurationMinimum>
     <DurationMaximum>Durata - massima: {0:0.000} secondi</DurationMaximum>
     <DurationAverage>Durata - media: {0:0.000} secondi</DurationAverage>
+    <CharactersPerSecondMinimum>Caratteri/sec - minimuo: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Caratteri/sec - massimo: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Caratteri/sec - media: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Proprietà Advanced Sub Station Alpha</Title>
@@ -1931,6 +1950,7 @@ Mantenere le modifiche?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Correzione automatica OCR / Correttore ortografico</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Correggi errori OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa testo con time code corrispondenti...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importa nuovi timecode</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Salva l'immagine del sottotitolo come...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Salva tutte le immagini (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Salva tutte le immagini con indice html...</SaveAllSubtitleImagesWithHtml>
