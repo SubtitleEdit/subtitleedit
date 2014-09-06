@@ -8856,8 +8856,8 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (f.Contains(" color="))
                         {
                             int colorStart = f.IndexOf(" color=");
-                            if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
-                                end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
                             s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
                             p.Text = s;
                             done = true;
@@ -8928,8 +8928,8 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (f.Contains(" face="))
                         {
                             int faceStart = f.IndexOf(" face=");
-                            if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
-                                end = s.IndexOf("\"", faceStart + " face=".Length + 1);
+                            if (s.IndexOf('"', faceStart + " face=".Length + 1) > 0)
+                                end = s.IndexOf('"', faceStart + " face=".Length + 1);
                             s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
                             p.Text = s;
                             done = true;
@@ -16093,8 +16093,8 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (f.Contains(" color="))
                             {
                                 int colorStart = f.IndexOf(" color=");
-                                if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
-                                    end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                                if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                                    end = s.IndexOf('"', colorStart + " color=".Length + 1);
                                 s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
                                 text = s;
                                 done = true;
@@ -16148,8 +16148,8 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (f.Contains(" face="))
                             {
                                 int faceStart = f.IndexOf(" face=");
-                                if (s.IndexOf("\"", faceStart + " face=".Length + 1) > 0)
-                                    end = s.IndexOf("\"", faceStart + " face=".Length + 1);
+                                if (s.IndexOf('"', faceStart + " face=".Length + 1) > 0)
+                                    end = s.IndexOf('"', faceStart + " face=".Length + 1);
                                 s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
                                 text = s;
                                 done = true;

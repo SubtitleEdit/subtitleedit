@@ -293,9 +293,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (f.Contains(" color="))
                                 {
                                     int colorStart = f.IndexOf(" color=");
-                                    if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
+                                    if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
                                     {
-                                        int colorEnd = f.IndexOf("\"", colorStart + " color=".Length + 1);
+                                        int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
                                         if (colorStart > 1)
                                         {
                                             string color = f.Substring(colorStart + 7, colorEnd - (colorStart + 7));

@@ -2437,9 +2437,9 @@ namespace Nikse.SubtitleEdit.Logic
         public static string GetRegExGroup(string regEx)
         {
             int start = regEx.IndexOf("(?<", StringComparison.Ordinal);
-            if (start >= 0 && regEx.IndexOf(")", start, StringComparison.Ordinal) > start)
+            if (start >= 0 && regEx.IndexOf(')') > start)
             {
-                int end = regEx.IndexOf(">", start, StringComparison.Ordinal);
+                int end = regEx.IndexOf('>');
                 if (end > start)
                 {
                     start += 3;
@@ -4017,8 +4017,8 @@ namespace Nikse.SubtitleEdit.Logic
                     if (f.Contains(" color="))
                     {
                         int colorStart = f.IndexOf(" color=", StringComparison.OrdinalIgnoreCase);
-                        if (s.IndexOf("\"", colorStart + " color=".Length + 1) > 0)
-                            end = s.IndexOf("\"", colorStart + " color=".Length + 1);
+                        if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                            end = s.IndexOf('"', colorStart + " color=".Length + 1);
                         s = s.Substring(colorStart, end - colorStart);
                         s = s.Replace(" color=", string.Empty);
                         s = s.Trim('\'').Trim('"').Trim('\'');
@@ -4321,8 +4321,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (text.Contains("- ") && text.Length > 5)
             {
-                int idx = text.IndexOf("- ", 2);
-                if (text.ToLower().StartsWith("<i>"))
+                int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
+                if (text.ToLower().StartsWith("<i>", StringComparison.Ordinal))
                     idx = text.IndexOf("- ", 5);
                 while (idx > 0)
                 {

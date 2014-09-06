@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Forms
                 webClient.Proxy = Utilities.GetProxy();
                 string result = webClient.DownloadString(url).ToLower();
                 int idx = result.IndexOf("charset");
-                int end = result.IndexOf("\"", idx + 8);
+                int end = result.IndexOf('"', idx + 8);
                 string charset = result.Substring(idx, end - idx).Replace("charset=", string.Empty);
                 return Encoding.GetEncoding(charset); // "koi8-r");
             }

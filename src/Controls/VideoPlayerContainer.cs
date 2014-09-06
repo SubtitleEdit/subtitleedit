@@ -299,11 +299,11 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 _subtitleText = value;
 
-                bool alignLeft = _subtitleText.StartsWith("{\\a1}") || _subtitleText.StartsWith("{\\a5}") || _subtitleText.StartsWith("{\\a9}") || // sub station alpha
-                                 _subtitleText.StartsWith("{\\an1}") || _subtitleText.StartsWith("{\\an4}") || _subtitleText.StartsWith("{\\an7}"); // advanced sub station alpha
+                bool alignLeft = _subtitleText.StartsWith("{\\a1}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\a5}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\a9}", StringComparison.Ordinal) || // sub station alpha
+                                 _subtitleText.StartsWith("{\\an1}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an4}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an7}", StringComparison.Ordinal); // advanced sub station alpha
 
-                bool alignRight = _subtitleText.StartsWith("{\\a3}") || _subtitleText.StartsWith("{\\a7}") || _subtitleText.StartsWith("{\\a11}") || // sub station alpha
-                                  _subtitleText.StartsWith("{\\an3}") || _subtitleText.StartsWith("{\\an6}") || _subtitleText.StartsWith("{\\an9}"); // advanced sub station alpha
+                bool alignRight = _subtitleText.StartsWith("{\\a3}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\a7}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\a11}", StringComparison.Ordinal) || // sub station alpha
+                                  _subtitleText.StartsWith("{\\an3}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an6}", StringComparison.Ordinal) || _subtitleText.StartsWith("{\\an9}", StringComparison.Ordinal); // advanced sub station alpha
 
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Color fontColor = Color.White;
                 while  (i < text.Length)
                 {
-                    if (text.Substring(i).ToLower().StartsWith("<i>"))
+                    if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
                         sb = new StringBuilder();
@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Controls
                         italicBegin = letterCount;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                    else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
                     {
                         italicLookups.Add(italicBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - italicBegin);
                         _subtitleTextBox.AppendText(sb.ToString());
@@ -347,21 +347,21 @@ namespace Nikse.SubtitleEdit.Controls
                         isItalic = false;
                         i += 3;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<font "))
+                    else if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
                     {
                         string s = text.Substring(i);
                         bool fontFound = false;
-                        int start = s.IndexOf("<font ");
+                        int start = s.IndexOf("<font ", StringComparison.Ordinal);
                         if (start >= 0)
                         {
                             int end = s.IndexOf(">", start);
                             if (end > 0)
                             {
                                 string f = s.Substring(start, end - start);
-                                int colorStart = f.IndexOf(" color=");
+                                int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
                                 if (colorStart > 0)
                                 {
-                                    int colorEnd = f.IndexOf("\"", colorStart + " color=".Length + 1);
+                                    int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
                                     if (colorEnd > 0)
                                     {
                                         s = f.Substring(colorStart, colorEnd - colorStart);
@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Controls
                             fontColorBegin = letterCount;
                         }
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</font>") && isFontColor)
+                    else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal) && isFontColor)
                     {
                         fontColorLookups.Add(new Point(fontColorBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
                         _subtitleTextBox.AppendText(sb.ToString());

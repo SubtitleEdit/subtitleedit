@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 return;
             }
 
-            int indexOfEqual = e.Data.IndexOf("=");
+            int indexOfEqual = e.Data.IndexOf('=');
             if (indexOfEqual > 0 && indexOfEqual + 1 < e.Data.Length && e.Data.StartsWith("ANS_"))
             {
                 string code = e.Data.Substring(0, indexOfEqual);
