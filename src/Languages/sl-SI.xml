@@ -1464,9 +1464,9 @@ popravlja enak podnapis (sodelovanje)</Information>
     <SpectrogramAppearance>Izgled spektrograma</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Enobarvni gradnik</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasik</SpectrogramClassic>
-    <WaveformUseFFmpeg>Uporabi FFMPEG za wave izlužitev</WaveformUseFFmpeg>
-    <WaveformFFmpegPath>Pot do FFMPEG</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Brskaj do FFMPEG</WaveformBrowseToFFmpeg>
+    <WaveformUseFFmpeg>Uporabi FFmpeg za wave izlužitev</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Pot do FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Brskaj do FFmpeg</WaveformBrowseToFFmpeg>
     <SubStationAlphaStyle>(Napredno) Stil Sub postaje Alpha</SubStationAlphaStyle>
     <ChooseFont>Izberi pisavo</ChooseFont>
     <ChooseColor>Izberi barvo</ChooseColor>

@@ -144,7 +144,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyDifferences>Show only differences</ShowOnlyDifferences>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
   </CompareSubtitles>
-  <DvdSubrip>
+  <DvdSubRip>
     <Title>Rip subtitles from ifo/vobs (dvd)</Title>
     <DvdGroupTitle>DVD files/info</DvdGroupTitle>
     <IfoFile>IFO file</IfoFile>
@@ -164,7 +164,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Aborted by user</AbortedByUser>
     <ReadingSubtitleData>Reading subtitle data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripping vob file {1} of {2}: {0}</RippingVobFileXofYZ>
-  </DvdSubrip>
+  </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Choose language</Title>
     <ChooseLanguageStreamId>Choose language (stream-id)</ChooseLanguageStreamId>
