@@ -7304,16 +7304,16 @@ namespace Nikse.SubtitleEdit.Forms
                         if (firstWord.StartsWith("<") && firstWord.Contains(">"))
                         {
                             // Save the start tag.
-                            startTag = firstWord.Substring(firstWord.IndexOf("<"), firstWord.IndexOf(">") + 1);
+                            startTag = firstWord.Substring(firstWord.IndexOf('<'), firstWord.IndexOf('>') + 1);
                             // Remove the start tag from the first word.
-                            firstWord = firstWord.Remove(0, firstWord.IndexOf(">") + 1);
+                            firstWord = firstWord.Remove(0, firstWord.IndexOf('>') + 1);
                         }
 
                         // If the second subtitle ends with a tag and there's only one word in it:
                         if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(" ") < 0)
                         {
                             // Remove the end tag.
-                            next.Text = next.Text.Remove(next.Text.LastIndexOf("<"));
+                            next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
                         }
 
                         // If the second subtitle (next) starts with a dialogue ("-"):
@@ -7421,9 +7421,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (next.Text.StartsWith("<") && next.Text.Contains(">"))
                         {
                             // Save the start tag.
-                            startTag = next.Text.Substring(next.Text.IndexOf("<"), next.Text.IndexOf(">") + 1);
+                            startTag = next.Text.Substring(next.Text.IndexOf('<'), next.Text.IndexOf('>') + 1);
                             // Remove the start tag from next subtitle.
-                            next.Text = next.Text.Remove(0, next.Text.IndexOf(">") + 1);
+                            next.Text = next.Text.Remove(0, next.Text.IndexOf('>') + 1);
                         }
 
                         // If the second subtitle (next) starts with a dialogue ("-"):
@@ -10692,13 +10692,13 @@ namespace Nikse.SubtitleEdit.Forms
         private static string SerializeSubtitle(Subtitle subtitle)
         {
             var sb = new StringBuilder();
-            foreach (Paragraph p in subtitle.Paragraphs)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                sb.Append(p.StartTime.TotalMilliseconds);
-                sb.Append(p.EndTime.TotalMilliseconds);
+                Paragraph p = subtitle.Paragraphs[i];
+                sb.Append(p.StartTime.TotalMilliseconds + p.EndTime.TotalMilliseconds);
                 sb.Append(p.Text);
             }
-            return sb.ToString().Trim();
+            return sb.ToString().TrimEnd();
         }
 
         internal void MainKeyDown(object sender, KeyEventArgs e)
