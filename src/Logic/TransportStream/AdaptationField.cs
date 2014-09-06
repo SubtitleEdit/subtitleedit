@@ -57,13 +57,13 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         {
             Length = packetBuffer[4];
             DiscontinuityIndicator = 1 == packetBuffer[5] >> 7;
-            RandomAccessIndicator = 1 == (packetBuffer[5] & 64); // and with 01000000 to get second byte
-            ElementaryStreamPriorityIndicator = 1 == (packetBuffer[5] & 32); // and with 00100000 to get third byte
+            RandomAccessIndicator = (packetBuffer[5] & 64) > 0; // and with 01000000 to get second byte
+            ElementaryStreamPriorityIndicator = (packetBuffer[5] & 32) > 0; // and with 00100000 to get third byte
             PcrFlag = (packetBuffer[5] & 16) > 0; // and with 00010000 to get fourth byte
             OpcrFlag = (packetBuffer[5] & 8) > 0; // and with 00001000 to get fifth byte
-            SplicingPointFlag = 1 == (packetBuffer[5] & 4); // and with 00000100 to get sixth byte
-            TransportPrivateDataFlag = 1 == (packetBuffer[5] & 2); // and with 00000100 to get seventh byte
-            AdaptationFieldExtensionFlag = 1 == (packetBuffer[5] & 1); // and with 00000010 to get 8th byte
+            SplicingPointFlag = (packetBuffer[5] & 4) > 0; // and with 00000100 to get sixth byte
+            TransportPrivateDataFlag = (packetBuffer[5] & 2) > 0; // and with 00000100 to get seventh byte
+            AdaptationFieldExtensionFlag = (packetBuffer[5] & 1) > 0; // and with 00000010 to get 8th byte
 
             int index = 6;
             if (PcrFlag)
