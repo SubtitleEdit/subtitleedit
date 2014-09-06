@@ -49,7 +49,7 @@ namespace ComponentAce.Compression.Libs.zlib
 	{
 		
 		private const int MAX_WBITS = 15; // 32K LZ77 window		
-		private static readonly int DEF_WBITS = MAX_WBITS;
+		private const int DEF_WBITS = MAX_WBITS;
 		
 		private const int Z_NO_FLUSH = 0;
 		private const int Z_PARTIAL_FLUSH = 1;
@@ -87,7 +87,6 @@ namespace ComponentAce.Compression.Libs.zlib
 		internal int data_type; // best guess about the data type: ascii or binary
 		
 		public long adler;
-		internal Adler32 _adler = new Adler32();
 		
 		public int inflateInit()
 		{
@@ -214,7 +213,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			
 			if (dstate.noheader == 0)
 			{
-				adler = _adler.adler32(adler, next_in, next_in_index, len);
+                adler = Adler32.adler32(adler, next_in, next_in_index, len);
 			}
 			Array.Copy(next_in, next_in_index, buf, start, len);
 			next_in_index += len;
@@ -227,7 +226,6 @@ namespace ComponentAce.Compression.Libs.zlib
 			next_in = null;
 			next_out = null;
 			msg = null;
-			_adler = null;
 		}
 	}
 }

@@ -55,7 +55,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		// NMAX is the largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1
 		private const int NMAX = 5552;
 		
-		internal long adler32(long adler, byte[] buf, int index, int len)
+		internal static long adler32(long adler, byte[] buf, int index, int len)
 		{
 			if (buf == null)
 			{

@@ -143,7 +143,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		private const int MIN_MATCH = 3;
 		private const int MAX_MATCH = 258;		
-		private static readonly int MIN_LOOKAHEAD = (MAX_MATCH + MIN_MATCH + 1);
+		private const int MIN_LOOKAHEAD = (MAX_MATCH + MIN_MATCH + 1);
 		
 		private const int MAX_BITS = 15;
 		private const int D_CODES = 30;
@@ -1432,10 +1432,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		{
 			return deflateInit2(strm, level, Z_DEFLATED, bits, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY);
 		}
-		internal int deflateInit(ZStream strm, int level)
-		{
-			return deflateInit(strm, level, MAX_WBITS);
-		}
+		
 		internal int deflateInit2(ZStream strm, int level, int method, int windowBits, int memLevel, int strategy)
 		{
 			int noheader = 0;
@@ -1514,7 +1511,7 @@ namespace ComponentAce.Compression.Libs.zlib
 				noheader = 0; // was set to -1 by deflate(..., Z_FINISH);
 			}
 			status = (noheader != 0)?BUSY_STATE:INIT_STATE;
-			strm.adler = strm._adler.adler32(0, null, 0, 0);
+            strm.adler = Adler32.adler32(0, null, 0, 0);
 			
 			last_flush = Z_NO_FLUSH;
 			
@@ -1577,8 +1574,8 @@ namespace ComponentAce.Compression.Libs.zlib
 			
 			if (dictionary == null || status != INIT_STATE)
 				return Z_STREAM_ERROR;
-			
-			strm.adler = strm._adler.adler32(strm.adler, dictionary, 0, dictLength);
+
+            strm.adler = Adler32.adler32(strm.adler, dictionary, 0, dictLength);
 			
 			if (length < MIN_MATCH)
 				return Z_OK;
@@ -1654,7 +1651,7 @@ namespace ComponentAce.Compression.Libs.zlib
 					putShortMSB((int) (SupportClass.URShift(strm.adler, 16)));
 					putShortMSB((int) (strm.adler & 0xffff));
 				}
-				strm.adler = strm._adler.adler32(0, null, 0, 0);
+                strm.adler = Adler32.adler32(0, null, 0, 0);
 			}
 			
 			// Flush as much pending output as possible
