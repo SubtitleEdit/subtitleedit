@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (tag.Contains(" color="))
                                 {
                                     int colorStart = tag.IndexOf(" color=");
-                                    int colorEnd = tag.IndexOf("\"", colorStart + " color=".Length + 1);
+                                    int colorEnd = tag.IndexOf('"', colorStart + " color=".Length + 1);
                                     if (colorEnd > 0)
                                     {
                                         string color = tag.Substring(colorStart, colorEnd - colorStart);
@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (tag.Contains(" face="))
                                 {
                                     int colorStart = tag.IndexOf(" face=");
-                                    int colorEnd = tag.IndexOf("\"", colorStart + " face=".Length + 1);
+                                    int colorEnd = tag.IndexOf('"', colorStart + " face=".Length + 1);
                                     if (colorEnd > 0)
                                     {
                                         string fontName = tag.Substring(colorStart, colorEnd - colorStart);
@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 if (tag.Contains(" size="))
                                 {
                                     int colorStart = tag.IndexOf(" size=");
-                                    int colorEnd = tag.IndexOf("\"", colorStart + " size=".Length + 1);
+                                    int colorEnd = tag.IndexOf('"', colorStart + " size=".Length + 1);
                                     if (colorEnd > 0)
                                     {
                                         string fontSize = tag.Substring(colorStart, colorEnd - colorStart);
