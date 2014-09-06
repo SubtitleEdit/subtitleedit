@@ -5,8 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -567,11 +566,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Fjern startende '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fix manglende [</FixMissingOpenBracket>
     <FixMusicNotation>Erstat âTª med *</FixMusicNotation>
-    <FixDoubleDashs>Fix '-'  -&gt; '...' </FixDoubleDashs>
-    <FixDoubleGreaterThans>Fjern &gt;&gt; fra start</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Fjern ... fra start</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Fix manglende  [</FixMissingOpenBrackets>
-    <FixMusicNotations>Erstat âTª med *</FixMusicNotations>
     <XFixDoubleDash>{0} rettet '-'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} fjernet &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} begyndende '...' fjernet</XFixEllipsesStart>

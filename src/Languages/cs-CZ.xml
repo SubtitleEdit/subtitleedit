@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
@@ -562,11 +562,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Odebrat úvodní '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Opravit chybějící '[' v řádku</FixMissingOpenBracket>
     <FixMusicNotation>Nahradit hudební symboly (např. âTª) upřednostňovaným symbolem</FixMusicNotation>
-    <FixDoubleDashs>Opravit více '--' -&gt; '...' </FixDoubleDashs>
-    <FixDoubleGreaterThans>Odebrat '&gt;&gt;' ze začátku</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Odebrat '...' ze začátku</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Opravit více chybějících '[' </FixMissingOpenBrackets>
-    <FixMusicNotations>Nahradit více 'âTª' symbolem '*'</FixMusicNotations>
     <XFixDoubleDash>Opraveno {0} '--' </XFixDoubleDash>
     <XFixDoubleGreaterThan>Odebráno {0} '&gt;&gt;' </XFixDoubleGreaterThan>
     <XFixEllipsesStart>Odebráno {0} začátečních '...'</XFixEllipsesStart>

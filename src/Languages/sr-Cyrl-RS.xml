@@ -360,11 +360,6 @@
     <FixEllipsesStart>Уклони три тачке</FixEllipsesStart>
     <FixMissingOpenBracket>Додај углату заграду која недостаје</FixMissingOpenBracket>
     <FixMusicNotation>Исправи музичке ноте</FixMusicNotation>
-    <FixDoubleDashs>Исправи две цртице у три тачке</FixDoubleDashs>
-    <FixDoubleGreaterThans>Уклони двоструки знак [&gt;&gt;] с почетка</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Уклони три тачке с почетка</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Исправи углате заграде које недостају</FixMissingOpenBrackets>
-    <FixMusicNotations>Замени ноту âTª' са знаком *'</FixMusicNotations>
     <XFixDoubleDash>Исправљено грешака с две цртице: {0}</XFixDoubleDash>
     <XFixDoubleGreaterThan>Уклоњено грешака с двоструким знаком [&gt;&gt;]: {0}</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Уклоњено линија које почињу с три тачке: {0}</XFixEllipsesStart>

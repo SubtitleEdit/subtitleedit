@@ -5,7 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Prijevod: Jozo Marić</TranslatedBy>
     <CultureName>hr-HR</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;U redu</Ok>
     <Cancel>&amp;Otkaži</Cancel>
     <Apply>Primjeni</Apply>
@@ -521,11 +521,6 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Ukloni tri točke</FixEllipsesStart>
     <FixMissingOpenBracket>Dodaj uglatu zagradu koja nedostaje</FixMissingOpenBracket>
     <FixMusicNotation>Ispravi glazbene note</FixMusicNotation>
-    <FixDoubleDashs>Ispravi dvije crtice u tri točke</FixDoubleDashs>
-    <FixDoubleGreaterThans>Ukloni dvostruki znak [&gt;&gt;] s početka</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Ukloni tri točke s početka</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Ispravi uglate zagrade koje nedostaju</FixMissingOpenBrackets>
-    <FixMusicNotations>Zamijeni notu âTª' sa znakom *'</FixMusicNotations>
     <XFixDoubleDash>Ispravljeno grešaka s dvije crtice: {0}</XFixDoubleDash>
     <XFixDoubleGreaterThan>Uklonjeno grešaka s dvostrukim znakom [&gt;&gt;]: {0}</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Uklonjeno linija koje počinju s tri točke: {0}</XFixEllipsesStart>
