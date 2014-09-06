@@ -1366,6 +1366,9 @@ namespace Nikse.SubtitleEdit.Forms
                     returnBmp.MakeTransparent();
             }
 
+            if (returnBmp == null)
+                return null;
+
             if (_binaryOcrDb == null && _nOcrDb == null)
                 return returnBmp;
 
