@@ -287,11 +287,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Dispose();
         }
 
-        ~QuartsPlayer()
-        {
-            Dispose(false);
-        }
-
         private void ReleaseUnmangedResources()
         {
             try
