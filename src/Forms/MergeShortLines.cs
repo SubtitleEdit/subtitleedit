@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Empty;
 
             string startTag = string.Empty;
-            int end = text.IndexOf(">");
+            int end = text.IndexOf('>');
             if (end > 0 && end < 25)
             {
                 startTag = text.Substring(0, end + 1);

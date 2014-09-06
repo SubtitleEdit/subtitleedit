@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (lines.Count > 0 && lines[0].ToUpper().StartsWith("WEBVTT"))
+            if (lines.Count > 0 && lines[0].ToUpper().StartsWith("WEBVTT", StringComparison.Ordinal))
                 return false;
 
             var subtitle = new Subtitle();
@@ -127,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (line.Trim().Length > 0)
                     {
-                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number+1).ToString() == nextNext)
+                        if (_lastParagraph != null && nextNext != null && string.Compare((_lastParagraph.Number+1).ToString(CultureInfo.InvariantCulture), nextNext, StringComparison.Ordinal) == 0)
                         {
                             _lastParagraph.Text = (_lastParagraph.Text + Environment.NewLine + line.Trim()).Trim();
                         }
@@ -254,11 +255,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int endMilliseconds = int.Parse(parts[7]);
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                    if (parts[0].StartsWith("-") && paragraph.StartTime.TotalMilliseconds > 0)
+                    if (parts[0].StartsWith("-", StringComparison.Ordinal) && paragraph.StartTime.TotalMilliseconds > 0)
                         paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
 
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                    if (parts[4].StartsWith("-") && paragraph.EndTime.TotalMilliseconds > 0)
+                    if (parts[4].StartsWith("-", StringComparison.Ordinal) && paragraph.EndTime.TotalMilliseconds > 0)
                         paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
 
                     return true;

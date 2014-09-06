@@ -95,8 +95,8 @@ namespace Nikse.SubtitleEdit.Forms
             get
             {
                 string name = comboBoxDictionaries.SelectedItem.ToString();
-                int start = name.LastIndexOf("[");
-                int end = name.LastIndexOf("]");
+                int start = name.LastIndexOf('[');
+                int end = name.LastIndexOf(']');
                 if (start >= 0 && end > start)
                 {
                     start++;
@@ -879,16 +879,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ReplaceHtmlTagsWithBlanks(string s)
         {
-            int start = s.IndexOf("<");
+            int start = s.IndexOf('<');
             while (start >= 0)
             {
-                int end = s.IndexOf(">", start);
+                int end = s.IndexOf('>', start);
                 if (end > 0)
                 {
                     int l = end - start + 1;
                     s = s.Remove(start, l).Insert(start, string.Empty.PadLeft(l));
                     if (start + 1 < s.Length)
-                        start = s.IndexOf("<", start + 1);
+                        start = s.IndexOf('<', start + 1);
                     else
                         start = -1;
                 }
