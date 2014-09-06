@@ -106,6 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
         Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
         Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         Keys _mainGeneralMergeSelectedLines = Keys.None;
+        Keys _mainGeneralMergeSelectedLinesOnlyFirstText = Keys.None;        
         Keys _mainGeneralToggleTranslationMode = Keys.None;
         Keys _mainGeneralSwitchTranslationAndOriginal = Keys.None;
         Keys _mainGeneralMergeTranslationAndOriginal = Keys.None;
@@ -10909,6 +10910,14 @@ namespace Nikse.SubtitleEdit.Forms
                         MergeSelectedLines();
                 }
             }
+            else if (_mainGeneralMergeSelectedLinesOnlyFirstText == e.KeyData)
+            {
+                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count >= 1)
+                {
+                    e.SuppressKeyPress = true;
+                    MergeSelectedLinesOnlyFirstText();
+                }
+            }
             else if (_mainGeneralToggleTranslationMode == e.KeyData)
             { // toggle translator mode
                 EditToolStripMenuItemDropDownOpening(null, null);
@@ -11456,6 +11465,96 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             // put new entries above tabs
+        }
+
+        private void MergeSelectedLinesOnlyFirstText()
+        {
+            if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
+            {
+                var sb = new StringBuilder();
+                var deleteIndices = new List<int>();
+                bool first = true;
+                int firstIndex = 0;
+                int next = 0;
+                string text = string.Empty;
+                double endTime = 0;
+                foreach (int index in SubtitleListview1.SelectedIndices)
+                {
+                    if (first)
+                    {
+                        firstIndex = index;
+                        next = index + 1;
+                    }
+                    else
+                    {
+                        deleteIndices.Add(index);
+                        if (next != index)
+                            return;
+                        next++;
+                    }
+                    first = false;
+                    if (string.IsNullOrEmpty(text))
+                        text = _subtitle.Paragraphs[index].Text.Trim();
+                    endTime = _subtitle.Paragraphs[index].EndTime.TotalMilliseconds;
+                }
+
+                SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                MakeHistoryForUndo(_language.BeforeMergeLines);
+
+                Paragraph currentParagraph = _subtitle.Paragraphs[firstIndex];
+                currentParagraph.Text = text;
+                currentParagraph.EndTime.TotalMilliseconds = endTime;
+
+                Paragraph nextParagraph = _subtitle.GetParagraphOrDefault(next);
+                if (nextParagraph != null && currentParagraph.EndTime.TotalMilliseconds > nextParagraph.StartTime.TotalMilliseconds && currentParagraph.StartTime.TotalMilliseconds < nextParagraph.StartTime.TotalMilliseconds)
+                {
+                    currentParagraph.EndTime.TotalMilliseconds = nextParagraph.StartTime.TotalMilliseconds - 1;
+                }
+
+                // original subtitle
+                if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                {
+                    Paragraph original = Utilities.GetOriginalParagraph(firstIndex, currentParagraph, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        string originalText = string.Empty;
+                        for (int i = 0; i < deleteIndices.Count; i++)
+                        {
+                            Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
+                            if (originalNext != null && string.IsNullOrEmpty(originalText))
+                                originalText = originalNext.Text;
+                        }
+                        for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                        {
+                            Paragraph originalNext = Utilities.GetOriginalParagraph(deleteIndices[i], _subtitle.Paragraphs[deleteIndices[i]], _subtitleAlternate.Paragraphs);
+                            if (originalNext != null)
+                                _subtitleAlternate.Paragraphs.Remove(originalNext);
+                        }
+                        original.Text = originalText;
+                        original.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+                        _subtitleAlternate.Renumber(1);
+                    }
+                }
+
+                if (_networkSession != null)
+                {
+                    _networkSession.TimerStop();
+                    _networkSession.UpdateLine(firstIndex, currentParagraph);
+                    NetworkGetSendUpdates(deleteIndices, 0, null);
+                }
+                else
+                {
+                    for (int i = deleteIndices.Count - 1; i >= 0; i--)
+                        _subtitle.Paragraphs.RemoveAt(deleteIndices[i]);
+                    _subtitle.Renumber(1);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+                ShowSource();
+                ShowStatus(_language.LinesMerged);
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                RefreshSelectedParagraph();
+            }
         }
 
         private void GoToFirstEmptyLine()
@@ -14681,6 +14780,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainGeneralGoToFirstSelectedLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine);
             _mainGeneralGoToFirstEmptyLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine);
             _mainGeneralMergeSelectedLines = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines);
+            _mainGeneralMergeSelectedLinesOnlyFirstText = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText);
             _mainGeneralToggleTranslationMode = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode);
             _mainGeneralSwitchTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation);
             _mainGeneralMergeTranslationAndOriginal = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation);
