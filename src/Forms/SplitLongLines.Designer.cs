@@ -188,6 +188,7 @@
             // 
             this.labelMaxSingleLineLengthIs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMaxSingleLineLengthIs.AutoSize = true;
+            this.labelMaxSingleLineLengthIs.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelMaxSingleLineLengthIs.Location = new System.Drawing.Point(9, 579);
             this.labelMaxSingleLineLengthIs.Name = "labelMaxSingleLineLengthIs";
             this.labelMaxSingleLineLengthIs.Size = new System.Drawing.Size(133, 13);
@@ -199,6 +200,7 @@
             // 
             this.labelMaxLineLengthIs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelMaxLineLengthIs.AutoSize = true;
+            this.labelMaxLineLengthIs.Cursor = System.Windows.Forms.Cursors.Hand;
             this.labelMaxLineLengthIs.Location = new System.Drawing.Point(9, 597);
             this.labelMaxLineLengthIs.Name = "labelMaxLineLengthIs";
             this.labelMaxLineLengthIs.Size = new System.Drawing.Size(83, 13);
