@@ -151,9 +151,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string ReadTag(string s, string tag)
         {
-            int startIndex = s.IndexOf("\"" + tag + "\"");
+            int startIndex = s.IndexOf("\"" + tag + "\"", StringComparison.Ordinal);
             if (startIndex == -1)
-                startIndex = s.IndexOf("'" + tag + "'");
+                startIndex = s.IndexOf("'" + tag + "'", StringComparison.Ordinal);
             if (startIndex == -1)
                 return null;
             string res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
@@ -161,8 +161,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             { // text
                 res = Json.ConvertJsonSpecialCharacters(res);
                 res = res.Replace("\\\"", "@__1");
-                int endIndex = res.IndexOf("\"}");
-                int endAlternate = res.IndexOf("\",");
+                int endIndex = res.IndexOf("\"}", StringComparison.Ordinal);
+                int endAlternate = res.IndexOf("\",", StringComparison.Ordinal);
                 if (endIndex == -1)
                     endIndex = endAlternate;
                 else if (endAlternate > 0 && endAlternate < endIndex)
@@ -175,9 +175,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             else
             { // number
-                int endIndex = res.IndexOf(",");
+                int endIndex = res.IndexOf(',');
                 if (endIndex == -1)
-                    endIndex = res.IndexOf("}");
+                    endIndex = res.IndexOf('}');
                 if (endIndex == -1)
                     return null;
                 return res.Substring(0, endIndex);
@@ -188,9 +188,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var list = new List<string>();
 
-            int startIndex = s.IndexOf("\"" + tag + "\"");
+            int startIndex = s.IndexOf("\"" + tag + "\"", StringComparison.Ordinal);
             if (startIndex == -1)
-                startIndex = s.IndexOf("'" + tag + "'");
+                startIndex = s.IndexOf("'" + tag + "'", StringComparison.Ordinal);
             if (startIndex == -1)
                 return list;
 
@@ -234,8 +234,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    int nextBegin = res.IndexOf("[", nextTag);
-                    int nextEnd = res.IndexOf("]", nextTag);
+                    int nextBegin = res.IndexOf('[', nextTag);
+                    int nextEnd = res.IndexOf(']', nextTag);
                     if (nextBegin < nextEnd && nextBegin != -1)
                     {
                         nextTag = nextBegin + 1;
