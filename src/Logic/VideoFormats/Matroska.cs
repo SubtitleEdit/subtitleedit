@@ -1283,7 +1283,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                                     numberOfFrames = (byte)_f.ReadByte();
                                     numberOfFrames++;
                                     for (int i = 1; i <= numberOfFrames; i++)
-                                        b = (byte)_f.ReadByte(); // frames
+                                        _f.ReadByte(); // frames
                                     break;
                                 case 6: System.Diagnostics.Debug.Print("EBML");        // 6 = 00000110 = EMBL
                                     numberOfFrames = (byte)_f.ReadByte();
@@ -1339,7 +1339,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                      numberOfFrames = (byte)_f.ReadByte();
                      numberOfFrames++;
                      for (int i = 1; i <= numberOfFrames; i++)
-                         b = (byte)_f.ReadByte(); // frames
+                         _f.ReadByte(); // frames
                      break;
                     case 6: System.Diagnostics.Debug.Print("EBML");        // 6 = 00000110 = EMBL
                      numberOfFrames = (byte)_f.ReadByte();
