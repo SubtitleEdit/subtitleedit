@@ -5,7 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>&amp;U redu</Ok>
     <Cancel>&amp;Otkaži</Cancel>
     <Apply>Primenite</Apply>
@@ -460,11 +460,6 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Ukloni tri tačke</FixEllipsesStart>
     <FixMissingOpenBracket>Dodaj uglastu zagradu koja nedostaje</FixMissingOpenBracket>
     <FixMusicNotation>Ispravi muzičke note</FixMusicNotation>
-    <FixDoubleDashs>Ispravi dve crtice u tri tačke</FixDoubleDashs>
-    <FixDoubleGreaterThans>Ukloni dvostruki znak [&gt;&gt;] sa početka</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Ukloni tri tačke sa početka</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Ispravi uglaste zagrade koje nedostaju</FixMissingOpenBrackets>
-    <FixMusicNotations>Zameni notu âTª' sa znakom *'</FixMusicNotations>
     <XFixDoubleDash>Ispravljeno grešaka s dve crtice: {0}</XFixDoubleDash>
     <XFixDoubleGreaterThan>Uklonjeno grešaka s dvostrukim znakom [&gt;&gt;]: {0}</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Uklonjeno linija koje počinju s tri tačke: {0}</XFixEllipsesStart>

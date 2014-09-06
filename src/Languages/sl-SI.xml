@@ -81,7 +81,7 @@ Lahko jo delite, spreminjate in uporabljate brezplačno.
 
 C # izvorna coda je na razpolago na: https://github.com/SubtitleEdit/subtitleedit
 
-Za novejšo verzijo obiščite: http://www.nikse.dk
+Za novejšo verzijo obiščite: www.nikse.dk
 
 Predlogi zelo dobrodošli.
 
@@ -540,11 +540,6 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FixEllipsesStart>Odstrani '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Dodaj manjkajoče [ v vrstici</FixMissingOpenBracket>
     <FixMusicNotation>Zamenjaj glasbene simbole (e.g. âTª) s priljubljenim simbolom</FixMusicNotation>
-    <FixDoubleDashs>Popravi '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Odstrani &gt;&gt; iz začetka vrstice</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Odstrani ... iz začetka vrstice</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Dodaj manjkajoče ['s </FixMissingOpenBrackets>
-    <FixMusicNotations>Zamenjaj âTª's z *'s</FixMusicNotations>
     <XFixDoubleDash>{0} popravljeno '--' </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} odstanjeno &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} odstranjeni začetni '...'</XFixEllipsesStart>

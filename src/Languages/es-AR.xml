@@ -498,7 +498,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Corregir etiqueta inválida en cursiva</FixInvalidItalicTag>
     <FixShortDisplayTime>Corregir duración demasiado corta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corregir solapamiento duración</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -533,11 +533,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Eliminar '...' al inicio</FixEllipsesStart>
     <FixMissingOpenBracket>Corregir [ omitido en la línea</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicales (e.g. âTª) con símbolos adecuados</FixMusicNotation>
-    <FixDoubleDashs>Corregir '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Eliminar &gt;&gt; del inicio</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Eliminar ... del inicio</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Corregir [ omitidos </FixMissingOpenBrackets>
-    <FixMusicNotations>Sustituir âTª's por *'s</FixMusicNotations>
     <XFixDoubleDash>{0} '--' corregidos</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; eliminados</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' iniciales eliminados</XFixEllipsesStart>

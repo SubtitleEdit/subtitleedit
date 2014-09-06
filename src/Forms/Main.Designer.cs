@@ -1976,7 +1976,7 @@
             this.addWordToNamesetcListToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.L)));
             this.addWordToNamesetcListToolStripMenuItem.Size = new System.Drawing.Size(296, 22);
-            this.addWordToNamesetcListToolStripMenuItem.Text = "Add word to names/ect list";
+            this.addWordToNamesetcListToolStripMenuItem.Text = "Add word to names/etc list";
             this.addWordToNamesetcListToolStripMenuItem.Click += new System.EventHandler(this.AddWordToNamesetcListToolStripMenuItemClick);
             // 
             // toolStripMenuItemSyncronization

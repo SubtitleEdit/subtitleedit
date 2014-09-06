@@ -567,11 +567,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
     <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
     <FixMusicNotation>Substituir símbolos musicais (e.g. âTª) por símbolos adequados</FixMusicNotation>
-    <FixDoubleDashs>Corrigir '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Remover &gt;&gt; do início</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Remover ... do início</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Corrigir [ omitidos</FixMissingOpenBrackets>
-    <FixMusicNotations>Substituir âTª's por *'s</FixMusicNotations>
     <XFixDoubleDash>{0} '--' corrigidos</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; removidos</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' iniciais eliminadas</XFixEllipsesStart>
@@ -632,7 +627,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ImportImages>
     <Title>Importar imagens</Title>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
-   <Input>Entrada</Input>
+    <Input>Entrada</Input>
     <InputDescription>Escolher ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>

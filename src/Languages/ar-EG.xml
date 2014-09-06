@@ -558,11 +558,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>إزالة المتقدم '...'</FixEllipsesStart>
     <FixMissingOpenBracket>الإصلاح [مفقود في السطر</FixMissingOpenBracket>
     <FixMusicNotation>مع الرمز المفضل (e.g. âTª) استبدال رموز الموسيقى</FixMusicNotation>
-    <FixDoubleDashs>اصلاح '--'s -&gt; '...'s</FixDoubleDashs>
-    <FixDoubleGreaterThans>إزالة&gt;&gt; من البداية</FixDoubleGreaterThans>
-    <FixEllipsesStarts>إزالة... من البداية</FixEllipsesStarts>
-    <FixMissingOpenBrackets>['s اصلاح المفقود</FixMissingOpenBrackets>
-    <FixMusicNotations>إستبدل âT?'s مع *'s</FixMusicNotations>
     <XFixDoubleDash>{0} الثابتة '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} إزالة&gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} إزالة بدءا '...'</XFixEllipsesStart>

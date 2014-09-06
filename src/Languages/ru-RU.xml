@@ -533,7 +533,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixInvalidItalicTag>Исправить неверные теги отображения курсива</FixInvalidItalicTag>
     <FixShortDisplayTime>Исправить короткое время отображения субтитра</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Исправить наложение субтитров</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -568,11 +568,6 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixEllipsesStart>Удалить многоточие "..." в начале строки</FixEllipsesStart>
     <FixMissingOpenBracket>Добавить недостающие "[" в строке</FixMissingOpenBracket>
     <FixMusicNotation>Заменить музыкальные символы (напр. âTª) выбранным</FixMusicNotation>
-    <FixDoubleDashs>Исправить ряд символов тире "--" на многоточие "..."</FixDoubleDashs>
-    <FixDoubleGreaterThans>Удалить символы "&gt;&gt;" в начале строк</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Удалить многоточие "..." из начала строк</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Исправить отсутствие символа "[" в строк</FixMissingOpenBrackets>
-    <FixMusicNotations>Заменить выражение "âTª" символами "*"</FixMusicNotations>
     <XFixDoubleDash>Исправлено символов тире "--" : {0}</XFixDoubleDash>
     <XFixDoubleGreaterThan>Удалено знаков "&gt;&gt;" : {0}</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Удалено многоточий "..." из начала строк: {0}</XFixEllipsesStart>

@@ -561,11 +561,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Изтриване на начални '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Поправяне на липсваща [ в ред</FixMissingOpenBracket>
     <FixMusicNotation>Замяна на музикални символи (например âTª) с избран символ</FixMusicNotation>
-    <FixDoubleDashs>Поправяне на '--'s -&gt; '...'s</FixDoubleDashs>
-    <FixDoubleGreaterThans>Изтриване на &gt;&gt; в началото</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Изтриване на ... в началото</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Поправяне на липсваща [</FixMissingOpenBrackets>
-    <FixMusicNotations>Замяна на âTª's с *'s</FixMusicNotations>
     <XFixDoubleDash>{0} поправени '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} изтрити &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} изтрити начални '...'</XFixEllipsesStart>

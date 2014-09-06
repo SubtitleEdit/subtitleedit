@@ -531,7 +531,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Popraw błędny tag kursywy</FixInvalidItalicTag>
     <FixShortDisplayTime>Popraw zbyt krótki czas wyświetlania</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Popraw nakładanie się czasu wyświetlania</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; --&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; --&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hej   ty , tam.  --&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej, ty!. --&gt; Hej, ty!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hej.Ty. --&gt; Hej. Ty..</FixMissingSpacesExample>
@@ -566,11 +566,6 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Usuń wielokropek "..." na początku linii</FixEllipsesStart>
     <FixMissingOpenBracket>Popraw brakujący "[" w linii</FixMissingOpenBracket>
     <FixMusicNotation>Zastąp symbole muzyczne (np. âTª) symbolami preferowanymi</FixMusicNotation>
-    <FixDoubleDashs>Popraw '--' na '...' </FixDoubleDashs>
-    <FixDoubleGreaterThans>Usuń znajdujące się na początku linii "&gt;&gt;"</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Usuń znajdujące się na początku ...</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Popraw brakujące "[" </FixMissingOpenBrackets>
-    <FixMusicNotations>Zastąp "âTª" --&gt; "*"</FixMusicNotations>
     <XFixDoubleDash>Poprawiono {0} "--" </XFixDoubleDash>
     <XFixDoubleGreaterThan>Usunięto {0} &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>Usunięto na początku {0} "..."</XFixEllipsesStart>

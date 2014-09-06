@@ -5,8 +5,7 @@
     <Version>3.4.1</Version>
     <TranslatedBy>Çevirmen: mailto:shadowxvb@windowslive.com</TranslatedBy>
     <CultureName>tr-TR</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;TAMAM</Ok>
     <Cancel>&amp;İptal</Cancel>
     <Apply>Uygula</Apply>
@@ -426,7 +425,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Geçersiz italik etiketi düzelt</FixInvalidItalicTag>
     <FixShortDisplayTime>Kısa görüntüleme süresini düzelt</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fix overlapping display time</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   sen , oradaki. -&gt; Hey sen, oradaki.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey sen!. -&gt; Hey sen!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.Sen. -&gt; Hey. Sen.</FixMissingSpacesExample>
@@ -461,11 +460,6 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Satırdaki eksik [ düzelt</FixMissingOpenBracket>
     <FixMusicNotation>Müzik sembolünü tercih edilen sembol ile değiştir</FixMusicNotation>
-    <FixDoubleDashs>Düzelt '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>Sil &gt;&gt; baştan</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Sil ... baştan</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Eksik ['s düzelt</FixMissingOpenBrackets>
-    <FixMusicNotations>*'s ile âTª's değiştir</FixMusicNotations>
     <XFixDoubleDash>{0} düzeltildi '--' </XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} silindi &gt;&gt; </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} remove starting '...'</XFixEllipsesStart>

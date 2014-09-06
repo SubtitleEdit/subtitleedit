@@ -562,11 +562,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FixEllipsesStart>Elimină suspensia '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Corectează absența [ din linie</FixMissingOpenBracket>
     <FixMusicNotation>Înlocuiește simbolurile muzicale (e.g. âTª) cu simboluri preferate</FixMusicNotation>
-    <FixDoubleDashs>Corectează '--' -&gt;'...' </FixDoubleDashs>
-    <FixDoubleGreaterThans>Elimină &gt;&gt; de la început</FixDoubleGreaterThans>
-    <FixEllipsesStarts>Elimină ... de la început</FixEllipsesStarts>
-    <FixMissingOpenBrackets>Corectează absența [</FixMissingOpenBrackets>
-    <FixMusicNotations>Înlocuiește âTª cu *</FixMusicNotations>
     <XFixDoubleDash>{0} "--" corectat</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; eliminat </XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} elimină începutul '...'</XFixEllipsesStart>
@@ -676,7 +671,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <Join>Îmbină</Join>
     <TotalNumberOfLinesX>Numărul total de linii: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
-<Main>
+  <Main>
     <Menu>
       <File>
         <Title>&amp;Fișier</Title>
@@ -1651,7 +1646,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <MainFileSaveAll>Salvează tot</MainFileSaveAll>
     <Miscellaneous>Diverse</Miscellaneous>
     <UseDoNotBreakAfterList>Folosește lista non-întrerupere-după (pentru auto-întrerupere)</UseDoNotBreakAfterList>
- </Settings>
+  </Settings>
   <ShowEarlierLater>
     <Title>Arată liniile selectate mai devreme/târziu</Title>
     <TitleAll>Arată toate liniile mai devreme/târziu</TitleAll>
@@ -1839,7 +1834,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <StyleAlreadyExits>Stilul deja există: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Stilul '{0}' exportat către fișierul '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Stilul '{0}' importat din fișierul '{1}'</StyleXImportedFromFileY>
-</SubStationAlphaStyles>
+  </SubStationAlphaStyles>
   <PointSync>
     <Title>Punct de sincronizare</Title>
     <TitleViaOtherSubtitle>Pct. de sinc. prin altă subtitrare</TitleViaOtherSubtitle>
@@ -1936,7 +1931,7 @@ Păstrezi schimbările?</KeepChangesMessage>
     <XImagesSavedInY>{0} imagini salvate în {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Încearcă MS MODI OCR ptr. cuvinte necunoscute</TryModiForUnknownWords>
     <DictionaryX>Dicționar: {0}</DictionaryX>
-    <RightToLeft>Dreapta --> stânga</RightToLeft>
+    <RightToLeft>Dreapta --&gt; stânga</RightToLeft>
     <ShowOnlyForcedSubtitles>Arată doar subtitrările silite</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Folosește coduri de timp din fișierul .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Nicio potrivire&gt;</NoMatch>
