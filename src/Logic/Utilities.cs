@@ -4231,6 +4231,7 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace(Environment.NewLine + "<i>... ", Environment.NewLine + "<i>...");
             text = text.Replace(Environment.NewLine + "- ... ", Environment.NewLine + "- ...");
             text = text.Replace(Environment.NewLine + "<i>- ... ", Environment.NewLine + "<i>- ...");
+            text = text.Replace(Environment.NewLine + "- ... ", Environment.NewLine + "- ...");
 
             if (text.StartsWith("... ", StringComparison.Ordinal))
                 text = text.Remove(3, 1);
@@ -4238,6 +4239,10 @@ namespace Nikse.SubtitleEdit.Logic
                 text = text.Remove(text.Length - 4, 1);
             if (text.EndsWith(" ...</i>", StringComparison.Ordinal))
                 text = text.Remove(text.Length - 8, 1);
+            if (text.StartsWith("- ... ", StringComparison.Ordinal))
+                text = text.Remove(5, 1);
+            if (text.StartsWith("<i>... ", StringComparison.Ordinal))
+                text = text.Remove(6, 1);
 
             if (language != "fr") // special rules for French
             {

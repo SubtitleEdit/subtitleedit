@@ -3004,12 +3004,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
 
-                if (text.Trim().StartsWith("-") ||
+                if (text.Trim().StartsWith('-') ||
                     text.Trim().StartsWith("<i>-") ||
                     text.Trim().StartsWith("<i> -") ||
                     text.Trim().StartsWith("<I>-") ||
                     text.Trim().StartsWith("<I> -") ||
-                    text.Contains(Environment.NewLine + "-") ||
+                    text.Contains(Environment.NewLine + '-') ||
                     text.Contains(Environment.NewLine + " -") ||
                     text.Contains(Environment.NewLine + "<i>-") ||
                     text.Contains(Environment.NewLine + "<i> -") ||
@@ -3024,7 +3024,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int startHyphenCount = 0;
                         foreach (string line in lines)
                         {
-                            if (line.Trim().StartsWith("-"))
+                            if (line.Trim().StartsWith('-'))
                                 startHyphenCount++;
                         }
                         if (startHyphenCount == 1)
@@ -3036,27 +3036,27 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                if (parts[0].Trim().StartsWith("-") && parts[1].Contains(": "))
+                                if (parts[0].Trim().StartsWith('-') && parts[1].Contains(": "))
                                     remove = false;
-                                if (parts[1].Trim().StartsWith("-") && parts[0].Contains(": "))
+                                if (parts[1].Trim().StartsWith('-') && parts[0].Contains(": "))
                                     remove = false;
                             }
 
                             if (remove)
                             {
-                                int idx = text.IndexOf("-", StringComparison.Ordinal);
+                                int idx = text.IndexOf('-');
                                 var st = new StripableText(text);
                                 if (idx < 5 && st.Pre.Length >= idx)
                                 {
                                     text = text.Remove(idx, 1).TrimStart();
-                                    idx = text.IndexOf("-", StringComparison.Ordinal);
+                                    idx = text.IndexOf('-');
                                     st = new StripableText(text);
                                     if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
                                     {
                                         text = text.Remove(idx, 1).TrimStart();
                                         st = new StripableText(text);
                                     }
-                                    idx = text.IndexOf("-", StringComparison.Ordinal);
+                                    idx = text.IndexOf('-');
                                     if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
                                         text = text.Remove(idx, 1).TrimStart();
 
@@ -3069,7 +3069,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     int idxNL = text.IndexOf(Environment.NewLine);
                                     if (idxNL > 0)
                                     {
-                                        idx = text.IndexOf("-", idxNL, StringComparison.Ordinal);
+                                        idx = text.IndexOf('-', idxNL);
                                         if (idx >= 0 && idxNL + 5 > idxNL)
                                         {
                                             text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -3102,14 +3102,14 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                else if (text.StartsWith("<font "))
+                else if (text.StartsWith("<font ", StringComparison.Ordinal))
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-", StringComparison.Ordinal))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith('-'))
                     {
                         string oldText = p.Text;
                         var st = new StripableText(text);
-                        if (st.Pre.EndsWith("-", StringComparison.Ordinal) || st.Pre.EndsWith("- ", StringComparison.Ordinal))
+                        if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
                         {
                             text = st.Pre.TrimEnd().TrimEnd('-').TrimEnd() + st.StrippedText + st.Post;
                         }
@@ -3139,7 +3139,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
 
-                if (text.Trim().StartsWith("-") ||
+                if (text.Trim().StartsWith('-') ||
                     text.Trim().StartsWith("<i>-") ||
                     text.Trim().StartsWith("<i> -") ||
                     text.Trim().StartsWith("<I>-") ||
@@ -3153,13 +3153,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
 
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-", StringComparison.Ordinal))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith('-'))
                     {
                         var lines = Utilities.RemoveHtmlTags(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         int startHyphenCount = 0;
                         foreach (string line in lines)
                         {
-                            if (line.Trim().StartsWith("-"))
+                            if (line.Trim().StartsWith('-'))
                                 startHyphenCount++;
                         }
                         if (startHyphenCount == 1)
@@ -3169,17 +3169,20 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                bool doAdd = parts[0].Trim().EndsWith(".", StringComparison.Ordinal) || parts[0].Trim().EndsWith("!", StringComparison.Ordinal) || parts[0].Trim().EndsWith("?", StringComparison.Ordinal) || Language == "ko";
+                                bool doAdd = parts[0].Trim().EndsWith('.') || parts[0].Trim().EndsWith('!') || parts[0].Trim().EndsWith('?') || Language == "ko";
 
-                                if (parts[0].Trim().StartsWith("-", StringComparison.Ordinal) && parts[1].Contains(":"))
+                                if (parts[0].Trim().StartsWith('-') && parts[1].Contains(":"))
                                     doAdd = false;
-                                if (parts[1].Trim().StartsWith("-", StringComparison.Ordinal) && parts[0].Contains(":"))
+                                if (parts[1].Trim().StartsWith('-') && parts[0].Contains(":"))
                                     doAdd = false;
 
                                 if (doAdd)
                                 {
-                                    int idx = text.IndexOf("-", StringComparison.Ordinal);
-                                    if (idx < 5)
+                                    int idx = text.IndexOf('-');
+                                    bool addFirstLine = idx < 5;
+                                    if (addFirstLine && idx > 0 && Utilities.AllLetters.Contains(text.Substring(idx - 1, 1)))
+                                        addFirstLine = false;
+                                    if (addFirstLine)
                                     {
                                         // add dash in second line.
                                         if (text.Contains(Environment.NewLine + "<i>"))

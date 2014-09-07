@@ -187,5 +187,22 @@ namespace Test
             Assert.AreEqual(s2, s1);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesDialogueDotDotDotLine1()
+        {
+            string s = Utilities.RemoveUnneededSpaces("- ... Careful", "en");
+            Assert.AreEqual(s, "- ...Careful");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesDialogueDotDotDotLine2()
+        {
+            string s = Utilities.RemoveUnneededSpaces("- Hi!" + Environment.NewLine + "- ... Careful", "en");
+            Assert.AreEqual(s, "- Hi!" + Environment.NewLine + "- ...Careful");
+        }
+         
+
     }
 }

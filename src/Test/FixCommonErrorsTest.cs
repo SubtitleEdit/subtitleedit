@@ -406,6 +406,16 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Hi!" + Environment.NewLine + "- Hi Pete!");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddDashButNotInFirst()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "Five-Both?" + Environment.NewLine + "- T... T... Ten...");
+            target.FixHyphensAdd();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
+        }
+
         #endregion
 
         #region Fix OCR errors
