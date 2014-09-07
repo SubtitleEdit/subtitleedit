@@ -109,11 +109,10 @@ Name: en;   MessagesFile: compiler:Default.isl
 #ifdef localize
 Name: ar;   MessagesFile: Languages\Arabic.isl
 Name: bg;   MessagesFile: Languages\Bulgarian.isl
-Name: br;   MessagesFile: compiler:Languages\BrazilianPortuguese.isl
 Name: ca;   MessagesFile: compiler:Languages\Catalan.isl
 Name: cs;   MessagesFile: compiler:Languages\Czech.isl
+Name: da;   MessagesFile: compiler:Languages\Danish.isl
 Name: de;   MessagesFile: compiler:Languages\German.isl
-Name: dk;   MessagesFile: compiler:Languages\Danish.isl
 Name: el;   MessagesFile: compiler:Languages\Greek.isl
 Name: es;   MessagesFile: compiler:Languages\Spanish.isl
 Name: eu;   MessagesFile: Languages\Basque.isl
@@ -124,17 +123,19 @@ Name: hr;   MessagesFile: Languages\Croatian.isl
 Name: hu;   MessagesFile: compiler:Languages\Hungarian.isl
 Name: it;   MessagesFile: compiler:Languages\Italian.isl
 Name: ja;   MessagesFile: compiler:Languages\Japanese.isl
-Name: kr;   MessagesFile: Languages\Korean.isl
+Name: ko;   MessagesFile: Languages\Korean.isl
 Name: nl;   MessagesFile: compiler:Languages\Dutch.isl
 Name: pl;   MessagesFile: compiler:Languages\Polish.isl
 Name: pt;   MessagesFile: compiler:Languages\Portuguese.isl
+Name: ptBR; MessagesFile: compiler:Languages\BrazilianPortuguese.isl
 Name: ro;   MessagesFile: Languages\Romanian.isl
 Name: ru;   MessagesFile: compiler:Languages\Russian.isl
+Name: sl;   MessagesFile: compiler:Languages\Slovenian.isl
 Name: srC;  MessagesFile: compiler:Languages\SerbianCyrillic.isl
 Name: srL;  MessagesFile: compiler:Languages\SerbianLatin.isl
 Name: sv;   MessagesFile: Languages\Swedish.isl
 Name: tr;   MessagesFile: compiler:Languages\Turkish.isl
-Name: vn;   MessagesFile: Languages\Vietnamese.isl
+Name: vi;   MessagesFile: Languages\Vietnamese.isl
 Name: zh;   MessagesFile: Languages\ChineseSimplified.isl
 Name: zhTW; MessagesFile: Languages\ChineseTraditional.isl
 #endif
