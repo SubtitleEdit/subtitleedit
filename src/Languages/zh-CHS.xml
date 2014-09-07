@@ -159,6 +159,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ScanningFolder>正在扫描 {0} 及其子文件夹中的字幕文件...</ScanningFolder>
     <Recursive>包含子文件夹</Recursive>
     <SetMinMsBetweenSubtitles>设定字幕间的最小毫秒数</SetMinMsBetweenSubtitles>
+    <PlainText>纯文本</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>投影仪</Title>
@@ -191,6 +192,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   <ChangeSpeedInPercent>
     <Title>调整速度百分比</Title>
     <Info>调整字幕速度百分比</Info>
+    <Custom>自定义</Custom>
+    <ToDropFrame>至丢失帧</ToDropFrame>
+    <FromDropFrame>自丢失帧</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>检查更新</Title>
@@ -215,12 +219,11 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Language>语言</Language>
   </ChooseLanguage>
   <ColorChooser>
-    <Title>红</Title>
-    <Red>绿</Red>
-    <Green>蓝</Green>
-    <Blue>Alpha</Blue>
-    <Alpha>
-    </Alpha>
+    <Title>选择颜色</Title>
+    <Red>红</Red>
+    <Green>绿</Green>
+    <Blue>蓝</Blue>
+    <Alpha>Alpha</Alpha>
   </ColorChooser>
   <ColumnPaste>
     <Title>粘贴列</Title>
@@ -527,7 +530,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FixInvalidItalicTag>修复无效的斜体</FixInvalidItalicTag>
     <FixShortDisplayTime>修复过短的显示时间</FixShortDisplayTime>
     <FixOverlappingDisplayTime>修复重叠的显示时间</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hey   you , there. -&gt; Hey you, there.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
@@ -682,8 +685,10 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <Save>保存(&amp;S)</Save>
         <SaveAs>另存为(&amp;A)...</SaveAs>
         <RestoreAutoBackup>还原自动备份...</RestoreAutoBackup>
-        <AdvancedSubStationAlphaProperties>高级 Sub Station Alpha 特性...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>Sub Station Alpha 特性...</SubStationAlphaProperties>
+        <AdvancedSubStationAlphaProperties>高级 Sub Station Alpha 属性...</AdvancedSubStationAlphaProperties>
+        <SubStationAlphaProperties>Sub Station Alpha 属性...</SubStationAlphaProperties>
+        <EbuProperties>EBU stl 属性...</EbuProperties>
+        <PacProperties>PAC 属性...</PacProperties>
         <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
         <SaveOriginal>保存原始字幕</SaveOriginal>
         <CloseOriginal>关闭原始字幕</CloseOriginal>
@@ -974,7 +979,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <VisualSyncPerformedOnSelectedLines>已对所选行执行视觉同步</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>视觉同步已执行</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>导入这个 VobSub 字幕吗？</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10MB>文件大于 10MB: {0}</FileXIsLargerThan10MB>
+    <FileXIsLargerThan10MB>文件大小超过 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>仍要继续吗？</ContinueAnyway>
     <BeforeLoadOf>加载 "{0}" 之前</BeforeLoadOf>
     <LoadedSubtitleX>已加载字幕 "{0}"</LoadedSubtitleX>
@@ -1058,6 +1063,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <NothingToUndo>没什么可撤消</NothingToUndo>
     <InvalidLanguageNameX>无效的语言名称: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>无法更改语言！</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>不再显示此信息</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>已修正单词数量: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>已跳过单词数量: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>正确单词数量: {0}</NumberOfCorrectWords>
@@ -1286,6 +1292,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ImportRulesTitle>导入替换规则自...</ImportRulesTitle>
     <ExportRulesTitle>导出替换规则到...</ExportRulesTitle>
     <Rules>到处规则</Rules>
+    <MoveToTop>移到顶部</MoveToTop>
+    <MoveToBottom>移到底部</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>聊天</Title>
@@ -1509,9 +1517,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SpectrogramAppearance>频谱图外观</SpectrogramAppearance>
     <SpectrogramOneColorGradient>单色梯度</SpectrogramOneColorGradient>
     <SpectrogramClassic>经典</SpectrogramClassic>
-    <WaveformUseFFmpeg>使用 FFmpeg 进行音频波形提取</WaveformUseFFmpeg>
+    <WaveformUseFFmpeg>使用 FFmpeg 提取波形</WaveformUseFFmpeg>
     <WaveformFFmpegPath>FFmpeg 文件路径</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>浏览至 FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformBrowseToFFmpeg>浏览 FFmpeg 文件</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>浏览至VLC便携版安装路径</WaveformBrowseToVLC>
     <SubStationAlphaStyle>(高级) Sub Station Alpha 样式</SubStationAlphaStyle>
     <ChooseFont>选择字体</ChooseFont>
@@ -1618,7 +1626,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SyntaxColorOverlap>时间码重叠涂色</SyntaxColorOverlap>
     <SyntaxErrorColor>错误项颜色</SyntaxErrorColor>
     <GoToFirstSelectedLine>转到首个所选行</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>转到下一个空白行</GoToNextEmptyLine>
     <MergeSelectedLines>合并所选行</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>合并所选行, 仅保留首个非空文本</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>切换翻译模式</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
@@ -1642,6 +1652,11 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Miscellaneous>杂项</Miscellaneous>
     <UseDoNotBreakAfterList>使用不在后面断行的列表</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>设置视频偏移</Title>
+    <Description>设置视频偏移 (字幕不与视频时间同步播放, 而是偏移某段时间)</Description>
+    <RelativeToCurrentVideoPosition>相对于当前的视频位置</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>提前/推后 显示所选行</Title>
     <TitleAll>提前/推后 显示所有行</TitleAll>
@@ -1754,13 +1769,16 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <LineLengthMinimum>字幕长度 - 最小: {0}</LineLengthMinimum>
     <LineLengthMaximum>字幕长度 - 最大: {0}</LineLengthMaximum>
     <LineLengthAverage>字幕长度 - 平均: {0}</LineLengthAverage>
-    <LinesPerSubtitleAverage>字幕、行数 - 平均: {0:0.0}</LinesPerSubtitleAverage>
+    <LinesPerSubtitleAverage>字幕, 行号 - 平均: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>单行长度 - 最小: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>单行长度 - 最大: {0}</SingleLineLengthMaximum>
     <SingleLineLengthAverage>单行长度 - 平均: {0}</SingleLineLengthAverage>
     <DurationMinimum>时长 - 最小: {0:0.000} 秒</DurationMinimum>
     <DurationMaximum>时长 - 最大: {0:0.000} 秒</DurationMaximum>
     <DurationAverage>时长 - 平均: {0:0.000} 秒</DurationAverage>
+    <CharactersPerSecondMinimum>每秒字符数 - 最小: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>每秒字符数 - 最大: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>每秒字符数 - 平均: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>高级 Sub Station Alpha 特性</Title>
@@ -1918,6 +1936,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <OcrAutoCorrectionSpellchecking>OCR 自动修正/拼写检查</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>修正 OCR 错误</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>通过匹配时间码导入文本...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>导入新的时间码</ImportNewTimeCodes>
     <SaveSubtitleImageAs>字幕图像另存为...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>保存所有图像 (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>用 html 索引保存所有图像...</SaveAllSubtitleImagesWithHtml>
