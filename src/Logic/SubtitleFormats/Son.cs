@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
-                        int lastIndexOfTab = line.LastIndexOf("\t");
+                        int lastIndexOfTab = line.LastIndexOf('\t');
                         string text = line.Remove(0,  lastIndexOfTab+1).Trim();
                         if (!text.Contains(Environment.NewLine))
                             text = text.Replace("\t", Environment.NewLine);

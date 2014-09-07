@@ -98,8 +98,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (list.Count > 0)
                     {
                         string name = list[0];
-                        int start = name.LastIndexOf("[", StringComparison.Ordinal);
-                        int end = name.LastIndexOf("]", StringComparison.Ordinal);
+                        int start = name.LastIndexOf('[');
+                        int end = name.LastIndexOf(']');
                         if (start > 0 && end > start)
                         {
                             start++;
@@ -118,8 +118,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (comboBoxDictionaries.Items.Count > 0)
                 {
                     string name = comboBoxDictionaries.SelectedItem.ToString();
-                    int start = name.LastIndexOf("[", StringComparison.Ordinal);
-                    int end = name.LastIndexOf("]", StringComparison.Ordinal);
+                    int start = name.LastIndexOf('[');
+                    int end = name.LastIndexOf(']');
                     if (start >= 0 && end > start)
                     {
                         start++;

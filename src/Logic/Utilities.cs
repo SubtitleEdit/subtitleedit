@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (s2.EndsWith("? -") || s2.EndsWith("! -") || s2.EndsWith(". -"))
+            if (s2.EndsWith("? -", StringComparison.Ordinal) || s2.EndsWith("! -", StringComparison.Ordinal) || s2.EndsWith(". -", StringComparison.Ordinal))
                 return false;
 
             return true;
@@ -553,7 +553,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (arr.Length == 2)
                 {
                     string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith("-") && arr[1].Trim().StartsWith("-") && (arr0.EndsWith(".") || arr0.EndsWith("!") || arr0.EndsWith("?")))
+                    if (arr0.StartsWith("-", StringComparison.Ordinal) && arr[1].Trim().StartsWith("-", StringComparison.Ordinal) && (arr0.EndsWith(".", StringComparison.Ordinal) || arr0.EndsWith("!", StringComparison.Ordinal) || arr0.EndsWith("?", StringComparison.Ordinal)))
                         return text;
                 }
             }
@@ -963,7 +963,7 @@ namespace Nikse.SubtitleEdit.Logic
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml") && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
+                        else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml", StringComparison.Ordinal) && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
@@ -2299,7 +2299,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (s.IndexOf(word, StringComparison.Ordinal) >= 0 && text.IndexOf(s, StringComparison.Ordinal) >= 0)
                 {
-                    if (s.StartsWith(word + " ") || s.EndsWith(" " + word) || s.Contains(" " + word + " "))
+                    if (s.StartsWith(word + " ", StringComparison.Ordinal) || s.EndsWith(" " + word, StringComparison.Ordinal) || s.Contains(" " + word + " "))
                         return true;
                     if (word == s)
                         return true;
@@ -2317,7 +2317,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (s.Contains(word) && text.Contains(s))
                 {
-                    if (s.StartsWith(word + " ") || s.EndsWith(" " + word) || s.Contains(" " + word + " "))
+                    if (s.StartsWith(word + " ", StringComparison.Ordinal) || s.EndsWith(" " + word, StringComparison.Ordinal) || s.Contains(" " + word + " "))
                         return true;
                     if (word == s)
                         return true;
@@ -2576,8 +2576,8 @@ namespace Nikse.SubtitleEdit.Logic
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
                     var lines = text.Replace(Environment.NewLine, "\n").Split('\n');
-                    if (lines.Length == 2 && lines[0].StartsWith("<i>") && lines[0].EndsWith("</i>") &&
-                        lines[1].StartsWith("<i>"))
+                    if (lines.Length == 2 && lines[0].StartsWith("<i>") && lines[0].EndsWith("</i>", StringComparison.Ordinal) &&
+                        lines[1].StartsWith("<i>", StringComparison.Ordinal))
                     {
                         text = text.TrimEnd() + "</i>";
                     }
@@ -2589,7 +2589,7 @@ namespace Nikse.SubtitleEdit.Logic
                         else
                             text = text.Substring(0, lastIndex - 1) + endTag;
                     }
-                    if (text.StartsWith("<i>") && text.EndsWith("</i>") && text.Contains("</i>" + Environment.NewLine + "<i>"))
+                    if (text.StartsWith("<i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal) && text.Contains("</i>" + Environment.NewLine + "<i>"))
                     {
                         text = text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
                     }
@@ -2614,7 +2614,7 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isFixed= false;
 
                     // Foo.</i>
-                    if (text.EndsWith(endTag) && !cleanText.StartsWith("-") && !cleanText.Contains(Environment.NewLine + "-"))
+                    if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith("-", StringComparison.Ordinal) && !cleanText.Contains(Environment.NewLine + "-"))
                     {
                         text = beginTag + text;
                         isFixed = true;
@@ -2629,12 +2629,12 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             var firstLine = text.Substring(0, newLineIndex).Trim();
                             var secondLine = text.Substring(newLineIndex + 2).Trim();
-                            if (firstLine.EndsWith(endTag))
+                            if (firstLine.EndsWith(endTag, StringComparison.Ordinal))
                             {
                                 firstLine = beginTag + firstLine;
                                 isFixed = true;
                             }
-                            if (secondLine.EndsWith(endTag))
+                            if (secondLine.EndsWith(endTag, StringComparison.Ordinal))
                             {
                                 secondLine = beginTag + secondLine;
                                 isFixed = true;
@@ -2648,13 +2648,13 @@ namespace Nikse.SubtitleEdit.Logic
 
                 // - foo.</i>
                 // - bar.</i>
-                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine) && text.EndsWith(endTag))
+                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine) && text.EndsWith(endTag, StringComparison.Ordinal))
                 {
                     text = text.Replace(endTag, string.Empty);
                     text = beginTag + text + endTag;
                 }
 
-                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.StartsWith("</i>") && text.EndsWith("</i>"))
+                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.StartsWith("</i>", StringComparison.Ordinal) && text.EndsWith("</i>", StringComparison.Ordinal))
                 {
                     int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
                     text = text.Remove(firstIndex, endTag.Length).Insert(firstIndex, "<i>");
@@ -2709,9 +2709,9 @@ namespace Nikse.SubtitleEdit.Logic
 
             bool isStart = false;
             bool isEnd = false;
-            if(text.StartsWith(startTag) || text.StartsWith(s1) || text.StartsWith(s2) || text.StartsWith(s3) || text.StartsWith(s4))
+            if (text.StartsWith(startTag, StringComparison.Ordinal) || text.StartsWith(s1, StringComparison.Ordinal) || text.StartsWith(s2, StringComparison.Ordinal) || text.StartsWith(s3, StringComparison.Ordinal) || text.StartsWith(s4, StringComparison.Ordinal))
                 isStart = true;
-            if (text.EndsWith(endTag) || text.EndsWith(e1) || text.EndsWith(e2) || text.EndsWith(e3) || text.EndsWith(e4) || text.EndsWith(e5))
+            if (text.EndsWith(endTag, StringComparison.Ordinal) || text.EndsWith(e1, StringComparison.Ordinal) || text.EndsWith(e2, StringComparison.Ordinal) || text.EndsWith(e3, StringComparison.Ordinal) || text.EndsWith(e4, StringComparison.Ordinal) || text.EndsWith(e5, StringComparison.Ordinal))
                 isEnd = true;
             return isStart && isEnd;
         }
@@ -3995,10 +3995,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (string.IsNullOrEmpty(text))
                 return text;
 
-            if (text.StartsWith("\"") && text.Length > 1)
+            if (text.StartsWith("\"", StringComparison.Ordinal) && text.Length > 1)
                 text = text.Substring(1);
 
-            if (text.EndsWith("\"") && text.Length >= 1)
+            if (text.EndsWith("\"", StringComparison.Ordinal) && text.Length >= 1)
                 text = text.Substring(0, text.Length - 1);
 
             return text.Replace("\"\"", "\"");
@@ -4214,7 +4214,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains(" " + Environment.NewLine))
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
 
-            if (text.EndsWith(" "))
+            if (text.EndsWith(" ", StringComparison.Ordinal))
                 text = text.TrimEnd(' ');
 
             text = text.Replace(". . ..", "...");
@@ -4232,11 +4232,11 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace(Environment.NewLine + "- ... ", Environment.NewLine + "- ...");
             text = text.Replace(Environment.NewLine + "<i>- ... ", Environment.NewLine + "<i>- ...");
 
-            if (text.StartsWith("... "))
+            if (text.StartsWith("... ", StringComparison.Ordinal))
                 text = text.Remove(3, 1);
-            if (text.EndsWith(" ..."))
+            if (text.EndsWith(" ...", StringComparison.Ordinal))
                 text = text.Remove(text.Length - 4, 1);
-            if (text.EndsWith(" ...</i>"))
+            if (text.EndsWith(" ...</i>", StringComparison.Ordinal))
                 text = text.Remove(text.Length - 8, 1);
 
             if (language != "fr") // special rules for French
@@ -4254,10 +4254,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains(" ,"))
                 text = text.Replace(" ,", ",");
 
-            if (text.EndsWith(" ."))
+            if (text.EndsWith(" .", StringComparison.Ordinal))
                 text = text.Substring(0, text.Length - " .".Length) + ".";
 
-            if (text.EndsWith(" \""))
+            if (text.EndsWith(" \"", StringComparison.Ordinal))
                 text = text.Remove(text.Length - 2, 1);
 
             if (text.Contains(" \"" + Environment.NewLine))
@@ -4288,13 +4288,13 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains("? </i>" + Environment.NewLine))
                 text = text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
 
-            if (text.EndsWith(" </i>"))
+            if (text.EndsWith(" </i>", StringComparison.Ordinal))
                 text = text.Substring(0, text.Length - " </i>".Length) + "</i>";
 
             if (text.Contains(" </i>" + Environment.NewLine))
                 text = text.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
 
-            if (text.EndsWith(" </I>"))
+            if (text.EndsWith(" </I>", StringComparison.Ordinal))
                 text = text.Substring(0, text.Length - " </I>".Length) + "</I>";
 
             if (text.Contains(" </I>" + Environment.NewLine))

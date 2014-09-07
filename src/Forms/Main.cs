@@ -380,11 +380,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (pos + 35 < textBoxSource.TextLength)
                             pos += 35;
                         string s = textBoxSource.Text.Substring(0, pos);
-                        int lastTimeCode = s.LastIndexOf(" --> "); // 00:02:26,407 --> 00:02:31,356
+                        int lastTimeCode = s.LastIndexOf(" --> ", StringComparison.Ordinal); // 00:02:26,407 --> 00:02:31,356
                         if (lastTimeCode > 14 && lastTimeCode + 16 >= s.Length)
                         {
                             s = s.Substring(0, lastTimeCode - 5);
-                            lastTimeCode = s.LastIndexOf(" --> ");
+                            lastTimeCode = s.LastIndexOf(" --> ", StringComparison.Ordinal);
                         }
 
                         if (lastTimeCode > 14 && lastTimeCode + 16 < s.Length)
@@ -710,7 +710,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar.ToString());
+                    int indexOfDirectorySeparatorChar = pattern.LastIndexOf(Path.DirectorySeparatorChar);
                     if (indexOfDirectorySeparatorChar > 0 && indexOfDirectorySeparatorChar < pattern.Length)
                     {
                         pattern = pattern.Substring(indexOfDirectorySeparatorChar + 1);
@@ -2622,7 +2622,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (fileName.ToLower().EndsWith(".dost"))
+                if (fileName.ToLower().EndsWith(".dost", StringComparison.Ordinal))
                 {
                     try
                     {
@@ -2674,7 +2674,7 @@ namespace Nikse.SubtitleEdit.Forms
                         foreach (Paragraph p in _subtitle.Paragraphs)
                         {
                             string s = p.Text.ToLower();
-                            if (s.EndsWith(".bmp") || s.EndsWith(".png") || s.EndsWith(".jpg") || s.EndsWith(".tif"))
+                            if (s.EndsWith(".bmp", StringComparison.Ordinal) || s.EndsWith(".png", StringComparison.Ordinal) || s.EndsWith(".jpg", StringComparison.Ordinal) || s.EndsWith(".tif", StringComparison.Ordinal))
                             {
                                 imageCount++;
                             }
@@ -2830,7 +2830,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
-                        if (fileName.ToLower().EndsWith(".rtf") && !s.Trim().StartsWith("{\\rtf"))
+                        if (fileName.ToLower().EndsWith(".rtf", StringComparison.Ordinal) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
                         {
                             var rtBox = new RichTextBox();
                             rtBox.Rtf = s;
@@ -3033,7 +3033,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".xml"))
+                        if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".xml", StringComparison.Ordinal))
                         {
                             string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                             var sb = new StringBuilder();
@@ -3478,7 +3478,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                         if (!extOk)
                         {
-                            if (_fileName.EndsWith("."))
+                            if (_fileName.EndsWith(".", StringComparison.Ordinal))
                                 _fileName = _fileName.Substring(0, _fileName.Length - 1);
                             _fileName += format.Extension;
                         }
@@ -7272,12 +7272,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
-                        if (p.Text.EndsWith(">") && p.Text.Contains("<"))
+                        if (p.Text.EndsWith(">", StringComparison.Ordinal) && p.Text.Contains("<"))
                         {
                             // Save the end tag.
-                            endTag = p.Text.Substring(p.Text.LastIndexOf("<"), p.Text.Length - p.Text.LastIndexOf("<"));
+                            endTag = p.Text.Substring(p.Text.LastIndexOf('<'), p.Text.Length - p.Text.LastIndexOf('<'));
                             // Remove the endTag from first subtitle.
-                            p.Text = p.Text.Remove(p.Text.LastIndexOf("<"));
+                            p.Text = p.Text.Remove(p.Text.LastIndexOf('<'));
                         }
 
                         // If the first subtitle ends with "...":
@@ -7365,7 +7365,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p != null && next != null)
                 {
                     string s = p.Text.Trim();
-                    int idx = s.LastIndexOf(" ");
+                    int idx = s.LastIndexOf(' ');
                     if (idx > 0 || s.Length > 0)
                     // A last word was found or the first subtitle is not empty (has one word).
                     {
@@ -7392,9 +7392,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (lastWord.EndsWith(">") && lastWord.Contains("<"))
                         {
                             // Save the end tag.
-                            endTag = lastWord.Substring(lastWord.LastIndexOf("<"), lastWord.Length - lastWord.LastIndexOf("<"));
+                            endTag = lastWord.Substring(lastWord.LastIndexOf('<'), lastWord.Length - lastWord.LastIndexOf("<"));
                             // Remove the end tag from the last word.
-                            lastWord = lastWord.Remove(lastWord.LastIndexOf("<"));
+                            lastWord = lastWord.Remove(lastWord.LastIndexOf('<'));
                         }
 
                         // If the first subtitle ends with "...":
@@ -8691,7 +8691,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int start = textBoxSource.Text.IndexOf(tc);
                             if (start > 0)
                             {
-                                int start2 = textBoxSource.Text.LastIndexOf("Dialogue:", start);
+                                int start2 = textBoxSource.Text.LastIndexOf("Dialogue:", start, StringComparison.Ordinal);
                                 if (start2 > 0)
                                     start2 = (textBoxSource.Text + Environment.NewLine).IndexOf(Environment.NewLine, start2);
                                 if (start2 > 0)
@@ -8720,11 +8720,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (pos + 35 < textBoxSource.TextLength)
                             pos += 35;
                         string s = textBoxSource.Text.Substring(0, pos);
-                        int lastTimeCode = s.LastIndexOf(" --> "); // 00:02:26,407 --> 00:02:31,356
+                        int lastTimeCode = s.LastIndexOf(" --> ", StringComparison.Ordinal); // 00:02:26,407 --> 00:02:31,356
                         if (lastTimeCode > 14 && lastTimeCode + 16 >= s.Length)
                         {
                             s = s.Substring(0, lastTimeCode - 5);
-                            lastTimeCode = s.LastIndexOf(" --> ");
+                            lastTimeCode = s.LastIndexOf(" --> ", StringComparison.Ordinal);
                         }
 
                         if (lastTimeCode > 14 && lastTimeCode + 16 < s.Length)
@@ -13302,7 +13302,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (fileNameNoExtension.Contains("."))
             {
-                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf("."));
+                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
                 TryToFindAndOpenVideoFile(fileNameNoExtension);
             }
         }

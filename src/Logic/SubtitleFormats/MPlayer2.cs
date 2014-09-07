@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     try
                     {
 
-                        int textIndex = s.LastIndexOf("]") + 1;
+                        int textIndex = s.LastIndexOf(']') + 1;
                         if (textIndex < s.Length)
                         {
                             string text = s.Substring(textIndex);

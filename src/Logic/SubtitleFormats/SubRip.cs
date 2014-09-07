@@ -235,9 +235,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
             line = line.Replace('.', ':');
-            if (line.Length >= 29 && ":;".Contains(line[8].ToString()))
+            if (line.Length >= 29 && (line[8] == ':' || line[8] == ';'))
                 line = line.Substring(0, 8) + ',' + line.Substring(8 + 1);
-            if (line.Length >= 29 && line.Length <= 30 && ":;".Contains(line[25].ToString()))
+            if (line.Length >= 29 && line.Length <= 30 && (line[25] == ':' || line[25] == ';'))
                 line = line.Substring(0, 25) + ',' + line.Substring(25 + 1);
 
             if (_regexTimeCodes.IsMatch(line) || _regexTimeCodes2.IsMatch(line))

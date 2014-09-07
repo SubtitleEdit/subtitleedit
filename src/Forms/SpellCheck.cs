@@ -1032,8 +1032,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 string name = Utilities.GetDictionaryLanguages()[0];
-                int start = name.LastIndexOf("[");
-                int end = name.LastIndexOf("]");
+                int start = name.LastIndexOf('[');
+                int end = name.LastIndexOf(']');
                 if (start > 0 && end > start)
                 {
                     start++;

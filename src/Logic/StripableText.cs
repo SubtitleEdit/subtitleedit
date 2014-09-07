@@ -75,21 +75,21 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Substring(0, text.Length - 1);
                     }
 
-                    if (text.EndsWith(">"))
+                    if (text.EndsWith(">", StringComparison.Ordinal))
                     {
                         string lower = text.ToLower();
 
                         // tags </i> </b> </u>
-                        if (lower.EndsWith("</i>") ||
-                            lower.EndsWith("</b>") ||
-                            lower.EndsWith("</u>"))
+                        if (lower.EndsWith("</i>", StringComparison.Ordinal) ||
+                            lower.EndsWith("</b>", StringComparison.Ordinal) ||
+                            lower.EndsWith("</u>", StringComparison.Ordinal))
                         {
                             Post = text.Substring(text.Length - 4, 4) + Post;
                             text = text.Substring(0, text.Length - 4);
                         }
 
                         // tag </font>
-                        if (lower.EndsWith("</font>"))
+                        if (lower.EndsWith("</font>", StringComparison.Ordinal))
                         {
                             Post = text.Substring(text.Length - 7, 7) + Post;
                             text = text.Substring(0, text.Length - 7);
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
                                    (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
-                                   (Environment.NewLine.EndsWith(lower[start - 1].ToString()));
+                                   (Environment.NewLine.EndsWith(lower[start - 1].ToString(), StringComparison.Ordinal));
 
                     if (startOk)
                     {
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (StrippedText.EndsWith("."))
+            if (StrippedText.EndsWith(".", StringComparison.Ordinal))
             {
                 Post = "." + Post;
                 StrippedText = StrippedText.TrimEnd('.');
@@ -185,18 +185,18 @@ namespace Nikse.SubtitleEdit.Logic
 
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
-                                          s.EndsWith(".") ||
-                                          s.EndsWith("!") ||
-                                          s.EndsWith("?") ||
-                                          s.EndsWith(". ♪") ||
-                                          s.EndsWith("! ♪") ||
-                                          s.EndsWith("? ♪") ||
-                                          s.EndsWith("]") ||
-                                          s.EndsWith(")") ||
-                                          s.EndsWith(":");
+                                          s.EndsWith(".", StringComparison.Ordinal) ||
+                                          s.EndsWith("!", StringComparison.Ordinal) ||
+                                          s.EndsWith("?", StringComparison.Ordinal) ||
+                                          s.EndsWith(". ♪", StringComparison.Ordinal) ||
+                                          s.EndsWith("! ♪", StringComparison.Ordinal) ||
+                                          s.EndsWith("? ♪", StringComparison.Ordinal) ||
+                                          s.EndsWith("]", StringComparison.Ordinal) ||
+                                          s.EndsWith(")", StringComparison.Ordinal) ||
+                                          s.EndsWith(":", StringComparison.Ordinal);
 
                 // start with uppercase after music symbol - but only if next line not starts with music symbol
-                if (!startWithUppercase && (s.EndsWith("♪") || s.EndsWith("♫")))
+                if (!startWithUppercase && (s.EndsWith("♪", StringComparison.Ordinal) || s.EndsWith("♫", StringComparison.Ordinal)))
                 {
                     if (!Pre.Contains("♪") && !Pre.Contains("♫"))
                         startWithUppercase = true;
@@ -232,15 +232,15 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             sb.Append(s);
                         }
-                        else if ((sb.ToString().EndsWith("<") || sb.ToString().EndsWith("</")) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
+                        else if ((sb.ToString().EndsWith("<", StringComparison.Ordinal) || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.ToString().EndsWith("<") && s == "/" &&  i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
+                        else if (sb.ToString().EndsWith("<", StringComparison.Ordinal) && s == "/" && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.ToString().EndsWith("... "))
+                        else if (sb.ToString().EndsWith("... ", StringComparison.Ordinal))
                         {
                             sb.Append(s);
                             lastWasBreak = false;
