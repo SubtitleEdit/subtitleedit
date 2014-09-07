@@ -13370,7 +13370,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            if (_changeSubtitleToString != SerializeSubtitle(_subtitle))
+            if (string.CompareOrdinal(_changeSubtitleToString, SerializeSubtitle(_subtitle)) != 0)
             {
                 if (!Text.EndsWith("*"))
                     Text = Text.TrimEnd() + "*";
