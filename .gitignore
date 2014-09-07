@@ -3,6 +3,7 @@
 *.psess
 *.suo
 *.vsp
+*.vspx
 bin/
 obj/
 /cov-int
