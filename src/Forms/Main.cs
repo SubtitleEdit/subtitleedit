@@ -10694,7 +10694,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
-                sb.Append(p.StartTime.TotalMilliseconds + p.EndTime.TotalMilliseconds);
+                sb.Append(p.StartTime.TotalMilliseconds + (p.EndTime.TotalMilliseconds * 127));
                 sb.Append(p.Text);
             }
             return sb.ToString().TrimEnd();

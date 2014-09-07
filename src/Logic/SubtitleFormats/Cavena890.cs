@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return buffer;
         }
 
-        private void WriteText(FileStream fs, string text, bool isLast, int languageIdLine1, int languageIdLine2)
+        private static void WriteText(FileStream fs, string text, bool isLast, int languageIdLine1, int languageIdLine2)
         {
             string line1 = string.Empty;
             string line2 = string.Empty;

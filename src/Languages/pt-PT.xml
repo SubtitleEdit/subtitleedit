@@ -532,7 +532,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Corrigir tag itálica inválida</FixInvalidItalicTag>
     <FixShortDisplayTime>Corrigir duração curta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corrigir tempo sobreposto</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;Quem eu.&lt;i&gt; -&gt; &lt;i&gt;Quem Eu.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;Quem eu.&lt;i&gt; -&gt; &lt;i&gt;Quem eu.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hei   tu , aí. -&gt; Hei tu, aí.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hei tu!. -&gt; Hei tu!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hei.Tu. -&gt; Hei. Tu.</FixMissingSpacesExample>
@@ -562,13 +562,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Aplicar correcções seleccionadas</ApplyFixes>
     <AutoBreak>Ajuste auto da &amp;linha</AutoBreak>
     <Unbreak>&amp;Combinar</Unbreak>
-    <FixDoubleDash>Corrigir '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Remover &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Corrigir '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Remover '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
     <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
     <FixMusicNotation>Substituir símbolos musicais (e.g. âTª) por símbolos adequados</FixMusicNotation>
     <XFixDoubleDash>{0} '--' corrigidos</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} &gt;&gt; removidos</XFixDoubleGreaterThan>
+    <XFixDoubleGreaterThan>{0} '&gt;&gt;' removidos</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' iniciais eliminadas</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ omitidos na linha corrigidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical na linha corrigida</XFixMusicNotation>
