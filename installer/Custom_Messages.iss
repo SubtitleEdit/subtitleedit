@@ -75,23 +75,6 @@ bg.types_custom=Custom installation
 bg.types_default=Default installation
 
 
-; Portuguese (Brazil)
-br.comp_translations=Traduções
-br.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.0. Por favor, baixe e instale o .NET Framework e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.0 agora?
-br.msg_DeleteSettings=Deseja também deletar as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe você planeja reinstalar o Subtitle Edit você não precisa deletar estes itens.
-br.msg_OptimizingPerformance=Otimizando performance...
-br.msg_SetupIsRunningWarning=A instalação do Subtitle Edit já está em execução!
-br.run_VisitWebsite=Visitar site do Subtitle Edit
-br.sm_com_Changelog=Changelog do Subtitle Edit
-br.tsk_AllUsers=Todos os usuários
-br.tsk_CurrentUser=Usuário atual
-br.tsk_Other=Outro:
-br.tsk_ResetDictionaries=Resetar Dicionários e deletar quaisquer nomes personalizados
-br.tsk_ResetSettings=Resetar configurações do  Subtitle Edit
-br.types_custom=Instalação personalizada
-br.types_default=Instalação padrão
-
-
 ; Catalan
 ca.comp_translations=Translations
 ca.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
@@ -126,6 +109,23 @@ cs.types_custom=Vlastní instalace
 cs.types_default=Výchozí instalace
 
 
+; Danish
+da.comp_translations=Oversættelser
+da.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 4.0 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 4.0 nu?
+da.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
+da.msg_OptimizingPerformance=Optimerer performance...
+da.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
+da.run_VisitWebsite=Besøg Subtitle Edits Website
+da.sm_com_Changelog=Subtitle Edit ændringslog
+da.tsk_AllUsers=For alle brugere
+da.tsk_CurrentUser=Kun for aktulle bruger
+da.tsk_Other=Andre:
+da.tsk_ResetDictionaries=Nulstil ordbøger og slet bruger ordlister
+da.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
+da.types_custom=Brugerdefineret installation
+da.types_default=Default installation
+
+
 ; Deutsch
 de.comp_translations=Übersetzungen
 de.msg_AskToDownNET=Subtitle Edit benötigt .NET Framework 4.0. Bitte installieren Sie .NET Framework und starten Sie die Installation erneut.%n%nMöchten Sie .NET Framework 4.0 jetzt herunterladen?
@@ -141,23 +141,6 @@ de.tsk_ResetDictionaries=Wörterbücher zurücksetzen und sonstige Namen lösche
 de.tsk_ResetSettings=Subtitle Edit Einstellungen zurücksetzen
 de.types_custom=Benutzerdefinierte Installation
 de.types_default=Standardinstallation
-
-
-; Danish
-dk.comp_translations=Oversættelser
-dk.msg_AskToDownNET=Subtitle Edit kræver .NET Framework 4.0 eller nyere. Download and installer .NET Framework og kør setup igen.%n%nVil du downloade .NET Framework 4.0 nu?
-dk.msg_DeleteSettings=Vil du også slette Subtitle Edit's indstillinger og evt. ændringer i ordlister?%n%nHvis du vil geninstallere Subtitle Edit senere kan du beholde disse indstillinger.
-dk.msg_OptimizingPerformance=Optimerer performance...
-dk.msg_SetupIsRunningWarning=Subtitle Edit Setup kører allerede!
-dk.run_VisitWebsite=Besøg Subtitle Edits Website
-dk.sm_com_Changelog=Subtitle Edit ændringslog
-dk.tsk_AllUsers=For alle brugere
-dk.tsk_CurrentUser=Kun for aktulle bruger
-dk.tsk_Other=Andre:
-dk.tsk_ResetDictionaries=Nulstil ordbøger og slet bruger ordlister
-dk.tsk_ResetSettings=Nulstil Subtitle Edit indstillinger
-dk.types_custom=Brugerdefineret installation
-dk.types_default=Default installation
 
 
 ; Greek
@@ -331,20 +314,20 @@ ja.types_default=Default installation
 
 
 ; Korean
-kr.comp_translations=번역
-kr.msg_AskToDownNET=Subtitle Edit는 .NET Framework 4.0이 필요합니다. .NET Framework를 다운 받아 설치하신 후, Subtitle Edit 설치 마법사를 다시 실행하시기 바랍니다.%n%n지금 .NET Framework 4.0을 다운로드하시겠습니까?
-kr.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이면 그것을 삭제할 필요가 없습니다.
-kr.msg_OptimizingPerformance=성능을 최적화하는 중...
-kr.msg_SetupIsRunningWarning=Subtitle Edit 설치가 이미 실행 중입니다!
-kr.run_VisitWebsite=Subtitle Edit 웹 사이트 방문
-kr.sm_com_Changelog=Subtitle Edit 변경 내역
-kr.tsk_AllUsers=모든 사용자
-kr.tsk_CurrentUser=현재 사용자
-kr.tsk_Other=기타:
-kr.tsk_ResetDictionaries=사전 초기화 및 모든 사용자 이름 삭제
-kr.tsk_ResetSettings=Subtitle Edit 설정 초기화
-kr.types_custom=사용자 지정 설치
-kr.types_default=기본 설치
+ko.comp_translations=번역
+ko.msg_AskToDownNET=Subtitle Edit는 .NET Framework 4.0이 필요합니다. .NET Framework를 다운 받아 설치하신 후, Subtitle Edit 설치 마법사를 다시 실행하시기 바랍니다.%n%n지금 .NET Framework 4.0을 다운로드하시겠습니까?
+ko.msg_DeleteSettings=Subtitle Edit의 설정 및 사전에 포함된 사용자 지정의 모든 변경 사항을 삭제하시겠습니까?%n%n만약 Subtitle Edit를 다시 설치할 계획이면 그것을 삭제할 필요가 없습니다.
+ko.msg_OptimizingPerformance=성능을 최적화하는 중...
+ko.msg_SetupIsRunningWarning=Subtitle Edit 설치가 이미 실행 중입니다!
+ko.run_VisitWebsite=Subtitle Edit 웹 사이트 방문
+ko.sm_com_Changelog=Subtitle Edit 변경 내역
+ko.tsk_AllUsers=모든 사용자
+ko.tsk_CurrentUser=현재 사용자
+ko.tsk_Other=기타:
+ko.tsk_ResetDictionaries=사전 초기화 및 모든 사용자 이름 삭제
+ko.tsk_ResetSettings=Subtitle Edit 설정 초기화
+ko.types_custom=사용자 지정 설치
+ko.types_default=기본 설치
 
 
 ; Dutch
@@ -398,6 +381,23 @@ pt.types_custom=Instalação personalizada
 pt.types_default=Instalação padrão
 
 
+; Portuguese (Brazil)
+ptBR.comp_translations=Traduções
+ptBR.msg_AskToDownNET=O Subtitle Edit necessita do .NET Framework 4.0. Por favor, baixe e instale o .NET Framework e execute a instalação novamente.%n%nDeseja baixar o .NET Framework 4.0 agora?
+ptBR.msg_DeleteSettings=Deseja também deletar as configurações do Subtitle Edit e quaisquer mudanças feitas nos dicionários?%n%nSe você planeja reinstalar o Subtitle Edit você não precisa deletar estes itens.
+ptBR.msg_OptimizingPerformance=Otimizando performance...
+ptBR.msg_SetupIsRunningWarning=A instalação do Subtitle Edit já está em execução!
+ptBR.run_VisitWebsite=Visitar site do Subtitle Edit
+ptBR.sm_com_Changelog=Changelog do Subtitle Edit
+ptBR.tsk_AllUsers=Todos os usuários
+ptBR.tsk_CurrentUser=Usuário atual
+ptBR.tsk_Other=Outro:
+ptBR.tsk_ResetDictionaries=Resetar Dicionários e deletar quaisquer nomes personalizados
+ptBR.tsk_ResetSettings=Resetar configurações do  Subtitle Edit
+ptBR.types_custom=Instalação personalizada
+ptBR.types_default=Instalação padrão
+
+
 ; Romanian
 ro.comp_translations=Translations
 ro.msg_AskToDownNET=Subtitle Edit necesită .NET Framework 4.0. Vă rog să descărcaţi şi să instalaţi .NET Framework şi apoi reinstalaţi.%n%nVreţi să descărcaţi acum .NET Framework 4.0?
@@ -430,6 +430,23 @@ ru.tsk_ResetDictionaries=Сброс и удаление пользователь
 ru.tsk_ResetSettings=Сброс настроек программы
 ru.types_custom=Выборочная установка
 ru.types_default=Обычная установка
+
+
+; Slovenian
+sl.comp_translations=Translations
+sl.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
+sl.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+sl.msg_OptimizingPerformance=Optimizing performance...
+sl.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+sl.run_VisitWebsite=Visit Subtitle Edit's Website
+sl.sm_com_Changelog=Subtitle Edit's Changelog
+sl.tsk_AllUsers=For all users
+sl.tsk_CurrentUser=For the current user only
+sl.tsk_Other=Other:
+sl.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+sl.tsk_ResetSettings=Reset Subtitle Edit's settings
+sl.types_custom=Custom installation
+sl.types_default=Default installation
 
 
 ; Serbian Cyrillic
@@ -499,20 +516,20 @@ tr.types_custom=Custom installation
 tr.types_default=Default installation
 
 ; Vietnamese
-vn.comp_translations=Translations
-vn.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
-vn.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
-vn.msg_OptimizingPerformance=Optimizing performance...
-vn.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
-vn.run_VisitWebsite=Visit Subtitle Edit's Website
-vn.sm_com_Changelog=Subtitle Edit's Changelog
-vn.tsk_AllUsers=For all users
-vn.tsk_CurrentUser=For the current user only
-vn.tsk_Other=Other:
-vn.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
-vn.tsk_ResetSettings=Reset Subtitle Edit's settings
-vn.types_custom=Custom installation
-vn.types_default=Default installation
+vi.comp_translations=Translations
+vi.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
+vi.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+vi.msg_OptimizingPerformance=Optimizing performance...
+vi.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+vi.run_VisitWebsite=Visit Subtitle Edit's Website
+vi.sm_com_Changelog=Subtitle Edit's Changelog
+vi.tsk_AllUsers=For all users
+vi.tsk_CurrentUser=For the current user only
+vi.tsk_Other=Other:
+vi.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+vi.tsk_ResetSettings=Reset Subtitle Edit's settings
+vi.types_custom=Custom installation
+vi.types_default=Default installation
 
 ; Chinese Simplified
 zh.comp_translations=Translations
