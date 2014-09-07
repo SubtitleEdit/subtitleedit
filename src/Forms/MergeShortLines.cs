@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Empty;
 
             string endTag = string.Empty;
-            int start = text.LastIndexOf("</");
+            int start = text.LastIndexOf("</", StringComparison.Ordinal);
             if (start > 0 && start >= text.Length - 8)
             {
                 endTag = text.Substring(start);

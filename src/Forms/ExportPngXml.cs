@@ -831,7 +831,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             if (text.Contains("("))
-                text = text.Remove(0, text.IndexOf("(")).Trim();
+                text = text.Remove(0, text.IndexOf('(')).Trim();
             text = text.TrimStart('(').TrimEnd(')').Trim();
             string[] arr = text.Split('x');
             width = int.Parse(arr[0]);
@@ -1475,7 +1475,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<font "))
+                if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
                 {
                     float addLeft = 0;
                     int oldPathPointIndex = path.PointCount;
@@ -1520,7 +1520,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string fontContent = text.Substring(i, endIndex);
                         if (fontContent.Contains(" color="))
                         {
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -1546,7 +1546,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         i += endIndex;
                     }
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal))
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
@@ -1594,7 +1594,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     i += 6;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<i>"))
+                else if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
                 {
                     if (sb.Length > 0)
                     {
@@ -1604,7 +1604,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isItalic = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
                 {
                     if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
                     {
@@ -1617,7 +1617,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isItalic = false;
                     i += 3;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<b>"))
+                else if (text.Substring(i).ToLower().StartsWith("<b>", StringComparison.Ordinal))
                 {
                     if (sb.Length > 0)
                     {
@@ -1627,7 +1627,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isBold = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</b>") && isBold)
+                else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
                 {
                     if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
                     {
@@ -1695,8 +1695,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     parameter.P.Text = fontTag + parameter.P.Text;
                     if (parameter.P.Text.Contains("<font ") && !parameter.P.Text.Contains("</font>"))
                     {
-                        int start = parameter.P.Text.LastIndexOf("<font ");
-                        int end = parameter.P.Text.IndexOf(">", start);
+                        int start = parameter.P.Text.LastIndexOf("<font ", StringComparison.Ordinal);
+                        int end = parameter.P.Text.IndexOf('>', start);
                         fontTag = parameter.P.Text.Substring(start, end - start + 1);
                     }
 
@@ -1895,7 +1895,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             if (parameter.SimpleRendering)
             {
-                if (text.StartsWith("<font ") && Utilities.CountTagInText(text, "<font") == 1)
+                if (text.StartsWith("<font ", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<font") == 1)
                 {
                     parameter.SubtitleColor = Utilities.GetColorFromFontString(text, parameter.SubtitleColor);
                 }
@@ -2019,7 +2019,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var lastText = new StringBuilder();
                 while (i < text.Length)
                 {
-                    if (text.Substring(i).ToLower().StartsWith("<font "))
+                    if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
                     {
                         float addLeft = 0;
                         int oldPathPointIndex = path.PointCount;
@@ -2054,7 +2054,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         path = new GraphicsPath();
                         sb = new StringBuilder();
 
-                        int endIndex = text.Substring(i).IndexOf(">", StringComparison.Ordinal);
+                        int endIndex = text.Substring(i).IndexOf('>');
                         if (endIndex == -1)
                         {
                             i += 9999;
@@ -2071,7 +2071,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     try
                                     {
                                         colorStack.Push(c); // save old color
-                                        if (fontColor.StartsWith("rgb("))
+                                        if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
                                         {
                                             arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                             c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -2090,7 +2090,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             i += endIndex;
                         }
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                    else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal))
                     {
                         if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                         {
@@ -2138,7 +2138,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         i += 6;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<i>"))
+                    else if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
                     {
                         if (sb.ToString().Trim().Length > 0)
                         {
@@ -2148,7 +2148,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isItalic = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                    else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
                     {
                         if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
                         {
@@ -2161,7 +2161,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isItalic = false;
                         i += 3;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<b>"))
+                    else if (text.Substring(i).ToLower().StartsWith("<b>", StringComparison.Ordinal))
                     {
                         if (sb.ToString().Trim().Length > 0)
                         {
@@ -2171,7 +2171,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isBold = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</b>") && isBold)
+                    else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
                     {
                         if (lastText.ToString().EndsWith(" ") && !sb.ToString().StartsWith(" "))
                         {
@@ -2184,7 +2184,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isBold = false;
                         i += 3;
                     }
-                    else if (text.Substring(i).StartsWith(Environment.NewLine))
+                    else if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -2346,11 +2346,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private static string RemoveSubStationAlphaFormatting(string s)
         {
             int indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
-            while (indexOfBegin >= 0 && s.IndexOf("}") > indexOfBegin)
+            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
             {
-                int indexOfEnd = s.IndexOf("}");
+                int indexOfEnd = s.IndexOf('}');
                 s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf("{");
+                indexOfBegin = s.IndexOf('{');
             }
             return s;
         }
@@ -2758,8 +2758,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //set language
             if (!string.IsNullOrEmpty(languageString))
             {
-                if (languageString.Contains("(") && !languageString.StartsWith("("))
-                    languageString = languageString.Substring(0, languageString.IndexOf("(", StringComparison.Ordinal) - 1).Trim();
+                if (languageString.Contains("(") && languageString[0] != '(')
+                    languageString = languageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
                 for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
                 {
                     string l = comboBoxLanguage.Items[i].ToString();
@@ -3188,7 +3188,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else
                     {
-                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf("}");
+                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
                         if (_subtitle.Paragraphs[i].Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
                         else
@@ -3230,7 +3230,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        int indexOfEndBracket = p.Text.IndexOf("}");
+                        int indexOfEndBracket = p.Text.IndexOf('}');
                         if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
@@ -3248,12 +3248,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string RemoveSsaStyle(string text)
         {
-            int indexOfBegin = text.IndexOf("{");
-            while (indexOfBegin >= 0 && text.IndexOf("}") > indexOfBegin)
+            int indexOfBegin = text.IndexOf('{');
+            while (indexOfBegin >= 0 && text.IndexOf('}') > indexOfBegin)
             {
-                int indexOfEnd = text.IndexOf("}");
+                int indexOfEnd = text.IndexOf('}');
                 text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = text.IndexOf("{");
+                indexOfBegin = text.IndexOf('{');
             }
             return text;
         }

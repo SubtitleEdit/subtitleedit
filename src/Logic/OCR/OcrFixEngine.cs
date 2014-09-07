@@ -955,7 +955,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (HexNumber.IsMatch(word))
                 return word;
 
-            if (word.LastIndexOf("0", StringComparison.Ordinal) > 0)
+            if (word.LastIndexOf('0') > 0)
             {
                 Match match = RegExTime1.Match(word);
                 if (match.Success)

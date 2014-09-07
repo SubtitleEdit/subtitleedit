@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string[] endParts = end.Split(":.\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                             if (startParts.Length == 4 && endParts.Length == 4)
                             {
-                                string text = line.Substring(line.LastIndexOf("/>") + 2);
+                                string text = line.Substring(line.LastIndexOf("/>", StringComparison.Ordinal) + 2);
                                 p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                                 subtitle.Paragraphs.Add(p);
                             }

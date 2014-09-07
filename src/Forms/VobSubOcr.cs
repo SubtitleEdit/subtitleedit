@@ -7296,8 +7296,8 @@ namespace Nikse.SubtitleEdit.Forms
                     return null;
 
                 string name = comboBoxDictionaries.SelectedItem.ToString();
-                int start = name.LastIndexOf("[");
-                int end = name.LastIndexOf("]");
+                int start = name.LastIndexOf('[');
+                int end = name.LastIndexOf(']');
                 if (start >= 0 && end > start)
                 {
                     start++;

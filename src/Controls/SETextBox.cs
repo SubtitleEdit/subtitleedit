@@ -189,13 +189,13 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // fix end spaces
-                if (endIndex < Text.Length && !newText.EndsWith(" ") && Text[endIndex] != ' ')
+                if (endIndex < Text.Length && !newText.EndsWith(" ", StringComparison.Ordinal) && Text[endIndex] != ' ')
                 {
                     bool lastWord = ";:]<.!?".Contains(Text[endIndex].ToString());
                     if (!lastWord)
                         Text = Text.Insert(endIndex, " ");
                 }
-                else if (endIndex < Text.Length && newText.EndsWith(" ") && Text[endIndex] == ' ')
+                else if (endIndex < Text.Length && newText.EndsWith(" ", StringComparison.Ordinal) && Text[endIndex] == ' ')
                 {
                     Text = Text.Remove(endIndex, 1);
                 }

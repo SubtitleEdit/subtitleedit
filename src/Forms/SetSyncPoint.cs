@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (fileNameNoExtension.Contains("."))
             {
-                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf("."));
+                fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
                 TryToFindAndOpenVideoFile(fileNameNoExtension);
             }
         }

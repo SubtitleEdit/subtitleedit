@@ -446,7 +446,7 @@ namespace Nikse.SubtitleEdit.Forms
             res = res.Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
             res = res.Replace(" " + Environment.NewLine, Environment.NewLine).Trim();
-            int end = res.LastIndexOf("<p>");
+            int end = res.LastIndexOf("<p>", StringComparison.Ordinal);
             if (end > 0)
                 res = res.Substring(0, end);
             return res;

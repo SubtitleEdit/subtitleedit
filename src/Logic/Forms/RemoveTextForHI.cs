@@ -422,11 +422,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 {
                     StripableText temp = new StripableText(text);
                     temp.StrippedText = temp.StrippedText.Replace(Environment.NewLine, " ");
-                    int splitIndex = temp.StrippedText.LastIndexOf("!", StringComparison.Ordinal);
+                    int splitIndex = temp.StrippedText.LastIndexOf('!');
                     if (splitIndex == -1)
-                        splitIndex = temp.StrippedText.LastIndexOf("?", StringComparison.Ordinal);
+                        splitIndex = temp.StrippedText.LastIndexOf('?');
                     if (splitIndex == -1)
-                        splitIndex = temp.StrippedText.LastIndexOf(".", StringComparison.Ordinal);
+                        splitIndex = temp.StrippedText.LastIndexOf('.');
                     if (splitIndex > 0)
                     {
                         text = temp.Pre + temp.StrippedText.Insert(splitIndex + 1, Environment.NewLine) + temp.Post;
