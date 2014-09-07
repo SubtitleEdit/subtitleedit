@@ -21,14 +21,21 @@ namespace Nikse.SubtitleEdit.Forms
             Text = _language.Title + " - " + (IntPtr.Size * 8) + "-bit";
             okButton.Text = _languageGeneral.Ok;
             string[] versionInfo = Utilities.AssemblyVersion.Split('.');
-            labelProduct.Text = String.Format("{0} {1}.{2}.{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
-            linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
-            linkLabelGitBuildHash.LinkColor = Color.FromArgb(0, 102, 204);
-            linkLabelGitBuildHash.VisitedLinkColor = Color.FromArgb(0, 102, 204);
-
             string revisionNumber = "0";
             if (versionInfo.Length >= 4)
                 revisionNumber = versionInfo[3];
+            if (revisionNumber == "0")
+            {
+                labelProduct.Text = String.Format("{0} {1}.{2}.{3}, ", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
+                revisionNumber = Utilities.AssemblyDescription.Substring(0, 7);
+            }
+            else
+            {
+                labelProduct.Text = String.Format("{0} {1}.{2}.{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
+            }
+            linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
+            linkLabelGitBuildHash.LinkColor = Color.FromArgb(0, 102, 204);
+            linkLabelGitBuildHash.VisitedLinkColor = Color.FromArgb(0, 102, 204);
             linkLabelGitBuildHash.Text = revisionNumber;
             var toolTip1 = new ToolTip();
             toolTip1.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
