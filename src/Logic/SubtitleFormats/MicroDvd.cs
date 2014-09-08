@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class MicroDvd : SubtitleFormat
     {
-        static Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
+        private static Regex _regexMicroDvdLine = new Regex(@"^\{-?\d+}\{-?\d+}.*$", RegexOptions.Compiled);
         public string Errors { get; private set; }
         private StringBuilder _errors;
         private int _lineNumber;
@@ -58,16 +58,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = line.IndexOf("}");
             if (index >= 0 && index < line.Length)
             {
-                index = line.IndexOf("}", index+1);
-                if (index >= 0 && index +1 < line.Length)
+                index = line.IndexOf("}", index + 1);
+                if (index >= 0 && index + 1 < line.Length)
                 {
                     if (line.IndexOf("{}") >= 0 && line.IndexOf("{}") < index)
                     {
-                        line = line.Insert(line.IndexOf("{}") +1, "0"); // set empty time codes to zero
+                        line = line.Insert(line.IndexOf("{}") + 1, "0"); // set empty time codes to zero
                         index++;
                     }
 
-                    while (line.IndexOf(" ")  >= 0 && line.IndexOf(" ") < index)
+                    while (line.IndexOf(" ") >= 0 && line.IndexOf(" ") < index)
                     {
                         line = line.Remove(line.IndexOf(" "), 1);
                         index--;
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     count++;
                 }
                 string text = lineSb.ToString();
-                int noOfLines = Utilities.CountTagInText(text,"|") +1;
+                int noOfLines = Utilities.CountTagInText(text, "|") + 1;
                 if (Utilities.CountTagInText(text, "{y:i}") == noOfLines && text.StartsWith("{y:i}"))
                     text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
                 else if (Utilities.CountTagInText(text, "{y:b}") == noOfLines && text.StartsWith("{y:b}"))
@@ -448,7 +448,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                             tag = tag.Remove(0, 3).Trim();
                                             if (tag.Length > 0)
                                             {
-                                                pre.Append( "<font face=\"" + tag + "\">");
+                                                pre.Append("<font face=\"" + tag + "\">");
                                                 s = s.Remove(start, end - start + 1);
                                                 singlePost = "</font>" + singlePost;
                                             }

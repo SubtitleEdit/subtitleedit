@@ -6,16 +6,16 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
-//00:01:27.703 00:01:29.514 Okay.
-//00:01:29.259 00:01:31.514 Okaaayyyy.
-//00:01:32.534 00:01:34.888 Let's go over this once again.
-//00:01:35.446 00:01:38.346 Pick up the bread, walk the dog, go to the dry cleaners,
-//00:01:38.609 00:01:41.471 pick up the bread, walk the dog, go thoughtless,
-//00:01:42.247 00:01:43.915 pick up the cake
+    //00:01:27.703 00:01:29.514 Okay.
+    //00:01:29.259 00:01:31.514 Okaaayyyy.
+    //00:01:32.534 00:01:34.888 Let's go over this once again.
+    //00:01:35.446 00:01:38.346 Pick up the bread, walk the dog, go to the dry cleaners,
+    //00:01:38.609 00:01:41.471 pick up the bread, walk the dog, go thoughtless,
+    //00:01:42.247 00:01:43.915 pick up the cake
 
     public class UnknownSubtitle48 : SubtitleFormat
     {
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d \d\d:\d\d:\d\d.\d\d\d .*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d \d\d:\d\d:\d\d.\d\d\d .*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    _errorCount+=10;
+                    _errorCount += 10;
                 }
             }
             subtitle.Renumber(1);

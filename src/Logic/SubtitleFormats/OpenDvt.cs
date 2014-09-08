@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -108,7 +107,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 stream.InnerText = "0";
                 line.AppendChild(stream);
 
-
                 XmlNode timeMS = xml.CreateElement("TimeMs");
                 timeMS.InnerText = p.StartTime.TotalMilliseconds.ToString();
                 line.AppendChild(timeMS);
@@ -195,5 +193,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

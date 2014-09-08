@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Scenarist : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
                     string start = temp.Substring(5, 11);
-                    string end = temp.Substring(12+5, 11);
+                    string end = temp.Substring(12 + 5, 11);
 
                     string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

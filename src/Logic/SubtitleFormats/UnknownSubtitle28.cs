@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -59,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    XmlNode text = xml.CreateElement("text" + (i+1).ToString());
+                    XmlNode text = xml.CreateElement("text" + (i + 1).ToString());
                     text.InnerText = arr[i];
                     paragraph.AppendChild(text);
                 }
@@ -103,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = timeNode.Attributes["start"].InnerText;
                     string end = timeNode.Attributes["end"].InnerText;
                     string text = string.Empty;
-                    for (int i=1; i<10; i++)
+                    for (int i = 1; i < 10; i++)
                     {
                         XmlNode textNode = node.SelectSingleNode("text" + i);
                         if (textNode != null)
@@ -129,5 +128,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

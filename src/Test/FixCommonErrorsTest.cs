@@ -41,6 +41,7 @@ namespace Test
         }
 
         #region Additional test attributes
+
         //
         //You can use the following additional attributes as you write your tests:
         //
@@ -110,7 +111,6 @@ namespace Test
                 }
             }
 
-
         }
 
         //Use ClassCleanup to run code after all tests in a class have run
@@ -131,9 +131,11 @@ namespace Test
         //{
         //}
         //
-        #endregion
+
+        #endregion Additional test attributes
 
         #region Merge short lines
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesNormal()
@@ -184,7 +186,6 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hallo!" + Environment.NewLine + "- Hi</i>");
         }
 
-
         /// <summary>
         ///A test for Merge short lines
         ///</summary>
@@ -197,9 +198,11 @@ namespace Test
             target.FixShortLines();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
         }
-        #endregion
+
+        #endregion Merge short lines
 
         #region Fix Italics
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixItalicsBeginOnly()
@@ -310,9 +313,10 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "<i>To be a life-changing weekend" + Environment.NewLine + "for all of us.</i>");
         }
 
-        #endregion
+        #endregion Fix Italics
 
         #region Fix Missing Periods At End Of Line
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingPeriodsAtEndOfLineNone()
@@ -353,9 +357,10 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "”... and gently down I laid her. ”");
         }
 
-        #endregion
+        #endregion Fix Missing Periods At End Of Line
 
         #region Fix Hyphens (add dash)
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddDash1()
@@ -416,9 +421,10 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
         }
 
-        #endregion
+        #endregion Fix Hyphens (add dash)
 
         #region Fix OCR errors
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixCommonOcrErrorsSlashMakesTwoWords()
@@ -459,9 +465,10 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...in a lot of trouble.");
         }
 
-        #endregion
+        #endregion Fix OCR errors
 
         #region Fix missingspaces
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesItalicBegin()
@@ -542,9 +549,10 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Go to www.Nikse.Dk for more info");
         }
 
-        #endregion
+        #endregion Fix missingspaces
 
         #region Start with uppercase after paragraph
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphMusic1()
@@ -675,10 +683,10 @@ namespace Test
             Assert.AreEqual(fixedText, "- moss!" + Environment.NewLine + " - Bye.");
         }
 
-
-        #endregion
+        #endregion Start with uppercase after paragraph
 
         #region Fix Spanish question- and exclamation-marks
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixSpanishNormalQuestion1()
@@ -749,7 +757,7 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "¿¡Cómo estás!?");
         }
 
-        #endregion
+        #endregion Fix Spanish question- and exclamation-marks
 
         #region FixHyphens
 
@@ -802,9 +810,11 @@ namespace Test
             target.FixHyphens();
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Uh-huh.");
         }
-        #endregion
+
+        #endregion FixHyphens
 
         #region Ellipses start
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartNormal1()
@@ -869,7 +879,7 @@ namespace Test
             Assert.AreEqual(result, "<i>Kurt: true but bad.</i>");
         }
 
-        #endregion
+        #endregion Ellipses start
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]

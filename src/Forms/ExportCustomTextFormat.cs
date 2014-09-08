@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            FormatOk = textBoxName.Text+ "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" +   comboBoxTimeCode.Text + "Æ" +  comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify) + "Æ" + textBoxFooter.Text;
+            FormatOk = textBoxName.Text + "Æ" + textBoxHeader.Text + "Æ" + textBoxParagraph.Text + "Æ" + comboBoxTimeCode.Text + "Æ" + comboBoxNewLine.Text.Replace(Configuration.Settings.Language.ExportCustomTextFormat.DoNotModify, EnglishDoNoModify) + "Æ" + textBoxFooter.Text;
             DialogResult = DialogResult.OK;
         }
 
@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
             string s = template;
             s = s.Replace("{{", "@@@@_@@@{");
             s = s.Replace("}}", "}@@@_@@@@");
-            s = string.Format(s, start, end, text, translation, number+1, number, d);
+            s = string.Format(s, start, end, text, translation, number + 1, number, d);
             s = s.Replace("@@@@_@@@", "{");
             s = s.Replace("@@@_@@@@", "}");
             return s;

@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class NetworkStart : Form
     {
 
-        Logic.Networking.NikseWebServiceSession _networkSession;
-        string _fileName;
+        private Logic.Networking.NikseWebServiceSession _networkSession;
+        private string _fileName;
 
         public NetworkStart()
         {

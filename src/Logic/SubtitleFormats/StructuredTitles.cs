@@ -43,10 +43,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 80 80 80
 ");
 
-//0001 : 01:07:25:08,01:07:29:00,10
-//80 80 80
-//C1Y00 Niemand zal je helpen ontsnappen.
-//C1Y00 - Een agent heeft me geholpen.
+            //0001 : 01:07:25:08,01:07:29:00,10
+            //80 80 80
+            //C1Y00 Niemand zal je helpen ontsnappen.
+            //C1Y00 - Een agent heeft me geholpen.
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.AppendLine(string.Format("{0:0000} : {1},{2},10", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine();
                 index++;
             }
-            sb.AppendLine(string.Format("{0:0000}", index+1) + @" : --:--:--:--,--:--:--:--,-1
+            sb.AppendLine(string.Format("{0:0000}", index + 1) + @" : --:--:--:--,--:--:--:--,-1
 80 80 80");
             return sb.ToString();
         }
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line.Substring(5).Trim();
                     else
-                        p.Text +=  Environment.NewLine + line.Substring(5).Trim();
+                        p.Text += Environment.NewLine + line.Substring(5).Trim();
                 }
                 else if (regexSomeCodes.IsMatch(line))
                 {

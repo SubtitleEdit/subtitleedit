@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class JoinSubtitles : Form
     {
-        List<string> _fileNamesToJoin = new List<string>();
+        private List<string> _fileNamesToJoin = new List<string>();
         public Subtitle JoinedSubtitle { get; set; }
         public Logic.SubtitleFormats.SubtitleFormat JoinedFormat { get; private set; }
 
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (sub.Paragraphs.Count > 0)
                 {
                     lvi.SubItems.Add(sub.Paragraphs[0].StartTime.ToString());
-                    lvi.SubItems.Add(sub.Paragraphs[sub.Paragraphs.Count-1].StartTime.ToString());
+                    lvi.SubItems.Add(sub.Paragraphs[sub.Paragraphs.Count - 1].StartTime.ToString());
                 }
                 else
                 {
@@ -239,7 +239,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             columnHeaderFileName.Width = -2;
         }
-
 
     }
 }

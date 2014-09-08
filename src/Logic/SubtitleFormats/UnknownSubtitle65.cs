@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle65 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             Text
@@ -39,14 +39,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             const string paragraphWriteFormat = "{0:00}:{1:00}:{2:00},{3:00}:{4:00}:{5:00}{6}{7}";
 
-//00:00:08,00:00:13
-//The 8.7 update will bring the British self-propelled guns, the map, called Severogorsk,
+            //00:00:08,00:00:13
+            //The 8.7 update will bring the British self-propelled guns, the map, called Severogorsk,
 
-//00:00:13,00:00:18
-//the soviet light tank MT-25 and the new German premium TD, the E25.
+            //00:00:13,00:00:18
+            //the soviet light tank MT-25 and the new German premium TD, the E25.
 
-//00:00:18,00:00:22
-//We will tell you about this and lots of other things in our review.
+            //00:00:18,00:00:22
+            //We will tell you about this and lots of other things in our review.
 
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)

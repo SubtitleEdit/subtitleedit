@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle52 : SubtitleFormat
     {
         //#00001    10:00:02.00 10:00:04.13 00:00:02.13 #F CC00000D0    #C
-        static readonly Regex RegexTimeCodes = new Regex(@"^\#\d\d\d\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t.*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\#\d\d\d\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t\d\d:\d\d:\d\d\.\d\d\t.*$", RegexOptions.Compiled);
 
         public override string Extension
         {

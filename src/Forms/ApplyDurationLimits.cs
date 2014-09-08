@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Forms
             _refreshTimer.Tick += RefreshTimerTick;
         }
 
-        void RefreshTimerTick(object sender, EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             _refreshTimer.Stop();
             GeneratePreviewReal();
@@ -123,7 +123,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             return false;
         }
-
 
         private void FixShortDisplayTimes()
         {

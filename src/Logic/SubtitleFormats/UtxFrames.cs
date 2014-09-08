@@ -34,7 +34,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //I'd forgotten.
             //#2060,2188
 
-
             //Were you somewhere far away?
             //- Yes, four years in Switzerland.
             //#3885,3926

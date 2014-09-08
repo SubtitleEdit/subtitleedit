@@ -27,9 +27,9 @@ namespace Nikse.SubtitleEdit.Forms
             public int NoOfNamesEtc { get; set; }
             public int NoOfAddedWords { get; set; }
         }
-        List<UndoObject> _undoList = new List<UndoObject>();
+        private List<UndoObject> _undoList = new List<UndoObject>();
 
-        SpellCheckAction _action = SpellCheckAction.Skip;
+        private SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
         private string _currentAction = null;
         public SpellCheckAction Action { get { return _action; } set { _action = value; } }
@@ -41,38 +41,38 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _currentIndex; }
         }
 
-        List<string> _namesEtcList = new List<string>();
-        List<string> _namesEtcMultiWordList = new List<string>();
-        List<string> _namesEtcListUppercase = new List<string>();
-        List<string> _namesEtcListWithApostrophe = new List<string>();
-        List<string> _skipAllList = new List<string>();
-        List<string> _wordsWithDashesOrPeriods = new List<string>();
+        private List<string> _namesEtcList = new List<string>();
+        private List<string> _namesEtcMultiWordList = new List<string>();
+        private List<string> _namesEtcListUppercase = new List<string>();
+        private List<string> _namesEtcListWithApostrophe = new List<string>();
+        private List<string> _skipAllList = new List<string>();
+        private List<string> _wordsWithDashesOrPeriods = new List<string>();
 
-        Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
-        List<string> _userWordList = new List<string>();
-        List<string> _userPhraseList = new List<string>();
-        string _prefix = string.Empty;
-        string _postfix = string.Empty;
-        Hunspell _hunspell;
-        Paragraph _currentParagraph;
-        int _currentIndex;
-        string _currentWord;
-        SpellCheckWord _currentSpellCheckWord;
-        List<SpellCheckWord> _words;
-        int _wordsIndex;
-        Subtitle _subtitle;
-        string _originalWord;
+        private Dictionary<string, string> _changeAllDictionary = new Dictionary<string, string>();
+        private List<string> _userWordList = new List<string>();
+        private List<string> _userPhraseList = new List<string>();
+        private string _prefix = string.Empty;
+        private string _postfix = string.Empty;
+        private Hunspell _hunspell;
+        private Paragraph _currentParagraph;
+        private int _currentIndex;
+        private string _currentWord;
+        private SpellCheckWord _currentSpellCheckWord;
+        private List<SpellCheckWord> _words;
+        private int _wordsIndex;
+        private Subtitle _subtitle;
+        private string _originalWord;
 
-        int _noOfSkippedWords = 0;
-        int _noOfChangedWords = 0;
-        int _noOfCorrectWords = 0;
-        int _noOfNamesEtc = 0;
-        int _noOfAddedWords = 0;
-        bool _firstChange = true;
-        string _languageName;
-        Main _mainWindow;
+        private int _noOfSkippedWords = 0;
+        private int _noOfChangedWords = 0;
+        private int _noOfCorrectWords = 0;
+        private int _noOfNamesEtc = 0;
+        private int _noOfAddedWords = 0;
+        private bool _firstChange = true;
+        private string _languageName;
+        private Main _mainWindow;
 
-        string _currentDictionary = null;
+        private string _currentDictionary = null;
 
         public class SuggestionParameter
         {
@@ -1098,7 +1098,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _wordsWithDashesOrPeriods.AddRange(_userPhraseList);
 
-
             _changeAllDictionary = new Dictionary<string, string>();
             LoadHunspell(dictionary);
             _currentIndex = 0;
@@ -1235,7 +1234,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var undo = _undoList[_undoList.Count - 1];
                 _currentIndex = undo.CurrentIndex - 1;
-                _wordsIndex = int.MaxValue-1;
+                _wordsIndex = int.MaxValue - 1;
                 _noOfSkippedWords = undo.NoOfSkippedWords;
                 _noOfChangedWords = undo.NoOfChangedWords;
                 _noOfCorrectWords = undo.NoOfCorrectWords;

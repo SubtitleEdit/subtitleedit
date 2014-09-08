@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class CheetahCaption : SubtitleFormat
     {
 
-          static readonly List<int> LatinCodes = new List<int> {
+        private static readonly List<int> LatinCodes = new List<int> {
             0x81, // ♪
             0x82, // á
             0x83, // é
@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x95, // ®
           };
 
-          static readonly List<string> LatinLetters = new List<string> {
+        private static readonly List<string> LatinLetters = new List<string> {
             "♪",
             "á",
             "é",
@@ -82,7 +82,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
             fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
 
-
             buffer = new byte[] { 9, 0xA8, 0xAF, 0x4F }; // ?
             fs.Write(buffer, 0, buffer.Length);
 
@@ -114,7 +113,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //Left          : 12 01 00 00 00 00 03 0F 0A
                 //Right         : 12 01 00 00 00 00 03 0F 1E
                 //Left          : 12 03 00 00 00 00 03 0F 07
-
 
                 if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
                 {
@@ -247,7 +245,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int length = buffer[i];
                 int textLength = length - 20;
                 int start = 19;
-                for (int j=0; j<4; j++)
+                for (int j = 0; j < 4; j++)
                 {
                     if (buffer[i + start - 1] > 0x10)
                     {
@@ -255,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         textLength++;
                     }
                 }
-                if (textLength > 0 && buffer.Length >= i+textLength)
+                if (textLength > 0 && buffer.Length >= i + textLength)
                 {
                     byte firstByte = buffer[i + 1];
                     p.StartTime = DecodeTimeStamp(buffer, i + 2);

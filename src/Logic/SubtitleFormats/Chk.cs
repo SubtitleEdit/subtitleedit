@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// <summary>
     /// .CHK subtitle file format - 128 bytes blocks, first byte in block is id (01==text)
     /// </summary>
-    public class Chk  : SubtitleFormat
+    public class Chk : SubtitleFormat
     {
         private Encoding _codePage = Encoding.GetEncoding(850);
         private string _languageId = "DEN"; // English

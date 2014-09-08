@@ -64,7 +64,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Header = null;
             byte[] buffer = Utilities.ReadAllBytes(fileName);
 
-
             int i = 128;
             while (i < buffer.Length - 40)
             {
@@ -100,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             {
                                 length = buffer[i - 1];
                                 i += 12;
-                                for (int j = i; j < i + (length*4); j+=4)
+                                for (int j = i; j < i + (length * 4); j += 4)
                                 {
                                     sb.Append(Encoding.GetEncoding(1252).GetString(buffer, j, 1));
                                 }

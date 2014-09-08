@@ -6,9 +6,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VideoControlsUndocked : Form
     {
-        Main _mainForm = null;
-        PositionsAndSizes _positionsAndSizes = null;
-        Keys _redockKeys;
+        private Main _mainForm = null;
+        private PositionsAndSizes _positionsAndSizes = null;
+        private Keys _redockKeys;
 
         public Panel PanelContainer
         {

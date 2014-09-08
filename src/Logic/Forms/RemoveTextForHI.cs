@@ -411,7 +411,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = RemoveStartEndTags(text);
             }
 
-
             text = RemoveHearImpairedTags(text);
 
             // fix 3 lines to two liners - if only two lines

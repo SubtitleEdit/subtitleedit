@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         else
                         {
                             int value = c.R + c.R + c.B;
-                            data[i] = value/766.0;
+                            data[i] = value / 766.0;
                         }
                     }
                     i++;

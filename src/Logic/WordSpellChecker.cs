@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Forms;
 
@@ -12,24 +11,24 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     internal class WordSpellChecker
     {
-        const int HWND_BOTTOM = 1;
+        private const int HWND_BOTTOM = 1;
 
-        const int SWP_NOACTIVATE = 0x0010;
-        const short SWP_NOMOVE = 0X2;
-        const short SWP_NOSIZE = 1;
-        const short SWP_NOZORDER = 0X4;
-        const int SWP_SHOWWINDOW = 0x0040;
+        private const int SWP_NOACTIVATE = 0x0010;
+        private const short SWP_NOMOVE = 0X2;
+        private const short SWP_NOSIZE = 1;
+        private const short SWP_NOZORDER = 0X4;
+        private const int SWP_SHOWWINDOW = 0x0040;
 
-        const int wdWindowStateNormal = 0;
-        const int wdWindowStateMaximize = 1;
-        const int wdWindowStateMinimize = 2;
+        private const int wdWindowStateNormal = 0;
+        private const int wdWindowStateMaximize = 1;
+        private const int wdWindowStateMinimize = 2;
 
         private object _wordApplication;
         private object _wordDocument;
         private Type _wordApplicationType;
         private Type _wordDocumentType;
-        IntPtr _mainHandle;
-        int _languageId = 1033; // english
+        private IntPtr _mainHandle;
+        private int _languageId = 1033; // english
 
         public WordSpellChecker(Main main, string languageId)
         {

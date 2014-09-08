@@ -10,10 +10,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ReplaceDialog : Form
     {
-        Regex _regEx;
-        int _left;
-        int _top;
-        bool _userAction = false;
+        private Regex _regEx;
+        private int _left;
+        private int _top;
+        private bool _userAction = false;
 
         public ReplaceDialog()
         {

@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //00:04:04.219
         //The city council of long beach
 
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append(string.Format(paragraphWriteFormat, p.StartTime.ToString().Replace(",","."), p.Text));
+                sb.Append(string.Format(paragraphWriteFormat, p.StartTime.ToString().Replace(",", "."), p.Text));
             }
             return sb.ToString().Trim();
         }

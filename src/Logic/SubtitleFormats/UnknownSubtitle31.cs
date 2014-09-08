@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle31 : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+\.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+\.\d\d$", RegexOptions.Compiled);
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             Number,
             TimeStart,
@@ -52,7 +52,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //16.00
             //19.06
             //Kaip reikalai ðunø grobimo versle?
-
 
             const string paragraphWriteFormat = "{4}.{3}{0}{3}{1}{3}{2}{3}";
             var sb = new StringBuilder();

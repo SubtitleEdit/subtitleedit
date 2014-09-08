@@ -1,5 +1,4 @@
-﻿
-namespace Nikse.SubtitleEdit.Logic.Ocr
+﻿namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class SpellcheckOcrTextResult
     {

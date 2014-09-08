@@ -58,7 +58,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var arr = all.Replace("\n", string.Empty).Replace("{\"content\":\"", "\n").Split('\n');
 
-
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
 
@@ -90,8 +89,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var paragraph = new Paragraph
                                             {
                                                 Text = text,
-                                                StartTime = {TotalMilliseconds = GetMilliseconds(start)},
-                                                EndTime = {TotalMilliseconds = GetMilliseconds(end)}
+                                                StartTime = { TotalMilliseconds = GetMilliseconds(start) },
+                                                EndTime = { TotalMilliseconds = GetMilliseconds(end) }
                                             };
                         subtitle.Paragraphs.Add(paragraph);
                     }

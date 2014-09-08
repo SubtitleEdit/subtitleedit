@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         s = s.Replace(" - ", ":");
                         s = s.Replace(" ", string.Empty);
                         string[] parts = s.Split(':');
-                        if (parts.Length ==  8)
+                        if (parts.Length == 8)
                         {
                             int hours = int.Parse(parts[0]);
                             int minutes = int.Parse(parts[1]);

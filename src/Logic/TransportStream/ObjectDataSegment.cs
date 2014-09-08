@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
         private int ProcessDataType(byte[] buffer, int index, ClutDefinitionSegment cds, ref int dataType, int start,
                                     List<int> twoToFourBitColorLookup, List<int> fourToEightBitColorLookup, List<int> twoToEightBitColorLookup,
-                                    ref int x, ref int y, int length,  ref int pixelCode, ref int runLength)
+                                    ref int x, ref int y, int length, ref int pixelCode, ref int runLength)
         {
             if (dataType == PixelDecoding2Bit)
             {
@@ -212,11 +212,11 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
             else if (dataType == MapTable2To4Bit)
             {
-                index+=2;
+                index += 2;
             }
             else if (dataType == MapTable2To8Bit)
             {
-                index+=4;
+                index += 4;
             }
             else if (dataType == MapTable4To8Bit)
             {
@@ -237,7 +237,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 width = x;
             return index;
         }
-
 
         private void DrawPixels(ClutDefinitionSegment cds, int pixelCode, int runLength, ref int x, ref int y)
         {

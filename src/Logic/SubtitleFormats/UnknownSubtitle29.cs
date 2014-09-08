@@ -8,9 +8,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle29 : SubtitleFormat
     {
 
-        //00:00:30:21   00:00:35:22        //Et c'est là que nous devions        //passer la nuit.        //00:00:38:04   00:00:40:18        //Un nouveau martyre a commencé.
+        //00:00:30:21   00:00:35:22
+        //Et c'est là que nous devions
+        //passer la nuit.
 
-        static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        //00:00:38:04   00:00:40:18
+        //Un nouveau martyre a commencé.
+
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {

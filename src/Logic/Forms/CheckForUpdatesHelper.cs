@@ -65,12 +65,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         //    }
         //}
 
-        void FinishWebRequestChangeLog(IAsyncResult result)
+        private void FinishWebRequestChangeLog(IAsyncResult result)
         {
             try
             {
                 _changeLog = GetStringFromResponse(result);
-                LatestChangeLog =  GetLastestChangeLog(_changeLog);
+                LatestChangeLog = GetLastestChangeLog(_changeLog);
                 LatestVersionNumber = GetLastestVersionNumber(LatestChangeLog);
             }
             catch (Exception exception)

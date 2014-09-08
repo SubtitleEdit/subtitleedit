@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     public class Configuration
     {
-        string _baseDir;
-        string _dataDir;
-        Settings _settings;
+        private string _baseDir;
+        private string _dataDir;
+        private Settings _settings;
 
         public static Configuration Instance
         {
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic
                         bool hasDictionaryFolder = Directory.Exists(Path.Combine(BaseDirectory, "Dictionaries"));
                         string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
 
-                        if ((installerPath != null && installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar) == BaseDirectory.ToLower().TrimEnd(Path.DirectorySeparatorChar))  ||
+                        if ((installerPath != null && installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar) == BaseDirectory.ToLower().TrimEnd(Path.DirectorySeparatorChar)) ||
                             hasUninstallFiles ||
                             (!hasDictionaryFolder && Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
                         {

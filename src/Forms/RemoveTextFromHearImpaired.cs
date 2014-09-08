@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FormRemoveTextForHearImpaired : Form
     {
-        Subtitle _subtitle;
-        readonly LanguageStructure.RemoveTextFromHearImpaired _language;
+        private Subtitle _subtitle;
+        private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private RemoveTextForHI _removeTextForHILib;
 
         public FormRemoveTextForHearImpaired()
@@ -90,17 +90,17 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.Substring(3);
 
             if (s.EndsWith("</b>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</i>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</u>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</B>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</I>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
             if (s.EndsWith("</U>") && s.Length > 4)
-                s = s.Substring(0, s.Length-4);
+                s = s.Substring(0, s.Length - 4);
 
             if (s.StartsWith("-") && s.Length > 2)
                 s = s.TrimStart('-');
@@ -166,10 +166,9 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Text = string.Format(_language.LinesFoundX, count);
         }
 
-
         private void AddToListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
             if (_removeTextForHILib.Warnings != null && _removeTextForHILib.Warnings.Contains(_removeTextForHILib.WarningIndex))
             {
                 item.UseItemStyleForSubItems = true;
@@ -304,7 +303,6 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
         }
 
-
         private void checkBoxRemoveIfAllUppercase_CheckedChanged(object sender, EventArgs e)
         {
             Cursor = Cursors.WaitCursor;
@@ -319,15 +317,15 @@ namespace Nikse.SubtitleEdit.Forms
             settings.RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked;
             settings.RemoveTextBeforeColon = checkBoxRemoveTextBeforeColon.Checked;
             settings.RemoveTextBeforeColonOnlyUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked;
-            settings.ColonSeparateLine  = checkBoxColonSeparateLine.Checked;
-            settings.RemoveWhereContains  = checkBoxRemoveWhereContains.Checked;
-            settings.RemoveIfTextContains  = comboBoxRemoveIfTextContains.Text;
-            settings.RemoveTextBetweenCustomTags  = checkBoxRemoveTextBetweenCustomTags.Checked;
-            settings.RemoveInterjections  = checkBoxRemoveInterjections.Checked;
-            settings.RemoveTextBetweenSquares  = checkBoxRemoveTextBetweenSquares.Checked;
-            settings.RemoveTextBetweenBrackets  = checkBoxRemoveTextBetweenBrackets.Checked;
-            settings.RemoveTextBetweenQuestionMarks  = checkBoxRemoveTextBetweenQuestionMarks.Checked;
-            settings.RemoveTextBetweenParentheses  = checkBoxRemoveTextBetweenParentheses.Checked;
+            settings.ColonSeparateLine = checkBoxColonSeparateLine.Checked;
+            settings.RemoveWhereContains = checkBoxRemoveWhereContains.Checked;
+            settings.RemoveIfTextContains = comboBoxRemoveIfTextContains.Text;
+            settings.RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked;
+            settings.RemoveInterjections = checkBoxRemoveInterjections.Checked;
+            settings.RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked;
+            settings.RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked;
+            settings.RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked;
+            settings.RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked;
             settings.CustomStart = comboBoxCustomStart.Text;
             settings.CustomEnd = comboBoxCustomEnd.Text;
             return settings;

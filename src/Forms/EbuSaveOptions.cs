@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class EbuSaveOptions : Form
     {
-        Ebu.EbuGeneralSubtitleInformation _header;
-        Subtitle _subtitle;
+        private Ebu.EbuGeneralSubtitleInformation _header;
+        private Subtitle _subtitle;
 
         public byte JustificationCode { get; private set; }
 

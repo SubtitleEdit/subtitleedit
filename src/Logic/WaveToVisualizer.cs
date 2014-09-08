@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic
     /// </summary>
     public class WaveHeader
     {
-        const int ConstantHeaderSize = 20;
+        private const int ConstantHeaderSize = 20;
         private readonly byte[] _headerData;
 
         public string ChunkId { get; private set; }
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Logic
             long totalSamples = 0;
 
             // write delay (if any)
-            int delaySampleCount = (int) (Header.SampleRate * (delayInMilliseconds / 1000.0));
+            int delaySampleCount = (int)(Header.SampleRate * (delayInMilliseconds / 1000.0));
             for (int i = 0; i < delaySampleCount; i++)
             {
                 samples.Add(0);

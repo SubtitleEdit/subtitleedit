@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class UnknownSubtitle12 : SubtitleFormat
     {
-        static Regex _regexTimeCode = new Regex(@"^\d+.\d\d\t\t\d+.\d\d\t*$", RegexOptions.Compiled);
+        private static Regex _regexTimeCode = new Regex(@"^\d+.\d\d\t\t\d+.\d\d\t*$", RegexOptions.Compiled);
 
         public override string Extension
         {

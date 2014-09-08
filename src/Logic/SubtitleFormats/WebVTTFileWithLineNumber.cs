@@ -11,9 +11,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class WebVTTFileWithLineNumber : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
-        static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
-        static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesMiddle = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesShort = new Regex(@"^-?\d+:-?\d+\.-?\d+\s*-->\s*-?\d+:-?\d+\.-?\d+", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     try
                     {
-                        string[] parts = s.Replace("-->","@").Split("@".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] parts = s.Replace("-->", "@").Split("@".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         p = new Paragraph();
                         p.StartTime = GetTimeCodeFromString(parts[0]);
                         p.EndTime = GetTimeCodeFromString(parts[1]);
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (startIndex == s.Length - 1)
                             startIndex = -1;
                         else
-                            startIndex = s.IndexOf("<v ", startIndex +1);
+                            startIndex = s.IndexOf("<v ", startIndex + 1);
                     }
                 }
 
@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode GetTimeCodeFromString(string time)
         {
             // hh:mm:ss.mmm
-            string[] timeCode = time.Trim().Split (':', '.', ' ');
+            string[] timeCode = time.Trim().Split(':', '.', ' ');
             return new TimeCode(int.Parse(timeCode[0]),
                                 int.Parse(timeCode[1]),
                                 int.Parse(timeCode[2]),

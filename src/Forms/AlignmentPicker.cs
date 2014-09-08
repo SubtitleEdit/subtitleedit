@@ -6,7 +6,6 @@ using Nikse.SubtitleEdit.Logic;
 namespace Nikse.SubtitleEdit.Forms
 {
 
-
     public partial class AlignmentPicker : Form
     {
         public ContentAlignment Alignment { get; set; }

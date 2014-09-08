@@ -7,11 +7,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Oresme : SubtitleFormat
     {
-//00:00:00:00{BC}{W2710}
-//10:00:00:15{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}
-//10:00:17:06{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}We view
-//10:00:19:06{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}Lufa Farms as{N}an agrotechnology business
-        static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d\{", RegexOptions.Compiled);
+        //00:00:00:00{BC}{W2710}
+        //10:00:00:15{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}
+        //10:00:17:06{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}We view
+        //10:00:19:06{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}Lufa Farms as{N}an agrotechnology business
+        private static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d\{", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var p = new Paragraph();
                     try
                     {
-                        p.StartTime = DecodeTimeCode(s.Substring(0,11));
+                        p.StartTime = DecodeTimeCode(s.Substring(0, 11));
                         p.Text = GetText(line.Remove(0, 11));
                         subtitle.Paragraphs.Add(p);
                     }
@@ -89,10 +89,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
 
-                for (int i = 0; i < subtitle.Paragraphs.Count-1; i++)
+                for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
                 {
                     var p2 = subtitle.Paragraphs[i];
-                    var next = subtitle.Paragraphs[i+1];
+                    var next = subtitle.Paragraphs[i + 1];
                     p2.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                 }
                 if (subtitle.Paragraphs.Count > 0)
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             s = s.Replace("{N}", Environment.NewLine);
             var sb = new StringBuilder();
             bool tagOn = false;
-            for (int i=0; i<s.Length; i++)
+            for (int i = 0; i < s.Length; i++)
             {
                 if (s[i] == '{')
                     tagOn = true;

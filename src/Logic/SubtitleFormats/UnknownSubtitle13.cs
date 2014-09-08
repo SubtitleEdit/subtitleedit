@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -100,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (text.StartsWith("<![CDATA["))
                         text = text.Remove(0, 9);
                     if (text.EndsWith("]]"))
-                        text = text.Remove(text.Length-2, 2);
+                        text = text.Remove(text.Length - 2, 2);
 
                     subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));
                 }
@@ -123,8 +122,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return new TimeCode(hours, minutes, seconds, ms);
         }
 
-
     }
 }
-
 

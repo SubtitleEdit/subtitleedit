@@ -11,28 +11,28 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public int Length { get; set; }
 
         public bool DiscontinuityIndicator { get; set; }
-        public bool RandomAccessIndicator  { get; set; }
+        public bool RandomAccessIndicator { get; set; }
         public bool ElementaryStreamPriorityIndicator { get; set; }
 
         /// <summary>
         /// '1' indicates that the adaptation field contains a PCR field coded in two parts
         /// </summary>
-        public bool PcrFlag  { get; set; }
+        public bool PcrFlag { get; set; }
 
         /// <summary>
         /// '1' indicates that the adaptation field contains an OPCR field coded in two parts
         /// </summary>
-        public bool OpcrFlag  { get; set; }
+        public bool OpcrFlag { get; set; }
 
         /// <summary>
         /// '1' indicates that a splice countdown field shall be present in the associated adaptation field
         /// </summary>
-        public bool SplicingPointFlag  { get; set; }
+        public bool SplicingPointFlag { get; set; }
 
         /// <summary>
         /// 1' indicates that the adaptation field contains one or more private data bytes
         /// </summary>
-        public bool TransportPrivateDataFlag  { get; set; }
+        public bool TransportPrivateDataFlag { get; set; }
 
         /// <summary>
         /// '1' indicates the presence of an adaptation field extension
@@ -51,7 +51,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public byte[] TransportPrivateData { get; set; }
 
         public int AdaptationFieldExtensionLength { get; set; }
-
 
         public AdaptationField(byte[] packetBuffer)
         {

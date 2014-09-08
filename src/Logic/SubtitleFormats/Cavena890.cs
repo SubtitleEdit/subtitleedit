@@ -8,17 +8,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Cavena890 : SubtitleFormat
     {
 
-        const int LanguageIdEnglish = 0x01;
-        const int LanguageIdDanish = 0x07;
-        const int LanguageIdAlbanian = 0x09;
-        const int LanguageIdSwedish = 0x28;
-        const int LanguageIdHebrew = 0x56;
-        const int LanguageIdArabic = 0x80;
-        const int LanguageIdRussian = 0x8f;
-        const int LanguageIdChineseTraditional = 0x90;
-        const int LanguageIdChineseSimplified = 0x91;
+        private const int LanguageIdEnglish = 0x01;
+        private const int LanguageIdDanish = 0x07;
+        private const int LanguageIdAlbanian = 0x09;
+        private const int LanguageIdSwedish = 0x28;
+        private const int LanguageIdHebrew = 0x56;
+        private const int LanguageIdArabic = 0x80;
+        private const int LanguageIdRussian = 0x8f;
+        private const int LanguageIdChineseTraditional = 0x90;
+        private const int LanguageIdChineseSimplified = 0x91;
 
-        static List<int> _hebrewCodes = new List<int> {
+        private static List<int> _hebrewCodes = new List<int> {
             0x40, // א
             0x41, // ב
             0x42, // ג
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x55, // ץ
         };
 
-        static List<string> _hebrewLetters = new List<string> {
+        private static List<string> _hebrewLetters = new List<string> {
             "א",
             "ב",
             "ג",
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "ץ",
         };
 
-        static List<int> _russianCodes = new List<int> {
+        private static List<int> _russianCodes = new List<int> {
             0x42, // Б
             0x45, // Е
             0x5A, // З
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x68, // П
         };
 
-        static List<string> _russianLetters = new List<string> {
+        private static List<string> _russianLetters = new List<string> {
             "Б",
             "Е",
             "З",
@@ -226,7 +226,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
                 _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
 
-
             //header
             for (int i = 0; i < 22; i++)
                 fs.WriteByte(0);
@@ -261,7 +260,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
             fs.Write(buffer, 0, buffer.Length);
 
-
             buffer = GetFontBytesFromLanguageId(_languageIdLine2);
             fs.Write(buffer, 0, buffer.Length);
 
@@ -271,7 +269,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             for (int i = 0; i < 92; i++)
                 fs.WriteByte(0);
-
 
             // paragraphs
             int number = 16;
@@ -543,7 +540,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             index++;
                             buffer[index] = 0x65;
                         }
-
                         else if (current == "É")
                         {
                             buffer[index] = 0x82;
@@ -556,7 +552,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             index++;
                             buffer[index] = 0x45;
                         }
-
                         else if (i + 3 < text.Length && text.Substring(i, 3) == "<i>")
                         {
                             buffer[index] = 0x88;
@@ -582,7 +577,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static void WriteTime(FileStream fs, TimeCode timeCode)
         {
             double totalMilliseconds = timeCode.TotalMilliseconds;
-            int frames = (int)Math.Round(totalMilliseconds / (1000.0 /Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(totalMilliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
             fs.WriteByte((byte)(frames / 256 / 256));
             fs.WriteByte((byte)(frames / 256));
             fs.WriteByte((byte)(frames % 256));
@@ -706,7 +701,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 lastNumber = number;
 
-                i+=128;
+                i += 128;
             }
 
             subtitle.Renumber(1);
@@ -751,7 +746,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (idx >= 0)
                         sb.Append(_hebrewLetters[idx]);
                     else
-                        sb.Append(encoding.GetString(buffer, start+i, 1));
+                        sb.Append(encoding.GetString(buffer, start + i, 1));
                 }
 
                 text = sb.ToString();
@@ -765,7 +760,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 int index = start;
 
-                while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength-1] == 0))
+                while (textLength >= 1 && index + textLength < buffer.Length && (buffer[index + textLength - 1] == 0))
                     textLength--;
                 if (textLength > 0)
                 {
@@ -805,7 +800,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x5C }), "Ø");
                 text = text.Replace(encoding.GetString(new byte[] { 0x5D }), "Å");
 
-
                 text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x41 }), "Ä");
                 text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x61 }), "ä");
                 text = text.Replace(encoding.GetString(new byte[] { 0x86, 0x4F }), "Ö");
@@ -823,7 +817,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x88 }), "<i>");
                 text = text.Replace(encoding.GetString(new byte[] { 0x98 }), "</i>");
 
-
                 //ăĂ îÎ şŞ ţŢ âÂ (romanian)
                 text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x61 }), "ă");
                 text = text.Replace(encoding.GetString(new byte[] { 0x89, 0x41 }), "Ă");
@@ -835,7 +828,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace(encoding.GetString(new byte[] { 0x87, 0x54 }), "Ţ");
                 text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x61 }), "â");
                 text = text.Replace(encoding.GetString(new byte[] { 0x83, 0x41 }), "Â");
-
 
                 if (text.Contains("<i></i>"))
                     text = text.Replace("<i></i>", "<i>");

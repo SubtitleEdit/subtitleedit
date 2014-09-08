@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ExportCustomText : Form
     {
-        List<string> _templates = new List<string>();
-        Subtitle _subtitle;
-        Subtitle _translated;
-        string _title;
+        private List<string> _templates = new List<string>();
+        private Subtitle _subtitle;
+        private Subtitle _translated;
+        private string _title;
         public string LogMessage { get; set; }
 
         public ExportCustomText(Subtitle subtitle, Subtitle original, string title)
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Selected)
                 {
                     string name = item.Text;
-                    for (int j = _templates.Count-1; j > 0; j--)
+                    for (int j = _templates.Count - 1; j > 0; j--)
                     {
                         if (_templates[j].StartsWith(name + "ÆÆ"))
                             _templates.RemoveAt(j);

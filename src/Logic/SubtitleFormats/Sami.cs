@@ -293,7 +293,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int sourceIndex = text.IndexOf("ID=\"Source\"", StringComparison.Ordinal);
                     if (sourceIndex < 0)
                         sourceIndex = text.IndexOf("ID=Source", StringComparison.Ordinal);
-                    int st = sourceIndex -1;
+                    int st = sourceIndex - 1;
                     while (st > 0 && text.Substring(st, 2).ToUpper() != "<P")
                     {
                         st--;
@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 int endSyncPos = text.ToUpper().IndexOf("</SYNC>", StringComparison.Ordinal);
                 if (text.IndexOf('>') > 0 && (text.IndexOf('>') < endSyncPos || endSyncPos == -1))
-                    text = text.Remove(0, text.IndexOf('>')+1);
+                    text = text.Remove(0, text.IndexOf('>') + 1);
                 text = text.TrimEnd();
 
                 if (text.ToLower().EndsWith("</sync>", StringComparison.Ordinal))
@@ -424,14 +424,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             if (p != null && !string.IsNullOrEmpty(p.Text) && subtitle.Paragraphs.IndexOf(p) == -1)
             {
-                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds +  Utilities.GetOptimalDisplayMilliseconds(p.Text);
+                p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);
             }
             subtitle.Renumber(1);
 
             if (subtitle.Paragraphs.Count > 0 &&
-                (subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text.ToUpper().Trim() == "</BODY>" ||
-                subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text.ToUpper().Trim() == "<BODY>"))
+                (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "</BODY>" ||
+                subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text.ToUpper().Trim() == "<BODY>"))
                 subtitle.Paragraphs.RemoveAt(subtitle.Paragraphs.Count - 1);
 
             foreach (Paragraph p2 in subtitle.Paragraphs)

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle27 : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:  ", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:  ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             string text = s.Remove(0, 10).Trim();
                             text = text.Replace("  ", Environment.NewLine);
-                            p = new Paragraph(DecodeTimeCode(startParts), new TimeCode(0,0,0,0), text);
+                            p = new Paragraph(DecodeTimeCode(startParts), new TimeCode(0, 0, 0, 0), text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch (Exception exception)
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-            for (int i=0; i<subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph current = subtitle.Paragraphs[i];
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);

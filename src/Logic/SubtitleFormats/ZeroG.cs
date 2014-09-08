@@ -32,11 +32,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//% Zero G 1.0
+            //% Zero G 1.0
 
-//E 1 0:50:20.22 0:50:21.38 Default NTP Die Frage ist:
-//E 1 0:50:21.54 0:50:25.86 Default NTP Wieso habe ich überlebt?
-//E 1 0:50:27.30 0:50:30.78 Default NTP Was habe ich richtig gemacht?  \n Ich weiß es nicht.
+            //E 1 0:50:20.22 0:50:21.38 Default NTP Die Frage ist:
+            //E 1 0:50:21.54 0:50:25.86 Default NTP Wieso habe ich überlebt?
+            //E 1 0:50:27.30 0:50:30.78 Default NTP Was habe ich richtig gemacht?  \n Ich weiß es nicht.
             const string paragraphWriteFormat = "E 1 {0} {1} Default NTP {2}";
 
             StringBuilder sb = new StringBuilder();

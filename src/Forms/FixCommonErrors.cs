@@ -15,69 +15,69 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FixCommonErrors : Form
     {
-        const int IndexRemoveEmptyLines = 0;
-        const int IndexOverlappingDisplayTime = 1;
-        const int IndexTooShortDisplayTime = 2;
-        const int IndexTooLongDisplayTime = 3;
-        const int IndexInvalidItalicTags = 4;
-        const int IndexUnneededSpaces = 5;
-        const int IndexUnneededPeriods = 6;
-        const int IndexMissingSpaces = 7;
-        const int IndexBreakLongLines = 8;
-        const int IndexMergeShortLines = 9;
-        const int IndexMergeShortLinesAll = 10;
-        const int IndexDoubleApostropheToQuote = 11;
-        const int IndexFixMusicNotation = 12;
-        const int IndexAddPeriodAfterParagraph = 13;
-        const int IndexStartWithUppercaseLetterAfterParagraph = 14;
-        const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 15;
-        const int IndexStartWithUppercaseLetterAfterColon = 16;
-        const int IndexAddMissingQuotes = 17;
-        const int IndexFixHyphens = 18;
-        const int IndexFixHyphensAdd = 19;
-        const int IndexFix3PlusLines = 20;
-        const int IndexFixDoubleDash = 21;
-        const int IndexFixDoubleGreaterThan = 22;
-        const int IndexFixEllipsesStart = 23;
-        const int IndexFixMissingOpenBracket = 24;
-        const int IndexFixOcrErrorsViaReplaceList = 25;
-        const int IndexUppercaseIInsideLowercaseWord = 26;
-        const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
-        const int IndexRemoveSpaceBetweenNumbers = 28;
-        const int IndexDialogsOnOneLine = 29;
-        const int IndexDanishLetterI = 30;
-        const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
-        int _turkishAnsiIndex = -1;
-        int _danishLetterIIndex = -1;
-        int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
+        private const int IndexRemoveEmptyLines = 0;
+        private const int IndexOverlappingDisplayTime = 1;
+        private const int IndexTooShortDisplayTime = 2;
+        private const int IndexTooLongDisplayTime = 3;
+        private const int IndexInvalidItalicTags = 4;
+        private const int IndexUnneededSpaces = 5;
+        private const int IndexUnneededPeriods = 6;
+        private const int IndexMissingSpaces = 7;
+        private const int IndexBreakLongLines = 8;
+        private const int IndexMergeShortLines = 9;
+        private const int IndexMergeShortLinesAll = 10;
+        private const int IndexDoubleApostropheToQuote = 11;
+        private const int IndexFixMusicNotation = 12;
+        private const int IndexAddPeriodAfterParagraph = 13;
+        private const int IndexStartWithUppercaseLetterAfterParagraph = 14;
+        private const int IndexStartWithUppercaseLetterAfterPeriodInsideParagraph = 15;
+        private const int IndexStartWithUppercaseLetterAfterColon = 16;
+        private const int IndexAddMissingQuotes = 17;
+        private const int IndexFixHyphens = 18;
+        private const int IndexFixHyphensAdd = 19;
+        private const int IndexFix3PlusLines = 20;
+        private const int IndexFixDoubleDash = 21;
+        private const int IndexFixDoubleGreaterThan = 22;
+        private const int IndexFixEllipsesStart = 23;
+        private const int IndexFixMissingOpenBracket = 24;
+        private const int IndexFixOcrErrorsViaReplaceList = 25;
+        private const int IndexUppercaseIInsideLowercaseWord = 26;
+        private const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
+        private const int IndexRemoveSpaceBetweenNumbers = 28;
+        private const int IndexDialogsOnOneLine = 29;
+        private const int IndexDanishLetterI = 30;
+        private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
+        private int _turkishAnsiIndex = -1;
+        private int _danishLetterIIndex = -1;
+        private int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
 
-        readonly LanguageStructure.FixCommonErrors _language;
-        readonly LanguageStructure.General _languageGeneral;
+        private readonly LanguageStructure.FixCommonErrors _language;
+        private readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
 
-        static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
-        static readonly Regex UrlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
-        static readonly Regex UrlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
-        static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
+        private static readonly Regex UrlCom = new Regex(@"\w\.com\b", RegexOptions.Compiled);
+        private static readonly Regex UrlNet = new Regex(@"\w\.net\b", RegexOptions.Compiled);
+        private static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
 
-        static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
-        static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùàìéóúñüéíóúñü]", RegexOptions.Compiled);
+        private static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
+        private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùàìéóúñüéíóúñü]", RegexOptions.Compiled);
 
-        static readonly Regex RemoveSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
+        private static readonly Regex RemoveSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
         public static readonly Regex FixAloneLowercaseIToUppercaseIRE = new Regex(@"\bi\b", RegexOptions.Compiled);
 
-        Keys _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
-        Keys _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        Keys _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
+        private Keys _goToLine = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainEditGoToLineNumber);
+        private Keys _preview = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToolsFixCommonErrorsPreview);
+        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private Keys _mainListViewGoToNextError = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainListViewGoToNextError);
 
-        class FixItem
+        private class FixItem
         {
             public string Name { get; set; }
             public string Example { get; set; }
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        class ListViewSorter : System.Collections.IComparer
+        private class ListViewSorter : System.Collections.IComparer
         {
             public int Compare(object o1, object o2)
             {
@@ -128,22 +128,22 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         public Subtitle _subtitle;
-        SubtitleFormat _format;
-        Encoding _encoding = Encoding.UTF8;
-        Subtitle _originalSubtitle;
-        int _totalFixes;
-        int _totalErrors;
-        List<FixItem> _fixActions;
-        int _subtitleListViewIndex = -1;
-        bool _onlyListFixes = true;
-        bool _batchMode = false;
-        string _autoDetectGoogleLanguage;
-        List<string> _namesEtcList;
-        List<string> _abbreviationList;
-        StringBuilder _newLog = new StringBuilder();
-        StringBuilder _appliedLog = new StringBuilder();
+        private SubtitleFormat _format;
+        private Encoding _encoding = Encoding.UTF8;
+        private Subtitle _originalSubtitle;
+        private int _totalFixes;
+        private int _totalErrors;
+        private List<FixItem> _fixActions;
+        private int _subtitleListViewIndex = -1;
+        private bool _onlyListFixes = true;
+        private bool _batchMode = false;
+        private string _autoDetectGoogleLanguage;
+        private List<string> _namesEtcList;
+        private List<string> _abbreviationList;
+        private StringBuilder _newLog = new StringBuilder();
+        private StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages = 0;
-        List<int> _deleteIndices = new List<int>();
+        private List<int> _deleteIndices = new List<int>();
 
         public Subtitle FixedSubtitle
         {
@@ -715,7 +715,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-//                        prev.EndTime.TotalMilliseconds--;
+                        //                        prev.EndTime.TotalMilliseconds--;
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
@@ -754,7 +754,6 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-
                     else if (diff > 0 && currentWantedDisplayTime <= p.Duration.TotalMilliseconds - diffHalf &&
                              prevWantedDisplayTime <= prev.Duration.TotalMilliseconds - diffHalf)
                     {
@@ -880,7 +879,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
-                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds >  Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
+                    else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
                              (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds))
                     {
                         if (AllowFix(p, fixAction))
@@ -1150,7 +1149,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
 
                 string s = Utilities.RemoveHtmlTags(p.Text);
-                if (s.Replace(Environment.NewLine," ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
                     s = s.TrimEnd().TrimEnd(".?!:;".ToCharArray());
                     s = s.TrimStart('-');
@@ -1445,7 +1444,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             bool isMatchAbbreviation = false;
 
-                            string word = GetWordFromIndex(p.Text, match.Index);                            
+                            string word = GetWordFromIndex(p.Text, match.Index);
                             if (Utilities.CountTagInText(word, '.') > 1)
                                 isMatchAbbreviation = true;
 
@@ -2053,7 +2052,6 @@ namespace Nikse.SubtitleEdit.Forms
                     nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
                 string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
 
-
                 if (IsOneLineUrl(p.Text) || p.Text.Contains("♪") || p.Text.Contains("♫") || p.Text.EndsWith("'", StringComparison.Ordinal))
                 {
                     ; // ignore urls
@@ -2065,7 +2063,7 @@ namespace Nikse.SubtitleEdit.Forms
                     (!",.!?:;>-])♪♫…".Contains(tempNoHtml[tempNoHtml.Length - 1].ToString())))
                 {
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd(new char[] { '\'', '"', '“', '”' }).TrimEnd();
-                    if (tempTrimmed.Length > 0 && !")]*#¶.!?".Contains(tempTrimmed.Substring(tempTrimmed.Length-1)))
+                    if (tempTrimmed.Length > 0 && !")]*#¶.!?".Contains(tempTrimmed.Substring(tempTrimmed.Length - 1)))
                     {
                         if (p.Text != p.Text.ToUpper())
                         {
@@ -2444,7 +2442,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (isPrevLineEndOfLine && arr[0].StartsWith("- ") && arr[0].Length > 3)
                         {
-                            p.Text =  "- " + arr[0].Substring(2, 1).ToUpper() + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
+                            p.Text = "- " + arr[0].Substring(2, 1).ToUpper() + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
                         }
 
                     }
@@ -2490,7 +2488,6 @@ namespace Nikse.SubtitleEdit.Forms
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1, StringComparison.Ordinal);
                     len = "♪ <i>-".Length;
                 }
-
 
                 if (indexOfNewLine > 0)
                 {
@@ -3213,7 +3210,6 @@ namespace Nikse.SubtitleEdit.Forms
                 LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
         }
 
-
         private void Fix3PlusLines()
         {
             string fixAction = _language.Fix3PlusLine;
@@ -3429,7 +3425,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (fixCount > 0)
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
         }
-
 
         private static string FixMissingOpenBracket(string text, string openB)
         {
@@ -4248,7 +4243,6 @@ namespace Nikse.SubtitleEdit.Forms
                     skip = true;
                 }
 
-
                 if (!skip)
                 {
                     int startIndex = 0;
@@ -4532,7 +4526,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_mainListViewGoToNextError == e.KeyData)
             {
-                 GoToNextSynaxError();
+                GoToNextSynaxError();
                 e.SuppressKeyPress = true;
             }
 
@@ -4551,7 +4545,7 @@ namespace Nikse.SubtitleEdit.Forms
                     listViewFixes.Items[idx].Selected = true;
                     listViewFixes.Items[idx].EnsureVisible();
                     if (idx > 0)
-                        listViewFixes.Items[idx-1].Selected = false;
+                        listViewFixes.Items[idx - 1].Selected = false;
                 }
             }
             catch
@@ -4999,7 +4993,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex + 1, _subtitle.Paragraphs[_subtitleListViewIndex + 1]);
         }
 
-        void MaskedTextBox_TextChanged(object sender, EventArgs e)
+        private void MaskedTextBox_TextChanged(object sender, EventArgs e)
         {
             if (_subtitleListViewIndex >= 0 &&
                 timeUpDownStartTime.TimeCode != null &&

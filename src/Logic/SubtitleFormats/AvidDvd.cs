@@ -15,8 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //Panessa, why didn't they give them
         //an escape route ?
 
-
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t.+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -58,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = p.Text;
                 if (text.StartsWith("{") && text.Length > 6 && text[6] == '}')
-                    text = text.Remove(0,6);
+                    text = text.Remove(0, 6);
                 if (text.StartsWith("<i>") && text.EndsWith("</i>"))
                 {
                     if (!italic)

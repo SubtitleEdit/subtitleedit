@@ -9,19 +9,19 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VobSubOcrNOcrCharacter : Form
     {
-        NOcrChar _nocrChar = null;
-        bool _drawLineOn;
-        bool _startDone;
-        Point _start;
-        Point _end;
-        double _zoomFactor = 3.0;
-        int _imageWidth;
-        int _imageHeight;
-        int _mx;
-        int _my;
-        bool _warningNoNotForegroundLinesShown = false;
-        List<NOcrChar> _history = new List<NOcrChar>();
-        int _historyIndex = -1;
+        private NOcrChar _nocrChar = null;
+        private bool _drawLineOn;
+        private bool _startDone;
+        private Point _start;
+        private Point _end;
+        private double _zoomFactor = 3.0;
+        private int _imageWidth;
+        private int _imageHeight;
+        private int _mx;
+        private int _my;
+        private bool _warningNoNotForegroundLinesShown = false;
+        private List<NOcrChar> _history = new List<NOcrChar>();
+        private int _historyIndex = -1;
 
         public VobSubOcrNOcrCharacter()
         {
@@ -344,7 +344,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 while (_history.Count > _historyIndex + 1)
                     _history.RemoveAt(_history.Count - 1);
-                _historyIndex = _history.Count-1;
+                _historyIndex = _history.Count - 1;
             }
             _history.Add(new NOcrChar(nocrChar));
             _historyIndex++;
@@ -638,7 +638,6 @@ namespace Nikse.SubtitleEdit.Forms
                 var start = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
                 var end = new Point(r.Next(nOcrChar.Width), r.Next(nOcrChar.Height));
 
-
                 if (hits < 5 && count < 100) // a few large lines
                 {
                     for (int k = 0; k < 500; k++)
@@ -655,7 +654,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else // and a lot of small lines
                 {
-                    for (int k = 0; k < 500 ; k++)
+                    for (int k = 0; k < 500; k++)
                     {
                         if (Math.Abs(start.X - end.X) + Math.Abs(start.Y - end.Y) < 5)
                         {
@@ -688,7 +687,6 @@ namespace Nikse.SubtitleEdit.Forms
                     tempVeryPrecise = true;
 
             }
-
 
         }
 

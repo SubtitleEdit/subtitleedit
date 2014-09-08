@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class UnknownSubtitle68: SubtitleFormat
+    public class UnknownSubtitle68 : SubtitleFormat
     {
-        static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\dF\d\d", RegexOptions.Compiled); //10:00:02F00
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\dF\d\d", RegexOptions.Compiled); //10:00:02F00
 
         public override string Extension
         {

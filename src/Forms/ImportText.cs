@@ -12,8 +12,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ImportText : Form
     {
-        Subtitle _subtitle;
-        string _videoFileName;
+        private Subtitle _subtitle;
+        private string _videoFileName;
         private readonly Timer _refreshTimer = new Timer();
 
         public Subtitle FixedSubtitle { get { return _subtitle; } }
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
             _refreshTimer.Tick += RefreshTimerTick;
         }
 
-        void RefreshTimerTick(object sender, EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             _refreshTimer.Stop();
             GeneratePreviewReal();
@@ -149,7 +149,6 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxAutoBreak.Enabled = false;
             }
 
-
             if (_refreshTimer.Enabled)
             {
                 _refreshTimer.Stop();
@@ -186,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    p.StartTime.TotalMilliseconds  = TimeCode.MaxTime.TotalMilliseconds;
+                    p.StartTime.TotalMilliseconds = TimeCode.MaxTime.TotalMilliseconds;
                     p.EndTime.TotalMilliseconds = TimeCode.MaxTime.TotalMilliseconds;
                 }
             }
@@ -237,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var temp = new Subtitle();
             bool skipNext = false;
-            for (int i=0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 if (!skipNext)
@@ -377,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var first = new StringBuilder();
                     var second = new StringBuilder();
-                    var third  = new StringBuilder();
+                    var third = new StringBuilder();
                     foreach (string word in input.Replace(Environment.NewLine, " ").Replace("  ", " ").Split(' '))
                     {
                         if (first.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
@@ -406,11 +405,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 splitPos = ending.IndexOf("? ") + second.Length - 9;
                             if (splitPos > 0)
                             {
-                                text = Utilities.AutoBreakLine(first.ToString().Trim() + second.ToString().Substring(0, splitPos+1)).Trim() + Environment.NewLine + (second.ToString().Substring(splitPos+1) + third).Trim();
+                                text = Utilities.AutoBreakLine(first.ToString().Trim() + second.ToString().Substring(0, splitPos + 1)).Trim() + Environment.NewLine + (second.ToString().Substring(splitPos + 1) + third).Trim();
                                 return true;
                             }
                         }
-
 
                         text = first + Environment.NewLine + second + Environment.NewLine + third;
                         return true;
@@ -451,7 +449,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var parts = threeliner.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[0] + Environment.NewLine + parts[1] });
-                _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[2].Trim()});
+                _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[2].Trim() });
                 return;
             }
 
@@ -510,13 +508,13 @@ namespace Nikse.SubtitleEdit.Forms
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-             text = text.Replace("!", "_@EXM_");
-             text = text.Replace("?", "_@QST_");
-             text = text.Replace(".", "_@PER_");
+            text = text.Replace("!", "_@EXM_");
+            text = text.Replace("?", "_@QST_");
+            text = text.Replace(".", "_@PER_");
 
             string[] lines = text.Split('.');
 
-            for (int i=0; i<lines.Length; i++)
+            for (int i = 0; i < lines.Length; i++)
             {
                 lines[i] = lines[i].Replace("_@EXM_", "!");
                 lines[i] = lines[i].Replace("_@QST_", "?");
@@ -542,7 +540,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string s = split.Trim();
                     if (s.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                        s = s.Insert(split.Length/2, Environment.NewLine);
+                        s = s.Insert(split.Length / 2, Environment.NewLine);
                     list.Add(s);
                 }
             }

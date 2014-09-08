@@ -12,18 +12,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private StringBuilder _errors;
         private int _lineNumber;
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             Number,
             TimeCodes,
             Text
         }
 
-        Paragraph _paragraph;
-        Paragraph _lastParagraph;
-        ExpectingLine _expecting = ExpectingLine.Number;
-        static Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
-        static Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
+        private Paragraph _paragraph;
+        private Paragraph _lastParagraph;
+        private ExpectingLine _expecting = ExpectingLine.Number;
+        private static Regex _regexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,]-?\d+\s*-->\s*-?\d+:-?\d+:-?\d+[:,]-?\d+$", RegexOptions.Compiled);
+        private static Regex _regexTimeCodes2 = new Regex(@"^\d+:\d+:\d+,\d+\s*-->\s*\d+:\d+:\d+,\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
-            for (int i=0; i<lines.Count; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 _lineNumber++;
                 string line = lines[i].TrimEnd();
@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 // A new line is missing between two paragraphs (buggy srt file)
                 if (_expecting == ExpectingLine.Text && i + 1 < lines.Count &&
                     _paragraph != null && !string.IsNullOrEmpty(_paragraph.Text) && Utilities.IsInteger(line) &&
-                    _regexTimeCodes.IsMatch(lines[i+1]))
+                    _regexTimeCodes.IsMatch(lines[i + 1]))
                 {
                     ReadLine(subtitle, string.Empty, string.Empty, string.Empty);
                 }
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (line.Trim().Length > 0)
                     {
-                        if (_lastParagraph != null && nextNext != null && string.Compare((_lastParagraph.Number+1).ToString(CultureInfo.InvariantCulture), nextNext, StringComparison.Ordinal) == 0)
+                        if (_lastParagraph != null && nextNext != null && string.Compare((_lastParagraph.Number + 1).ToString(CultureInfo.InvariantCulture), nextNext, StringComparison.Ordinal) == 0)
                         {
                             _lastParagraph.Text = (_lastParagraph.Text + Environment.NewLine + line.Trim()).Trim();
                         }
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (_errors.Length < 2000)
                             _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
                         _errorCount++;
-                        _expecting = ExpectingLine.Number ; // lets go to next paragraph
+                        _expecting = ExpectingLine.Number; // lets go to next paragraph
                     }
                     break;
                 case ExpectingLine.Text:

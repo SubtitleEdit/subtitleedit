@@ -1,6 +1,4 @@
-using System;
 using System.Runtime.InteropServices;
-using System.Text;
 
 /// <copyright>
 /// Giora Tamir (giora@gtamir.com), 2005
@@ -9,7 +7,7 @@ using System.Text;
 namespace Nikse.SubtitleEdit.Logic
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    unsafe struct AVIMAINHEADER
+    internal unsafe struct AVIMAINHEADER
     {    // 'avih'
         public int dwMicroSecPerFrame;
         public int dwMaxBytesPerSec;
@@ -28,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct AVIEXTHEADER
+    internal struct AVIEXTHEADER
     {          // 'dmlh'
         public int dwGrandFrames;          // total number of frames in the file
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 244)]
@@ -36,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct RECT
+    internal struct RECT
     {
         public short left;
         public short top;
@@ -45,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct AVISTREAMHEADER
+    internal struct AVISTREAMHEADER
     { // 'strh'
         public int fccType;      // stream type codes
         public int fccHandler;
@@ -64,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct AVIOLDINDEXENTRY
+    internal struct AVIOLDINDEXENTRY
     {
         public int dwChunkId;
         public int dwFlags;
@@ -73,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct TIMECODE
+    internal struct TIMECODE
     {
         public short wFrameRate;
         public short wFrameFract;
@@ -81,27 +79,26 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct TIMECODEDATA
+    internal struct TIMECODEDATA
     {
-        TIMECODE time;
+        private TIMECODE time;
         public int dwSMPTEflags;
         public int dwUser;
     }
 
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    struct WAVEFORMATEX
+    internal struct WAVEFORMATEX
     {
-        public short  wFormatTag;
-        public short  nChannels;
-        public int    nSamplesPerSec;
-        public int    nAvgBytesPerSec;
-        public short  nBlockAlign;
-        public short  wBitsPerSample;
-        public short  cbSize;
+        public short wFormatTag;
+        public short nChannels;
+        public int nSamplesPerSec;
+        public int nAvgBytesPerSec;
+        public short nBlockAlign;
+        public short wBitsPerSample;
+        public short cbSize;
     }
 
-
-    static class AviRiffData
+    internal static class AviRiffData
     {
         #region AVI constants
 
@@ -127,7 +124,6 @@ namespace Nikse.SubtitleEdit.Logic
         public const int TIMECODE_SMPTE_BINARY_GROUP = 0x07;
         public const int TIMECODE_SMPTE_COLOR_FRAME = 0x08;
 
-
         // AVI stream FourCC codes
         public static readonly int streamtypeVIDEO = RiffParser.ToFourCC("vids");
         public static readonly int streamtypeAUDIO = RiffParser.ToFourCC("auds");
@@ -148,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic
         public const int ckidMP3 = 0x0055;
         public static readonly int ckidWaveFMT = RiffParser.ToFourCC("fmt ");
 
-        #endregion
+        #endregion AVI constants
 
     }
 }

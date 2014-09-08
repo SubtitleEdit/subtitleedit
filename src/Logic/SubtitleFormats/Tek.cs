@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Tek : SubtitleFormat
     {
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+ \d+ \d \d \d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+ \d+ \d \d \d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -43,7 +43,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //16.00
             //19.06
             //Kaip reikalai ðunø grobimo versle?
-
 
             const string paragraphWriteFormat = "{0} {1} 1 1 0\r\n{2}";
             var sb = new StringBuilder();

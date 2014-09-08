@@ -6,18 +6,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SwiftTextLineNOAndDur : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             Text
         }
 
-        Paragraph _paragraph;
-        StringBuilder _text = new StringBuilder();
-        ExpectingLine _expecting = ExpectingLine.TimeCodes;
+        private Paragraph _paragraph;
+        private StringBuilder _text = new StringBuilder();
+        private ExpectingLine _expecting = ExpectingLine.TimeCodes;
 
-
-        static readonly Regex RegexTimeCodes = new Regex(@"^SUBTITLE: \d+\s+TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s+TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^SUBTITLE: \d+\s+TIMEIN:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+\s*DURATION:\s*[0123456789-]+:[0123456789-]+\s+TIMEOUT:\s*[0123456789-]+:[0123456789-]+:[0123456789-]+:[0123456789-]+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -147,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[4]));
 
                     int endHours = 0;
-                    if (parts[5+2] != "--")
+                    if (parts[5 + 2] != "--")
                         endHours = int.Parse(parts[5 + 2]);
                     int endMinutes = 0;
                     if (parts[6 + 2] != "--")

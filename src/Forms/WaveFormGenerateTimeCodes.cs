@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             BlockSize = (int)numericUpDownBlockSize.Value;
             VolumeMinimum = (int)numericUpDownMinVol.Value;
             VolumeMaximum = (int)numericUpDownMaxVol.Value;
-            DefaultMilliseconds = (int) numericUpDownDefaultMilliseconds.Value;
+            DefaultMilliseconds = (int)numericUpDownDefaultMilliseconds.Value;
             DialogResult = DialogResult.OK;
         }
 

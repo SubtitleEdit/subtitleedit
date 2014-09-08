@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -103,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             string language = "en-US";
             string xmlStructure = "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
-            "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier +"\" ttp:dropMode=\"nonDrop\">" + Environment.NewLine +
+            "<tt xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://www.w3.org/ns/ttml\" xmlns:tt=\"http://www.w3.org/ns/ttml\" xmlns:tts=\"http://www.w3.org/ns/ttml#styling\" xmlns:ttp=\"http://www.w3.org/ns/ttml#parameter\" xml:lang=\"" + language + "\" ttp:timeBase=\"smpte\" ttp:frameRate=\"" + frameRate + "\" ttp:frameRateMultiplier=\"" + frameRateMultiplier + "\" ttp:dropMode=\"nonDrop\">" + Environment.NewLine +
             "   <head>" + Environment.NewLine +
             "       <styling>" + Environment.NewLine +
             "         <style tts:fontSize=\"100%\" tts:color=\"white\" tts:fontStyle=\"normal\" tts:fontWeight=\"normal\" tts:fontFamily=\"sansSerif\" xml:id=\"normal\"/>" + Environment.NewLine +
@@ -149,7 +148,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     xml.LoadXml(xmlStructure);
                 }
             }
-
 
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             string defaultStyle = Guid.NewGuid().ToString();

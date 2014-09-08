@@ -185,13 +185,13 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
 
             // Fix subs with no duration (completely normal) or negative duration or duration > 10 seconds
-            for (int i=0; i<list.Count; i++)
+            for (int i = 0; i < list.Count; i++)
             {
                 VobSubMergedPack pack = list[i];
                 if (pack.SubPicture.Delay.TotalMilliseconds > 0)
                     pack.EndTime = pack.StartTime.Add(pack.SubPicture.Delay);
 
-                if (pack.EndTime < pack.StartTime || pack.EndTime.TotalSeconds  - pack.StartTime.TotalSeconds > 10.0)
+                if (pack.EndTime < pack.StartTime || pack.EndTime.TotalSeconds - pack.StartTime.TotalSeconds > 10.0)
                 {
                     if (i + 1 < list.Count)
                         pack.EndTime = TimeSpan.FromMilliseconds(list[i].StartTime.TotalMilliseconds - 100);

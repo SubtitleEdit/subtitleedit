@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -343,8 +342,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     startSeconds = endCode.TotalSeconds;
                     if (mustHaveLineBreakAsEnd)
                     {
-                         if (!pText.ToString().EndsWith("\\n"))
-                             _errorCount++;
+                        if (!pText.ToString().EndsWith("\\n"))
+                            _errorCount++;
                     }
                     else
                     {
@@ -388,5 +387,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
     }
 }
-
 

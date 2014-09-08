@@ -106,7 +106,7 @@
             public string Title { get; set; }
             public string SourceVideoFile { get; set; }
             public string GenerateWaveFormData { get; set; }
-            public string PleaseWait{ get; set; }
+            public string PleaseWait { get; set; }
             public string VlcMediaPlayerNotFoundTitle { get; set; }
             public string VlcMediaPlayerNotFound { get; set; }
             public string GoToVlcMediaPlayerHomePage { get; set; }
@@ -609,7 +609,7 @@
             public string UnableToFixTextXY { get; set; }
             public string XOverlappingTimestampsFixed { get; set; }
             public string XDisplayTimesProlonged { get; set; }
-            public string XInvalidHtmlTagsFixed  { get; set; }
+            public string XInvalidHtmlTagsFixed { get; set; }
             public string XDisplayTimesShortned { get; set; }
             public string XLinesUnbreaked { get; set; }
             public string UnneededSpace { get; set; }
@@ -1924,7 +1924,7 @@
             public string Done { get; set; }
             public string NothingToSplit { get; set; }
             public string SavePartOneAs { get; set; }
-            public string SavePartTwoAs{ get; set; }
+            public string SavePartTwoAs { get; set; }
             public string Part1 { get; set; }
             public string Part2 { get; set; }
             public string UnableToSaveFileX { get; set; }
@@ -2150,7 +2150,7 @@
             public string SaveAllSubtitleImagesWithHtml { get; set; }
             public string XImagesSavedInY { get; set; }
             public string TryModiForUnknownWords { get; set; }
-            public string DictionaryX  { get; set; }
+            public string DictionaryX { get; set; }
             public string RightToLeft { get; set; }
             public string ShowOnlyForcedSubtitles { get; set; }
             public string UseTimeCodesFromIdx { get; set; }

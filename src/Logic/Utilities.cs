@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.CurrentPosition * 1000.0) + 5;
-                for (int i=0; i<paragraphs.Count; i++)
+                for (int i = 0; i < paragraphs.Count; i++)
                 {
                     var p = paragraphs[i];
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
@@ -496,7 +496,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (allOk)
                     {
                         int index = 0;
-                        foreach(var item in list)
+                        foreach (var item in list)
                         {
                             index += item;
                             htmlTags.Add(index, Environment.NewLine);
@@ -539,7 +539,6 @@ namespace Nikse.SubtitleEdit.Logic
             return list;
         }
 
-
         public static string AutoBreakLine(string text, int maximumLength, int mergeLinesShorterThan, string language)
         {
             if (text == null || text.Length < 3)
@@ -573,14 +572,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (temp.Length < mergeLinesShorterThan)
             {
                 string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length > 1) {
+                if (lines.Length > 1)
+                {
                     bool isDialog = true;
-                    foreach (string line in lines) {
+                    foreach (string line in lines)
+                    {
                         string cleanLine = RemoveHtmlTags(line).Trim();
                         isDialog = isDialog && (cleanLine.StartsWith("-") ||
                                                 cleanLine.StartsWith("—"));
                     }
-                    if (isDialog) {
+                    if (isDialog)
+                    {
                         return text;
                     }
                 }
@@ -629,7 +631,7 @@ namespace Nikse.SubtitleEdit.Logic
             // try to find " - " with uppercase letter after (dialogue)
             if (splitPos == -1 && s.Contains(" - "))
             {
-                for (int j = 0; j < (maximumLength / 2)+5; j++)
+                for (int j = 0; j < (maximumLength / 2) + 5; j++)
                 {
                     if (mid + j + 4 < s.Length)
                     {
@@ -775,7 +777,6 @@ namespace Nikse.SubtitleEdit.Logic
             return s;
         }
 
-
         public static string UnbreakLine(string text)
         {
             if (text.Contains(Environment.NewLine))
@@ -818,7 +819,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (!s.Contains("<"))
                 return s;
 
-            if(s.Contains("< "))
+            if (s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
             s = RemoveSingleLetterHtmlTags(s);
@@ -942,7 +943,7 @@ namespace Nikse.SubtitleEdit.Logic
                         encoding = Encoding.BigEndianUnicode;
                     else if (bom[0] == 0 && bom[1] == 0 && bom[2] == 0xfe && bom[3] == 0xff) // ucs-4
                         encoding = Encoding.UTF32;
-                    else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 ||bom[3] == 0x2b ||bom[3] == 0x2f)) // utf-7
+                    else if (bom[0] == 0x2b && bom[1] == 0x2f && bom[2] == 0x76 && (bom[3] == 0x38 || bom[3] == 0x39 || bom[3] == 0x2b || bom[3] == 0x2f)) // utf-7
                         encoding = Encoding.UTF7;
                     else if (file.Length > 12)
                     {
@@ -1482,7 +1483,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             return languageId;
         }
-
 
         public static string AutoDetectLanguageName(string languageName, Subtitle subtitle)
         {
@@ -2145,7 +2145,6 @@ namespace Nikse.SubtitleEdit.Logic
             return userNamesEtcXmlFileName;
         }
 
-
         public static void LoadGlobalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList)
         {
             // Load names etc list (names/noise words)
@@ -2224,7 +2223,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
         }
 
-
         public static string LoadLocalNamesEtc(List<string> namesEtcList, List<string> namesEtcMultiWordList, string languageName)
         {
             string userNamesEtcXmlFileName = DictionaryFolder + languageName + "_names_etc.xml";
@@ -2288,7 +2286,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return userNamesEtcXmlFileName;
         }
-
 
         public static bool IsInNamesEtcMultiWordList(List<string> namesEtcMultiWordList, string line, string word)
         {
@@ -2625,7 +2622,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
                     string cleanText = RemoveSingleLetterHtmlTags(text);
-                    bool isFixed= false;
+                    bool isFixed = false;
 
                     // Foo.</i>
                     if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith("-", StringComparison.Ordinal) && !cleanText.Contains(Environment.NewLine + "-"))
@@ -2676,7 +2673,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 // <i>Foo</i>
                 // <i>Bar</i>
-                if(italicBeginTagCount == 2 && italicEndTagCount == 2 && CountTagInText(text, Environment.NewLine) == 1)
+                if (italicBeginTagCount == 2 && italicEndTagCount == 2 && CountTagInText(text, Environment.NewLine) == 1)
                 {
                     int index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                     if (index > 0 && text.Length > index + (beginTag.Length + endTag.Length))
@@ -2782,7 +2779,7 @@ namespace Nikse.SubtitleEdit.Logic
                         break;
                     default:
                         if (text[i] > 127)
-                          sb.Append("&#" + (int)text[i] + ";");
+                            sb.Append("&#" + (int)text[i] + ";");
                         else
                             sb.Append(text[i]);
                         break;
@@ -3061,7 +3058,6 @@ namespace Nikse.SubtitleEdit.Logic
                     case 'ÿ':
                         sb.Append("&yuml;");
                         break;
-
 
                     default:
                         if (text[i] > 127)
@@ -3355,7 +3351,6 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.ToString();
         }
 
-
         /// <summary>
         /// HTML-decodes a string
         /// </summary>
@@ -3376,7 +3371,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int nextSemiColon = text.IndexOf(';', i + 1);
                 if (c == '&' && nextSemiColon > 0 && nextSemiColon <= i + 8)
                 {
-                    string code = text.Substring(i + 1, nextSemiColon - (i+1));
+                    string code = text.Substring(i + 1, nextSemiColon - (i + 1));
                     i += code.Length + 2;
                     switch (code) // http://www.html-entities.com/   + http://en.wikipedia.org/wiki/List_of_XML_and_HTML_character_entity_references
                     {
@@ -3715,7 +3710,7 @@ namespace Nikse.SubtitleEdit.Logic
                         int selectionStart = textBox.SelectionStart;
                         textBox.Text = newText;
                         if (selectionStart > autobreakIndex)
-                            selectionStart += Environment.NewLine.Length-1;
+                            selectionStart += Environment.NewLine.Length - 1;
                         if (selectionStart >= 0)
                             textBox.SelectionStart = selectionStart;
                     }
@@ -4186,7 +4181,6 @@ namespace Nikse.SubtitleEdit.Logic
             return int.MaxValue;
         }
 
-
         internal static string RemoveNonNumbers(string p)
         {
             if (string.IsNullOrEmpty(p))
@@ -4285,7 +4279,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains(" ." + Environment.NewLine))
                 text = text.Replace(" ." + Environment.NewLine, "." + Environment.NewLine);
 
-
             if (language != "fr") // special rules for French
             {
                 if (text.Contains(" !"))
@@ -4336,7 +4329,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             text = text.Trim();
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-
 
             if (text.Contains("- ") && text.Length > 5)
             {

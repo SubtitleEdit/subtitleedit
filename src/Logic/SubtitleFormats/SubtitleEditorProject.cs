@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -56,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string xmlStructure =
                 "<?xml version=\"1.0\"?>" + Environment.NewLine +
-                "<SubtitleEditorProject version=\"1.0\">"  + Environment.NewLine +
+                "<SubtitleEditorProject version=\"1.0\">" + Environment.NewLine +
                 "  <player />" + Environment.NewLine +
                 "  <waveform />" + Environment.NewLine +
                 "  <styles />" + Environment.NewLine +
@@ -68,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlDocument xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
-//          <subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" />
+            //          <subtitle duration="2256" effect="" end="124581" layer="0" margin-l="0" margin-r="0" margin-v="0" name="" note="" path="0" start="122325" style="Default" text="The fever hath weakened thee." translation="" />
             XmlNode div = xml.DocumentElement.SelectSingleNode("subtitles");
             int no = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -172,5 +171,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

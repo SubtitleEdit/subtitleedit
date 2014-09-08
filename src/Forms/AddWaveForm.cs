@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav");
             string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
-//            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
+            //            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
             string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
@@ -275,7 +275,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var mp4 = new Nikse.SubtitleEdit.Logic.Mp4.MP4Parser(labelVideoFileName.Text);
                         var tracks = mp4.GetAudioTracks();
-                        int i=0;
+                        int i = 0;
                         foreach (var track in tracks)
                         {
                             i++;

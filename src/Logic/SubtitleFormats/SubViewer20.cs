@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SubViewer20 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             Text

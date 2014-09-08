@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -127,5 +126,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

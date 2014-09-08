@@ -34,10 +34,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             sb.AppendLine("Title: " + title);
             sb.AppendLine("Translator: No Author");
-            sb.AppendLine("Date: " + DateTime.Now.ToString("dd-MM-yyyy").Replace("-",".")); //  25.08.2011
+            sb.AppendLine("Date: " + DateTime.Now.ToString("dd-MM-yyyy").Replace("-", ".")); //  25.08.2011
             double milliseconds = 0;
             if (subtitle.Paragraphs.Count > 0)
-                milliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime.TotalMilliseconds;
+                milliseconds = subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds;
             var tc = new TimeCode(milliseconds);
             sb.AppendLine(string.Format("Duration: {0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, MillisecondsToFramesMaxFrameRate(tc.Milliseconds))); // 01:20:49:12
             sb.AppendLine("Program start: 00:00:00:00");

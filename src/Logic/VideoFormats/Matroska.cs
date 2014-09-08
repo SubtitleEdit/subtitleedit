@@ -71,7 +71,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             public Int16 IntData16; //16-bit signed int
         }
 
-
         [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Explicit, Pack = 2)]
         private struct FloatLayout32
         {
@@ -778,7 +777,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             int contentCompressionAlgorithm = -1;
             int contentEncodingType = -1;
 
-
             while (_f.Position < _f.Length && done == false)
             {
                 matroskaId = GetMatroskaTrackEntryId();
@@ -870,8 +868,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         contentCompressionAlgorithm = 0; // default value
                         contentEncodingType = 0; // default value
 
-                        int contentEncoding1  = _f.ReadByte();
-                        int contentEncoding2  = _f.ReadByte();
+                        int contentEncoding1 = _f.ReadByte();
+                        int contentEncoding2 = _f.ReadByte();
 
                         if (contentEncoding1 == 0x62 && contentEncoding2 == 0x40)
                         {
@@ -879,14 +877,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         }
                         _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
-
                     else
                         _f.Seek(dataSize, SeekOrigin.Current);
                 }
             }
             if (_tracks != null)
             {
-                _tracks.Add(new MatroskaTrackInfo() {
+                _tracks.Add(new MatroskaTrackInfo()
+                {
                     TrackNumber = (int)trackNumber,
                     IsVideo = isVideo,
                     IsAudio = isAudio,
@@ -913,7 +911,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                     CodecPrivate = codecPrivate,
                     ContentEncodingType = contentEncodingType,
                     ContentCompressionAlgorithm = contentCompressionAlgorithm
-                } );
+                });
             }
         }
 
@@ -968,7 +966,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                 }
             }
         }
-
 
         private void AnalyzeMatroskaSegmentInformation(long endPosition)
         {
@@ -1330,21 +1327,21 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                 switch ((flags & 6))  // 6 = 00000110
                 {
                     case 0: System.Diagnostics.Debug.Print("No lacing");   // No lacing
-                     break;
+                        break;
                     case 2: System.Diagnostics.Debug.Print("Xiph lacing"); // 2 = 00000010 = Xiph lacing
-                     numberOfFrames = (byte)_f.ReadByte();
-                     numberOfFrames++;
-                     break;
+                        numberOfFrames = (byte)_f.ReadByte();
+                        numberOfFrames++;
+                        break;
                     case 4: System.Diagnostics.Debug.Print("fixed-size");  // 4 = 00000100 = Fixed-size lacing
-                     numberOfFrames = (byte)_f.ReadByte();
-                     numberOfFrames++;
-                     for (int i = 1; i <= numberOfFrames; i++)
-                         _f.ReadByte(); // frames
-                     break;
+                        numberOfFrames = (byte)_f.ReadByte();
+                        numberOfFrames++;
+                        for (int i = 1; i <= numberOfFrames; i++)
+                            _f.ReadByte(); // frames
+                        break;
                     case 6: System.Diagnostics.Debug.Print("EBML");        // 6 = 00000110 = EMBL
-                     numberOfFrames = (byte)_f.ReadByte();
-                     numberOfFrames++;
-                     break;
+                        numberOfFrames = (byte)_f.ReadByte();
+                        numberOfFrames++;
+                        break;
                 }
 
                 // save subtitle data

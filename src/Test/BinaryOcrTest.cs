@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;

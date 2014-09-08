@@ -202,7 +202,6 @@ namespace Test
             string s = Utilities.RemoveUnneededSpaces("- Hi!" + Environment.NewLine + "- ... Careful", "en");
             Assert.AreEqual(s, "- Hi!" + Environment.NewLine + "- ...Careful");
         }
-         
 
     }
 }

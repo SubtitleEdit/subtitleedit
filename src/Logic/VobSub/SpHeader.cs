@@ -17,8 +17,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             Identifier = System.Text.Encoding.ASCII.GetString(buffer, 0, 2);
             int startMilliseconds = (int)Helper.GetLittleEndian32(buffer, 2) / 90;
             StartTime = TimeSpan.FromMilliseconds(startMilliseconds);
-            NextBlockPosition = Helper.GetEndianWord(buffer, 10) -4;
-            ControlSequencePosition = Helper.GetEndianWord(buffer, 12) -4;
+            NextBlockPosition = Helper.GetEndianWord(buffer, 10) - 4;
+            ControlSequencePosition = Helper.GetEndianWord(buffer, 12) - 4;
         }
 
         public SubPicture AddPicture(byte[] buffer)

@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Ebu : SubtitleFormat
     {
-        static readonly Regex RegExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
+        private static readonly Regex RegExpr = new Regex(@"^[a-f0-9]{6}$", RegexOptions.Compiled);
 
         public List<int> VerticalPositions = new List<int>();
         public List<int> JustificationCodes = new List<int>();
@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 TextField = TextField.Replace("</U>", underlineOff);
 
                 //em-dash (–) tags
-               // TextField = TextField.Replace("–", "Ð");
+                // TextField = TextField.Replace("–", "Ð");
 
                 //font tags
                 if (header.DisplayStandardCode == "0") // Open subtitling
@@ -349,7 +349,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 // save em-dash indexes (–)
                 List<int> indexOfEmdash = new List<int>();
-                for (int j=0; j<TextField.Length; j++)
+                for (int j = 0; j < TextField.Length; j++)
                 {
                     if (TextField.Substring(j, 1) == "–")
                         indexOfEmdash.Add(j);
@@ -417,7 +417,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             return encoding.GetString(new byte[] { 0x05 }); // magenta
                         if (r < maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
                             return encoding.GetString(new byte[] { 0x06 }); // cyan
-                        if (r > 255-maxDiff && g > 255-maxDiff && b > 255-maxDiff)
+                        if (r > 255 - maxDiff && g > 255 - maxDiff && b > 255 - maxDiff)
                             return encoding.GetString(new byte[] { 0x07 }); // white
                     }
                 }
@@ -521,17 +521,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an6}"))
                 {
-                    tti.VerticalPosition = (byte) (rows / 2); // middle (vertical)
+                    tti.VerticalPosition = (byte)(rows / 2); // middle (vertical)
                 }
                 else
                 {
-                    int startRow = (rows-1) - Utilities.CountTagInText(p.Text, Environment.NewLine) * 2;
+                    int startRow = (rows - 1) - Utilities.CountTagInText(p.Text, Environment.NewLine) * 2;
                     if (startRow < 0)
                         startRow = 0;
                     tti.VerticalPosition = (byte)startRow;  // bottom (vertical)
                 }
 
-               tti.JustificationCode = saveOptions.JustificationCode;
+                tti.JustificationCode = saveOptions.JustificationCode;
                 if (p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"))
                 {
                     tti.JustificationCode = 1; // 01h=left-justified text
@@ -543,7 +543,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else // If it's not left- or right-justified, it's centred.
                 {
                     tti.JustificationCode = 2; // 02h=centred text
-                 }
+                }
 
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;
@@ -972,7 +972,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var tti = new EbuTextTimingInformation();
 
                 tti.SubtitleGroupNumber = buffer[index];
-                tti.SubtitleNumber = (ushort)(buffer[index + 2] * 256+ buffer[index + 1]);
+                tti.SubtitleNumber = (ushort)(buffer[index + 2] * 256 + buffer[index + 1]);
                 tti.ExtensionBlockNumber = buffer[index + 3];
                 tti.CumulativeStatus = buffer[index + 4];
 

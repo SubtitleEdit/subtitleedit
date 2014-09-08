@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static NikseBitmap CropTopAndBottom(NikseBitmap bmp, out int topCropping)
         {
             int startTop = 0;
-            int maxTop = bmp.Height-2;
+            int maxTop = bmp.Height - 2;
             if (maxTop > bmp.Height)
                 maxTop = bmp.Height;
             for (int y = 0; y < maxTop; y++)
@@ -60,9 +60,9 @@ namespace Nikse.SubtitleEdit.Logic
 
             int h = bmp.Height;
             bool bottomCroppingDone = false;
-            for (int y = bmp.Height-1; y > 3; y--)
+            for (int y = bmp.Height - 1; y > 3; y--)
             {
-                for (int x = 1; x < bmp.Width-1; x++)
+                for (int x = 1; x < bmp.Width - 1; x++)
                 {
                     int a = bmp.GetAlpha(x, y);
                     if (a != 0)
@@ -170,10 +170,10 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (size > 2)
                         {
-                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size+1));
-//                            part.Save("c:\\line_0_to_width.bmp");
+                            NikseBitmap part = bmp.CopyRectangle(new Rectangle(0, startY, bmp.Width, size + 1));
+                            //                            part.Save("c:\\line_0_to_width.bmp");
                             parts.Add(new ImageSplitterItem(0, startY, part));
-//                            bmp.Save("c:\\original.bmp");
+                            //                            bmp.Save("c:\\original.bmp");
                         }
                         size = 0;
                         startY = y;
@@ -352,7 +352,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (allTransparent == false &&
                     size > 5 &&
                     y > 3 &&
-                    x < bmp.Width-2 &&
+                    x < bmp.Width - 2 &&
                     !IsVerticalLineTransparent(bmp, ref tempY, x + 1))
                 {
 
@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Logic
                             end++;
                         }
                         NikseBitmap b1 = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height));
-//                         b1.Save(@"d:\temp\cursive.bmp"); // just for debugging
+                        //                         b1.Save(@"d:\temp\cursive.bmp"); // just for debugging
 
                         // make non-black/transparent stuff from other letter transparent
                         foreach (Point p in cursivePoints)
@@ -397,7 +397,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
 
                         RemoveBlackBarRight(b1);
-//                                                b1.Save(@"d:\temp\cursive-cleaned.bmp"); // just for debugging
+                        //                                                b1.Save(@"d:\temp\cursive-cleaned.bmp"); // just for debugging
 
                         // crop and save image
                         int addY;
@@ -424,7 +424,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     int cleanCount = 0;
                                     for (int j = lastEndX; j < startX; j++)
                                     {
-                                        int y1=j;
+                                        int y1 = j;
                                         if (IsVerticalLineTransparentAlphaOnly(bmp, ref y1, j))
                                             cleanCount++;
                                     }
@@ -447,7 +447,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 //                            part.Save("c:\\after" + startX.ToString() + ".bmp"); // just for debugging
                                 parts.Add(new ImageSplitterItem(startX, verticalItem.Y + addY, part));
                                 spaceJustAdded = false;
-//                                part.Save(@"d:\temp\cursive.bmp"); // just for debugging
+                                //                                part.Save(@"d:\temp\cursive.bmp"); // just for debugging
                             }
                             size = 0;
                         }
@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (startX > 0)
                     startX--;
-                lastEndX = bmp.Width-1;
+                lastEndX = bmp.Width - 1;
                 int end = lastEndX + 1 - startX;
                 NikseBitmap part = bmp.CopyRectangle(new Rectangle(startX, 0, end, bmp.Height - 1));
                 int addY;
@@ -480,7 +480,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void RemoveBlackBarRight(NikseBitmap bmp)
         {
-            int xRemoveBlackBar = bmp.Width-1;
+            int xRemoveBlackBar = bmp.Width - 1;
             for (int yRemoveBlackBar = 0; yRemoveBlackBar < bmp.Height; yRemoveBlackBar++)
             {
                 byte[] c = bmp.GetPixelColors(xRemoveBlackBar, yRemoveBlackBar);
@@ -869,7 +869,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return different;
         }
-
 
         internal static unsafe int IsBitmapsAlike(Ocr.Binary.BinaryOcrBitmap bmp1, NikseBitmap bmp2)
         {

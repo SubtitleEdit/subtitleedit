@@ -55,12 +55,11 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
         }
 
-        void RefreshTimerTick(object sender, EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             _refreshTimer.Stop();
             GeneratePreviewReal();
         }
-
 
         private void LoadTextFile(string fileName)
         {

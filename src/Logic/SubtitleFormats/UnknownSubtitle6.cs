@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle6 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             BeforeText,
@@ -44,20 +44,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine(@"NORMAL
 00:00:00.00
 
-
-
-
-
 SRPSKI
-
-
-
-
-
 
 00:00:00.00
 26.11.2008  18:54:15");
-
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -74,9 +64,9 @@ SRPSKI
                     secondLine = lines[1];
 
                 sb.AppendLine(string.Format(" {0}          {1} " + Environment.NewLine +
-                                            "1    0    0    0    0    0"+ Environment.NewLine +
+                                            "1    0    0    0    0    0" + Environment.NewLine +
                                             "{2}" + Environment.NewLine +
-                                            "{3}", p.StartTime.TotalMilliseconds /  10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));
+                                            "{3}", p.StartTime.TotalMilliseconds / 10, p.EndTime.TotalMilliseconds / 10, firstLine, secondLine));
             }
             return sb.ToString().Trim();
         }

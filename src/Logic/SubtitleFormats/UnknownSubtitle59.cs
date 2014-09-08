@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\t.+\t\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
         public static readonly Regex RegexTimeCodes2 = new Regex(@"^\d\d\:\d\d\:\d\d.+\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
-        static Regex regexStartOnly = new Regex(@"^\d\d\:\d\d\:\d\d\t.+$", RegexOptions.Compiled);
-        static Regex regexEndOnly = new Regex(@"\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
+        private static Regex regexStartOnly = new Regex(@"^\d\d\:\d\d\:\d\d\t.+$", RegexOptions.Compiled);
+        private static Regex regexEndOnly = new Regex(@"\d\d\:\d\d\:\d\d$", RegexOptions.Compiled);
         public override string Extension
         {
             get { return ".txt"; }
@@ -115,7 +115,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int minutes = int.Parse(start[1]);
                             int seconds = int.Parse(start[2]);
                             p.StartTime = new TimeCode(hours, minutes, seconds, 0);
-
 
                             string text = s.Remove(0, 8).Trim();
                             p.Text = text;

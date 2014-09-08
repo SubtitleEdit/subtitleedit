@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
-          //  int count = 1;
+            //  int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("Clip");
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(attr);
 
                 xml.DocumentElement.AppendChild(paragraph);
-            //    count++;
+                //    count++;
             }
 
             return ToUtf8XmlString(xml);

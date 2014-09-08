@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class StripableText
     {
-        public string Pre { get;  set; }
+        public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
         public string OriginalText { get; private set; }
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private void ReplaceNames2Fix(List<string> replaceIds, List<string> replaceNames)
         {
-            for (int i=0; i<replaceIds.Count; i++)
+            for (int i = 0; i < replaceIds.Count; i++)
             {
                 StrippedText = StrippedText.Replace(replaceIds[i], replaceNames[i]);
             }
@@ -182,7 +182,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (checkLastLine)
             {
                 string s = Utilities.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
-
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
                                           s.EndsWith(".", StringComparison.Ordinal) ||
@@ -223,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
-                for (int i=0; i<StrippedText.Length; i++)
+                for (int i = 0; i < StrippedText.Length; i++)
                 {
                     string s = StrippedText[i].ToString();
                     if (lastWasBreak)

@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class EffectTypewriter : Form
     {
-        Paragraph _paragraph;
-        List<Paragraph> _animation;
-        int _timerCount;
+        private Paragraph _paragraph;
+        private List<Paragraph> _animation;
+        private int _timerCount;
 
         public EffectTypewriter()
         {
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     startMilliseconds = index * stepsLength;
                     startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    endMilliseconds = ((index + 1) * stepsLength) -1;
+                    endMilliseconds = ((index + 1) * stepsLength) - 1;
                     endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);

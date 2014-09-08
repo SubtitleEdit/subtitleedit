@@ -4,7 +4,7 @@ using System.Threading;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
-    class LibVlcMono : VideoPlayer, IDisposable
+    internal class LibVlcMono : VideoPlayer, IDisposable
     {
         private System.Windows.Forms.Timer _videoLoadedTimer;
         private System.Windows.Forms.Timer _videoEndTimer;
@@ -108,7 +108,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-
         public int AudioTrackNumber
         {
             get
@@ -158,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return newVlc;
         }
 
-        void VideoLoadedTimer_Tick(object sender, EventArgs e)
+        private void VideoLoadedTimer_Tick(object sender, EventArgs e)
         {
             int i = 0;
             while (!IsPlaying && i < 50)
@@ -172,7 +171,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (OnVideoLoaded != null)
                 OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
         }
-
 
         public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
@@ -209,8 +207,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-
-        void VideoEndTimerTick(object sender, EventArgs e)
+        private void VideoEndTimerTick(object sender, EventArgs e)
         {
             const int Ended = 6;
             int state = NativeMethods.libvlc_media_player_get_state(_mediaPlayer);

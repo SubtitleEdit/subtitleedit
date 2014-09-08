@@ -72,7 +72,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
-            bool isValidAssHeader =!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
+            bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
             List<string> styles = new List<string>();
             if (isValidAssHeader)
             {
@@ -255,7 +255,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 var tt = new TimedText10();
                 var sub = new Subtitle();
                 tt.LoadSubtitle(sub, lines, string.Empty);
-
 
                 var xml = new XmlDocument();
                 xml.LoadXml(subtitle.Header);

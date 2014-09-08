@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
 
         //  338:  00:24:34.00  00:24:37.10   [51]
-        static Regex regexTimeCodes = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d\s+\d\d:\d\d:\d\d\.\d\d\s+\[\d+\]$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d\s+\d\d:\d\d:\d\d\.\d\d\s+\[\d+\]$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {
-                        _errorCount+=10;
+                        _errorCount += 10;
                         return;
                     }
                     while (p.Text.Contains(Environment.NewLine + " "))

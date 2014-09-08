@@ -3,10 +3,10 @@ using System.IO;
 
 namespace UpdateLanguageFiles
 {
-    class Program
+    internal class Program
     {
 
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             if (args.Length != 2)
             {

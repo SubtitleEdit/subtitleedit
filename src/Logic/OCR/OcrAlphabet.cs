@@ -4,24 +4,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 {
     public class OcrAlphabet
     {
-       public OcrAlphabet()
-       {
-           OcrCharacters = new List<OcrCharacter>();
-       }
+        public OcrAlphabet()
+        {
+            OcrCharacters = new List<OcrCharacter>();
+        }
 
-       public List<OcrCharacter> OcrCharacters { get; private set; }
+        public List<OcrCharacter> OcrCharacters { get; private set; }
 
         public int CalculateMaximumSize()
         {
             int max = 0;
             foreach (OcrCharacter c in OcrCharacters)
             {
-               foreach (OcrImage img in c.OcrImages)
-               {
-                   int size = img.Bmp.Width * img.Bmp.Height;
-                   if (size > max)
-                       max = size;
-               }
+                foreach (OcrImage img in c.OcrImages)
+                {
+                    int size = img.Bmp.Width * img.Bmp.Height;
+                    if (size > max)
+                        max = size;
+                }
             }
             return max;
         }

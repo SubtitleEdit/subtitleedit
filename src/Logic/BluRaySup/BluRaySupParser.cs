@@ -112,7 +112,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 return palette;
             }
 
-
             /// <summary>
             /// Decode caption from the input stream
             /// </summary>
@@ -252,7 +251,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             /// <summary>
             /// if true, contains forced entry
             /// </summary>
-            public bool IsForced {
+            public bool IsForced
+            {
                 get
                 {
                     foreach (PcsObject obj in PcsObjects)
@@ -293,7 +293,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             }
 
         }
-
 
         public class PdsData
         {
@@ -356,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                return  ParseBluRaySup(fs, log, false);
+                return ParseBluRaySup(fs, log, false);
             }
         }
 
@@ -406,7 +405,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return pcs;
         }
 
-        static PcsData ParsePicture(byte[] buffer, SupSegment segment)
+        private static PcsData ParsePicture(byte[] buffer, SupSegment segment)
         {
             var sb = new StringBuilder();
             var pcs = new PcsData();
@@ -444,7 +443,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return pcs;
         }
 
-        static bool CompletePcs(PcsData pcs, Dictionary<int, List<OdsData>> bitmapObjects, Dictionary<int, List<PaletteInfo>> palettes)
+        private static bool CompletePcs(PcsData pcs, Dictionary<int, List<OdsData>> bitmapObjects, Dictionary<int, List<PaletteInfo>> palettes)
         {
             if (pcs.PcsObjects.Count == 0)
                 return true;
@@ -759,8 +758,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                         prev.BitmapObjects.Count > 0 && prev.BitmapObjects[0].Count > 0 &&
                         ByteArraysEqual(cur.BitmapObjects[0][0].Fragment.ImageBuffer, prev.BitmapObjects[0][0].Fragment.ImageBuffer))
                     {
-                            prev.EndTime = cur.EndTime;
-                            pcsList.RemoveAt(pcsIndex);
+                        prev.EndTime = cur.EndTime;
+                        pcsList.RemoveAt(pcsIndex);
                     }
                 }
             }

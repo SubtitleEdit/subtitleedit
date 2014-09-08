@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Logic
     /// *****************************************************************************
     /// Converted/optimized by Nikse from vb code: http://www.wilhelm-kurz-software.de/dynaplot/applicationnotes/spectrogram.htm
     /// </summary>
-    class Fourier
+    internal class Fourier
     {
         public const double W0Hanning = 0.5;
         public const double W0Hamming = 0.54;
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         real[arg] = real[i] - prodreal;
                         imag[arg] = imag[i] - prodimag;
-                        real[i] +=  prodreal;
+                        real[i] += prodreal;
                         imag[i] += prodimag;
                         i += a;
                     }

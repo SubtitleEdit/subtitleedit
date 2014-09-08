@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                var newButtonHeight = (int) (textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -78,7 +78,6 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
         }
-
 
         private void ButtonOkClick(object sender, EventArgs e)
         {

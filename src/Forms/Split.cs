@@ -10,12 +10,12 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Split : Form
     {
-        Subtitle _subtitle;
+        private Subtitle _subtitle;
         public bool ShowBasic { get; private set; }
-        int _totalNumberOfCharacters;
-        bool _loading = true;
-        List<Subtitle> _parts;
-        string _fileName;
+        private int _totalNumberOfCharacters;
+        private bool _loading = true;
+        private List<Subtitle> _parts;
+        private string _fileName;
 
         public Split()
         {
@@ -88,7 +88,6 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 radioButtonCharacters.Checked = true;
 
-
             foreach (SubtitleFormat f in SubtitleFormat.AllSubtitleFormats)
             {
                 if (!f.IsVobSubIndexFile)
@@ -96,7 +95,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (f.FriendlyName == format.FriendlyName)
                     comboBoxSubtitleFormats.SelectedIndex = comboBoxSubtitleFormats.Items.Count - 1;
             }
-
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
@@ -111,7 +109,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
-
 
             if (numericUpDownParts.Maximum > _subtitle.Paragraphs.Count)
                 numericUpDownParts.Maximum = _subtitle.Paragraphs.Count / 2;
@@ -144,9 +141,9 @@ namespace Nikse.SubtitleEdit.Forms
                 int partSize = (int)(_subtitle.Paragraphs.Count / numericUpDownParts.Value);
                 for (int i = 0; i < numericUpDownParts.Value; i++)
                 {
-                    int noOfLines = (int) partSize;
-                    if (i == numericUpDownParts.Value -1)
-                        noOfLines = (int) (_subtitle.Paragraphs.Count - ((numericUpDownParts.Value-1) * partSize));
+                    int noOfLines = (int)partSize;
+                    if (i == numericUpDownParts.Value - 1)
+                        noOfLines = (int)(_subtitle.Paragraphs.Count - ((numericUpDownParts.Value - 1) * partSize));
 
                     Subtitle temp = new Subtitle();
                     temp.Header = _subtitle.Header;
@@ -177,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     int size = p.Text.Length;
-                    if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value-1)
+                    if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value - 1)
                     {
                         _parts.Add(temp);
                         ListViewItem lvi = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));

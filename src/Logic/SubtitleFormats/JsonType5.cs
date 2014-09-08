@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(p.StartTime.TotalMilliseconds);
                 sb.Append(",");
                 sb.Append(p.EndTime.TotalMilliseconds);
-                if (i < subtitle.Paragraphs.Count-1)
+                if (i < subtitle.Paragraphs.Count - 1)
                     sb.Append(",");
             }
             sb.Append("],");
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
                 sb.Append(timerageP.StartTime.TotalMilliseconds);
             sb.Append(",");
-            timerageP = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count-1);
+            timerageP = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (timerageP == null)
                 sb.Append("0");
             else

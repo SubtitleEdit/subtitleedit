@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
 
         //79.29 1.63
-        static readonly Regex RegexTimeCode1 = new Regex(@"^\d+.[0-9]{1,2} \d+.[0-9]{1,2}$", RegexOptions.Compiled);
-        static readonly Regex RegexTimeCode2 = new Regex(@"^\d+ \d+.[0-9]{1,2}$", RegexOptions.Compiled);
-        static readonly Regex RegexTimeCode3 = new Regex(@"^\d+.[0-9]{1,2} \d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode1 = new Regex(@"^\d+.[0-9]{1,2} \d+.[0-9]{1,2}$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode2 = new Regex(@"^\d+ \d+.[0-9]{1,2}$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode3 = new Regex(@"^\d+.[0-9]{1,2} \d+$", RegexOptions.Compiled);
 
         public override string Extension
         {

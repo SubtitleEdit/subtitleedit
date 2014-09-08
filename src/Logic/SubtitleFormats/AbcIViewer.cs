@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 try
                 {
                     string start = node.Attributes["start"].InnerText;
-                    string end = node.Attributes["end"] .InnerText;
+                    string end = node.Attributes["end"].InnerText;
                     string text = node.InnerText;
                     text = text.Replace("|", Environment.NewLine);
                     subtitle.Paragraphs.Add(new Paragraph(text, ParseTimeCode(start), ParseTimeCode(end)));
@@ -117,5 +117,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChooseEncoding : Form
     {
-        class ListViewSorter : System.Collections.IComparer
+        private class ListViewSorter : System.Collections.IComparer
         {
             public int Compare(object o1, object o2)
             {
@@ -42,7 +42,6 @@ namespace Nikse.SubtitleEdit.Forms
             public bool IsNumber { get; set; }
             public bool Descending { get; set; }
         }
-
 
         private Encoding _encoding;
         private byte[] _fileBuffer;

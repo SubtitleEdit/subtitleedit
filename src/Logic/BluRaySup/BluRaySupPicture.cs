@@ -401,7 +401,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             byte[] buf = new byte[size];
             int index = 0;
 
-
             int fpsId = GetFpsId(fps);
 
             /* time (in 90kHz resolution) needed to initialize (clear) the screen buffer

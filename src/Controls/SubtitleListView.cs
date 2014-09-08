@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Controls
         public bool IsExtraColumnVisible { get; private set; }
         public bool DisplayExtraFromExtra { get; set; }
         public bool UseSyntaxColoring { get; set; }
-        Settings _settings;
+        private Settings _settings;
         private bool _saveColumnWidthChanges;
 
         public int FirstVisibleIndex
@@ -147,12 +147,12 @@ namespace Nikse.SubtitleEdit.Controls
             DrawColumnHeader += SubtitleListView_DrawColumnHeader;
         }
 
-        void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
+        private void SubtitleListView_DrawColumnHeader(object sender, DrawListViewColumnHeaderEventArgs e)
         {
             e.DrawDefault = true;
         }
 
-        void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
+        private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
             Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
             if (Focused && backgroundColor == BackColor)
@@ -182,7 +182,7 @@ namespace Nikse.SubtitleEdit.Controls
                             backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
                         else
                         {
-                            int r = backgroundColor.R -39;
+                            int r = backgroundColor.R - 39;
                             int g = backgroundColor.G - 39;
                             int b = backgroundColor.B - 39;
                             if (r < 0)
@@ -210,7 +210,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        void SubtitleListView_DrawItem(object sender, DrawListViewItemEventArgs e)
+        private void SubtitleListView_DrawItem(object sender, DrawListViewItemEventArgs e)
         {
             if (!Focused && (e.State & ListViewItemStates.Selected) != 0)
             {
@@ -224,8 +224,8 @@ namespace Nikse.SubtitleEdit.Controls
                 e.DrawDefault = true;
             }
         }
-        void SubtitleListViewColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
-       {
+        private void SubtitleListViewColumnWidthChanged(object sender, ColumnWidthChangedEventArgs e)
+        {
             if (_settings != null && _saveColumnWidthChanges)
             {
                 switch (e.ColumnIndex)
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Controls
                         break;
                 }
             }
-       }
+        }
 
         public void AutoSizeAllColumns(Form parentForm)
         {
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Controls
             else if (!IsAlternateTextColumnVisible && IsExtraColumnVisible)
             {
                 int restWidth = lengthAvailable - 15;
-                Columns[ColumnIndexText].Width = (int) (restWidth * 0.6);
+                Columns[ColumnIndexText].Width = (int)(restWidth * 0.6);
                 Columns[ColumnIndexExtra].Width = (int)(restWidth * 0.4);
             }
             else
@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        void SubtitleListViewResize(object sender, EventArgs e)
+        private void SubtitleListViewResize(object sender, EventArgs e)
         {
             int width = 0;
             for (int i = 0; i < Columns.Count - 1; i++)
@@ -434,7 +434,6 @@ namespace Nikse.SubtitleEdit.Controls
                 i++;
             }
 
-
             ListViewItemSorter = x;
             EndUpdate();
 
@@ -469,7 +468,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 if (_settings.Tools.ListViewSyntaxColorDurationBig)
                 {
-                //    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
+                    //    double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                     if (paragraph.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {
                         item.SubItems[ColumnIndexDuration].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
@@ -533,10 +532,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void Add(Paragraph paragraph)
         {
-            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) {Tag = paragraph };
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph };
             ListViewItem.ListViewSubItem subItem;
 
-            if (Configuration.Settings != null  && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
                 if (paragraph.StartTime.IsMaxTime)
                     subItem = new ListViewItem.ListViewSubItem(item, "-");
@@ -573,7 +572,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, _lineSeparatorString));
             if (SubtitleFontBold)
-                subItem.Font = new Font(_subtitleFontName, SubtitleFontSize , FontStyle.Bold);
+                subItem.Font = new Font(_subtitleFontName, SubtitleFontSize, FontStyle.Bold);
             else
                 subItem.Font = new Font(_subtitleFontName, SubtitleFontSize);
 
@@ -617,7 +616,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Items[index].Selected = true;
                 Items[index].EnsureVisible();
                 if (focus)
-                   Items[index].Focused = true;
+                    Items[index].Focused = true;
                 return;
             }
 
@@ -795,7 +794,6 @@ namespace Nikse.SubtitleEdit.Controls
                 if (Items[index].SubItems.Count <= ColumnIndexExtra)
                     Items[index].SubItems.Add(new ListViewItem.ListViewSubItem());
                 Items[index].SubItems[ColumnIndexExtra].Text = text;
-
 
                 Items[index].UseItemStyleForSubItems = false;
                 Items[index].SubItems[ColumnIndexExtra].BackColor = Color.AntiqueWhite;

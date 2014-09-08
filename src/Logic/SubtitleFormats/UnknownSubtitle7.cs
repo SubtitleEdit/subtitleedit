@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle7 : SubtitleFormat
     {
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeStart,
             Text,
@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 count++;
                 if (regexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Substring(0,11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, 11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (regexTimeCodeEnd.IsMatch(line) || (count == lines.Count && regexTimeCodeEnd.IsMatch(line + "\t")))
                 {
-                    string[] parts = line.Substring(0,11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, 11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         var tc = DecodeTimeCode(parts);

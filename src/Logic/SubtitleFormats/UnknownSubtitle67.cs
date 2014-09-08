@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-    public class UnknownSubtitle67: SubtitleFormat
+    public class UnknownSubtitle67 : SubtitleFormat
     {
         public override string Extension
         {
@@ -105,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 if (i < subtitle.Paragraphs.Count - 1)
                 {
-                    Paragraph next = subtitle.Paragraphs[i+1];
+                    Paragraph next = subtitle.Paragraphs[i + 1];
                     if (p.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                 }
@@ -115,5 +114,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

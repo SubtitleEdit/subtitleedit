@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class NetworkJoin : Form
     {
 
-        Logic.Networking.NikseWebServiceSession _networkSession;
-        public string FileName { get; set;}
+        private Logic.Networking.NikseWebServiceSession _networkSession;
+        public string FileName { get; set; }
 
         public NetworkJoin()
         {

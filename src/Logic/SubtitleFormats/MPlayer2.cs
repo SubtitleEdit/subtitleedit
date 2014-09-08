@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class MPlayer2 : SubtitleFormat
     {
-        static Regex _regexMPlayer2Line = new Regex(@"^\[-?\d+]\[-?\d+].*$", RegexOptions.Compiled);
+        private static Regex _regexMPlayer2Line = new Regex(@"^\[-?\d+]\[-?\d+].*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (textIndex < s.Length)
                         {
                             string text = s.Substring(textIndex);
-                            if (text.StartsWith("/") && (Utilities.CountTagInText(text,"|") == 0 || text.Contains("|/")))
+                            if (text.StartsWith("/") && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
                                 text = "<i>" + text.TrimStart('/').Replace("|/", Environment.NewLine) + "</i>";
                             else if (text.StartsWith("/") && text.Contains("|") && !text.Contains("|/"))
                                 text = "<i>" + text.TrimStart('/').Replace("|", "</i>" + Environment.NewLine);
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             double endSeconds = double.Parse(frames[1]) / 10;
 
                             if (startSeconds == 0 && subtitle.Paragraphs.Count > 0)
-                                startSeconds = (subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime.TotalMilliseconds / 1000) + 0.1;
+                                startSeconds = (subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalMilliseconds / 1000) + 0.1;
                             if (endSeconds == 0)
                                 endSeconds = startSeconds;
 

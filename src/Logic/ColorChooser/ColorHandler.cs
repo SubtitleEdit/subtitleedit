@@ -13,14 +13,14 @@
 // projects, without the express and written consent of
 // the Author.
 
-#endregion
+#endregion #Disclaimer
 
 #region Using directives
 
 using System;
 using System.Drawing;
 
-#endregion
+#endregion Using directives
 
 namespace Nikse.SubtitleEdit.Logic.ColorChooser
 {
@@ -66,9 +66,9 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
             // Scale Hue to be between 0 and 360. Saturation
             // and value scale to be between 0 and 1.
-            h = ((double) HSV.Hue/255*360)%360;
-            s = (double) HSV.Saturation/255;
-            v = (double) HSV.Value/255;
+            h = ((double)HSV.Hue / 255 * 360) % 360;
+            s = (double)HSV.Saturation / 255;
+            v = (double)HSV.Value / 255;
 
             if (s == 0)
             {
@@ -82,8 +82,8 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             {
                 // The color wheel consists of 6 sectors.
                 // Figure out which sector you//re in.
-                double sectorPos = h/60;
-                int sectorNumber = (int) (Math.Floor(sectorPos));
+                double sectorPos = h / 60;
+                int sectorNumber = (int)(Math.Floor(sectorPos));
 
                 // get the fractional part of the sector.
                 // That is, how many degrees into the sector
@@ -92,9 +92,9 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
                 // Calculate values for the three axes
                 // of the color.
-                double p = v*(1 - s);
-                double q = v*(1 - (s*fractionalSector));
-                double t = v*(1 - (s*(1 - fractionalSector)));
+                double p = v * (1 - s);
+                double q = v * (1 - (s * fractionalSector));
+                double t = v * (1 - (s * (1 - fractionalSector)));
 
                 // Assign the fractional colors to r, g, and b
                 // based on the sector the angle is in.
@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
             // return an RGB structure, with values scaled
             // to be between 0 and 255.
-            return new ARGB(HSV.Alpha, (int) (r*255), (int) (g*255), (int) (b*255));
+            return new ARGB(HSV.Alpha, (int)(r * 255), (int)(g * 255), (int)(b * 255));
         }
 
         public static HSV RGBtoHSV(ARGB argb)
@@ -151,9 +151,9 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // The code must scale these to be between 0 and 255 for
             // the purposes of this application.
 
-            double r = (double) argb.Red/255;
-            double g = (double) argb.Green/255;
-            double b = (double) argb.Blue/255;
+            double r = (double)argb.Red / 255;
+            double g = (double)argb.Green / 255;
+            double b = (double)argb.Blue / 255;
 
             double h;
             double s;
@@ -173,21 +173,21 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
             else
             {
-                s = delta/max;
+                s = delta / max;
                 if (r == max)
                 {
                     // Between Yellow and Magenta
-                    h = (g - b)/delta;
+                    h = (g - b) / delta;
                 }
                 else if (g == max)
                 {
                     // Between Cyan and Yellow
-                    h = 2 + (b - r)/delta;
+                    h = 2 + (b - r) / delta;
                 }
                 else
                 {
                     // Between Magenta and Cyan
-                    h = 4 + (r - g)/delta;
+                    h = 4 + (r - g) / delta;
                 }
             }
             // Scale h to be between 0 and 360.
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
             // Scale to the requirements of this
             // application. All values are between 0 and 255.
-            return new HSV(argb.Alpha, (int) (h/360*255), (int) (s*255), (int) (v*255));
+            return new HSV(argb.Alpha, (int)(h / 360 * 255), (int)(s * 255), (int)(v * 255));
         }
 
         #region Nested type: ARGB
@@ -209,7 +209,8 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         public struct ARGB
         {
             // All values are between 0 and 255.
-            public ARGB(int a, int r, int g, int b) : this()
+            public ARGB(int a, int r, int g, int b)
+                : this()
             {
                 Alpha = a;
                 Red = r;
@@ -228,14 +229,15 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
         }
 
-        #endregion
+        #endregion Nested type: ARGB
 
         #region Nested type: HSV
 
         public struct HSV
         {
             // All values are between 0 and 255.
-            public HSV(int a, int h, int s, int v) : this()
+            public HSV(int a, int h, int s, int v)
+                : this()
             {
                 Alpha = a;
                 Hue = h;
@@ -254,6 +256,6 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             }
         }
 
-        #endregion
+        #endregion Nested type: HSV
     }
 }

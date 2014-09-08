@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 i++;
-                sb.AppendLine(string.Format("{0},1,\"{1}\",\"{2}\",0,\"{3}\"", i, p.StartTime, p.EndTime, p.Text.Replace(Environment.NewLine, "\\n").Replace("\"",string.Empty)));
+                sb.AppendLine(string.Format("{0},1,\"{1}\",\"{2}\",0,\"{3}\"", i, p.StartTime, p.EndTime, p.Text.Replace(Environment.NewLine, "\\n").Replace("\"", string.Empty)));
             }
             return sb.ToString().Trim() + Environment.NewLine;
         }

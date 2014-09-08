@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     public partial class SetMinimumDisplayTimeBetweenParagraphs : Form
     {
 
-        Subtitle _subtitle;
+        private Subtitle _subtitle;
         private Subtitle _fixedSubtitle;
         public int FixCount { get; private set; }
 
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = subtitle;
             numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
-//            GeneratePreview();
+            //            GeneratePreview();
         }
 
         private void GeneratePreview()

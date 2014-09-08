@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using System.Text;
 
 namespace Test
 {
@@ -33,6 +32,7 @@ namespace Test
         }
 
         #region Additional test attributes
+
         //
         //You can use the following additional attributes as you write your tests:
         //
@@ -60,10 +60,10 @@ namespace Test
         //{
         //}
         //
-        #endregion
+
+        #endregion Additional test attributes
 
         #region Subrip (.srt)
-
 
         private static List<string> GetSrtLines(string text)
         {
@@ -107,7 +107,6 @@ Line 2.";
             string expected = "2";
             Assert.AreEqual(expected, actual);
         }
-
 
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -159,10 +158,9 @@ Line 3";
             Assert.AreEqual(expected, actual);
         }
 
-        #endregion
+        #endregion Subrip (.srt)
 
         #region Advanced Sub Station alpha (.ass)
-
 
         private static List<string> GetAssLines(string lineOneText)
         {
@@ -327,7 +325,8 @@ Dialogue: 0,0:00:16.84,0:00:18.16,rechts,,0000,0000,0000,," + lineOneText;
             string expected = "<font face=\"Viner Hand ITC\" size=\"28\">Testing</font>";
             Assert.AreEqual(expected, actual);
         }
-        #endregion
+
+        #endregion Advanced Sub Station alpha (.ass)
 
         #region Sub Station Alpha (.ssa)
 
@@ -367,7 +366,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.AreEqual(expected, actual);
         }
 
-        #endregion
+        #endregion Sub Station Alpha (.ssa)
 
         #region DCinema smpte (.xml)
 
@@ -393,7 +392,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.IsTrue(text.Contains("<dcst:Font Italic=\"yes\" Color=\"FFFF0000\">Red</dcst:Font>"));
         }
 
-        #endregion
+        #endregion DCinema smpte (.xml)
 
         #region DCinema interop (.xml)
 
@@ -419,7 +418,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             Assert.IsTrue(text.Contains(" Italic=\"yes\"") && text.Contains(" Color=\"FFFF0000\""));
         }
 
-        #endregion
+        #endregion DCinema interop (.xml)
 
         #region MicroDVD
 
@@ -571,7 +570,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
                           text == "<b><i>Hello!</i></b>" + Environment.NewLine + "<b>Hello!</b>");
         }
 
-        #endregion
+        #endregion MicroDVD
 
         #region Scenerist SCC
 
@@ -584,7 +583,6 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             subtitle.Paragraphs.Add(new Paragraph("Line1", 1000, 5000));
             subtitle.Paragraphs.Add(new Paragraph("Line2", 6000, 8000));
             subtitle.Paragraphs.Add(new Paragraph("Line2", 8000, 12000));
-
 
             string text = @"Scenarist_SCC V1.0
 
@@ -626,29 +624,28 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
 
 01:00:52:04 942c";
 
+            var sub2 = new Subtitle();
 
-             var sub2 = new Subtitle();
+            List<string> lines = new List<string>();
+            foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                lines.Add(line);
 
-             List<string> lines = new List<string>();
-             foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
-                 lines.Add(line);
-
-             target.LoadSubtitle(sub2, lines, null);
+            target.LoadSubtitle(sub2, lines, null);
 
             var copy = new Subtitle(sub2);
-            for (int i = 0; i<copy.Paragraphs.Count;i++)
+            for (int i = 0; i < copy.Paragraphs.Count; i++)
             {
                 sub2.Paragraphs[i].StartTime.TotalMilliseconds += 1000;
                 sub2.Paragraphs[i].EndTime.TotalMilliseconds += 1000;
             }
-            for (int i = 0; i<copy.Paragraphs.Count;i++)
+            for (int i = 0; i < copy.Paragraphs.Count; i++)
             {
                 Assert.IsTrue(copy.Paragraphs[i].StartTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].StartTime.TotalMilliseconds);
                 Assert.IsTrue(copy.Paragraphs[i].EndTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].EndTime.TotalMilliseconds);
             }
         }
 
-        #endregion
+        #endregion Scenerist SCC
 
         #region All subtitle formats
 
@@ -656,96 +653,96 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void LineCount()
         {
-             var subtitle = new Subtitle();
-             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+            subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+            subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+            subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
-             int expected = subtitle.Paragraphs.Count;
-             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-             {
-                 if (format.GetType() != typeof(JsonType6) && format.IsTextBased)
-                 {
-                     format.BatchMode = true;
-                     string text = format.ToText(subtitle, "test");
-                     var list = new List<string>();
-                     foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
-                         list.Add(line);
-                     var s2 = new Subtitle();
-                     format.LoadSubtitle(s2, list, null);
-                     int actual = s2.Paragraphs.Count;
-                     Assert.AreEqual(expected, actual, format.FriendlyName);
-                 }
-             }
-         }
+            int expected = subtitle.Paragraphs.Count;
+            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+            {
+                if (format.GetType() != typeof(JsonType6) && format.IsTextBased)
+                {
+                    format.BatchMode = true;
+                    string text = format.ToText(subtitle, "test");
+                    var list = new List<string>();
+                    foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                        list.Add(line);
+                    var s2 = new Subtitle();
+                    format.LoadSubtitle(s2, list, null);
+                    int actual = s2.Paragraphs.Count;
+                    Assert.AreEqual(expected, actual, format.FriendlyName);
+                }
+            }
+        }
 
-         [TestMethod()]
-         [DeploymentItem("SubtitleEdit.exe")]
-         public void LineContent()
-         {
-             var subtitle = new Subtitle();
-             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
-             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void LineContent()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+            subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+            subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+            subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
-             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-             {
-                 if (format.IsTextBased)
-                 {
-                     format.BatchMode = true;
-                     string text = format.ToText(subtitle, "test");
-                     var list = new List<string>();
-                     foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
-                         list.Add(line);
-                     var s2 = new Subtitle();
-                     format.LoadSubtitle(s2, list, null);
+            foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+            {
+                if (format.IsTextBased)
+                {
+                    format.BatchMode = true;
+                    string text = format.ToText(subtitle, "test");
+                    var list = new List<string>();
+                    foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+                        list.Add(line);
+                    var s2 = new Subtitle();
+                    format.LoadSubtitle(s2, list, null);
 
-                     if (s2.Paragraphs.Count == 4)
-                     {
-                         Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
-                         Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
-                     }
-                 }
-             }
-         }
+                    if (s2.Paragraphs.Count == 4)
+                    {
+                        Assert.AreEqual(subtitle.Paragraphs[0].Text, s2.Paragraphs[0].Text, format.FriendlyName);
+                        Assert.AreEqual(subtitle.Paragraphs[3].Text, s2.Paragraphs[3].Text, format.FriendlyName);
+                    }
+                }
+            }
+        }
 
-//         [TestMethod()]
-//         [DeploymentItem("SubtitleEdit.exe")]
-//         public void FormatReload()
-//         {
-//             var subtitle = new Subtitle();
-//             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
-//             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
-//             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
-//             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
+        //         [TestMethod()]
+        //         [DeploymentItem("SubtitleEdit.exe")]
+        //         public void FormatReload()
+        //         {
+        //             var subtitle = new Subtitle();
+        //             subtitle.Paragraphs.Add(new Paragraph("Line 1", 0, 3000));
+        //             subtitle.Paragraphs.Add(new Paragraph("Line 2", 4000, 7000));
+        //             subtitle.Paragraphs.Add(new Paragraph("Line 3", 8000, 11000));
+        //             subtitle.Paragraphs.Add(new Paragraph("Line 4", 12000, 15000));
 
-//             StringBuilder sb = new StringBuilder();
-//             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
-//             {
-//                 string text = format.ToText(subtitle, "test");
-//                 var list = new List<string>();
-//                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
-//                     list.Add(line);
+        //             StringBuilder sb = new StringBuilder();
+        //             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
+        //             {
+        //                 string text = format.ToText(subtitle, "test");
+        //                 var list = new List<string>();
+        //                 foreach (string line in text.Replace("\r\n", "\n").Split('\n'))
+        //                     list.Add(line);
 
-//                 foreach (SubtitleFormat innerFormat in SubtitleFormat.AllSubtitleFormats)
-//                 {
-//                     if (innerFormat.IsMine(list, null))
-//                     {
-//                         if (format.FriendlyName != innerFormat.FriendlyName  &&
-//                             !format.FriendlyName.Contains("Final Cut"))
-//                         {
-////                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);
-//                             sb.AppendLine(innerFormat.FriendlyName + " takes " + format.FriendlyName);
-//                         }
-//                         break;
-//                     }
-//                 }
-//             }
-////             System.Windows.Forms.MessageBox.Show(sb.ToString());
-//         }
+        //                 foreach (SubtitleFormat innerFormat in SubtitleFormat.AllSubtitleFormats)
+        //                 {
+        //                     if (innerFormat.IsMine(list, null))
+        //                     {
+        //                         if (format.FriendlyName != innerFormat.FriendlyName  &&
+        //                             !format.FriendlyName.Contains("Final Cut"))
+        //                         {
+        ////                             Assert.AreEqual(format.FriendlyName, innerFormat.FriendlyName, text);
+        //                             sb.AppendLine(innerFormat.FriendlyName + " takes " + format.FriendlyName);
+        //                         }
+        //                         break;
+        //                     }
+        //                 }
+        //             }
+        ////             System.Windows.Forms.MessageBox.Show(sb.ToString());
+        //         }
 
-        #endregion
+        #endregion All subtitle formats
     }
 }

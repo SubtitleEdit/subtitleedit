@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _noTimerAction;
         private long _videoStartTick;
         //Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public Beamer(Main main, Subtitle subtitle, int index)
         {
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
             if (_subtitleFontSize > 10 && _subtitleFontSize < 100)
-                comboBoxSubtitleFontSize.SelectedIndex = (int)(_subtitleFontSize -10);
+                comboBoxSubtitleFontSize.SelectedIndex = (int)(_subtitleFontSize - 10);
             else
                 comboBoxSubtitleFontSize.SelectedIndex = 40;
             _isLoading = false;
@@ -287,7 +287,6 @@ namespace Nikse.SubtitleEdit.Forms
                     path = new GraphicsPath();
                     sb = new StringBuilder();
 
-
                     int endIndex = text.Substring(i).IndexOf('>');
                     if (endIndex == -1)
                     {
@@ -355,7 +354,6 @@ namespace Nikse.SubtitleEdit.Forms
                         if (addLeft == 0)
                             addLeft = left + 2;
                         left = addLeft;
-
 
                         if (_borderWidth > 0)
                             g.DrawPath(new Pen(_borderColor, _borderWidth), path);
@@ -476,7 +474,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_index >= 0)
             {
-                _videoStartTick = DateTime.Now.Ticks- ((long) (_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
+                _videoStartTick = DateTime.Now.Ticks - ((long)(_subtitle.Paragraphs[_index].StartTime.TotalMilliseconds) * 10000); //10,000 ticks = 1 millisecond
             }
 
             groupBoxImageSettings.Hide();
@@ -502,7 +500,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.End)
             {
-                _index = _subtitle.Paragraphs.Count-1;
+                _index = _subtitle.Paragraphs.Count - 1;
                 ShowCurrent();
                 e.Handled = true;
                 return;
@@ -533,7 +531,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_index < _subtitle.Paragraphs.Count - 21)
                         _index += 20;
                     else
-                        _index = _subtitle.Paragraphs.Count-1;
+                        _index = _subtitle.Paragraphs.Count - 1;
                     ShowCurrent();
                     e.Handled = true;
                 }
@@ -659,7 +657,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _marginLeft++;
                 ShowCurrent();
             }
-            else if (e.KeyCode == Keys.Back || e.KeyCode ==  Keys.Delete)
+            else if (e.KeyCode == Keys.Back || e.KeyCode == Keys.Delete)
             {
                 timer1.Stop();
                 int temp = _index;

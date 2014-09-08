@@ -1,6 +1,5 @@
 using System.IO;
 using System.Xml;
-using Nikse.SubtitleEdit.Logic;
 
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!
@@ -132,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (reader.NodeType == XmlNodeType.Element)
                     {
                         if ((name.Length > 0 || string.CompareOrdinal(reader.Name, "Language") != 0) && !reader.IsEmptyElement)
-                          name = (name + "/" + reader.Name).TrimStart('/');
+                            name = (name + "/" + reader.Name).TrimStart('/');
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {

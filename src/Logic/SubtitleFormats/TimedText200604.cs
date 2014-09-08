@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -48,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (body == null)
                         div = xml.DocumentElement;
                     else
-                       div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
+                        div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).SelectSingleNode("ttaf1:div", nsmgr);
                     if (div == null)
                         div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
                     int numberOfParagraphs = div.ChildNodes.Count;
@@ -245,5 +244,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

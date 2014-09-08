@@ -15,12 +15,12 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private XmlDocument _pluginDoc = new XmlDocument();
         private string _downloadedPluginName;
-        readonly LanguageStructure.PluginsGet _language;
-//        bool _firstTry = true;
-        List<string> _updateAllListUrls;
-        List<string> _updateAllListNames;
-        bool _updatingAllPlugins = false;
-        int _updatingAllPluginsCount = 0;
+        private readonly LanguageStructure.PluginsGet _language;
+        //        bool _firstTry = true;
+        private List<string> _updateAllListUrls;
+        private List<string> _updateAllListNames;
+        private bool _updatingAllPlugins = false;
+        private int _updatingAllPluginsCount = 0;
 
         private static string GetPluginXmlFileUrl()
         {
@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
+        private void wc_DownloadStringCompleted(object sender, DownloadStringCompletedEventArgs e)
         {
             //if (e.Error != null && _firstTry)
             //{
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (installed.Text.TrimEnd('.') == node.SelectSingleNode("Name").InnerText.TrimEnd('.') &&
                             installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
                         {
-//                            item.BackColor = Color.LightGreen;
+                            //                            item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
                             installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
                             buttonUpdateAll.Visible = true;
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             labelPleaseWait.Text = string.Empty;
             if (e.Error != null)
@@ -281,9 +281,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 zip.ExtractFile(entry, fullPath);
             }
-//            zip.Close();
+            //            zip.Close();
             zip.Dispose();
-//            ms.Close();
+            //            ms.Close();
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;

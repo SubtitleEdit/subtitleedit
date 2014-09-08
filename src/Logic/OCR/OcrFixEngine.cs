@@ -22,45 +22,45 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         }
 
         // Dictionaries/spellchecking/fixing
-        Dictionary<string, string> _wordReplaceList;
-        Dictionary<string, string> _partialLineWordBoundaryReplaceList;
-        Dictionary<string, string> _partialLineAlwaysReplaceList;
-        Dictionary<string, string> _beginLineReplaceList;
-        Dictionary<string, string> _endLineReplaceList;
-        Dictionary<string, string> _wholeLineReplaceList;
-        Dictionary<string, string> _partialWordReplaceListAlways;
-        Dictionary<string, string> _partialWordReplaceList;
-        Dictionary<string, string> _regExList;
+        private Dictionary<string, string> _wordReplaceList;
+        private Dictionary<string, string> _partialLineWordBoundaryReplaceList;
+        private Dictionary<string, string> _partialLineAlwaysReplaceList;
+        private Dictionary<string, string> _beginLineReplaceList;
+        private Dictionary<string, string> _endLineReplaceList;
+        private Dictionary<string, string> _wholeLineReplaceList;
+        private Dictionary<string, string> _partialWordReplaceListAlways;
+        private Dictionary<string, string> _partialWordReplaceList;
+        private Dictionary<string, string> _regExList;
 
-        string _replaceListXmlFileName;
-        string _userWordListXmlFileName;
-        string _fiveLetterWordListLanguageName;
+        private string _replaceListXmlFileName;
+        private string _userWordListXmlFileName;
+        private string _fiveLetterWordListLanguageName;
 
-        HashSet<string> _namesEtcList = new HashSet<string>();
-        HashSet<string> _namesEtcListUppercase = new HashSet<string>();
-        HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
-        HashSet<string> _namesEtcMultiWordList = new HashSet<string>(); // case sensitive phrases
-        HashSet<string> _abbreviationList;
-        HashSet<string> _userWordList = new HashSet<string>();
-        HashSet<string> _wordSkipList = new HashSet<string>();
-        Hunspell _hunspell;
-        readonly OcrSpellCheck _spellCheck;
-        readonly Form _parentForm;
+        private HashSet<string> _namesEtcList = new HashSet<string>();
+        private HashSet<string> _namesEtcListUppercase = new HashSet<string>();
+        private HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
+        private HashSet<string> _namesEtcMultiWordList = new HashSet<string>(); // case sensitive phrases
+        private HashSet<string> _abbreviationList;
+        private HashSet<string> _userWordList = new HashSet<string>();
+        private HashSet<string> _wordSkipList = new HashSet<string>();
+        private Hunspell _hunspell;
+        private readonly OcrSpellCheck _spellCheck;
+        private readonly Form _parentForm;
         private string _spellCheckDictionaryName;
         private string _threeLetterIsoLanguageName;
 
-        static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
-        static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
-        static readonly Regex RegexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
-        static readonly Regex RegExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
-        static readonly Regex RegExUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
-        static readonly Regex RegExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
-        static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
-        static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
-        static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][0]", RegexOptions.Compiled);
-        static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
-        static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
-        static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexAloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+        private static readonly Regex RegexAloneIasL = new Regex(@"\bl\b", RegexOptions.Compiled);
+        private static readonly Regex RegexSpaceBetweenNumbers = new Regex(@"\d \d", RegexOptions.Compiled);
+        private static readonly Regex RegExLowercaseL = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]l[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏ]", RegexOptions.Compiled);
+        private static readonly Regex RegExUppercaseI = new Regex("[a-zæøåöääöéèàùâêîôûëï]I.", RegexOptions.Compiled);
+        private static readonly Regex RegExNumber1 = new Regex(@"\d\ 1", RegexOptions.Compiled);
+        private static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
+        private static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
+        private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][0]", RegexOptions.Compiled);
+        private static readonly Regex RegExTime2 = new Regex(@"0[a-zæøåöääöéèàùâêîôûëï]", RegexOptions.Compiled);
+        private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
+        private static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public bool Abort { get; set; }
         public List<string> AutoGuessesUsed { get; set; }
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _threeLetterIsoLanguageName = threeLetterIsoLanguageName;
             _parentForm = parentForm;
 
-            _spellCheck = new OcrSpellCheck {StartPosition = FormStartPosition.Manual};
+            _spellCheck = new OcrSpellCheck { StartPosition = FormStartPosition.Manual };
             _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
                                              parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
 
@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             string dictionary = Utilities.DictionaryFolder + _fiveLetterWordListLanguageName;
             if (resetSkipList)
             {
-                _wordSkipList = new HashSet<string> {Configuration.Settings.Tools.MusicSymbol, "*", "%", "#", "+", "$"};
+                _wordSkipList = new HashSet<string> { Configuration.Settings.Tools.MusicSymbol, "*", "%", "#", "+", "$" };
             }
 
             // Load names etc list (names/noise words)
@@ -408,7 +408,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 text = text.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
             }
 
-
             text = ReplaceWordsBeforeLineFixes(text);
 
             text = FixCommenOcrLineErrors(text, lastLine);
@@ -462,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             text = FixCommenOcrLineErrors(sb.ToString(), lastLine);
             int wordsNotFound;
-            text =  FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, autoGuess);
+            text = FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, text, index, null, true, false, logSuggestions, autoGuess);
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
@@ -631,7 +630,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 }
                 else
                 {
-                    match = RegexSpaceBetweenNumbers.Match(text, match.Index+1);
+                    match = RegexSpaceBetweenNumbers.Match(text, match.Index + 1);
                 }
             }
             return text;
@@ -675,7 +674,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             //always replace list
             foreach (string letter in _partialWordReplaceListAlways.Keys)
-                word = word.Replace(letter,_partialWordReplaceListAlways[letter]);
+                word = word.Replace(letter, _partialWordReplaceListAlways[letter]);
 
             string pre = string.Empty;
             string post = string.Empty;
@@ -995,7 +994,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return word;
         }
 
-
         public static string FixIor1InsideLowerCaseWord(string word)
         {
             if (StartEndEndsWithNumber.IsMatch(word))
@@ -1258,7 +1256,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (input.StartsWith("-...") && lastLine != null && lastLine.EndsWith("...") && !(input.Contains(Environment.NewLine + "-")))
                     input = input.Remove(0, 1);
             }
-
 
             if (input.Length > 2 && input[0] == '-' && Utilities.UppercaseLetters.Contains(input[1].ToString()))
             {
@@ -1543,7 +1540,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (!correct)
                         correct = DoSpell(word.Trim('\''));
                     if (!correct && word.Length > 3 && !word.EndsWith("ss") && !string.IsNullOrEmpty(_threeLetterIsoLanguageName) &&
-                        (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe"|| _threeLetterIsoLanguageName == "nld"))
+                        (_threeLetterIsoLanguageName == "eng" || _threeLetterIsoLanguageName == "dan" || _threeLetterIsoLanguageName == "swe" || _threeLetterIsoLanguageName == "nld"))
                         correct = DoSpell(word.TrimEnd('s'));
                     if (!correct)
                         correct = DoSpell(wordNoItalics);
@@ -1631,10 +1628,10 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
 
-                                if (word.Length > 2  && word[0] == 'I' && word[1].ToString().ToUpper() != word[1].ToString())
+                                if (word.Length > 2 && word[0] == 'I' && word[1].ToString().ToUpper() != word[1].ToString())
                                     guesses.Add("l" + word.Substring(1));
 
-                                if (i==0)
+                                if (i == 0)
                                     guesses.Add(word.Replace(@"\/", "V"));
                                 else
                                     guesses.Add(word.Replace(@"\/", "v"));
@@ -1687,7 +1684,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 word = word.Remove(0, 3);
 
                             if (word.EndsWith("</i>"))
-                                word = word.Remove(word.Length-4, 4);
+                                word = word.Remove(word.Length - 4, 4);
 
                             SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, word, suggestions);
 
@@ -1826,7 +1823,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _wordSkipList.Add(_spellCheck.Word);
                     _wordSkipList.Add(_spellCheck.Word.ToUpper());
                     if (_spellCheck.Word.Length > 1)
-                        _wordSkipList.Add(_spellCheck.Word.Substring(0,1).ToUpper() + _spellCheck.Word.Substring(1));
+                        _wordSkipList.Add(_spellCheck.Word.Substring(0, 1).ToUpper() + _spellCheck.Word.Substring(1));
                     break;
                 case OcrSpellCheck.Action.SkipOnce:
                     break;

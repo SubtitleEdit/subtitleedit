@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public List<SubPicture> SubPictures = new List<SubPicture>();
         public List<double> StartTimeCodes = new List<double>();
         public List<double> EndTimeCodes = new List<double>();
-        Mdia _mdia;
+        private Mdia _mdia;
 
         public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
         {
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
             }
         }
 
-        private void ReadText(FileStream fs, ulong offset, string  handlerType)
+        private void ReadText(FileStream fs, ulong offset, string handlerType)
         {
             fs.Seek((long)offset, SeekOrigin.Begin);
             var data = new byte[4];

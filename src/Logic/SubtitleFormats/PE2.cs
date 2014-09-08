@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class PE2 : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
-        static readonly Regex RegexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodeEnd = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeStart,
             Text,

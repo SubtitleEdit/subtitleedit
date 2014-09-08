@@ -51,7 +51,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0}:{1:00}", (int)(time.TotalSeconds / 60), (int)(time.TotalSeconds % 60));
         }
 
-
         public override string ToText(Subtitle subtitle, string title)
         {
             var xml = new XmlDocument();
@@ -176,5 +175,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

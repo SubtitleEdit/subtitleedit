@@ -22,8 +22,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private Control _owner;
         private System.Windows.Forms.Timer _videoEndTimer;
         private BackgroundWorker _videoLoader;
-        int _sourceWidth;
-        int _sourceHeight;
+        private int _sourceWidth;
+        private int _sourceHeight;
 
         public override string PlayerName { get { return "DirectShow"; } }
 
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return info;
         }
 
-        void VideoLoaderDoWork(object sender, DoWorkEventArgs e)
+        private void VideoLoaderDoWork(object sender, DoWorkEventArgs e)
         {
             int i = 0;
             while (CurrentPosition < 1 && i < 100)
@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        void VideoLoaderRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void VideoLoaderRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             if (OnVideoLoaded != null)
             {
@@ -243,7 +243,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _videoEndTimer = null;
         }
 
-        void VideoEndTimerTick(object sender, EventArgs e)
+        private void VideoEndTimerTick(object sender, EventArgs e)
         {
             if (_isPaused == false && _quartzFilgraphManager != null && CurrentPosition >= Duration)
             {
@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        void OwnerControlResize(object sender, EventArgs e)
+        private void OwnerControlResize(object sender, EventArgs e)
         {
             if (_quartzVideo == null)
                 return;

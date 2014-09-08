@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     cur.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minMsBetweenLines;
                     fixedIndexes.Add(i);
-                    fixedIndexes.Add(i+1);
+                    fixedIndexes.Add(i + 1);
                     count++;
                 }
                 var msToNext = next.StartTime.TotalMilliseconds - cur.EndTime.TotalMilliseconds;

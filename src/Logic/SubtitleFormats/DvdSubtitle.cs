@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class DvdSubtitle : SubtitleFormat
     {
 
-        static Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -56,7 +56,7 @@ LICENSE=
             {
                 int milliseconds = p.StartTime.Milliseconds / 10;
                 string time = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, milliseconds);
-                sb.AppendLine("{" + string.Format(paragraphWriteFormat, time, p.Text)+ "}");
+                sb.AppendLine("{" + string.Format(paragraphWriteFormat, time, p.Text) + "}");
 
                 milliseconds = p.EndTime.Milliseconds / 10;
                 time = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, milliseconds);
@@ -67,9 +67,9 @@ LICENSE=
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-//{T 00:03:14:27
-//Some text
-//}
+            //{T 00:03:14:27
+            //Some text
+            //}
             _errorCount = 0;
             bool textOn = false;
             string text = string.Empty;

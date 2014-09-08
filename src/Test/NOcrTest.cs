@@ -1,7 +1,5 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 
 namespace Test
@@ -22,8 +20,8 @@ namespace Test
             nOcrChar.MarginTop = 2;
             nOcrChar.Width = 10;
             nOcrChar.Height = 10;
-            nOcrChar.LinesForeground.Add(new NOcrPoint(new Point(1,1), new Point(2,2)));
-            nOcrChar.LinesBackground.Add(new NOcrPoint(new Point(3,4), new Point(5,6)));
+            nOcrChar.LinesForeground.Add(new NOcrPoint(new Point(1, 1), new Point(2, 2)));
+            nOcrChar.LinesBackground.Add(new NOcrPoint(new Point(3, 4), new Point(5, 6)));
             db.Add(nOcrChar);
 
             var nOcrChar2 = new NOcrChar("u");

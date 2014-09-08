@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle20 : SubtitleFormat
     {
-        static Regex _regexTimeCode1 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d            ", RegexOptions.Compiled);
-        static Regex _regexTimeCode1Empty = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d$", RegexOptions.Compiled);
-        static Regex _regexTimeCode2 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\-\d\d          ", RegexOptions.Compiled);
+        private static Regex _regexTimeCode1 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d            ", RegexOptions.Compiled);
+        private static Regex _regexTimeCode1Empty = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\d$", RegexOptions.Compiled);
+        private static Regex _regexTimeCode2 = new Regex(@"^     \d\d:\d\d:\d\d:\d\d     \d\d\d\-\d\d          ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5,11)), new TimeCode(0,0,0,0), s.Remove(0, 37).Trim());
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
                     }
                     catch
                     {
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p != null)
                         {
-                            p.EndTime = DecodeTimeCode(s.Substring(5,11));
+                            p.EndTime = DecodeTimeCode(s.Substring(5, 11));
                             if (p.Text.Trim().Length == 0)
                                 p.Text = s.Remove(0, 37).Trim();
                             else

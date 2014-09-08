@@ -6,32 +6,29 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
-//00:00:31:17           ,           00:00:35:12           , Signori e Signorine come state?|Va tutto bene?
+    //00:00:31:17           ,           00:00:35:12           , Signori e Signorine come state?|Va tutto bene?
 
-//00:00:35:24           ,           00:00:40:17           ,Oggi riceveremo un |grande artista che viene dall’Africa.
+    //00:00:35:24           ,           00:00:40:17           ,Oggi riceveremo un |grande artista che viene dall’Africa.
 
-//00:00:40:20           ,           00:00:44:12           ,Indovinate come si chiama?|Indovinate come si chiama?
+    //00:00:40:20           ,           00:00:44:12           ,Indovinate come si chiama?|Indovinate come si chiama?
 
-//00:00:44:15           ,           00:00:48:24           ,Si chiama Bella Balde.
+    //00:00:44:15           ,           00:00:48:24           ,Si chiama Bella Balde.
 
-//00:00:49:04           ,           00:00:50:16           ,Grazie Signore e Signori.
+    //00:00:49:04           ,           00:00:50:16           ,Grazie Signore e Signori.
 
-//00:00:50:18           ,           00:00:52:24           ,per ricevere questo grande artista| che viene dall’Africa.
+    //00:00:50:18           ,           00:00:52:24           ,per ricevere questo grande artista| che viene dall’Africa.
 
-//00:00:53:00           ,           00:00:55:08           ,Grazie di nuovo,|grazie ancora.
+    //00:00:53:00           ,           00:00:55:08           ,Grazie di nuovo,|grazie ancora.
 
+    //---------------------------------------------------
 
-//---------------------------------------------------
+    //00:02:13:14           ,           00:02:18:21            ,Stiamo preparando un festival|nel centro scolastico.
 
-
-//00:02:13:14           ,           00:02:18:21            ,Stiamo preparando un festival|nel centro scolastico.
-
-//00:02:20:16            ,           00:02:24:00           ,Gente di questo quartiere |Un gran festival!
-
+    //00:02:20:16            ,           00:02:24:00           ,Gente di questo quartiere |Un gran festival!
 
     public class UnknownSubtitle36 : SubtitleFormat
     {
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+           ,           \d+:\d+:\d+:\d+           ,.*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+           ,           \d+:\d+:\d+:\d+           ,.*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -91,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             number++;
                             p.Number = number;
-                            p.Text = line.Remove(0,57).Trim().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
+                            p.Text = line.Remove(0, 57).Trim().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
                             subtitle.Paragraphs.Add(p);
                         }
                     }

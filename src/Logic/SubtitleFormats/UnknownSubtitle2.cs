@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     //Subtitle text: In preajma lacului Razel,
     public class UnknownSubtitle2 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             Number,
             StartTime,
@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Text
         }
 
-        Paragraph _paragraph;
-        ExpectingLine _expecting = ExpectingLine.Number;
+        private Paragraph _paragraph;
+        private ExpectingLine _expecting = ExpectingLine.Number;
 
         public override string Extension
         {

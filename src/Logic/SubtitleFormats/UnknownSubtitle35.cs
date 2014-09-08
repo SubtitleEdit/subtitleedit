@@ -15,8 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //0076.09-0078.14
         //Mõtled seda tõsiselt või?
 
-
-        static readonly Regex RegexTimeCode = new Regex(@"^\d\d\d\d\.\d\d-\d\d\d\d\.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d\d\d\d\.\d\d-\d\d\d\d\.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {

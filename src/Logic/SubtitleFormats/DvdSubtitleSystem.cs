@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class DvdSubtitleSystem : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -44,8 +44,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-//00:03:15:22 00:03:23:10 This is line one.
-//This is line two.
+                //00:03:15:22 00:03:23:10 This is line one.
+                //This is line two.
                 sb.AppendLine(string.Format("{0} {1} {2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "//"))));
                 index++;
             }
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    _errorCount+=10;
+                    _errorCount += 10;
                 }
             }
 

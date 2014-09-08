@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -31,9 +30,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode ReadTimeCode(byte[] buffer, ref int index)
         {
             int hours = buffer[index];
-            int minutes = buffer[index+1];
-            int seconds = buffer[index+2];
-            int milliseconds = FramesToMillisecondsMax999(buffer[index+3]);
+            int minutes = buffer[index + 1];
+            int seconds = buffer[index + 2];
+            int milliseconds = FramesToMillisecondsMax999(buffer[index + 3]);
             index += 4;
             return new TimeCode(hours, minutes, seconds, milliseconds);
         }

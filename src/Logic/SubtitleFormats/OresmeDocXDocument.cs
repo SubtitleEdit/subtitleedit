@@ -71,7 +71,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
   </w:body>
 </w:document>";
 
-
         public override string ToText(Subtitle subtitle, string title)
         {
             string xmlStructure = Layout.Replace("'", "\"");
@@ -147,7 +146,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             n2sub2.AppendChild(n2sub2sub);
             n2.AppendChild(n2sub2);
             tc1.AppendChild(n2);
-
 
             //<w:tc>
             //  <w:tcPr>
@@ -266,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            for (int i = 0; i < subtitle.Paragraphs.Count-1; i++)
+            for (int i = 0; i < subtitle.Paragraphs.Count - 1; i++)
             {
                 subtitle.Paragraphs[i].EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds;
             }

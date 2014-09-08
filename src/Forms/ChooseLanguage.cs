@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public class CultureListItem
         {
-            CultureInfo _cultureInfo;
+            private CultureInfo _cultureInfo;
 
             public CultureListItem(CultureInfo cultureInfo)
             {
@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int index = 0;
-            for (int i=0; i< comboBoxLanguages.Items.Count; i++)
+            for (int i = 0; i < comboBoxLanguages.Items.Count; i++)
             {
                 var item = (CultureListItem)comboBoxLanguages.Items[i];
                 if (item.Name == Configuration.Settings.Language.General.CultureName)

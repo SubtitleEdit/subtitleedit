@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonicScenaristBitmaps : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d\d\d\s+\d\d:\d\d:\d\d:\d\d\s+\d\d:\d\d:\d\d:\d\d\s+.+\.(tif|tiff|png|bmp|TIF|TIFF|PNG|BMP)", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (parts.Length > 3)
                     {
                         var sb = new StringBuilder();
-                        for (int i = 3; i < parts.Length; i++ )
+                        for (int i = 3; i < parts.Length; i++)
                             sb.Append(parts[i] + " ");
                         string text = sb.ToString().Trim();
                         p = new Paragraph(DecodeTimeCode(parts[1].Split(':')), DecodeTimeCode(parts[2].Split(':')), text);

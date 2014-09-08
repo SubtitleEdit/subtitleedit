@@ -62,13 +62,16 @@ namespace System.IO.Compression
         }
 
         #region Public fields
+
         /// <summary>True if UTF8 encoding for filename and comments, false if default (CP 437)</summary>
         public bool EncodeUTF8 = false;
         /// <summary>Force deflate algotithm even if it inflates the stored file. Off by default.</summary>
         public bool ForceDeflating = false;
-        #endregion
+
+        #endregion Public fields
 
         #region Private fields
+
         // Stream object of storage file
         private Stream ZipFileStream;
         // Central dir image
@@ -77,9 +80,11 @@ namespace System.IO.Compression
         private static UInt32[] CrcTable = null;
         // Default filename encoder
         private static Encoding DefaultEncoding = Encoding.GetEncoding(437);
-        #endregion
+
+        #endregion Private fields
 
         #region Public methods
+
         // Static constructor. Just invoked once in order to create the CRC32 lookup table.
         static ZipExtractor()
         {
@@ -266,7 +271,7 @@ namespace System.IO.Compression
             return true;
         }
 
-        #endregion
+        #endregion Public methods
 
         #region Private methods
 
@@ -343,7 +348,6 @@ namespace System.IO.Compression
             zipfile comment (variable size)
         */
 
-
         /* DOS Date and time:
             MS-DOS date. The date is a packed value with the following format. Bits Description
                 0-4 Day of the month (1–31)
@@ -408,9 +412,11 @@ namespace System.IO.Compression
 
             return false;
         }
-        #endregion
+
+        #endregion Private methods
 
         #region IDisposable Members
+
         public void Dispose()
         {
             Dispose(true);
@@ -424,6 +430,7 @@ namespace System.IO.Compression
                 this.Close();
             }
         }
-        #endregion
+
+        #endregion IDisposable Members
     }
 }

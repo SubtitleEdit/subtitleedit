@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private Subtitle _subtitle;
         private SubtitleFormat _format;
-        LanguageStructure.Statistics _l;
+        private LanguageStructure.Statistics _l;
 
         public Statistics(Subtitle subtitle, string fileName, SubtitleFormat format)
         {
@@ -265,7 +265,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
-
 
             SortedDictionary<string, string> sortedTable = new SortedDictionary<string, string>();
             foreach (KeyValuePair<string, string> item in hashtable)

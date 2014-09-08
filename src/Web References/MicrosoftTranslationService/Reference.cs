@@ -13,21 +13,16 @@
 //
 #pragma warning disable 1591
 
-namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
-    using System;
-    using System.Web.Services;
-    using System.Diagnostics;
-    using System.Web.Services.Protocols;
-    using System.Xml.Serialization;
-    using System.ComponentModel;
-
+namespace Nikse.SubtitleEdit.MicrosoftTranslationService
+{
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Web.Services.WebServiceBindingAttribute(Name="BasicHttpBinding_LanguageService", Namespace="http://tempuri.org/")]
-    public partial class SoapService : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    [System.Web.Services.WebServiceBindingAttribute(Name = "BasicHttpBinding_LanguageService", Namespace = "http://tempuri.org/")]
+    public partial class SoapService : System.Web.Services.Protocols.SoapHttpClientProtocol
+    {
 
         private System.Threading.SendOrPostCallback AddTranslationOperationCompleted;
 
@@ -60,36 +55,46 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         private bool useDefaultCredentialsSetExplicitly;
 
         /// <remarks/>
-        public SoapService() {
+        public SoapService()
+        {
             this.Url = global::Nikse.SubtitleEdit.Properties.Settings.Default.SubtitleEdit_MicrosoftTranslationService_SoapService;
-            if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
+            if ((this.IsLocalFileSystemWebService(this.Url) == true))
+            {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
             }
-            else {
+            else
+            {
                 this.useDefaultCredentialsSetExplicitly = true;
             }
         }
 
-        public new string Url {
-            get {
+        public new string Url
+        {
+            get
+            {
                 return base.Url;
             }
-            set {
+            set
+            {
                 if ((((this.IsLocalFileSystemWebService(base.Url) == true)
                             && (this.useDefaultCredentialsSetExplicitly == false))
-                            && (this.IsLocalFileSystemWebService(value) == false))) {
+                            && (this.IsLocalFileSystemWebService(value) == false)))
+                {
                     base.UseDefaultCredentials = false;
                 }
                 base.Url = value;
             }
         }
 
-        public new bool UseDefaultCredentials {
-            get {
+        public new bool UseDefaultCredentials
+        {
+            get
+            {
                 return base.UseDefaultCredentials;
             }
-            set {
+            set
+            {
                 base.UseDefaultCredentials = value;
                 this.useDefaultCredentialsSetExplicitly = true;
             }
@@ -138,8 +143,9 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         public event TranslateArrayCompletedEventHandler TranslateArrayCompleted;
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/AddTranslation", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public void AddTranslation([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string originalText, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string translatedText, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string to, int rating, [System.Xml.Serialization.XmlIgnoreAttribute()] bool ratingSpecified, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string contentType, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string category, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string user, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string uri) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/AddTranslation", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void AddTranslation([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string originalText, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string translatedText, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string to, int rating, [System.Xml.Serialization.XmlIgnoreAttribute()] bool ratingSpecified, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string contentType, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string category, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string user, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string uri)
+        {
             this.Invoke("AddTranslation", new object[] {
                         appId,
                         originalText,
@@ -155,13 +161,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void AddTranslationAsync(string appId, string originalText, string translatedText, string from, string to, int rating, bool ratingSpecified, string contentType, string category, string user, string uri) {
+        public void AddTranslationAsync(string appId, string originalText, string translatedText, string from, string to, int rating, bool ratingSpecified, string contentType, string category, string user, string uri)
+        {
             this.AddTranslationAsync(appId, originalText, translatedText, from, to, rating, ratingSpecified, contentType, category, user, uri, null);
         }
 
         /// <remarks/>
-        public void AddTranslationAsync(string appId, string originalText, string translatedText, string from, string to, int rating, bool ratingSpecified, string contentType, string category, string user, string uri, object userState) {
-            if ((this.AddTranslationOperationCompleted == null)) {
+        public void AddTranslationAsync(string appId, string originalText, string translatedText, string from, string to, int rating, bool ratingSpecified, string contentType, string category, string user, string uri, object userState)
+        {
+            if ((this.AddTranslationOperationCompleted == null))
+            {
                 this.AddTranslationOperationCompleted = new System.Threading.SendOrPostCallback(this.OnAddTranslationOperationCompleted);
             }
             this.InvokeAsync("AddTranslation", new object[] {
@@ -178,18 +187,21 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         uri}, this.AddTranslationOperationCompleted, userState);
         }
 
-        private void OnAddTranslationOperationCompleted(object arg) {
-            if ((this.AddTranslationCompleted != null)) {
+        private void OnAddTranslationOperationCompleted(object arg)
+        {
+            if ((this.AddTranslationCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.AddTranslationCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/BreakSentences", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable=false)]
-        public int[] BreakSentences([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string language) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/BreakSentences", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable = false)]
+        public int[] BreakSentences([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string language)
+        {
             object[] results = this.Invoke("BreakSentences", new object[] {
                         appId,
                         text,
@@ -198,13 +210,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void BreakSentencesAsync(string appId, string text, string language) {
+        public void BreakSentencesAsync(string appId, string text, string language)
+        {
             this.BreakSentencesAsync(appId, text, language, null);
         }
 
         /// <remarks/>
-        public void BreakSentencesAsync(string appId, string text, string language, object userState) {
-            if ((this.BreakSentencesOperationCompleted == null)) {
+        public void BreakSentencesAsync(string appId, string text, string language, object userState)
+        {
+            if ((this.BreakSentencesOperationCompleted == null))
+            {
                 this.BreakSentencesOperationCompleted = new System.Threading.SendOrPostCallback(this.OnBreakSentencesOperationCompleted);
             }
             this.InvokeAsync("BreakSentences", new object[] {
@@ -213,17 +228,20 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         language}, this.BreakSentencesOperationCompleted, userState);
         }
 
-        private void OnBreakSentencesOperationCompleted(object arg) {
-            if ((this.BreakSentencesCompleted != null)) {
+        private void OnBreakSentencesOperationCompleted(object arg)
+        {
+            if ((this.BreakSentencesCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.BreakSentencesCompleted(this, new BreakSentencesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/Detect", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Detect([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string text) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/Detect", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Detect([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string text)
+        {
             object[] results = this.Invoke("Detect", new object[] {
                         appId,
                         text});
@@ -231,13 +249,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void DetectAsync(string appId, string text) {
+        public void DetectAsync(string appId, string text)
+        {
             this.DetectAsync(appId, text, null);
         }
 
         /// <remarks/>
-        public void DetectAsync(string appId, string text, object userState) {
-            if ((this.DetectOperationCompleted == null)) {
+        public void DetectAsync(string appId, string text, object userState)
+        {
+            if ((this.DetectOperationCompleted == null))
+            {
                 this.DetectOperationCompleted = new System.Threading.SendOrPostCallback(this.OnDetectOperationCompleted);
             }
             this.InvokeAsync("Detect", new object[] {
@@ -245,18 +266,21 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         text}, this.DetectOperationCompleted, userState);
         }
 
-        private void OnDetectOperationCompleted(object arg) {
-            if ((this.DetectCompleted != null)) {
+        private void OnDetectOperationCompleted(object arg)
+        {
+            if ((this.DetectCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DetectCompleted(this, new DetectCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/DetectArray", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
-        public string[] DetectArray([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] texts) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/DetectArray", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
+        public string[] DetectArray([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] texts)
+        {
             object[] results = this.Invoke("DetectArray", new object[] {
                         appId,
                         texts});
@@ -264,13 +288,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void DetectArrayAsync(string appId, string[] texts) {
+        public void DetectArrayAsync(string appId, string[] texts)
+        {
             this.DetectArrayAsync(appId, texts, null);
         }
 
         /// <remarks/>
-        public void DetectArrayAsync(string appId, string[] texts, object userState) {
-            if ((this.DetectArrayOperationCompleted == null)) {
+        public void DetectArrayAsync(string appId, string[] texts, object userState)
+        {
+            if ((this.DetectArrayOperationCompleted == null))
+            {
                 this.DetectArrayOperationCompleted = new System.Threading.SendOrPostCallback(this.OnDetectArrayOperationCompleted);
             }
             this.InvokeAsync("DetectArray", new object[] {
@@ -278,17 +305,20 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         texts}, this.DetectArrayOperationCompleted, userState);
         }
 
-        private void OnDetectArrayOperationCompleted(object arg) {
-            if ((this.DetectArrayCompleted != null)) {
+        private void OnDetectArrayOperationCompleted(object arg)
+        {
+            if ((this.DetectArrayCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DetectArrayCompleted(this, new DetectArrayCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetAppIdToken", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string GetAppIdToken([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, int minRatingRead, [System.Xml.Serialization.XmlIgnoreAttribute()] bool minRatingReadSpecified, int maxRatingWrite, [System.Xml.Serialization.XmlIgnoreAttribute()] bool maxRatingWriteSpecified, int expireSeconds, [System.Xml.Serialization.XmlIgnoreAttribute()] bool expireSecondsSpecified) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetAppIdToken", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string GetAppIdToken([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, int minRatingRead, [System.Xml.Serialization.XmlIgnoreAttribute()] bool minRatingReadSpecified, int maxRatingWrite, [System.Xml.Serialization.XmlIgnoreAttribute()] bool maxRatingWriteSpecified, int expireSeconds, [System.Xml.Serialization.XmlIgnoreAttribute()] bool expireSecondsSpecified)
+        {
             object[] results = this.Invoke("GetAppIdToken", new object[] {
                         appId,
                         minRatingRead,
@@ -301,13 +331,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void GetAppIdTokenAsync(string appId, int minRatingRead, bool minRatingReadSpecified, int maxRatingWrite, bool maxRatingWriteSpecified, int expireSeconds, bool expireSecondsSpecified) {
+        public void GetAppIdTokenAsync(string appId, int minRatingRead, bool minRatingReadSpecified, int maxRatingWrite, bool maxRatingWriteSpecified, int expireSeconds, bool expireSecondsSpecified)
+        {
             this.GetAppIdTokenAsync(appId, minRatingRead, minRatingReadSpecified, maxRatingWrite, maxRatingWriteSpecified, expireSeconds, expireSecondsSpecified, null);
         }
 
         /// <remarks/>
-        public void GetAppIdTokenAsync(string appId, int minRatingRead, bool minRatingReadSpecified, int maxRatingWrite, bool maxRatingWriteSpecified, int expireSeconds, bool expireSecondsSpecified, object userState) {
-            if ((this.GetAppIdTokenOperationCompleted == null)) {
+        public void GetAppIdTokenAsync(string appId, int minRatingRead, bool minRatingReadSpecified, int maxRatingWrite, bool maxRatingWriteSpecified, int expireSeconds, bool expireSecondsSpecified, object userState)
+        {
+            if ((this.GetAppIdTokenOperationCompleted == null))
+            {
                 this.GetAppIdTokenOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetAppIdTokenOperationCompleted);
             }
             this.InvokeAsync("GetAppIdToken", new object[] {
@@ -320,18 +353,21 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         expireSecondsSpecified}, this.GetAppIdTokenOperationCompleted, userState);
         }
 
-        private void OnGetAppIdTokenOperationCompleted(object arg) {
-            if ((this.GetAppIdTokenCompleted != null)) {
+        private void OnGetAppIdTokenOperationCompleted(object arg)
+        {
+            if ((this.GetAppIdTokenCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetAppIdTokenCompleted(this, new GetAppIdTokenCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetLanguageNames", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
-        public string[] GetLanguageNames([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string locale, [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] languageCodes) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetLanguageNames", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
+        public string[] GetLanguageNames([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string locale, [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] languageCodes)
+        {
             object[] results = this.Invoke("GetLanguageNames", new object[] {
                         appId,
                         locale,
@@ -340,13 +376,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void GetLanguageNamesAsync(string appId, string locale, string[] languageCodes) {
+        public void GetLanguageNamesAsync(string appId, string locale, string[] languageCodes)
+        {
             this.GetLanguageNamesAsync(appId, locale, languageCodes, null);
         }
 
         /// <remarks/>
-        public void GetLanguageNamesAsync(string appId, string locale, string[] languageCodes, object userState) {
-            if ((this.GetLanguageNamesOperationCompleted == null)) {
+        public void GetLanguageNamesAsync(string appId, string locale, string[] languageCodes, object userState)
+        {
+            if ((this.GetLanguageNamesOperationCompleted == null))
+            {
                 this.GetLanguageNamesOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetLanguageNamesOperationCompleted);
             }
             this.InvokeAsync("GetLanguageNames", new object[] {
@@ -355,79 +394,94 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         languageCodes}, this.GetLanguageNamesOperationCompleted, userState);
         }
 
-        private void OnGetLanguageNamesOperationCompleted(object arg) {
-            if ((this.GetLanguageNamesCompleted != null)) {
+        private void OnGetLanguageNamesOperationCompleted(object arg)
+        {
+            if ((this.GetLanguageNamesCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetLanguageNamesCompleted(this, new GetLanguageNamesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForSpeak", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
-        public string[] GetLanguagesForSpeak([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForSpeak", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
+        public string[] GetLanguagesForSpeak([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId)
+        {
             object[] results = this.Invoke("GetLanguagesForSpeak", new object[] {
                         appId});
             return ((string[])(results[0]));
         }
 
         /// <remarks/>
-        public void GetLanguagesForSpeakAsync(string appId) {
+        public void GetLanguagesForSpeakAsync(string appId)
+        {
             this.GetLanguagesForSpeakAsync(appId, null);
         }
 
         /// <remarks/>
-        public void GetLanguagesForSpeakAsync(string appId, object userState) {
-            if ((this.GetLanguagesForSpeakOperationCompleted == null)) {
+        public void GetLanguagesForSpeakAsync(string appId, object userState)
+        {
+            if ((this.GetLanguagesForSpeakOperationCompleted == null))
+            {
                 this.GetLanguagesForSpeakOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetLanguagesForSpeakOperationCompleted);
             }
             this.InvokeAsync("GetLanguagesForSpeak", new object[] {
                         appId}, this.GetLanguagesForSpeakOperationCompleted, userState);
         }
 
-        private void OnGetLanguagesForSpeakOperationCompleted(object arg) {
-            if ((this.GetLanguagesForSpeakCompleted != null)) {
+        private void OnGetLanguagesForSpeakOperationCompleted(object arg)
+        {
+            if ((this.GetLanguagesForSpeakCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetLanguagesForSpeakCompleted(this, new GetLanguagesForSpeakCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForTranslate", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
-        public string[] GetLanguagesForTranslate([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetLanguagesForTranslate", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")]
+        public string[] GetLanguagesForTranslate([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId)
+        {
             object[] results = this.Invoke("GetLanguagesForTranslate", new object[] {
                         appId});
             return ((string[])(results[0]));
         }
 
         /// <remarks/>
-        public void GetLanguagesForTranslateAsync(string appId) {
+        public void GetLanguagesForTranslateAsync(string appId)
+        {
             this.GetLanguagesForTranslateAsync(appId, null);
         }
 
         /// <remarks/>
-        public void GetLanguagesForTranslateAsync(string appId, object userState) {
-            if ((this.GetLanguagesForTranslateOperationCompleted == null)) {
+        public void GetLanguagesForTranslateAsync(string appId, object userState)
+        {
+            if ((this.GetLanguagesForTranslateOperationCompleted == null))
+            {
                 this.GetLanguagesForTranslateOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetLanguagesForTranslateOperationCompleted);
             }
             this.InvokeAsync("GetLanguagesForTranslate", new object[] {
                         appId}, this.GetLanguagesForTranslateOperationCompleted, userState);
         }
 
-        private void OnGetLanguagesForTranslateOperationCompleted(object arg) {
-            if ((this.GetLanguagesForTranslateCompleted != null)) {
+        private void OnGetLanguagesForTranslateOperationCompleted(object arg)
+        {
+            if ((this.GetLanguagesForTranslateCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetLanguagesForTranslateCompleted(this, new GetLanguagesForTranslateCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetTranslations", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public GetTranslationsResponse GetTranslations([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string to, int maxTranslations, [System.Xml.Serialization.XmlIgnoreAttribute()] bool maxTranslationsSpecified, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] TranslateOptions options) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetTranslations", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public GetTranslationsResponse GetTranslations([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string to, int maxTranslations, [System.Xml.Serialization.XmlIgnoreAttribute()] bool maxTranslationsSpecified, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] TranslateOptions options)
+        {
             object[] results = this.Invoke("GetTranslations", new object[] {
                         appId,
                         text,
@@ -440,13 +494,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void GetTranslationsAsync(string appId, string text, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options) {
+        public void GetTranslationsAsync(string appId, string text, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options)
+        {
             this.GetTranslationsAsync(appId, text, from, to, maxTranslations, maxTranslationsSpecified, options, null);
         }
 
         /// <remarks/>
-        public void GetTranslationsAsync(string appId, string text, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options, object userState) {
-            if ((this.GetTranslationsOperationCompleted == null)) {
+        public void GetTranslationsAsync(string appId, string text, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options, object userState)
+        {
+            if ((this.GetTranslationsOperationCompleted == null))
+            {
                 this.GetTranslationsOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetTranslationsOperationCompleted);
             }
             this.InvokeAsync("GetTranslations", new object[] {
@@ -459,17 +516,20 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         options}, this.GetTranslationsOperationCompleted, userState);
         }
 
-        private void OnGetTranslationsOperationCompleted(object arg) {
-            if ((this.GetTranslationsCompleted != null)) {
+        private void OnGetTranslationsOperationCompleted(object arg)
+        {
+            if ((this.GetTranslationsCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetTranslationsCompleted(this, new GetTranslationsCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/Translate", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Translate([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string to, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string contentType, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string category) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/Translate", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Translate([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string to, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string contentType, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string category)
+        {
             object[] results = this.Invoke("Translate", new object[] {
                         appId,
                         text,
@@ -481,13 +541,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void TranslateAsync(string appId, string text, string from, string to, string contentType, string category) {
+        public void TranslateAsync(string appId, string text, string from, string to, string contentType, string category)
+        {
             this.TranslateAsync(appId, text, from, to, contentType, category, null);
         }
 
         /// <remarks/>
-        public void TranslateAsync(string appId, string text, string from, string to, string contentType, string category, object userState) {
-            if ((this.TranslateOperationCompleted == null)) {
+        public void TranslateAsync(string appId, string text, string from, string to, string contentType, string category, object userState)
+        {
+            if ((this.TranslateOperationCompleted == null))
+            {
                 this.TranslateOperationCompleted = new System.Threading.SendOrPostCallback(this.OnTranslateOperationCompleted);
             }
             this.InvokeAsync("Translate", new object[] {
@@ -499,16 +562,19 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         category}, this.TranslateOperationCompleted, userState);
         }
 
-        private void OnTranslateOperationCompleted(object arg) {
-            if ((this.TranslateCompleted != null)) {
+        private void OnTranslateOperationCompleted(object arg)
+        {
+            if ((this.TranslateCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.TranslateCompleted(this, new TranslateCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/AddTranslationArray", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public void AddTranslationArray([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")] Translation[] translations, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string to, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] TranslateOptions options) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/AddTranslationArray", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void AddTranslationArray([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")] Translation[] translations, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string to, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] TranslateOptions options)
+        {
             this.Invoke("AddTranslationArray", new object[] {
                         appId,
                         translations,
@@ -518,13 +584,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void AddTranslationArrayAsync(string appId, Translation[] translations, string from, string to, TranslateOptions options) {
+        public void AddTranslationArrayAsync(string appId, Translation[] translations, string from, string to, TranslateOptions options)
+        {
             this.AddTranslationArrayAsync(appId, translations, from, to, options, null);
         }
 
         /// <remarks/>
-        public void AddTranslationArrayAsync(string appId, Translation[] translations, string from, string to, TranslateOptions options, object userState) {
-            if ((this.AddTranslationArrayOperationCompleted == null)) {
+        public void AddTranslationArrayAsync(string appId, Translation[] translations, string from, string to, TranslateOptions options, object userState)
+        {
+            if ((this.AddTranslationArrayOperationCompleted == null))
+            {
                 this.AddTranslationArrayOperationCompleted = new System.Threading.SendOrPostCallback(this.OnAddTranslationArrayOperationCompleted);
             }
             this.InvokeAsync("AddTranslationArray", new object[] {
@@ -535,18 +604,21 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         options}, this.AddTranslationArrayOperationCompleted, userState);
         }
 
-        private void OnAddTranslationArrayOperationCompleted(object arg) {
-            if ((this.AddTranslationArrayCompleted != null)) {
+        private void OnAddTranslationArrayOperationCompleted(object arg)
+        {
+            if ((this.AddTranslationArrayCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.AddTranslationArrayCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetTranslationsArray", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-        public GetTranslationsResponse[] GetTranslationsArray([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] texts, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string to, int maxTranslations, [System.Xml.Serialization.XmlIgnoreAttribute()] bool maxTranslationsSpecified, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] TranslateOptions options) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/GetTranslationsArray", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+        public GetTranslationsResponse[] GetTranslationsArray([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] texts, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string to, int maxTranslations, [System.Xml.Serialization.XmlIgnoreAttribute()] bool maxTranslationsSpecified, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] TranslateOptions options)
+        {
             object[] results = this.Invoke("GetTranslationsArray", new object[] {
                         appId,
                         texts,
@@ -559,13 +631,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void GetTranslationsArrayAsync(string appId, string[] texts, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options) {
+        public void GetTranslationsArrayAsync(string appId, string[] texts, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options)
+        {
             this.GetTranslationsArrayAsync(appId, texts, from, to, maxTranslations, maxTranslationsSpecified, options, null);
         }
 
         /// <remarks/>
-        public void GetTranslationsArrayAsync(string appId, string[] texts, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options, object userState) {
-            if ((this.GetTranslationsArrayOperationCompleted == null)) {
+        public void GetTranslationsArrayAsync(string appId, string[] texts, string from, string to, int maxTranslations, bool maxTranslationsSpecified, TranslateOptions options, object userState)
+        {
+            if ((this.GetTranslationsArrayOperationCompleted == null))
+            {
                 this.GetTranslationsArrayOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetTranslationsArrayOperationCompleted);
             }
             this.InvokeAsync("GetTranslationsArray", new object[] {
@@ -578,17 +653,20 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         options}, this.GetTranslationsArrayOperationCompleted, userState);
         }
 
-        private void OnGetTranslationsArrayOperationCompleted(object arg) {
-            if ((this.GetTranslationsArrayCompleted != null)) {
+        private void OnGetTranslationsArrayOperationCompleted(object arg)
+        {
+            if ((this.GetTranslationsArrayCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetTranslationsArrayCompleted(this, new GetTranslationsArrayCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/Speak", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Speak([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string language, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string format) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/Speak", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Speak([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string text, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string language, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string format)
+        {
             object[] results = this.Invoke("Speak", new object[] {
                         appId,
                         text,
@@ -598,13 +676,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void SpeakAsync(string appId, string text, string language, string format) {
+        public void SpeakAsync(string appId, string text, string language, string format)
+        {
             this.SpeakAsync(appId, text, language, format, null);
         }
 
         /// <remarks/>
-        public void SpeakAsync(string appId, string text, string language, string format, object userState) {
-            if ((this.SpeakOperationCompleted == null)) {
+        public void SpeakAsync(string appId, string text, string language, string format, object userState)
+        {
+            if ((this.SpeakOperationCompleted == null))
+            {
                 this.SpeakOperationCompleted = new System.Threading.SendOrPostCallback(this.OnSpeakOperationCompleted);
             }
             this.InvokeAsync("Speak", new object[] {
@@ -614,18 +695,21 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         format}, this.SpeakOperationCompleted, userState);
         }
 
-        private void OnSpeakOperationCompleted(object arg) {
-            if ((this.SpeakCompleted != null)) {
+        private void OnSpeakOperationCompleted(object arg)
+        {
+            if ((this.SpeakCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SpeakCompleted(this, new SpeakCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/TranslateArray", RequestNamespace="http://api.microsofttranslator.com/V2", ResponseNamespace="http://api.microsofttranslator.com/V2", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-        public TranslateArrayResponse[] TranslateArray([System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] texts, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] string to, [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)] TranslateOptions options) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://api.microsofttranslator.com/V2/LanguageService/TranslateArray", RequestNamespace = "http://api.microsofttranslator.com/V2", ResponseNamespace = "http://api.microsofttranslator.com/V2", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        [return: System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [return: System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+        public TranslateArrayResponse[] TranslateArray([System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string appId, [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)] [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays")] string[] texts, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string from, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] string to, [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)] TranslateOptions options)
+        {
             object[] results = this.Invoke("TranslateArray", new object[] {
                         appId,
                         texts,
@@ -636,13 +720,16 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         }
 
         /// <remarks/>
-        public void TranslateArrayAsync(string appId, string[] texts, string from, string to, TranslateOptions options) {
+        public void TranslateArrayAsync(string appId, string[] texts, string from, string to, TranslateOptions options)
+        {
             this.TranslateArrayAsync(appId, texts, from, to, options, null);
         }
 
         /// <remarks/>
-        public void TranslateArrayAsync(string appId, string[] texts, string from, string to, TranslateOptions options, object userState) {
-            if ((this.TranslateArrayOperationCompleted == null)) {
+        public void TranslateArrayAsync(string appId, string[] texts, string from, string to, TranslateOptions options, object userState)
+        {
+            if ((this.TranslateArrayOperationCompleted == null))
+            {
                 this.TranslateArrayOperationCompleted = new System.Threading.SendOrPostCallback(this.OnTranslateArrayOperationCompleted);
             }
             this.InvokeAsync("TranslateArray", new object[] {
@@ -653,26 +740,32 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
                         options}, this.TranslateArrayOperationCompleted, userState);
         }
 
-        private void OnTranslateArrayOperationCompleted(object arg) {
-            if ((this.TranslateArrayCompleted != null)) {
+        private void OnTranslateArrayOperationCompleted(object arg)
+        {
+            if ((this.TranslateArrayCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.TranslateArrayCompleted(this, new TranslateArrayCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        public new void CancelAsync(object userState) {
+        public new void CancelAsync(object userState)
+        {
             base.CancelAsync(userState);
         }
 
-        private bool IsLocalFileSystemWebService(string url) {
+        private bool IsLocalFileSystemWebService(string url)
+        {
             if (((url == null)
-                        || (url == string.Empty))) {
+                        || (url == string.Empty)))
+            {
                 return false;
             }
             System.Uri wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024)
-                        && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
+                        && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0)))
+            {
                 return true;
             }
             return false;
@@ -684,8 +777,9 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-    public partial class TranslateOptions {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+    public partial class TranslateOptions
+    {
 
         private string categoryField;
 
@@ -700,67 +794,85 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         private string userField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Category {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Category
+        {
+            get
+            {
                 return this.categoryField;
             }
-            set {
+            set
+            {
                 this.categoryField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string ContentType {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string ContentType
+        {
+            get
+            {
                 return this.contentTypeField;
             }
-            set {
+            set
+            {
                 this.contentTypeField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string ReservedFlags {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string ReservedFlags
+        {
+            get
+            {
                 return this.reservedFlagsField;
             }
-            set {
+            set
+            {
                 this.reservedFlagsField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string State {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string State
+        {
+            get
+            {
                 return this.stateField;
             }
-            set {
+            set
+            {
                 this.stateField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Uri {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Uri
+        {
+            get
+            {
                 return this.uriField;
             }
-            set {
+            set
+            {
                 this.uriField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string User {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string User
+        {
+            get
+            {
                 return this.userField;
             }
-            set {
+            set
+            {
                 this.userField = value;
             }
         }
@@ -771,8 +883,9 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-    public partial class TranslateArrayResponse {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+    public partial class TranslateArrayResponse
+    {
 
         private string errorField;
 
@@ -787,69 +900,87 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         private int[] translatedTextSentenceLengthsField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Error {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Error
+        {
+            get
+            {
                 return this.errorField;
             }
-            set {
+            set
+            {
                 this.errorField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string From {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string From
+        {
+            get
+            {
                 return this.fromField;
             }
-            set {
+            set
+            {
                 this.fromField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable=false)]
-        public int[] OriginalTextSentenceLengths {
-            get {
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable = false)]
+        public int[] OriginalTextSentenceLengths
+        {
+            get
+            {
                 return this.originalTextSentenceLengthsField;
             }
-            set {
+            set
+            {
                 this.originalTextSentenceLengthsField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string State {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string State
+        {
+            get
+            {
                 return this.stateField;
             }
-            set {
+            set
+            {
                 this.stateField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string TranslatedText {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string TranslatedText
+        {
+            get
+            {
                 return this.translatedTextField;
             }
-            set {
+            set
+            {
                 this.translatedTextField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        [System.Xml.Serialization.XmlArrayItemAttribute(Namespace="http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable=false)]
-        public int[] TranslatedTextSentenceLengths {
-            get {
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        [System.Xml.Serialization.XmlArrayItemAttribute(Namespace = "http://schemas.microsoft.com/2003/10/Serialization/Arrays", IsNullable = false)]
+        public int[] TranslatedTextSentenceLengths
+        {
+            get
+            {
                 return this.translatedTextSentenceLengthsField;
             }
-            set {
+            set
+            {
                 this.translatedTextSentenceLengthsField = value;
             }
         }
@@ -860,8 +991,9 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-    public partial class Translation {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+    public partial class Translation
+    {
 
         private string originalTextField;
 
@@ -876,65 +1008,83 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         private string translatedTextField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string OriginalText {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string OriginalText
+        {
+            get
+            {
                 return this.originalTextField;
             }
-            set {
+            set
+            {
                 this.originalTextField = value;
             }
         }
 
         /// <remarks/>
-        public int Rating {
-            get {
+        public int Rating
+        {
+            get
+            {
                 return this.ratingField;
             }
-            set {
+            set
+            {
                 this.ratingField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool RatingSpecified {
-            get {
+        public bool RatingSpecified
+        {
+            get
+            {
                 return this.ratingFieldSpecified;
             }
-            set {
+            set
+            {
                 this.ratingFieldSpecified = value;
             }
         }
 
         /// <remarks/>
-        public int Sequence {
-            get {
+        public int Sequence
+        {
+            get
+            {
                 return this.sequenceField;
             }
-            set {
+            set
+            {
                 this.sequenceField = value;
             }
         }
 
         /// <remarks/>
         [System.Xml.Serialization.XmlIgnoreAttribute()]
-        public bool SequenceSpecified {
-            get {
+        public bool SequenceSpecified
+        {
+            get
+            {
                 return this.sequenceFieldSpecified;
             }
-            set {
+            set
+            {
                 this.sequenceFieldSpecified = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string TranslatedText {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string TranslatedText
+        {
+            get
+            {
                 return this.translatedTextField;
             }
-            set {
+            set
+            {
                 this.translatedTextField = value;
             }
         }
@@ -945,8 +1095,9 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-    public partial class TranslationMatch {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+    public partial class TranslationMatch
+    {
 
         private int countField;
 
@@ -961,64 +1112,82 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         private string translatedTextField;
 
         /// <remarks/>
-        public int Count {
-            get {
+        public int Count
+        {
+            get
+            {
                 return this.countField;
             }
-            set {
+            set
+            {
                 this.countField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string Error {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string Error
+        {
+            get
+            {
                 return this.errorField;
             }
-            set {
+            set
+            {
                 this.errorField = value;
             }
         }
 
         /// <remarks/>
-        public int MatchDegree {
-            get {
+        public int MatchDegree
+        {
+            get
+            {
                 return this.matchDegreeField;
             }
-            set {
+            set
+            {
                 this.matchDegreeField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string MatchedOriginalText {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string MatchedOriginalText
+        {
+            get
+            {
                 return this.matchedOriginalTextField;
             }
-            set {
+            set
+            {
                 this.matchedOriginalTextField = value;
             }
         }
 
         /// <remarks/>
-        public int Rating {
-            get {
+        public int Rating
+        {
+            get
+            {
                 return this.ratingField;
             }
-            set {
+            set
+            {
                 this.ratingField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string TranslatedText {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string TranslatedText
+        {
+            get
+            {
                 return this.translatedTextField;
             }
-            set {
+            set
+            {
                 this.translatedTextField = value;
             }
         }
@@ -1029,8 +1198,9 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
-    public partial class GetTranslationsResponse {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://schemas.datacontract.org/2004/07/Microsoft.MT.Web.Service.V2")]
+    public partial class GetTranslationsResponse
+    {
 
         private string fromField;
 
@@ -1039,34 +1209,43 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
         private TranslationMatch[] translationsField;
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string From {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string From
+        {
+            get
+            {
                 return this.fromField;
             }
-            set {
+            set
+            {
                 this.fromField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(IsNullable=true)]
-        public string State {
-            get {
+        [System.Xml.Serialization.XmlElementAttribute(IsNullable = true)]
+        public string State
+        {
+            get
+            {
                 return this.stateField;
             }
-            set {
+            set
+            {
                 this.stateField = value;
             }
         }
 
         /// <remarks/>
-        [System.Xml.Serialization.XmlArrayAttribute(IsNullable=true)]
-        public TranslationMatch[] Translations {
-            get {
+        [System.Xml.Serialization.XmlArrayAttribute(IsNullable = true)]
+        public TranslationMatch[] Translations
+        {
+            get
+            {
                 return this.translationsField;
             }
-            set {
+            set
+            {
                 this.translationsField = value;
             }
         }
@@ -1084,18 +1263,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class BreakSentencesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class BreakSentencesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal BreakSentencesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public int[] Result {
-            get {
+        public int[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((int[])(this.results[0]));
             }
@@ -1110,18 +1293,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class DetectCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class DetectCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal DetectCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string Result {
-            get {
+        public string Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
             }
@@ -1136,18 +1323,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class DetectArrayCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class DetectArrayCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal DetectArrayCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string[] Result {
-            get {
+        public string[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string[])(this.results[0]));
             }
@@ -1162,18 +1353,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetAppIdTokenCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetAppIdTokenCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetAppIdTokenCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string Result {
-            get {
+        public string Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
             }
@@ -1188,18 +1383,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetLanguageNamesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetLanguageNamesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetLanguageNamesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string[] Result {
-            get {
+        public string[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string[])(this.results[0]));
             }
@@ -1214,18 +1413,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetLanguagesForSpeakCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetLanguagesForSpeakCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetLanguagesForSpeakCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string[] Result {
-            get {
+        public string[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string[])(this.results[0]));
             }
@@ -1240,18 +1443,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetLanguagesForTranslateCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetLanguagesForTranslateCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetLanguagesForTranslateCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string[] Result {
-            get {
+        public string[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string[])(this.results[0]));
             }
@@ -1266,18 +1473,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetTranslationsCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetTranslationsCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetTranslationsCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public GetTranslationsResponse Result {
-            get {
+        public GetTranslationsResponse Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((GetTranslationsResponse)(this.results[0]));
             }
@@ -1292,18 +1503,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class TranslateCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class TranslateCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal TranslateCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string Result {
-            get {
+        public string Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
             }
@@ -1322,18 +1537,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetTranslationsArrayCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetTranslationsArrayCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetTranslationsArrayCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public GetTranslationsResponse[] Result {
-            get {
+        public GetTranslationsResponse[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((GetTranslationsResponse[])(this.results[0]));
             }
@@ -1348,18 +1567,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class SpeakCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class SpeakCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal SpeakCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public string Result {
-            get {
+        public string Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[0]));
             }
@@ -1374,18 +1597,22 @@ namespace Nikse.SubtitleEdit.MicrosoftTranslationService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class TranslateArrayCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class TranslateArrayCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal TranslateArrayCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public TranslateArrayResponse[] Result {
-            get {
+        public TranslateArrayResponse[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((TranslateArrayResponse[])(this.results[0]));
             }

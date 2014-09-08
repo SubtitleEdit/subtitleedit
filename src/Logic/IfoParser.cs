@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public class IfoParser: IDisposable
+    public class IfoParser : IDisposable
     {
         public struct AudioStream
         {
@@ -76,14 +76,13 @@ namespace Nikse.SubtitleEdit.Logic
             }
         };
 
-
-        readonly List<string> ArrayOfAudioMode = new List<string> { "AC3", "...", "MPEG1", "MPEG2", "LPCM", "...", "DTS" };
-        readonly List<string> ArrayOfAudioExtension = new List<string> { "unspecified", "normal", "for visually impaired", "director's comments", "alternate director's comments" };
-        readonly List<string> ArrayOfAspect = new List<string> { "4:3", "...", "...", "16:9" };
-        readonly List<string> ArrayOfStandard = new List<string> { "NTSC", "PAL", "...", "..." };
-        readonly List<string> ArrayOfCodingMode = new List<string> { "MPEG1", "MPEG2" };
-        readonly List<string> ArrayOfNTSCResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
-        readonly List<string> ArrayOfPALResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
+        private readonly List<string> ArrayOfAudioMode = new List<string> { "AC3", "...", "MPEG1", "MPEG2", "LPCM", "...", "DTS" };
+        private readonly List<string> ArrayOfAudioExtension = new List<string> { "unspecified", "normal", "for visually impaired", "director's comments", "alternate director's comments" };
+        private readonly List<string> ArrayOfAspect = new List<string> { "4:3", "...", "...", "16:9" };
+        private readonly List<string> ArrayOfStandard = new List<string> { "NTSC", "PAL", "...", "..." };
+        private readonly List<string> ArrayOfCodingMode = new List<string> { "MPEG1", "MPEG2" };
+        private readonly List<string> ArrayOfNTSCResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
+        private readonly List<string> ArrayOfPALResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
         public static List<string> ArrayOfLanguageCode = new List<string> { "  ", "aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br", "ca", "co", "cs", "cy", "da", "de", "dz", "el",
            "en", "eo", "es", "et", "eu", "fa", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl", "gn", "gu", "ha", "he", "hi", "hr", "hu", "hy", "ia", "id", "ie", "ik",
            "in", "is", "it", "iu", "iw", "ja", "ji", "jw", "ka", "kk", "kl", "km", "kn", "ko", "ks", "ku", "ky", "la", "ln", "lo", "lt", "lv", "mg", "mi", "mk", "ml",
@@ -194,10 +193,10 @@ namespace Nikse.SubtitleEdit.Logic
                     case 15: subtitleFormat = "(director comments for children)"; break;
                 }
 
-////                int languageId = buffer[1] & Helper.B11111000;
-//                int languageId1 = buffer[0] & Helper.B11111000;
-//                int languageId2= buffer[1] & Helper.B11111000;
-//                System.Diagnostics.Debug.WriteLine(languageTwoLetter + " " + languageId1.ToString() + " " + languageId2.ToString() + "  " + buffer[0].ToString() + " " + buffer[1].ToString());
+                ////                int languageId = buffer[1] & Helper.B11111000;
+                //                int languageId1 = buffer[0] & Helper.B11111000;
+                //                int languageId2= buffer[1] & Helper.B11111000;
+                //                System.Diagnostics.Debug.WriteLine(languageTwoLetter + " " + languageId1.ToString() + " " + languageId2.ToString() + "  " + buffer[0].ToString() + " " + buffer[1].ToString());
                 _fs.Position += 2;
             }
         }
@@ -289,9 +288,9 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     byte[] colors = new byte[4];
                     _fs.Read(colors, 0, 4);
-                    int y = colors[1]-16;
-                    int cr = colors[2]-128;
-                    int cb = colors[3]-128;
+                    int y = colors[1] - 16;
+                    int cr = colors[2] - 128;
+                    int cb = colors[3] - 128;
                     int r = (int)Math.Min(Math.Max(Math.Round(1.1644F * y + 1.596F * cr), 0), 255);
                     int g = (int)Math.Min(Math.Max(Math.Round(1.1644F * y - 0.813F * cr - 0.391F * cb), 0), 255);
                     int b = (int)Math.Min(Math.Max(Math.Round(1.1644F * y + 2.018F * cb), 0), 255);
@@ -350,14 +349,14 @@ namespace Nikse.SubtitleEdit.Logic
             double fps;
 
             temp = IntToBin(time, 32);
-            result = StrToInt(IntToHex(BinToInt(MidStr(temp,0,8)),1))*3600000;
-            result = result + StrToInt(IntToHex(BinToInt(MidStr(temp,8,8)),2))*60000;
-            result = result + StrToInt(IntToHex(BinToInt(MidStr(temp,16,8)),2))*1000;
-            if (temp.Substring(24,2) == "11")
+            result = StrToInt(IntToHex(BinToInt(MidStr(temp, 0, 8)), 1)) * 3600000;
+            result = result + StrToInt(IntToHex(BinToInt(MidStr(temp, 8, 8)), 2)) * 60000;
+            result = result + StrToInt(IntToHex(BinToInt(MidStr(temp, 16, 8)), 2)) * 1000;
+            if (temp.Substring(24, 2) == "11")
                 fps = 30;
             else
                 fps = 25;
-            result += (int) Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
+            result += (int)Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(MidStr(temp, 26, 6)), 3)));
             return result;
         }
 
@@ -388,13 +387,13 @@ namespace Nikse.SubtitleEdit.Logic
         private static string InterpretTime(int timeNumber)
         {
             string timeBytes = IntToBin(timeNumber, 32);
-            int h = StrToInt(IntToHex(BinToInt(timeBytes.Substring(0,8)),1));
-            int m = StrToInt(IntToHex(BinToInt(timeBytes.Substring(8,8)),2));
-            int s = StrToInt(IntToHex(BinToInt(timeBytes.Substring(16,8)),2));
+            int h = StrToInt(IntToHex(BinToInt(timeBytes.Substring(0, 8)), 1));
+            int m = StrToInt(IntToHex(BinToInt(timeBytes.Substring(8, 8)), 2));
+            int s = StrToInt(IntToHex(BinToInt(timeBytes.Substring(16, 8)), 2));
             int fps = 25;
             if (timeBytes.Substring(24, 2) == "11")
                 fps = 30;
-            int milliseconds = (int)Math.Round((1000.0/fps)*StrToFloat(IntToHex(BinToInt(timeBytes.Substring(26,6)),3)));
+            int milliseconds = (int)Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(timeBytes.Substring(26, 6)), 3)));
             TimeSpan ts = new TimeSpan(0, h, m, s, milliseconds);
             return MsToTime(ts.TotalMilliseconds);
         }

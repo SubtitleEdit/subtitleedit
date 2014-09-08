@@ -204,7 +204,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     end.InnerText = ConvertToTimeString(p.EndTime);
                     subNode.Attributes.Append(end);
 
-
                     bool alignLeft = p.Text.StartsWith("{\\a1}") || p.Text.StartsWith("{\\a5}") || p.Text.StartsWith("{\\a9}") || // sub station alpha
                                     p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"); // advanced sub station alpha
 
@@ -219,7 +218,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     // remove styles for display text (except italic)
                     string text = RemoveSubStationAlphaFormatting(p.Text);
-
 
                     string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     int vPos = 1 + lines.Length * 7;
@@ -297,7 +295,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     italic.InnerText = "yes";
                                     fontNode.Attributes.Append(italic);
 
-                                    if (line.Length > i + 5 && line.Substring(i+4).StartsWith("</font>"))
+                                    if (line.Length > i + 5 && line.Substring(i + 4).StartsWith("</font>"))
                                     {
                                         XmlAttribute fontColor = xml.CreateAttribute("Color");
                                         fontColor.InnerText = fontColors.Pop();
@@ -480,12 +478,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return result;
         }
 
-
         private void ValidationCallBack(object sender, ValidationEventArgs e)
         {
             throw new Exception(e.Message);
         }
-
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
@@ -764,7 +760,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private  TimeCode GetTimeCode(string s)
+        private TimeCode GetTimeCode(string s)
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
 

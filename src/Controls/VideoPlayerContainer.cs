@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakeSubtitlesPanel()
         {
-            _panelSubtitle = new Panel {BackColor = _backgroundColor, Left = 0, Top = 0, Height = SubtitlesHeight + 1};
+            _panelSubtitle = new Panel { BackColor = _backgroundColor, Left = 0, Top = 0, Height = SubtitlesHeight + 1 };
             _subtitleTextBox = new RichTextBoxViewOnly();
             _panelSubtitle.Controls.Add(_subtitleTextBox);
             _subtitleTextBox.BackColor = _backgroundColor;
@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Controls
                 text = text.Replace("</u>", string.Empty);
                 text = text.Replace("<U>", string.Empty);
                 text = text.Replace("</U>", string.Empty);
-            //    text = Utilities.RemoveHtmlFontTag(text);
+                //    text = Utilities.RemoveHtmlFontTag(text);
 
                 // display italic
                 var sb = new StringBuilder();
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Controls
                 var italicLookups = new System.Collections.Generic.Dictionary<int, int>();
                 var fontColorLookups = new System.Collections.Generic.Dictionary<Point, Color>();
                 Color fontColor = Color.White;
-                while  (i < text.Length)
+                while (i < text.Length)
                 {
                     if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
                     {
@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                             }
-                            i+=end;
+                            i += end;
                             //fontIndices.Push(_subtitleTextBox.Text.Length);
                         }
                         if (fontFound)
@@ -491,11 +491,11 @@ namespace Nikse.SubtitleEdit.Controls
 
         private Control MakeControlsPanel()
         {
-            _panelcontrols = new Panel {Left = 0, Height = ControlsHeight};
+            _panelcontrols = new Panel { Left = 0, Height = ControlsHeight };
 
             _pictureBoxBackground = new PictureBox
                                         {
-                                            Image = ((Image) (_resources.GetObject("pictureBoxBar.Image"))),
+                                            Image = ((Image)(_resources.GetObject("pictureBoxBar.Image"))),
                                             Location = new Point(0, 0),
                                             Name = "_pictureBoxBackground",
                                             Size = new Size(200, 45),
@@ -506,7 +506,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxPlay = new PictureBox
                                   {
-                                      Image = ((Image) (_resources.GetObject("pictureBoxPlay.Image"))),
+                                      Image = ((Image)(_resources.GetObject("pictureBoxPlay.Image"))),
                                       Location = new Point(22, 126 - 113),
                                       Name = "_pictureBoxPlay",
                                       Size = new Size(29, 29),
@@ -518,7 +518,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxPlayDown = new PictureBox
                                       {
-                                          Image = ((Image) (_resources.GetObject("pictureBoxPlayDown.Image"))),
+                                          Image = ((Image)(_resources.GetObject("pictureBoxPlayDown.Image"))),
                                           Location = new Point(22, 127 - 113),
                                           Name = "_pictureBoxPlayDown",
                                           Size = new Size(29, 29),
@@ -529,7 +529,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxPlayOver = new PictureBox
                                       {
-                                          Image = ((Image) (_resources.GetObject("pictureBoxPlayOver.Image"))),
+                                          Image = ((Image)(_resources.GetObject("pictureBoxPlayOver.Image"))),
                                           Location = new Point(23, 126 - 113),
                                           Name = "_pictureBoxPlayOver",
                                           Size = new Size(29, 29),
@@ -697,7 +697,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxReverse = new PictureBox
                                      {
-                                         Image = ((Image) (_resources.GetObject("pictureBoxReverse.Image"))),
+                                         Image = ((Image)(_resources.GetObject("pictureBoxReverse.Image"))),
                                          Location = new Point(28, 3),
                                          Name = "_pictureBoxReverse",
                                          Size = new Size(16, 8),
@@ -710,7 +710,7 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxReverseOver = new PictureBox
                                          {
                                              Image =
-                                                 ((Image) (_resources.GetObject("pictureBoxReverseMouseOver.Image"))),
+                                                 ((Image)(_resources.GetObject("pictureBoxReverseMouseOver.Image"))),
                                              Location = _pictureBoxReverse.Location,
                                              Name = "_pictureBoxReverseOver",
                                              Size = _pictureBoxReverse.Size,
@@ -724,7 +724,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxReverseDown = new PictureBox
                                          {
-                                             Image = ((Image) (_resources.GetObject("pictureBoxReverseMouseDown.Image"))),
+                                             Image = ((Image)(_resources.GetObject("pictureBoxReverseMouseDown.Image"))),
                                              Location = _pictureBoxReverse.Location,
                                              Name = "_pictureBoxReverseOver",
                                              Size = _pictureBoxReverse.Size,
@@ -735,7 +735,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             _pictureBoxFastForward = new PictureBox
                                          {
-                                             Image = ((Image) (_resources.GetObject("pictureBoxFastForward.Image"))),
+                                             Image = ((Image)(_resources.GetObject("pictureBoxFastForward.Image"))),
                                              Location = new Point(571, 1),
                                              Name = "_pictureBoxFastForward",
                                              Size = new Size(17, 13),
@@ -891,7 +891,6 @@ namespace Nikse.SubtitleEdit.Controls
             Play();
         }
 
-
         private void HideAllPauseImages()
         {
             _pictureBoxPauseOver.Visible = false;
@@ -936,9 +935,11 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxPlay.Visible = true;
             Pause();
         }
-        #endregion
+
+        #endregion PlayPauseButtons
 
         #region StopButtons
+
         private void HideAllStopImages()
         {
             _pictureBoxStopOver.Visible = false;
@@ -978,9 +979,11 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxStop.Visible = true;
             Stop();
         }
-        #endregion
+
+        #endregion StopButtons
 
         #region FullscreenButtons
+
         private void HideAllFullscreenImages()
         {
             _pictureBoxFullscreenOver.Visible = false;
@@ -1029,9 +1032,11 @@ namespace Nikse.SubtitleEdit.Controls
             HideAllFullscreenImages();
             _pictureBoxFullscreen.Visible = true;
         }
-        #endregion
+
+        #endregion FullscreenButtons
 
         #region Mute buttons
+
         private void HideAllMuteImages()
         {
             _pictureBoxMuteOver.Visible = false;
@@ -1084,9 +1089,10 @@ namespace Nikse.SubtitleEdit.Controls
                 OnButtonClicked.Invoke(sender, e);
         }
 
-        #endregion
+        #endregion Mute buttons
 
         #region Reverse buttons
+
         private void HideAllReverseImages()
         {
             _pictureBoxReverseOver.Visible = false;
@@ -1125,9 +1131,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxReverse.Visible = true;
         }
 
-        #endregion
+        #endregion Reverse buttons
 
         #region Fast forward buttons
+
         private void HideAllFastForwardImages()
         {
             _pictureBoxFastForwardOver.Visible = false;
@@ -1167,9 +1174,10 @@ namespace Nikse.SubtitleEdit.Controls
             _pictureBoxFastForward.Visible = true;
         }
 
-        #endregion
+        #endregion Fast forward buttons
 
         #region Progress bars
+
         private void SetProgressBarPosition(int mouseX)
         {
             int max = _pictureBoxProgressbarBackground.Width - 9;
@@ -1179,7 +1187,7 @@ namespace Nikse.SubtitleEdit.Controls
             double percent = (mouseX * 100.0) / max;
             _pictureBoxProgressBar.Width = (int)(max * percent / 100.0);
 
-            double pos = percent * (Duration - Offset)  / 100.0;
+            double pos = percent * (Duration - Offset) / 100.0;
             CurrentPosition = pos + Offset;
         }
 
@@ -1217,7 +1225,6 @@ namespace Nikse.SubtitleEdit.Controls
                     pos = 0;
                 var span = TimeCode.FromSeconds(pos);
                 var dur = TimeCode.FromSeconds(Duration);
-
 
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     _labelTimeCode.Text = string.Format("{0} / {1}", span.ToHHMMSSFF(), dur.ToHHMMSSFF());
@@ -1268,9 +1275,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        #endregion
+        #endregion Progress bars
 
         #region VideoPlayer functions
+
         public void Play()
         {
             if (VideoPlayer != null)
@@ -1425,7 +1433,8 @@ namespace Nikse.SubtitleEdit.Controls
                 }
             }
         }
-        #endregion
+
+        #endregion VideoPlayer functions
 
     }
 }

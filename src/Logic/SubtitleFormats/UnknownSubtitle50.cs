@@ -17,14 +17,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class UnknownSubtitle50 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             Text1,
             Text2
         }
 
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\.\d\d\.\d\d\.\d\d-\d\d\.\d\d\.\d\d\.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\.\d\d\.\d\d\.\d\d-\d\d\.\d\d\.\d\d\.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                     {
                         if (line.StartsWith("||"))
-                            line = "<i>" + line.Replace("||", string.Empty) +  "</i>";
+                            line = "<i>" + line.Replace("||", string.Empty) + "</i>";
                         p.Text = line.Trim();
                         expecting = ExpectingLine.Text2;
                     }

@@ -1,5 +1,4 @@
-﻿
-namespace Nikse.SubtitleEdit.Logic.Forms
+﻿namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public class RemoveTextForHISettings
     {

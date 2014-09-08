@@ -7,15 +7,16 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.VobSub
 {
-    class Idx
+    internal class Idx
     {
         public readonly List<IdxParagraph> IdxParagraphs = new List<IdxParagraph>();
         public readonly List<Color> Palette = new List<Color>();
         public readonly List<string> Languages = new List<string>();
 
-        static Regex timeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
+        private static Regex timeCodeLinePattern = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
-        public Idx(string fileName):this(File.ReadAllLines(fileName))
+        public Idx(string fileName)
+            : this(File.ReadAllLines(fileName))
         {
         }
 
@@ -96,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     int.TryParse(parts[3], out seconds) &&
                     int.TryParse(parts[4], out milliseconds))
                 {
-                    return new IdxParagraph(new TimeSpan(0, hours, minutes, seconds, milliseconds),Convert.ToInt64(parts[6].Trim(), 16));
+                    return new IdxParagraph(new TimeSpan(0, hours, minutes, seconds, milliseconds), Convert.ToInt64(parts[6].Trim(), 16));
                 }
             }
             return null;

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class ImageLogicAutocaption : SubtitleFormat
     {
-        static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+\t\d\d:\d\d:\d\d;\d\d", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+\t\d\d:\d\d:\d\d;\d\d", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("#\tAppearance\tCaption\t");
             sb.AppendLine();
             int count = 1;
-            for (int i=0; i<subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = Utilities.RemoveHtmlTags(p.Text);
@@ -133,10 +133,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (p != null)
                 subtitle.Paragraphs.Add(p);
 
-            for (int j = 0; j < subtitle.Paragraphs.Count-1; j++)
+            for (int j = 0; j < subtitle.Paragraphs.Count - 1; j++)
             {
                 p = subtitle.Paragraphs[j];
-                Paragraph next = subtitle.Paragraphs[j+1];
+                Paragraph next = subtitle.Paragraphs[j + 1];
                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
             }
             if (subtitle.Paragraphs.Count > 0)

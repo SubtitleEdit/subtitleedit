@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class MacCaption : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\t", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 ///////////////////////////////////////////////////////////////////////////////////");
             sb.AppendLine();
             sb.AppendLine("UUID=" + Guid.NewGuid().ToString().ToUpper());// UUID=9F6112F4-D9D0-4AAF-AA95-854710D3B57A
-            sb.AppendLine("Creation Program=Subtitle Edit" );
+            sb.AppendLine("Creation Program=Subtitle Edit");
             sb.AppendLine("Creation Date=" + DateTime.Now.ToLongDateString());
             sb.AppendLine("Creation Time=" + DateTime.Now.ToShortTimeString());
             sb.AppendLine();
@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             s = s.Replace("T", "6101");
             s = s.Replace("U", "E10000");
             s = s.Replace("Z", "00");
-            for (int i = 0; i < s.Length; i+=4)
+            for (int i = 0; i < s.Length; i += 4)
             {
                 string sub = s.Substring(i);
                 if (sub.Length >= 2)

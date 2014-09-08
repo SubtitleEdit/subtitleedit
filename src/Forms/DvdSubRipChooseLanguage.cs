@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class DvdSubRipChooseLanguage : Form
     {
-        class SubListBoxItem
+        private class SubListBoxItem
         {
             public string Name { get; set; }
             public VobSubMergedPack SubPack { get; set; }
@@ -25,9 +25,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        List<VobSubMergedPack> _mergedVobSubPacks;
-        List<Color> _palette;
-        List<string> _languages;
+        private List<VobSubMergedPack> _mergedVobSubPacks;
+        private List<Color> _palette;
+        private List<string> _languages;
 
         public List<VobSubMergedPack> SelectedVobSubMergedPacks { get; private set; }
         public string SelectedLanguageString { get; private set; }
@@ -116,7 +116,6 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxImage.Image = bmp;
             groupBoxImage.Text = string.Format(Configuration.Settings.Language.DvdSubRipChooseLanguage.SubtitleImageXofYAndWidthXHeight, listBox1.SelectedIndex + 1, listBox1.Items.Count, bmp.Width, bmp.Height);
         }
-
 
         private static int GetLanguageIdFromString(string currentLanguage)
         {

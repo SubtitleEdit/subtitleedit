@@ -8,32 +8,31 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle26 : SubtitleFormat
     {
 
-//L'Enfant d'en haut
-//1ab
+        //L'Enfant d'en haut
+        //1ab
 
-//10/01/2012
-//10/01/2012
-//01:00:22.09
-//01:00:30.09
-//**:**:**.**
-//**:**:**.**
-//01:00:51.09
-//01:00:55.22
-//01:01:10.09
-//**:**:**.**
-//**:**:**.**
-//01:13:23.09
-//
-//1:  01:01:28.22  01:01:33.09*
-//     SISTER
-//
-//2:
-//01:02:58.15 01:03:00.00
-//I'm pooping, sir.
-//Were they easy to get?
+        //10/01/2012
+        //10/01/2012
+        //01:00:22.09
+        //01:00:30.09
+        //**:**:**.**
+        //**:**:**.**
+        //01:00:51.09
+        //01:00:55.22
+        //01:01:10.09
+        //**:**:**.**
+        //**:**:**.**
+        //01:13:23.09
+        //
+        //1:  01:01:28.22  01:01:33.09*
+        //     SISTER
+        //
+        //2:
+        //01:02:58.15 01:03:00.00
+        //I'm pooping, sir.
+        //Were they easy to get?
 
-
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+:  \d\d:\d\d:\d\d.\d\d  \d\d:\d\d:\d\d.\d\d[\*]*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+:  \d\d:\d\d:\d\d.\d\d  \d\d:\d\d:\d\d.\d\d[\*]*$", RegexOptions.Compiled);
 
         public override string Extension
         {

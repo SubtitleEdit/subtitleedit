@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -134,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string stop = node.Attributes["stop"].InnerText;
                     string text = node.SelectSingleNode("text").InnerText;
 
-                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop),  text));
+                    subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(stop), text));
                 }
                 catch (Exception ex)
                 {
@@ -147,5 +146,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

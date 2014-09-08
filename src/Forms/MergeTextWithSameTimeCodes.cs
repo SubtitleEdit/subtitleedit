@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             _language = Utilities.AutoDetectGoogleLanguage(subtitle);
         }
 
-        void previewTimer_Tick(object sender, EventArgs e)
+        private void previewTimer_Tick(object sender, EventArgs e)
         {
             previewTimer.Stop();
             Cursor = Cursors.WaitCursor;

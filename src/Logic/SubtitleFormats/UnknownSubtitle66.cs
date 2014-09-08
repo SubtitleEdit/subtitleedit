@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //   25       10:08:59:19   10:09:04:01       04:07
         //is this upside-down vision
         //permanent or only temporary?
-        static Regex regexTimeCodes = new Regex(@"^\d+\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d+\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d:\d\d\:\d\d\s+\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {
-                        _errorCount+=10;
+                        _errorCount += 10;
                         return;
                     }
                     while (p.Text.Contains(Environment.NewLine + " "))

@@ -211,7 +211,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-
             XmlNode body = xml.DocumentElement.SelectSingleNode("ttml:body", nsmgr);
             string defaultStyle = Guid.NewGuid().ToString();
             if (body.Attributes["style"] != null)
@@ -704,5 +703,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

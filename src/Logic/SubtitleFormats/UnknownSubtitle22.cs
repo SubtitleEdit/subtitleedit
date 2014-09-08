@@ -8,15 +8,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle22 : SubtitleFormat
     {
 
-//25    10:03:20:23 02:07   10:03:23:05
-//I see, on my way.
-//
-//26    10:03:31:18 02:07   10:03:34:00
-//Panessa, why didn't they give them
-//an escape route ?
+        //25    10:03:20:23 02:07   10:03:23:05
+        //I see, on my way.
+        //
+        //26    10:03:31:18 02:07   10:03:34:00
+        //Panessa, why didn't they give them
+        //an escape route ?
 
-
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -51,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine("#\tAppearance\tCaption\t");
             sb.AppendLine();
             int count = 1;
-            for (int i=0; i<subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = Utilities.RemoveHtmlTags(p.Text);

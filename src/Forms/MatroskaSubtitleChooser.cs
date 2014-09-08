@@ -64,7 +64,6 @@ namespace Nikse.SubtitleEdit.Forms
             listBox1.SelectedIndex = 0;
         }
 
-
         private void FormMatroskaSubtitleChooser_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

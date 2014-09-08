@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //10:00:33:19
         //10:00:35:00
         //This is the place,
-        static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {
-                        _errorCount+=10;
+                        _errorCount += 10;
                         return;
                     }
                 }

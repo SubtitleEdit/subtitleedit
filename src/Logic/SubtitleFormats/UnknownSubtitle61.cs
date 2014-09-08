@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         //00:02:27.78
         //ליזי: אוקיי. אז אני מניחה שזה זמן הנתינה
-        static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     allNullEndTime = false;
 
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                if (i < subtitle.Paragraphs.Count - 2 &&p.EndTime.TotalMilliseconds >= subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
+                if (i < subtitle.Paragraphs.Count - 2 && p.EndTime.TotalMilliseconds >= subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds)
                     p.EndTime.TotalMilliseconds = subtitle.Paragraphs[i + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
             }
             if (!allNullEndTime)
