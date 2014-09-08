@@ -482,6 +482,66 @@ namespace Test
             Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "The <i>Bombshell</i> will gone.");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesBeforePeriod1()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "It will be okay.It surely will be!");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "It will be okay. It surely will be!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesBeforePeriod2()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "you can't get out.Alright?");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "you can't get out. Alright?");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange1()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "What did Dr. Gey say?");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "What did Dr. Gey say?");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange2()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "Go to the O.R. now!");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Go to the O.R. now!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange3()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "Email niksedk@gmail.Com now!");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Email niksedk@gmail.Com now!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange4()
+        {
+            var target = GetFixCommonErrorsLib();
+            InitializeFixCommonErrorsLine(target, "Go to www.Nikse.Dk for more info");
+            target.FixMissingSpaces();
+            Assert.AreEqual(target._subtitle.Paragraphs[0].Text, "Go to www.Nikse.Dk for more info");
+        }
+
         #endregion
 
         #region Start with uppercase after paragraph
