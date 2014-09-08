@@ -1225,4 +1225,3 @@ namespace Nikse.SubtitleEdit.Forms
 
     }
 }
-

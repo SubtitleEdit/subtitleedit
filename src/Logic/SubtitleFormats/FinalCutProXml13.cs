@@ -210,4 +210,3 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-

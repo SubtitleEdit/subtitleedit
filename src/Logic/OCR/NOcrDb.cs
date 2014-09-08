@@ -157,4 +157,3 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
     }
 }
-

@@ -22,4 +22,3 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         public abstract List<string> Suggest(string word);
     }
 }
-
