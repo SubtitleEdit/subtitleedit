@@ -471,4 +471,3 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
     }
 }
-
