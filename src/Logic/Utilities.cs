@@ -2491,6 +2491,20 @@ namespace Nikse.SubtitleEdit.Logic
             return count;
         }
 
+        public static int CountTagInText(string text, char tag)
+        {
+            int count = 0;
+            int index = text.IndexOf(tag);
+            while (index >= 0)
+            {
+                count++;
+                if (index == text.Length)
+                    return count;
+                index = text.IndexOf(tag, index + 1);
+            }
+            return count;
+        }
+
         public static string FixInvalidItalicTags(string text)
         {
             const string beginTag = "<i>";

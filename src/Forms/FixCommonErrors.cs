@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Forms
         private bool _hasFixesBeenMade;
 
         static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
-        static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][.][a-zA-Z]", RegexOptions.Compiled);
+        static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
         static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
         static readonly Regex FixMissingSpacesReExclamation = new Regex(@"[^\s\d]\![a-zA-Z]", RegexOptions.Compiled);
         static readonly Regex FixMissingSpacesReColon = new Regex(@"[^\s\d]\:[a-zA-Z]", RegexOptions.Compiled);
@@ -1445,9 +1445,11 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             bool isMatchAbbreviation = false;
 
-                            string word = GetWordFromIndex(p.Text, match.Index);
-                            word = RemoveEverySecondLetter(word, 1);
-                            if (!word.Contains("."))
+                            string word = GetWordFromIndex(p.Text, match.Index);                            
+                            if (Utilities.CountTagInText(word, '.') > 1)
+                                isMatchAbbreviation = true;
+
+                            if (!isMatchAbbreviation && word.Contains("@")) // skip emails
                                 isMatchAbbreviation = true;
 
                             if (match.Value.ToLower() == "h.d" && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).ToLower() == "ph.d")
@@ -1459,7 +1461,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 missingSpaces++;
 
                                 string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value[0] + ". " + match.Value[match.Value.Length - 1]);
+                                p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
                                 AddFixToListView(p, fixAction, oldText, p.Text);
                             }
                         }
@@ -1661,17 +1663,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (missingSpaces > 0)
                 LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));
-        }
-
-        private static string RemoveEverySecondLetter(string text, int start)
-        {
-            int i = start;
-            while (i < text.Length)
-            {
-                text = text.Remove(i, 1);
-                i++;
-            }
-            return text;
         }
 
         private static string GetWordFromIndex(string text, int index)
