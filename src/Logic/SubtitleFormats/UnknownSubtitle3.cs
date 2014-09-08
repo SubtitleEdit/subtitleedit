@@ -36,8 +36,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//150583||3968723||Rythme standard quatre-par-quatre.\~- Sûr... Accord d'entrée, D majeur?||
-//155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||
+            //150583||3968723||Rythme standard quatre-par-quatre.\~- Sûr... Accord d'entrée, D majeur?||
+            //155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||
 
             const string paragraphWriteFormat = "{0}||{1}||{2}||";
             var sb = new StringBuilder();
@@ -62,9 +62,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private void ReadLine(Subtitle subtitle, string line)
         {
-// 150583||3968723||Rythme standard quatre-par-quatre.\~- Sûr... Accord d'entrée, D majeur?||
-// 155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||
-            string[] parts = line.Split(new char[] {'|'},  StringSplitOptions.RemoveEmptyEntries);
+            // 150583||3968723||Rythme standard quatre-par-quatre.\~- Sûr... Accord d'entrée, D majeur?||
+            // 155822||160350||Rob n'y connait rien en claviers. Il\~commence chaque chanson en D majeur||
+            string[] parts = line.Split(new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 3)
             {
                 int start;

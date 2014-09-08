@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int k = 0;
 
                 PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                for (int i = list.Length -1; i >= 0; i--)
+                for (int i = list.Length - 1; i >= 0; i--)
                 {
                     if (list[i].X > next.X)
                         next.X = list[i].X;
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
             else if (isUnderline && isBold)
                 fontStyle = FontStyle.Underline | FontStyle.Bold;
             else if (isItalic)
-                    fontStyle = FontStyle.Italic;
+                fontStyle = FontStyle.Italic;
             else if (isBold)
                 fontStyle = FontStyle.Bold;
             else if (isUnderline)
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic
             int index = list.Length - 42;
             if (index < 0)
                 index = 0;
-            for (int i = index; i < list.Length; i+=2)
+            for (int i = index; i < list.Length; i += 2)
             {
                 if (list[i].X > width)
                     width = list[i].X;
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic
             int max = 52;
             if (max > list.Length)
                 max = list.Length;
-            for (int i = 0; i < max; i+=2)
+            for (int i = 0; i < max; i += 2)
             {
                 if (list[i].X > width)
                     width = list[i].X;
@@ -120,13 +120,13 @@ namespace Nikse.SubtitleEdit.Logic
             int index = list.Length - 80;
             if (index < 0)
                 index = 0;
-            for (int i = index; i < list.Length; i+=2)
+            for (int i = index; i < list.Length; i += 2)
             {
                 if (list[i].Y > height)
                     height = list[i].Y;
             }
 
-            for (int i = 0; i < list.Length; i+=2)
+            for (int i = 0; i < list.Length; i += 2)
             {
                 if (list[i].Y > height)
                     height = list[i].Y;
@@ -134,7 +134,6 @@ namespace Nikse.SubtitleEdit.Logic
 
             return height;
         }
-
 
     }
 }

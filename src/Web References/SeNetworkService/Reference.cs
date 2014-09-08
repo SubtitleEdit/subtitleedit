@@ -13,21 +13,16 @@
 //
 #pragma warning disable 1591
 
-namespace Nikse.SubtitleEdit.SeNetworkService {
-    using System;
-    using System.Web.Services;
-    using System.Diagnostics;
-    using System.Web.Services.Protocols;
-    using System.Xml.Serialization;
-    using System.ComponentModel;
-
+namespace Nikse.SubtitleEdit.SeNetworkService
+{
 
     /// <remarks/>
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Web.Services.WebServiceBindingAttribute(Name="SeServiceSoap", Namespace="http://tempuri.org/")]
-    public partial class SeService : System.Web.Services.Protocols.SoapHttpClientProtocol {
+    [System.Web.Services.WebServiceBindingAttribute(Name = "SeServiceSoap", Namespace = "http://tempuri.org/")]
+    public partial class SeService : System.Web.Services.Protocols.SoapHttpClientProtocol
+    {
 
         private System.Threading.SendOrPostCallback StartOperationCompleted;
 
@@ -52,36 +47,46 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         private bool useDefaultCredentialsSetExplicitly;
 
         /// <remarks/>
-        public SeService() {
+        public SeService()
+        {
             this.Url = global::Nikse.SubtitleEdit.Properties.Settings.Default.SubtitleEdit_SeNetworkService_SeService;
-            if ((this.IsLocalFileSystemWebService(this.Url) == true)) {
+            if ((this.IsLocalFileSystemWebService(this.Url) == true))
+            {
                 this.UseDefaultCredentials = true;
                 this.useDefaultCredentialsSetExplicitly = false;
             }
-            else {
+            else
+            {
                 this.useDefaultCredentialsSetExplicitly = true;
             }
         }
 
-        public new string Url {
-            get {
+        public new string Url
+        {
+            get
+            {
                 return base.Url;
             }
-            set {
+            set
+            {
                 if ((((this.IsLocalFileSystemWebService(base.Url) == true)
                             && (this.useDefaultCredentialsSetExplicitly == false))
-                            && (this.IsLocalFileSystemWebService(value) == false))) {
+                            && (this.IsLocalFileSystemWebService(value) == false)))
+                {
                     base.UseDefaultCredentials = false;
                 }
                 base.Url = value;
             }
         }
 
-        public new bool UseDefaultCredentials {
-            get {
+        public new bool UseDefaultCredentials
+        {
+            get
+            {
                 return base.UseDefaultCredentials;
             }
-            set {
+            set
+            {
                 base.UseDefaultCredentials = value;
                 this.useDefaultCredentialsSetExplicitly = true;
             }
@@ -118,8 +123,9 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         public event GetOriginalSubtitleCompletedEventHandler GetOriginalSubtitleCompleted;
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Start", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public SeUser Start(string sessionKey, string userName, SeSequence[] subtitle, SeSequence[] originalSubtitle, string fileName, out string message) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Start", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public SeUser Start(string sessionKey, string userName, SeSequence[] subtitle, SeSequence[] originalSubtitle, string fileName, out string message)
+        {
             object[] results = this.Invoke("Start", new object[] {
                         sessionKey,
                         userName,
@@ -131,13 +137,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void StartAsync(string sessionKey, string userName, SeSequence[] subtitle, SeSequence[] originalSubtitle, string fileName) {
+        public void StartAsync(string sessionKey, string userName, SeSequence[] subtitle, SeSequence[] originalSubtitle, string fileName)
+        {
             this.StartAsync(sessionKey, userName, subtitle, originalSubtitle, fileName, null);
         }
 
         /// <remarks/>
-        public void StartAsync(string sessionKey, string userName, SeSequence[] subtitle, SeSequence[] originalSubtitle, string fileName, object userState) {
-            if ((this.StartOperationCompleted == null)) {
+        public void StartAsync(string sessionKey, string userName, SeSequence[] subtitle, SeSequence[] originalSubtitle, string fileName, object userState)
+        {
+            if ((this.StartOperationCompleted == null))
+            {
                 this.StartOperationCompleted = new System.Threading.SendOrPostCallback(this.OnStartOperationCompleted);
             }
             this.InvokeAsync("Start", new object[] {
@@ -148,16 +157,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         fileName}, this.StartOperationCompleted, userState);
         }
 
-        private void OnStartOperationCompleted(object arg) {
-            if ((this.StartCompleted != null)) {
+        private void OnStartOperationCompleted(object arg)
+        {
+            if ((this.StartCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.StartCompleted(this, new StartCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Join", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public SeUser[] Join(string sessionId, string userName, out string message) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Join", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public SeUser[] Join(string sessionId, string userName, out string message)
+        {
             object[] results = this.Invoke("Join", new object[] {
                         sessionId,
                         userName});
@@ -166,13 +178,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void JoinAsync(string sessionId, string userName) {
+        public void JoinAsync(string sessionId, string userName)
+        {
             this.JoinAsync(sessionId, userName, null);
         }
 
         /// <remarks/>
-        public void JoinAsync(string sessionId, string userName, object userState) {
-            if ((this.JoinOperationCompleted == null)) {
+        public void JoinAsync(string sessionId, string userName, object userState)
+        {
+            if ((this.JoinOperationCompleted == null))
+            {
                 this.JoinOperationCompleted = new System.Threading.SendOrPostCallback(this.OnJoinOperationCompleted);
             }
             this.InvokeAsync("Join", new object[] {
@@ -180,29 +195,35 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         userName}, this.JoinOperationCompleted, userState);
         }
 
-        private void OnJoinOperationCompleted(object arg) {
-            if ((this.JoinCompleted != null)) {
+        private void OnJoinOperationCompleted(object arg)
+        {
+            if ((this.JoinCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.JoinCompleted(this, new JoinCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Leave", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public void Leave(string sessionId, string userName) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/Leave", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public void Leave(string sessionId, string userName)
+        {
             this.Invoke("Leave", new object[] {
                         sessionId,
                         userName});
         }
 
         /// <remarks/>
-        public void LeaveAsync(string sessionId, string userName) {
+        public void LeaveAsync(string sessionId, string userName)
+        {
             this.LeaveAsync(sessionId, userName, null);
         }
 
         /// <remarks/>
-        public void LeaveAsync(string sessionId, string userName, object userState) {
-            if ((this.LeaveOperationCompleted == null)) {
+        public void LeaveAsync(string sessionId, string userName, object userState)
+        {
+            if ((this.LeaveOperationCompleted == null))
+            {
                 this.LeaveOperationCompleted = new System.Threading.SendOrPostCallback(this.OnLeaveOperationCompleted);
             }
             this.InvokeAsync("Leave", new object[] {
@@ -210,16 +231,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         userName}, this.LeaveOperationCompleted, userState);
         }
 
-        private void OnLeaveOperationCompleted(object arg) {
-            if ((this.LeaveCompleted != null)) {
+        private void OnLeaveOperationCompleted(object arg)
+        {
+            if ((this.LeaveCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.LeaveCompleted(this, new System.ComponentModel.AsyncCompletedEventArgs(invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/DeleteLines", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public bool DeleteLines(string sessionId, int[] indices, SeUser user) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/DeleteLines", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public bool DeleteLines(string sessionId, int[] indices, SeUser user)
+        {
             object[] results = this.Invoke("DeleteLines", new object[] {
                         sessionId,
                         indices,
@@ -228,13 +252,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void DeleteLinesAsync(string sessionId, int[] indices, SeUser user) {
+        public void DeleteLinesAsync(string sessionId, int[] indices, SeUser user)
+        {
             this.DeleteLinesAsync(sessionId, indices, user, null);
         }
 
         /// <remarks/>
-        public void DeleteLinesAsync(string sessionId, int[] indices, SeUser user, object userState) {
-            if ((this.DeleteLinesOperationCompleted == null)) {
+        public void DeleteLinesAsync(string sessionId, int[] indices, SeUser user, object userState)
+        {
+            if ((this.DeleteLinesOperationCompleted == null))
+            {
                 this.DeleteLinesOperationCompleted = new System.Threading.SendOrPostCallback(this.OnDeleteLinesOperationCompleted);
             }
             this.InvokeAsync("DeleteLines", new object[] {
@@ -243,16 +270,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         user}, this.DeleteLinesOperationCompleted, userState);
         }
 
-        private void OnDeleteLinesOperationCompleted(object arg) {
-            if ((this.DeleteLinesCompleted != null)) {
+        private void OnDeleteLinesOperationCompleted(object arg)
+        {
+            if ((this.DeleteLinesCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.DeleteLinesCompleted(this, new DeleteLinesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/InsertLine", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public bool InsertLine(string sessionId, int index, int startMilliseconds, int endMilliseconds, string text, SeUser user) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/InsertLine", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public bool InsertLine(string sessionId, int index, int startMilliseconds, int endMilliseconds, string text, SeUser user)
+        {
             object[] results = this.Invoke("InsertLine", new object[] {
                         sessionId,
                         index,
@@ -264,13 +294,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void InsertLineAsync(string sessionId, int index, int startMilliseconds, int endMilliseconds, string text, SeUser user) {
+        public void InsertLineAsync(string sessionId, int index, int startMilliseconds, int endMilliseconds, string text, SeUser user)
+        {
             this.InsertLineAsync(sessionId, index, startMilliseconds, endMilliseconds, text, user, null);
         }
 
         /// <remarks/>
-        public void InsertLineAsync(string sessionId, int index, int startMilliseconds, int endMilliseconds, string text, SeUser user, object userState) {
-            if ((this.InsertLineOperationCompleted == null)) {
+        public void InsertLineAsync(string sessionId, int index, int startMilliseconds, int endMilliseconds, string text, SeUser user, object userState)
+        {
+            if ((this.InsertLineOperationCompleted == null))
+            {
                 this.InsertLineOperationCompleted = new System.Threading.SendOrPostCallback(this.OnInsertLineOperationCompleted);
             }
             this.InvokeAsync("InsertLine", new object[] {
@@ -282,16 +315,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         user}, this.InsertLineOperationCompleted, userState);
         }
 
-        private void OnInsertLineOperationCompleted(object arg) {
-            if ((this.InsertLineCompleted != null)) {
+        private void OnInsertLineOperationCompleted(object arg)
+        {
+            if ((this.InsertLineCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.InsertLineCompleted(this, new InsertLineCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/UpdateLine", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public bool UpdateLine(string sessionId, int index, SeSequence sequence, SeUser user) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/UpdateLine", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public bool UpdateLine(string sessionId, int index, SeSequence sequence, SeUser user)
+        {
             object[] results = this.Invoke("UpdateLine", new object[] {
                         sessionId,
                         index,
@@ -301,13 +337,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void UpdateLineAsync(string sessionId, int index, SeSequence sequence, SeUser user) {
+        public void UpdateLineAsync(string sessionId, int index, SeSequence sequence, SeUser user)
+        {
             this.UpdateLineAsync(sessionId, index, sequence, user, null);
         }
 
         /// <remarks/>
-        public void UpdateLineAsync(string sessionId, int index, SeSequence sequence, SeUser user, object userState) {
-            if ((this.UpdateLineOperationCompleted == null)) {
+        public void UpdateLineAsync(string sessionId, int index, SeSequence sequence, SeUser user, object userState)
+        {
+            if ((this.UpdateLineOperationCompleted == null))
+            {
                 this.UpdateLineOperationCompleted = new System.Threading.SendOrPostCallback(this.OnUpdateLineOperationCompleted);
             }
             this.InvokeAsync("UpdateLine", new object[] {
@@ -317,16 +356,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         user}, this.UpdateLineOperationCompleted, userState);
         }
 
-        private void OnUpdateLineOperationCompleted(object arg) {
-            if ((this.UpdateLineCompleted != null)) {
+        private void OnUpdateLineOperationCompleted(object arg)
+        {
+            if ((this.UpdateLineCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.UpdateLineCompleted(this, new UpdateLineCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/SendMessage", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public bool SendMessage(string sessionId, string text, SeUser user) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/SendMessage", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public bool SendMessage(string sessionId, string text, SeUser user)
+        {
             object[] results = this.Invoke("SendMessage", new object[] {
                         sessionId,
                         text,
@@ -335,13 +377,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void SendMessageAsync(string sessionId, string text, SeUser user) {
+        public void SendMessageAsync(string sessionId, string text, SeUser user)
+        {
             this.SendMessageAsync(sessionId, text, user, null);
         }
 
         /// <remarks/>
-        public void SendMessageAsync(string sessionId, string text, SeUser user, object userState) {
-            if ((this.SendMessageOperationCompleted == null)) {
+        public void SendMessageAsync(string sessionId, string text, SeUser user, object userState)
+        {
+            if ((this.SendMessageOperationCompleted == null))
+            {
                 this.SendMessageOperationCompleted = new System.Threading.SendOrPostCallback(this.OnSendMessageOperationCompleted);
             }
             this.InvokeAsync("SendMessage", new object[] {
@@ -350,16 +395,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         user}, this.SendMessageOperationCompleted, userState);
         }
 
-        private void OnSendMessageOperationCompleted(object arg) {
-            if ((this.SendMessageCompleted != null)) {
+        private void OnSendMessageOperationCompleted(object arg)
+        {
+            if ((this.SendMessageCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.SendMessageCompleted(this, new SendMessageCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetUpdates", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public SeUpdate[] GetUpdates(string sessionId, string userName, System.DateTime lastUpdateTime, out string message, out System.DateTime newUpdateTime, out int numberOfLines) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetUpdates", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public SeUpdate[] GetUpdates(string sessionId, string userName, System.DateTime lastUpdateTime, out string message, out System.DateTime newUpdateTime, out int numberOfLines)
+        {
             object[] results = this.Invoke("GetUpdates", new object[] {
                         sessionId,
                         userName,
@@ -371,13 +419,16 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void GetUpdatesAsync(string sessionId, string userName, System.DateTime lastUpdateTime) {
+        public void GetUpdatesAsync(string sessionId, string userName, System.DateTime lastUpdateTime)
+        {
             this.GetUpdatesAsync(sessionId, userName, lastUpdateTime, null);
         }
 
         /// <remarks/>
-        public void GetUpdatesAsync(string sessionId, string userName, System.DateTime lastUpdateTime, object userState) {
-            if ((this.GetUpdatesOperationCompleted == null)) {
+        public void GetUpdatesAsync(string sessionId, string userName, System.DateTime lastUpdateTime, object userState)
+        {
+            if ((this.GetUpdatesOperationCompleted == null))
+            {
                 this.GetUpdatesOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetUpdatesOperationCompleted);
             }
             this.InvokeAsync("GetUpdates", new object[] {
@@ -386,16 +437,19 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
                         lastUpdateTime}, this.GetUpdatesOperationCompleted, userState);
         }
 
-        private void OnGetUpdatesOperationCompleted(object arg) {
-            if ((this.GetUpdatesCompleted != null)) {
+        private void OnGetUpdatesOperationCompleted(object arg)
+        {
+            if ((this.GetUpdatesCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetUpdatesCompleted(this, new GetUpdatesCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetSubtitle", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public SeSequence[] GetSubtitle(string sessionId, out string fileName, out System.DateTime updateTime) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetSubtitle", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public SeSequence[] GetSubtitle(string sessionId, out string fileName, out System.DateTime updateTime)
+        {
             object[] results = this.Invoke("GetSubtitle", new object[] {
                         sessionId});
             fileName = ((string)(results[1]));
@@ -404,68 +458,83 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         }
 
         /// <remarks/>
-        public void GetSubtitleAsync(string sessionId) {
+        public void GetSubtitleAsync(string sessionId)
+        {
             this.GetSubtitleAsync(sessionId, null);
         }
 
         /// <remarks/>
-        public void GetSubtitleAsync(string sessionId, object userState) {
-            if ((this.GetSubtitleOperationCompleted == null)) {
+        public void GetSubtitleAsync(string sessionId, object userState)
+        {
+            if ((this.GetSubtitleOperationCompleted == null))
+            {
                 this.GetSubtitleOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetSubtitleOperationCompleted);
             }
             this.InvokeAsync("GetSubtitle", new object[] {
                         sessionId}, this.GetSubtitleOperationCompleted, userState);
         }
 
-        private void OnGetSubtitleOperationCompleted(object arg) {
-            if ((this.GetSubtitleCompleted != null)) {
+        private void OnGetSubtitleOperationCompleted(object arg)
+        {
+            if ((this.GetSubtitleCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetSubtitleCompleted(this, new GetSubtitleCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetOriginalSubtitle", RequestNamespace="http://tempuri.org/", ResponseNamespace="http://tempuri.org/", Use=System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle=System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
-        public SeSequence[] GetOriginalSubtitle(string sessionId) {
+        [System.Web.Services.Protocols.SoapDocumentMethodAttribute("http://tempuri.org/GetOriginalSubtitle", RequestNamespace = "http://tempuri.org/", ResponseNamespace = "http://tempuri.org/", Use = System.Web.Services.Description.SoapBindingUse.Literal, ParameterStyle = System.Web.Services.Protocols.SoapParameterStyle.Wrapped)]
+        public SeSequence[] GetOriginalSubtitle(string sessionId)
+        {
             object[] results = this.Invoke("GetOriginalSubtitle", new object[] {
                         sessionId});
             return ((SeSequence[])(results[0]));
         }
 
         /// <remarks/>
-        public void GetOriginalSubtitleAsync(string sessionId) {
+        public void GetOriginalSubtitleAsync(string sessionId)
+        {
             this.GetOriginalSubtitleAsync(sessionId, null);
         }
 
         /// <remarks/>
-        public void GetOriginalSubtitleAsync(string sessionId, object userState) {
-            if ((this.GetOriginalSubtitleOperationCompleted == null)) {
+        public void GetOriginalSubtitleAsync(string sessionId, object userState)
+        {
+            if ((this.GetOriginalSubtitleOperationCompleted == null))
+            {
                 this.GetOriginalSubtitleOperationCompleted = new System.Threading.SendOrPostCallback(this.OnGetOriginalSubtitleOperationCompleted);
             }
             this.InvokeAsync("GetOriginalSubtitle", new object[] {
                         sessionId}, this.GetOriginalSubtitleOperationCompleted, userState);
         }
 
-        private void OnGetOriginalSubtitleOperationCompleted(object arg) {
-            if ((this.GetOriginalSubtitleCompleted != null)) {
+        private void OnGetOriginalSubtitleOperationCompleted(object arg)
+        {
+            if ((this.GetOriginalSubtitleCompleted != null))
+            {
                 System.Web.Services.Protocols.InvokeCompletedEventArgs invokeArgs = ((System.Web.Services.Protocols.InvokeCompletedEventArgs)(arg));
                 this.GetOriginalSubtitleCompleted(this, new GetOriginalSubtitleCompletedEventArgs(invokeArgs.Results, invokeArgs.Error, invokeArgs.Cancelled, invokeArgs.UserState));
             }
         }
 
         /// <remarks/>
-        public new void CancelAsync(object userState) {
+        public new void CancelAsync(object userState)
+        {
             base.CancelAsync(userState);
         }
 
-        private bool IsLocalFileSystemWebService(string url) {
+        private bool IsLocalFileSystemWebService(string url)
+        {
             if (((url == null)
-                        || (url == string.Empty))) {
+                        || (url == string.Empty)))
+            {
                 return false;
             }
             System.Uri wsUri = new System.Uri(url);
             if (((wsUri.Port >= 1024)
-                        && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0))) {
+                        && (string.Compare(wsUri.Host, "localHost", System.StringComparison.OrdinalIgnoreCase) == 0)))
+            {
                 return true;
             }
             return false;
@@ -477,8 +546,9 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class SeSequence {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
+    public partial class SeSequence
+    {
 
         private int indexField;
 
@@ -489,41 +559,53 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         private string textField;
 
         /// <remarks/>
-        public int Index {
-            get {
+        public int Index
+        {
+            get
+            {
                 return this.indexField;
             }
-            set {
+            set
+            {
                 this.indexField = value;
             }
         }
 
         /// <remarks/>
-        public int StartMilliseconds {
-            get {
+        public int StartMilliseconds
+        {
+            get
+            {
                 return this.startMillisecondsField;
             }
-            set {
+            set
+            {
                 this.startMillisecondsField = value;
             }
         }
 
         /// <remarks/>
-        public int EndMilliseconds {
-            get {
+        public int EndMilliseconds
+        {
+            get
+            {
                 return this.endMillisecondsField;
             }
-            set {
+            set
+            {
                 this.endMillisecondsField = value;
             }
         }
 
         /// <remarks/>
-        public string Text {
-            get {
+        public string Text
+        {
+            get
+            {
                 return this.textField;
             }
-            set {
+            set
+            {
                 this.textField = value;
             }
         }
@@ -534,8 +616,9 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class SeUpdate {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
+    public partial class SeUpdate
+    {
 
         private System.DateTime timeField;
 
@@ -552,71 +635,92 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         private string actionField;
 
         /// <remarks/>
-        public System.DateTime Time {
-            get {
+        public System.DateTime Time
+        {
+            get
+            {
                 return this.timeField;
             }
-            set {
+            set
+            {
                 this.timeField = value;
             }
         }
 
         /// <remarks/>
-        public SeUser User {
-            get {
+        public SeUser User
+        {
+            get
+            {
                 return this.userField;
             }
-            set {
+            set
+            {
                 this.userField = value;
             }
         }
 
         /// <remarks/>
-        public int Index {
-            get {
+        public int Index
+        {
+            get
+            {
                 return this.indexField;
             }
-            set {
+            set
+            {
                 this.indexField = value;
             }
         }
 
         /// <remarks/>
-        public int StartMilliseconds {
-            get {
+        public int StartMilliseconds
+        {
+            get
+            {
                 return this.startMillisecondsField;
             }
-            set {
+            set
+            {
                 this.startMillisecondsField = value;
             }
         }
 
         /// <remarks/>
-        public int EndMilliseconds {
-            get {
+        public int EndMilliseconds
+        {
+            get
+            {
                 return this.endMillisecondsField;
             }
-            set {
+            set
+            {
                 this.endMillisecondsField = value;
             }
         }
 
         /// <remarks/>
-        public string Text {
-            get {
+        public string Text
+        {
+            get
+            {
                 return this.textField;
             }
-            set {
+            set
+            {
                 this.textField = value;
             }
         }
 
         /// <remarks/>
-        public string Action {
-            get {
+        public string Action
+        {
+            get
+            {
                 return this.actionField;
             }
-            set {
+            set
+            {
                 this.actionField = value;
             }
         }
@@ -627,8 +731,9 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.SerializableAttribute()]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://tempuri.org/")]
-    public partial class SeUser {
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace = "http://tempuri.org/")]
+    public partial class SeUser
+    {
 
         private string userNameField;
 
@@ -637,31 +742,40 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
         private System.DateTime lastActivityField;
 
         /// <remarks/>
-        public string UserName {
-            get {
+        public string UserName
+        {
+            get
+            {
                 return this.userNameField;
             }
-            set {
+            set
+            {
                 this.userNameField = value;
             }
         }
 
         /// <remarks/>
-        public string Ip {
-            get {
+        public string Ip
+        {
+            get
+            {
                 return this.ipField;
             }
-            set {
+            set
+            {
                 this.ipField = value;
             }
         }
 
         /// <remarks/>
-        public System.DateTime LastActivity {
-            get {
+        public System.DateTime LastActivity
+        {
+            get
+            {
                 return this.lastActivityField;
             }
-            set {
+            set
+            {
                 this.lastActivityField = value;
             }
         }
@@ -675,26 +789,32 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class StartCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class StartCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal StartCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public SeUser Result {
-            get {
+        public SeUser Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((SeUser)(this.results[0]));
             }
         }
 
         /// <remarks/>
-        public string message {
-            get {
+        public string message
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[1]));
             }
@@ -709,26 +829,32 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class JoinCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class JoinCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal JoinCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public SeUser[] Result {
-            get {
+        public SeUser[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((SeUser[])(this.results[0]));
             }
         }
 
         /// <remarks/>
-        public string message {
-            get {
+        public string message
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[1]));
             }
@@ -747,18 +873,22 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class DeleteLinesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class DeleteLinesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal DeleteLinesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public bool Result {
-            get {
+        public bool Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((bool)(this.results[0]));
             }
@@ -773,18 +903,22 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class InsertLineCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class InsertLineCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal InsertLineCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public bool Result {
-            get {
+        public bool Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((bool)(this.results[0]));
             }
@@ -799,18 +933,22 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class UpdateLineCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class UpdateLineCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal UpdateLineCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public bool Result {
-            get {
+        public bool Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((bool)(this.results[0]));
             }
@@ -825,18 +963,22 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class SendMessageCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class SendMessageCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal SendMessageCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public bool Result {
-            get {
+        public bool Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((bool)(this.results[0]));
             }
@@ -851,42 +993,52 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetUpdatesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetUpdatesCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetUpdatesCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public SeUpdate[] Result {
-            get {
+        public SeUpdate[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((SeUpdate[])(this.results[0]));
             }
         }
 
         /// <remarks/>
-        public string message {
-            get {
+        public string message
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[1]));
             }
         }
 
         /// <remarks/>
-        public System.DateTime newUpdateTime {
-            get {
+        public System.DateTime newUpdateTime
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((System.DateTime)(this.results[2]));
             }
         }
 
         /// <remarks/>
-        public int numberOfLines {
-            get {
+        public int numberOfLines
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((int)(this.results[3]));
             }
@@ -901,34 +1053,42 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetSubtitleCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetSubtitleCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetSubtitleCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public SeSequence[] Result {
-            get {
+        public SeSequence[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((SeSequence[])(this.results[0]));
             }
         }
 
         /// <remarks/>
-        public string fileName {
-            get {
+        public string fileName
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((string)(this.results[1]));
             }
         }
 
         /// <remarks/>
-        public System.DateTime updateTime {
-            get {
+        public System.DateTime updateTime
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((System.DateTime)(this.results[2]));
             }
@@ -943,18 +1103,22 @@ namespace Nikse.SubtitleEdit.SeNetworkService {
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Web.Services", "4.0.30319.33440")]
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
-    public partial class GetOriginalSubtitleCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs {
+    public partial class GetOriginalSubtitleCompletedEventArgs : System.ComponentModel.AsyncCompletedEventArgs
+    {
 
         private object[] results;
 
         internal GetOriginalSubtitleCompletedEventArgs(object[] results, System.Exception exception, bool cancelled, object userState) :
-                base(exception, cancelled, userState) {
+            base(exception, cancelled, userState)
+        {
             this.results = results;
         }
 
         /// <remarks/>
-        public SeSequence[] Result {
-            get {
+        public SeSequence[] Result
+        {
+            get
+            {
                 this.RaiseExceptionIfNecessary();
                 return ((SeSequence[])(this.results[0]));
             }

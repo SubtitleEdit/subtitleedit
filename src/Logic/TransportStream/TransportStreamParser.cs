@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public long TotalNumberOfPrivateStream1Continuation0 { get; private set; }
         public List<int> SubtitlePacketIds { get; private set; }
         public List<Packet> SubtitlePackets { get; private set; }
-//        public List<Packet> ProgramAssociationTables { get; private set; }
+        //        public List<Packet> ProgramAssociationTables { get; private set; }
         private Dictionary<int, List<DvbSubPes>> SubtitlesLookup { get; set; }
         private Dictionary<int, List<TransportStreamSubtitle>> DvbSubtitlesLookup { get; set; }
         public bool IsM2TransportStream { get; private set; }
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             TotalNumberOfPrivateStream1Continuation0 = 0;
             SubtitlePacketIds = new List<int>();
             SubtitlePackets = new List<Packet>();
-//            ProgramAssociationTables = new List<Packet>();
+            //            ProgramAssociationTables = new List<Packet>();
             ms.Position = 0;
             const int packetLength = 188;
             DetectFormat(ms);
@@ -58,7 +58,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             ms.Read(m2TsTimeCodeBuffer, 0, 3);
             if (m2TsTimeCodeBuffer[0] == 0x54 && m2TsTimeCodeBuffer[1] == 0x46 && m2TsTimeCodeBuffer[2] == 0x72)
                 position = 3760;
-
 
             while (position < ms.Length)
             {
@@ -205,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     if (bdList.Count > 0)
                     {
                         var subList = new List<TransportStreamSubtitle>();
-                        for (int k=0; k < bdList.Count; k++)
+                        for (int k = 0; k < bdList.Count; k++)
                         {
                             var bdSup = bdList[k];
                             ulong startMs = 0;
@@ -226,9 +225,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 return;
             }
 
-
             // check for SubPictureStreamId = 32
-            SubtitlesLookup = new Dictionary<int,List<DvbSubPes>>();
+            SubtitlesLookup = new Dictionary<int, List<DvbSubPes>>();
             foreach (int pid in SubtitlePacketIds)
             {
                 var list = MakeSubtitlePesPackets(pid);
@@ -250,7 +248,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             foreach (int key in SubtitlesLookup.Keys)
                 SubtitlePacketIds.Add(key);
             SubtitlePacketIds.Sort();
-
 
             // Merge packets and set start/end time
             DvbSubtitlesLookup = new Dictionary<int, List<TransportStreamSubtitle>>();

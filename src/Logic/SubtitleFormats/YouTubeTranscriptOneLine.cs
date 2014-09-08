@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class YouTubeTranscriptOneLine : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d{1,3}:\d\d.+$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d{1,3}:\d\d.+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeTimeCode(TimeCode time)
         {
-            return string.Format("{0}:{1:00}", time.Hours * 60 + time.Minutes , time.Seconds);
+            return string.Format("{0}:{1:00}", time.Hours * 60 + time.Minutes, time.Seconds);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int splitter = line.IndexOf(":") + 3;
                     string text = line.Remove(0, splitter);
-                    p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0,0,0,0), text);
+                    p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim('–', '.', ';', ':').Trim();
                     if (text.Length > 0 && "0123456789".Contains(text[0].ToString()))
@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    _errorCount+=2;
+                    _errorCount += 2;
                 }
             }
             foreach (Paragraph p2 in subtitle.Paragraphs)

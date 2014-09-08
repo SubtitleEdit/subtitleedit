@@ -5,7 +5,6 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Web;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Xml;
@@ -15,11 +14,11 @@ namespace Nikse.SubtitleEdit.Forms
 
     public sealed partial class GoogleTranslate : Form
     {
-        Subtitle _subtitle;
-        Subtitle _translatedSubtitle;
-        bool _breakTranslation;
-        bool _googleTranslate = true;
-        MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
+        private Subtitle _subtitle;
+        private Subtitle _translatedSubtitle;
+        private bool _breakTranslation;
+        private bool _googleTranslate = true;
+        private MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
         private bool _googleApiNotWorking = false;
         private const string _splitterString = " == ";
         private const string _newlineString = " __ ";
@@ -327,7 +326,6 @@ namespace Nikse.SubtitleEdit.Forms
             //string to = arr[1];
             //string url = String.Format("https://www.googleapis.com/language/translate/v2?key={3}&q={0}&source={1}&target={2}", HttpUtility.UrlEncode(input), from, to, googleApiKey);
 
-
             WebRequest request = WebRequest.Create(uri);
             request.Proxy = Utilities.GetProxy();
             WebResponse response = request.GetResponse();
@@ -551,7 +549,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("JAVANESE", "jw"));
             comboBox.Items.Add(new ComboBoxItem("KANNADA", "kn"));
             //            comboBox.Items.Add(new ComboBoxItem("KAZAKH" , "kk"));
-            comboBox.Items.Add(new ComboBoxItem("KHMER" , "km"));
+            comboBox.Items.Add(new ComboBoxItem("KHMER", "km"));
             comboBox.Items.Add(new ComboBoxItem("KOREAN", "ko"));
             //            comboBox.Items.Add(new ComboBoxItem("KURDISH", "ku"));
             //            comboBox.Items.Add(new ComboBoxItem("KYRGYZ", "ky"));
@@ -565,15 +563,15 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("MALTESE", "mt"));
             comboBox.Items.Add(new ComboBoxItem("MAORI", "mi"));
             comboBox.Items.Add(new ComboBoxItem("MARATHI", "mr"));
-            comboBox.Items.Add(new ComboBoxItem("MONGOLIAN" , "mn"));
-            comboBox.Items.Add(new ComboBoxItem("NEPALI" , "ne"));
+            comboBox.Items.Add(new ComboBoxItem("MONGOLIAN", "mn"));
+            comboBox.Items.Add(new ComboBoxItem("NEPALI", "ne"));
             comboBox.Items.Add(new ComboBoxItem("NORWEGIAN", "no"));
             //            comboBox.Items.Add(new ComboBoxItem("ORIYA" , "or"));
             //            comboBox.Items.Add(new ComboBoxItem("PASHTO" , "ps"));
             comboBox.Items.Add(new ComboBoxItem("PERSIAN", "fa"));
             comboBox.Items.Add(new ComboBoxItem("POLISH", "pl"));
             comboBox.Items.Add(new ComboBoxItem("PORTUGUESE", "pt"));
-            comboBox.Items.Add(new ComboBoxItem("PUNJABI" , "pa"));
+            comboBox.Items.Add(new ComboBoxItem("PUNJABI", "pa"));
             comboBox.Items.Add(new ComboBoxItem("ROMANIAN", "ro"));
             comboBox.Items.Add(new ComboBoxItem("RUSSIAN", "ru"));
             //            comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));

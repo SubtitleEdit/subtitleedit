@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFontUnderline.Left = checkBoxFontItalic.Left + checkBoxFontItalic.Width + 12;
         }
 
-        void RefreshTimerTick(object sender, EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             _previewTimer.Stop();
             GeneratePreviewReal();
@@ -202,7 +202,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
-
                 float top = 2;
                 if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
                     top = (float)numericUpDownMarginVertical.Value;
@@ -232,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // draw shadow
                 if (numericUpDownShadowWidth.Value > 0 && radioButtonOutline.Checked)
                 {
-                    var shadowPath = (GraphicsPath) path.Clone();
+                    var shadowPath = (GraphicsPath)path.Clone();
                     for (int i = 0; i < (int)numericUpDownShadowWidth.Value; i++)
                     {
                         var translateMatrix = new Matrix();
@@ -253,7 +252,6 @@ namespace Nikse.SubtitleEdit.Forms
                         g.DrawPath(new Pen(panelOutlineColor.BackColor, outline), path);
                 }
                 g.FillPath(new SolidBrush(panelPrimaryColor.BackColor), path);
-
 
             }
             pictureBoxPreview.Image = bmp;
@@ -698,7 +696,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int i = indexOfEvents - 1;
                     while (i > 0 && Environment.NewLine.Contains(Header[i].ToString()))
                         i--;
-                    Header = Header.Insert(i+1, Environment.NewLine + newLine);
+                    Header = Header.Insert(i + 1, Environment.NewLine + newLine);
                 }
                 else
                 {
@@ -710,7 +708,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void RemoveStyleFromHeader(string name)
         {
             var sb = new StringBuilder();
-            foreach (string line in Header.Split(new string[] { Environment.NewLine}, StringSplitOptions.None))
+            foreach (string line in Header.Split(new string[] { Environment.NewLine }, StringSplitOptions.None))
             {
                 if (!line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + name.ToLower() + ","))
                     sb.AppendLine(line);
@@ -746,7 +744,6 @@ namespace Nikse.SubtitleEdit.Forms
             SetControlsFromStyle(style);
             listViewStyles_SelectedIndexChanged(null, null);
         }
-
 
         private void textBoxStyleName_TextChanged(object sender, EventArgs e)
         {

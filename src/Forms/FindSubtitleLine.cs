@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FindSubtitleLine : Form
     {
-        int _startFindIndex = -1;
-        List<Paragraph> _paragraphs = new List<Paragraph>();
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private int _startFindIndex = -1;
+        private List<Paragraph> _paragraphs = new List<Paragraph>();
+        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public int SelectedIndex
         {

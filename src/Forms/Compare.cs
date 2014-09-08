@@ -12,12 +12,12 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Compare : Form
     {
-        Subtitle _subtitle1;
-        Subtitle _subtitle2;
-        List<int> _differences;
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        string _language1;
+        private Subtitle _subtitle1;
+        private Subtitle _subtitle2;
+        private List<int> _differences;
+        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private string _language1;
 
         public Compare()
         {
@@ -245,7 +245,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             subtitleListView1.Fill(sub1);
             subtitleListView2.Fill(sub2);
-
 
             // coloring + differences index list
             _differences = new List<int>();

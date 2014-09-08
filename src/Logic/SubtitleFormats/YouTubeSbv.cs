@@ -7,15 +7,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class YouTubeSbv : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             Text
         }
 
-        Paragraph _paragraph;
-        ExpectingLine _expecting = ExpectingLine.TimeCodes;
-        static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,.]-?\d+,\d+:-?\d+:-?\d+[:,.]-?\d+$", RegexOptions.Compiled);
+        private Paragraph _paragraph;
+        private ExpectingLine _expecting = ExpectingLine.TimeCodes;
+        private static readonly Regex RegexTimeCodes = new Regex(@"^-?\d+:-?\d+:-?\d+[:,.]-?\d+,\d+:-?\d+:-?\d+[:,.]-?\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -58,11 +58,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-//0:00:07.500,0:00:13.500
-//In den Bergen über Musanze in Ruanda feiert die Trustbank (Kreditnehmer-Gruppe)  "Trususanze" ihren Erfolg.
+            //0:00:07.500,0:00:13.500
+            //In den Bergen über Musanze in Ruanda feiert die Trustbank (Kreditnehmer-Gruppe)  "Trususanze" ihren Erfolg.
 
-//0:00:14.000,0:00:17.000
-//Indem sie ihre Zukunft einander anvertraut haben, haben sie sich
+            //0:00:14.000,0:00:17.000
+            //Indem sie ihre Zukunft einander anvertraut haben, haben sie sich
 
             _paragraph = new Paragraph();
             _expecting = ExpectingLine.TimeCodes;

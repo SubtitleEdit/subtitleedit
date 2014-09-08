@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
             buttonChangeWholeText.Text = Configuration.Settings.Language.SpellCheck.Change;
             buttonSkipText.Text = Configuration.Settings.Language.SpellCheck.SkipOnce;
-            buttonEditWholeText.Text =  Configuration.Settings.Language.SpellCheck.EditWholeText;
+            buttonEditWholeText.Text = Configuration.Settings.Language.SpellCheck.EditWholeText;
             buttonEditWord.Text = Configuration.Settings.Language.SpellCheck.EditWordOnly;
             groupBoxText.Text = Configuration.Settings.Language.General.Text;
             GroupBoxEditWord.Text = Configuration.Settings.Language.SpellCheck.WordNotFound;
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 endOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i + word.Length, 1));
                             if (endOk)
                             {
-                                richTextBoxParagraph.SelectionStart = i+ 1;
+                                richTextBoxParagraph.SelectionStart = i + 1;
                                 richTextBoxParagraph.SelectionLength = word.Length;
                                 while (richTextBoxParagraph.SelectedText != word && richTextBoxParagraph.SelectionStart > 0)
                                 {

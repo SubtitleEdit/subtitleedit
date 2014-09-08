@@ -4,7 +4,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Ocr;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -43,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-           // _imageList = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
+            // _imageList = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
 
             int index = 0;
             while (index < _imageList.Count)
@@ -223,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxInspectItems.SelectedIndex < 0)
                 return;
 
-            int index  = listBoxInspectItems.SelectedIndex;
+            int index = listBoxInspectItems.SelectedIndex;
             var img = _imageList[index];
             if (img.NikseBitmap == null)
                 return;

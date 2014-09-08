@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 try
                 {
                     string start = node.Attributes["stime"].InnerText;
-                    string end = node.Attributes["etime"] .InnerText;
+                    string end = node.Attributes["etime"].InnerText;
                     string text = node.InnerText;
                     text = text.Replace("<s/>", Environment.NewLine);
                     text = text.Replace("  ", " ");
@@ -167,5 +167,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

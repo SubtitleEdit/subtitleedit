@@ -67,7 +67,6 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
-
         private void buttonTrain_Click(object sender, EventArgs e)
         {
             if (!System.IO.File.Exists(textBoxInputFile.Text))

@@ -13,18 +13,17 @@
 // projects, without the express and written consent of
 // the Author.
 
-#endregion
+#endregion #Disclaimer
 
 #region Using directives
 
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.ColorChooser;
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
-#endregion
+#endregion Using directives
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -238,11 +237,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void HandleHSVScroll(object sender, EventArgs e)
-            // If the H, S, or V values change, use this
-            // code to update the RGB values and invalidate
-            // the color wheel (so it updates the pointers).
-            // Check the isInUpdate flag to avoid recursive events
-            // when you update the NumericUpdownControls.
+        // If the H, S, or V values change, use this
+        // code to update the RGB values and invalidate
+        // the color wheel (so it updates the pointers).
+        // Check the isInUpdate flag to avoid recursive events
+        // when you update the NumericUpdownControls.
         {
             changeType = ChangeStyle.HSV;
             hsv = new ColorHandler.HSV(tbAlpha.Value, tbHue.Value, tbSaturation.Value, tbValue.Value);
@@ -720,7 +719,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
-        #endregion
+        #endregion Windows Form Designer generated code
 
         #region Nested type: ChangeStyle
 
@@ -732,7 +731,7 @@ namespace Nikse.SubtitleEdit.Forms
             None
         }
 
-        #endregion
+        #endregion Nested type: ChangeStyle
 
         private void buttonOK_Click(object sender, EventArgs e)
         {

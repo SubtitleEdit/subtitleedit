@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -71,11 +70,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     try
                     {
 
-                    string text = line.Substring(0, indexOfTen).Trim();
-                    int indexOf7001 = line.IndexOf("7\0");
-                    string time = line.Substring(indexOf7001 -16, 16);
-                    p = new Paragraph(DecodeTimeCode(time.Substring(0, 8)), DecodeTimeCode(time.Substring(8)), text);
-                    subtitle.Paragraphs.Add(p);
+                        string text = line.Substring(0, indexOfTen).Trim();
+                        int indexOf7001 = line.IndexOf("7\0");
+                        string time = line.Substring(indexOf7001 - 16, 16);
+                        p = new Paragraph(DecodeTimeCode(time.Substring(0, 8)), DecodeTimeCode(time.Substring(8)), text);
+                        subtitle.Paragraphs.Add(p);
                     }
                     catch (Exception exception)
                     {
@@ -101,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string time)
         {
             //00:00:07:12
-            string hour = time.Substring(0,2);
+            string hour = time.Substring(0, 2);
             string minutes = time.Substring(2, 2);
             string seconds = time.Substring(4, 2);
             string frames = time.Substring(6, 2);

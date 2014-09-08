@@ -12,23 +12,23 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
         // Voikko functions in dll
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr VoikkoInit(ref IntPtr error, byte[] languageCode, byte[] path);
-        VoikkoInit _voikkoInit;
+        private VoikkoInit _voikkoInit;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate void VoikkoTerminate(IntPtr libVlc);
-        VoikkoTerminate _voikkoTerminate;
+        private VoikkoTerminate _voikkoTerminate;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate Int32 VoikkoSpell(IntPtr handle, byte[] word);
-        VoikkoSpell _voikkoSpell;
+        private VoikkoSpell _voikkoSpell;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr VoikkoSuggest(IntPtr handle, byte[] word);
-        VoikkoSuggest _voikkoSuggest;
+        private VoikkoSuggest _voikkoSuggest;
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr VoikkoFreeCstrArray(IntPtr array);
-        VoikkoFreeCstrArray _voikkoFreeCstrArray;
+        private VoikkoFreeCstrArray _voikkoFreeCstrArray;
 
         private IntPtr _libDll = IntPtr.Zero;
         private IntPtr _libVoikko = IntPtr.Zero;
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         private void ReleaseUnmangedResources()
         {
-             try
+            try
             {
                 if (_libVoikko != IntPtr.Zero)
                 {

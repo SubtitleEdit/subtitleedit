@@ -2,20 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
-//<?xml version="1.0" encoding="UTF-8"?>
-//<tt>
-//    <div>
-//      <p begin="00:00:00.700" end="00:00:05.000"><![CDATA[<sub>This is fully skinnable through XML<br/>using external images for each button</sub>]]></p>
-//      <p begin="00:00:05.200" end="00:00:10.000"><![CDATA[<sub>You can put in any order or enable/disable<br/>the control buttons</sub>]]></p>
-//      <p begin="00:00:10.200" end="00:00:15.000"><![CDATA[<sub>Test below some of the customizable<br/>properties this player has</sub>]]></p>
-//      <p begin="00:00:15.200" end="00:00:19.700"><![CDATA[<sub>Many other properties related to fonts, sizes, colors<br/>and list properties are in style.css file</sub>]]></p>
-// </div>
-//</tt>
+    //<?xml version="1.0" encoding="UTF-8"?>
+    //<tt>
+    //    <div>
+    //      <p begin="00:00:00.700" end="00:00:05.000"><![CDATA[<sub>This is fully skinnable through XML<br/>using external images for each button</sub>]]></p>
+    //      <p begin="00:00:05.200" end="00:00:10.000"><![CDATA[<sub>You can put in any order or enable/disable<br/>the control buttons</sub>]]></p>
+    //      <p begin="00:00:10.200" end="00:00:15.000"><![CDATA[<sub>Test below some of the customizable<br/>properties this player has</sub>]]></p>
+    //      <p begin="00:00:15.200" end="00:00:19.700"><![CDATA[<sub>Many other properties related to fonts, sizes, colors<br/>and list properties are in style.css file</sub>]]></p>
+    // </div>
+    //</tt>
     public class FlashXml : SubtitleFormat
     {
         public override string Extension
@@ -163,7 +162,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     startSeconds = endCode.TotalSeconds;
 
-
                     subtitle.Paragraphs.Add(new Paragraph(startCode, endCode, pText.ToString().Replace("<sub>", string.Empty).Replace("</sub>", string.Empty)));
                 }
                 catch (Exception ex)
@@ -190,5 +188,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
     }
 }
-
 

@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class MergeShortLines : Form
     {
-        Subtitle _subtitle;
+        private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;
 
         public int NumberOfMerges { get; private set; }
@@ -95,11 +95,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             SubtitleListview1.Fill(_subtitle);
 
-            foreach(var index in mergedIndexes)
+            foreach (var index in mergedIndexes)
             {
                 SubtitleListview1.SetBackgroundColor(index, Color.Green);
             }
-
 
             SubtitleListview1.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MergedShortLines.NumberOfMergesX, NumberOfMerges);
@@ -171,8 +170,8 @@ namespace Nikse.SubtitleEdit.Forms
                         numberOfMerges++;
                         if (!mergedIndexes.Contains(i))
                             mergedIndexes.Add(i);
-                        if (!mergedIndexes.Contains(i-1))
-                            mergedIndexes.Add(i-1);
+                        if (!mergedIndexes.Contains(i - 1))
+                            mergedIndexes.Add(i - 1);
                     }
                     else
                     {
@@ -190,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (!lastMerged)
-                mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count-1)));
+                mergedSubtitle.Paragraphs.Add(new Paragraph(subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1)));
 
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
             return mergedSubtitle;

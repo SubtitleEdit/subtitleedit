@@ -1,26 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
 
-// https://github.com/SubtitleEdit/subtitleedit/issues/detail?id=18
-//<?xml version="1.0" encoding="UTF-8"?>
-//<DCSubtitle Version="1.0">
-//  <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>
-//  <MovieTitle>Unknown</MovieTitle>
-//  <ReelNumber>1</ReelNumber>
-//  <Language>Swedish</Language>
-//  <Font Italic="no">
-//    <Subtitle SpotNumber="1" TimeIn="00:00:06:040" TimeOut="00:00:08:040" FadeUpTime="20" FadeDownTime="20">
-//      <Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="6.0">DETTA HAR HÄNT...</Text>
-//    </Subtitle>
-//  </Font>
-//</DCSubtitle>
+    // https://github.com/SubtitleEdit/subtitleedit/issues/detail?id=18
+    //<?xml version="1.0" encoding="UTF-8"?>
+    //<DCSubtitle Version="1.0">
+    //  <SubtitleID>4EB245B8-4D3A-4158-9516-95DD20E8322E</SubtitleID>
+    //  <MovieTitle>Unknown</MovieTitle>
+    //  <ReelNumber>1</ReelNumber>
+    //  <Language>Swedish</Language>
+    //  <Font Italic="no">
+    //    <Subtitle SpotNumber="1" TimeIn="00:00:06:040" TimeOut="00:00:08:040" FadeUpTime="20" FadeDownTime="20">
+    //      <Text Direction="horizontal" HAlign="center" HPosition="0.0" VAlign="bottom" VPosition="6.0">DETTA HAR HÄNT...</Text>
+    //    </Subtitle>
+    //  </Font>
+    //</DCSubtitle>
 
     public class DCSubtitle : SubtitleFormat
     {
@@ -166,7 +165,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     end.InnerText = ConvertToTimeString(p.EndTime);
                     subNode.Attributes.Append(end);
 
-
                     bool alignLeft = p.Text.StartsWith("{\\a1}") || p.Text.StartsWith("{\\a5}") || p.Text.StartsWith("{\\a9}") || // sub station alpha
                                     p.Text.StartsWith("{\\an1}") || p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an7}"); // advanced sub station alpha
 
@@ -181,7 +179,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     // remove styles for display text (except italic)
                     string text = RemoveSubStationAlphaFormatting(p.Text);
-
 
                     string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     int vPos = 1 + lines.Length * 7;
@@ -289,7 +286,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 isItalic = false;
                                 i += 3;
                             }
-                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i+3).Contains(">"))
+                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains(">"))
                             {
                                 int endOfFont = line.IndexOf(">", i);
                                 if (txt.Length > 0)
@@ -537,7 +534,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         lastVPosition = vPosition;
                                     }
                                 }
-                                 bool alignLeft = false;
+                                bool alignLeft = false;
                                 bool alignRight = false;
                                 bool alignVTop = false;
                                 bool alignVCenter = false;
@@ -738,5 +735,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

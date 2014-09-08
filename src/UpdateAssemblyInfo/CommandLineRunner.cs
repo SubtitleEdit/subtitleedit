@@ -34,7 +34,7 @@ namespace UpdateAssemblyInfo
             return false;
         }
 
-        void OutputDataReceived(object sender, DataReceivedEventArgs e)
+        private void OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e != null && e.Data != null)
                 Result = e.Data;

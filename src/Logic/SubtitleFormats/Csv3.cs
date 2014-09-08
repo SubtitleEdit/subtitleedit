@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private const string Seperator = ",";
 
         //01:00:10:03,01:00:15:25,"I thought I should let my sister-in-law know.", ""
-        static readonly Regex CsvLine = new Regex(@"^\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator, RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator, RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -99,20 +99,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Match m = CsvLine.Match(line);
                 if (m.Success)
                 {
-                    string[] parts = line.Substring(0, m.Length).Split(Seperator.ToCharArray(),  StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, m.Length).Split(Seperator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
-                    try
-                    {
-                        var start = DecodeTimeCode(parts[0]);
-                        var end = DecodeTimeCode(parts[1]);
-                        string text = ReadText(line.Remove(0, m.Length));
-                        p = new Paragraph(start, end, text);
-                        subtitle.Paragraphs.Add(p);
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                    }
+                        try
+                        {
+                            var start = DecodeTimeCode(parts[0]);
+                            var end = DecodeTimeCode(parts[1]);
+                            string text = ReadText(line.Remove(0, m.Length));
+                            p = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(p);
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                        }
                 }
                 else if (line.Trim().Length > 0)
                 {
@@ -134,9 +134,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (csv.StartsWith("\""))
                 csv = csv.Remove(0, 1);
             if (csv.EndsWith("\""))
-                csv = csv.Remove(csv.Length-1, 1);
+                csv = csv.Remove(csv.Length - 1, 1);
             bool isBreak = false;
-            for (int i=0; i<csv.Length; i++)
+            for (int i = 0; i < csv.Length; i++)
             {
                 string s = csv.Substring(i, 1);
                 if (s == "\"" && csv.Substring(i).StartsWith("\"\""))

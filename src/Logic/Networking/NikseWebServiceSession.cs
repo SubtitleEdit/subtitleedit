@@ -15,11 +15,11 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         public event EventHandler OnUpdateTimerTick;
         public event EventHandler OnUpdateUserLogEntries;
 
-        System.Windows.Forms.Timer _timerWebService;
+        private System.Windows.Forms.Timer _timerWebService;
         public List<UpdateLogEntry> UpdateLog = new List<UpdateLogEntry>();
         public List<ChatEntry> ChatLog = new List<ChatEntry>();
-        SeNetworkService.SeService _seWs;
-        DateTime _seWsLastUpdate = DateTime.Now.AddYears(-1);
+        private SeNetworkService.SeService _seWs;
+        private DateTime _seWsLastUpdate = DateTime.Now.AddYears(-1);
         public SeNetworkService.SeUser CurrentUser { get; set; }
         public Subtitle LastSubtitle;
         public Subtitle Subtitle;
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             return true;
         }
 
-        void TimerWebServiceTick(object sender, EventArgs e)
+        private void TimerWebServiceTick(object sender, EventArgs e)
         {
             if (OnUpdateTimerTick != null)
                 OnUpdateTimerTick.Invoke(sender, e);
@@ -254,7 +254,6 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             if (updateUI && OnUpdateUserLogEntries != null)
                 OnUpdateUserLogEntries.Invoke(null, null);
         }
-
 
         internal void Leave()
         {

@@ -7,16 +7,16 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial  class SetSyncPoint : Form
+    public sealed partial class SetSyncPoint : Form
     {
         private double _lastPosition;
         private TimeSpan _guess;
-        double _goBackPosition;
-        double _stopPosition = -1.0;
-        Subtitle _subtitle;
-        int _audioTrackNumber = -1;
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private double _goBackPosition;
+        private double _stopPosition = -1.0;
+        private Subtitle _subtitle;
+        private int _audioTrackNumber = -1;
+        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName { get; private set; }
 
@@ -134,12 +134,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void VideoStartEnded(object sender, EventArgs e)
+        private void VideoStartEnded(object sender, EventArgs e)
         {
             videoPlayerContainer1.Pause();
         }
 
-        void VideoStartLoaded(object sender, EventArgs e)
+        private void VideoStartLoaded(object sender, EventArgs e)
         {
             timer1.Start();
 

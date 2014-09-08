@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private Color GetColor(int start)
         {
-            return Color.FromArgb(colorBuffer[start], colorBuffer[start+1], colorBuffer[start+2]);
+            return Color.FromArgb(colorBuffer[start], colorBuffer[start + 1], colorBuffer[start + 2]);
         }
 
         public Bitmap GetImage()

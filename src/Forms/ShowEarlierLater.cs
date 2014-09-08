@@ -10,9 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
 
-        TimeSpan _totalAdjustment = TimeSpan.FromMilliseconds(0);
-        AdjustEventHandler _adjustCallback;
-        PositionsAndSizes _formPositionsAndSizes;
+        private TimeSpan _totalAdjustment = TimeSpan.FromMilliseconds(0);
+        private AdjustEventHandler _adjustCallback;
+        private PositionsAndSizes _formPositionsAndSizes;
 
         public ShowEarlierLater()
         {

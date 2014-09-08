@@ -13,8 +13,8 @@ namespace Nikse.SubtitleEdit.Forms
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
         public const string SearchTypeRegularExpression = "RegularExpression";
-        Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
-        Subtitle _subtitle;
+        private Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
+        private Subtitle _subtitle;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
         private List<MultipleSearchAndReplaceSetting> oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
@@ -470,7 +470,6 @@ namespace Nikse.SubtitleEdit.Forms
             SwapReplaceList(index, index + 1);
         }
 
-
         private void moveTopToolStripMenuItem_Click(object sender, EventArgs e)
         {
             int index = listViewReplaceList.SelectedIndices[0];
@@ -535,7 +534,6 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(exception.Message);
                     return;
                 }
-
 
                 foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
                 {

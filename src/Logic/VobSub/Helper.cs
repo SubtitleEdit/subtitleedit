@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
     {
 
         #region Binary constants
+
         public const int B00000000 = 0;
         public const int B00000001 = 1;
         public const int B00000010 = 2;
@@ -263,7 +264,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public const int B11111101 = 253;
         public const int B11111110 = 254;
         public const int B11111111 = 255;
-        #endregion
+
+        #endregion Binary constants
 
         public static string IntToHex(UInt64 value, int digits)
         {
@@ -296,8 +298,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         /// <returns>Word as int</returns>
         public static int GetEndianWord(byte[] buffer, int index)
         {
-            if (index +1 < buffer.Length)
-                return (buffer[index] << 8) + buffer[index+1];
+            if (index + 1 < buffer.Length)
+                return (buffer[index] << 8) + buffer[index + 1];
             return 0;
         }
 
@@ -309,7 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public static string GetBinaryString(byte[] buffer, int index, int count)
         {
             var sb = new StringBuilder();
-            for (int i=0; i < count; i++)
+            for (int i = 0; i < count; i++)
                 sb.Append(Convert.ToString(buffer[index + i], 2).PadLeft(8, '0'));
             return sb.ToString();
         }

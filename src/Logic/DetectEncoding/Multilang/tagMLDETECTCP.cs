@@ -1,10 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace MultiLanguage
 {
-    public enum MLDETECTCP {
+    public enum MLDETECTCP
+    {
         // Default setting will be used.
         MLDETECTCP_NONE = 0,
 

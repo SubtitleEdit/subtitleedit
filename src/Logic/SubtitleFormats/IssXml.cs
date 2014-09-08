@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
@@ -10,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class IssXml : SubtitleFormat
     {
 
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled); //00:02:56:02
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled); //00:02:56:02
 
         public override string Extension
         {
@@ -171,10 +170,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string text = string.Empty;
                         XmlNodeList list = node.SelectNodes("StTextList/StText");
 
-
                         if (list.Count == 3 && regexTimeCodes.IsMatch(list[2].InnerText))
                             p.StartTime.TotalMilliseconds = TimeCode.ParseHHMMSSFFToMilliseconds(list[2].InnerText);
-
 
                         if (list.Count > 1)
                         {
@@ -214,5 +211,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

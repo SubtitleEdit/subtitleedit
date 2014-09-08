@@ -1,5 +1,4 @@
-﻿
-namespace Nikse.SubtitleEdit.Logic.VobSub
+﻿namespace Nikse.SubtitleEdit.Logic.VobSub
 {
     public class VobSubPack
     {
@@ -7,7 +6,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public Mpeg2Header Mpeg2Header;
         public IdxParagraph IdxLine { get; private set; }
 
-        readonly byte[] _buffer;
+        private readonly byte[] _buffer;
 
         public byte[] Buffer
         {

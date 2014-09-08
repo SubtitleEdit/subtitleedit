@@ -1,5 +1,4 @@
-﻿
-namespace Nikse.SubtitleEdit.Logic
+﻿namespace Nikse.SubtitleEdit.Logic
 {
     public class VideoInfo
     {

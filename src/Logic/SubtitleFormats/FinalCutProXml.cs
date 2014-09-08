@@ -416,7 +416,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 double frameRate = Configuration.Settings.General.CurrentFrameRate;
                 XmlNode start = generatorItem.SelectSingleNode("generatoritem/start");
-                start.InnerText = ((int)Math.Round(p.StartTime.TotalSeconds*frameRate)).ToString();
+                start.InnerText = ((int)Math.Round(p.StartTime.TotalSeconds * frameRate)).ToString();
 
                 XmlNode end = generatorItem.SelectSingleNode("generatoritem/end");
                 end.InnerText = ((int)Math.Round(p.EndTime.TotalSeconds * frameRate)).ToString();
@@ -614,5 +614,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

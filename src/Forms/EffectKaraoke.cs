@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class EffectKaraoke : Form
     {
-        Paragraph _paragraph;
-        List<Paragraph> _animation;
-        int _timerCount;
+        private Paragraph _paragraph;
+        private List<Paragraph> _animation;
+        private int _timerCount;
 
         public EffectKaraoke()
         {
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddTextToRichTextBox(rtb, bold > 0, italic > 0, underline > 0, currentColor, sb.ToString());
                     sb = new StringBuilder();
                     string tag = GetTag(text.Substring(i).ToLower());
-                    if (i + 1 < text.Length && text[i+1] == '/')
+                    if (i + 1 < text.Length && text[i + 1] == '/')
                     { //
                         if (tag == "</i>" && italic > 0)
                             italic--;

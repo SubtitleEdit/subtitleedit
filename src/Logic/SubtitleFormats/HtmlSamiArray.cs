@@ -67,14 +67,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     pos = line.IndexOf("[1] = '");
                     sb = new StringBuilder();
-                    for (int i = pos + 7; i<line.Length &&line[i] != '\''; i++)
+                    for (int i = pos + 7; i < line.Length && line[i] != '\''; i++)
                     {
                         sb.Append(line.Substring(i, 1));
                     }
                     if (sb.Length > 0)
                         sb.AppendLine();
                     pos = line.IndexOf("[2] = '");
-                    for (int i = pos + 7; i<line.Length &&line[i] != '\''; i++)
+                    for (int i = pos + 7; i < line.Length && line[i] != '\''; i++)
                     {
                         sb.Append(line.Substring(i, 1));
                     }

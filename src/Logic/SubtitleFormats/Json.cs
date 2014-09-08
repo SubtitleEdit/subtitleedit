@@ -124,12 +124,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        _errorCount ++;
+                        _errorCount++;
                     }
                 }
                 else
                 {
-                    _errorCount ++;
+                    _errorCount++;
                 }
             }
             subtitle.Renumber(1);
@@ -201,13 +201,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int tagLevel = 1;
             int nextTag = 0;
             int oldStart = 0;
-            while (tagLevel >= 1 && nextTag >= 0 && nextTag+1 < res.Length)
+            while (tagLevel >= 1 && nextTag >= 0 && nextTag + 1 < res.Length)
             {
                 if (res.Substring(oldStart, 1) == "\"")
                 {
                     nextTag = res.IndexOf('"', oldStart + 1);
 
-                    while (nextTag > 0 && nextTag + 1 < res.Length &&  res.Substring(nextTag - 1, 1) == "\\")
+                    while (nextTag > 0 && nextTag + 1 < res.Length && res.Substring(nextTag - 1, 1) == "\\")
                         nextTag = res.IndexOf('"', nextTag + 1);
 
                     if (nextTag > 0)

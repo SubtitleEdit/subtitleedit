@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (line.Contains("class=\"caption\"") && indexOfStart > 0 && indexOfDuration > 0)
                 {
                     string startTime = "0";
-                    int index = indexOfStart +10;
+                    int index = indexOfStart + 10;
                     while (index < line.Length && "0123456789\"'.,".Contains(line[index].ToString()))
                     {
                         if ("0123456789,.".Contains(line[index].ToString()))
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     string text = string.Empty;
                     index = line.IndexOf(">", indexOfDuration);
-                    if (index > 0 && index+ 1 < line.Length)
+                    if (index > 0 && index + 1 < line.Length)
                     {
                         text = line.Substring(index + 1).Trim();
                         index = text.IndexOf("</");

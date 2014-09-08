@@ -105,8 +105,8 @@ namespace Nikse.SubtitleEdit.Controls
         public event EventHandler OnZoomedChanged;
         public event EventHandler InsertAtVideoPosition;
 
-        double _wholeParagraphMinMilliseconds;
-        double _wholeParagraphMaxMilliseconds = double.MaxValue;
+        private double _wholeParagraphMinMilliseconds;
+        private double _wholeParagraphMaxMilliseconds = double.MaxValue;
 
         public Keys InsertAtVideoPositionShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Paragraph nextParagraph = subtitle.GetParagraphOrDefault(subtitleIndex - j);
                     _previousAndNextParagraphs.Add(nextParagraph);
                 }
-                for (int j=1; j < 10; j++)
+                for (int j = 1; j < 10; j++)
                 {
                     Paragraph nextParagraph = subtitle.GetParagraphOrDefault(subtitleIndex + j);
                     _previousAndNextParagraphs.Add(nextParagraph);
@@ -572,7 +572,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (currentRegionWidth > 40)
                         {
                             SolidBrush tBrush = new SolidBrush(Color.Turquoise);
-                            graphics.DrawString(string.Format("{0:0.###} {1}",((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
+                            graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
                                                                 Configuration.Settings.Language.WaveForm.Seconds),
                                                   Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
                             tBrush.Dispose();
@@ -808,7 +808,7 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                     else
                     {
-                        if (curIdx < _subtitle.Paragraphs.Count -1)
+                        if (curIdx < _subtitle.Paragraphs.Count - 1)
                         {
                             var next = _subtitle.Paragraphs[curIdx + 1];
                             if (milliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
@@ -1004,8 +1004,8 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (curIdx < _subtitle.Paragraphs.Count - 1)
                     {
-                        var gap = Math.Abs(_subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx+1].StartTime.TotalMilliseconds);
-                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].EndTime.TotalMilliseconds - gap -200;
+                        var gap = Math.Abs(_subtitle.Paragraphs[curIdx].EndTime.TotalMilliseconds - _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds);
+                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].EndTime.TotalMilliseconds - gap - 200;
                     }
                 }
             }
@@ -1245,7 +1245,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 }
                                 else
                                 {
-//SHOW DEBUG MSG                     SolidBrush tBrush = new SolidBrush(Color.Turquoise);
+                                    //SHOW DEBUG MSG                     SolidBrush tBrush = new SolidBrush(Color.Turquoise);
                                     //var g = this.CreateGraphics();
                                     //g.DrawString("AllowMovePrevOrNext: " + AllowMovePrevOrNext.ToString() + ", GapStart: " + _gapAtStart.ToString(), Font, tBrush, new PointF(100, 100));
                                     //tBrush.Dispose();
@@ -1294,7 +1294,6 @@ namespace Nikse.SubtitleEdit.Controls
 
                             var startTotalSeconds = XPositionToSeconds(start);
                             var endTotalSeconds = XPositionToSeconds(end);
-
 
                             if (PreventOverlap && endTotalSeconds * 1000.0 >= _wholeParagraphMaxMilliseconds)
                             {
@@ -1581,7 +1580,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double FindDataBelowThresshold(int thresshold, double durationInSeconds)
         {
-            int begin = SecondsToXPosition(_currentVideoPositionSeconds+1);
+            int begin = SecondsToXPosition(_currentVideoPositionSeconds + 1);
             int length = SecondsToXPosition(durationInSeconds);
 
             int hitCount = 0;
@@ -1611,7 +1610,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         public double FindDataBelowThressholdBack(int thresshold, double durationInSeconds)
         {
-            int begin = SecondsToXPosition(_currentVideoPositionSeconds-1);
+            int begin = SecondsToXPosition(_currentVideoPositionSeconds - 1);
             int length = SecondsToXPosition(durationInSeconds);
 
             int hitCount = 0;
@@ -1655,7 +1654,7 @@ namespace Nikse.SubtitleEdit.Controls
                 OnZoomedChanged.Invoke(this, null);
         }
 
-        void WaveFormMouseWheel(object sender, MouseEventArgs e)
+        private void WaveFormMouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
             if (!MouseWheelScrollUpIsForward)
@@ -1690,13 +1689,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        void LoadSpectrogramBitmapsCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void LoadSpectrogramBitmapsCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             LoadSpectrogramInfo(_spectrogramDirectory);
             ShowSpectrogram = _tempShowSpectrogram;
         }
 
-        void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             int count = 0;
             string fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
@@ -1784,7 +1783,7 @@ namespace Nikse.SubtitleEdit.Controls
                 length = 9;
             double v = 0;
             int count = 0;
-            for (int i = sampleIndex; i < sampleIndex+length; i++)
+            for (int i = sampleIndex; i < sampleIndex + length; i++)
             {
                 if (i > 0 && i < _wavePeaks.AllSamples.Count)
                 {
@@ -1802,7 +1801,7 @@ namespace Nikse.SubtitleEdit.Controls
             int begin = SecondsToXPosition(startFromSeconds);
 
             double average = 0;
-            for (int k=begin; k<_wavePeaks.AllSamples.Count; k++)
+            for (int k = begin; k < _wavePeaks.AllSamples.Count; k++)
                 average += Math.Abs(_wavePeaks.AllSamples[k]);
             average = average / (_wavePeaks.AllSamples.Count - begin);
 
@@ -1861,10 +1860,10 @@ namespace Nikse.SubtitleEdit.Controls
                             subtitleOn = true;
                             begin = i;
                         }
-//                        else
-//                        {
-//                            MessageBox.Show("Too much");
-//                        }
+                        //                        else
+                        //                        {
+                        //                            MessageBox.Show("Too much");
+                        //                        }
                     }
                 }
                 i++;

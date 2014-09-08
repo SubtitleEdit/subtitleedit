@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class VobSubOcrCharacter : Form
     {
 
-        VobSubOcr _vobSubForm;
-        List<VobSubOcr.ImageCompareAddition> _additions;
+        private VobSubOcr _vobSubForm;
+        private List<VobSubOcr.ImageCompareAddition> _additions;
 
         public VobSubOcrCharacter()
         {
@@ -33,7 +33,6 @@ namespace Nikse.SubtitleEdit.Forms
             spanishToolStripMenuItem.Text = language.Spanish;
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
-
 
             string[] row0 = { "♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű" };
             string[] row1 = { "♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű" };

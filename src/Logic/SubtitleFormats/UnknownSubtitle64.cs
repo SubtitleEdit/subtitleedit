@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle64 : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             Number,
             TimeStart,
@@ -42,21 +42,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-           // 1
-           // 00:00:04:12
-           // 00:00:06:05
-           // Berniukai, tik pažiūrėkit.
+            // 1
+            // 00:00:04:12
+            // 00:00:06:05
+            // Berniukai, tik pažiūrėkit.
 
-           // 2
-           // 00:00:06:16
-           // 00:00:07:20
-           // Argi ne puiku?
+            // 2
+            // 00:00:06:16
+            // 00:00:07:20
+            // Argi ne puiku?
 
-           // 3
-           // 00:00:08:02
-           // 00:00:10:20
-           // Tėti, ar galime čia paplaukioti?
-           // -Aišku, kad galim.
+            // 3
+            // 00:00:08:02
+            // 00:00:10:20
+            // Tėti, ar galime čia paplaukioti?
+            // -Aišku, kad galim.
 
             const string paragraphWriteFormat = "{4}{3}{0}{3}{1}{3}{2}{3}";
             var sb = new StringBuilder();

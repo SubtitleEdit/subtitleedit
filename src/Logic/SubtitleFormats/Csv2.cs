@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private const string Seperator = ",";
 
         //1,01:00:10:03,01:00:15:25,I thought I should let my sister-in-law know.
-        static readonly Regex CsvLine = new Regex(@"^\d+" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator, RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^\d+" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator, RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -81,22 +81,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Match m = CsvLine.Match(line);
                 if (m.Success)
                 {
-                    string[] parts = line.Substring(0, m.Length).Split(Seperator.ToCharArray(),  StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, m.Length).Split(Seperator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
-                    try
-                    {
-                        var start = DecodeTimeCode(parts[1]);
-                        var end = DecodeTimeCode(parts[2]);
-                        string text = line.Remove(0, m.Length);
-                        continuation = text.StartsWith("\"") && !text.EndsWith("\"");
-                        text = text.Trim('"');
-                        p = new Paragraph(start, end, text);
-                        subtitle.Paragraphs.Add(p);
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                    }
+                        try
+                        {
+                            var start = DecodeTimeCode(parts[1]);
+                            var end = DecodeTimeCode(parts[2]);
+                            string text = line.Remove(0, m.Length);
+                            continuation = text.StartsWith("\"") && !text.EndsWith("\"");
+                            text = text.Trim('"');
+                            p = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(p);
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                        }
                 }
                 else if (line.Trim().Length > 0)
                 {

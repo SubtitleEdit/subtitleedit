@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SubViewer10 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeStart,
             Text,
@@ -38,22 +38,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//[00:02:14]
-//Yes a new line|Line number 2
-//[00:02:15]
+            //[00:02:14]
+            //Yes a new line|Line number 2
+            //[00:02:15]
             string paragraphWriteFormat = "[{0:00}:{1:00}:{2:00}]" + Environment.NewLine +
                                           "{3}" + Environment.NewLine +
                                           "[{4:00}:{5:00}:{6:00}]";
             const string header = @"[TITLE]
 {0}
 [AUTHOR]
-
 [SOURCE]
-
 [PRG]
-
 [FILEPATH]
-
 [DELAY]
 0
 [CD TRACK]

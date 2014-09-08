@@ -181,10 +181,10 @@ namespace Nikse.SubtitleEdit.Logic
             ManagedBitmap newRectangle = new ManagedBitmap(section.Width, section.Height);
 
             int recty = 0;
-            for (int y=section.Top; y < section.Top + section.Height; y++)
+            for (int y = section.Top; y < section.Top + section.Height; y++)
             {
                 int rectx = 0;
-                for (int x=section.Left; x< section.Left +section.Width; x++)
+                for (int x = section.Left; x < section.Left + section.Width; x++)
                 {
                     newRectangle.SetPixel(rectx, recty, this.GetPixel(x, y));
                     rectx++;

@@ -10,9 +10,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class SplitSubtitle : Form
     {
-        Subtitle _subtitle;
-        SubtitleFormat _format;
-        Encoding _encoding;
+        private Subtitle _subtitle;
+        private SubtitleFormat _format;
+        private Encoding _encoding;
         private string _fileName;
         public bool ShowAdvanced { get; private set; }
 

@@ -15,21 +15,21 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Settings : Form
     {
-        string _ssaFontName;
-        double _ssaFontSize;
-        int _ssaFontColor;
-        bool _starting = true;
+        private string _ssaFontName;
+        private double _ssaFontSize;
+        private int _ssaFontColor;
+        private bool _starting = true;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
-        string oldVlcLocation;
-        string oldVlcLocationRelative;
+        private string oldVlcLocation;
+        private string oldVlcLocationRelative;
 
-        List<string> _wordListNamesEtc = new List<string>();
-        List<string> _userWordList = new List<string>();
-        Dictionary<string, string> _ocrFixWords = new Dictionary<string, string>();
-        Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();
+        private List<string> _wordListNamesEtc = new List<string>();
+        private List<string> _userWordList = new List<string>();
+        private Dictionary<string, string> _ocrFixWords = new Dictionary<string, string>();
+        private Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();
 
-        class ComboBoxLanguage
+        private class ComboBoxLanguage
         {
             public CultureInfo CultureInfo { get; set; }
             public override string ToString()
@@ -38,11 +38,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        static string GetRelativePath(string fileName)
+        private static string GetRelativePath(string fileName)
         {
             string folder = Configuration.BaseDirectory;
 
-            if (string.IsNullOrEmpty(fileName) || !fileName.ToUpper().StartsWith(folder.Substring(0,2)))
+            if (string.IsNullOrEmpty(fileName) || !fileName.ToUpper().StartsWith(folder.Substring(0, 2)))
                 return string.Empty;
 
             Uri pathUri = new Uri(fileName);
@@ -334,7 +334,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
 
-            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+                Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
@@ -537,7 +537,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxMergeShortLineLength.SelectedIndex = toolsSettings.MergeLinesShorterThan - 10;
             else
                 comboBoxMergeShortLineLength.SelectedIndex = 0;
-
 
             // Music notes / music symbols
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
@@ -992,7 +991,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 }
 
-
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
                     if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1)
@@ -1071,7 +1069,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (gs.ListViewLineSeparatorString.Trim().Length == 0)
                 gs.ListViewLineSeparatorString = "<br />";
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
-
 
             gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
             gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
@@ -1179,7 +1176,7 @@ namespace Nikse.SubtitleEdit.Forms
             ssa.SsaOpaqueBox = checkBoxSsaOpaqueBox.Checked;
 
             ProxySettings proxy = Configuration.Settings.Proxy;
-            proxy.ProxyAddress = textBoxProxyAddress.Text ;
+            proxy.ProxyAddress = textBoxProxyAddress.Text;
             proxy.UserName = textBoxProxyUserName.Text;
             if (textBoxProxyPassword.Text.Trim().Length == 0)
                 proxy.Password = null;
@@ -1189,7 +1186,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall = checkBoxSyntaxColorDurationTooSmall.Checked;
             Configuration.Settings.Tools.ListViewSyntaxColorDurationBig = checkBoxSyntaxColorDurationTooLarge.Checked;
-            Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked ;
+            Configuration.Settings.Tools.ListViewSyntaxColorLongLines = checkBoxSyntaxColorTextTooLong.Checked;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines = checkBoxSyntaxColorTextMoreThanTwoLines.Checked;
             Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX = (int)numericUpDownSyntaxColorTextMoreThanXLines.Value;
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
@@ -1341,7 +1338,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Frame) && text == Configuration.Settings.Language.Settings.GoBack1Frame.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo1FrameLeft = GetShortcut(node.Text);
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Frame) && text == Configuration.Settings.Language.Settings.GoForward1Frame.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainVideo1FrameRight= GetShortcut(node.Text);
+                        Configuration.Settings.Shortcuts.MainVideo1FrameRight = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoBack100Milliseconds.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo100MsLeft = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoForward100Milliseconds.Replace("&", string.Empty))
@@ -1480,7 +1477,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-
             //Translate
             foreach (TreeNode node in treeViewShortcuts.Nodes[10].Nodes)
             {
@@ -1561,7 +1557,6 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformAddTextHere = GetShortcut(node.Text);
                     else if (Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition != null && text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
-
                     else if (Configuration.Settings.Language.Settings.WaveformFocusListView != null && text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformFocusListView = GetShortcut(node.Text);
 
@@ -1694,7 +1689,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 g.FillPath(new SolidBrush(System.Drawing.Color.FromArgb(_ssaFontColor)), path);
 
-
             }
             pictureBoxPreview.Image = bmp;
         }
@@ -1821,13 +1815,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void BwDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+        private void BwDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
             Utilities.LoadNamesEtcWordLists(_wordListNamesEtc, _wordListNamesEtc, e.Argument.ToString());
             _wordListNamesEtc.Sort();
         }
 
-        void BwRunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+        private void BwRunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
         {
             try
             {
@@ -1992,7 +1986,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxUserWord.Text.Trim().ToLower();
             if (!string.IsNullOrEmpty(language) && text.Length > 0 && !_userWordList.Contains(text))
             {
-                Utilities.AddToUserDictionary(text , language);
+                Utilities.AddToUserDictionary(text, language);
                 LoadUserWords(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxUserWord.Text = string.Empty;
@@ -2277,24 +2271,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListBoxKeyDownSearch(object sender, KeyEventArgs e)
         {
-             if (e.KeyCode == Keys.Escape ||
-                 e.KeyCode == Keys.Tab ||
-                 e.KeyCode == Keys.Return ||
-                 e.KeyCode == Keys.Enter ||
-                 e.KeyCode == Keys.Down ||
-                 e.KeyCode == Keys.Up  ||
-                 e.KeyCode == Keys.PageDown ||
-                 e.KeyCode == Keys.PageUp ||
-                 e.KeyCode == Keys.None ||
-                 e.KeyCode == Keys.F1 ||
-                 e.KeyCode == Keys.Home ||
-                 e.KeyCode == Keys.End
-                 )
-                 return;
+            if (e.KeyCode == Keys.Escape ||
+                e.KeyCode == Keys.Tab ||
+                e.KeyCode == Keys.Return ||
+                e.KeyCode == Keys.Enter ||
+                e.KeyCode == Keys.Down ||
+                e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.PageDown ||
+                e.KeyCode == Keys.PageUp ||
+                e.KeyCode == Keys.None ||
+                e.KeyCode == Keys.F1 ||
+                e.KeyCode == Keys.Home ||
+                e.KeyCode == Keys.End
+                )
+                return;
 
-             if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
-                 TimeSpan.FromTicks(DateTime.Now.Ticks).TotalMilliseconds)
-                 _listBoxSearchString = string.Empty;
+            if (TimeSpan.FromTicks(_listBoxSearchStringLastUsed.Ticks).TotalMilliseconds + 1800 <
+                TimeSpan.FromTicks(DateTime.Now.Ticks).TotalMilliseconds)
+                _listBoxSearchString = string.Empty;
 
             if (e.KeyCode == Keys.Delete)
             {

@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -20,6 +18,5 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
     }
-
 
 }

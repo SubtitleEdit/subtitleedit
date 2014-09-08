@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle44 : SubtitleFormat
     {
 
-//>>> "COMMON GROUND" IS FUNDED BY  10:01:04:12                         1
-//THE MINNESOTA ARTS AND CULTURAL   10:01:07:09
-        static Regex regexTimeCodes1 = new Regex(@" \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
-        static Regex regexTimeCodes2 = new Regex(@" \d\d:\d\d:\d\d:\d\d         +\d+$", RegexOptions.Compiled);
+        //>>> "COMMON GROUND" IS FUNDED BY  10:01:04:12                         1
+        //THE MINNESOTA ARTS AND CULTURAL   10:01:07:09
+        private static Regex regexTimeCodes1 = new Regex(@" \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes2 = new Regex(@" \d\d:\d\d:\d\d:\d\d         +\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {

@@ -4,7 +4,6 @@ using System;
 namespace Test
 {
 
-
     /// <summary>
     ///This is a test class for FormRemoveTextForHearImpairedTest and is intended
     ///to contain all FormRemoveTextForHearImpairedTest Unit Tests
@@ -38,6 +37,7 @@ namespace Test
         }
 
         #region Additional test attributes
+
         //
         //You can use the following additional attributes as you write your tests:
         //
@@ -65,7 +65,8 @@ namespace Test
         //{
         //}
         //
-        #endregion
+
+        #endregion Additional test attributes
 
         /// <summary>
         ///A test for RemoveColon
@@ -87,7 +88,6 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest2a()
@@ -105,7 +105,6 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest2b()
@@ -122,7 +121,6 @@ namespace Test
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
-
 
         /// <summary>
         ///A test for RemoveHIInsideLine
@@ -200,7 +198,6 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
         /// <summary>
         ///A test for RemoveHI
         ///</summary>
@@ -256,7 +253,7 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "- JOHN: Hey." + Environment.NewLine +
                           "- ...hey.";
-            string expected = "- Hey."+ Environment.NewLine +"- ...hey.";
+            string expected = "- Hey." + Environment.NewLine + "- ...hey.";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
@@ -534,7 +531,6 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections11()
@@ -638,7 +634,6 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
         [TestMethod()]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonSecondLine()
@@ -650,7 +645,7 @@ namespace Test
             target.Settings.OnlyIfInSeparateLine = false;
             target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
             target.Settings.ColonSeparateLine = false;
-            string text = "- even if it was one week." + Environment.NewLine  + "CANNING: Objection.";
+            string text = "- even if it was one week." + Environment.NewLine + "CANNING: Objection.";
             string expected = "- even if it was one week." + Environment.NewLine + "- Objection.";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);

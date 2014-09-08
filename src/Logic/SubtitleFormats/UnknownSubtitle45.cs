@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         //*         00001.00-00003.00 02.01 00.0 1 0001 00 16-090-090
         //*         00138.10-00143.05 00.00 00.0 1 0003 00 16-090-090
-        static Regex regexTimeCodes = new Regex(@"^\*\s+\d\d\d\d\d\.\d\d-\d\d\d\d\d\.\d\d \d\d.\d\d \d\d.\d\ \d \d\d\d\d \d\d \d\d-\d\d\d-\d\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\*\s+\d\d\d\d\d\.\d\d-\d\d\d\d\d\.\d\d \d\d.\d\d \d\d.\d\ \d \d\d\d\d \d\d \d\d-\d\d\d-\d\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -44,7 +44,6 @@ CRULIC R1
 ST 0 EB 3.10
 @");
 
-
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -68,10 +67,10 @@ ST 0 EB 3.10
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-//*         00001.00-00003.00 02.01 00.0 1 0001 00 16-090-090
-//CRULIC R1
-//pour Bobi
-//@
+            //*         00001.00-00003.00 02.01 00.0 1 0001 00 16-090-090
+            //CRULIC R1
+            //pour Bobi
+            //@
             _errorCount = 0;
             var sb = new StringBuilder();
             foreach (string line in lines)

@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
             _previewTimer.Tick += RefreshTimerTick;
         }
 
-        void RefreshTimerTick(object sender, EventArgs e)
+        private void RefreshTimerTick(object sender, EventArgs e)
         {
             _previewTimer.Stop();
             GeneratePreviewReal();
@@ -131,7 +131,6 @@ namespace Nikse.SubtitleEdit.Forms
                 //    left = bmp.Width - (measuredWidth + ((float)numericUpDownMarginRight.Value));
                 //else
                 //    left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
-
 
                 float top = 2;
                 //if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
@@ -299,7 +298,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (node.Attributes["tts:fontSize"] != null)
                         fontSize = node.Attributes["tts:fontSize"].InnerText;
 
-
                     textBoxStyleName.Text = name;
                     comboBoxFontName.Text = fontFamily;
 
@@ -406,7 +404,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddStyleToXml(string name, string fontFamily, string fontWeight, string fontStyle, string color, string fontSize)
         {
-            TimedText10.AddStyleToXml(_xml, _xmlHead, _nsmgr,name, fontFamily, fontWeight, fontStyle, color, fontSize);
+            TimedText10.AddStyleToXml(_xml, _xmlHead, _nsmgr, name, fontFamily, fontWeight, fontStyle, color, fontSize);
         }
 
         private bool StyleExists(string name)

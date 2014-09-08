@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial  class Interjections : Form
+    public sealed partial class Interjections : Form
     {
         private List<string> _interjections;
 

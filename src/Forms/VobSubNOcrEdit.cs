@@ -13,15 +13,15 @@ namespace Nikse.SubtitleEdit.Forms
         private List<NOcrChar> _nocrChars;
         private NOcrChar _nocrChar;
         private double _zoomFactor = 5.0;
-        bool _drawLineOn;
-        bool _startDone;
-        Point _start;
-        Point _end;
-        int _mx;
-        int _my;
+        private bool _drawLineOn;
+        private bool _startDone;
+        private Point _start;
+        private Point _end;
+        private int _mx;
+        private int _my;
         private Bitmap _bitmap;
-        List<NOcrChar> _history = new List<NOcrChar>();
-        int _historyIndex = -1;
+        private List<NOcrChar> _history = new List<NOcrChar>();
+        private int _historyIndex = -1;
 
         public VobSubNOcrEdit(List<NOcrChar> nocrChars, Bitmap bitmap)
         {

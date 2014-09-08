@@ -11,10 +11,10 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
     public static class EncodingTools
     {
         // this only contains ascii, default windows code page and unicode
-        static int[] PreferredEncodingsForStream;
+        private static int[] PreferredEncodingsForStream;
 
         // this contains all codepages, sorted by preference and byte usage
-        static int[] PreferredEncodings;
+        private static int[] PreferredEncodings;
 
         /// <summary>
         /// Static constructor that fills the default preferred codepages
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         static EncodingTools()
         {
 
-            List<int> streamEcodings= new List<int>();
+            List<int> streamEcodings = new List<int>();
             List<int> allEncodings = new List<int>();
             List<int> mimeEcodings = new List<int>();
 
@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             streamEcodings.Add(Encoding.ASCII.CodePage);
             mimeEcodings.Add(Encoding.ASCII.CodePage);
             allEncodings.Add(Encoding.ASCII.CodePage);
-
 
             // add default 2nd for all encodings
             allEncodings.Add(Encoding.Default.CodePage);
@@ -42,12 +41,10 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 mimeEcodings.Add(Encoding.Default.CodePage);
             }
 
-
             // prefer JIS over JIS-SHIFT (JIS is detected better than JIS-SHIFT)
             // this one does include cyrilic (strange but true)
             allEncodings.Add(50220);
             mimeEcodings.Add(50220);
-
 
             // always allow unicode flavours for streams (they all have a preamble)
             streamEcodings.Add(Encoding.Unicode.CodePage);
@@ -61,15 +58,12 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 }
             }
 
-
             // stream is done here
             PreferredEncodingsForStream = streamEcodings.ToArray();
-
 
             // all singlebyte encodings
             foreach (EncodingInfo enc in Encoding.GetEncodings())
             {
-
 
                 if (!enc.GetEncoding().IsSingleByte)
                     continue;
@@ -103,10 +97,8 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // add unicodes
             mimeEcodings.Add(Encoding.Unicode.CodePage);
 
-
             PreferredEncodings = mimeEcodings.ToArray();
         }
-
 
         /// <summary>
         /// Checks if specified string data is acii data.
@@ -157,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         /// <returns>the suggested encoding</returns>
         public static Encoding GetMostEfficientEncoding(string input, int[] preferredEncodings)
         {
-            Encoding enc = DetectOutgoingEncoding(input,preferredEncodings,true);
+            Encoding enc = DetectOutgoingEncoding(input, preferredEncodings, true);
             // unicode.. hmmm... check for smallest encoding
             if (enc.CodePage == Encoding.Unicode.CodePage)
             {
@@ -230,7 +222,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 uint detectedCodepages = (uint)resultCodePages.Length;
                 ushort specialChar = (ushort)'?';
 
-
                 // get unmanaged arrays
                 IntPtr pPrefEncs = preferredEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * preferredEncodings.Length);
                 IntPtr pDetectedEncs = Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
@@ -251,7 +242,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 
                     multilang3.DetectOutboundCodePage(options,
                         input, (uint)input.Length,
-                        pPrefEncs, (uint) (preferredEncodings==null ? 0 : preferredEncodings.Length),
+                        pPrefEncs, (uint)(preferredEncodings == null ? 0 : preferredEncodings.Length),
 
                         pDetectedEncs, ref detectedCodepages,
                         ref specialChar);
@@ -301,10 +292,9 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 uint detectedCodepages = (uint)resultCodePages.Length;
                 ushort specialChar = (ushort)'?';
 
-
                 // get unmanaged arrays
                 IntPtr pPrefEncs = Marshal.AllocCoTaskMem(sizeof(uint) * preferredEncodings.Length);
-                IntPtr pDetectedEncs =  preferredEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
+                IntPtr pDetectedEncs = preferredEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
 
                 try
                 {
@@ -323,7 +313,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                     // finally... call to DetectOutboundCodePage
                     multilang3.DetectOutboundCodePage(options,
                         input, (uint)input.Length,
-                        pPrefEncs, (uint) (preferredEncodings==null ? 0 : preferredEncodings.Length),
+                        pPrefEncs, (uint)(preferredEncodings == null ? 0 : preferredEncodings.Length),
                         pDetectedEncs, ref detectedCodepages,
                         ref specialChar);
 
@@ -332,7 +322,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                     {
                         int[] theResult = new int[detectedCodepages];
                         Marshal.Copy(pDetectedEncs, theResult, 0, theResult.Length);
-
 
                         // get the encodings for the codepages
                         for (int i = 0; i < detectedCodepages; i++)
@@ -356,7 +345,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             return result.ToArray();
         }
 
-
         /// <summary>
         /// Detect the most probable codepage from an byte array
         /// </summary>
@@ -372,7 +360,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                     return detected[0];
                 return Encoding.Default;
             }
-            catch(COMException)
+            catch (COMException)
             {
                 // return default codepage on error
                 return Encoding.Default;
@@ -429,7 +417,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 MultiLanguage.MLDETECTCP options = MultiLanguage.MLDETECTCP.MLDETECTCP_NONE;
 
                 // finally... call to DetectInputCodepage
-                multilang2.DetectInputCodepage(options,0,
+                multilang2.DetectInputCodepage(options, 0,
                     ref input[0], ref srcLen, ref detectedEncdings[0], ref scores);
 
                 // get result
@@ -449,7 +437,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // nothing found
             return result.ToArray();
         }
-
 
         /// <summary>
         /// Opens a text file and returns the content
@@ -495,7 +482,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             if (stream == null)
                 throw new ArgumentNullException("stream");
             if (!stream.CanSeek)
-                throw new ArgumentException("the stream must support seek operations","stream");
+                throw new ArgumentException("the stream must support seek operations", "stream");
 
             // assume default encoding at first place
             Encoding detectedEncoding = Encoding.Default;
@@ -511,12 +498,10 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // seek back to stream start
             stream.Seek(0, SeekOrigin.Begin);
 
-
-            return new StreamReader(stream,detectedEncoding);
+            return new StreamReader(stream, detectedEncoding);
 
         }
 
     }
-
 
 }

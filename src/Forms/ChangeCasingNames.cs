@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                var newButtonHeight = (int) (textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToListViewNames(string name)
         {
-            var item = new ListViewItem(string.Empty) {Checked = true};
+            var item = new ListViewItem(string.Empty) { Checked = true };
 
             var subItem = new ListViewItem.ListViewSubItem(item, name);
             item.SubItems.Add(subItem);
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                         {
                             var st = new StripableText(text);
-                            st.FixCasing(new List<string> {name}, true, false, false, string.Empty);
+                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
                             text = st.MergedString;
                         }
                     }
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToPreviewListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
 
             var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);

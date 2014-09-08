@@ -7,6 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
 
         #region Hunspell
+
         [DllImport("libhunspell", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern IntPtr Hunspell_create(string affpath, string dpath);
 
@@ -21,7 +22,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("libhunspell")]
         internal static extern void Hunspell_free_list(IntPtr hunspellHandle, IntPtr slst, int n);
-        #endregion
+
+        #endregion Hunspell
 
         #region structures
 
@@ -142,14 +144,16 @@ namespace Nikse.SubtitleEdit.Logic
             /// </summary>
             internal ushort dwProcessorRevision;
         }
-        #endregion
+
+        #endregion structures
 
         #region Win32 API
+
         // Win32 API functions for loading dlls dynamic
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern IntPtr LoadLibrary(string dllToLoad);
 
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping=false)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern IntPtr GetProcAddress(IntPtr hModule, string procedureName);
 
         [DllImport("kernel32.dll")]
@@ -172,9 +176,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
         internal static extern IntPtr SetWindowPos(IntPtr hWnd, int hWndInsertAfter, int x, int y, int width, int height, int wFlags);
-        #endregion
+
+        #endregion Win32 API
 
         #region VLC
+
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
         [DllImport("libvlc")]
         internal static extern IntPtr libvlc_new(int argc, [MarshalAs(UnmanagedType.LPArray)] string[] argv);
@@ -192,7 +198,6 @@ namespace Nikse.SubtitleEdit.Logic
         [DllImport("libvlc")]
         internal static extern void libvlc_media_release(IntPtr media);
 
-
         // LibVLC Audio Controls - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__audio.html
         [DllImport("libvlc")]
         internal static extern int libvlc_audio_get_track_count(IntPtr mediaPlayer);
@@ -209,7 +214,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("libvlc")]
         internal static extern void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
-
 
         // LibVLC Media Player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
         [DllImport("libvlc")]
@@ -244,7 +248,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("libvlc")]
         internal static extern int libvlc_media_player_set_rate(IntPtr mediaPlayer, float rate);
-        #endregion
+
+        #endregion VLC
 
     }
 

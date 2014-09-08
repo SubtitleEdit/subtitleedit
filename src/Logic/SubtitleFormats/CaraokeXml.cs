@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -82,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 xml.LoadXml(xmlAsText);
             }
-            catch (Exception ex )
+            catch (Exception ex)
             {
                 _errorCount = 1;
                 System.Diagnostics.Debug.WriteLine(ex.Message);
@@ -110,5 +109,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

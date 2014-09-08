@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         private XmlNode _selectedCompareNode = null;
         private BinaryOcrBitmap _selectedCompareBinaryOcrBitmap = null;
         private VobSubOcr.CompareMatch _selectedMatch = null;
-        BinaryOcrDb _binOcrDb = null;
+        private BinaryOcrDb _binOcrDb = null;
 
         public VobSubOcrCharacterInspect()
         {
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             _selectedMatch = match;
             if (!string.IsNullOrEmpty(match.Name))
             {
-                Bitmap bitmap = new Bitmap(1,1);
+                Bitmap bitmap = new Bitmap(1, 1);
 
                 if (_binOcrDb != null)
                 {
@@ -185,7 +185,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
 
-
                             try
                             {
                                 labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
@@ -259,7 +258,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SetItalic(node);
             }
 
-
             listBoxInspectItems_SelectedIndexChanged(null, null);
         }
 
@@ -317,7 +315,6 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-
             if (_selectedCompareNode != null)
             {
                 XmlNode newNode = ImageCompareDocument.CreateElement("Item");
@@ -346,7 +343,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 string name = pos.ToString(CultureInfo.InvariantCulture);
                 newNode.InnerText = name;
-
 
                 SetItalic(newNode);
                 ImageCompareDocument.DocumentElement.AppendChild(newNode);

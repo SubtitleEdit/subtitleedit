@@ -13,7 +13,7 @@
 // projects, without the express and written consent of
 // the Author.
 
-#endregion
+#endregion #Disclaimer
 
 #region Using directives
 
@@ -23,7 +23,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 
-#endregion
+#endregion Using directives
 
 namespace Nikse.SubtitleEdit.Logic.ColorChooser
 {
@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
         public delegate void ColorChangedEventHandler(object sender, ColorChangedEventArgs e);
 
-        #endregion
+        #endregion Delegates
 
         // Keep track of the current mouse state.
 
@@ -53,13 +53,13 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             DragOutsideRegion,
         }
 
-        #endregion
+        #endregion MouseState enum
 
         // The code needs to convert back and forth between
         // degrees and radians. There are 2*PI radians in a
         // full circle, and 360 degrees. This constant allows
         // you to convert back and forth.
-        private const double DEGREES_PER_RADIAN = 180.0/Math.PI;
+        private const double DEGREES_PER_RADIAN = 180.0 / Math.PI;
 
         // COLOR_COUNT represents the number of distinct colors
         // used to create the circular gradient. Its value
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
         // attempting to generate the image. The color wheel
         // contains 6 sections, and each section displays
         // 256 colors. Seems like a reasonable compromise.
-        private const int COLOR_COUNT = 6*256;
+        private const int COLOR_COUNT = 6 * 256;
         private readonly int brightnessMax;
         private readonly int brightnessMin;
 
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // the point by the radius.
                 // Use the smaller of the width and height of
                 // the colorRectangle value.
-                radius = Math.Min(colorRectangle.Width, colorRectangle.Height)/2;
+                radius = Math.Min(colorRectangle.Width, colorRectangle.Height) / 2;
                 centerPoint = colorRectangle.Location;
                 centerPoint.Offset(radius, radius);
 
@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // Also calculate the scaling factor, scaling the height
                 // to be between 0 and 255.
                 brightnessX = brightnessRectangle.Left + brightnessRectangle.Width;
-                brightnessScaling = (double) 255/(brightnessMax - brightnessMin);
+                brightnessScaling = (double)255 / (brightnessMax - brightnessMin);
 
                 // Calculate the location of the brightness
                 // pointer. Assume it's at the highest position.
@@ -356,7 +356,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // to the bottom of the bar. return the correct point at which
             // to display the brightness pointer.
             return new Point(brightnessX,
-                (int) (brightnessMax - brightness/brightnessScaling));
+                (int)(brightnessMax - brightness / brightnessScaling));
         }
 
         private void UpdateDisplay()
@@ -399,8 +399,8 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // the center (HSV.Saturation), and the center,
             // calculate the point corresponding to
             // the selected color, on the color wheel.
-            colorPoint = GetPoint((double) HSV.Hue/255*360,
-                (double) HSV.Saturation/255*radius,
+            colorPoint = GetPoint((double)HSV.Hue / 255 * 360,
+                (double)HSV.Saturation / 255 * radius,
                 centerPoint);
 
             // Given the brightness (HSV.value), calculate the
@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
                 // the form has a lower y-value, in this coordinate
                 // system. So everything's off by a factor of -1 when
                 // performing the ratio calculations.
-                degrees = (int) (-Math.Atan((double) pt.Y/pt.X)*DEGREES_PER_RADIAN);
+                degrees = (int)(-Math.Atan((double)pt.Y / pt.X) * DEGREES_PER_RADIAN);
 
                 // If the x-coordinate of the selected point
                 // is to the left of the center of the circle, you
@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
                 // Ensure that the return value is
                 // between 0 and 360.
-                degrees = (degrees + 360)%360;
+                degrees = (degrees + 360) % 360;
             }
             return degrees;
         }
@@ -524,7 +524,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             var Colors = new Color[COLOR_COUNT];
 
             for (int i = 0; i <= COLOR_COUNT - 1; i++)
-                Colors[i] = ColorHandler.HSVtoColor(255, (int) ((double) (i*255)/COLOR_COUNT), 255, 255);
+                Colors[i] = ColorHandler.HSVtoColor(255, (int)((double)(i * 255) / COLOR_COUNT), 255, 255);
             return Colors;
         }
 
@@ -536,7 +536,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             var Points = new Point[COLOR_COUNT];
 
             for (int i = 0; i <= COLOR_COUNT - 1; i++)
-                Points[i] = GetPoint((double) (i*360)/COLOR_COUNT, radius, centerPoint);
+                Points[i] = GetPoint((double)(i * 360) / COLOR_COUNT, radius, centerPoint);
             return Points;
         }
 
@@ -545,10 +545,10 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // Given the center of a circle and its radius, along
             // with the angle corresponding to the point, find the coordinates.
             // In other words, conver  t from polar to rectangular coordinates.
-            double radians = degrees/DEGREES_PER_RADIAN;
+            double radians = degrees / DEGREES_PER_RADIAN;
 
-            return new Point((int) (centerPoint.X + Math.Floor(radius*Math.Cos(radians))),
-                (int) (centerPoint.Y - Math.Floor(radius*Math.Sin(radians))));
+            return new Point((int)(centerPoint.X + Math.Floor(radius * Math.Cos(radians))),
+                (int)(centerPoint.Y - Math.Floor(radius * Math.Sin(radians))));
         }
 
         private void DrawColorPointer(Point pt)
@@ -559,7 +559,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // this value in width and height.
             const int SIZE = 3;
             g.DrawRectangle(Pens.Black,
-                pt.X - SIZE, pt.Y - SIZE, SIZE*2, SIZE*2);
+                pt.X - SIZE, pt.Y - SIZE, SIZE * 2, SIZE * 2);
         }
 
         private void DrawBrightnessPointer(Point pt)
@@ -572,8 +572,8 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
 
             var Points = new Point[3];
             Points[0] = pt;
-            Points[1] = new Point(pt.X + WIDTH, pt.Y + HEIGHT/2);
-            Points[2] = new Point(pt.X + WIDTH, pt.Y - HEIGHT/2);
+            Points[1] = new Point(pt.X + WIDTH, pt.Y + HEIGHT / 2);
+            Points[2] = new Point(pt.X + WIDTH, pt.Y - HEIGHT / 2);
             g.FillPolygon(Brushes.Black, Points);
         }
 

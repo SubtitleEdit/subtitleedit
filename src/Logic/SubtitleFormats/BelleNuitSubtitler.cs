@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class BelleNuitSubtitler : SubtitleFormat
     {
         ///tc 00:00:35:09 00:00:38:05
-        static readonly Regex RegexTimeCode = new Regex(@"^\/tc \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
-        static readonly Regex RegexFileNum = new Regex(@"^\/file\s+\d+$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\/tc \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
+        private static readonly Regex RegexFileNum = new Regex(@"^\/file\s+\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {

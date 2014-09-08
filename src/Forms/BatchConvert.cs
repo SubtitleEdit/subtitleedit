@@ -50,18 +50,18 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        string _assStyle;
-        string _ssaStyle;
-        Logic.Forms.RemoveTextForHI _removeForHI;
-        ChangeCasing _changeCasing = new ChangeCasing();
-        ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
-        bool _converting;
-        int _count;
-        int _converted;
-        int _errors;
-        IList<SubtitleFormat> _allFormats;
-        bool _abort;
-        ListViewItem _matroskaListViewItem;
+        private string _assStyle;
+        private string _ssaStyle;
+        private Logic.Forms.RemoveTextForHI _removeForHI;
+        private ChangeCasing _changeCasing = new ChangeCasing();
+        private ChangeCasingNames _changeCasingNames = new ChangeCasingNames();
+        private bool _converting;
+        private int _count;
+        private int _converted;
+        private int _errors;
+        private IList<SubtitleFormat> _allFormats;
+        private bool _abort;
+        private ListViewItem _matroskaListViewItem;
 
         public BatchConvert(Icon icon)
         {
@@ -102,7 +102,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelToFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.ToFrameRate;
             labelHoursMinSecsMilliSecs.Text = Configuration.Settings.Language.General.HourMinutesSecondsMilliseconds;
 
-
             comboBoxFrameRateFrom.Left = labelFromFrameRate.Left + labelFromFrameRate.Width + 3;
             comboBoxFrameRateTo.Left = labelToFrameRate.Left + labelToFrameRate.Width + 3;
             if (comboBoxFrameRateFrom.Left > comboBoxFrameRateTo.Left)
@@ -133,7 +132,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateTo.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
             comboBoxFrameRateTo.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
             comboBoxFrameRateTo.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
-
 
             FixLargeFonts();
 
@@ -828,7 +826,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         double fromFrameRate;
                         double toFrameRate;
-                        if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint , CultureInfo.InvariantCulture, out fromFrameRate) &&
+                        if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
                             double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                         {
                             sub.ChangeFramerate(fromFrameRate, toFrameRate);
@@ -895,7 +893,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.DoEvents();
         }
 
-        void DoThreadWork(object sender, DoWorkEventArgs e)
+        private void DoThreadWork(object sender, DoWorkEventArgs e)
         {
             ThreadDoWorkParameter p = (ThreadDoWorkParameter)e.Argument;
             if (p.FixCommonErrors)
@@ -965,7 +963,7 @@ namespace Nikse.SubtitleEdit.Forms
             e.Result = p;
         }
 
-        void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void ThreadWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             var p = (ThreadDoWorkParameter)e.Result;
             if (p.Item.Index + 2 < listViewInputFiles.Items.Count)
@@ -1072,7 +1070,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_converting)
                 return;
 
-            for (int i = listViewInputFiles.SelectedIndices.Count-1; i>=0; i--)
+            for (int i = listViewInputFiles.SelectedIndices.Count - 1; i >= 0; i--)
             {
                 listViewInputFiles.Items.RemoveAt(listViewInputFiles.SelectedIndices[i]);
             }

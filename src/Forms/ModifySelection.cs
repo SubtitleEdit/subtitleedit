@@ -9,16 +9,16 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ModifySelection : Form
     {
-        SubtitleListView _subtitleListView;
-        Subtitle _subtitle;
-        bool _loading;
+        private SubtitleListView _subtitleListView;
+        private Subtitle _subtitle;
+        private bool _loading;
 
-        private const int  FunctionContains = 0;
-        private const int  FunctionStartsWith = 1;
-        private const int  FunctionEndsWith = 2;
-        private const int  FunctionNotContains = 3;
-        private const int  FunctionRegEx = 4;
-        private const int  FunctionUnequal = 5;
+        private const int FunctionContains = 0;
+        private const int FunctionStartsWith = 1;
+        private const int FunctionEndsWith = 2;
+        private const int FunctionNotContains = 3;
+        private const int FunctionRegEx = 4;
+        private const int FunctionUnequal = 5;
         private const int FunctionEqual = 6;
 
         public ModifySelection(Subtitle subtitle, SubtitleListView subtitleListView)

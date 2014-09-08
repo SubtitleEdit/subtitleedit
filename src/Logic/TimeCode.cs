@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public static TimeCode MaxTime = new TimeCode(99, 59, 59, 999);
 
-        double _totalMilliseconds;
+        private double _totalMilliseconds;
 
         public bool IsMaxTime
         {

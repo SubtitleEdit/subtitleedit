@@ -20,10 +20,10 @@
             uint k1 = 0;
 
             int length = arr.Length / 4;
-            for (int i=0; i<length; i++)
+            for (int i = 0; i < length; i++)
             {
                 int idx = i * 4;
-                k1 = (uint) (arr[idx] | arr[idx + 1] << 8 | arr[idx + 2] << 16 | arr[idx + 3] << 24);
+                k1 = (uint)(arr[idx] | arr[idx + 1] << 8 | arr[idx + 2] << 16 | arr[idx + 3] << 24);
 
                 // bitmagic hash
                 k1 *= c1;

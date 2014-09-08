@@ -22,8 +22,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
 
         public UInt64 GetUInt64(int index)
         {
-            return (UInt64)Buffer[index] << 56 | (UInt64)Buffer[index + 1] << 48 | (UInt64)Buffer[index + 2] << 40 | (UInt64)Buffer[index+3] << 32 |
-                   (UInt64)Buffer[index + 4] << 24 | (UInt64)Buffer[index + 5] << 16 | (UInt64)Buffer[index + 6] << 8 | Buffer[index+7];
+            return (UInt64)Buffer[index] << 56 | (UInt64)Buffer[index + 1] << 48 | (UInt64)Buffer[index + 2] << 40 | (UInt64)Buffer[index + 3] << 32 |
+                   (UInt64)Buffer[index + 4] << 24 | (UInt64)Buffer[index + 5] << 16 | (UInt64)Buffer[index + 6] << 8 | Buffer[index + 7];
         }
 
         public static UInt64 GetUInt64(byte[] buffer, int index)

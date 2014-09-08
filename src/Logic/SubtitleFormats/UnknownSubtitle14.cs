@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
-using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -32,9 +31,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-  //<Phrase TimeStart="4020" TimeEnd="6020">
-  //  <Text>XYZ PRESENTS</Text>
-  //</Phrase>
+            //<Phrase TimeStart="4020" TimeEnd="6020">
+            //  <Text>XYZ PRESENTS</Text>
+            //</Phrase>
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
@@ -116,5 +115,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

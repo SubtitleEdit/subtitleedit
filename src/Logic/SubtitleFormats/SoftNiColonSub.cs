@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class SoftNicolonSub : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d\\\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         lineSb.Append(Environment.NewLine);
                                     tempLine = subtitleLine;
                                     // Close italics in every line (if next line is in italics, SoftNI will use "[" at the beginning)
-                                    if (Utilities.CountTagInText(tempLine,"<i>") > Utilities.CountTagInText(tempLine,"</i>"))
+                                    if (Utilities.CountTagInText(tempLine, "<i>") > Utilities.CountTagInText(tempLine, "</i>"))
                                         tempLine = tempLine + "</i>";
 
                                     lineSb.Append(tempLine);

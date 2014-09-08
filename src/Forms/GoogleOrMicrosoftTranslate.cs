@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)
         {
-            for (int i = comboBox.Items.Count-1; i>0; i--)
+            for (int i = comboBox.Items.Count - 1; i > 0; i--)
             {
                 Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem item = (Nikse.SubtitleEdit.Forms.GoogleTranslate.ComboBoxItem)comboBox.Items[i];
                 if (item.Value != FixMsLocale(item.Value))
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 GoogleTranslate gt = new GoogleTranslate();
                 Subtitle subtitle = new Subtitle();
-                subtitle.Paragraphs.Add(new Paragraph(0,0,textBoxSourceText.Text));
+                subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
                 gt.Initialize(subtitle, string.Empty, false, System.Text.Encoding.UTF8);
                 from = FixMsLocale(from);
                 to = FixMsLocale(to);

@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial  class SyncPointsSync : Form
+    public sealed partial class SyncPointsSync : Form
     {
         public class ListBoxSyncPoint
         {
@@ -19,19 +19,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        string _subtitleFileName;
-        string _videoFileName;
-        int _audioTrackNumber;
-        Subtitle _subtitle;
-        Subtitle _originalSubtitle;
-        Subtitle _otherSubtitle;
-        SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
-        Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private string _subtitleFileName;
+        private string _videoFileName;
+        private int _audioTrackNumber;
+        private Subtitle _subtitle;
+        private Subtitle _originalSubtitle;
+        private Subtitle _otherSubtitle;
+        private SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
+        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName
         {
-            get { return _videoFileName;  }
+            get { return _videoFileName; }
         }
 
         public Subtitle FixedSubtitle
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
             buttonSetSyncPoint.Anchor = AnchorStyles.Right;
             buttonRemoveSyncPoint.Anchor = AnchorStyles.Right;
-            labelNoOfSyncPoints.Anchor =  AnchorStyles.Right;
+            labelNoOfSyncPoints.Anchor = AnchorStyles.Right;
             listBoxSyncPoints.Anchor = AnchorStyles.Right;
             groupBoxImportResult.Anchor = AnchorStyles.Left | AnchorStyles.Bottom | AnchorStyles.Top | AnchorStyles.Right;
             buttonFindText.Left = SubtitleListview1.Left + SubtitleListview1.Width - buttonFindText.Width;
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView2.Visible = true;
             buttonFindTextOther.Visible = true;
             Width = subtitleListView2.Width * 2 + 250;
-            MinimumSize = new Size(Width-50, MinimumSize.Height);
+            MinimumSize = new Size(Width - 50, MinimumSize.Height);
         }
 
         private void RefreshSyncronizationPointsUI()
@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // adjust to starting position
                 double adjust = startPos - subStart * factor;
 
-                for (int i=minIndex; i<_subtitle.Paragraphs.Count; i++)
+                for (int i = minIndex; i < _subtitle.Paragraphs.Count; i++)
                 {
                     if (i <= maxIndex)
                     {
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
                     startIndex = endIndex;
                     endIndex = syncIndices[i];
 
-                    if (i == syncIndices.Count -1)
+                    if (i == syncIndices.Count - 1)
                         maxIndex = _subtitle.Paragraphs.Count;
                     else
                         maxIndex = syncIndices[i]; // maxIndex = syncIndices[i + 1];
@@ -353,7 +353,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listBoxSyncPoints.SelectedIndex >= 0)
             {
-                ListBoxSyncPoint item = (ListBoxSyncPoint) listBoxSyncPoints.Items[listBoxSyncPoints.SelectedIndex];
+                ListBoxSyncPoint item = (ListBoxSyncPoint)listBoxSyncPoints.Items[listBoxSyncPoints.SelectedIndex];
                 SubtitleListview1.SelectIndexAndEnsureVisible(item.Index);
             }
         }

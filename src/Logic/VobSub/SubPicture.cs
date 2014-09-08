@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
                 lastDisplayControlSequenceTableAddress = displayControlSequenceTableAddress;
                 if (_pixelDataAddressOffset == -4)
-                    displayControlSequenceTableAddress = Helper.GetEndianWord(_data, commandIndex+3);
+                    displayControlSequenceTableAddress = Helper.GetEndianWord(_data, commandIndex + 3);
                 else
                     displayControlSequenceTableAddress = Helper.GetEndianWord(_data, displayControlSequenceTableAddress + 2);
             }
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private Bitmap GenerateBitmap(Rectangle imageDisplayArea, int imageTopFieldDataAddress, int imageBottomFieldDataAddress, List<Color> fourColors)
         {
             if (imageDisplayArea.Width <= 0 || imageDisplayArea.Height <= 0)
-                return new Bitmap(1,1);
+                return new Bitmap(1, 1);
 
             var bmp = new Bitmap(imageDisplayArea.Width + 1, imageDisplayArea.Height + 1);
             if (fourColors[0] != Color.Transparent)
@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 minX -= 0;
 
             // Crop bottom
-            y = bmp.Height-1;
+            y = bmp.Height - 1;
             c = backgroundColor;
             while (y > minY && IsBackgroundColor(c, backgroundArgb))
             {
@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 Color c = fourColors[color]; // set color via the four colors
                 for (int i = 0; i < runLength; i++, x++)
                 {
-                    if (x >= bmp.Width-1)
+                    if (x >= bmp.Width - 1)
                     {
                         if (y < bmp.Height && x < bmp.Width && c != fourColors[0])
                             bmp.SetPixel(x, y, c);
@@ -372,7 +372,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         break;
                     }
                     if (y < bmp.Height && c.ToArgb() != colorZeroValue)
-                       bmp.SetPixel(x, y, c);
+                        bmp.SetPixel(x, y, c);
                 }
             }
         }
@@ -444,7 +444,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             onlyHalf = true;
             return 0;
         }
-
 
         //private static int DecodeRleNonOptimized(int index, byte[] data, out int color, out int runLength, ref bool onlyHalf, out bool restOfLine)
         //{

@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //3:       00:00:09:23 00:00:16:21 06:23
         //Alustame sellest...
         //Siin kajab kuidagi harjumatult.
-        static Regex regexTimeCodes = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\:\d\d \d\d:\d\d:\d\d\:\d\d \d\d:\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\:\d\d \d\d:\d\d:\d\d\:\d\d \d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {
-                        _errorCount+=10;
+                        _errorCount += 10;
                         return;
                     }
                     while (p.Text.Contains(Environment.NewLine + " "))

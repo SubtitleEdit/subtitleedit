@@ -7,13 +7,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class QubeMasterImport : SubtitleFormat
     {
-// ToText code by Tosil Velkoff, tosil@velkoff.net
-// Based on UnknownSubtitle44
-    //SubLine1
-    //SubLine2
-    //10:01:04:12
-    //10:01:07:09
-        static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        // ToText code by Tosil Velkoff, tosil@velkoff.net
+        // Based on UnknownSubtitle44
+        //SubLine1
+        //SubLine2
+        //10:01:04:12
+        //10:01:07:09
+        private static Regex regexTimeCodes1 = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)
                     {
-                        _errorCount+=10;
+                        _errorCount += 10;
                         return;
                     }
                 }

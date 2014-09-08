@@ -8,8 +8,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle33 : SubtitleFormat
     {
 
-        static Regex regexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\s+\d+    ", RegexOptions.Compiled);
-        static Regex regexNumberAndText = new Regex(@"^\d+    [^ ]+", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d\:\d\d\:\d\d\s+\d+    ", RegexOptions.Compiled);
+        private static Regex regexNumberAndText = new Regex(@"^\d+    [^ ]+", RegexOptions.Compiled);
         public override string Extension
         {
             get { return ".txt"; }
@@ -34,11 +34,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//08:59:51  3    ON THE PANEL THIS WEEK WE HAVE EMILY LAWLER AND ZACH
-//08:59:54  4    GORCHOW, ALONG WITH RON DZWONKOWSKI.
-//          5    HERE IS THE RUNDOWN.
-//          6    A POSSIBLE REDO OF THE EM LAW IF VOTERS REJECT IT.
-//09:00:03  7    AND MIKE DUGAN AND LATER GENE CLEM IS DISCUSSING THIS
+            //08:59:51  3    ON THE PANEL THIS WEEK WE HAVE EMILY LAWLER AND ZACH
+            //08:59:54  4    GORCHOW, ALONG WITH RON DZWONKOWSKI.
+            //          5    HERE IS THE RUNDOWN.
+            //          6    A POSSIBLE REDO OF THE EM LAW IF VOTERS REJECT IT.
+            //09:00:03  7    AND MIKE DUGAN AND LATER GENE CLEM IS DISCUSSING THIS
 
             const string paragraphWriteFormat = "{0} {1}    {2}";
 
@@ -67,13 +67,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     count++;
                     if (count > 26)
-                        {
-                            sb.Append(string.Empty.PadLeft(38, ' ') + count2);
-                            sb.AppendLine();
-                            sb.AppendLine();
-                            count = 1;
-                            count2++;
-                        }
+                    {
+                        sb.Append(string.Empty.PadLeft(38, ' ') + count2);
+                        sb.AppendLine();
+                        sb.AppendLine();
+                        count = 1;
+                        count2++;
+                    }
                 }
             }
             return sb.ToString().Trim();

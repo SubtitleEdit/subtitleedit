@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Idx : SubtitleFormat
     {
         // timestamp: 00:00:01:401, filepos: 000000000
-        static Regex _regexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
+        private static Regex _regexTimeCodes = new Regex(@"^timestamp: \d+:\d+:\d+:\d+, filepos: [\dabcdefABCDEF]+$", RegexOptions.Compiled);
 
         public Hashtable NonTimeCodes = new Hashtable();
 
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int place;
                     if (subtitle.Paragraphs.Count == 0 ||
-                        !int.TryParse(subtitle.Paragraphs[subtitle.Paragraphs.Count-1].Text, out place))
+                        !int.TryParse(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].Text, out place))
                         place = -1;
 
                     if (NonTimeCodes.ContainsKey(place))
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     return new Paragraph
                                 {
-                                    StartTime = {TimeSpan = new TimeSpan(0, hours, minutes, seconds, milliseconds)},
+                                    StartTime = { TimeSpan = new TimeSpan(0, hours, minutes, seconds, milliseconds) },
                                     Text = parts[6]
                                 };
                 }

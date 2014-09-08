@@ -7,8 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle41 : SubtitleFormat
     {
 
-        static Regex regexTimeCodes1 = new Regex(@"^\d+.\d$", RegexOptions.Compiled);
-        static Regex regexTimeCodes2 = new Regex(@"^\d+.\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes1 = new Regex(@"^\d+.\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes2 = new Regex(@"^\d+.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {

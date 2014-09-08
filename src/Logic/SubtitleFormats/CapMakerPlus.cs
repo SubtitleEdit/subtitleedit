@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class CapMakerPlus : SubtitleFormat
     {
 
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Write(buffer, 0, buffer.Length);
 
             p = null;
-            for (int i=0; i<subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 p = subtitle.Paragraphs[i];
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer = Encoding.GetEncoding(1252).GetBytes(text);
                 fs.Write(buffer, 0, buffer.Length);
 
-                for (int j=0; j<74; j++)
+                for (int j = 0; j < 74; j++)
                     fs.WriteByte(0);
 
                 if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         byte[] buffer = Utilities.ReadAllBytes(fileName);
                         if (buffer[0] == 0x2b) // "+"
-                                return true;
+                            return true;
                     }
                 }
             }

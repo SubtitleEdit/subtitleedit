@@ -10,20 +10,20 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class VisualSync : Form
     {
-        List<Paragraph> _paragraphs;
-        VideoInfo _videoInfo;
-        string _subtitleFileName;
-        Subtitle _originalSubtitle;
-        double _oldFramerate;
-        bool _frameRateChanged;
-        bool _isStartSceneActive;
-        double _startGoBackPosition;
-        double _startStopPosition = -1.0;
-        double _endGoBackPosition;
-        double _endStopPosition = -1.0;
-        readonly LanguageStructure.VisualSync _language;
-        readonly LanguageStructure.General _languageGeneral;
-        Timer timerHideSyncLabel = new Timer();
+        private List<Paragraph> _paragraphs;
+        private VideoInfo _videoInfo;
+        private string _subtitleFileName;
+        private Subtitle _originalSubtitle;
+        private double _oldFramerate;
+        private bool _frameRateChanged;
+        private bool _isStartSceneActive;
+        private double _startGoBackPosition;
+        private double _startStopPosition = -1.0;
+        private double _endGoBackPosition;
+        private double _endStopPosition = -1.0;
+        private readonly LanguageStructure.VisualSync _language;
+        private readonly LanguageStructure.General _languageGeneral;
+        private Timer timerHideSyncLabel = new Timer();
 
         public string VideoFileName { get; set; }
         public int AudioTrackNumber { get; set; }
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             timerHideSyncLabel.Interval = 1000;
         }
 
-        void timerHideSyncLabel_Tick(object sender, EventArgs e)
+        private void timerHideSyncLabel_Tick(object sender, EventArgs e)
         {
             labelSyncDone.Text = string.Empty;
         }
@@ -168,12 +168,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void VideoStartEnded(object sender, EventArgs e)
+        private void VideoStartEnded(object sender, EventArgs e)
         {
             MediaPlayerStart.Pause();
         }
 
-        void VideoStartLoaded(object sender, EventArgs e)
+        private void VideoStartLoaded(object sender, EventArgs e)
         {
             MediaPlayerStart.Pause();
             GotoSubtitlePosition(MediaPlayerStart);
@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                Utilities.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, _videoInfo , MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
+                Utilities.InitializeVideoPlayerAndContainer(MediaPlayerStart.VideoPlayer.VideoFileName, _videoInfo, MediaPlayerEnd, VideoEndLoaded, VideoEndEnded);
             }
             timer1.Start();
             timerProgressBarRefresh.Start();
@@ -200,12 +200,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void VideoEndEnded(object sender, EventArgs e)
+        private void VideoEndEnded(object sender, EventArgs e)
         {
             MediaPlayerEnd.Pause();
         }
 
-        void VideoEndLoaded(object sender, EventArgs e)
+        private void VideoEndLoaded(object sender, EventArgs e)
         {
             MediaPlayerEnd.Pause();
             GotoSubtitlePosition(MediaPlayerEnd);
@@ -280,7 +280,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MediaPlayerEnd.Pause();
 
             bool change = false;
-            for (int i=0; i<_paragraphs.Count; i++)
+            for (int i = 0; i < _paragraphs.Count; i++)
             {
                 if (_paragraphs[i].ToString() != _originalSubtitle.Paragraphs[i].ToString())
                 {

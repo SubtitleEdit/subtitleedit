@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Lrc : SubtitleFormat
     {
-        static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
+        private static Regex _timeCode = new Regex(@"^\[\d+:\d\d\.\d\d\].*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int milliseconds = int.Parse(parts[2]) * 10;
                             string text = line.Remove(0, 9).Trim().TrimStart(']').Trim();
                             var start = new TimeCode(0, minutes, seconds, milliseconds);
-                            var p = new Paragraph(start, new TimeCode(0,0,0,0), text);
+                            var p = new Paragraph(start, new TimeCode(0, 0, 0, 0), text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph p = subtitle.Paragraphs[i];
                 while (_timeCode.Match(p.Text).Success)
                 {
-                    string s = p.Text.Substring(1,8);
+                    string s = p.Text.Substring(1, 8);
                     p.Text = p.Text.Remove(0, 10).Trim();
                     string[] parts = s.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     try
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         int milliseconds = int.Parse(parts[2]) * 10;
                         string text = GetTextAfterTimeCodes(p.Text);
                         var start = new TimeCode(0, minutes, seconds, milliseconds);
-                        var newParagraph = new Paragraph(start, new TimeCode(0,0,0,0), text);
+                        var newParagraph = new Paragraph(start, new TimeCode(0, 0, 0, 0), text);
                         subtitle.Paragraphs.Add(newParagraph);
                     }
                     catch

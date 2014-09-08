@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic;
 using System.Xml;
@@ -65,7 +64,6 @@ namespace Test
         //        reader.Close();
         //    }
         //}
-
 
     }
 

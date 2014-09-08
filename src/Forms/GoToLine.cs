@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Forms
     {
         private int _max;
         private int _min;
-        int _lineNumber;
+        private int _lineNumber;
 
         public GoToLine()
         {
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _min = min;
             _max = max;
-            labelGoToLine.Text = string.Format(Text +  " ({0} - {1})", min, max);
+            labelGoToLine.Text = string.Format(Text + " ({0} - {1})", min, max);
         }
 
         private void FormGoToLine_KeyDown(object sender, KeyEventArgs e)

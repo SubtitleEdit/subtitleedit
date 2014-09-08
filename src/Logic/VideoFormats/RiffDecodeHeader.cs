@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Text;
 
 /// <copyright>
@@ -37,8 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
         private int m_bitsPerSec;
         private int m_bitsPerSample;
 
-
-        #endregion
+        #endregion private members
 
         #region public members
 
@@ -185,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return String.Format("Audio rate: {0:N0} Bytes/Sec", m_bitsPerSec );
+                return String.Format("Audio rate: {0:N0} Bytes/Sec", m_bitsPerSec);
             }
         }
 
@@ -197,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        #endregion
+        #endregion public members
 
         #region Constructor
 
@@ -228,7 +226,7 @@ namespace Nikse.SubtitleEdit.Logic
             m_bitsPerSec = 0;
         }
 
-        #endregion
+        #endregion Constructor
 
         #region Default element processing
 
@@ -243,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic
             rp.SkipData(length);
         }
 
-        #endregion
+        #endregion Default element processing
 
         #region Decode AVI
 
@@ -380,7 +378,8 @@ namespace Nikse.SubtitleEdit.Logic
                         m_vidDataRate = 0.0;
                     }
                 }
-                else if (AviRiffData.streamtypeAUDIO == avi->fccType) {
+                else if (AviRiffData.streamtypeAUDIO == avi->fccType)
+                {
                     if (AviRiffData.ckidMP3 == avi->fccHandler)
                     {
                         m_audHandler = "MP3";
@@ -406,8 +405,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-
-        #endregion
+        #endregion Decode AVI
 
         #region WAVE processing
 
@@ -429,7 +427,7 @@ namespace Nikse.SubtitleEdit.Logic
             byte[] ba = new byte[length];
             rp.ReadData(ba, 0, length);
 
-            fixed(byte* bp = &ba[0])
+            fixed (byte* bp = &ba[0])
             {
                 WAVEFORMATEX* wave = (WAVEFORMATEX*)bp;
                 m_numChannels = wave->nChannels;
@@ -453,7 +451,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        #endregion
+        #endregion WAVE processing
 
     }
 }

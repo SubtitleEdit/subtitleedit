@@ -7,8 +7,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VobSubOcrSetItalicFactor : Form
     {
-        Bitmap _bmp;
-        double _factor;
+        private Bitmap _bmp;
+        private double _factor;
 
         public VobSubOcrSetItalicFactor(Bitmap bmp, double factor)
         {
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                Bitmap bmp = (Bitmap) pictureBoxSubtitleImage.Image;
+                Bitmap bmp = (Bitmap)pictureBoxSubtitleImage.Image;
                 if (bmp == null)
                 {
                     MessageBox.Show("No image!");

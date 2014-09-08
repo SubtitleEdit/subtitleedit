@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nikse.SubtitleEdit.Logic.TransportStream
+﻿namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-    class HummingDecoder
+    internal class HummingDecoder
     {
         private static byte[] _unhammingTable = new byte[256]
         {

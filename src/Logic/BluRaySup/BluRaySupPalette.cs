@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
          * @param cr 8 bit chrominance red
          * @return Integer array with red, blue, green component (in this order)
          */
-        static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
+        private static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
         {
             int[] rgb = new int[3];
             double y1, r, g, b;
@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
          * @param b 8 bit blue component
          * @return Integer array with luminance (Y), chrominance blue (Cb), chrominance red (Cr) (in this order)
          */
-        static int[] Rgb2YCbCr(int r, int g, int b, bool useBt601)
+        private static int[] Rgb2YCbCr(int r, int g, int b, bool useBt601)
         {
             int[] yCbCr = new int[3];
             double y, cb, cr;

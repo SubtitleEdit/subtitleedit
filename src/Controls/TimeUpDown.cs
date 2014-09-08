@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Controls
             HHMMSSFF
         }
 
-        const int NumericUpDownValue = 50;
+        private const int NumericUpDownValue = 50;
 
         public EventHandler TimeCodeChanged;
 
@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Controls
             maskedTextBox1.InsertKeyMode = InsertKeyMode.Overwrite;
         }
 
-        void NumericUpDownValueChanged(object sender, EventArgs e)
+        private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
             double? millisecs = GetTotalMilliseconds();
             if (millisecs.HasValue)
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Controls
             get
             {
                 if (maskedTextBox1.Text.Replace(".", string.Empty).Replace(",", string.Empty).Replace(":", string.Empty).Trim().Length == 0)
-                   return TimeCode.MaxTime;
+                    return TimeCode.MaxTime;
 
                 string startTime = maskedTextBox1.Text;
                 startTime = startTime.Replace(' ', '0');

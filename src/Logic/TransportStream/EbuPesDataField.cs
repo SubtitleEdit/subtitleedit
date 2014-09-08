@@ -1,5 +1,4 @@
-﻿
-namespace Nikse.SubtitleEdit.Logic.TransportStream
+﻿namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
 
     public class EbuPesDataFieldText

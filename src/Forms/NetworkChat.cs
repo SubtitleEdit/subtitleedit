@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class NetworkChat : Form
     {
-        Logic.Networking.NikseWebServiceSession _networkSession;
+        private Logic.Networking.NikseWebServiceSession _networkSession;
         private string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
 
         protected override bool ShowWithoutActivation

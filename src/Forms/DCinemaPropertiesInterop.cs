@@ -94,7 +94,6 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     numericUpDownZPosition.Value = 0;
 
-
             }
             FixLargeFonts();
         }

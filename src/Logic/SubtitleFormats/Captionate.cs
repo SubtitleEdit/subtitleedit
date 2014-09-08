@@ -114,7 +114,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
             }
 
-
             if (!xmlString.Contains("<captionate>") || !xmlString.Contains("</caption>"))
                 return;
 
@@ -174,5 +173,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

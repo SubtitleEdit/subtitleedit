@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
         private CheckForUpdatesHelper _updatesHelper;
         private double _seconds = 0;
         private bool _performCheckOnShown = true;
-        Main _mainForm;
+        private Main _mainForm;
 
         public CheckForUpdates(Main mainForm)
         {

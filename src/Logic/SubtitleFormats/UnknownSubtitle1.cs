@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle1 : SubtitleFormat
     {
         //0:01 – 0:11
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d – \d+:\d\d ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d\d – \d+:\d\d ", RegexOptions.Compiled);
 
         public override string Extension
         {

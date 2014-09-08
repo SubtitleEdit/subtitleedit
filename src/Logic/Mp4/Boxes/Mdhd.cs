@@ -230,7 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     case ("ine"): return "Indo-European (Other)";
                     case ("ind"): return "Indonesian";
                     case ("ina"): return "Interlingua (International Auxiliary language Association)";
-//                    case ("ine"): return "Interlingue";
+                    //                    case ("ine"): return "Interlingue";
                     case ("iku"): return "Inuktitut";
                     case ("ipk"): return "Inupiak";
                     case ("ira"): return "Iranian (Other)";

@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class SplitLongLines : Form
     {
 
-        Subtitle _subtitle;
+        private Subtitle _subtitle;
         private Subtitle _splittedSubtitle;
 
         public int NumberOfSplits { get; private set; }
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int index = listViewFixes.SelectedIndices[0];
                 ListViewItem item = listViewFixes.Items[index];
-                index = int.Parse(item.SubItems[1].Text) -1;
+                index = int.Parse(item.SubItems[1].Text) - 1;
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
             }
         }

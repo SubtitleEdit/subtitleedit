@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle32 : SubtitleFormat
     {
         //1:  02:25:07.24  02:25:10.19
-        static readonly Regex RegexTimeCode = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d  \d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\d+:\s+\d\d:\d\d:\d\d\.\d\d  \d\d:\d\d:\d\d\.\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -73,7 +73,7 @@ Sony,Sony DVD/UMD,1:85,16x9
                 text = text.Replace(Environment.NewLine, Environment.NewLine.PadRight(Environment.NewLine.Length + 8, ' '));
                 text = text.PadLeft(text.Length + 8, ' ');
 
-                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text , Environment.NewLine, count));
+                sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine, count));
             }
             return sb.ToString().Trim();
         }
@@ -134,8 +134,8 @@ Sony,Sony DVD/UMD,1:85,16x9
 
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-//@+: reposition top
-//@|: reposition middle
+                //@+: reposition top
+                //@|: reposition middle
                 if (p.Text.Contains("@+"))
                     p.Text = "{\\an8}" + p.Text.Replace("@+", string.Empty).Replace("@|", string.Empty);
                 else if (p.Text.Contains("@|"))

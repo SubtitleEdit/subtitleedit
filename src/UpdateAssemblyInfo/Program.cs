@@ -3,7 +3,7 @@ using System.IO;
 
 namespace UpdateAssemblyInfo
 {
-    class Program
+    internal class Program
     {
 
         private static string GetGitPath()
@@ -39,7 +39,7 @@ namespace UpdateAssemblyInfo
             File.WriteAllText(target, fixedData);
         }
 
-        static int Main(string[] args)
+        private static int Main(string[] args)
         {
             if (args.Length != 2)
             {
@@ -64,7 +64,7 @@ namespace UpdateAssemblyInfo
                     DoUpdateAssembly("[GITHASH]", clrHash.Result, template, target);
                     if (!clrTags.Result.Contains("-"))
                         clrTags.Result += "-0";
-                    DoUpdateAssembly("[REVNO]", clrTags.Result.Split('-')[1] , target, target);
+                    DoUpdateAssembly("[REVNO]", clrTags.Result.Split('-')[1], target, target);
                     return 0;
                 }
                 catch (Exception e)

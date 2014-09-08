@@ -11,11 +11,11 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class VobSubEditCharacters : Form
     {
-        XmlDocument _compareDoc = new XmlDocument();
-        string _directoryPath;
-        List<bool> _italics = new List<bool>();
+        private XmlDocument _compareDoc = new XmlDocument();
+        private string _directoryPath;
+        private List<bool> _italics = new List<bool>();
         internal List<VobSubOcr.ImageCompareAddition> Additions { get; private set; }
-        BinaryOcrDb _binOcrDb = null;
+        private BinaryOcrDb _binOcrDb = null;
 
         public XmlDocument ImageCompareDocument
         {
@@ -293,7 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            else  if (File.Exists(databaseName))
+            else if (File.Exists(databaseName))
             {
                 using (var f = new FileStream(databaseName, FileMode.Open))
                 {
@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (bmp == null)
             {
-                bmp = new Bitmap(1,1);
+                bmp = new Bitmap(1, 1);
                 labelImageInfo.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageFileNotFound;
             }
             pictureBox1.Image = bmp;
@@ -594,7 +594,6 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.OK;
             }
         }
-
 
         public bool ChangesMade { get; set; }
 

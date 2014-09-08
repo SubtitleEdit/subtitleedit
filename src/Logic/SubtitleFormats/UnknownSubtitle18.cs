@@ -7,19 +7,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle18 : SubtitleFormat
     {
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeCodes,
             BlankBeforeText,
             Text
         }
 
-        Paragraph _paragraph;
-        StringBuilder _text = new StringBuilder();
-        ExpectingLine _expecting = ExpectingLine.TimeCodes;
+        private Paragraph _paragraph;
+        private StringBuilder _text = new StringBuilder();
+        private ExpectingLine _expecting = ExpectingLine.TimeCodes;
 
         // 0001 01:00:15:08 01:00:18:05
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d \d\d:\d\d:\d\d:\d\d \d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
 
         public override string Extension
         {

@@ -13,13 +13,13 @@
 // projects, without the express and written consent of
 // the Author.
 
-#endregion
+#endregion #Disclaimer
 
 #region Using directives
 
 using System;
 
-#endregion
+#endregion Using directives
 
 namespace Nikse.SubtitleEdit.Logic.ColorChooser
 {

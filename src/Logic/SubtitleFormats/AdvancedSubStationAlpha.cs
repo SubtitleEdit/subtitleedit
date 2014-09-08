@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return "Style: Default," + Configuration.Settings.SubtitleSettings.SsaFontName + "," +
                     ((int)Configuration.Settings.SubtitleSettings.SsaFontSize) + "," +
                     GetSsaColorString(Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb)) + "," +
-                    "&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0," +  borderStyle + "," + Configuration.Settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
+                    "&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0," + borderStyle + "," + Configuration.Settings.SubtitleSettings.SsaOutline.ToString(CultureInfo.InvariantCulture) + "," +
                     Configuration.Settings.SubtitleSettings.SsaShadow.ToString(CultureInfo.InvariantCulture) + ",2,10,10,10,1";
             }
         }
@@ -126,7 +126,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             var sb = new StringBuilder();
             System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
-            bool isValidAssHeader =!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
+            bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
             List<string> styles = new List<string>();
             if (isValidAssHeader)
             {
@@ -271,7 +271,6 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 var tt = new TimedText10();
                 var sub = new Subtitle();
                 tt.LoadSubtitle(sub, lines, string.Empty);
-
 
                 var xml = new XmlDocument();
                 xml.LoadXml(subtitle.Header);

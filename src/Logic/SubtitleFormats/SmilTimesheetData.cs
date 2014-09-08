@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 int syncEndPos = allInputLower.IndexOf("</p>", index);
                 if (syncEndPos > 0)
                 {
-                    string s = allInput.Substring(syncStartPos+2, syncEndPos - syncStartPos -2);
+                    string s = allInput.Substring(syncStartPos + 2, syncEndPos - syncStartPos - 2);
                     int indexOfBegin = s.IndexOf(" data-begin=", StringComparison.Ordinal);
                     int indexOfAttributesEnd = s.IndexOf('>');
                     if (indexOfBegin >= 0 && indexOfAttributesEnd > indexOfBegin)
@@ -202,7 +202,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 index++;
             }
-
 
             foreach (Paragraph p2 in subtitle.Paragraphs)
                 p2.Text = Utilities.HtmlDecode(p2.Text);

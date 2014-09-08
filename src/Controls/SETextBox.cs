@@ -10,24 +10,24 @@ namespace Nikse.SubtitleEdit.Controls
     public class SETextBox : TextBox
     {
         private string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
-        string _dragText = string.Empty;
-        int _dragStartFrom = 0;
-        long _dragStartTicks = 0;
-        bool _dragRemoveOld = false;
-        bool _dragFromThis = false;
+        private string _dragText = string.Empty;
+        private int _dragStartFrom = 0;
+        private long _dragStartTicks = 0;
+        private bool _dragRemoveOld = false;
+        private bool _dragFromThis = false;
 
         public SETextBox()
         {
             AllowDrop = true;
             DragEnter += new DragEventHandler(SETextBox_DragEnter);
-         //   DragOver += new DragEventHandler(SETextBox_DragOver); could draw some gfx where drop position is...
+            //   DragOver += new DragEventHandler(SETextBox_DragOver); could draw some gfx where drop position is...
             DragDrop += new DragEventHandler(SETextBox_DragDrop);
             MouseDown += new MouseEventHandler(SETextBox_MouseDown);
             MouseUp += new MouseEventHandler(SETextBox_MouseUp);
             KeyDown += SETextBox_KeyDown;
         }
 
-        void SETextBox_KeyDown(object sender, KeyEventArgs e)
+        private void SETextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.Control && e.KeyCode == Keys.Back)
             {
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (SelectionLength == 0)
                 {
                     string s = Text;
-                    int deleteFrom = index-1;
+                    int deleteFrom = index - 1;
 
                     if (deleteFrom > 0 && deleteFrom < s.Length)
                     {
@@ -62,13 +62,13 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        void SETextBox_MouseUp(object sender, MouseEventArgs e)
+        private void SETextBox_MouseUp(object sender, MouseEventArgs e)
         {
             _dragRemoveOld = false;
             _dragFromThis = false;
         }
 
-        void SETextBox_MouseDown(object sender, MouseEventArgs e)
+        private void SETextBox_MouseDown(object sender, MouseEventArgs e)
         {
             if (MouseButtons == System.Windows.Forms.MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
             {
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        void SETextBox_DragDrop(object sender, DragEventArgs e)
+        private void SETextBox_DragDrop(object sender, DragEventArgs e)
         {
             Point pt = new Point(e.X, e.Y);
             pt = PointToClient(pt);
@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Controls
                     Text = Text.Remove(endIndex, 1);
                 }
 
-                SelectionStart = index+1;
+                SelectionStart = index + 1;
                 SelectCurrentWord(this);
             }
 
@@ -208,7 +208,7 @@ namespace Nikse.SubtitleEdit.Controls
             _dragFromThis = false;
         }
 
-        void SETextBox_DragEnter(object sender, DragEventArgs e)
+        private void SETextBox_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.Text) || e.Data.GetDataPresent(DataFormats.UnicodeText))
             {

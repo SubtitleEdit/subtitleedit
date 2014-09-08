@@ -38,7 +38,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         byte[] buffer = Utilities.ReadAllBytes(fileName);
 
-
                         return ((buffer[0] == 0x43 &&  // CAPT.2.0
                                 buffer[1] == 0x41 &&
                                 buffer[2] == 0x50 &&
@@ -69,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(byte[] buffer, int index)
         {
             int hour = buffer[index];
-            int minutes = buffer[index+1];
+            int minutes = buffer[index + 1];
             int seconds = buffer[index + 2];
             int frames = buffer[index + 3];
 
@@ -132,7 +131,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             subtitle.Renumber(1);
 
-
             if (buffer[0] == 0x43 && // CAPT.1.2
                                 buffer[1] == 0x41 &&
                                 buffer[2] == 0x50 &&
@@ -149,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (buffer[i] == 0xff && buffer[i + 1] == 0xff && buffer[i + 2] != 0xff && buffer[i + 28] == 0xff && buffer[i + 29] == 0xff && buffer[i + 30] != 0xff)
                     {
-                        if (buffer[i+14] == number+1)
+                        if (buffer[i + 14] == number + 1)
                         {
                             Paragraph p = subtitle.GetParagraphOrDefault(number);
                             if (p != null)

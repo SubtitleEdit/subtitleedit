@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public Moov(FileStream fs, ulong maximumLength)
         {
             Tracks = new List<Trak>();
-            Position = (ulong) fs.Position;
+            Position = (ulong)fs.Position;
             while (fs.Position < (long)maximumLength)
             {
                 if (!InitializeSizeAndName(fs))

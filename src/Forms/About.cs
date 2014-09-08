@@ -50,8 +50,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             richTextBoxAbout1.Text = aboutText;
 
-            double height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false)*1.4 + 80;
-            richTextBoxAbout1.Height = (int) height;
+            double height = TextDraw.MeasureTextHeight(richTextBoxAbout1.Font, richTextBoxAbout1.Text, false) * 1.4 + 80;
+            richTextBoxAbout1.Height = (int)height;
             Height = richTextBoxAbout1.Top + richTextBoxAbout1.Height + 90;
         }
 

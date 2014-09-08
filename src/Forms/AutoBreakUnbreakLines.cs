@@ -9,9 +9,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AutoBreakUnbreakLines : Form
     {
-        List<Paragraph> _paragraphs;
-        int _changes;
-        bool _modeAutoBalance;
+        private List<Paragraph> _paragraphs;
+        private int _changes;
+        private bool _modeAutoBalance;
 
         public int Changes
         {
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = start; i <= max; i++)
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
 
-                int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start +1);
+                int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start + 1);
                 if (index > 0 && index < max)
                     comboBoxConditions.SelectedIndex = index;
                 else
@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem(string.Empty) {Tag = p, Checked = true};
+            var item = new ListViewItem(string.Empty) { Tag = p, Checked = true };
 
             var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);

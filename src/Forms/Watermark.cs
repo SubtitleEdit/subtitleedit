@@ -9,10 +9,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Watermark : Form
     {
-        const string zeroWhiteSpace = "\u200B";
-        const string zeroWidthNoBreakSpace = "\uFEFF";
+        private const string zeroWhiteSpace = "\u200B";
+        private const string zeroWidthNoBreakSpace = "\uFEFF";
 
-        int _firstSelectedIndex;
+        private int _firstSelectedIndex;
 
         public Watermark()
         {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -37,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-//                "<!DOCTYPE Trans SYSTEM \"trans-14.dtd\">" + Environment.NewLine +
+                //                "<!DOCTYPE Trans SYSTEM \"trans-14.dtd\">" + Environment.NewLine +
                 "<Trans version=\"1\" version_date=\"981211\">" + Environment.NewLine +
                 "   <Episode/>" + Environment.NewLine +
                 "</Trans>";
@@ -103,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (startDocType > 0)
                 {
                     int endDocType = xmlText.IndexOf(">", startDocType);
-                    xmlText = xmlText.Remove(startDocType, endDocType - startDocType +1);
+                    xmlText = xmlText.Remove(startDocType, endDocType - startDocType + 1);
                 }
                 xml.LoadXml(xmlText);
 
@@ -139,5 +138,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

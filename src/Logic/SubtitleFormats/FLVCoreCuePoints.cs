@@ -88,7 +88,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 xml.DocumentElement.AppendChild(paragraph);
             }
 
-
             return ToUtf8XmlString(xml);
         }
 
@@ -155,5 +154,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

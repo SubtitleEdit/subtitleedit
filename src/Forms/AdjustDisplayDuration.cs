@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxPercent.SelectedIndex = 0;
             comboBoxSeconds.SelectedIndex = 0;
 
-            for (int i=0; i<comboBoxSeconds.Items.Count; i++)
+            for (int i = 0; i < comboBoxSeconds.Items.Count; i++)
             {
                 string s = comboBoxSeconds.Items[i].ToString();
                 s = s.Replace(".", CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator);

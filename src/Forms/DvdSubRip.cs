@@ -11,15 +11,15 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class DvdSubRip : Form
     {
-        volatile bool _abort;
+        private volatile bool _abort;
         public List<VobSubMergedPack> MergedVobSubPacks;
         public List<Color> Palette;
         public List<string> Languages;
-        LanguageStructure.DvdSubRip _language;
-        long _lastPresentationTimeStamp = 0;
-        long _lastVobPresentationTimeStamp = 0;
-        long _lastNavEndPts = 0;
-        long _accumulatedPresentationTimeStamp;
+        private LanguageStructure.DvdSubRip _language;
+        private long _lastPresentationTimeStamp = 0;
+        private long _lastVobPresentationTimeStamp = 0;
+        private long _lastNavEndPts = 0;
+        private long _accumulatedPresentationTimeStamp;
 
         public string SelectedLanguage
         {
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK && File.Exists(openFileDialog1.FileName))
             {
-               OpenIfoFile(openFileDialog1.FileName);
+                OpenIfoFile(openFileDialog1.FileName);
             }
         }
 
@@ -110,7 +110,6 @@ namespace Nikse.SubtitleEdit.Forms
                         listBoxVobFiles.Items.Add(Path.Combine(path, vobFileName));
                 }
             }
-
 
             var ifoParser = new IfoParser(fileName);
             if (!string.IsNullOrEmpty(ifoParser.ErrorMessage))
@@ -168,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Application.DoEvents();
 
                 if (!_abort)
-                    RipSubtitles(vobFileName, ms, i-1); // Rip/demux subtitle vob packs
+                    RipSubtitles(vobFileName, ms, i - 1); // Rip/demux subtitle vob packs
             }
             progressBarRip.Visible = false;
             buttonStartRipping.Enabled = false;
@@ -310,7 +309,7 @@ namespace Nikse.SubtitleEdit.Forms
                 lba++;
             }
             fs.Close();
-            _lastVobPresentationTimeStamp =  _lastPresentationTimeStamp;
+            _lastVobPresentationTimeStamp = _lastPresentationTimeStamp;
         }
 
         /// <summary>
@@ -404,7 +403,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonMoveVobDown_Click(object sender, EventArgs e)
         {
-            if (listBoxVobFiles.SelectedIndex > -1 && listBoxVobFiles.SelectedIndex < listBoxVobFiles.Items.Count -1)
+            if (listBoxVobFiles.SelectedIndex > -1 && listBoxVobFiles.SelectedIndex < listBoxVobFiles.Items.Count - 1)
             {
                 int index = listBoxVobFiles.SelectedIndex;
                 string old = listBoxVobFiles.Items[index].ToString();
@@ -423,7 +422,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < listBoxVobFiles.Items.Count)
                     listBoxVobFiles.SelectedIndex = index;
                 else if (index > 0)
-                    listBoxVobFiles.SelectedIndex = index-1;
+                    listBoxVobFiles.SelectedIndex = index - 1;
 
                 buttonStartRipping.Enabled = listBoxVobFiles.Items.Count > 0;
 

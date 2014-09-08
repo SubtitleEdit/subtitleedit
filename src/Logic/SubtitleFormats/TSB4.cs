@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -74,11 +73,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         end += array[i + 22] * 256 * 256;
 
                     int textStart = i;
-                    while (textStart < i + endOfText && !(array[textStart] == 0x4C && array[textStart+1] == 0x49 && array[textStart+2] == 0x4E && array[textStart+3] == 0x45)) // LINE
+                    while (textStart < i + endOfText && !(array[textStart] == 0x4C && array[textStart + 1] == 0x49 && array[textStart + 2] == 0x4E && array[textStart + 3] == 0x45)) // LINE
                     {
                         textStart++;
                     }
-                    int length = i + endOfText - textStart -2;
+                    int length = i + endOfText - textStart - 2;
                     textStart += 8;
 
                     string text = Encoding.Default.GetString(array, textStart, length);

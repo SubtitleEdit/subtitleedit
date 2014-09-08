@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             var text = new StringBuilder();
-            for (int i=0; i<lines.Count; i++)
+            for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
 

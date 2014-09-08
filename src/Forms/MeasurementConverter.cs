@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class MeasurementConverter : Form
     {
-        Color _defaultBackColor = Color.White;
+        private Color _defaultBackColor = Color.White;
         public MeasurementConverter()
         {
             InitializeComponent();
@@ -63,7 +63,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 comboBoxTo.Items.Add(l.Fahrenheit);
             }
-
             else if (text == l.Miles)
             {
                 comboBoxTo.Items.Add(l.Kilometers);
@@ -112,7 +111,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTo.Items.Add(l.Yards);
                 comboBoxTo.Items.Add(l.Feet);
             }
-
             else if (text == l.Pounds)
             {
                 comboBoxTo.Items.Add(l.Kilos);
@@ -171,7 +169,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowResult(Convert.ToDouble(d) * 1.80 + 32);
             }
-
             else if (text == l.Miles)
             {
                 if (textTo == l.Kilometers)
@@ -310,7 +307,6 @@ namespace Nikse.SubtitleEdit.Forms
                     ShowResult(Convert.ToDouble(d) * 0.0833333333);
                 }
             }
-
             else if (text == l.Pounds)
             {
                 ShowResult(Convert.ToDouble(d) * 0.45359237);

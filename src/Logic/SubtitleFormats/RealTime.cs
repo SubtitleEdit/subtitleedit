@@ -81,14 +81,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string begin = line.Substring(indexOfBegin + 7, 11);
                         string end = line.Substring(indexOfEnd + 5, 11);
 
-                            string[] startParts = begin.Split(":.\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                            string[] endParts = end.Split(":.\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                            if (startParts.Length == 4 && endParts.Length == 4)
-                            {
-                                string text = line.Substring(line.LastIndexOf("/>", StringComparison.Ordinal) + 2);
-                                p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
-                                subtitle.Paragraphs.Add(p);
-                            }
+                        string[] startParts = begin.Split(":.\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(":.\"".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        if (startParts.Length == 4 && endParts.Length == 4)
+                        {
+                            string text = line.Substring(line.LastIndexOf("/>", StringComparison.Ordinal) + 2);
+                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                            subtitle.Paragraphs.Add(p);
+                        }
                     }
                 }
                 catch

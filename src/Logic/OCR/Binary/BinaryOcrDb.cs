@@ -119,9 +119,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
                 else
                 {
                     bool allAlike = true;
-                    for (int i=0; i < bob.ExpandCount-1; i++)
+                    for (int i = 0; i < bob.ExpandCount - 1; i++)
                     {
-                        if (bob.ExpandedList[i].Hash !=  CompareImagesExpanded[index].ExpandedList[i].Hash)
+                        if (bob.ExpandedList[i].Hash != CompareImagesExpanded[index].ExpandedList[i].Hash)
                             allAlike = false;
                     }
                     if (!allAlike)
@@ -140,7 +140,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr.Binary
             }
             return index;
         }
-
 
     }
 }

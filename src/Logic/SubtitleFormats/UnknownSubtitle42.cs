@@ -9,8 +9,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         //SUB[0 I 01:00:09:10>01:00:12:10]
         //SUB[0 N 01:00:09:10>01:00:12:10]
-        static Regex regexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
-        static Regex regexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
+        private static Regex regexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
+        private static Regex regexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
 
         public override string Extension
         {

@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class AQTitle : SubtitleFormat
     {
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             TimeStart,
             Text,
@@ -38,16 +38,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//-->> 072058
-//<i>Meine Mutter und meine Schwester,
+            //-->> 072058
+            //<i>Meine Mutter und meine Schwester,
 
-//-->> 072169
+            //-->> 072169
 
+            //-->> 072172
+            //<i>die in Zürich lebt, und ich,
 
-//-->> 072172
-//<i>die in Zürich lebt, und ich,
-
-//-->> 072247
+            //-->> 072247
             const string paragraphWriteFormat = "-->> {0}{3}{2}{3}-->> {1}{3}{3}";
 
             StringBuilder sb = new StringBuilder();

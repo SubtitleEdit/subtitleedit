@@ -48,7 +48,6 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         /// </summary>
         public bool TransportPriority { get; set; }
 
-
         /// <summary>
         /// Program Identifier
         /// </summary>
@@ -132,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
                 if (PacketId == ProgramAssociationTablePacketId) // PAT = Program Association Table: lists all programs available in the transport stream.
                 {
-                    ProgramAssociationTable = new ProgramAssociationTable(packetBuffer, payloadStart+1); // TODO: what index?
+                    ProgramAssociationTable = new ProgramAssociationTable(packetBuffer, payloadStart + 1); // TODO: what index?
                 }
 
                 // Save payload

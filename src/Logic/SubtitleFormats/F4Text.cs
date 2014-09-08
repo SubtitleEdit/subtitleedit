@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class F4Text : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d-\d$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -44,8 +44,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             double lastEndTimeMilliseconds = -1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-               // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
-                    sb.Append(string.Format("{0}{1}", Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
+                // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
+                sb.Append(string.Format("{0}{1}", Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
                 //else
                 //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
                 lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;

@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
             // Finnish is uses Voikko (not available via hunspell)
             if (dictionary.ToLower().EndsWith("fi_fi"))
-                 return new VoikkoSpellCheck(Configuration.BaseDirectory, Configuration.DictionariesFolder);
+                return new VoikkoSpellCheck(Configuration.BaseDirectory, Configuration.DictionariesFolder);
 
             return new WindowsHunspell(dictionary + ".aff", dictionary + ".dic");
         }

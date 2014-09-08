@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 bool allStartWithNumber = true;
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    if (p.Text.Length > 1  && !Utilities.IsInteger(p.Text.Substring(0, 2)))
+                    if (p.Text.Length > 1 && !Utilities.IsInteger(p.Text.Substring(0, 2)))
                     {
                         allStartWithNumber = false;
                         break;
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         { // 0:02:36:You've returned to the village|after 2 years, Shekhar.
-          // 00:00:50:America has made my fortune.
+            // 00:00:50:America has made my fortune.
             var regex = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
             _errorCount = 0;
             foreach (string line in lines)
@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                Paragraph next = subtitle.GetParagraphOrDefault(index+1);
+                Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
                 if (next != null && next.StartTime.TotalMilliseconds <= p.EndTime.TotalMilliseconds)
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
 

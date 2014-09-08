@@ -49,7 +49,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return "0x" + s;
         }
 
-
         /// <summary>
         /// Convert an integer to a string with leading zeroes
         /// </summary>

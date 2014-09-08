@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append(Convert.ToChar(0x2E).ToString());
                 }
                 int y = 0x74 - (numberOfNewLines * 0x20);
-                for (int j=0; j<text.Length; j++)
+                for (int j = 0; j < text.Length; j++)
                 {
                     if (text.Substring(j).StartsWith(Environment.NewLine))
                     {
@@ -82,7 +82,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         //center
                         sb.Append(Convert.ToChar(0x17).ToString());
                         sb.Append(Convert.ToChar(0x21).ToString());
-
 
                         if (italic)
                         {
@@ -224,11 +223,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (i < buffer.Length - 25)
             {
                 var p = new Paragraph();
-                int length = buffer[i+1];
+                int length = buffer[i + 1];
 
                 p.StartTime = DecodeTimeStamp(buffer, i + 3);
                 if (last != null && last.EndTime.TotalMilliseconds == 0)
-                    last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds-1;
+                    last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
 
                 if (length > 22)
                 {
@@ -246,7 +245,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (b < 0x1F)
                         {
-                            byte b2 = buffer[k+1];
+                            byte b2 = buffer[k + 1];
                             skipCount = 1;
                             if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine) && !sb.ToString().EndsWith(">"))
                             {
@@ -272,7 +271,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 sb.Append("<i>");
                                 italics = true;
                             }
-
 
                             //foreach (char ch in code)
                             //    codeBytes.Insert(0, ch);
@@ -455,7 +453,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             subtitle.Renumber(1);
         }
-
 
         public override List<string> AlternateExtensions
         {

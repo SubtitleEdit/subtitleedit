@@ -8,9 +8,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Footage : SubtitleFormat
     {
 
-        static readonly Regex RegexTimeCode = new Regex(@"^\s*\d+,\d\d$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode = new Regex(@"^\s*\d+,\d\d$", RegexOptions.Compiled);
 
-        enum ExpectingLine
+        private enum ExpectingLine
         {
             Number,
             TimeStart,
@@ -42,18 +42,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-//1.
-//   66,13
-//   70,00
-//#Tā nu es sapazinos
-//#И так я познакомился
+            //1.
+            //   66,13
+            //   70,00
+            //#Tā nu es sapazinos
+            //#И так я познакомился
 
-//2.
-//   71,14
-//   78,10
-//#ar dakteri Henriju Gūsu.
-//#с доктором Генри Гусом.
-
+            //2.
+            //   71,14
+            //   78,10
+            //#ar dakteri Henriju Gūsu.
+            //#с доктором Генри Гусом.
 
             const string paragraphWriteFormat = "{4}.{3}{0}{3}{1}{3}{2}{3}";
             var sb = new StringBuilder();

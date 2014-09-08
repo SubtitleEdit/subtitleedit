@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Titra : SubtitleFormat
     {
         //* 1 : 01:01:31:19 01:01:33:04 22c
-        static Regex regexTimeCodes = new Regex(@"^\* \d+ :\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d+c", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\* \d+ :\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d+c", RegexOptions.Compiled);
         private int _maxMsDiv10 = 0;
 
         public override string Extension
@@ -51,10 +51,8 @@ Langue VO :  Français
 Langue VST : Espagnol
 Bobine :     e01
 
-
 BEWARE : No more than 40 characters ON A LINE
 ATTENTION : Pas plus de 40 caractères PAR LIGNE
-
 
 ");
             int index = 0;

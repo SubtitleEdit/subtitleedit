@@ -53,7 +53,6 @@ namespace Nikse.SubtitleEdit.Forms
             public int ShadowAlpha { get; set; }
             public int LineHeight { get; set; }
 
-
             public MakeBitmapParameter()
             {
                 BackgroundColor = Color.Transparent;
@@ -72,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _exportType = "BDNXML";
         private string _fileName;
         private VobSubOcr _vobSubOcr;
-        System.Windows.Forms.Timer previewTimer = new System.Windows.Forms.Timer();
+        private System.Windows.Forms.Timer previewTimer = new System.Windows.Forms.Timer();
 
         private const string BoxMultiLine = "BoxMultiLine";
         private const string BoxSingleLine = "BoxSingleLine";
@@ -87,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
             previewTimer.Interval = 100;
         }
 
-        void previewTimer_Tick(object sender, EventArgs e)
+        private void previewTimer_Tick(object sender, EventArgs e)
         {
             previewTimer.Stop();
             GeneratePreview();
@@ -113,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var fr = FrameRate;
             var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));
-            int frames =SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
+            int frames = SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
         }
 
@@ -232,8 +231,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var brSub = new Logic.BluRaySup.BluRaySupPicture
                                 {
-                                    StartTime = (long) parameter.P.StartTime.TotalMilliseconds,
-                                    EndTime = (long) parameter.P.EndTime.TotalMilliseconds,
+                                    StartTime = (long)parameter.P.StartTime.TotalMilliseconds,
+                                    EndTime = (long)parameter.P.EndTime.TotalMilliseconds,
                                     Width = parameter.ScreenWidth,
                                     Height = parameter.ScreenHeight
                                 };
@@ -241,7 +240,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth,int screenHeight)
+        private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
         {
             var parameter = new MakeBitmapParameter
                                 {
@@ -260,7 +259,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     VideoResolution = comboBoxResolution.Text,
                                     Bitmap = null,
                                     FramesPerSeconds = FrameRate,
-                                    BottomMargin =  comboBoxBottomMargin.SelectedIndex,
+                                    BottomMargin = comboBoxBottomMargin.SelectedIndex,
                                     Saved = false,
                                     Alignment = ContentAlignment.BottomCenter,
                                     Type3D = comboBox3D.SelectedIndex,
@@ -275,7 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (index < _subtitle.Paragraphs.Count)
             {
                 parameter.P = _subtitle.Paragraphs[index];
-                parameter.Alignment = GetAlignmentFromParagraph(parameter.P,_format, _subtitle);
+                parameter.Alignment = GetAlignmentFromParagraph(parameter.P, _format, _subtitle);
 
                 if (_format.HasStyleSupport && !string.IsNullOrEmpty(parameter.P.Extra))
                 {
@@ -412,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
                     vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
-                progressBar1.Maximum = _subtitle.Paragraphs.Count-1;
+                progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
                 progressBar1.Visible = true;
 
                 int border = comboBoxBottomMargin.SelectedIndex;
@@ -584,9 +583,9 @@ namespace Nikse.SubtitleEdit.Forms
                     string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
 "<!DOCTYPE xmeml[]>" + Environment.NewLine +
 "<xmeml version=\"4\">" + Environment.NewLine +
-"  <sequence id=\"" + fileNameNoExt  + "\">" + Environment.NewLine +
+"  <sequence id=\"" + fileNameNoExt + "\">" + Environment.NewLine +
 "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
-"    <name>" + fileNameNoExt  + @"</name>
+"    <name>" + fileNameNoExt + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -751,7 +750,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             string[] parts = xAndY.Split('x');
             if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
             {
-                for (int i = 0; i < comboBoxResolution.Items.Count;i++)
+                for (int i = 0; i < comboBoxResolution.Items.Count; i++)
                 {
                     if (comboBoxResolution.Items[i].ToString().Contains(xAndY))
                     {
@@ -759,7 +758,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         return;
                     }
                 }
-                comboBoxResolution.Items[comboBoxResolution.Items.Count-1] = xAndY;
+                comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = xAndY;
                 comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
             }
         }
@@ -838,7 +837,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             height = int.Parse(arr[1]);
         }
 
-
         private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
                                    VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param, int i)
         {
@@ -909,7 +907,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-
 
                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {
@@ -1044,7 +1041,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string numberString = string.Format("{0:0000}", i);
                         string fileName = Path.Combine(Path.GetDirectoryName(saveFileDialog1.FileName), Path.GetFileNameWithoutExtension(saveFileDialog1.FileName).Replace(" ", "_")) + "_" + numberString + ".png";
 
-                         foreach (var encoder in ImageCodecInfo.GetImageEncoders())
+                        foreach (var encoder in ImageCodecInfo.GetImageEncoders())
                         {
                             if (encoder.FormatID == ImageFormat.Png.Guid)
                             {
@@ -1375,7 +1372,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.SubtitleColor = _subtitleColor;
             mbp.SubtitleFontSize = _subtitleFontSize;
             mbp.SubtitleFontBold = _subtitleFontBold;
-            mbp.LineHeight = (int) numericUpDownLineSpacing.Value;
+            mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
 
             if (_format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
             {
@@ -1798,13 +1795,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             text = text.Replace("<U>", string.Empty);
             text = text.Replace("</U>", string.Empty);
 
-
             var bmp = new Bitmap(1, 1);
             var g = Graphics.FromImage(bmp);
             var fontSize = g.DpiY * parameter.SubtitleFontSize / 72;
             Font font = SetFont(parameter, parameter.SubtitleFontSize);
             var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
-
 
             var textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
             g.Dispose();
@@ -1823,7 +1818,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var temp = nbmpTemp.GetBitmap();
                 bmp.Dispose();
                 bmp = temp;
-//                g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
+                //                g.FillRectangle(new SolidBrush(parameter.BackgroundColor), 0, 0, bmp.Width, bmp.Height);
 
             }
 
@@ -1891,7 +1886,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-
 
             if (parameter.SimpleRendering)
             {
@@ -2107,7 +2101,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 oldPathPointIndex = 0;
                             if (sb.Length > 0)
                             {
-                                if (lastText.Length > 0  && left > 2)
+                                if (lastText.Length > 0 && left > 2)
                                     left -= 1.5f;
 
                                 lastText.Append(sb);
@@ -2617,7 +2611,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             panelShadowColor.BackColor = Configuration.Settings.Tools.ExportShadowColor;
 
-            for (int i=0; i<1000; i++)
+            for (int i = 0; i < 1000; i++)
                 comboBoxBottomMargin.Items.Add(i);
             if (Configuration.Settings.Tools.ExportBottomMargin >= 0 && Configuration.Settings.Tools.ExportBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBottomMargin;
@@ -2727,7 +2721,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 index = 4;
             }
 
-            for (int i=0; i<16; i++)
+            for (int i = 0; i < 16; i++)
             {
                 comboBoxBorderWidth.Items.Add(string.Format(text, i));
             }

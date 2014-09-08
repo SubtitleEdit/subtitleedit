@@ -6,10 +6,10 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class VideoPlayerUnDocked : Form
     {
-        Main _mainForm = null;
-        PositionsAndSizes _positionsAndSizes = null;
-        Controls.VideoPlayerContainer _videoPlayerContainer;
-        Keys _redockKeys;
+        private Main _mainForm = null;
+        private PositionsAndSizes _positionsAndSizes = null;
+        private Controls.VideoPlayerContainer _videoPlayerContainer;
+        private Keys _redockKeys;
 
         public bool RedockOnFullscreenEnd { get; set; }
 
@@ -94,7 +94,6 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
-
             else if (e.KeyCode == Keys.Up && e.Modifiers == Keys.Alt && WindowState == FormWindowState.Maximized)
             {
                 _mainForm.GotoPrevSubPosFromvideoPos();

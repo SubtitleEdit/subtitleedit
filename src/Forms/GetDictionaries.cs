@@ -12,9 +12,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class GetDictionaries : Form
     {
-        List<string> _dictionaryDownloadLinks = new List<string>();
-        List<string> _descriptions = new List<string>();
-        string _xmlName = null;
+        private List<string> _dictionaryDownloadLinks = new List<string>();
+        private List<string> _descriptions = new List<string>();
+        private string _xmlName = null;
 
         public GetDictionaries()
         {
@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
+        private void wc_DownloadDataCompleted(object sender, DownloadDataCompletedEventArgs e)
         {
             if (e.Error != null && _xmlName == "Nikse.SubtitleEdit.Resources.OpenOfficeDictionaries.xml.zip")
             {

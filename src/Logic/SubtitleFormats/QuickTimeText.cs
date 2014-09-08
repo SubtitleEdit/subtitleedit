@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class QuickTimeText : SubtitleFormat
     {
-        static Regex regexTimeCodes = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\]", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\[\d\d:\d\d:\d\d.\d\d\]", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -54,7 +54,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //[00:00:26.26]
                 //tout le temps,
                 //[00:00:35.08]
-
                 sb.AppendLine(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime) + Environment.NewLine, Utilities.RemoveHtmlTags(p.Text) + Environment.NewLine, EncodeTimeCode(p.EndTime) + Environment.NewLine));
                 index++;
             }
@@ -138,7 +137,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string[] parts)
         {
             //[00:00:07.12]
-
             string hour = parts[0];
             string minutes = parts[1];
             string seconds = parts[2];

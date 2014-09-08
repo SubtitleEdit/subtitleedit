@@ -5,7 +5,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class PositionsAndSizes
     {
-        List<PositionAndSize> _positionsAndSizes = new List<PositionAndSize>();
+        private List<PositionAndSize> _positionsAndSizes = new List<PositionAndSize>();
 
         public void AddPositionAndSize(PositionAndSize pAndS)
         {

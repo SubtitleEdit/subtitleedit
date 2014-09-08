@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -78,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             int duration = 0;
             if (subtitle.Paragraphs.Count > 0)
-                duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count-1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
+                duration = (int)Math.Round(subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * Configuration.Settings.General.CurrentFrameRate);
 
             string xmlStructure =
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
@@ -168,7 +167,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             xml.DocumentElement.SelectSingleNode("sequence").Attributes["id"].Value = title;
             xml.DocumentElement.SelectSingleNode("sequence/name").InnerText = title;
 
-
             xml.DocumentElement.SelectSingleNode("sequence/uuid").InnerText = Guid.NewGuid().ToString().ToUpper();
             if (!string.IsNullOrEmpty(subtitle.Header))
             {
@@ -184,7 +182,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                 }
             }
-
 
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("sequence/media/video/track");
 
@@ -237,7 +234,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlDocument header = new XmlDocument();
                 header.LoadXml(sb.ToString());
                 if (header.SelectSingleNode("sequence/media/video/track") != null)
-                header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));
+                    header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));
                 subtitle.Header = header.OuterXml;
 
                 if (xml.DocumentElement.SelectSingleNode("sequence/rate") != null && xml.DocumentElement.SelectSingleNode("sequence/rate/timebase") != null)
@@ -365,5 +362,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

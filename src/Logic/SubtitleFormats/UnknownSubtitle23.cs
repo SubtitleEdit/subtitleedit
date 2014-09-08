@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class UnknownSubtitle23 : SubtitleFormat
     {
         //1:  01:00:19.04  01:00:21.05
-        static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+:\s+\d\d:\d\d:\d\d.\d\d\s+\d\d:\d\d:\d\d.\d\d\s*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCode1 = new Regex(@"^\s*\d+:\s+\d\d:\d\d:\d\d.\d\d\s+\d\d:\d\d:\d\d.\d\d\s*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -39,8 +39,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine(title);
             sb.AppendLine(@"1ab
 
-
-
 23/03/2012
 03/05/2012
 **:**:**.**
@@ -62,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 count++;
             }
 
-            var rtBox = new System.Windows.Forms.RichTextBox {Text = sb.ToString().Trim()};
+            var rtBox = new System.Windows.Forms.RichTextBox { Text = sb.ToString().Trim() };
             return rtBox.Rtf;
         }
 

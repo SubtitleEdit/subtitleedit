@@ -42,18 +42,18 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         private readonly string _subFileName;
         private FileStream _subFile;
-        readonly StringBuilder _idx = new StringBuilder();
-        readonly int _screenWidth = 720;
-        readonly int _screenHeight = 480;
-        readonly int _bottomMargin = 15;
+        private readonly StringBuilder _idx = new StringBuilder();
+        private readonly int _screenWidth = 720;
+        private readonly int _screenHeight = 480;
+        private readonly int _bottomMargin = 15;
         private readonly int _languageStreamId;
-        Color _background = Color.Transparent;
-        Color _pattern = Color.White;
-        Color _emphasis1 = Color.Black;
-        readonly bool _useInnerAntialiasing = true;
-        Color _emphasis2 = Color.FromArgb(240, Color.Black);
-        readonly string _languageName = "English";
-        readonly string _languageNameShort = "en";
+        private Color _background = Color.Transparent;
+        private Color _pattern = Color.White;
+        private Color _emphasis1 = Color.Black;
+        private readonly bool _useInnerAntialiasing = true;
+        private Color _emphasis2 = Color.FromArgb(240, Color.Black);
+        private readonly string _languageName = "English";
+        private readonly string _languageNameShort = "en";
 
         public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntialiasing, string languageName, string languageNameShort)
         {
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             stream.WriteByte(5);
 
             // Write 6 bytes of area - starting X, ending X, starting Y, ending Y, each 12 bits
-            ushort startX = (ushort) ((_screenWidth - nbmp.Width) / 2);
+            ushort startX = (ushort)((_screenWidth - nbmp.Width) / 2);
             ushort startY = (ushort)(_screenHeight - nbmp.Height - _bottomMargin);
 
             if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
@@ -362,7 +362,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 #
 # You can also modify timestamps or delete a few subs you don't like.
 # Just make sure they stay in increasing order.
-
 
 # Settings
 

@@ -389,7 +389,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             EmptyLinesTicked = true;
             OverlappingDisplayTimeTicked = true;
-            TooShortDisplayTimeTicked  = true;
+            TooShortDisplayTimeTicked = true;
             TooLongDisplayTimeTicked = true;
             InvalidItalicTagsTicked = true;
             BreakLongLinesTicked = true;
@@ -605,7 +605,6 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
     }
-
 
     public class VideoControlsSettings
     {
@@ -1092,11 +1091,11 @@ namespace Nikse.SubtitleEdit.Logic
                 if (string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString) || settings.General.ListViewLineSeparatorString.Trim().Length == 0)
                     settings.General.ListViewLineSeparatorString = "<br />";
 
-               if (settings.Shortcuts.GeneralToggleTranslationMode == "Control+U" && settings.Shortcuts.MainTextBoxSelectionToLower == "Control+U")
-               {
-                   settings.Shortcuts.GeneralToggleTranslationMode = "Control+Shift+O";
-                   settings.Shortcuts.GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
-               }
+                if (settings.Shortcuts.GeneralToggleTranslationMode == "Control+U" && settings.Shortcuts.MainTextBoxSelectionToLower == "Control+U")
+                {
+                    settings.Shortcuts.GeneralToggleTranslationMode = "Control+Shift+O";
+                    settings.Shortcuts.GeneralSwitchOriginalAndTranslation = "Control+Alt+O";
+                }
             }
 
             return settings;
@@ -1731,7 +1730,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (subNode != null)
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
 
-
             settings.SubtitleSettings = new SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
             if (node != null)
@@ -2239,7 +2237,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.Shortcuts.MainToolsMergeShortLines = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsSplitLongLines");
                 if (subNode != null)
-                    settings.Shortcuts.MainToolsSplitLongLines= subNode.InnerText;
+                    settings.Shortcuts.MainToolsSplitLongLines = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainToolsRenumber");
                 if (subNode != null)
                     settings.Shortcuts.MainToolsRenumber = subNode.InnerText;
@@ -2707,7 +2705,6 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("LastCheckForUpdates", settings.General.LastCheckForUpdates.ToString("yyyy-MM-dd"));
                 textWriter.WriteElementString("ShowBetaStuff", settings.General.ShowBetaStuff.ToString());
                 textWriter.WriteElementString("NewEmptyDefaultMs", settings.General.NewEmptyDefaultMs.ToString(CultureInfo.InvariantCulture));
-
 
                 textWriter.WriteEndElement();
 

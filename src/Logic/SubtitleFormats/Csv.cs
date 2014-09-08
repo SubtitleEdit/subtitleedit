@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Csv : SubtitleFormat
     {
         private const string Seperator = ";";
-        static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Seperator + @"""?\d+""?" + Seperator + @"""?\d+""?" + Seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^""?\d+""?" + Seperator + @"""?\d+""?" + Seperator + @"""?\d+""?" + Seperator + @"""?[^""]*""?$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -61,21 +61,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (CsvLine.IsMatch(line))
                 {
-                    string[] parts = line.Split(Seperator.ToCharArray(),  StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(Seperator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
-                    try
-                    {
-                        int start = Convert.ToInt32(Utilities.FixQuotes(parts[1]));
-                        int end = Convert.ToInt32(Utilities.FixQuotes(parts[2]));
-                        string text = Utilities.FixQuotes(parts[3]);
-                        p = new Paragraph(text, start, end);
-                        subtitle.Paragraphs.Add(p);
-                        continuation = parts[3].StartsWith("\"") && !parts[3].EndsWith("\"");
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                    }
+                        try
+                        {
+                            int start = Convert.ToInt32(Utilities.FixQuotes(parts[1]));
+                            int end = Convert.ToInt32(Utilities.FixQuotes(parts[2]));
+                            string text = Utilities.FixQuotes(parts[3]);
+                            p = new Paragraph(text, start, end);
+                            subtitle.Paragraphs.Add(p);
+                            continuation = parts[3].StartsWith("\"") && !parts[3].EndsWith("\"");
+                        }
+                        catch
+                        {
+                            _errorCount++;
+                        }
                 }
                 else
                 {

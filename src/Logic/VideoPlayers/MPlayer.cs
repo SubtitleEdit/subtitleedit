@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get { return "MPlayer"; }
         }
 
-        float _volume;
+        private float _volume;
         public override int Volume
         {
             get
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get { return _lengthInSeconds.TotalSeconds; }
         }
 
-        double _timePosition;
+        private double _timePosition;
         public override double CurrentPosition
         {
             get
@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        void timer_Tick(object sender, EventArgs e)
+        private void timer_Tick(object sender, EventArgs e)
         {
             // variable properties
             _mplayer.StandardInput.WriteLine("pausing_keep_force get_property time_pos");
@@ -191,8 +191,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (!_ended && OnVideoEnded != null && _lengthInSeconds.TotalSeconds == Duration)
             {
-              //  _ended = true;
-              //  OnVideoEnded.Invoke(this, null);
+                //  _ended = true;
+                //  OnVideoEnded.Invoke(this, null);
             }
             else if (_lengthInSeconds.TotalSeconds < Duration)
             {
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _lastLengthInSeconds = _lengthInSeconds;
         }
 
-        void MPlayerOutputDataReceived(object sender, DataReceivedEventArgs e)
+        private void MPlayerOutputDataReceived(object sender, DataReceivedEventArgs e)
         {
             if (e.Data == null)
                 return;

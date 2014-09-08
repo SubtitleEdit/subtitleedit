@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Text;
 using System.Xml;
 
@@ -63,7 +62,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
-
             XmlNode paragraph = xml.CreateElement("Data");
 
             XmlAttribute charSize = xml.CreateAttribute("CharSize");
@@ -112,7 +110,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             xml.DocumentElement.AppendChild(paragraph);
 
-
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 paragraph = xml.CreateElement("Data");
@@ -134,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             string s = "<?xml version=\"1.0\"?>" + Environment.NewLine + ToUtf8XmlString(xml, true).Replace("\"", "__@____").Replace("'", "&apos;").Replace("__@____", "'").Replace(" />", "/>");
             while (s.Contains(Environment.NewLine + " "))
-            s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
+                s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             return s;
         }
 
@@ -190,5 +187,4 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     }
 }
-
 

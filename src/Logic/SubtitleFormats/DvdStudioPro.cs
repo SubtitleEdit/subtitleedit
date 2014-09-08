@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class DvdStudioPro : SubtitleFormat
     {
-        static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d+:\d+:\d+:\d+\t,\t\d+:\d+:\d+:\d+\t,\t.*$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -56,7 +56,7 @@ $HorzAlign          =   Center
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
-                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds  / factor));
+                string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / factor));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, (int)Math.Round(p.EndTime.Milliseconds / factor));
                 sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, EncodeStyles(p.Text)));
             }
@@ -78,7 +78,7 @@ $HorzAlign          =   Center
                 {
                     if (RegexTimeCodes.Match(line).Success)
                     {
-                        string[] threePart = line.Split(new[] { "\t,\t"}, StringSplitOptions.None);
+                        string[] threePart = line.Split(new[] { "\t,\t" }, StringSplitOptions.None);
                         var p = new Paragraph();
                         if (threePart.Length == 3 &&
                             GetTimeCode(p.StartTime, threePart[0]) &&
@@ -105,7 +105,7 @@ $HorzAlign          =   Center
             bool italicOn = false;
             bool boldOn = false;
             bool skipNext = false;
-            for (int i = 0; i<text.Length; i++)
+            for (int i = 0; i < text.Length; i++)
             {
                 if (skipNext)
                 {

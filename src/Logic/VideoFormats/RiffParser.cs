@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
     }
 
-    #endregion
+    #endregion RiffParserException
 
     /// <summary>
     /// Summary description for RiffParser
@@ -55,12 +55,11 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly int ckidWAV = ToFourCC("WAVE");
         public static readonly int ckidRMID = ToFourCC("RMID");
 
-
-        #endregion
+        #endregion CONSTANTS
 
         #region private members
 
-        private string  m_filename;
+        private string m_filename;
         private string m_shortname;
         private long m_filesize;
         private int m_datasize;
@@ -72,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic
         private byte[] m_eightBytes = new byte[TWODWORDSSIZE];
         private byte[] m_fourBytes = new byte[DWORDSIZE];
 
-        #endregion
+        #endregion private members
 
         #region Delegates
 
@@ -91,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="paddedLength"></param>
         public delegate void ProcessChunkElement(RiffParser rp, int FourCCType, int unpaddedLength, int paddedLength);
 
-        #endregion
+        #endregion Delegates
 
         #region public Members
 
@@ -150,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        #endregion
+        #endregion public Members
 
         public RiffParser()
         {
@@ -164,7 +163,8 @@ namespace Nikse.SubtitleEdit.Logic
         public unsafe void OpenFile(string filename)
         {
             // Sanity check
-            if (null != m_stream) {
+            if (null != m_stream)
+            {
                 throw new RiffParserException("RIFF file already open " + FileName);
             }
 
@@ -330,14 +330,17 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="size">Output chunk/list size</param>
         public unsafe void ReadTwoInts(out int FourCC, out int size)
         {
-            try {
+            try
+            {
                 int readsize = m_stream.Read(m_eightBytes, 0, TWODWORDSSIZE);
 
-                if (TWODWORDSSIZE != readsize) {
+                if (TWODWORDSSIZE != readsize)
+                {
                     throw new RiffParserException("Unable to read. Corrupt RIFF file " + FileName);
                 }
 
-                fixed (byte* bp = &m_eightBytes[0]) {
+                fixed (byte* bp = &m_eightBytes[0])
+                {
                     FourCC = *((int*)bp);
                     size = *((int*)(bp + DWORDSIZE));
                 }
@@ -354,14 +357,17 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="FourCC">Output int</param>
         public unsafe void ReadOneInt(out int FourCC)
         {
-            try {
+            try
+            {
                 int readsize = m_stream.Read(m_fourBytes, 0, DWORDSIZE);
 
-                if (DWORDSIZE != readsize) {
+                if (DWORDSIZE != readsize)
+                {
                     throw new RiffParserException("Unable to read. Corrupt RIFF file " + FileName);
                 }
 
-                fixed (byte* bp = &m_fourBytes[0]) {
+                fixed (byte* bp = &m_fourBytes[0])
+                {
                     FourCC = *((int*)bp);
                 }
             }
@@ -377,7 +383,8 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="skipBytes">Number of bytes to skip</param>
         public void SkipData(int skipBytes)
         {
-            try {
+            try
+            {
                 m_stream.Seek(skipBytes, SeekOrigin.Current);
             }
             catch (Exception ex)
@@ -396,7 +403,8 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>Number of bytes actually read</returns>
         public int ReadData(Byte[] data, int offset, int length)
         {
-            try {
+            try
+            {
                 return m_stream.Read(data, offset, length);
             }
             catch (Exception ex)
@@ -417,7 +425,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        #endregion
+        #endregion Stream access
 
         #region FourCC conversion methods
 
@@ -471,7 +479,8 @@ namespace Nikse.SubtitleEdit.Logic
 
             return result;
         }
-        #endregion
+
+        #endregion FourCC conversion methods
 
         public void Dispose()
         {

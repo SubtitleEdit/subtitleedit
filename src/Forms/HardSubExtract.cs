@@ -4,16 +4,13 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.Runtime.InteropServices;
-using System.Collections.Generic;
 //using Nikse.SubtitleEdit.Logic.DirectShow.Custom;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class HardSubExtract : Form
     {
-//        HardExtractCapture cam = null;
+        //        HardExtractCapture cam = null;
         private string _videoFileName;
         private LibVlcDynamic _libVlc;
         private VideoInfo _videoInfo;
@@ -56,11 +53,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        void VideoLoaded(object sender, EventArgs e)
+        private void VideoLoaded(object sender, EventArgs e)
         {
             mediaPlayer.Stop();
             mediaPlayer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
-//            pictureBox2.Image = GetSnapShot(startMilliseconds);
+            //            pictureBox2.Image = GetSnapShot(startMilliseconds);
             mediaPlayer.Pause();
             timerRefreshProgressbar.Start();
             pictureBox2.Refresh();
@@ -197,21 +194,21 @@ namespace Nikse.SubtitleEdit.Forms
             //StartStop.Enabled = true;
         }
 
-       //private void timer1_Tick(object sender, System.EventArgs e)
-       //{
-            //if (cam != null)
-            //{
-            //    tbFrameNum.Text = cam.count.ToString();
-            //    tbBlacks.Text = cam.blacks.ToString();
-            //    if (cam.Images.Count > 0)
-            //    {
-            //        var old = pictureBox2.Image as Bitmap;
-            //        pictureBox2.Image = cam.Images[cam.Images.Count - 1].GetBitmap();
-            //        if (old != null)
-            //            old.Dispose();
-            //    }
-            //}
-       //}
+        //private void timer1_Tick(object sender, System.EventArgs e)
+        //{
+        //if (cam != null)
+        //{
+        //    tbFrameNum.Text = cam.count.ToString();
+        //    tbBlacks.Text = cam.blacks.ToString();
+        //    if (cam.Images.Count > 0)
+        //    {
+        //        var old = pictureBox2.Image as Bitmap;
+        //        pictureBox2.Image = cam.Images[cam.Images.Count - 1].GetBitmap();
+        //        if (old != null)
+        //            old.Dispose();
+        //    }
+        //}
+        //}
 
         private void pictureBoxCustomColor_Click(object sender, EventArgs e)
         {

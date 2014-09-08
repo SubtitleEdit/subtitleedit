@@ -104,7 +104,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
             }
 
-
             listViewBackups.Items.Add(item);
         }
 

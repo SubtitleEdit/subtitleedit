@@ -43,10 +43,10 @@
             switch (SegmentType)
             {
                 case PageCompositionSegment:
-                    PageComposition = new PageCompositionSegment(buffer, index + 6, SegmentLength-2);
+                    PageComposition = new PageCompositionSegment(buffer, index + 6, SegmentLength - 2);
                     break;
                 case RegionCompositionSegment:
-                    RegionComposition = new RegionCompositionSegment(buffer, index + 6, SegmentLength-10);
+                    RegionComposition = new RegionCompositionSegment(buffer, index + 6, SegmentLength - 10);
                     break;
                 case ClutDefinitionSegment:
                     ClutDefinition = new ClutDefinitionSegment(buffer, index + 6, SegmentLength);
