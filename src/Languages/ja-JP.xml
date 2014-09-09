@@ -39,7 +39,7 @@
     <FrameRateX>フレーム レート: {0:0.0###}</FrameRateX>
     <TotalFramesX>総フレーム数: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>ビデオ エンコード: {0}</VideoEncodingX>
-    <SingleLineLengths>各行の文字数: </SingleLineLengths>
+    <SingleLineLengths>各行の文字数:</SingleLineLengths>
     <TotalLengthX>総文字数: {0}</TotalLengthX>
     <TotalLengthXSplitLine>総文字数: {0} (改行してください!)</TotalLengthXSplitLine>
     <SplitLine>改行してください!</SplitLine>
@@ -251,7 +251,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Title>言語の選択</Title>
     <ChooseLanguageStreamId>言語の選択 (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>不明な言語</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>字幕イメージ {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>字幕イメージ {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>字幕イメージ</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -401,7 +401,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixHyphensAdd>ダッシュ (-) が 1 つしかない 2 行を修正 (ダッシュを追加) する</FixHyphensAdd>
     <FixHyphen>ハイフン (-) で始まる行を修正する</FixHyphen>
     <XHyphensFixed>修正されたハイフン: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>付加された足りない引用符: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>3 行以上の字幕を修正する</Fix3PlusLines>
     <Fix3PlusLine>3 行以上の字幕を修正する</Fix3PlusLine>
@@ -460,13 +460,13 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixEllipsesStart>先頭の '...' を削除する</FixEllipsesStart>
     <FixMissingOpenBracket>行中の足りない [ を修正する</FixMissingOpenBracket>
     <FixMusicNotation>音符 (âTª など) を置換する</FixMusicNotation>
-    <XFixDoubleDash>{0} '--' を修正しました </XFixDoubleDash>
+    <XFixDoubleDash>{0} '--' を修正しました</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; を削除しました</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} 先頭の '...' を削除します</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} 行中の足りない [ を修正しました</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} 行中の音符を修正します</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -872,8 +872,8 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <BeforeRenumbering>番号を振り直す前</BeforeRenumbering>
     <RenumberedStartingFromX>次から番号を振り直しました: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>聴覚障害者用テキストの削除前</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>聴覚障害者用テキストが削除されました : 1 行</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>聴覚障害者用テキストが削除されました : {0} 行</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>聴覚障害者用テキストが削除されました: 1 行</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>聴覚障害者用テキストが削除されました: {0} 行</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>字幕が分割されました</SubtitleSplitted>
     <SubtitleAppendPrompt>これは既存の字幕を現在読み込まれている既にビデオ ファイルと同期されている字幕に
 追加します。
@@ -1237,7 +1237,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>system32 フォルダーの quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  DirectX の .NET Managed コード</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - DirectX の .NET Managed コード</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>

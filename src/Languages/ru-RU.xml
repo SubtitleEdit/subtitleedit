@@ -40,7 +40,7 @@
     <FrameRateX>Частота кадров: {0:0.0###}</FrameRateX>
     <TotalFramesX>Всего кадров: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Видео кодек: {0}</VideoEncodingX>
-    <SingleLineLengths>Число символов в строке: </SingleLineLengths>
+    <SingleLineLengths>Число символов в строке:</SingleLineLengths>
     <TotalLengthX>Всего: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Всего: {0} (строка разделена!)</TotalLengthXSplitLine>
     <SplitLine>Разделить строку!</SplitLine>
@@ -314,7 +314,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Выбор языка</Title>
     <ChooseLanguageStreamId>Выберите язык (id-поток)</ChooseLanguageStreamId>
     <UnknownLanguage>Неизвестный язык</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Изображение субтитров {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Изображение субтитров {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Изображение субтитра</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -509,7 +509,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixHyphensAdd>Исправить (добавить тире) строки начинающиеся с тире (-)</FixHyphensAdd>
     <FixHyphen>Исправить строки начинающиеся с тире (-)</FixHyphen>
     <XHyphensFixed>Удалено тире: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Добавлено недостающих кавычек: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Исправить субтитры с более, чем двумя строками</Fix3PlusLines>
     <Fix3PlusLine>Исправить субтитр с более, чем двумя строками</Fix3PlusLine>
@@ -568,13 +568,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixEllipsesStart>Удалить многоточие "..." в начале строки</FixEllipsesStart>
     <FixMissingOpenBracket>Добавить недостающие "[" в строке</FixMissingOpenBracket>
     <FixMusicNotation>Заменить музыкальные символы (напр. âTª) выбранным</FixMusicNotation>
-    <XFixDoubleDash>Исправлено символов тире "--" : {0}</XFixDoubleDash>
-    <XFixDoubleGreaterThan>Удалено знаков "&gt;&gt;" : {0}</XFixDoubleGreaterThan>
+    <XFixDoubleDash>Исправлено символов тире "--": {0}</XFixDoubleDash>
+    <XFixDoubleGreaterThan>Удалено знаков "&gt;&gt;": {0}</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Удалено многоточий "..." из начала строк: {0}</XFixEllipsesStart>
-    <XFixMissingOpenBracket>Добавлено недостающих "[" : {0}</XFixMissingOpenBracket>
+    <XFixMissingOpenBracket>Добавлено недостающих "[": {0}</XFixMissingOpenBracket>
     <XFixMusicNotation>Заменено музыкальных символов: {0}</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1040,8 +1040,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <BeforeRenumbering>Перед перенумерацией</BeforeRenumbering>
     <RenumberedStartingFromX>Перенумеровано, начиная с: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Перед удалением текста для людей с нарушением слуха</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Удален текст для людей с нарушением слуха : Одна строка</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Удален текст для людей с нарушением слуха : {0} строк</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Удален текст для людей с нарушением слуха: Одна строка</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Удален текст для людей с нарушением слуха: {0} строк</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Субтитры разделены</SubtitleSplitted>
     <SubtitleAppendPrompt>Будет выполнено добавление существующих субтитров к загруженным,
 которые уже были синхронизированны с видео файлом.
@@ -1500,7 +1500,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll в папке system32</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>

@@ -40,7 +40,7 @@
     <FrameRateX>影格率: {0:0.0###}</FrameRateX>
     <TotalFramesX>總影格數: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>視訊編碼: {0}</VideoEncodingX>
-    <SingleLineLengths>單行長度: </SingleLineLengths>
+    <SingleLineLengths>單行長度:</SingleLineLengths>
     <TotalLengthX>總長度: {0}</TotalLengthX>
     <TotalLengthXSplitLine>總長度: {0} (分割行！)</TotalLengthXSplitLine>
     <SplitLine>分割行</SplitLine>
@@ -503,7 +503,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <FixHyphensAdd>修復僅用一個破折號的行對 (加入破折號)</FixHyphensAdd>
     <FixHyphen>修復以破折號開頭的行</FixHyphen>
     <XHyphensFixed>已移除破折號: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>已加入遺失的引號: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>修復超過兩行的字幕</Fix3PlusLines>
     <Fix3PlusLine>修復超過兩行的字幕</Fix3PlusLine>
@@ -568,7 +568,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <XFixMissingOpenBracket>{0} 個行內遺失的 '[' 已修復</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} 個行內的音符已修復</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>

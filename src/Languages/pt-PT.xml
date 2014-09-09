@@ -42,7 +42,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <FrameRateX>Fotogramas por segundo: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total de fotogramas: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codificação de vídeo: {0}</VideoEncodingX>
-    <SingleLineLengths>Comprimento da linha individual: </SingleLineLengths>
+    <SingleLineLengths>Comprimento da linha individual:</SingleLineLengths>
     <TotalLengthX>Comprimento total: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Comprimento total: {0} (dividir linha!)</TotalLengthXSplitLine>
     <SplitLine>Dividir Linha!</SplitLine>
@@ -314,7 +314,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Seleccionar idioma</Title>
     <ChooseLanguageStreamId>Seleccionar idioma (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Idioma desconhecido</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Imagem da legenda {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Imagem da legenda {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imagem de legenda</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -508,7 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Corrigir (adicionar hífen) em linhas duplas só com um hífen (-)</FixHyphensAdd>
     <FixHyphen>Corrigir linhas que começam com hífen (-)</FixHyphen>
     <XHyphensFixed>Hífens removidos: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Como estás  -&gt; "Como estás?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Como estás -&gt; "Como estás?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Aspas em falta adicionadas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corrigir legendas com mais de duas linhas</Fix3PlusLines>
     <Fix3PlusLine>Corrigir legenda com mais de duas linhas</Fix3PlusLine>
@@ -573,7 +573,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} [ omitidos na linha corrigidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical na linha corrigida</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1037,8 +1037,8 @@ Gostaria de começar do início do documento a localizar e substituir?</ReplaceX
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar as mensagens de texto para surdos</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos : Uma linha</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos : {0} linhas</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos: Uma linha</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos: {0} linhas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Legenda foi dividida</SubtitleSplitted>
     <SubtitleAppendPrompt>Isto irá acrescentar uma legenda existente à legenda já carregada que deve
 já estar em sincronia com o vídeo.
@@ -1835,7 +1835,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Margins>Margens</Margins>
     <MarginLeft>Margem esq.</MarginLeft>
     <MarginRight>Margem dir.</MarginRight>
-    <MarginVertical>Margem  vert.</MarginVertical>
+    <MarginVertical>Margem vert.</MarginVertical>
     <Border>Borda</Border>
     <PlusShadow>+ Sombra</PlusShadow>
     <OpaqueBox>Caixa opaca (contorno colorido)</OpaqueBox>

@@ -225,7 +225,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ColumnPaste>
     <Title>Enganxa columna</Title>
     <ChooseColumn>Tria columna</ChooseColumn>
-    <OverwriteShiftCellsDown>Sobreescriu/Desplaça cel·les avall </OverwriteShiftCellsDown>
+    <OverwriteShiftCellsDown>Sobreescriu/Desplaça cel·les avall</OverwriteShiftCellsDown>
     <Overwrite>Sobreescriu</Overwrite>
     <ShiftCellsDown>Desplaça cel·les avall</ShiftCellsDown>
     <TimeCodesOnly>Només codis de temps</TimeCodesOnly>
@@ -308,7 +308,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Escolliu idioma</Title>
     <ChooseLanguageStreamId>Escolliu idioma (flux-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Idioma desconegut</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Imatge de subtítol {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Imatge de subtítol {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imatge de subtítol</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -328,7 +328,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CountryOfOrigin>País d'origen</CountryOfOrigin>
     <RevisionNumber>Nombre de revisió</RevisionNumber>
     <MaxNoOfDisplayableChars>Màx# caràcters per fila</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows>Màx#  files</MaxNumberOfDisplayableRows>
+    <MaxNumberOfDisplayableRows>Màx# files</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Nombre seqüència disc</DiskSequenceNumber>
     <TotalNumberOfDisks>Discs totals</TotalNumberOfDisks>
     <Import>Importa...</Import>
@@ -446,7 +446,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Find>Cerca</Find>
     <Normal>Normal</Normal>
     <CaseSensitive>Sensible majúscules</CaseSensitive>
-    <RegularExpression>Expressió regular </RegularExpression>
+    <RegularExpression>Expressió regular</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Cerca línia subtítol</Title>
@@ -502,7 +502,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Fixa (afegeix guió) línies parells amb només un guió (-)</FixHyphensAdd>
     <FixHyphen>Fixa línia comença amb guió (-)</FixHyphen>
     <XHyphensFixed>Guions fixats: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Cometes omeses afegides: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Fixa subtítols amb més de dues línies</Fix3PlusLines>
     <Fix3PlusLine>Fixa subtítol amb més de dues línies</Fix3PlusLine>
@@ -556,8 +556,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Aplica selecció solucions</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>Tall enrrere</Unbreak>
-    <FixDoubleDash>Fixa '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Suprimeix &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Fixa '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Suprimeix &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Suprimeix marcat '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fixa [ omés en línia</FixMissingOpenBracket>
     <FixMusicNotation>Substitueix símbols musicals (e.g. âTª) amb símbols preferits</FixMusicNotation>
@@ -567,7 +567,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} [ omesos en línia fixats</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} notes musicals en línia fixats</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -636,7 +636,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ImportSceneChanges>
   <ImportText>
     <Title>Importa text pla</Title>
-    <OneSubtitleIsOneFile>Múltiples fitxers  - un fitxer és un subtítul</OneSubtitleIsOneFile>
+    <OneSubtitleIsOneFile>Múltiples fitxers - un fitxer és un subtítul</OneSubtitleIsOneFile>
     <OpenTextFile>Obre fitxer de text...</OpenTextFile>
     <OpenTextFiles>Obre fitxers de text...</OpenTextFiles>
     <ImportOptions>Opcions d'importació</ImportOptions>
@@ -994,7 +994,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineNumberX>Nombre línia: {0:#,##0.##}</LineNumberX>
     <OpenVideoFile>Obre fitxer vídeo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nou ràtio quadres ({0}) s'ha emprat pel càlcul de codis d'inici/final de temps</NewFrameRateUsedToCalculateTimeCodes>
-    <NewFrameRateUsedToCalculateFrameNumbers>Nou ràtio quadres ({0}) s'ha emprat pel càlcul de nombre de quadres d'inici/final </NewFrameRateUsedToCalculateFrameNumbers>
+    <NewFrameRateUsedToCalculateFrameNumbers>Nou ràtio quadres ({0}) s'ha emprat pel càlcul de nombre de quadres d'inici/final</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>No s'ha trobat l'element de cerca. Voleu començar des de l'inici del document i tornar a cercar?</FindContinue>
     <FindContinueTitle>Continua cercant?</FindContinueTitle>
     <ReplaceContinueNotFound>L'element cercat no s'ha trobat. Voleu anar al principi del document i continua la cerca i reemplaçament?</ReplaceContinueNotFound>
@@ -1031,7 +1031,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleAppendPrompt>Açò afegirà un subtítol al carregat actualment què ja deu estar sincronitzat amb el fitxer de vídeo. Continua?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Annexa subtítol</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Obre subtítol per annexar</OpenSubtitleToAppend>
-    <AppendViaVisualSyncTitle>Sinc visual -  annexa segona part del subtítol</AppendViaVisualSyncTitle>
+    <AppendViaVisualSyncTitle>Sinc visual - annexa segona part del subtítol</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>Annexa aquest subtítol sincronitzat?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Abans annexa</BeforeAppend>
     <SubtitleAppendedX>Subtítols annexats: {0}</SubtitleAppendedX>
@@ -1358,7 +1358,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OnlyIfTextIsUppercase>Només si el text és en MAJÚSCULES</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Només si es línia separada</OnlyIfInSeparateLine>
     <LinesFoundX>S'han trobat: {0} línies</LinesFoundX>
-    <RemoveTextIfContains>Suprimeix text si conté: </RemoveTextIfContains>
+    <RemoveTextIfContains>Suprimeix text si conté:</RemoveTextIfContains>
     <RemoveTextIfAllUppercase>Suprimeix línia si són MAJÚSCULES</RemoveTextIfAllUppercase>
     <RemoveInterjections>Suprimeix interjeccions</RemoveInterjections>
     <EditInterjections>Edita...</EditInterjections>
@@ -1458,7 +1458,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainListViewEditText>Vés a quadre d'edició de text</MainListViewEditText>
     <MainListViewVideoGoToPositionMinus1SecAndPause>Vés a possició vídeo - 1 segon i pausa</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Vés a possició vídeo - 0,5 segon i pausa</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Vés a possició vídeo  1 segon i reprodueix</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Vés a possició vídeo 1 segon i reprodueix</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Vés a quadre d'edició de text, i pausa a possició de vídeo</MainListViewEditTextAndPause>
     <AutoBackup>Auto-copia</AutoBackup>
     <AutoBackupEveryMinute>Cada minut</AutoBackupEveryMinute>
@@ -1474,7 +1474,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en carpeta system32</DirectShowDescription>
     <ManagedDirectX>Gestió DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET codi gestionat per DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET codi gestionat per DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1632,7 +1632,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainTextBoxSelectionToLower>Selecció a minúscules</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selecció a Majúscules</MainTextBoxSelectionToUpper>
     <MainTextBoxAutoBreak>Auto-trencament de text</MainTextBoxAutoBreak>
-    <MainTextBoxUnbreak>Destrencament deText </MainTextBoxUnbreak>
+    <MainTextBoxUnbreak>Destrencament deText</MainTextBoxUnbreak>
     <MainFileSaveAll>Desa-ho tot</MainFileSaveAll>
     <Miscellaneous>Misc.</Miscellaneous>
     <UseDoNotBreakAfterList>Empra no-trenques-després-de-llistar (per auto-br)</UseDoNotBreakAfterList>
@@ -1641,7 +1641,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Mostra selecció línies anterior/posterior</Title>
     <TitleAll>Mostra totes les línies anterior/posterior</TitleAll>
     <ShowEarlier>Mostra anterior</ShowEarlier>
-    <ShowLater>Mostra posterior </ShowLater>
+    <ShowLater>Mostra posterior</ShowLater>
     <TotalAdjustmentX>Total ajustaments: {0}</TotalAdjustmentX>
     <AllLines>Totes les línies</AllLines>
     <SelectedLinesOnly>Només selecció de línies</SelectedLinesOnly>
@@ -1875,7 +1875,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Importa/OCR subtítol VobSub (sub/idx)</Title>
-    <TitleBluRay>Importa/OCR subtítol (.sup) Blu-ray </TitleBluRay>
+    <TitleBluRay>Importa/OCR subtítol (.sup) Blu-ray</TitleBluRay>
     <OcrMethod>Mètode OCR</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging(MODI). Cal MS Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>

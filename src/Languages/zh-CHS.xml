@@ -40,7 +40,7 @@
     <FrameRateX>帧率: {0:0.0###}</FrameRateX>
     <TotalFramesX>总帧数: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>视频编码: {0}</VideoEncodingX>
-    <SingleLineLengths>单行长度: </SingleLineLengths>
+    <SingleLineLengths>单行长度:</SingleLineLengths>
     <TotalLengthX>总长度: {0}</TotalLengthX>
     <TotalLengthXSplitLine>总长度: {0} (分割行！)</TotalLengthXSplitLine>
     <SplitLine>分割行</SplitLine>
@@ -279,7 +279,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>桥接行间的小间隔</Title>
     <GapsBridgedX>已桥接的小间隔数量: {0}</GapsBridgedX>
     <GapToNext>与下一行的间隔时间</GapToNext>
-    <BridgeGapsSmallerThanXPart1>桥接的间隔时长小于 </BridgeGapsSmallerThanXPart1>
+    <BridgeGapsSmallerThanXPart1>桥接的间隔时长小于</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>毫秒</BridgeGapsSmallerThanXPart2>
     <MinMsBetweenLines>行间最小毫秒数</MinMsBetweenLines>
     <ProlongEndTime>间隔时间分配给前一行</ProlongEndTime>
@@ -506,7 +506,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FixHyphensAdd>仅用一个破折号修复一对行 (添加破折号)</FixHyphensAdd>
     <FixHyphen>修复以破折号开头的行</FixHyphen>
     <XHyphensFixed>已修复破折号: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>已添加丢失的引号: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>修复超过两行的字幕</Fix3PlusLines>
     <Fix3PlusLine>修复超过两行的字幕</Fix3PlusLine>
@@ -571,7 +571,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <XFixMissingOpenBracket>{0} 个行内丢失的 '[' 已修复</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} 个行内丢失的音符已修复</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1898,7 +1898,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>导入/OCR VobSub 字幕 (sub/idx)</Title>
-    <TitleBluRay>导入/OCR 蓝光字幕 (sup) </TitleBluRay>
+    <TitleBluRay>导入/OCR 蓝光字幕 (sup)</TitleBluRay>
     <OcrMethod>OCR 方式</OcrMethod>
     <OcrViaModi>使用 MS Office 文档图像(MODI) OCR，需要 MS Office</OcrViaModi>
     <OcrViaTesseract>使用 TesserAct OCR</OcrViaTesseract>

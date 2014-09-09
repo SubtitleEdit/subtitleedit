@@ -186,7 +186,7 @@ http://soft98.ir
     <Title>زبان را انتخاب کنید</Title>
     <ChooseLanguageStreamId>زبان را انتخاب کنید (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>زبان ناشناخته است</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>تصویر زیرنویس</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -308,7 +308,7 @@ http://soft98.ir
     <FixHyphens>اصلاح خطوطی که با خط تیره شروع می شوند (-)</FixHyphens>
     <FixHyphen>اصلاح خطی که با خط تیره شروع می شوند (-)</FixHyphen>
     <XHyphensFixed>Hyphens fixed: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>اصلاح زیرنویسهایی با بیش از دو خط</Fix3PlusLines>
     <Fix3PlusLine>اصلاح زیرنویسی با بیش از دو خط</Fix3PlusLine>
@@ -364,7 +364,7 @@ http://soft98.ir
     <Unbreak>و Unbreak</Unbreak>
     <FixDoubleDash>اصلاح '--' به '...'</FixDoubleDash>
     <FixDoubleGreaterThan>حذف &lt;&lt;</FixDoubleGreaterThan>
-    <FixEllipsesStart> حذف  '...'</FixEllipsesStart>
+    <FixEllipsesStart> حذف '...'</FixEllipsesStart>
     <FixMissingOpenBracket>گذاشتن [ فراموش شده</FixMissingOpenBracket>
     <FixMusicNotation>جابجایی علائم موسیقی</FixMusicNotation>
     <XFixDoubleDash>{0} ثابت '--'</XFixDoubleDash>
@@ -1028,7 +1028,7 @@ http://soft98.ir
     <WaveFormAppearance>موج ظاهر فرم</WaveFormAppearance>
     <WaveFormGridColor>رنگ گرید</WaveFormGridColor>
     <WaveFormShowGridLines>نمایش خطوط شبکه</WaveFormShowGridLines>
-    <ReverseMouseWheelScrollDirection>برگرداندن چرخ موس اسکرول برای راهبری </ReverseMouseWheelScrollDirection>
+    <ReverseMouseWheelScrollDirection>برگرداندن چرخ موس اسکرول برای راهبری</ReverseMouseWheelScrollDirection>
     <WaveFormColor>رنگ</WaveFormColor>
     <WaveFormSelectedColor>انتخاب رنگ</WaveFormSelectedColor>
     <WaveFormBackgroundColor>برگشت رنگ</WaveFormBackgroundColor>
@@ -1103,9 +1103,9 @@ http://soft98.ir
     <WaveformSeekSilenceForward>جستجوی آرام بعدی</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>جستجوی آرام قبلی</WaveformSeekSilenceBack>
     <GoBack100Milliseconds>میلی ثانیه عقب 100</GoBack100Milliseconds>
-    <GoForward100Milliseconds>میلی ثانیه جلو100 </GoForward100Milliseconds>
+    <GoForward100Milliseconds>میلی ثانیه جلو100</GoForward100Milliseconds>
     <GoBack500Milliseconds>میلی ثانیه عقب 500</GoBack500Milliseconds>
-    <GoForward500Milliseconds>میلی ثانیه جلو500 </GoForward500Milliseconds>
+    <GoForward500Milliseconds>میلی ثانیه جلو500</GoForward500Milliseconds>
     <TogglePlayPause>کنترل پخش/مکث</TogglePlayPause>
     <Pause>مکث</Pause>
     <Fullscreen>تمام صفحه</Fullscreen>
@@ -1256,7 +1256,7 @@ http://soft98.ir
     <ImportTextWithMatchingTimeCodes>باز کردن متن با تطبیق دادن زمان کدها</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>ذخیره کردن تصویر زیرنویس به عنوان</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>html ذخیره تمام عکس ها با نمایه </SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>html ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
     <TryModiForUnknownWords>سعی کنید او سی آر ام اس MODI کلمات ناشناخته</TryModiForUnknownWords>
     <DictionaryX>Dictionary: {0}</DictionaryX>
@@ -1266,7 +1266,7 @@ http://soft98.ir
     <NoMatch>&lt;بدون تطبیق&gt;</NoMatch>
     <AutoTransparentBackground>شفاف کردن پشت زمینه بصورت خودکار</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>رسیدگی سنجیدن تطابق ها برای عکس جاری</InspectCompareMatchesForCurrentImage>
-    <EditLastAdditions>ویرایش آخرین عکس سنجیده شده و اضافه شده </EditLastAdditions>
+    <EditLastAdditions>ویرایش آخرین عکس سنجیده شده و اضافه شده</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub -- تبدیل تصویر به متن بطور دستی</Title>

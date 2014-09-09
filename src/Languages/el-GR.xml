@@ -41,7 +41,7 @@
     <FrameRateX>Ρυθμός καρέ: {0:0.0###}</FrameRateX>
     <TotalFramesX>Σύνολο καρέ: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Κωδικοποίηση βίντεο: {0}</VideoEncodingX>
-    <SingleLineLengths>Μήκος μονής γραμμής: </SingleLineLengths>
+    <SingleLineLengths>Μήκος μονής γραμμής:</SingleLineLengths>
     <TotalLengthX>Συνολικό μήκος: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Συνολικό μήκος: {0} (Χωρισμός γραμμής!)</TotalLengthXSplitLine>
     <SplitLine>Χωρισμός γραμμής!</SplitLine>
@@ -311,7 +311,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Επιλέξτε γλώσσα</Title>
     <ChooseLanguageStreamId>Επιλέξτε γλώσσα (id-ροής)</ChooseLanguageStreamId>
     <UnknownLanguage>Άγνωστη γλώσσα</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Εικόνα υπότιτλου {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Εικόνα υπότιτλου {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Εικόνα υπότιτλου</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -342,7 +342,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Η Γραμμή {0} υπερβαίνει το μέγιστο μήκος ({1}) κατά {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Αμετάβλητη παρουσίαση</TextUnchangedPresentation>
     <TextLeftJustifiedText>Αριστερά στοιχισμένο κείμενο</TextLeftJustifiedText>
-    <TextCentredText>Κεντραρισμένο κείμενο </TextCentredText>
+    <TextCentredText>Κεντραρισμένο κείμενο</TextCentredText>
     <TextRightJustifiedText>Δεξιά στοιχισμένο κείμενο</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -506,7 +506,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Επιδιόρθωση (προσθήκη παύλας) των ζευγών γραμμών με μία μόνο παύλα (-)</FixHyphensAdd>
     <FixHyphen>Επιδιόρθωση γραμμής που ξεκινά με παύλα (-)</FixHyphen>
     <XHyphensFixed>Παύλες που επιδιορθώθηκαν: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Πώς είσαι;  -&gt; "Πώς είσαι;"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Πώς είσαι; -&gt; "Πώς είσαι;"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Εισαγωγικά που έλλειπαν και προστέθηκαν: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Επιδιόρθωση υποτίτλων με περισσότερες από δύο γραμμές</Fix3PlusLines>
     <Fix3PlusLine>Επιδιόρθωση υπότιτλου με περισσότερες από δύο γραμμές</Fix3PlusLine>
@@ -560,18 +560,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Εφαρμογή επιλεγμένων επιδιορθώσεων</ApplyFixes>
     <AutoBreak>Αυτόματη &amp;αλλαγή γραμμής</AutoBreak>
     <Unbreak>Σ&amp;υνένωση γραμμών</Unbreak>
-    <FixDoubleDash>Επιδιόρθωση '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Αφαίρεση &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Επιδιόρθωση '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Αφαίρεση &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Αφαίρεση αρχικού '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Επιδιόρθωση [ που λείπει από γραμμή</FixMissingOpenBracket>
     <FixMusicNotation>Αντικατάσταση συμβόλου μουσικής (π.χ. âTª) με προτιμώμενο σύμβολο</FixMusicNotation>
-    <XFixDoubleDash>{0} '--' επιδιορθώθηκαν </XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} &gt;&gt; αφαιρέθηκαν </XFixDoubleGreaterThan>
+    <XFixDoubleDash>{0} '--' επιδιορθώθηκαν</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} &gt;&gt; αφαιρέθηκαν</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' αφαιρέθηκαν από αρχή γραμμής</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ που λείπουν επιδιορθώθηκαν</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} σύμβολα μουσικής αντικαταστάθηκαν</XFixMusicNotation>
     <FixDoubleDashExample>'Τι-- αα ναι!' --&gt; 'Τι... αα ναι!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει!'  --&gt; 'Ρόμπερτ: Τι τρέχει!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει!' --&gt; 'Ρόμπερτ: Τι τρέχει!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... και τότε εμείς' -&gt; 'και τότε εμείς'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'κλανκ] Πρόσεξε!' --&gt; '[κλανκ] Πρόσεξε!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1033,8 +1033,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeRenumbering>Πριν από επαναρίθμηση</BeforeRenumbering>
     <RenumberedStartingFromX>Επαναρίθμηση ξεκινώντας από: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Πριν από αφαίρεση κειμένου για άτομα με προβλήματα ακοής</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Κείμενο για άτομα με προβλήματα ακοής  αφαιρέθηκε : Μια γραμμή</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Κείμενο για άτομα με προβλήματα ακοής  αφαιρέθηκε : {0} γραμμές</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Κείμενο για άτομα με προβλήματα ακοής αφαιρέθηκε: Μια γραμμή</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Κείμενο για άτομα με προβλήματα ακοής αφαιρέθηκε: {0} γραμμές</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Ο υπότιτλος διαχωρίστηκε</SubtitleSplitted>
     <SubtitleAppendPrompt>Αυτό θα προσαρτήσει έναν υπάρχον υπότιτλο στον φορτωμένο υπότιτλο που πρέπει να
 έχει ήδη συγχρονιστεί με το αρχείο βίντεο.
@@ -1072,7 +1072,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
     <BeforeSpellCheck>Πριν από ορθογραφικό έλεγχο</BeforeSpellCheck>
     <SpellCheckChangedXToY>Ορθογραφικός έλεγχος: Αλλαγή του '{0}' σε '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Πριν από προσθήκη ετικετών &lt;{0}&gt; </BeforeAddingTagX>
+    <BeforeAddingTagX>Πριν από προσθήκη ετικετών &lt;{0}&gt;</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; ετικέτες προστέθηκαν</TagXAdded>
     <LineXOfY>γραμμή {0} από {1}</LineXOfY>
     <XLinesSavedAsY>{0} γραμμές αποθηκεύτηκαν ως {1}</XLinesSavedAsY>
@@ -1485,7 +1485,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll στο φάκελο system32</DirectShowDescription>
     <ManagedDirectX>Διαχείριση DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  διαχείριση κώδικα .NET από DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - διαχείριση κώδικα .NET από DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
