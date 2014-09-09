@@ -160,6 +160,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Prohledávání {0} a podsložek pro soubory titulků...</ScanningFolder>
     <Recursive>Včetně podsložek</Recursive>
     <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
+    <PlainText>Prostý text</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -192,6 +193,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Upravit rychlost v procentech</Title>
     <Info>Změnit rychlost titulků v procentech</Info>
+    <Custom>Vlastní</Custom>
+    <ToDropFrame>Do zahozeného snímku</ToDropFrame>
+    <FromDropFrame>Od zahozeného snímku</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>Zkontrolovat aktualizace</Title>
@@ -199,7 +203,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdatesFailedX>Kontrola aktualizací selhala: {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Používáte nejnovější verzi Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Je dostupná nová verze!</CheckingForUpdatesNewVersion>
-    <InstallUpdate>Přejít na stránku pro stahování</InstallUpdate>
+    <InstallUpdate>Přejít na stránku stahování</InstallUpdate>
     <NoUpdates>Neaktualizovat</NoUpdates>
   </CheckForUpdates>
   <ChooseAudioTrack>
@@ -467,9 +471,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Fixes>Opravy</Fixes>
     <Log>Zpráva</Log>
     <Function>Funkce</Function>
-    <RemovedEmptyLine>Odebrán prázdný řádek</RemovedEmptyLine>
-    <RemovedEmptyLineAtTop>Odebrán prázdný řádek na začátku</RemovedEmptyLineAtTop>
-    <RemovedEmptyLineAtBottom>Odebrán prázdný řádek na konci</RemovedEmptyLineAtBottom>
+    <RemovedEmptyLine>Odebrat prázdný řádek</RemovedEmptyLine>
+    <RemovedEmptyLineAtTop>Odebrat prázdný řádek na začátku</RemovedEmptyLineAtTop>
+    <RemovedEmptyLineAtBottom>Odebrat prázdný řádek na konci</RemovedEmptyLineAtBottom>
     <RemovedEmptyLinesUnsedLineBreaks>Odebrat prázdné řádky nebo nevyužitá zalomení řádků</RemovedEmptyLinesUnsedLineBreaks>
     <EmptyLinesRemovedX>Odebráno prázdných řádků: {0}</EmptyLinesRemovedX>
     <FixOverlappingDisplayTimes>Opravit překrývání časů zobrazení</FixOverlappingDisplayTimes>
@@ -598,22 +602,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XDownloaded>{0} byla stažena a nainstalována</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
-    <Title>Google překladač</Title>
+    <Title>Překladač Google</Title>
     <From>Z:</From>
     <To>Do:</To>
     <Translate>Přeložit</Translate>
     <PleaseWait>Čekejte... chvíli to může trvat</PleaseWait>
-    <PoweredByGoogleTranslate>Používá technologii Google překladač</PoweredByGoogleTranslate>
-    <PoweredByMicrosoftTranslate>Používá technologii Microsoft překladač</PoweredByMicrosoftTranslate>
+    <PoweredByGoogleTranslate>Používá technologii Překladače Google</PoweredByGoogleTranslate>
+    <PoweredByMicrosoftTranslate>Používá technologii Překladače Microsoft</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
-    <Title>Google vs. Microsoft překladač</Title>
+    <Title>Překladač Google vs. Microsoft</Title>
     <From>Z:</From>
     <To>Do:</To>
     <Translate>Přeložit</Translate>
     <SourceText>Zdrojový text</SourceText>
-    <GoogleTranslate>Google překladač</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft překladač</MicrosoftTranslate>
+    <GoogleTranslate>Překladač Google</GoogleTranslate>
+    <MicrosoftTranslate>Překladač Microsoft</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Přejít na řádek číslo</Title>
@@ -684,6 +688,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Obnovit automatickou zálohu...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Vlastnosti Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Vlastnosti Sub Station Alpha...</SubStationAlphaProperties>
+        <EbuProperties>Vlastnosti EBU stl...</EbuProperties>
+        <PacProperties>Vlastnosti PAC...</PacProperties>
         <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
         <SaveOriginal>Uložit původní titulky</SaveOriginal>
         <CloseOriginal>Zavřít původní titulky</CloseOriginal>
@@ -944,13 +950,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SetEndTime>Nastavit čas &amp;konce</SetEndTime>
       <SetstartTimeAndOffsetOfRest>Nastavit začátek a &amp;vyrovnat zbytek</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>Vyhledat text online</SearchTextOnline>
-      <GoogleTranslate>Google překladač</GoogleTranslate>
+      <GoogleTranslate>Překladač Google</GoogleTranslate>
       <GoogleIt>Vygooglit</GoogleIt>
       <SecondsBackShort>&lt;&lt;</SecondsBackShort>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Pozice videa:</VideoPosition>
       <TranslateTip>Tip: Použijte &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí nebo další titulek</TranslateTip>
-      <CreateTip>Tip: Použijte &lt;ctrl+šipka vlevo/vpravot&gt;</CreateTip>
+      <CreateTip>Tip: Použijte &lt;ctrl+šipka vlevo/vpravo&gt;</CreateTip>
       <AdjustTip>Tip: Použijte &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí nebo další titulek</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Před změnou času ve vlnovce: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Nový text vložen v {0}</NewTextInsertAtX>
@@ -1044,8 +1050,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeAppend>Před připojením</BeforeAppend>
     <SubtitleAppendedX>Připojeny titulky: {0}</SubtitleAppendedX>
     <SubtitleNotAppended>Titulky NEBYLY připojeny!</SubtitleNotAppended>
-    <GoogleTranslate>Google překladač</GoogleTranslate>
-    <MicrosoftTranslate>Microsoft překladač</MicrosoftTranslate>
+    <GoogleTranslate>Překladač Google</GoogleTranslate>
+    <MicrosoftTranslate>Překladač Microsoft</MicrosoftTranslate>
     <BeforeGoogleTranslation>Před překladem Googlem</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Přeloženy vybrané řádky</SelectedLinesTranslated>
     <SubtitleTranslated>Přeloženy titulky</SubtitleTranslated>
@@ -1061,6 +1067,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <NothingToUndo>Není co vrátit zpět</NothingToUndo>
     <InvalidLanguageNameX>Neplatný název jazyka: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Nelze změnit jazyk!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Tuto zprávu znovu nezobrazovat</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Počet opravených slov: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Počet přeskočených slov: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Počet správných slov: {0}</NumberOfCorrectWords>
@@ -1289,6 +1296,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <ImportRulesTitle>Importovat pravidla nahrazení z...</ImportRulesTitle>
     <ExportRulesTitle>Exportovat pravidla nahrazení do...</ExportRulesTitle>
     <Rules>Exportovat pravidla</Rules>
+    <MoveToTop>Posunout nahoru</MoveToTop>
+    <MoveToBottom>Posunout dolů</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Konverzace</Title>
@@ -1623,7 +1632,9 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SyntaxColorOverlap>Obarvit překrývání časového kódu</SyntaxColorOverlap>
     <SyntaxErrorColor>Barva chyby</SyntaxErrorColor>
     <GoToFirstSelectedLine>Přejít na první vybraný řádek</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Přejít na další prázdný řádek</GoToNextEmptyLine>
     <MergeSelectedLines>Sloučit vybrané řádky</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Sloučit vybrané řádky, ponechat pouze první neprázdný text</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Přepnout režim překladu</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Prohodit původní a překlad</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Sloučit původní a překlad</MergeOriginalAndTranslation>
@@ -1645,6 +1656,11 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <Miscellaneous>Různé</Miscellaneous>
     <UseDoNotBreakAfterList>Používat seznam nezalamování po (pro automatické zalamování)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Nastavit posun videa</Title>
+    <Description>Nastavit posun videa (titulky by neměly sledovat skutečný čas videa, ale např. +10 hodin)</Description>
+    <RelativeToCurrentVideoPosition>Relativně k aktuální pozici videa</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Zobrazit vybrané řádky dříve nebo později</Title>
     <TitleAll>Zobrazit všechny řádky dříve nebo později</TitleAll>
@@ -1763,7 +1779,10 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SingleLineLengthAverage>Průměrná délka jednotlivého řádku: {0}</SingleLineLengthAverage>
     <DurationMinimum>Minimální trvání: {0:0.000} sekund</DurationMinimum>
     <DurationMaximum>Maximální trvání: {0:0.000} sekund</DurationMaximum>
-    <DurationAverage>Průměrné trvání: {0:0.000} seconds</DurationAverage>
+    <DurationAverage>Průměrné trvání: {0:0.000} sekund</DurationAverage>
+    <CharactersPerSecondMinimum>Znaků za sekundu - minimálně: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Znaků za sekundu - maximálně: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Znaků za sekundu - průměrně: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Vlastnosti Advanced Sub Station Alpha</Title>
@@ -1923,6 +1942,7 @@ Zachovat změny?</KeepChangesMessage>
     <OcrAutoCorrectionSpellchecking>Automatická oprava a kontrola pravopisu OCR</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Opravit chyby OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importovat text s odpovídajícími kódy časů...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importovat nové časové kódy</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Uložit snímek titulku jako...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Uložit všechny snímky (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Uložit všechny snímky s html indexem...</SaveAllSubtitleImagesWithHtml>
