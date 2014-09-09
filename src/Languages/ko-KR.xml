@@ -19,7 +19,7 @@
     <OpenSubtitle>자막 열기</OpenSubtitle>
     <OpenVideoFile>비디오 열기</OpenVideoFile>
     <OpenVideoFileTitle>비디오 파일 열기</OpenVideoFileTitle>
-    <NoVideoLoaded>로드된 비디오가 없습니다! </NoVideoLoaded>
+    <NoVideoLoaded>로드된 비디오가 없습니다!</NoVideoLoaded>
     <VideoInformation>비디오 정보</VideoInformation>
     <PositionX>위치 / 시간: {0}</PositionX>
     <StartTime>시작</StartTime>
@@ -40,7 +40,7 @@
     <FrameRateX>프레임 속도: {0:0.0###}</FrameRateX>
     <TotalFramesX>총 프레임: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>비디오 인코딩: {0}</VideoEncodingX>
-    <SingleLineLengths>한 줄당 문자수: </SingleLineLengths>
+    <SingleLineLengths>한 줄당 문자수:</SingleLineLengths>
     <TotalLengthX>총 문자수: {0}</TotalLengthX>
     <TotalLengthXSplitLine>총 문자: {0} (분할)</TotalLengthXSplitLine>
     <SplitLine>줄 분할</SplitLine>
@@ -240,8 +240,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NextDifference>다음(&amp;N)...</NextDifference>
     <SubtitlesNotAlike>완전히 다른 자막입니다!</SubtitlesNotAlike>
     <XNumberOfDifference>차이: {0}개</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>차이나는 줄: {0}개  (변경된 단어 비율: {1}%)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>차이나는 줄: {0}개  (변경된 문자 비율: {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>차이나는 줄: {0}개 (변경된 단어 비율: {1}%)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>차이나는 줄: {0}개 (변경된 문자 비율: {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>차이나는 줄만 표시</ShowOnlyDifferences>
     <IgnoreLineBreaks>줄바꿈 무시</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>변경된 텍스트에 색칠</OnlyLookForDifferencesInText>
@@ -310,7 +310,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>언어 선택</Title>
     <ChooseLanguageStreamId>언어 선택 (스트림 ID)</ChooseLanguageStreamId>
     <UnknownLanguage>알 수 없는 언어</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>이미지 자막 {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>이미지 자막 {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>이미지 자막</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1014,11 +1014,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <XNotFound>'{0}'(을)를 찾지 못했습니다!</XNotFound>
     <BeforeReplace>바꾸기 전: {0}</BeforeReplace>
     <MatchFoundX>일치하는 내용: {0}개</MatchFoundX>
-    <NoMatchFoundX>'{0}'(와)과 일치하는 내용이 없습니다! </NoMatchFoundX>
+    <NoMatchFoundX>'{0}'(와)과 일치하는 내용이 없습니다!</NoMatchFoundX>
     <FoundNothingToReplace>교체할 내용이 없습니다!</FoundNothingToReplace>
     <ReplaceCountX>총 '{0}'개를 교체했습니다!</ReplaceCountX>
     <NoXFoundAtLineY>{0}번 줄에서 '{1}'을(를) 찾았습니다!</NoXFoundAtLineY>
-    <OneReplacementMade>1개를 교체한 후, </OneReplacementMade>
+    <OneReplacementMade>1개를 교체한 후,</OneReplacementMade>
     <BeforeChangesMadeInSourceView>소스 보기로 변경하기 전</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>소스 보기의 문자를 분석할 수 없습니다!</UnableToParseSourceView>
     <GoToLineNumberX>'{0}'번 줄로 이동했습니다!</GoToLineNumberX>
@@ -1032,7 +1032,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CommonErrorsFixedInSelectedLines>선택한 줄의 일반적 오류가 수정되었습니다.</CommonErrorsFixedInSelectedLines>
     <CommonErrorsFixed>일반적인 오류가 수정되었습니다!</CommonErrorsFixed>
     <BeforeRenumbering>자막 시작 번호 변경 전</BeforeRenumbering>
-    <RenumberedStartingFromX>변경됨!  -  새 시작 번호: {0}</RenumberedStartingFromX>
+    <RenumberedStartingFromX>변경됨! - 새 시작 번호: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>청각 장애인용 텍스트 삭제하기</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>1개의 청각 장애인용 텍스트가 삭제됐습니다!</TextingForHearingImpairedRemovedOneLine>
     <TextingForHearingImpairedRemovedXLines>청각 장애인용 텍스트가 삭제된 줄: {0}개</TextingForHearingImpairedRemovedXLines>
@@ -1110,11 +1110,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BeforeChangeCasing>대/소문자 바꾸기 전</BeforeChangeCasing>
     <CasingCompleteMessageNoNames>대소문자 변경: {0}/{1}(줄)</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>이름의 대소문자 변경: {0}/{1}(줄)</CasingCompleteMessageOnlyNames>
-    <CasingCompleteMessage>대소문자 변경: {0}/{1}(줄)  -  이름의 대소문자 변경: {2}(줄)</CasingCompleteMessage>
+    <CasingCompleteMessage>대소문자 변경: {0}/{1}(줄) - 이름의 대소문자 변경: {2}(줄)</CasingCompleteMessage>
     <BeforeChangeFrameRate>프레임 속도 변경 전</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>퍼센트로 속도를 조정하기 전</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>- 프레임 속도가 {0}fps에서 {1}fps로 변경됨.</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} 파일이 없습니다!  그래도 VobSub 파일을 계속 로드하시겠습니까?</IdxFileNotFoundWarning>
+    <IdxFileNotFoundWarning>{0} 파일이 없습니다! 그래도 VobSub 파일을 계속 로드하시겠습니까?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>헤더가 잘못된 VobSub 파일: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>VobSub(sub/idx) 자막 열기...</OpenVobSubFile>
     <VobSubFiles>VobSub 자막 파일</VobSubFiles>
@@ -1181,7 +1181,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NetworkUnableToConnectToServer>서버에 연결할 수 없습니다: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>사용자 | 동작</UserAndAction>
     <NetworkMode>네트워크 모드</NetworkMode>
-    <XStartedSessionYAtZ>-＞[{0}]가 [{2}]에 {1} 세션을 시작함. </XStartedSessionYAtZ>
+    <XStartedSessionYAtZ>-＞[{0}]가 [{2}]에 {1} 세션을 시작함.</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Word {0}을 사용해 맞춤법을 검사하고 있습니다. - 줄 {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Microsoft Word를 시작할 수 없습니다.</UnableToStartWord>
     <SpellCheckAbortedXCorrections>맞춤법 검사 중지!  {0} 줄이 변경됨.</SpellCheckAbortedXCorrections>
@@ -1212,7 +1212,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NotAValidXSubFile>유효한 XSUB 파일이 아닙니다!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>동일한 텍스트 라인 병합하기 전</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>현재 자막과 타임코드 수가 일치하지 않습니다! 그래도 계속하시겠습니까?
--  타임코드 수: ({0})개 | 현재 자막 줄 수: ({1})개</ImportTimeCodesDifferentNumberOfLinesWarning>
+- 타임코드 수: ({0})개 | 현재 자막 줄 수: ({1})개</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>전송 스트림을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStream>
     <ErrorLoadIdx>Idx 파일은 읽거나 편집할 수 없습니다. Idx 파일은 한 쌍으로 이루어진 VobSub(sub/idx) 파일의 서브 파일일 뿐입니다. .sub 파일로 여시기 바랍니다.</ErrorLoadIdx>
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
@@ -1370,7 +1370,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Brackets>'{ ~ }'</Brackets>
     <Parentheses>'( ~ )'</Parentheses>
     <QuestionMarks>'? ~ ?'</QuestionMarks>
-    <And>와 </And>
+    <And>와</And>
     <RemoveTextBeforeColon>콜론(':') 이전에 있는 텍스트 삭제</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>텍스트가 대문자인 경우에만</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>별도의 줄에 있을 때만</OnlyIfInSeparateLine>
@@ -1835,7 +1835,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MarginRight>오른쪽 여백</MarginRight>
     <MarginVertical>수직 여백</MarginVertical>
     <Border>테두리</Border>
-    <PlusShadow>+  그림자</PlusShadow>
+    <PlusShadow>+ 그림자</PlusShadow>
     <OpaqueBox>불투명 상자 (테두리 색 사용)</OpaqueBox>
     <Import>가져오기...</Import>
     <Export>내보내기...</Export>
@@ -1970,7 +1970,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Spanish>스페인어</Spanish>
     <German>독일어</German>
     <AutoSubmitOnFirstChar>자동으로 첫번째 문자를 전송함 (&amp;F)</AutoSubmitOnFirstChar>
-    <EditLastX>마지막 작업: {0} </EditLastX>
+    <EditLastX>마지막 작업: {0}</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>현재 이미지에 대한 일치 항목 비교 검사</Title>

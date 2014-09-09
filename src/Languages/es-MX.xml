@@ -40,7 +40,7 @@
     <FrameRateX>Tasa de cuadros: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total de cuadros: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codificación del video: {0}</VideoEncodingX>
-    <SingleLineLengths>Longitud individual de línea: </SingleLineLengths>
+    <SingleLineLengths>Longitud individual de línea:</SingleLineLengths>
     <TotalLengthX>Longitud total: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Longitud total: {0} (¡dividir línea!)</TotalLengthXSplitLine>
     <SplitLine>¡Dividir línea!</SplitLine>
@@ -253,7 +253,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FontUri>URI</FontUri>
     <FontColor>Color</FontColor>
     <FontEffect>Efecto</FontEffect>
-    <FontEffectColor>Color Efecto </FontEffectColor>
+    <FontEffectColor>Color Efecto</FontEffectColor>
     <FontSize>Tamaño</FontSize>
     <TopBottomMargin>Margen Arriba/Abajo</TopBottomMargin>
     <FadeUpTime>Atenuar tiempo de subida</FadeUpTime>
@@ -299,7 +299,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Seleccionar idioma</Title>
     <ChooseLanguageStreamId>Seleccioneidioma (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Idioma desconocido</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Imagen de subtítulo {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Imagen de subtítulo {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imagen de subtítulo</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -427,7 +427,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generar tiempo como texto</Title>
-    <OpenVideoFile>Elegir archivo de video para extraer información de  fecha/tiempo</OpenVideoFile>
+    <OpenVideoFile>Elegir archivo de video para extraer información de fecha/tiempo</OpenVideoFile>
     <StartFrom>Empezar desde</StartFrom>
     <DateTimeFormat>Formato de fecha/tiempo</DateTimeFormat>
     <Example>Ejemplo</Example>
@@ -494,7 +494,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Reparar (añadir guion) pares de líneas con un solo guion (-)</FixHyphensAdd>
     <FixHyphen>Corregir líneas que comienzan con guion (-)</FixHyphen>
     <XHyphensFixed>Guiones solucionados: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"¿Cómo estás?  --&gt;  "¿Cómo estás?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"¿Cómo estás? --&gt; "¿Cómo estás?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Comillas omitidas añadidas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corregir subtítulos con más de dos líneas</Fix3PlusLines>
     <Fix3PlusLine>Corregir subtítulo con más de dos líneas</Fix3PlusLine>
@@ -518,12 +518,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Corregir etiqueta inválida en cursiva</FixInvalidItalicTag>
     <FixShortDisplayTime>Corregir duración demasiado corta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corregir solapamiento duración</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;No tienes por qué preocuparte.&lt;i&gt;  --&gt;  &lt;i&gt;No tienes por qué preocuparte.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Oye   tú , ¿ qué haces?  --&gt;  Oye tú, ¿qué haces?</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>¡Oye tú!.  --&gt;  ¡Oye tú!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Eh.Tú.  --&gt;  Eh. Tú.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>La tIerra es plana.  --&gt;  La tierra es plana.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care.  --&gt;  What do I care.</FixLowercaseIToUppercaseIExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;No tienes por qué preocuparte.&lt;i&gt; --&gt; &lt;i&gt;No tienes por qué preocuparte.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Oye   tú , ¿ qué haces? --&gt; Oye tú, ¿qué haces?</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>¡Oye tú!. --&gt; ¡Oye tú!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Eh.Tú. --&gt; Eh. Tú.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>La tIerra es plana. --&gt; La tierra es plana.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. --&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Número de texto {0}: Tiempo inicial es posterior a tiempo final: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>No se pudo solucionar número de texto {0}: Tiempo inicial es posterior a tiempo final: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0}convertido a: {1}{2}</XFixedToYZ>
@@ -548,8 +548,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Aplicar correcciones seleccionadas</ApplyFixes>
     <AutoBreak>Salto automático</AutoBreak>
     <Unbreak>Combinar</Unbreak>
-    <FixDoubleDash>Corregir «--»  --&gt;  «...»</FixDoubleDash>
-    <FixDoubleGreaterThan>Eliminar &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Corregir «--» --&gt;  «...»</FixDoubleDash>
+    <FixDoubleGreaterThan>Eliminar &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Eliminar «...» al inicio</FixEllipsesStart>
     <FixMissingOpenBracket>Corregir «[» omitido en la línea</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicales (ej. âTª) con símbolos adecuados</FixMusicNotation>
@@ -558,11 +558,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} «...» iniciales eliminados</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} «[» omitidos en línea corregidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical en línea corregida</XFixMusicNotation>
-    <FixDoubleDashExample>Pero--   --&gt;  Pero...</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>«&gt;&gt; Roberto: ¡Vaya mierda!»  --&gt;  «Roberto: ¡Vaya mierda!»</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>«...y luego nosotros»  --&gt;  «y luego nosotros»</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>«toc toc] Abre la puerta, por favor.»  --&gt;  «[toc toc] Abre la puerta, por favor.»</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>«âTª eres mi vida, eres mi sol»  --&gt;  «♫ eres mi vida, eres mi sol»</FixMusicNotationExample>
+    <FixDoubleDashExample>Pero-- --&gt; Pero...</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>«&gt;&gt; Roberto: ¡Vaya mierda!» --&gt; «Roberto: ¡Vaya mierda!»</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>«...y luego nosotros» --&gt; «y luego nosotros»</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>«toc toc] Abre la puerta, por favor.» --&gt; «[toc toc] Abre la puerta, por favor.»</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>«âTª eres mi vida, eres mi sol» --&gt; «♫ eres mi vida, eres mi sol»</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ¡Mensajes de registro importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corregidos y aceptados - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -836,7 +836,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Mostrar/ocultar video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Sub Station Alpha - Ajustar estilo (Avanzado) </AdvancedSubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Sub Station Alpha - Ajustar estilo (Avanzado)</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>Sub Station Alpha - Ajustar estilo</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha estilos...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Sub Station Alpha estilos (Avanzado)...</AdvancedSubStationAlphaStyles>
@@ -1019,9 +1019,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <CommonErrorsFixed>Errores comunes corregidos</CommonErrorsFixed>
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
-    <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar los  mensajes de texto para sordos</BeforeRemovalOfTextingForHearingImpaired>
+    <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar los mensajes de texto para sordos</BeforeRemovalOfTextingForHearingImpaired>
     <TextingForHearingImpairedRemovedOneLine>Eliminados los mensajes de texto para sordos: Una línea</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Texto para sordos eliminado : {0} líneas</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedXLines>Texto para sordos eliminado: {0} líneas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Subtítulo dividido</SubtitleSplitted>
     <SubtitleAppendPrompt>Esto añadirá un subtítulo existente, que debería estar sincronizado
 con el archivo de video, al subtítulo actual cargado.
@@ -1100,7 +1100,7 @@ con el archivo de video, al subtítulo actual cargado.
     <BeforeChangeFrameRate>Antes de cambiar la tasa de cuadros</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Antes de ajustar la velocidad en porcentaje</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Tasa de cuadros cambiada de {0} a {1}</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} ¡no encontrado! ¿Importar archivo VobSub  de todos modos?</IdxFileNotFoundWarning>
+    <IdxFileNotFoundWarning>{0} ¡no encontrado! ¿Importar archivo VobSub de todos modos?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Cabecera de archivo VobSub no válida: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Abrir subtítulo VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Archivos de subtítulos VobSub</VobSubFiles>
@@ -1311,7 +1311,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
   </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
-    <InstalledPlugins>Plugins Instalados </InstalledPlugins>
+    <InstalledPlugins>Plugins Instalados</InstalledPlugins>
     <GetPlugins>Obtener plugins</GetPlugins>
     <Description>Descripción</Description>
     <Version>Versión</Version>
@@ -1471,7 +1471,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll en la carpeta system32</DirectShowDescription>
     <ManagedDirectX>Gestión de DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Código gestionado desde DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Código gestionado desde DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1872,7 +1872,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Image>Imagen</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Importar subtítulo OCR VobSub (sub/idx) </Title>
+    <Title>Importar subtítulo OCR VobSub (sub/idx)</Title>
     <TitleBluRay>Importar subtítulo OCR Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Método OCR</OcrMethod>
     <OcrViaModi>OCR con Microsoft Office Document Imaging (MODI). Necesita MS Office</OcrViaModi>
@@ -1911,7 +1911,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <OcrAutoCorrectionSpellchecking>OCR autocorrección / revisión ortográfica</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Corregir errores de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto con código de tiempo coincidente...</ImportTextWithMatchingTimeCodes>
-    <SaveSubtitleImageAs>Guardar imagen de subtítulo  como...</SaveSubtitleImageAs>
+    <SaveSubtitleImageAs>Guardar imagen de subtítulo como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas las imágenes (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas las imágenes con índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imágenes guardadas en {1}</XImagesSavedInY>
@@ -1965,8 +1965,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <MergeWithPrevious>Combinar con anterior</MergeWithPrevious>
     <MergeWithNext>Combinar con siguiente</MergeWithNext>
     <PlaySelection>Reproducir selección</PlaySelection>
-    <ShowWaveformAndSpectrogram>Mostrar  forma de onda y espectrograma</ShowWaveformAndSpectrogram>
-    <ShowWaveformOnly>Mostrar solo  forma de onda</ShowWaveformOnly>
+    <ShowWaveformAndSpectrogram>Mostrar forma de onda y espectrograma</ShowWaveformAndSpectrogram>
+    <ShowWaveformOnly>Mostrar solo forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar solo espectrograma</ShowSpectrogramOnly>
     <GuessTimeCodes>Adivinar códigos de tiempo...</GuessTimeCodes>
     <SeekSilence>Buscar silencio...</SeekSilence>

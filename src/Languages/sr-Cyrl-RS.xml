@@ -36,7 +36,7 @@
     <FrameRateX>Број кадрова: {0:0.0###}</FrameRateX>
     <TotalFramesX>Укупно кадрова: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Видео кодирање: {0}</VideoEncodingX>
-    <SingleLineLengths>Дужина линије: </SingleLineLengths>
+    <SingleLineLengths>Дужина линије:</SingleLineLengths>
     <TotalLengthX>Укупна дужина: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Укупна дужина: {0} (раздвојите линију!)</TotalLengthXSplitLine>
     <SplitLine>Раздвоји линију</SplitLine>
@@ -184,7 +184,7 @@
     <Title>Одабир језика</Title>
     <ChooseLanguageStreamId>Изаберите жељени језик испод:</ChooseLanguageStreamId>
     <UnknownLanguage>Непознато</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Слика титла ({0}/{1} – {2}×{3}) </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Слика титла ({0}/{1} – {2}×{3})</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Слика титла</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -208,7 +208,7 @@
     <TotalNumberOfDisks>Укупно дискова:</TotalNumberOfDisks>
     <Import>У&amp;вези…</Import>
     <TextAndTimingInformation>Подаци о тексту и времену</TextAndTimingInformation>
-    <JustificationCode>                       Поравнање:</JustificationCode>
+    <JustificationCode>Поравнање:</JustificationCode>
     <Errors>Грешке</Errors>
     <ErrorsX>Грешака: {0}</ErrorsX>
     <MaxLengthError>Линија {0} прелази дозвољену дужину ({1}) за {2}: {3}</MaxLengthError>
@@ -995,15 +995,15 @@
     <DirectShow>Директшоу</DirectShow>
     <DirectShowDescription>quartz.dll у фасцикли „System32“</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback —  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback — .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>Ем плејер</MPlayer>
     <MPlayerDescription>Ем плејер 2/Ем плејер</MPlayerDescription>
     <VlcMediaPlayer>ВЛЦ медија плејер</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll из ВЛЦ медија плејера 1.1.0 или новијег издања</VlcMediaPlayerDescription>
     <ShowStopButton>&amp;Дугме за заустављање</ShowStopButton>
-    <DefaultVolume>     Јачина звука:</DefaultVolume>
+    <DefaultVolume>Јачина звука:</DefaultVolume>
     <VolumeNotes>(0 – искључено, 100 – најгласније)</VolumeNotes>
-    <PreviewFontSize>     Величина фонта:  </PreviewFontSize>
+    <PreviewFontSize>Величина фонта:</PreviewFontSize>
     <MainWindowVideoControls>Главни прозор за управљање видео снимком</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Адреса за претрагу речи:</CustomSearchTextAndUrl>
     <WaveFormAppearance>Изглед таласног облика</WaveFormAppearance>
@@ -1041,11 +1041,11 @@
     <RemoveX>Желите ли да уклоните „{0}“?</RemoveX>
     <CannotUpdateNamesEtcOnline>Не могу да ажурирам мрежну датотеку „NamesEtc.xml“.</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Поставке посредничког сервера</ProxyServerSettings>
-    <ProxyAddress>     Адреса сервера:</ProxyAddress>
+    <ProxyAddress>Адреса сервера:</ProxyAddress>
     <ProxyAuthentication>Потврда идентитета</ProxyAuthentication>
     <ProxyUserName>Корисничко име:</ProxyUserName>
-    <ProxyPassword>            Лозинка:</ProxyPassword>
-    <ProxyDomain>               Домен:</ProxyDomain>
+    <ProxyPassword>Лозинка:</ProxyPassword>
+    <ProxyDomain>Домен:</ProxyDomain>
     <PlayXSecondsAndBack>Пусти икс секунди па врати. Икс је:</PlayXSecondsAndBack>
     <StartSceneIndex>Пасус почетне сцене:</StartSceneIndex>
     <EndSceneIndex>Пасус завршне сцене:</EndSceneIndex>
@@ -1185,7 +1185,7 @@
   <VobSubOcr>
     <Title>Препознавање знакова Вобсаб титла</Title>
     <TitleBluRay>Препознавање знакова Блу-реј титла</TitleBluRay>
-    <OcrMethod>  Начин препознавања знакова:</OcrMethod>
+    <OcrMethod>Начин препознавања знакова:</OcrMethod>
     <OcrViaModi>Препознавање знакова путем Microsoft Office Document Imaging (MODI). Захтева Мајкрософт офис.</OcrViaModi>
     <OcrViaTesseract>користећи хиперкоцку</OcrViaTesseract>
     <Language>Језик:</Language>

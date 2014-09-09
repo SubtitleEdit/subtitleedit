@@ -40,7 +40,7 @@
     <FrameRateX>Taxa de quadros: {0:0.0###}</FrameRateX>
     <TotalFramesX>Quadros totais: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codificação de vídeo: {0}</VideoEncodingX>
-    <SingleLineLengths>Comprimento linha única: </SingleLineLengths>
+    <SingleLineLengths>Comprimento linha única:</SingleLineLengths>
     <TotalLengthX>Comprimento total: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Comprimento total: {0} (dividir lnha)</TotalLengthXSplitLine>
     <SplitLine>Dividir linha!</SplitLine>
@@ -312,14 +312,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Selecionar idioma</Title>
     <ChooseLanguageStreamId>Selecionar idioma (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Idioma desconhecido</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Imagem de legenda {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Imagem de legenda {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Imagem de legenda</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
     <Title>Opções de salvamento EBU</Title>
     <GeneralSubtitleInformation>Informação geral da legenda</GeneralSubtitleInformation>
     <CodePageNumber>Número code page</CodePageNumber>
-    <DiskFormatCode>Código formato de  disco</DiskFormatCode>
+    <DiskFormatCode>Código formato de disco</DiskFormatCode>
     <DisplayStandardCode>Código de exibição padrão</DisplayStandardCode>
     <CharacterCodeTable>Tabela de caracteres</CharacterCodeTable>
     <LanguageCode>Código de idiomas</LanguageCode>
@@ -506,7 +506,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Corrigir pares de linha (adicionar traço) com apenas um traço (-)</FixHyphensAdd>
     <FixHyphen>Corrigir linhas que começam com hífen (-)</FixHyphen>
     <XHyphensFixed>Hífens solucionados: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Aspas em falta adicionadas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corrigir legendas com mais de duas linhas</Fix3PlusLines>
     <Fix3PlusLine>Corrigir legenda com mais de duas linhas</Fix3PlusLine>
@@ -520,7 +520,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Continue>Continuar</Continue>
     <ContinueAnyway>Continuar assim mesmo?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Desmarcar "Corrigir "i" minúscula sozinha por "I" maiúscula (Inglês)"</UncheckedFixLowercaseIToUppercaseI>
-    <XIsChangedToUppercase>{0} "i"s alterados para maiúsculo </XIsChangedToUppercase>
+    <XIsChangedToUppercase>{0} "i"s alterados para maiúsculo</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Corrigir primeira letra do pparágrafo para maiúscula</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>combinar linha curta (uma frase)</MergeShortLine>
     <MergeShortLineAll>Combinar linhas curtas (exceto diálogos)</MergeShortLineAll>
@@ -560,8 +560,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Aplicar correções selecionadas</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Combinar</Unbreak>
-    <FixDoubleDash>Corrigir '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Remover &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Corrigir '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Remover &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Remover '...' no início</FixEllipsesStart>
     <FixMissingOpenBracket>Corrigir [ omitido na linha</FixMissingOpenBracket>
     <FixMusicNotation>Sustituir símbolos musicais (ex.: âTª) por símbolos adequados</FixMusicNotation>
@@ -571,7 +571,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} [ omitidos na linha corregidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical na linha corrigida</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1034,8 +1034,8 @@ Gostaria de começar do início do documento e continuar pesquisa e substituiç�
     <BeforeRenumbering>Antes de renumerar</BeforeRenumbering>
     <RenumberedStartingFromX>Renumerar a partir de: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Antes de eliminar as mensagens de texto para surdos</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos : Uma linha</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos : {0} linhas</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Eliminadas as mensagens de texto para surdos: Uma linha</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Eliminadas as mensagens de texto para surdos: {0} linhas</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Legenda dividida</SubtitleSplitted>
     <SubtitleAppendPrompt>Isto anexará uma legenda existente, que deveria estar sincronizada
 com o arquivo de vídeo, à legenda carregada atualmente.
@@ -1314,7 +1314,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
   <NetworkStart>
     <Title>Iniciar sessão de rede</Title>
     <ConnectionTo>Conectando a {0}...</ConnectionTo>
-    <Information>Começar  nova sesão onde várias pessoas
+    <Information>Começar nova sesão onde várias pessoas
  podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Start>Início</Start>
   </NetworkStart>
@@ -1489,7 +1489,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
     <ManagedDirectX>Gerenc. DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  Código .NET gerenc. pelo DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerenc. pelo DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1901,7 +1901,7 @@ Manter as alterações?</KeepChangesMessage>
     <Image>Imagem</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title>Importar legenda OCR VobSub (sub/idx) </Title>
+    <Title>Importar legenda OCR VobSub (sub/idx)</Title>
     <TitleBluRay>Importar legenda OCR Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Método OCR</OcrMethod>
     <OcrViaModi>OCR com o Microsoft Office Document Imaging (MODI). Necessita do MS Office</OcrViaModi>
@@ -1941,7 +1941,7 @@ Manter as alterações?</KeepChangesMessage>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importar novos códigos de tempo</ImportNewTimeCodes>
-    <SaveSubtitleImageAs>Salvar imagem de legenda  como...</SaveSubtitleImageAs>
+    <SaveSubtitleImageAs>Salvar imagem de legenda como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Salvar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Salvar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imagens salvas em {1}</XImagesSavedInY>

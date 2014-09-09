@@ -40,7 +40,7 @@
     <FrameRateX>Snímková frekvence: {0:0.0###}</FrameRateX>
     <TotalFramesX>Celkový počet snímků: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Kódování videa: {0}</VideoEncodingX>
-    <SingleLineLengths>Délka jednotlivého řádku: </SingleLineLengths>
+    <SingleLineLengths>Délka jednotlivého řádku:</SingleLineLengths>
     <TotalLengthX>Celková délka: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Celková délka: {0} (rozdělit řádek!)</TotalLengthXSplitLine>
     <SplitLine>Rozdělit řádek!</SplitLine>
@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Vybrat jazyk</Title>
     <ChooseLanguageStreamId>Vyberte jazyk (ID stopy)</ChooseLanguageStreamId>
     <UnknownLanguage>Neznámý jazyk</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Snímek titulku {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Snímek titulku {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Snímek titulku</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -507,7 +507,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Opravit (přidat pomlčku) dvojice řádků pouze s jednou pomlčkou (-)</FixHyphensAdd>
     <FixHyphen>Opravit řádek začínající pomlčkou (-)</FixHyphen>
     <XHyphensFixed>Opravených pomlček: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Jak se máte?  -&gt; "Jak se máte?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Jak se máte? -&gt; "Jak se máte?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Přidáno chybějících uvozovek: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Opravit titulky s více než dvěma řádky</Fix3PlusLines>
     <Fix3PlusLine>Opravit titulek s více než dvěma řádky</Fix3PlusLine>
@@ -561,18 +561,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Použít vybrané opravy</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Zrušit zalomení</Unbreak>
-    <FixDoubleDash>Opravit '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Odebrat '&gt;&gt;' </FixDoubleGreaterThan>
+    <FixDoubleDash>Opravit '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Odebrat '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Odebrat úvodní '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Opravit chybějící '[' v řádku</FixMissingOpenBracket>
     <FixMusicNotation>Nahradit hudební symboly (např. âTª) upřednostňovaným symbolem</FixMusicNotation>
-    <XFixDoubleDash>Opraveno {0} '--' </XFixDoubleDash>
-    <XFixDoubleGreaterThan>Odebráno {0} '&gt;&gt;' </XFixDoubleGreaterThan>
+    <XFixDoubleDash>Opraveno {0} '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>Odebráno {0} '&gt;&gt;'</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Odebráno {0} začátečních '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>Opraveno {0} chybějících '[' v řádku</XFixMissingOpenBracket>
     <XFixMusicNotation>Opraveno {0} hudebních symbolů v řádku</XFixMusicNotation>
     <FixDoubleDashExample>'Páni-- jo!' --&gt; 'Páni... jo!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Jez!'  --&gt; 'Robert: Jez!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Jez!' --&gt; 'Robert: Jez!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... a pak my' -&gt; 'a pak my'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'zvonění] Pozor!' --&gt; '[zvonění] Pozor!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sladké sny' --&gt; '♫ sladké sny'</FixMusicNotationExample>
@@ -586,7 +586,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GetDictionariesHere>ZTískat slovníky zde:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Seznam slovníků programu Open Office</OpenOpenOfficeWiki>
     <GetAllDictionaries>Získat všechny slovníky</GetAllDictionaries>
-    <ChooseLanguageAndClickDownload>Vyberte svůj jazyk  a klepněte na Stáhnout</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Vyberte svůj jazyk a klepněte na Stáhnout</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Otevřít složku 'Dictionaries'</OpenDictionariesFolder>
     <Download>Stáhnout</Download>
     <XDownloaded>{0} bylo staženo a nainstalováno</XDownloaded>

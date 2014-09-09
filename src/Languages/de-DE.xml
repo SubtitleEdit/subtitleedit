@@ -40,7 +40,7 @@
     <FrameRateX>Bildfrequenz: {0:0.0###}</FrameRateX>
     <TotalFramesX>Bilder gesamt: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Videokodierung: {0}</VideoEncodingX>
-    <SingleLineLengths>Einzelzeilenlänge: </SingleLineLengths>
+    <SingleLineLengths>Einzelzeilenlänge:</SingleLineLengths>
     <TotalLengthX>Gesamtlänge: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Gesamtlänge: {0} (Zeilenumbruch!)</TotalLengthXSplitLine>
     <SplitLine>Zeilenumbruch!</SplitLine>
@@ -560,13 +560,13 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Ausgewählte Korrekturen anwenden</ApplyFixes>
     <AutoBreak>Auto-&amp;Umbruch</AutoBreak>
     <Unbreak>&amp;Umbruch entfernen</Unbreak>
-    <FixDoubleDash>Korrigiere '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Entferne &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Korrigiere '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Entferne &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Entferne '...' am Anfang</FixEllipsesStart>
     <FixMissingOpenBracket>Korrigiere fehlende [</FixMissingOpenBracket>
     <FixMusicNotation>Musikzeichen âTª mit bevorzugten Zeichen korrigieren</FixMusicNotation>
-    <XFixDoubleDash>{0} korrigierte '--' </XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} entfernte &gt;&gt; </XFixDoubleGreaterThan>
+    <XFixDoubleDash>{0} korrigierte '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} entfernte &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} entfernte '...' am Anfang</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} korrigierte [</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} korrigierte Musikzeichen</XFixMusicNotation>
@@ -1496,7 +1496,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll aus VLC Media Player 1.1.0 oder höher</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC-Pfad (nur für VLC Portable  benötigt)</VlcBrowseToLabel>
+    <VlcBrowseToLabel>VLC-Pfad (nur für VLC Portable benötigt)</VlcBrowseToLabel>
     <ShowStopButton>Stopp-Knopf anzeigen</ShowStopButton>
     <ShowMuteButton>Ton-aus-Knopf anzeigen</ShowMuteButton>
     <ShowFullscreenButton>Vollbild-Knopf anzeigen</ShowFullscreenButton>
