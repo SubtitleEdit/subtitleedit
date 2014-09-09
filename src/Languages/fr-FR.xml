@@ -160,6 +160,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Scan {0} et les sous-dossiers...</ScanningFolder>
     <Recursive>Inclus les sous-dossiers</Recursive>
     <SetMinMsBetweenSubtitles>Définir mini millisec. entre les sous-titres</SetMinMsBetweenSubtitles>
+    <PlainText>Texte brut</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Sous-titre spectateur</Title>
@@ -192,7 +193,19 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Ajuster la vitesse en pourcentage</Title>
     <Info>Modifier la vitesse des sous-titres en pourcentage</Info>
+    <Custom>Custom</Custom>
+    <ToDropFrame>A drop-frame</ToDropFrame>
+    <FromDropFrame>De drop-frame</FromDropFrame>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Recherche de mise à jour</Title>
+    <CheckingForUpdates>Recherche de mise à jour...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Recherche de mise à jour a échoué : {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Vous utilisez la dernière version de Subtitle Edit :</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Aller à la page de téléchargement</InstallUpdate>
+    <NoUpdates>Ne pas mettre à jour</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Sélectionner la piste audio</Title>
   </ChooseAudioTrack>
@@ -206,6 +219,13 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Choisisser la langue</Title>
     <Language>Langue</Language>
   </ChooseLanguage>
+  <ColorChooser>
+    <Title>Choisir la couleur</Title>
+    <Red>Rouge</Red>
+    <Green>Vert</Green>
+    <Blue>Bleu</Blue>
+    <Alpha>Alpha</Alpha>
+  </ColorChooser>
   <ColumnPaste>
     <Title>Coller colonne</Title>
     <ChooseColumn>Sélectionner colonne</ChooseColumn>
@@ -365,6 +385,10 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <FontColor>Couleur de police</FontColor>
     <BorderColor>Couleur de bordure</BorderColor>
     <BorderWidth>Largeur de bordure</BorderWidth>
+    <BorderStyle>Style de bordure</BorderStyle>
+    <BorderStyleOneBox>Boîte unique</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Boîte multi-lignes</BorderStyleBoxForEachLine>
+    <BorderStyleNormalWidthX>Normal, largeur={0}</BorderStyleNormalWidthX>
     <ShadowColor>Couleur d'ombre</ShadowColor>
     <ShadowWidth>Largeur d'ombre</ShadowWidth>
     <Transparency>Transparence</Transparency>
@@ -390,6 +414,8 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
     <SomeLinesWereTooLongX>Certaines lignes sont trop longues:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Hauteur de ligne</LineHeight>
+    <BoxSingleLine>Boîte unique</BoxSingleLine>
+    <BoxMultiLine>Boîte multi-lignes</BoxMultiLine>
   </ExportPngXml>
   <ExportText>
     <Title>Exporter du texte</Title>
@@ -661,7 +687,9 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <SaveAs>Sauver so&amp;us...</SaveAs>
         <RestoreAutoBackup>Restauration à partir d'auto-backup...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced SubStation Alpha propriétés...</AdvancedSubStationAlphaProperties>
-        <SubStationAlphaProperties>SubStation Alpha propriétés ...</SubStationAlphaProperties>
+        <SubStationAlphaProperties>SubStation Alpha propriétés...</SubStationAlphaProperties>
+        <EbuProperties>EBU stl propriétés...</EbuProperties>
+        <PacProperties>PAC propriétés...</PacProperties>
         <OpenOriginal>Ouvrir sous-titre original (mode traduction)...</OpenOriginal>
         <SaveOriginal>Sauver original</SaveOriginal>
         <CloseOriginal>Retirer original</CloseOriginal>
@@ -728,6 +756,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Modifier vitesse (en %)...</ChangeSpeedInPercent>
         <MergeShortLines>&amp;Fusionner les lignes courtes...</MergeShortLines>
         <MergeDuplicateText>Fusionner les doublons...</MergeDuplicateText>
+        <MergeSameTimeCodes>Fusionner les lignes au time codes identique...</MergeSameTimeCodes>
         <SplitLongLines>Diviser les lignes trop longues...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Temps d'affichage minimum entre paragraphes...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>T&amp;rier par</SortBy>
@@ -802,6 +831,7 @@ Email : mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Quitter la session</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Recherche de mise à jour...</CheckForUpdates>
         <Title>&amp;Aide</Title>
         <Help>&amp;Aide</Help>
         <About>A &amp;propos</About>
@@ -1032,6 +1062,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <NothingToUndo>Rien à annuler</NothingToUndo>
     <InvalidLanguageNameX>Nom de langue invalide : {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Impossible de changer de langue!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>Ne plus afficher ce message</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Nombre de mots corrigés: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Nombre de mots ignorés: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Nombre de mots corrects: {0}</NumberOfCorrectWords>
@@ -1219,6 +1250,13 @@ Poursuivre?</SubtitleAppendPrompt>
     <MergedText>Texte fusionné</MergedText>
     <OnlyMergeContinuationLines>Fusionner uniquement les lignes continues</OnlyMergeContinuationLines>
   </MergedShortLines>
+  <MergeTextWithSameTimeCodes>
+    <Title>Fusionner les lignes au time codes identique</Title>
+    <MaxDifferenceMilliseconds>Maximum d'écart en millisecondes</MaxDifferenceMilliseconds>
+    <ReBreakLines>Recouper les lignes</ReBreakLines>
+    <NumberOfMergesX>Nombre de fusions : {0}</NumberOfMergesX>
+    <MergedText>Texte fusionné</MergedText>
+  </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Modifier la sélection</Title>
     <Rule>Règles</Rule>
@@ -1256,6 +1294,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <ImportRulesTitle>Règle(s) importation</ImportRulesTitle>
     <ExportRulesTitle>Règle(s) exportation</ExportRulesTitle>
     <Rules>Règles d'exportation</Rules>
+    <MoveToTop>Tout en haut</MoveToTop>
+    <MoveToBottom>Tout en bas</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Bavarder</Title>
@@ -1441,6 +1481,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <AutoBackupEveryMinute>Chaque minute</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Toutes les 5 minutes</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Toutes les 15 minutes</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Rechercher des mises à jour</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Autoriser la modification du sous-titre original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmer la suppression des lignes</PromptDeleteLines>
     <TimeCodeMode>Mode de timecode :</TimeCodeMode>
@@ -1591,7 +1632,9 @@ Poursuivre?</SubtitleAppendPrompt>
     <SyntaxColorOverlap>Chevauchement de timecode</SyntaxColorOverlap>
     <SyntaxErrorColor>Couleur - Erreur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Aller à la ligne sélectionnée en premier</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Aller à la ligne vide suivante</GoToNextEmptyLine>
     <MergeSelectedLines>Fusionner les lignes sélectionnées</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Fusionner les lignes sélectionnées, garder que le premier texte non vide</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Basculer le mode de traduction</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Permuter original et traduction</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Fusionner original et traduction</MergeOriginalAndTranslation>
@@ -1614,6 +1657,11 @@ Poursuivre?</SubtitleAppendPrompt>
     <Miscellaneous>Divers</Miscellaneous>
     <UseDoNotBreakAfterList>Sans pause après la liste (pause automatique)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Régler décalage vidéo</Title>
+    <Description>Régler décalage vidéo (sous-titres ne devraient pas suivre la durée réelle de la vidéo, ex : +10 hours)</Description>
+    <RelativeToCurrentVideoPosition>Par rapport à la position de la vidéo en cours</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Visualiser les sous-titres plus tôt/tard</Title>
     <TitleAll>Visualiser tous les sous-titres plus tôt/tard</TitleAll>
@@ -1659,6 +1707,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <ImageText>Texte de l'image</ImageText>
     <SpellCheckCompleted>Vérification d'orthographe terminée</SpellCheckCompleted>
     <SpellCheckAborted>Vérification d'orthographe interrompue</SpellCheckAborted>
+    <UndoX>Annuler : {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Diviser sous-titres</Title>
@@ -1732,6 +1781,9 @@ Poursuivre?</SubtitleAppendPrompt>
     <DurationMinimum>Durée - minimum: {0:0.000} secondes</DurationMinimum>
     <DurationMaximum>Durée - maximum: {0:0.000} secondes</DurationMaximum>
     <DurationAverage>Durée - moyenne: {0:0.000} secondes</DurationAverage>
+    <CharactersPerSecondMinimum>Caractères/sec - minimum : {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Caractères/sec - maximum : {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Caractères/sec - moyen : {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propriétés Advanced SubStation Alpha</Title>
@@ -1889,6 +1941,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <OcrAutoCorrectionSpellchecking>Correction auto. OCR/Vérification d'orthographe</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Correction des erreurs</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer du texte avec les timecodes correspondants...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importer nouveaux time codes</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Sauver images de sous-titre sous...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Enregistrer toutes les images (PNG/BDN xml )...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Enregistrer toutes les images avec index html...</SaveAllSubtitleImagesWithHtml>
