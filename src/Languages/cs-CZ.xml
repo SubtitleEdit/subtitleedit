@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Čeština">
   <General>
     <Title>Subtitle Edit</Title>
@@ -561,8 +561,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Použít vybrané opravy</ApplyFixes>
     <AutoBreak>Auto &amp;br</AutoBreak>
     <Unbreak>&amp;Zrušit zalomení</Unbreak>
-    <FixDoubleDash>Opravit '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Odebrat '&gt;&gt;' </FixDoubleGreaterThan>
+    <FixDoubleDash>Opravit '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Odebrat '&gt;&gt;'</FixDoubleGreaterThan>
     <FixEllipsesStart>Odebrat úvodní '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Opravit chybějící '[' v řádku</FixMissingOpenBracket>
     <FixMusicNotation>Nahradit hudební symboly (např. âTª) upřednostňovaným symbolem</FixMusicNotation>
@@ -1523,9 +1523,9 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SpectrogramAppearance>Vzhled spektrogramu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Jednobarevný přechod</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klasický</SpectrogramClassic>
-    <WaveformUseFFmpeg>Použít FFmpeg pro extrahování křivky</WaveformUseFFmpeg>
-    <WaveformFFmpegPath>Cesta k FFmpeg</WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>Najít FFmpeg</WaveformBrowseToFFmpeg>
+    <WaveformUseFFmpeg>Použít FFMPEG pro extrahování křivky</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>Cesta k FFMPEG</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>Najít FFMPEG</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>Najít přenosné VLC</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Styl (Advanced) Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>Vyberte písmo</ChooseFont>
