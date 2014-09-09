@@ -308,7 +308,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Válasszon nyelvet</Title>
     <ChooseLanguageStreamId>Válasszon nyelvet (adatfolyam-azonosító)</ChooseLanguageStreamId>
     <UnknownLanguage>Ismeretlen nyelv</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Feliratkép {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Feliratkép {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Feliratkép</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -481,7 +481,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpaces>Hiányzó szóközök eltávolítása</FixMissingSpaces>
     <BreakLongLines>Hosszú sorok tördelése</BreakLongLines>
     <RemoveLineBreaks>Sortörések eltávolítása rövid szövegekben, csak egy mondatnál</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Sortörések eltávolítása rövid szövegekben (a párbeszédablakok kivételével) </RemoveLineBreaksAll>
+    <RemoveLineBreaksAll>Sortörések eltávolítása rövid szövegekben (a párbeszédablakok kivételével)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Nagybetűs 'i' javítása a kisbetűs szavakban (OCR hiba)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Dupla idézőjeles ('') karakterek javítása egyszeres idézőjelesre (')</FixDoubleApostrophes>
     <AddPeriods>Pont hozzáadás azon sorok után, ahol a következő sor nagybetűvel indul</AddPeriods>
@@ -503,7 +503,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Sorpárok javítása (kötöjel hozzáadása) csak egy kötőjellel (-)</FixHyphensAdd>
     <FixHyphen>A kötőjellel (-) kezdődő sor javítása</FixHyphen>
     <XHyphensFixed>Javított kötőjel: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Hozzáadott hiányzó idézőjel: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>A több mint két soros feliratok javítása</Fix3PlusLines>
     <Fix3PlusLine>A több mint két soros felirat javítása</Fix3PlusLine>
@@ -568,7 +568,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} hiányzó [ jel pótolva a sorban</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zenei jelölés javítása a sorban</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1030,8 +1030,8 @@ Elindítja a dokumentum tetejéről és folytatja a keresést és cserét?</Repl
     <BeforeRenumbering>Újraszámozás előtti állapotra</BeforeRenumbering>
     <RenumberedStartingFromX>Újraszámozás kezdése innen: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>A szöveg eltávolítása előtt</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Szöveg eltávolítva a halláskárosultak számára : Egy sor</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Szöveg eltávolítva a halláskárosultak számára : {0} sor</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Szöveg eltávolítva a halláskárosultak számára: Egy sor</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Szöveg eltávolítva a halláskárosultak számára: {0} sor</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Felirat vágva</SubtitleSplitted>
     <SubtitleAppendPrompt>Ez hozzá fog fűzni egy létező feliratot a jelenleg betöltött felirathoz, amelyet már szinkronizálni kellett
 volna a videóállománnyal.
@@ -1119,7 +1119,7 @@ Folytatja?</SubtitleAppendPrompt>
     <OpenXSubFiles>Az xsub fájl megnyitása...</OpenXSubFiles>
     <XSubFiles>xsub fájlok</XSubFiles>
     <BeforeImportingVobSubFile>A VobSub felirat importálása előtti állapotra</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Blu-ray sup fájl importálása előtt </BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Blu-ray sup fájl importálása előtt</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>A BDN xml fájl importálása előtt</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>A kijelölt sorok korábban/később megjelenítése előtti állapotra</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Az összes sor megjelenítése {0:0.0##} másodperccel korábban</ShowAllLinesXSecondsLinesEarlier>
@@ -1482,7 +1482,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll a system32 mappában</DirectShowDescription>
     <ManagedDirectX>Kezelt DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET felügyelt-kód a DirectX-ből</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET felügyelt-kód a DirectX-ből</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Médialejátszó</VlcMediaPlayer>
@@ -1885,7 +1885,7 @@ Megtartja a változásokat?</KeepChangesMessage>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>VobSub (sub/idx) felirat importálás/OCR</Title>
-    <TitleBluRay>Blu-ray (.sup) felirat importálás/OCR </TitleBluRay>
+    <TitleBluRay>Blu-ray (.sup) felirat importálás/OCR</TitleBluRay>
     <OcrMethod>OCR mód</OcrMethod>
     <OcrViaModi>Optikai karakterfelismerés Microsoft Office dokumentum képkezelésen (MODI) keresztül . MS Office szükséges hozzá.</OcrViaModi>
     <OcrViaTesseract>Optikai karakterfelismerés Tesseract-on keresztül</OcrViaTesseract>

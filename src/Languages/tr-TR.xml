@@ -39,7 +39,7 @@
     <FrameRateX>Kare hızı: {0:0.0###}</FrameRateX>
     <TotalFramesX>Toplam kare: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Video kodlama: {0}</VideoEncodingX>
-    <SingleLineLengths>Satır uzunluğu: </SingleLineLengths>
+    <SingleLineLengths>Satır uzunluğu:</SingleLineLengths>
     <TotalLengthX>Toplam uzunluk: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Toplam uzunluk: {0} (split line!)</TotalLengthXSplitLine>
     <SplitLine>Satır böl!</SplitLine>
@@ -251,7 +251,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Dil seç</Title>
     <ChooseLanguageStreamId>Dil seç (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Bilinmeyen dil</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Altyazı görüntüsü {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Altyazı görüntüsü {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Altyazı görüntüsü</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -267,7 +267,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <TranslatedEpisodeTitle>Bölüm başlığı çevrildi</TranslatedEpisodeTitle>
     <TranslatorsName>Çevirmenlerin ismi</TranslatorsName>
     <SubtitleListReferenceCode>Altyazı listesi referans kodu</SubtitleListReferenceCode>
-    <CountryOfOrigin>Ülke </CountryOfOrigin>
+    <CountryOfOrigin>Ülke</CountryOfOrigin>
     <RevisionNumber>Revizyon numarası</RevisionNumber>
     <MaxNoOfDisplayableChars>Max# of chars per row</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>Max# of rows</MaxNumberOfDisplayableRows>
@@ -401,7 +401,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Fix (add dash) line pairs with only one dash (-)</FixHyphensAdd>
     <FixHyphen>Tire işareti (-) ile başlayan satırı düzelt</FixHyphen>
     <XHyphensFixed>Tireler düzeltildi: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Eksik alıntılar eklendi: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>İkiden fazla satırları düzelt</Fix3PlusLines>
     <Fix3PlusLine>İkiden fazla satırları düzelt</Fix3PlusLine>
@@ -455,18 +455,18 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Seçilen düzeltmeleri uygula</ApplyFixes>
     <AutoBreak>Otomatik Ayar</AutoBreak>
     <Unbreak>&amp;Boşluksuz</Unbreak>
-    <FixDoubleDash>Düzelt '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Temizle &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Düzelt '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Temizle &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Remove leading '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Satırdaki eksik [ düzelt</FixMissingOpenBracket>
     <FixMusicNotation>Müzik sembolünü tercih edilen sembol ile değiştir</FixMusicNotation>
-    <XFixDoubleDash>{0} düzeltildi '--' </XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} silindi &gt;&gt; </XFixDoubleGreaterThan>
+    <XFixDoubleDash>{0} düzeltildi '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} silindi &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} remove starting '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} fixed missing [ in line</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} fix music notation in line</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -872,8 +872,8 @@ Belgenin üstünden başlamak ve aramaya devam etmek veya değiştirmek ister mi
     <BeforeRenumbering>Yeniden numaralandırmadan önce</BeforeRenumbering>
     <RenumberedStartingFromX>Yeniden numaralandırma başlangıcı: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed : One line</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed : {0} lines</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed: One line</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed: {0} lines</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Altyazı bölündü</SubtitleSplitted>
     <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should
 already be in sync with video file.
@@ -892,7 +892,7 @@ Continue?</SubtitleAppendPrompt>
     <SelectedLinesTranslated>Seçilen satırlar çevrildi</SelectedLinesTranslated>
     <SubtitleTranslated>Altyazı çevrildi</SubtitleTranslated>
     <TranslateSwedishToDanish>Translate currently loaded Swedish subtitle to Danish</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>Yüklenen İsveççe altyazı (İsveççe olduğundan emin misiniz? Danca'ya  çevrilsin mi?</TranslateSwedishToDanishWarning>
+    <TranslateSwedishToDanishWarning>Yüklenen İsveççe altyazı (İsveççe olduğundan emin misiniz? Danca'ya çevrilsin mi?</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>www.nikse.dk/mt... ile çevriliyor</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>İsveççe'den Danca'ya çevirmeden önce</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Translation from Swedish to Danish complete</TranslationFromSwedishToDanishComplete>
@@ -941,7 +941,7 @@ Continue?</SubtitleAppendPrompt>
     <ParsingMatroskaFile>Matroska dosyası ayrıştırılıyor. Lütfen bekleyin...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Matroska dosyasından içe altyazı aktarılmasından önce</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska dosyasından altyazı aktarıldı</SubtitleImportedFromMatroskaFile>
-    <DropFileXNotAccepted>'{0}'  kabul edilemez - dosya çok büyük</DropFileXNotAccepted>
+    <DropFileXNotAccepted>'{0}' kabul edilemez - dosya çok büyük</DropFileXNotAccepted>
     <DropOnlyOneFile>Yalnızca bir dosya bırakabilirsiniz</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Satırları oluşturmadan/ayarlamadan önce</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Altyazı aç...</OpenAnsiSubtitle>
@@ -1235,9 +1235,9 @@ Yeni oturum başlatın.</Information>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video motoru</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>system32 klasöründe quartz.dll </DirectShowDescription>
+    <DirectShowDescription>system32 klasöründe quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1249,7 +1249,7 @@ Yeni oturum başlatın.</Information>
     <VolumeNotes>0 sessiz, 100 en yüksek ses.</VolumeNotes>
     <PreviewFontSize>Altyazı ön izlemesi yazı boyutu</PreviewFontSize>
     <MainWindowVideoControls>Ana pencere video kontrolleri</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Metin ve link için özel arama </CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Metin ve link için özel arama</CustomSearchTextAndUrl>
     <WaveFormAppearance>Dalga formu görünümü</WaveFormAppearance>
     <WaveFormGridColor>Grid color</WaveFormGridColor>
     <WaveFormShowGridLines>Show grid lines</WaveFormShowGridLines>

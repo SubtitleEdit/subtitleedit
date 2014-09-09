@@ -40,7 +40,7 @@
     <FrameRateX>Hitrost slik: {0:0.0###}</FrameRateX>
     <TotalFramesX>Slik skupaj: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Video kodiranje: {0}</VideoEncodingX>
-    <SingleLineLengths>Dolžina posamične vrstice: </SingleLineLengths>
+    <SingleLineLengths>Dolžina posamične vrstice:</SingleLineLengths>
     <TotalLengthX>Dolžina skupaj: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Dolžina skupaj: {0} (razdeli vrstico!)</TotalLengthXSplitLine>
     <SplitLine>Razdeli vrstico!</SplitLine>
@@ -66,7 +66,7 @@
     <Advanced>Napredno</Advanced>
     <Style>Oblika</Style>
     <Class>Razred</Class>
-    <GeneralText>Splošno  besedilo</GeneralText>
+    <GeneralText>Splošno besedilo</GeneralText>
     <LineNumber># Vrstice</LineNumber>
     <Before>Nazaj</Before>
     <After>Naprej</After>
@@ -124,7 +124,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Recalculate>Preračunaj</Recalculate>
     <AddSeconds>Dodaj sekunde</AddSeconds>
     <SetAsPercent>Določi po odstotku trajanja</SetAsPercent>
-    <Note>Opomba: Čas prikazovanja ne bo prekoračil  začetnega časa naslednjega besedila</Note>
+    <Note>Opomba: Čas prikazovanja ne bo prekoračil začetnega časa naslednjega besedila</Note>
     <PleaseSelectAValueFromTheDropDownList>Prosim izberite vrednost iz spustnega menija</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> - Prosim izberite - </PleaseChoose>
   </AdjustDisplayDuration>
@@ -228,8 +228,8 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <NextDifference>&amp; naslednja razlika</NextDifference>
     <SubtitlesNotAlike>Podnapisa nimata podobnosti</SubtitlesNotAlike>
     <XNumberOfDifference>Število razlik: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Število razlik: {0}  ({1}% od,  zamenjane besede)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Število razlik: {0}  ({1}% od,  zamenjane črke)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Število razlik: {0} ({1}% od, zamenjane besede)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Število razlik: {0} ({1}% od, zamenjane črke)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaži edino razlike</ShowOnlyDifferences>
     <IgnoreLineBreaks>Spreglej lome vrstic</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Razlike samo v besedilu</OnlyLookForDifferencesInText>
@@ -284,7 +284,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Ntsc>NTSC (29.97fps)</Ntsc>
     <StartRipping>Začni</StartRipping>
     <Abort>Prekini</Abort>
-    <AbortedByUser>Prekinil uporabnik </AbortedByUser>
+    <AbortedByUser>Prekinil uporabnik</AbortedByUser>
     <ReadingSubtitleData>Berem podnapis datoteko...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Kopiram vob datoteko {1} of {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>IFO tip je '{0}' in nič 'DVDVIDEO-VTS'.{1} poskusi drugo datoteko {2}</WrongIfoType>
@@ -293,7 +293,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Title>Izberi jezik</Title>
     <ChooseLanguageStreamId>Izberi jezik (pretok-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Neznan jezik</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Slika podnapisa {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Slika podnapisa {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Slika podnapisa</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -331,7 +331,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Title>Karaoke učinek</Title>
     <ChooseColor>Izberi barvo:</ChooseColor>
     <TotalMilliseconds>Skupaj millisek.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Končaj zakasnitev v  millisek.:</EndDelayInMilliseconds>
+    <EndDelayInMilliseconds>Končaj zakasnitev v millisek.:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Učinek pisalnega stroja</Title>
@@ -461,7 +461,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <RemoveLineBreaks>Odstrani lome vrstic v kratkih besedilih v enem stavku</RemoveLineBreaks>
     <RemoveLineBreaksAll>Odstrani lome vrstic v kratkih besedilih (vse, razen dialogi)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Popravi veliko začetnico "i" v besedah z malo začetnico (OCR napake)</FixUppercaseIInsindeLowercaseWords>
-    <FixDoubleApostrophes>Spremeni dvojni apostrof  ('') v enojnega, navednice (")</FixDoubleApostrophes>
+    <FixDoubleApostrophes>Spremeni dvojni apostrof ('') v enojnega, navednice (")</FixDoubleApostrophes>
     <AddPeriods>Dodaj piko za vrstico tam, kjer se lačne nova vrstica z veliko začetnico</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Za odstavkom začni z veliko začetnico</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>V odstavku začni z veliko začetnico po presledku</StartWithUppercaseLetterAfterPeriodInsideParagraph>
@@ -481,7 +481,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FixHyphensAdd>Popravi (dodaj pomišljaj) pari vrstic s samo enim pomišljajem (-)</FixHyphensAdd>
     <FixHyphen>Popravi vrstice, ki se začnejo s pomišljajem (-)</FixHyphen>
     <XHyphensFixed>Odstranjenih pomišljajev: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Kako si?  -&gt; "Kako si?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Kako si? -&gt; "Kako si?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Dodanih manjkajočih navednic: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Uredi podnapise z več kot dvema vrsticama</Fix3PlusLines>
     <Fix3PlusLine>Uredi podnapis z več kot dvema vrsticama</Fix3PlusLine>
@@ -535,18 +535,18 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <ApplyFixes>Uporabi izbrane popravke</ApplyFixes>
     <AutoBreak>Samodejno lomi</AutoBreak>
     <Unbreak>Razveljavi</Unbreak>
-    <FixDoubleDash>Popravi '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Odstrani &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Popravi '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Odstrani &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Odstrani '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Dodaj manjkajoče [ v vrstici</FixMissingOpenBracket>
     <FixMusicNotation>Zamenjaj glasbene simbole (e.g. âTª) s priljubljenim simbolom</FixMusicNotation>
-    <XFixDoubleDash>{0} popravljeno '--' </XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} odstanjeno &gt;&gt; </XFixDoubleGreaterThan>
+    <XFixDoubleDash>{0} popravljeno '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} odstanjeno &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} odstranjeni začetni '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} dodani manjkajoči [ v vrstici</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zamenjane glasbene note</XFixMusicNotation>
     <FixDoubleDashExample>'Resno-- o ja!' --&gt; 'Resno... o ja!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Kako kaj!'  --&gt; 'Robert: Kako kaj!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Kako kaj!' --&gt; 'Robert: Kako kaj!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... in ko smo' -&gt; 'in ko smo'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'klank] Zaklenjen!' --&gt; '[klank] Zaklenjen!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sladke sanje' --&gt; '♫ sladke sanje'</FixMusicNotationExample>
@@ -1004,8 +1004,8 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <BeforeRenumbering>Pred ponovnim štetjem</BeforeRenumbering>
     <RenumberedStartingFromX>Ponovno prešteto prične: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Pred odstranitvijo besedila za slušno prizadete</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Besedilo za slušno prizadete odstanjeno : Ena vrstica</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Besedilo za slušno prizadete odstanjeno : {0} vrstic</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Besedilo za slušno prizadete odstanjeno: Ena vrstica</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Besedilo za slušno prizadete odstanjeno: {0} vrstic</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Podnapis je bil razdeljen</SubtitleSplitted>
     <SubtitleAppendPrompt>To bo pripelo obstoječ podnapis k naloženemu podnapisu, kateri bi moral biti sinhroniziran z video datoteko.
 Nadaljujem?</SubtitleAppendPrompt>
@@ -1110,7 +1110,7 @@ Nadaljujem?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Število vrstic z odstranjenim lomom: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Pred množično zamenjavo</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Število vrstic z zamenjanim besedilom: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Ime '{0}' je bilo dodano v  imena/itd listo</NameXAddedToNamesEtcList>
+    <NameXAddedToNamesEtcList>Ime '{0}' je bilo dodano v imena/itd listo</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Ime '{0}' NI bilo dodano v imena/itd listo</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Beseda '{0}' je bila dodana v uporabnikov slovar</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Beseda '{0}'NI bila dodana v uporabnikov slovar</WordXNotAddedToUserDic>
@@ -1428,7 +1428,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll v sistem32 mapi</DirectShowDescription>
     <ManagedDirectX>Upravljanje DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideo predvajanje -  .NET Vodena koda iz DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideo predvajanje - .NET Vodena koda iz DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC medijski predvajalnik</VlcMediaPlayer>
@@ -1452,7 +1452,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <WaveFormSelectedColor>Izbrana barva</WaveFormSelectedColor>
     <WaveFormBackgroundColor>Barva ozadja</WaveFormBackgroundColor>
     <WaveFormTextColor>Barva besedila</WaveFormTextColor>
-    <WaveformAndSpectrogramsFolderEmpty>Izprazni mapo 'Spektrogram' in 'Krivulje' </WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderEmpty>Izprazni mapo 'Spektrogram' in 'Krivulje'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Mapa 'Krivulja' in 'Spektrogram' vsebuje {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
     <GenerateSpectrogram>Izdelaj spektrogram</GenerateSpectrogram>

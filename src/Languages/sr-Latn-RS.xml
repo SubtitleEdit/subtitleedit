@@ -39,7 +39,7 @@
     <FrameRateX>Broj Kadrova: {0:0.0###}</FrameRateX>
     <TotalFramesX>Ukupno Kadrova: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Video kodiranje: {0}</VideoEncodingX>
-    <SingleLineLengths>Dužina Linije: </SingleLineLengths>
+    <SingleLineLengths>Dužina Linije:</SingleLineLengths>
     <TotalLengthX>Ukupna Dužina: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Ukupna Dužina: {0} (Razdvojite Liniju!)</TotalLengthXSplitLine>
     <SplitLine>Razdvojite Liniju</SplitLine>
@@ -74,7 +74,7 @@
   <About>
     <Title>O programu</Title>
     <AboutText1>Subtitle Edit je besplatan program koji je objavljen pod
-GNU  opštom javnom licencom, a to znači da ga možete
+GNU opštom javnom licencom, a to znači da ga možete
 raspodeljivati, menjati i koristiti kako god vi želite.
 
 Izvorni kôd, kao i najnovije izdanje programa
@@ -251,7 +251,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Biranje jezika</Title>
     <ChooseLanguageStreamId>Izaberite željeni jezik ispod:</ChooseLanguageStreamId>
     <UnknownLanguage>Nepoznato</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Slika prevoda ({0}/{1} – {2}×{3}) </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Slika prevoda ({0}/{1} – {2}×{3})</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Slika prevoda</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -530,7 +530,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
   </Interjections>
   <JoinSubtitles>
     <Title>Spoji prevode</Title>
-    <Information>Dodaj prevode za spajanje  ("Uzmi i spusti" je takođe podržan)</Information>
+    <Information>Dodaj prevode za spajanje ("Uzmi i spusti" je takođe podržan)</Information>
     <NumberOfLines>#Linije</NumberOfLines>
     <StartTime>Vreme početka</StartTime>
     <EndTime>Vreme završetka</EndTime>
@@ -693,7 +693,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Prikaži/Sakrij Video snimak</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha -  stil</AdvancedSubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha - stil</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA – Podešavanje stila</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha stilovi...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Napredno, Sub Station Alpha stilovi...</AdvancedSubStationAlphaStyles>
@@ -960,7 +960,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <BluRaySupFiles>Blu-Ray prevodi</BluRaySupFiles>
     <BeforeImportingVobSubFile>Pre uvoza VobSub datoteke</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Pre uvoza Blu-Ray Sup datoteke</BeforeImportingBluRaySupFile>
-    <BeforeImportingBdnXml>Pre uvoza BDN XML datoteke </BeforeImportingBdnXml>
+    <BeforeImportingBdnXml>Pre uvoza BDN XML datoteke</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Pre prikaza odabranih linija pre/kasnije</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Prikaži sve linije {0:0.0##} sekundi pre</ShowAllLinesXSecondsLinesEarlier>
     <ShowAllLinesXSecondsLinesLater>Prikaži sve linije {0:0.0##} sekundi kasnije</ShowAllLinesXSecondsLinesLater>
@@ -1244,10 +1244,10 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <VlcMediaPlayerDescription>libvlc.dll iz VLC Media Player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
     <ShowStopButton>&amp;Dugme za zaustavljanje</ShowStopButton>
     <ShowMuteButton>Pokaži dugme za isključivanje zvuka</ShowMuteButton>
-    <ShowFullscreenButton>Prikaži  dugme za puni ekran</ShowFullscreenButton>
+    <ShowFullscreenButton>Prikaži dugme za puni ekran</ShowFullscreenButton>
     <DefaultVolume>Jačina zvuka:</DefaultVolume>
     <VolumeNotes>(0 – isključeno, 100 – najglasnije)</VolumeNotes>
-    <PreviewFontSize>Veličina fonta:  </PreviewFontSize>
+    <PreviewFontSize>Veličina fonta:</PreviewFontSize>
     <MainWindowVideoControls>Glavni prozor za upravljanje Video datotekom</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Adresa za pretragu reči:</CustomSearchTextAndUrl>
     <WaveFormAppearance>Izgled talasnog oblika</WaveFormAppearance>
@@ -1313,7 +1313,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <ToggleDockUndockOfVideoControls>Zakači/Otkači video kontrole</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idite na novi</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i pređi na sledeći</AdjustViaEndAutoStartAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje  i idi na sledeći</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje i idi na sledeći</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i ići na sledeći</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tipka dole = Start, Tipka gore = postavi kraj i idi na sledeći</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Premeštanje odabrane linije 100 ms napred</AdjustSelected100MsForward>
@@ -1471,7 +1471,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <NumberOfItalicTags>Broj 'iskošenih' oznaka: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Broj 'podebljanih' oznaka: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Broj 'podvučenih' oznaka: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Broj oznaka fonta : {0}</NumberOfFontTags>
+    <NumberOfFontTags>Broj oznaka fonta: {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Prevod dužina - minimalno: {0}</LineLengthMinimum>
     <LineLengthMaximum>Prevod dužina - maksimalno: {0}</LineLengthMaximum>
@@ -1551,9 +1551,9 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <Title>Tačka usklađivanja</Title>
     <TitleViaOtherSubtitle>Tačka usklađivanja iz drugog prevoda</TitleViaOtherSubtitle>
     <SyncHelp>Postavite bar dve točke da biste napravili grubu usklađenost.</SyncHelp>
-    <SetSyncPoint>Postavi  točku  usklađivanja</SetSyncPoint>
-    <RemoveSyncPoint>Ukloni  točku  usklađivanja</RemoveSyncPoint>
-    <SyncPointsX>Ukupno usklađenih  točaka: {0}</SyncPointsX>
+    <SetSyncPoint>Postavi točku usklađivanja</SetSyncPoint>
+    <RemoveSyncPoint>Ukloni točku usklađivanja</RemoveSyncPoint>
+    <SyncPointsX>Ukupno usklađenih točaka: {0}</SyncPointsX>
     <Info>Jedna tačka usklađivanja prilagodiće položaj. Dve ili više tačaka uticaće na položaj i brzinu.</Info>
     <ApplySync>&amp;Primeni</ApplySync>
   </PointSync>
@@ -1595,7 +1595,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
   <VobSubOcr>
     <Title>Prepoznavanje znakova Vobsub prevoda</Title>
     <TitleBluRay>Prepoznavanje znakova Blu-Ray prevoda</TitleBluRay>
-    <OcrMethod>  Način prepoznavanja znakova:</OcrMethod>
+    <OcrMethod>Način prepoznavanja znakova:</OcrMethod>
     <OcrViaModi>Prepoznavanje znakova putem Microsoft Office Document Imaging (MODI). Zahteva Microsoft Office.</OcrViaModi>
     <OcrViaTesseract>koristeći hiperkocku</OcrViaTesseract>
     <Language>Jezik:</Language>

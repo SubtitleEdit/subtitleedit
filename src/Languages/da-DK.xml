@@ -40,7 +40,7 @@
     <FrameRateX>Billeder pr. sekund: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total antal frames: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Video encoding: {0}</VideoEncodingX>
-    <SingleLineLengths>Enkelt linje længde: </SingleLineLengths>
+    <SingleLineLengths>Enkelt linje længde:</SingleLineLengths>
     <TotalLengthX>Total længde: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Total længde: {0} (split linje!)</TotalLengthXSplitLine>
     <SplitLine>Split linje!</SplitLine>
@@ -108,7 +108,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingPeakFile>Genererer peak-fil...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generer spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>
-    <ExtractingMinutes>Udpakker  lyd:. {0} (1:00) minutter</ExtractingMinutes>
+    <ExtractingMinutes>Udpakker lyd:. {0} (1:00) minutter</ExtractingMinutes>
   </AddWaveForm>
   <AdjustDisplayDuration>
     <Title>Juster visnings tid</Title>
@@ -570,7 +570,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixDoubleGreaterThan>{0} fjernet &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} begyndende '...' fjernet</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} rettet manglende [</XFixMissingOpenBracket>
-    <XFixMusicNotation>{0} lave musik notation </XFixMusicNotation>
+    <XFixMusicNotation>{0} lave musik notation</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude! " -&gt; 'Robert: Sup dude! "</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... og så har vi '-&gt;' og så har vi '</FixEllipsesStartExample>
@@ -673,7 +673,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <EndTime>Sluttid</EndTime>
     <FileName>Filnavn</FileName>
     <Join>Sammensæt</Join>
-    <TotalNumberOfLinesX>Total antal  linjer: {0:#,###,###}</TotalNumberOfLinesX>
+    <TotalNumberOfLinesX>Total antal linjer: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -902,7 +902,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrorsInSelectedLines>Ret almindelige fejl i valgte linjer...</FixCommonErrorsInSelectedLines>
         <ChangeCasingForSelectedLines>Skift casing (små/store/normal) for valgte linjer...</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Gem valgte linjer som...</SaveSelectedLines>
-        <WebVTTSetNewVoice>Angiv ny  stemme...</WebVTTSetNewVoice>
+        <WebVTTSetNewVoice>Angiv ny stemme...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Fjern stemmer</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
@@ -1147,7 +1147,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NameXAddedToNamesEtcList>Navnet '{0}' blev tilføjet til navne mv, liste</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Navnet '{0}' blev ikke tilføjet til navne mv. liste</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Ordet '{0}' blev tilføjet til brugerordbog</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>Ordet '{0}'  blev IKKE tilføjet til brugerordbogen</WordXNotAddedToUserDic>
+    <WordXNotAddedToUserDic>Ordet '{0}' blev IKKE tilføjet til brugerordbogen</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' blev tilføjet til OCR erstat listen</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>'{0} -&gt; {1}' blev IKKE tilføjet til OCR erstat listen</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} linjer valgt</XLinesSelected>
@@ -1168,7 +1168,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeInsertSubtitleAtVideoPosition>Før ny tekst ved aktuel video position</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Før sæt start tid og juster resten</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Før sæt sluttid og juster resten</BeforeSetEndTimeAndOffsetTheRest>
-    <BeforeSetEndAndVideoPosition>Før indsæt video via sluttid +  automatisk starttid</BeforeSetEndAndVideoPosition>
+    <BeforeSetEndAndVideoPosition>Før indsæt video via sluttid + automatisk starttid</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Fortsæt med aktuelle stavekontrol?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Bogstav/sek: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Hent frame rate fra video fil</GetFrameRateFromVideoFile>
@@ -1555,7 +1555,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ProxyPassword>Password</ProxyPassword>
     <ProxyDomain>Domæne</ProxyDomain>
     <PlayXSecondsAndBack>Spil X sekunder og tilbage, X</PlayXSecondsAndBack>
-    <StartSceneIndex>Start scene </StartSceneIndex>
+    <StartSceneIndex>Start scene</StartSceneIndex>
     <EndSceneIndex>Slut scene</EndSceneIndex>
     <FirstPlusX>Første + {0}</FirstPlusX>
     <LastMinusX>Sidste - {0}</LastMinusX>
@@ -1782,7 +1782,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <DurationAverage>Varihed - average: {0:0.000} sekunder</DurationAverage>
     <CharactersPerSecondMinimum>Karakterer/sek - min: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakterer/sek - maks: {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Karakterer/sek -  gennemsnit: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondAverage>Karakterer/sek - gennemsnit: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha egenskaber</Title>
@@ -1981,7 +1981,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
   <WaveForm>
-    <ClickToAddWaveForm>Klik  for  at  tilføje  audio  kurve</ClickToAddWaveForm>
+    <ClickToAddWaveForm>Klik for at tilføje audio kurve</ClickToAddWaveForm>
     <ClickToAddWaveformAndSpectrogram>Klik for at tilføje bølgeform/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>

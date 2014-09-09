@@ -165,7 +165,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Textvisare</Title>
   </Beamer>
   <ChangeCasing>
-    <Title>Ändra  formsättning</Title>
+    <Title>Ändra formsättning</Title>
     <ChangeCasingTo>Ändra formsättning till</ChangeCasingTo>
     <NormalCasing>Normal formsättning. Meningar börjar med stor bokstav.</NormalCasing>
     <FixNamesCasing>Fixa namn formsättning (via Lexikon\Namn,etc.xml)</FixNamesCasing>
@@ -185,7 +185,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Byt bildfrekvens</Title>
     <ConvertFrameRateOfSubtitle>Konvertera bildfrekvens</ConvertFrameRateOfSubtitle>
     <FromFrameRate>Från bildfrekvens</FromFrameRate>
-    <ToFrameRate>Till  bildfrekvens</ToFrameRate>
+    <ToFrameRate>Till bildfrekvens</ToFrameRate>
     <FrameRateNotCorrect>Bildfrekvens är inte korrekt</FrameRateNotCorrect>
     <FrameRateNotChanged>Bildfrekvens är detsamma - ingenting att konvertera</FrameRateNotChanged>
   </ChangeFrameRate>
@@ -223,7 +223,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Alpha>Alpha</Alpha>
   </ColorChooser>
   <ColumnPaste>
-    <Title>Kolumn klistra in </Title>
+    <Title>Kolumn klistra in</Title>
     <ChooseColumn>Välj kolumn</ChooseColumn>
     <OverwriteShiftCellsDown>Skriv över/Flytta celler nedåt</OverwriteShiftCellsDown>
     <Overwrite>Skriv över</Overwrite>
@@ -397,7 +397,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Depth>Djup</Depth>
     <ExportAllLines>Exportera alla linjer</ExportAllLines>
     <XImagesSavedInY>{0} bilder som sparats {1}</XImagesSavedInY>
-    <VideoResolution>Videoupplösning </VideoResolution>
+    <VideoResolution>Videoupplösning</VideoResolution>
     <Align>Justering</Align>
     <Left>Vänster</Left>
     <Right>Höger</Right>
@@ -508,7 +508,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Fix3PlusLine>Fixa text med mer än två rader</Fix3PlusLine>
     <X3PlusLinesFixed>Texter med mer än två rader fixade: {0}</X3PlusLinesFixed>
     <Analysing>Analysera</Analysing>
-    <NothingToFix>Inget att fixa:)</NothingToFix>
+    <NothingToFix>Inget att fixa :)</NothingToFix>
     <FixesFoundX>Korrigeringar hittades: {0}</FixesFoundX>
     <XFixesApplied>Korrigeringar som tillämpas: {0}</XFixesApplied>
     <NothingToFixBut>Inget att fixa men några saker kan förbättras - se logg för detaljer</NothingToFixBut>
@@ -556,7 +556,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Använd markerade fixar</ApplyFixes>
     <AutoBreak>Auto bryt</AutoBreak>
     <Unbreak>Obryt</Unbreak>
-    <FixDoubleDash>Fixa '--' -&gt; '...' </FixDoubleDash>
+    <FixDoubleDash>Fixa '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Ta bort&gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Ta bort inledande '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fixa saknade [</FixMissingOpenBracket>
@@ -567,7 +567,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} Fixa saknade [</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} Fixa noter i rad</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>' and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -668,7 +668,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <EndTime>Sluttid</EndTime>
     <FileName>Filnamn</FileName>
     <Join>Gå med</Join>
-    <TotalNumberOfLinesX>Totalt antal  linjer: {0:#,###,###}</TotalNumberOfLinesX>
+    <TotalNumberOfLinesX>Totalt antal linjer: {0:#,###,###}</TotalNumberOfLinesX>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -690,7 +690,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Jämför</Compare>
         <Statistics>Statistik</Statistics>
         <Plugins>Plugin</Plugins>
-        <ImportOcrFromDvd>Import/OCR text från vob/ifo (dvd) </ImportOcrFromDvd>
+        <ImportOcrFromDvd>Import/OCR text från vob/ifo (dvd)</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) text</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR BluRay text</ImportBluRaySupFile>
         <ImportXSub>Import/OCR xsub från divx/avi</ImportXSub>
@@ -769,7 +769,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Skapa tom översättning i nuvarande text</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Konvertera stycke</BatchConvert>
         <GenerateTimeAsText>Generera tid som text</GenerateTimeAsText>
-        <MeasurementConverter>Måttomräknare </MeasurementConverter>
+        <MeasurementConverter>Måttomräknare</MeasurementConverter>
         <SplitSubtitle>Splitta text</SplitSubtitle>
         <AppendSubtitle>Lägg till text</AppendSubtitle>
         <JoinSubtitles>Slå ihop text</JoinSubtitles>
@@ -850,7 +850,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <SubStationAlphaStyles>Sub Station Alpha stil</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha stil</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Tidsstyrd text - välj stil</TimedTextSetStyle>
-        <TimedTextStyles>Tidsstyrd text  stil</TimedTextStyles>
+        <TimedTextStyles>Tidsstyrd text stil</TimedTextStyles>
         <TimedTextSetLanguage>Tidsstyrd text - ange språk</TimedTextSetLanguage>
         <SamiSetStyle>Sami - välj klass</SamiSetStyle>
         <Cut>Klipp ut</Cut>
@@ -927,11 +927,11 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
       <PlayCurrent>Spela aktuell</PlayCurrent>
       <Next>Nästa &gt;</Next>
       <Playing>Spela</Playing>
-      <RepeatingLastTime>Upprepa  sista</RepeatingLastTime>
-      <RepeatingXTimesLeft>Upprepa  {0} sista vänster</RepeatingXTimesLeft>
+      <RepeatingLastTime>Upprepa sista</RepeatingLastTime>
+      <RepeatingXTimesLeft>Upprepa {0} sista vänster</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>Auto fortsätt på en sekund</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Auto fortsätt i {0} sekunder</AutoContinueInXSeconds>
-      <StillTypingAutoContinueStopped>Skriver fortfarande,  auto fortsätt stoppad</StillTypingAutoContinueStopped>
+      <StillTypingAutoContinueStopped>Skriver fortfarande, auto fortsätt stoppad</StillTypingAutoContinueStopped>
       <InsertNewSubtitleAtVideoPosition>Infoga ny text på video pos.</InsertNewSubtitleAtVideoPosition>
       <Auto>Auto</Auto>
       <PlayFromJustBeforeText>Spela från strax före text</PlayFromJustBeforeText>
@@ -1018,7 +1018,7 @@ Vill du starta från början av dokumentet och fortsätta söka och ersätta?</R
     <GoToLineNumberX>Gå till rad nummer {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Skapa/anpassa rader tillämpa ändringarna</CreateAdjustChangesApplied>
     <SelectedLines>Markerade rader</SelectedLines>
-    <BeforeDisplayTimeAdjustment>Före visad  tidjustering</BeforeDisplayTimeAdjustment>
+    <BeforeDisplayTimeAdjustment>Före visad tidjustering</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Visad tidjustering: {0}</DisplayTimeAdjustedX>
     <DisplayTimesAdjustedX>Visa justerade tider: {0}</DisplayTimesAdjustedX>
     <StarTimeAdjustedX>Starttid justerad: {0}</StarTimeAdjustedX>
@@ -1150,7 +1150,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <BeforeSplitLongLines>Före splitta långa rader</BeforeSplitLongLines>
     <MergedShortLinesX>Antal rader sammanfogade: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Innan fixa minsta visningstid mellan rader</BeforeSetMinimumDisplayTimeBetweenParagraphs>
-    <XMinimumDisplayTimeBetweenParagraphsChanged>Antal rader med minsta visningstid  mellan rader: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
+    <XMinimumDisplayTimeBetweenParagraphsChanged>Antal rader med minsta visningstid mellan rader: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Före import klartext</BeforeImportText>
     <TextImported>Text importerade</TextImported>
     <BeforePointSynchronization>Före punkt synkronisering</BeforePointSynchronization>
@@ -1158,7 +1158,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <BeforeTimeCodeImport>Före import av tid koder</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Tid koder importeras från {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Innan infoga text på video position</BeforeInsertSubtitleAtVideoPosition>
-    <BeforeSetStartTimeAndOffsetTheRest>Innan sätt starttid och  kompensera resten</BeforeSetStartTimeAndOffsetTheRest>
+    <BeforeSetStartTimeAndOffsetTheRest>Innan sätt starttid och kompensera resten</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Innan inställd sluttid och kompensera resten</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Före ange sluttid på video position och automatiskt beräkna start</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Fortsätt med nuvarande stavningskontroll?</ContinueWithCurrentSpellCheck>
@@ -1202,7 +1202,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <XSceneChangesImported>{0} scenförändringar som importerats</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' körs.</PluginXExecuted>
     <NotAValidXSubFile>Inte en giltig xsub fil!</NotAValidXSubFile>
-    <BeforeMergeLinesWithSameText>Innan du sammanfogar linjer med samma text </BeforeMergeLinesWithSameText>
+    <BeforeMergeLinesWithSameText>Innan du sammanfogar linjer med samma text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Textning med tidskoder har ett annat antal rader ({0}) än aktuell undertext ({1}) - fortsätta ändå?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analysera transportström - var god vänta</ParsingTransportStream>
     <ErrorLoadIdx>Kan inte läsa/redigera. idx filer. Idx filer är en del av en idx/sub-par (även kallad VobSub), och SE kan öppna. sub filen.</ErrorLoadIdx>
@@ -1215,7 +1215,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <TrackXLanguageYTypeZ>Spår {0} - {1} - Språk: {2} - typ: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
-    <Title>Måttomräknare </Title>
+    <Title>Måttomräknare</Title>
     <ConvertFrom>Konvertera från</ConvertFrom>
     <ConvertTo>Konvertera till</ConvertTo>
     <CopyToClipboard>Kopiera till Urklipp</CopyToClipboard>
@@ -1402,7 +1402,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <ShowOnlyModifiedLines>Visa endast ändrade rader</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minsta millisekunder mellan raderna</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Bildfrekvens info</FrameInfo>
-    <OneFrameXisYMilliseconds>En bildruta på {0:0.00} fps är {1} millisekunder </OneFrameXisYMilliseconds>
+    <OneFrameXisYMilliseconds>En bildruta på {0:0.00} fps är {1} millisekunder</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Sätt synk punkt för rad {0}</Title>
@@ -1522,7 +1522,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <SsaOutline>Outline</SsaOutline>
     <SsaShadow>Shadow</SsaShadow>
     <SsaOpaqueBox>Opaque box</SsaOpaqueBox>
-    <Testing123>Provning av text123  ♫</Testing123>
+    <Testing123>Provning av text123 ♫</Testing123>
     <Language>Språk</Language>
     <NamesIgnoreLists>Namn/Ignor-lista (skiftlägeskänslig)</NamesIgnoreLists>
     <AddNameEtc>Lägg till namn</AddNameEtc>
@@ -1932,7 +1932,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <NoMatch>&lt;No match&gt;</NoMatch>
     <AutoTransparentBackground>Auto transparent bakgrund</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Granska resultatet av den aktuella bilden</InspectCompareMatchesForCurrentImage>
-    <EditLastAdditions>Redigera sista bilden jämför versioner </EditLastAdditions>
+    <EditLastAdditions>Redigera sista bilden jämför versioner</EditLastAdditions>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuell bild till text</Title>

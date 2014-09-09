@@ -40,7 +40,7 @@
     <FrameRateX>Frame rate: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total frames: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Video encoding: {0}</VideoEncodingX>
-    <SingleLineLengths>Single line length: </SingleLineLengths>
+    <SingleLineLengths>Single line length:</SingleLineLengths>
     <TotalLengthX>Total length: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Total length: {0} (split line!)</TotalLengthXSplitLine>
     <SplitLine>Split line!</SplitLine>
@@ -282,7 +282,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Gap to next in seconds</GapToNext>
     <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milliseconds between  lines</MinMsBetweenLines>
+    <MinMsBetweenLines>Min. milliseconds between lines</MinMsBetweenLines>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>
@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Choose language</Title>
     <ChooseLanguageStreamId>Choose language (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Unknown language</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Subtitle image {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Subtitle image</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Line {0} exceeds max length ({1}) by {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Unchanged presentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>Left justified text</TextLeftJustifiedText>
-    <TextCentredText>Centred text </TextCentredText>
+    <TextCentredText>Centred text</TextCentredText>
     <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -507,7 +507,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Fix (add dash) line pairs with only one dash (-)</FixHyphensAdd>
     <FixHyphen>Fix line beginning with dash (-)</FixHyphen>
     <XHyphensFixed>Dashes removed: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Missing quotes added: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Fix subtitles with more than two lines</Fix3PlusLines>
     <Fix3PlusLine>Fix subtitle with more than two lines</Fix3PlusLine>
@@ -572,7 +572,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} fixed missing [ in line</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} fix music notation in line</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1036,8 +1036,8 @@ Would you like to start from the top of the document and continue search and rep
     <BeforeRenumbering>Before renumbering</BeforeRenumbering>
     <RenumberedStartingFromX>Renumbered starting from: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Before removal of texting for hearing impaired</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed : One line</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed : {0} lines</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Texting for hearing impaired removed: One line</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed: {0} lines</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Subtitle was split</SubtitleSplitted>
     <SubtitleAppendPrompt>This will append an existing subtitle to the currently loaded subtitle which should
 already be in sync with video file.
@@ -1491,7 +1491,7 @@ can edit in same subtitle file (collaboration)</Information>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll in system32 folder</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
