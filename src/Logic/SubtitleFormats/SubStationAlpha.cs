@@ -255,7 +255,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         Color c = Color.White;
                         try
                         {
-                            if (color.StartsWith("rgb("))
+                            if (color.StartsWith("rgb(", StringComparison.Ordinal))
                             {
                                 string[] arr = color.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                 c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -302,8 +302,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         {
             if (fontTag.Contains(tag))
             {
-                int fontStart = fontTag.IndexOf(tag);
-                int fontEnd = fontTag.IndexOf(endSign, fontStart + tag.Length);
+                int fontStart = fontTag.IndexOf(tag, StringComparison.Ordinal);
+                int fontEnd = fontTag.IndexOf(endSign, fontStart + tag.Length, StringComparison.Ordinal);
                 if (fontEnd > 0)
                 {
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
@@ -351,14 +351,14 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 {
                     eventsStarted = true;
                 }
-                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(";"))
+                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(';'))
                 {
                     // skip comment lines
                 }
                 else if (eventsStarted && line.Trim().Length > 0)
                 {
                     string s = line.Trim().ToLower();
-                    if (s.StartsWith("format:"))
+                    if (s.StartsWith("format:", StringComparison.Ordinal))
                     {
                         if (line.Length > 10)
                         {
@@ -392,7 +392,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                         string[] splittedLine;
 
-                        if (s.StartsWith("dialogue:"))
+                        if (s.StartsWith("dialogue:", StringComparison.Ordinal))
                             splittedLine = line.Substring(10).Split(',');
                         else
                             splittedLine = line.Split(',');
@@ -432,7 +432,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 p.Layer = layer;
                             if (!string.IsNullOrEmpty(name))
                                 p.Actor = name;
-                            p.IsComment = s.StartsWith("comment:");
+                            p.IsComment = s.StartsWith("comment:", StringComparison.Ordinal);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
@@ -470,68 +470,68 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    int indexOfBegin = p.Text.IndexOf("{");
+                    int indexOfBegin = p.Text.IndexOf('{');
                     string pre = string.Empty;
-                    while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
+                    while (indexOfBegin >= 0 && p.Text.IndexOf('}') > indexOfBegin)
                     {
                         string s = p.Text.Substring(indexOfBegin);
-                        if (s.StartsWith("{\\an1}") ||
-                            s.StartsWith("{\\an2}") ||
-                            s.StartsWith("{\\an3}") ||
-                            s.StartsWith("{\\an4}") ||
-                            s.StartsWith("{\\an5}") ||
-                            s.StartsWith("{\\an6}") ||
-                            s.StartsWith("{\\an7}") ||
-                            s.StartsWith("{\\an8}") ||
-                            s.StartsWith("{\\an9}"))
+                        if (s.StartsWith("{\\an1}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an2}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an3}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an5}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an6}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an9}", StringComparison.Ordinal))
                         {
                             pre = s.Substring(0, 6);
                         }
-                        else if (s.StartsWith("{\\an1\\") ||
-                            s.StartsWith("{\\an2\\") ||
-                            s.StartsWith("{\\an3\\") ||
-                            s.StartsWith("{\\an4\\") ||
-                            s.StartsWith("{\\an5\\") ||
-                            s.StartsWith("{\\an6\\") ||
-                            s.StartsWith("{\\an7\\") ||
-                            s.StartsWith("{\\an8\\") ||
-                            s.StartsWith("{\\an9\\"))
+                        else if (s.StartsWith("{\\an1\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an2\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an3\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an4\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an5\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an6\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an7\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an8\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an9\\", StringComparison.Ordinal))
                         {
                             pre = s.Substring(0, 5) + "}";
                         }
-                        else if (s.StartsWith("{\\a1}") || s.StartsWith("{\\a1\\") ||
-                                 s.StartsWith("{\\a3}") || s.StartsWith("{\\a3\\"))
+                        else if (s.StartsWith("{\\a1}", StringComparison.Ordinal) || s.StartsWith("{\\a1\\", StringComparison.Ordinal) ||
+                                 s.StartsWith("{\\a3}", StringComparison.Ordinal) || s.StartsWith("{\\a3\\", StringComparison.Ordinal))
                         {
                             pre = s.Substring(0, 4) + "}";
                         }
-                        else if (s.StartsWith("{\\a9}") || s.StartsWith("{\\a9\\"))
+                        else if (s.StartsWith("{\\a9}", StringComparison.Ordinal) || s.StartsWith("{\\a9\\", StringComparison.Ordinal))
                         {
                             pre = "{\\an4}";
                         }
-                        else if (s.StartsWith("{\\a10}") || s.StartsWith("{\\a10\\"))
+                        else if (s.StartsWith("{\\a10}", StringComparison.Ordinal) || s.StartsWith("{\\a10\\", StringComparison.Ordinal))
                         {
                             pre = "{\\an5}";
                         }
-                        else if (s.StartsWith("{\\a11}") || s.StartsWith("{\\a11\\"))
+                        else if (s.StartsWith("{\\a11}", StringComparison.Ordinal) || s.StartsWith("{\\a11\\", StringComparison.Ordinal))
                         {
                             pre = "{\\an6}";
                         }
-                        else if (s.StartsWith("{\\a5}") || s.StartsWith("{\\a5\\"))
+                        else if (s.StartsWith("{\\a5}", StringComparison.Ordinal) || s.StartsWith("{\\a5\\", StringComparison.Ordinal))
                         {
                             pre = "{\\an7}";
                         }
-                        else if (s.StartsWith("{\\a6}") || s.StartsWith("{\\a6\\"))
+                        else if (s.StartsWith("{\\a6}", StringComparison.Ordinal) || s.StartsWith("{\\a6\\", StringComparison.Ordinal))
                         {
                             pre = "{\\an8}";
                         }
-                        else if (s.StartsWith("{\\a7}") || s.StartsWith("{\\a7\\"))
+                        else if (s.StartsWith("{\\a7}", StringComparison.Ordinal) || s.StartsWith("{\\a7\\", StringComparison.Ordinal))
                         {
                             pre = "{\\an9}";
                         }
-                        int indexOfEnd = p.Text.IndexOf("}");
+                        int indexOfEnd = p.Text.IndexOf('}');
                         p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
-                        indexOfBegin = p.Text.IndexOf("{");
+                        indexOfBegin = p.Text.IndexOf('{');
                     }
                     p.Text = pre + p.Text;
                 }
