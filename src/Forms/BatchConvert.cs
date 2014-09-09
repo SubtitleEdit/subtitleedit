@@ -574,6 +574,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var pac = new Pac();
                             if (pac.IsMine(null, fileName))
                             {
+                                pac.BatchMode = true;
                                 pac.LoadSubtitle(sub, null, fileName);
                                 format = pac;
                             }
