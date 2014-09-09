@@ -10125,8 +10125,6 @@ namespace Nikse.SubtitleEdit.Forms
             _dragAndDropFiles = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (_dragAndDropFiles.Length == 1)
             {
-                _dragAndDropTimer.Interval = 50;
-                _dragAndDropTimer.Tick += DoSubtitleListview1Drop;
                 _dragAndDropTimer.Start();
             }
             else
@@ -14706,6 +14704,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _timerCheckForUpdates.Start();
                 Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
             }
+            _dragAndDropTimer.Interval = 50;
+            _dragAndDropTimer.Tick += DoSubtitleListview1Drop;
         }
 
         private void TimerCheckForUpdatesTick(object sender, EventArgs e)
