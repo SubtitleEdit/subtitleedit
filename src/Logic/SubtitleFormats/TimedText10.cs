@@ -78,6 +78,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
             else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "ticks")
                 return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
+            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "hh:mm:ss.msec")
+                return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "hh:mm:ss.ff")
+                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
@@ -476,17 +480,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var startCode = TimeCode.FromSeconds(startSeconds);
                     if (start.Length > 0)
                     {
-                        startCode = GetTimeCode(start, true);
+                        startCode = GetTimeCode(start, IsFrames(start));
                     }
 
                     TimeCode endCode;
                     if (end.Length > 0)
                     {
-                        endCode = GetTimeCode(end, true);
+                        endCode = GetTimeCode(end, IsFrames(end));
                     }
                     else if (dur.Length > 0)
                     {
-                        endCode = new TimeCode(GetTimeCode(dur, true).TotalMilliseconds + startCode.TotalMilliseconds);
+                        endCode = new TimeCode(GetTimeCode(dur, IsFrames(dur)).TotalMilliseconds + startCode.TotalMilliseconds);
                     }
                     else
                     {
@@ -526,6 +530,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.Renumber(1);
+        }
+
+        private bool IsFrames(string timeCode)
+        {
+            if (timeCode.Length == 12 && timeCode[8] == '.') // 00:00:08.292
+                return false;
+            return true;
         }
 
         public static string SetExtra(Paragraph p)
