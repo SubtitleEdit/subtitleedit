@@ -40,7 +40,7 @@
     <FrameRateX>Ilość klatek na sekundę: {0:0.0###}</FrameRateX>
     <TotalFramesX>Ogółem klatek: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Kodowanie wideo: {0}</VideoEncodingX>
-    <SingleLineLengths>Długość pojedynczej linii: </SingleLineLengths>
+    <SingleLineLengths>Długość pojedynczej linii:</SingleLineLengths>
     <TotalLengthX>Długość całkowita: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Długość całkowita: {0} (linia podzielona!)</TotalLengthXSplitLine>
     <SplitLine>Podziel linię!</SplitLine>
@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -507,7 +507,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Popraw (dodając myślnik) pary linii z tylko jednym myślnikiem (-)</FixHyphensAdd>
     <FixHyphen>Popraw linie rozpoczynające się myślnikiem (-)</FixHyphen>
     <XHyphensFixed>Usunięto myślników: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Jak się masz?  --&gt; "Jak się masz?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Jak się masz? --&gt; "Jak się masz?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Dodano brakujących cudzysłowów: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Popraw napisy z więcej niż dwiema liniami</Fix3PlusLines>
     <Fix3PlusLine>Popraw napis z więcej niż dwiema liniami</Fix3PlusLine>
@@ -532,7 +532,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixShortDisplayTime>Popraw zbyt krótki czas wyświetlania</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Popraw nakładanie się czasu wyświetlania</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; --&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hej   ty , tam.  --&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
+    <RemoveUnneededSpacesExample>Hej   ty , tam. --&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej, ty!. --&gt; Hej, ty!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hej.Ty. --&gt; Hej. Ty..</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Tam jest kIatka. --&gt; Tam jest klatka.</FixUppercaseIInsindeLowercaseWordsExample>
@@ -561,18 +561,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Zastosuj wybrane poprawki</ApplyFixes>
     <AutoBreak>Przełam linię</AutoBreak>
     <Unbreak>&amp;Cofnij łamanie</Unbreak>
-    <FixDoubleDash>Popraw '--' na wielokropek '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Usuń &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Popraw '--' na wielokropek '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Usuń &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Usuń wielokropek "..." na początku linii</FixEllipsesStart>
     <FixMissingOpenBracket>Popraw brakujący "[" w linii</FixMissingOpenBracket>
     <FixMusicNotation>Zastąp symbole muzyczne (np. âTª) symbolami preferowanymi</FixMusicNotation>
-    <XFixDoubleDash>Poprawiono {0} "--" </XFixDoubleDash>
-    <XFixDoubleGreaterThan>Usunięto {0} &gt;&gt; </XFixDoubleGreaterThan>
+    <XFixDoubleDash>Poprawiono {0} "--"</XFixDoubleDash>
+    <XFixDoubleGreaterThan>Usunięto {0} &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>Usunięto na początku {0} "..."</XFixEllipsesStart>
     <XFixMissingOpenBracket>Poprawiono {0} "[" brakujących w linii</XFixMissingOpenBracket>
     <XFixMusicNotation>Poprawiono {0} notacji muzycznych w linii</XFixMusicNotation>
     <FixDoubleDashExample>"Ach-- tak!" --&gt; "Ach... tak!"</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>"&gt;&gt; Robert: jesteś maminsynkiem!"  --&gt; "Robert: jesteś maminsynkiem!"</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>"&gt;&gt; Robert: jesteś maminsynkiem!" --&gt; "Robert: jesteś maminsynkiem!"</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>"... i pójdziemy dalej" --&gt; "i pójdziemy dalej"</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>"brzęk] Uważaj!" --&gt; "[brzęk] Uważaj!"</FixMissingOpenBracketExample>
     <FixMusicNotationExample>"âTª słodkie są sny" --&gt; "♫ słodkie są sny"</FixMusicNotationExample>
@@ -1036,8 +1036,8 @@ Chcesz zacząć jeszcze raz od początku dokumentu z kontynuacją wyszukiwania i
     <BeforeRenumbering>Przed zmianą numeracji</BeforeRenumbering>
     <RenumberedStartingFromX>Rozpoczęto zmianę numeracji od: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Przed usunięciem tekstu dla niedosłyszących</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Usunięty tekstu dla niedosłyszących : Jedna linia</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Usunięty tekstu dla niedosłyszących : {0} linii</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Usunięty tekstu dla niedosłyszących: Jedna linia</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Usunięty tekstu dla niedosłyszących: {0} linii</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Napisów zostały podzielone</SubtitleSplitted>
     <SubtitleAppendPrompt>Opcja ta dołączy drugi plik napisów do aktualnie wczytanych napisów,
 które powinny już być zsynchronizowane z plikiem wideo.
@@ -1491,7 +1491,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
     <ManagedDirectX>Zarządzanie DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1731,8 +1731,8 @@ tylko gdy różnią się budową</AutoFixNames>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>

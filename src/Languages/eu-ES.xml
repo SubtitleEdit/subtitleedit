@@ -40,7 +40,7 @@
     <FrameRateX>Frame neurria: {0:0.0###}</FrameRateX>
     <TotalFramesX>Frame guztira: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Bideo kodeaketa: {0}</VideoEncodingX>
-    <SingleLineLengths>Lerro bakarraren luzera: </SingleLineLengths>
+    <SingleLineLengths>Lerro bakarraren luzera:</SingleLineLengths>
     <TotalLengthX>Luzera guztira: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Luzera guztira: {0} (banandu lerroa!)</TotalLengthXSplitLine>
     <SplitLine>Banandu lerroa&amp;!</SplitLine>
@@ -224,7 +224,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   <ColumnPaste>
     <Title>Zutabe itsatsia</Title>
     <ChooseColumn>Hautatu zutabea</ChooseColumn>
-    <OverwriteShiftCellsDown>Gainidatzi/Aldatu  gelaxkak behera</OverwriteShiftCellsDown>
+    <OverwriteShiftCellsDown>Gainidatzi/Aldatu gelaxkak behera</OverwriteShiftCellsDown>
     <Overwrite>Gainidatzi</Overwrite>
     <ShiftCellsDown>Aldatu gelaxkak behera</ShiftCellsDown>
     <TimeCodesOnly>Denbora kodeak bakarrik</TimeCodesOnly>
@@ -307,7 +307,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Hautatu hizkuntza</Title>
     <ChooseLanguageStreamId>Hautatu hizkuntza (Jario-ezaug.)</ChooseLanguageStreamId>
     <UnknownLanguage>Hizkuntza ezezaguna</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Azpidatzi irudia {0}/{1} - {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Azpidatzi irudia {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Azpidatzi irudia</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -338,7 +338,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>{0} Lerroak luzera geh. gainditzen du ({1}) {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Aldatu gabeko aurkezpena</TextUnchangedPresentation>
     <TextLeftJustifiedText>Ezkerreratutako idatzia</TextLeftJustifiedText>
-    <TextCentredText>Erdiratutako idatzia </TextCentredText>
+    <TextCentredText>Erdiratutako idatzia</TextCentredText>
     <TextRightJustifiedText>Eskuineratutako idatzia</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -487,7 +487,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Hasi hizki larriz esaldi barneko aldi baten ondoren</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Hasi hizki larriz bi puntu/puntu eta kakotxa ondoren</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Zuzendu hizki xehe bakunak 'i'-tik 'I'-ra (Ingeleran)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Zuzendu OCR akats arruntak  (OCR ordezpen zerrenda erabiliz)</FixCommonOcrErrors>
+    <FixCommonOcrErrors>Zuzendu OCR akats arruntak (OCR ordezpen zerrenda erabiliz)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>OCR akats arruntak zuzenduta (OcrOrdezpen Zerrenda erabiliz): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Kendu zenbaki arteko tarteak</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Zuzendu lerro bateko elkarrizketak</FixDialogsOnOneLine>
@@ -501,7 +501,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Zuzendu marratxo bakarreko (gehitu rmarratxoa) lerro pareak (-)</FixHyphensAdd>
     <FixHyphen>Zuzendu marratxoz hasten diren lerroak (-)</FixHyphen>
     <XHyphensFixed>Marratxoak zuzenduta: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Nola zaude?  -&gt; "Nola zaude?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Nola zaude? -&gt; "Nola zaude?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Galdutako adartxoak gehituta: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Zuzendu bi lerro baino gehiagoko azpidatziak</Fix3PlusLines>
     <Fix3PlusLine>Zuzendu bi lerro baino gehiagoko azpidatziak</Fix3PlusLine>
@@ -533,7 +533,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Idatzi zenbakia {0}: Hasiera denbora amaiera denboraren ondoren da: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ezgaitu idatzi zenbakia zuzentzea {0}: Hasiera denbora amaiera denbora amaitu ondoren da: {1}</UnableToFixStartTimeLaterThanEndTime>
-    <XFixedToYZ>{0} hona zuzenduta : {1}{2}</XFixedToYZ>
+    <XFixedToYZ>{0} hona zuzenduta: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Ezgaitu idatzi zenbakia zuzentzea {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} gainjartze denborak zuzenduta</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} erakus denbora luzatuta</XDisplayTimesProlonged>
@@ -555,13 +555,13 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>&amp;Ezarri zuzenketak</ApplyFixes>
     <AutoBreak>Berez &amp;h.</AutoBreak>
     <Unbreak>Ez-haut&amp;si</Unbreak>
-    <FixDoubleDash>Zuzendu '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Kendu &gt;&gt; </FixDoubleGreaterThan>
-    <FixEllipsesStart>Kendu  '...' ezaugarria</FixEllipsesStart>
-    <FixMissingOpenBracket>Zuzendu lerroan galdutako [ </FixMissingOpenBracket>
+    <FixDoubleDash>Zuzendu '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Kendu &gt;&gt;</FixDoubleGreaterThan>
+    <FixEllipsesStart>Kendu '...' ezaugarria</FixEllipsesStart>
+    <FixMissingOpenBracket>Zuzendu lerroan galdutako [</FixMissingOpenBracket>
     <FixMusicNotation>Ordeztu musika ikurrak (adib. âTª) hobetsitako ikur batekin</FixMusicNotation>
-    <XFixDoubleDash>{0} galdutako '--' </XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} kendutako &gt;&gt; </XFixDoubleGreaterThan>
+    <XFixDoubleDash>{0} galdutako '--'</XFixDoubleDash>
+    <XFixDoubleGreaterThan>{0} kendutako &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} kendu hasierako '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} zuzendutako galduak [ lerroan</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zuzendu musika idatziak lerroan</XFixMusicNotation>
@@ -587,7 +587,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </GetDictionaries>
   <GetTesseractDictionaries>
     <Title>Hiztegiak behar dituzu?</Title>
-    <DescriptionLine1>Lortu Tesseract  OCR hiztegiak web-etik</DescriptionLine1>
+    <DescriptionLine1>Lortu Tesseract OCR hiztegiak web-etik</DescriptionLine1>
     <DownloadFailed>Jeisketa hutsegitea!</DownloadFailed>
     <GetDictionariesHere>Lortu hiztegiak hemen:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Hautatu zure hizkuntza eta hautatu jeitsi</ChooseLanguageAndClickDownload>
@@ -1027,8 +1027,8 @@ Nahi duzu agiriaren hasieratik hastea eta bilaketa eta ordezpenarekin jarraitzea
     <BeforeRenumbering>Birzenbakitu aurretik</BeforeRenumbering>
     <RenumberedStartingFromX>Birzenbakitzea hemendik hasita: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Gorrentzako idatzitik kendu aurretik</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Gorrentzako idatzia kenduta : Lerro bat</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Gorrentzako idatzia kenduta : {0} lerro</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Gorrentzako idatzia kenduta: Lerro bat</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Gorrentzako idatzia kenduta: {0} lerro</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Azpidatzia bananduta</SubtitleSplitted>
     <SubtitleAppendPrompt>Honek dagoen azpidatzi bat gehituko du orain gertaturik dagoen azpidatziarekin zein bideo agiriarekin jadanik aldiberetuta dagoena.
 Jarraitu nahi duzu?</SubtitleAppendPrompt>
@@ -1104,7 +1104,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <CasingCompleteMessage>Azala aldatutako lerro zenbatekoa: {0}/{1}, hizki larri-xehe artean aldatuta izenentzat: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Frame neurria aldatu aurretik</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Abiadura ehunekotan zehaztu aurretik</BeforeAdjustSpeedInPercent>
-    <FrameRateChangedFromXToY>Frame neurria aldatuta {0}-tik  {1}-ra</FrameRateChangedFromXToY>
+    <FrameRateChangedFromXToY>Frame neurria aldatuta {0}-tik {1}-ra</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>{0} ez aurkituta! Inportatu VobSub agiria horrela ere?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Goiburu ez baliozko VobSub agiria: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Ireki VobSub (sub/idx) azpidatzia...</OpenVobSubFile>
@@ -1475,7 +1475,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll - system32 agiritegian</DirectShowDescription>
     <ManagedDirectX>DirectX-ek kudeatuta</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioBideoIrakurketa -  .NET Kode kudeaketa DirectX-tik</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioBideoIrakurketa - .NET Kode kudeaketa DirectX-tik</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Irakurgailua</VlcMediaPlayer>
@@ -1569,7 +1569,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustSelected100MsBack>Mugitu hautaturiko lerroa 100 sm atzera</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Ezarri hasiera denbora, heutsi iraupenari</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
-    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora </AdjustSetEndAndOffsetTheRestAndGoToNext>
+    <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
     <MergeDialogue>Batu elkarrizketa (txertatu marratxoak)</MergeDialogue>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
@@ -1702,12 +1702,12 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   </Split>
   <SplitLongLines>
     <Title>Banandu lerro luzeak</Title>
-    <SingleLineMaximumLength>Lerro bakarraren gehienezko luzera </SingleLineMaximumLength>
+    <SingleLineMaximumLength>Lerro bakarraren gehienezko luzera</SingleLineMaximumLength>
     <LineMaximumLength>Lerroaren gehienezko luzera</LineMaximumLength>
     <LineContinuationBeginEndStrings>Kate hasiera/amaiera lerroak</LineContinuationBeginEndStrings>
     <NumberOfSplits>Banantze zenbatekoa: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Lerro bakar luzeenaren luzera da: {0}  Lerro honetan: {1}</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Lerro luzeenaren luzera da: {0}  Lerro honetan: {1}</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Lerro bakar luzeenaren luzera da: {0} Lerro honetan: {1}</LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Lerro luzeenaren luzera da: {0} Lerro honetan: {1}</LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Banandu azpidatzia</Title>
@@ -1821,7 +1821,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <RemoveAll>Kendu denak</RemoveAll>
     <ImportStyleFromFile>Inportatu estiloa agiritik...</ImportStyleFromFile>
     <ExportStyleToFile>Esportatu estiloa agirira... (estiloa gehituko du agiria jadanik badago)</ExportStyleToFile>
-    <ChooseStyle>Hautatu inportatzeko estiloa </ChooseStyle>
+    <ChooseStyle>Hautatu inportatzeko estiloa</ChooseStyle>
     <StyleAlreadyExits>Estiloa jadanik badago: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>'{0}' estiloa '{1}' agirira esportaturik</StyleXExportedToFileY>
     <StyleXImportedFromFileY>'{0}' estiloa '{1}' agiritik inportaturik</StyleXImportedFromFileY>
@@ -1881,7 +1881,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <OcrMethod>OCR metodoa</OcrMethod>
     <OcrViaModi>OCR Microsoft Office Document Imaging (MODI) bidez. Beharrezkoa da MS Office</OcrViaModi>
     <OcrViaTesseract>OCR Tesseract bidez</OcrViaTesseract>
-    <OcrViaNOCR>OCR  nOCR bidez</OcrViaNOCR>
+    <OcrViaNOCR>OCR nOCR bidez</OcrViaNOCR>
     <Language>Hizkuntza</Language>
     <OcrViaImageCompare>OCR irudi alderaketa bidez</OcrViaImageCompare>
     <ImageDatabase>Irudi databasea</ImageDatabase>

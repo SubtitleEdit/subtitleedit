@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Visible = "Visible",
                 FrameRate = "Frame rate",
                 Name = "Name",
-                SingleLineLengths = "Single line length: ",
+                SingleLineLengths = "Single line length:",
                 TotalLengthX = "Total length: {0}",
                 TotalLengthXSplitLine = "Total length: {0} (split line!)",
                 SplitLine = "Split line!",
@@ -436,7 +436,7 @@ namespace Nikse.SubtitleEdit.Logic
                 GapToNext = "Gap to next in seconds",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
-                MinMsBetweenLines = "Min. milliseconds between  lines",
+                MinMsBetweenLines = "Min. milliseconds between lines",
                 ProlongEndTime = "Previous text takes all gap time",
                 DivideEven = "Texts divides gap time",
             };
@@ -470,7 +470,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Title = "Choose language",
                 ChooseLanguageStreamId = "Choose language (stream-id)",
                 UnknownLanguage = "Unknown language",
-                SubtitleImageXofYAndWidthXHeight = "Subtitle image {0}/{1}  -  {2}x{3} ",
+                SubtitleImageXofYAndWidthXHeight = "Subtitle image {0}/{1} - {2}x{3}",
                 SubtitleImage = "Subtitle image",
             };
 
@@ -503,7 +503,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MaxLengthError = "Line {0} exceeds max length ({1}) by {2}: {3}",
                 TextUnchangedPresentation = "Unchanged presentation",
                 TextLeftJustifiedText = "Left justified text",
-                TextCentredText = "Centred text ",
+                TextCentredText = "Centred text",
                 TextRightJustifiedText = "Right justified text",
             };
 
@@ -685,7 +685,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixHyphensAdd = "Fix (add dash) line pairs with only one dash (-)",
                 FixHyphen = "Fix line beginning with dash (-)",
                 XHyphensFixed = "Dashes removed: {0}",
-                AddMissingQuotesExample = "\"How are you?  -> \"How are you?\"",
+                AddMissingQuotesExample = "\"How are you? -> \"How are you?\"",
                 XMissingQuotesAdded = "Missing quotes added: {0}",
                 Fix3PlusLines = "Fix subtitles with more than two lines",
                 Fix3PlusLine = "Fix subtitle with more than two lines",
@@ -743,7 +743,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixMissingOpenBracket = "Fix missing [ in line",
                 FixMusicNotation = "Replace music symbols (e.g. âTª) with preferred symbol",
                 FixDoubleDashExample = "'Whoa-- um yeah!' --> 'Whoa... um yeah!'",
-                FixDoubleGreaterThanExample = "'>> Robert: Sup dude!'  --> 'Robert: Sup dude!'",
+                FixDoubleGreaterThanExample = "'>> Robert: Sup dude!' --> 'Robert: Sup dude!'",
                 FixEllipsesStartExample = "'... and then we' -> 'and then we'",
                 FixMissingOpenBracketExample = "'clanks] Look out!' --> '[clanks] Look out!'",
                 FixMusicNotationExample = "'âTª sweet dreams are' --> '♫ sweet dreams are'",
@@ -947,8 +947,8 @@ namespace Nikse.SubtitleEdit.Logic
                 BeforeRenumbering = "Before renumbering",
                 RenumberedStartingFromX = "Renumbered starting from: {0}",
                 BeforeRemovalOfTextingForHearingImpaired = "Before removal of texting for hearing impaired",
-                TextingForHearingImpairedRemovedOneLine = "Texting for hearing impaired removed : One line",
-                TextingForHearingImpairedRemovedXLines = "Texting for hearing impaired removed : {0} lines",
+                TextingForHearingImpairedRemovedOneLine = "Texting for hearing impaired removed: One line",
+                TextingForHearingImpairedRemovedXLines = "Texting for hearing impaired removed: {0} lines",
                 SubtitleSplitted = "Subtitle was split",
                 SubtitleAppendPrompt = "This will append an existing subtitle to the currently loaded subtitle which should" + Environment.NewLine +
                                     "already be in sync with video file." + Environment.NewLine +
@@ -1769,7 +1769,7 @@ can edit in same subtitle file (collaboration)",
                 DirectShow = "DirectShow",
                 DirectShowDescription = "quartz.dll in system32 folder",
                 ManagedDirectX = "Managed DirectX",
-                ManagedDirectXDescription = "Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX",
+                ManagedDirectXDescription = "Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX",
                 MPlayer = "MPlayer",
                 MPlayerDescription = "MPlayer2/Mplayer",
                 VlcMediaPlayer = "VLC Media Player",

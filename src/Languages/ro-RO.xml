@@ -40,7 +40,7 @@
     <FrameRateX>Rată cadre: {0:0.0###}</FrameRateX>
     <TotalFramesX>Total cadre: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Codare video: {0}</VideoEncodingX>
-    <SingleLineLengths>Lungimea unei linii: </SingleLineLengths>
+    <SingleLineLengths>Lungimea unei linii:</SingleLineLengths>
     <TotalLengthX>Lungime totală: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Lungime totală: {0} (scindează linia!)</TotalLengthXSplitLine>
     <SplitLine>Scindează linia!</SplitLine>
@@ -95,7 +95,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Adăugare la dicționarul propriu</Title>
-    <Description>Adăugare cuvânt la dicționarul propriu (fără caractere identice) </Description>
+    <Description>Adăugare cuvânt la dicționarul propriu (fără caractere identice)</Description>
   </AddToUserDictionary>
   <AddWaveForm>
     <Title>Generarea datelor de formă audio</Title>
@@ -197,7 +197,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <Title>Verificarea actualizărilor</Title>
     <CheckingForUpdates>Verificare actualizări ...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Verificarea actualizărilor eșuate: {0}</CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable>Folosești ultima versiune a Subtitle Edit: </CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNoneAvailable>Folosești ultima versiune a Subtitle Edit:</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Versiune nouă disponibilă!</CheckingForUpdatesNewVersion>
     <InstallUpdate>Mergi la pagina de descărcare</InstallUpdate>
     <NoUpdates>Nicio actualizare</NoUpdates>
@@ -563,12 +563,12 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FixMissingOpenBracket>Corectează absența [ din linie</FixMissingOpenBracket>
     <FixMusicNotation>Înlocuiește simbolurile muzicale (e.g. âTª) cu simboluri preferate</FixMusicNotation>
     <XFixDoubleDash>{0} "--" corectat</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} &gt;&gt; eliminat </XFixDoubleGreaterThan>
+    <XFixDoubleGreaterThan>{0} &gt;&gt; eliminat</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} elimină începutul '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} absența [ din linie corectată</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} corectează notația muzicală din linie</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa ... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'aTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -1713,7 +1713,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <Title>Scindarea liniilor lungi</Title>
     <SingleLineMaximumLength>Lungimea maximă a unei singure linii</SingleLineMaximumLength>
     <LineMaximumLength>Lungimea maximă a liniei</LineMaximumLength>
-    <LineContinuationBeginEndStrings>Linia prelungită  începe/sfârșește cu</LineContinuationBeginEndStrings>
+    <LineContinuationBeginEndStrings>Linia prelungită începe/sfârșește cu</LineContinuationBeginEndStrings>
     <NumberOfSplits>Număr de scindări: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Cea mai lungă linie singulară este de {0} la linia {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Cea mai lungă linie totală este de {0} la linia {1}</LongestLineIsXAtY>
@@ -1760,9 +1760,9 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <LineLengthMaximum>Lungimea subtitrării - maximă: {0}</LineLengthMaximum>
     <LineLengthAverage>Lungimea subtitrării - medie: {0}</LineLengthAverage>
     <LinesPerSubtitleAverage>Subtitrare, număr de linii - mediu: {0:0.0}</LinesPerSubtitleAverage>
-    <SingleLineLengthMinimum>Lungimea unei singure linii  - minimă: {0}</SingleLineLengthMinimum>
-    <SingleLineLengthMaximum>Lungimea unei singure linii  - maximă: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAverage>Lungimea unei singure linii  - medie: {0}</SingleLineLengthAverage>
+    <SingleLineLengthMinimum>Lungimea unei singure linii - minimă: {0}</SingleLineLengthMinimum>
+    <SingleLineLengthMaximum>Lungimea unei singure linii - maximă: {0}</SingleLineLengthMaximum>
+    <SingleLineLengthAverage>Lungimea unei singure linii - medie: {0}</SingleLineLengthAverage>
     <DurationMinimum>Durata - minimă: {0:0.000} secunde</DurationMinimum>
     <DurationMaximum>Durata - maximă: {0:0.000} secunde</DurationMaximum>
     <DurationAverage>Durata - medie: {0:0.000} secunde</DurationAverage>

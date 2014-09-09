@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.2</Version>
     <TranslatedBy>Translation By. Zakaria Farah Abu Wael
-zakaria_farah2000@hotmail.com  : للتواصل
+zakaria_farah2000@hotmail.com : للتواصل
 https://www.facebook.com/zakaria2000
 منتديات عميد التعريب الأستاذ عوض الغامدى
 إضغط على الرابط التالى لزيارة المنتدى
@@ -63,7 +63,7 @@ http://www.alghaamdi.com/vb/index.php</TranslatedBy>
     <PleaseWait>...من فضلك أنتظر</PleaseWait>
     <SessionKey>مفتاح الجلسة</SessionKey>
     <UserName>اسم المستخدم</UserName>
-    <UserNameAlreadyInUse>اسم المستخدم  قيد الإستعمال</UserNameAlreadyInUse>
+    <UserNameAlreadyInUse>اسم المستخدم قيد الإستعمال</UserNameAlreadyInUse>
     <WebServiceUrl>عنوان خدمة ويب</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>{0} - فيديو</VideoWindowTitle>
@@ -121,8 +121,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GenerateWaveFormData>توليد بيانات الفيديو</GenerateWaveFormData>
     <PleaseWait>هذا قد يستغرق بضع دقائق -- يرجى الانتظار</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC لم يتم العثور على ميديا بلاير</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>ميديا بلير أو أحدث لاستخراج البيانات الصوتية  VLC 1.1.x يحتاج لبرنامج</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>ميديا بلير؟VLC  هل تريد أن تذهب إلى تحميل برنامج</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFound>ميديا بلير أو أحدث لاستخراج البيانات الصوتية VLC 1.1.x يحتاج لبرنامج</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>ميديا بلير؟VLC هل تريد أن تذهب إلى تحميل برنامج</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>...توليد ملف الفيديو</GeneratingPeakFile>
     <GeneratingSpectrogram>...توليد صورة طيفية</GeneratingSpectrogram>
     <ExtractingSeconds>استخراج الصوت : {0:0.0} ثانية</ExtractingSeconds>
@@ -292,9 +292,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <DvdSubRip>
     <Title>ifo/vobs (DVD) نسخ الترجمات من</Title>
     <DvdGroupTitle>معلومات / DVD ملفات</DvdGroupTitle>
-    <IfoFile>IFO  ملف</IfoFile>
-    <IfoFiles>IFO  ملف</IfoFiles>
-    <VobFiles>VOB  ملف</VobFiles>
+    <IfoFile>IFO ملف</IfoFile>
+    <IfoFiles>IFO ملف</IfoFiles>
+    <VobFiles>VOB ملف</VobFiles>
     <Add>. . .أضف</Add>
     <Remove>حذف</Remove>
     <Clear>مسح</Clear>
@@ -315,7 +315,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>اختيار اللغة</Title>
     <ChooseLanguageStreamId>اختيار اللغة</ChooseLanguageStreamId>
     <UnknownLanguage>لغة مجهولة</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>{0}/{1}  -  {2}x{3} ترجمة تصوير</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>{0}/{1} - {2}x{3} ترجمة تصوير</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>ترجمة تصوير</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -505,14 +505,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Fix3PlusLine>اصلاح الترجمة مع أكثر من سطرين</Fix3PlusLine>
     <X3PlusLinesFixed>{اصلحت الترجمة مع أكثر من سطرين : {0</X3PlusLinesFixed>
     <Analysing>...تحليل</Analysing>
-    <NothingToFix>لا شيء للإصلاح : )</NothingToFix>
+    <NothingToFix>لا شيء للإصلاح :)</NothingToFix>
     <FixesFoundX>{إصلاحات وجدت : {0</FixesFoundX>
     <XFixesApplied>{الإصلاحات التي تم تطبيقها : {0</XFixesApplied>
     <NothingToFixBut>لا شيء لإصلاح ولكن يمكن تحسين بعض الأشياء - مراجعة السجل للحصول على التفاصيل</NothingToFixBut>
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>بالانجليزية محددا ولكن الترجمة التي تم تحميلها حاليا لا تبدو أنها اللغة الإنجليزية ' i 'إلى' I ' الأصلاح الوحيد صغير</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>إستمر</Continue>
     <ContinueAnyway>المتابعة على أية حال؟</ContinueAnyway>
-    <UncheckedFixLowercaseIToUppercaseI>بالانجليزية "' i 'إلى' I ' "  الأصلاح الوحيد صغير  لم يتم التحقق منه</UncheckedFixLowercaseIToUppercaseI>
+    <UncheckedFixLowercaseIToUppercaseI>بالانجليزية "' i 'إلى' I ' "  الأصلاح الوحيد صغير لم يتم التحقق منه</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i's متغير إلى أحرف كبيرة</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>الرسالة الأولى لإصلاح كبيرة بعد الفقرة</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>(إدمج سطراً قصيراً (جملة وحيدة</MergeShortLine>
@@ -564,7 +564,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} اصلاح [مفقود في السطر</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} تدوين الموسيقى الإصلاح في السطر</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'قف... نعم أم!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'روبرت : سوب المتأنق!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'روبرت : سوب المتأنق!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'ومن ثم نحن'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[القعقعة] ابحثوا!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ أحلام حلوة'</FixMusicNotationExample>
@@ -573,7 +573,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>تحتاج قواميس؟</Title>
-    <DescriptionLine1>NHunspell  تستند الترجمة لتحرير التدقيق الإملائي على المحرك</DescriptionLine1>
+    <DescriptionLine1>NHunspell تستند الترجمة لتحرير التدقيق الإملائي على المحرك</DescriptionLine1>
     <DescriptionLine2>إستخدم قواميس التدقيق الإملائي من المكتب المفتوح</DescriptionLine2>
     <GetDictionariesHere>الحصول على القواميس هنا :</GetDictionariesHere>
     <OpenOpenOfficeWiki>قائمة قواميس Wiki افتح مكتب</OpenOpenOfficeWiki>
@@ -1109,7 +1109,7 @@ Continue?</SubtitleAppendPrompt>
     </BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>{الإطار معدل تغير من {0} إلى {1</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>على أية حال؟ VobSub غير موجود!  {0}  استيراد ملف</IdxFileNotFoundWarning>
-    <InvalidVobSubHeader>{0} :العنوان الرأسي ليس ملف صحيح   VobSub</InvalidVobSubHeader>
+    <InvalidVobSubHeader>{0} :العنوان الرأسي ليس ملف صحيح VobSub</InvalidVobSubHeader>
     <OpenVobSubFile>ترجمة VobSub (sub/idx) فتح</OpenVobSubFile>
     <VobSubFiles>VobSub ملفات ترجمة</VobSubFiles>
     <OpenBluRaySupFile>Blu-ray .sup فتح ملف</OpenBluRaySupFile>
@@ -1416,7 +1416,7 @@ Continue?</SubtitleAppendPrompt>
     <ShowFrameRate>عرض معدل الإطار في شريط الأدوات</ShowFrameRate>
     <DefaultFrameRate>معدل الإطار الافتراضي</DefaultFrameRate>
     <DefaultFileEncoding>ملف الترميز الافتراضي</DefaultFileEncoding>
-    <AutoDetectAnsiEncoding>ANSI  تلقائى كشف الترميز</AutoDetectAnsiEncoding>
+    <AutoDetectAnsiEncoding>ANSI تلقائى كشف الترميز</AutoDetectAnsiEncoding>
     <SubtitleLineMaximumLength>سطر واحد كحد أقصى. طول</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>
     </MaximumCharactersPerSecond>
@@ -1950,7 +1950,7 @@ Continue?</SubtitleAppendPrompt>
   </PointSync>
   <UnknownSubtitle>
     <Title>نوع الترجمة مجهول</Title>
-    <Message>إذا كنت تريد هذا ثابت الرجاء إرسال بريد إلكتروني إلى niksedk@gmail.com  وتشمل نسخة من الترجمة</Message>
+    <Message>إذا كنت تريد هذا ثابت الرجاء إرسال بريد إلكتروني إلى niksedk@gmail.com وتشمل نسخة من الترجمة</Message>
   </UnknownSubtitle>
   <VisualSync>
     <Title>مزامنة الفيديو</Title>
@@ -1997,7 +1997,7 @@ Keep changes?</KeepChangesMessage>
     <Edit>تعديل</Edit>
     <StartOcr>OCR بدء</StartOcr>
     <Stop>توقف</Stop>
-    <StartOcrFrom>: لا الترجمة  OCR ابدأ من</StartOcrFrom>
+    <StartOcrFrom>: لا الترجمة OCR ابدأ من</StartOcrFrom>
     <LoadingVobSubImages>... VobSub تحميل تصوير</LoadingVobSubImages>
     <SubtitleImage>ترجمة تصوير</SubtitleImage>
     <SubtitleText>ترجمة نصية</SubtitleText>

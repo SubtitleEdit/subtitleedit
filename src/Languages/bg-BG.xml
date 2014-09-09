@@ -308,7 +308,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Избор на език</Title>
     <ChooseLanguageStreamId>Избор на език (поток-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Неизвестен език</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Изображение със субтитри {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Изображение със субтитри {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Изображение със субтитри</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -502,7 +502,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Поправяне (добавяне на тире) двойно с единично тире</FixHyphensAdd>
     <FixHyphen>Поправяне на ред започващ с тире (-)</FixHyphen>
     <XHyphensFixed>Поправени тирета: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Как си?  -&gt; "Как си?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Как си? -&gt; "Как си?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Добавени липсващи кавички: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Поправяне на субтитри с повече от два реда</Fix3PlusLines>
     <Fix3PlusLine>Поправяне на субтитри с повече от два реда</Fix3PlusLine>
@@ -512,7 +512,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixesFoundX>Намерени грешки: {0}</FixesFoundX>
     <XFixesApplied>Направени поправки: {0}</XFixesApplied>
     <NothingToFixBut>Няма нищо за поправяне, но някои неща могат да се подобрят – вижте отчета...</NothingToFixBut>
-    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Поправяне на единична малка буква  'i' към 'I' (англ.)" е маркирано, но текущите заредени субтитри изглежда не са английски.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
+    <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Поправяне на единична малка буква 'i' към 'I' (англ.)" е маркирано, но текущите заредени субтитри изглежда не са английски.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Продължаване</Continue>
     <ContinueAnyway>Искате ли да продължите?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Де маркиране на “Единична малка буква 'i' към 'I' (англ.)"</UncheckedFixLowercaseIToUppercaseI>
@@ -567,7 +567,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} поправени липсващи [ в ред</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} поправени музикални символи в ред</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -642,7 +642,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ImportOptions>Опции при внасяне</ImportOptions>
     <Splitting>Разделяне</Splitting>
     <AutoSplitText>Автоматично разделяне на текста</AutoSplitText>
-    <OneLineIsOneSubtitle>Един ред текст са един  ред субтитри</OneLineIsOneSubtitle>
+    <OneLineIsOneSubtitle>Един ред текст са един ред субтитри</OneLineIsOneSubtitle>
     <LineBreak>Разделител на редове</LineBreak>
     <SplitAtBlankLines>Раздели в празни редове</SplitAtBlankLines>
     <MergeShortLines>Сливане на кратки редове с продължение</MergeShortLines>
@@ -949,7 +949,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
       <VideoPosition>Позиц. видео:</VideoPosition>
       <TranslateTip>Използвайте клавиши &lt;alt+горна/долна стрелка&gt;, за предишни/следващи субтитри</TranslateTip>
-      <CreateTip>Клавиши &lt;ctrl+лява/дясна стрелка&gt; </CreateTip>
+      <CreateTip>Клавиши &lt;ctrl+лява/дясна стрелка&gt;</CreateTip>
       <AdjustTip>Клавиши &lt;alt+горна/долна стрелка&gt;, за предишни/следващи субтитри</AdjustTip>
       <BeforeChangingTimeInWaveFormX>Преди промяната на времето във формата на звуковия сигнал: {0}</BeforeChangingTimeInWaveFormX>
       <NewTextInsertAtX>Новия текст е вмъкнат в {0}</NewTextInsertAtX>
@@ -1026,8 +1026,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeRenumbering>Преди преномерацията</BeforeRenumbering>
     <RenumberedStartingFromX>Начало на преномерация от: {0}</RenumberedStartingFromX>
     <BeforeRemovalOfTextingForHearingImpaired>Преди изтриването на текста за увредени със слуха</BeforeRemovalOfTextingForHearingImpaired>
-    <TextingForHearingImpairedRemovedOneLine>Изтрит текст за увредени със слуха : Един ред</TextingForHearingImpairedRemovedOneLine>
-    <TextingForHearingImpairedRemovedXLines>Изтрит текст за увредени със слуха : {0} реда</TextingForHearingImpairedRemovedXLines>
+    <TextingForHearingImpairedRemovedOneLine>Изтрит текст за увредени със слуха: Един ред</TextingForHearingImpairedRemovedOneLine>
+    <TextingForHearingImpairedRemovedXLines>Изтрит текст за увредени със слуха: {0} реда</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>Субтитрите са разделени</SubtitleSplitted>
     <SubtitleAppendPrompt>Обединяване на съществуващи субтитри към текущите заредени субтитри,
 които вече трябва да са синхронизирани с видео файла.
@@ -1188,11 +1188,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeAutoDuration>Преди авто времетраене за избраните редове</BeforeAutoDuration>
     <BeforeColumnPaste>Преди поставянето на колона</BeforeColumnPaste>
     <BeforeColumnDelete>Преди изтриването на колона</BeforeColumnDelete>
-    <BeforeColumnImportText>Преди колоната внасяне на текст </BeforeColumnImportText>
+    <BeforeColumnImportText>Преди колоната внасяне на текст</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Преди местенето на клетка надолу</BeforeColumnShiftCellsDown>
     <ErrorLoadingPluginXErrorY>Грешка в зареждането на приставка: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Преди стартирането на приставка: {0}: {1}</BeforeRunningPluginXVersionY>
-    <UnableToReadPluginResult>Не може да се прочетат субтитрите, в  резултат от приставката!</UnableToReadPluginResult>
+    <UnableToReadPluginResult>Не може да се прочетат субтитрите, в резултат от приставката!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Не може да се създаде папка за резервно копие: {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Преди обединение на субтитрите</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Субтитрите са обединени</SubtitlesJoined>
@@ -1201,7 +1201,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PluginXExecuted>Изпълнени са (0) плъгина</PluginXExecuted>
     <NotAValidXSubFile>Невалиден xsub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Преди сливането на редове с еднакъв текст</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри с различен тайм код имат ({0}) различни редове с ({1}), продължение? </ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри с различен тайм код имат ({0}) различни редове с ({1}), продължение?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Анализ на странспортния стрийм, изчакайте, моля...</ParsingTransportStream>
     <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а SE може да отвори .sub файла.</ErrorLoadIdx>
     <ErrorLoadRar>Изглежда това са архивни .rar файлове. SE не може да отваря арховни файлове.</ErrorLoadRar>
@@ -1478,7 +1478,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll в папката system32</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
@@ -1496,7 +1496,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ReverseMouseWheelScrollDirection>Обръщане на скрул бутона на мишката</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Възможно презастъпване (при местене/оразмеряване)</WaveFormAllowOverlap>
     <WaveFormFocusMouseEnter>На фокус при клик на мишката</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Както и задаване на списъчен изглед при клик на мишката в списъчен изглед </WaveFormListViewFocusMouseEnter>
+    <WaveFormListViewFocusMouseEnter>Както и задаване на списъчен изглед при клик на мишката в списъчен изглед</WaveFormListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Ограждащият маркер трябва да бъде</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>милисекунди</WaveformBorderHitMs2>
     <WaveFormColor>Цвят на сигнала</WaveFormColor>
@@ -1617,7 +1617,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SyntaxColorTextIfTooLong>Дълъг ред</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>На текст над реда:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Презастъпване на времена</SyntaxColorOverlap>
-    <SyntaxErrorColor>Цвят  на грешка</SyntaxErrorColor>
+    <SyntaxErrorColor>Цвят на грешка</SyntaxErrorColor>
     <GoToFirstSelectedLine>Отиване на първия избран ред</GoToFirstSelectedLine>
     <MergeSelectedLines>Сливане на избраните редове</MergeSelectedLines>
     <ToggleTranslationMode>Включване на преводен режим</ToggleTranslationMode>
