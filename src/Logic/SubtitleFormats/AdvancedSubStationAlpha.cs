@@ -308,7 +308,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         Color c = Color.White;
                         try
                         {
-                            if (color.StartsWith("rgb("))
+                            if (color.StartsWith("rgb(", StringComparison.Ordinal))
                             {
                                 string[] arr = color.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                 c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -359,9 +359,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.ToLower().StartsWith("style:"))
+                if (line.ToLower().StartsWith("style:", StringComparison.Ordinal))
                 {
-                    int end = line.IndexOf(",");
+                    int end = line.IndexOf(',');
                     if (end > 0)
                         list.Add(line.Substring(6, end - 6).Trim());
                 }
@@ -416,8 +416,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         {
             if (fontTag.Contains(tag))
             {
-                int fontStart = fontTag.IndexOf(tag);
-                int fontEnd = fontTag.IndexOf(endSign, fontStart + tag.Length);
+                int fontStart = fontTag.IndexOf(tag, StringComparison.Ordinal);
+                int fontEnd = fontTag.IndexOf(endSign, fontStart + tag.Length, StringComparison.Ordinal);
                 if (fontEnd > 0)
                 {
                     string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
@@ -446,9 +446,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 if (text.Contains(@"{\fn"))
                 {
-                    int start = text.IndexOf(@"{\fn");
+                    int start = text.IndexOf(@"{\fn", StringComparison.Ordinal);
                     int end = text.IndexOf('}', start);
-                    if (end > 0 && !text.Substring(start).StartsWith("{\\fn}"))
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\fn}", StringComparison.Ordinal))
                     {
                         string fontName = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -459,7 +459,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         else
                             text = text.Insert(start, "<font face=\"" + fontName + "\"" + extraTags + ">");
 
-                        int indexOfEndTag = text.IndexOf("{\\fn}", start);
+                        int indexOfEndTag = text.IndexOf("{\\fn}", start, StringComparison.Ordinal);
                         if (indexOfEndTag > 0)
                             text = text.Remove(indexOfEndTag, "{\\fn}".Length).Insert(indexOfEndTag, "</font>");
                         else
@@ -469,9 +469,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                 if (text.Contains(@"{\fs"))
                 {
-                    int start = text.IndexOf(@"{\fs");
+                    int start = text.IndexOf(@"{\fs", StringComparison.Ordinal);
                     int end = text.IndexOf('}', start);
-                    if (end > 0 && !text.Substring(start).StartsWith("{\\fs}"))
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\fs}", StringComparison.Ordinal))
                     {
                         string fontSize = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -484,7 +484,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             else
                                 text = text.Insert(start, "<font size=\"" + fontSize + "\"" + extraTags + ">");
 
-                            int indexOfEndTag = text.IndexOf("{\\fs}", start);
+                            int indexOfEndTag = text.IndexOf("{\\fs}", start, StringComparison.Ordinal);
                             if (indexOfEndTag > 0)
                                 text = text.Remove(indexOfEndTag, "{\\fs}".Length).Insert(indexOfEndTag, "</font>");
                             else
@@ -495,9 +495,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                 if (text.Contains(@"{\c"))
                 {
-                    int start = text.IndexOf(@"{\c");
+                    int start = text.IndexOf(@"{\c", StringComparison.Ordinal);
                     int end = text.IndexOf('}', start);
-                    if (end > 0 && !text.Substring(start).StartsWith("{\\c}"))
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\c}", StringComparison.Ordinal))
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -515,8 +515,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + "><i>");
                         else
                             text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + ">");
-                        int indexOfEndTag = text.IndexOf("{\\c}", start);
-                        int indexOfNextColorTag = text.IndexOf("{\\c&", start);
+                        int indexOfEndTag = text.IndexOf("{\\c}", start, StringComparison.Ordinal);
+                        int indexOfNextColorTag = text.IndexOf("{\\c&", start, StringComparison.Ordinal);
                         if (indexOfNextColorTag > 0 && (indexOfNextColorTag < indexOfEndTag || indexOfEndTag == -1))
                             text = text.Insert(indexOfNextColorTag, "</font>");
                         else if (indexOfEndTag > 0)
@@ -528,9 +528,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                 if (text.Contains(@"{\1c")) // "1" specifices primary color
                 {
-                    int start = text.IndexOf(@"{\1c");
+                    int start = text.IndexOf(@"{\1c", StringComparison.Ordinal);
                     int end = text.IndexOf('}', start);
-                    if (end > 0 && !text.Substring(start).StartsWith("{\\1c}"))
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\1c}", StringComparison.Ordinal))
                     {
                         string color = text.Substring(start + 5, end - (start + 5));
                         string extraTags = string.Empty;
@@ -578,7 +578,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         private static void CheckAndAddSubTags(ref string tagName, ref string extraTags, out bool italic)
         {
             italic = false;
-            int indexOfSPlit = tagName.IndexOf(@"\");
+            int indexOfSPlit = tagName.IndexOf('\\');
             if (indexOfSPlit > 0)
             {
                 string rest = tagName.Substring(indexOfSPlit).TrimStart('\\');
@@ -586,9 +586,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                 for (int i = 0; i < 10; i++)
                 {
-                    if (rest.StartsWith("fs") && rest.Length > 2)
+                    if (rest.StartsWith("fs", StringComparison.Ordinal) && rest.Length > 2)
                     {
-                        indexOfSPlit = rest.IndexOf(@"\");
+                        indexOfSPlit = rest.IndexOf('\\');
                         string fontSize = rest;
                         if (indexOfSPlit > 0)
                         {
@@ -601,9 +601,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                         extraTags += " size=\"" + fontSize.Substring(2) + "\"";
                     }
-                    else if (rest.StartsWith("fn") && rest.Length > 2)
+                    else if (rest.StartsWith("fn", StringComparison.Ordinal) && rest.Length > 2)
                     {
-                        indexOfSPlit = rest.IndexOf(@"\");
+                        indexOfSPlit = rest.IndexOf('\\');
                         string fontName = rest;
                         if (indexOfSPlit > 0)
                         {
@@ -616,9 +616,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                         extraTags += " face=\"" + fontName.Substring(2) + "\"";
                     }
-                    else if (rest.StartsWith("c") && rest.Length > 2)
+                    else if (rest.StartsWith('c') && rest.Length > 2)
                     {
-                        indexOfSPlit = rest.IndexOf(@"\");
+                        indexOfSPlit = rest.IndexOf('\\');
                         string fontColor = rest;
                         if (indexOfSPlit > 0)
                         {
@@ -639,9 +639,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         extraTags += " color=\"" + color + "\"";
                     }
-                    else if (rest.StartsWith("i1") && rest.Length > 1)
+                    else if (rest.StartsWith("i1", StringComparison.Ordinal) && rest.Length > 1)
                     {
-                        indexOfSPlit = rest.IndexOf(@"\");
+                        indexOfSPlit = rest.IndexOf('\\');
                         italic = true;
                         if (indexOfSPlit > 0)
                         {
@@ -654,7 +654,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     }
                     else if (rest.Length > 0 && rest.Contains("\\"))
                     {
-                        indexOfSPlit = rest.IndexOf(@"\");
+                        indexOfSPlit = rest.IndexOf('\\');
                         rest = rest.Substring(indexOfSPlit).TrimStart('\\');
                     }
                 }
@@ -692,11 +692,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip empty lines
                 }
-                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(";"))
+                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(';'))
                 {
                     // skip comment lines
                 }
-                else if (line.Trim().ToLower().StartsWith("dialogue:")) // fix faulty font tags...
+                else if (line.Trim().ToLower().StartsWith("dialogue:", StringComparison.Ordinal)) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -736,7 +736,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 else if (eventsStarted)
                 {
                     string s = line.Trim().ToLower();
-                    if (s.StartsWith("format:"))
+                    if (s.StartsWith("format:", StringComparison.Ordinal))
                     {
                         if (line.Length > 10)
                         {
@@ -772,7 +772,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         string[] splittedLine;
 
-                        if (s.StartsWith("dialogue:"))
+                        if (s.StartsWith("dialogue:", StringComparison.Ordinal))
                             splittedLine = line.Substring(10).Split(',');
                         else
                             splittedLine = line.Split(',');
@@ -812,7 +812,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 p.Effect = effect;
                             if (!string.IsNullOrEmpty(layer))
                                 p.Layer = layer;
-                            p.IsComment = s.StartsWith("comment:");
+                            p.IsComment = s.StartsWith("comment:", StringComparison.Ordinal);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch
@@ -885,39 +885,39 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    int indexOfBegin = p.Text.IndexOf("{");
+                    int indexOfBegin = p.Text.IndexOf('{');
                     string pre = string.Empty;
-                    while (indexOfBegin >= 0 && p.Text.IndexOf("}") > indexOfBegin)
+                    while (indexOfBegin >= 0 && p.Text.IndexOf('}') > indexOfBegin)
                     {
                         string s = p.Text.Substring(indexOfBegin);
-                        if (s.StartsWith("{\\an1}") ||
-                            s.StartsWith("{\\an2}") ||
-                            s.StartsWith("{\\an3}") ||
-                            s.StartsWith("{\\an4}") ||
-                            s.StartsWith("{\\an5}") ||
-                            s.StartsWith("{\\an6}") ||
-                            s.StartsWith("{\\an7}") ||
-                            s.StartsWith("{\\an8}") ||
-                            s.StartsWith("{\\an9}"))
+                        if (s.StartsWith("{\\an1}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an2}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an3}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an4}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an5}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an6}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an7}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an8}", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an9}", StringComparison.Ordinal))
                         {
                             pre = s.Substring(0, 6);
                         }
-                        else if (s.StartsWith("{\\an1\\") ||
-                            s.StartsWith("{\\an2\\") ||
-                            s.StartsWith("{\\an3\\") ||
-                            s.StartsWith("{\\an4\\") ||
-                            s.StartsWith("{\\an5\\") ||
-                            s.StartsWith("{\\an6\\") ||
-                            s.StartsWith("{\\an7\\") ||
-                            s.StartsWith("{\\an8\\") ||
-                            s.StartsWith("{\\an9\\"))
+                        else if (s.StartsWith("{\\an1\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an2\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an3\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an4\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an5\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an6\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an7\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an8\\", StringComparison.Ordinal) ||
+                            s.StartsWith("{\\an9\\", StringComparison.Ordinal))
                         {
                             pre = s.Substring(0, 5) + "}";
                         }
-                        int indexOfEnd = p.Text.IndexOf("}");
+                        int indexOfEnd = p.Text.IndexOf('}');
                         p.Text = p.Text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
 
-                        indexOfBegin = p.Text.IndexOf("{");
+                        indexOfBegin = p.Text.IndexOf('{');
                     }
                     p.Text = pre + p.Text;
                 }
@@ -926,13 +926,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         private static string RemoveTag(string s, string tag)
         {
-            int indexOfTag = s.IndexOf(@"\" + tag);
+            int indexOfTag = s.IndexOf(@"\" + tag, StringComparison.Ordinal);
             int endIndex1 = int.MaxValue;
             int endIndex2 = int.MaxValue;
             if (indexOfTag > 0)
             {
-                endIndex1 = s.IndexOf("\\", indexOfTag + 1);
-                endIndex2 = s.IndexOf("}", indexOfTag + 1);
+                endIndex1 = s.IndexOf("\\", indexOfTag + 1, StringComparison.Ordinal);
+                endIndex2 = s.IndexOf("}", indexOfTag + 1, StringComparison.Ordinal);
                 endIndex1 = Math.Min(endIndex1, endIndex2);
                 if (endIndex1 > 0)
                     s = s.Remove(indexOfTag, endIndex1 - indexOfTag);
@@ -955,13 +955,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             //Black = &H000000&
             string s = f.Trim().Trim('&');
 
-            if (s.ToLower().StartsWith("h") && s.Length < 7)
+            if (s.ToLower().StartsWith('h') && s.Length < 7)
             {
                 while (s.Length < 7)
                     s = s.Insert(1, "0");
             }
 
-            if (s.ToLower().StartsWith("h") && s.Length == 7)
+            if (s.ToLower().StartsWith('h') && s.Length == 7)
             {
                 s = s.Substring(1);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -974,7 +974,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            else if (s.ToLower().StartsWith("h") && s.Length == 9)
+            else if (s.ToLower().StartsWith('h') && s.Length == 9)
             {
                 s = s.Substring(3);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -1036,7 +1036,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim().ToLower();
-                if (s.StartsWith("format:"))
+                if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -1082,7 +1082,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:"))
+                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -1119,7 +1119,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 else if (i == fontsizeIndex)
                                 {
                                     int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Fontsize' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1184,7 +1184,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 else if (i == outlineIndex)
                                 {
                                     float number;
-                                    if (!float.TryParse(f, out number) || f.StartsWith("-"))
+                                    if (!float.TryParse(f, out number) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Outline' (width) incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1193,7 +1193,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 else if (i == shadowIndex)
                                 {
                                     float number;
-                                    if (!float.TryParse(f, out number) || f.StartsWith("-"))
+                                    if (!float.TryParse(f, out number) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'Shadow' (width) incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1210,7 +1210,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 else if (i == marginLIndex)
                                 {
                                     int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'MarginL' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1219,7 +1219,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 else if (i == marginRIndex)
                                 {
                                     int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'MarginR' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1228,7 +1228,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 else if (i == marginVIndex)
                                 {
                                     int number;
-                                    if (!int.TryParse(f, out number) || f.StartsWith("-"))
+                                    if (!int.TryParse(f, out number) || f.StartsWith('-'))
                                     {
                                         sb.AppendLine("'MarginV' incorrect: " + rawLine);
                                         sb.AppendLine();
@@ -1267,11 +1267,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 if (line.ToLower() == "[V4+ Styles]".ToLower() || line.ToLower() == "[V4 Styles]".ToLower())
                     stylesStarted = true;
-                if (line.ToLower().StartsWith("format:"))
+                if (line.ToLower().StartsWith("format:", StringComparison.Ordinal))
                     styleFormat = line;
-                if (!line.StartsWith("Style: " + style.Name + ",")) // overwrite existing style
+                if (!line.StartsWith("Style: " + style.Name + ",", StringComparison.Ordinal)) // overwrite existing style
                     sb.AppendLine(line);
-                if (!styleAdded && stylesStarted && line.ToLower().Trim().StartsWith("style:"))
+                if (!styleAdded && stylesStarted && line.ToLower().Trim().StartsWith("style:", StringComparison.Ordinal))
                 {
                     sb.AppendLine(style.ToRawAss(styleFormat));
                     styleAdded = true;
@@ -1307,7 +1307,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim().ToLower();
-                if (s.StartsWith("format:"))
+                if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -1354,7 +1354,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         }
                     }
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:"))
+                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
