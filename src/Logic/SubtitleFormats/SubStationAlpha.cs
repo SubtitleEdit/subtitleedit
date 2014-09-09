@@ -121,49 +121,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
                 if (p.IsComment)
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, FormatText(p), style, layer, actor, effect));
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, layer, actor, effect));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, layer, actor, effect));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, layer, actor, effect));
             }
             return sb.ToString().Trim();
-        }
-
-        private static string FormatText(Paragraph p)
-        {
-            string text = p.Text.Replace(Environment.NewLine, "\\N");
-            text = text.Replace("<i>", @"{\i1}");
-            text = text.Replace("</i>", @"{\i0}");
-            text = text.Replace("</i>", @"{\i}");
-            text = text.Replace("<u>", @"{\u1}");
-            text = text.Replace("</u>", @"{\u0}");
-            text = text.Replace("</u>", @"{\u}");
-            text = text.Replace("<b>", @"{\b1}");
-            text = text.Replace("</b>", @"{\b0}");
-            text = text.Replace("</b>", @"{\b}");
-            int count = 0;
-            while (text.Contains("<font ") && count < 10)
-            {
-                int start = text.IndexOf(@"<font ");
-                int end = text.IndexOf('>', start);
-                if (end > 0)
-                {
-                    string fontTag = text.Substring(start + 4, end - (start + 4));
-                    text = text.Remove(start, end - start + 1);
-                    text = text.Replace("</font>", string.Empty);
-
-                    fontTag = FormatTag(ref text, start, fontTag, "face=\"", "\"", "fn", "}");
-                    fontTag = FormatTag(ref text, start, fontTag, "face='", "'", "fn", "}");
-
-                    fontTag = FormatTag(ref text, start, fontTag, "size=\"", "\"", "fs", "}");
-                    fontTag = FormatTag(ref text, start, fontTag, "size='", "'", "fs", "}");
-
-                    fontTag = FormatTag(ref text, start, fontTag, "color=\"", "\"", "c&H", "&}");
-                    fontTag = FormatTag(ref text, start, fontTag, "color='", "'", "c&H", "&}");
-                }
-                count++;
-            }
-            return text;
-        }
+        }       
 
         private static void LoadStylesFromAdvancedSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
         {

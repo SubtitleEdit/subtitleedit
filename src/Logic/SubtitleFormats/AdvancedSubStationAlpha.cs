@@ -369,7 +369,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             return list;
         }
 
-        private static string FormatText(Paragraph p)
+        public static string FormatText(Paragraph p)
         {
             string text = p.Text.Replace(Environment.NewLine, "\\N");
             text = text.Replace("<i>", @"{\i1}");
@@ -384,13 +384,19 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int count = 0;
             while (text.Contains("<font ") && count < 10)
             {
-                int start = text.IndexOf(@"<font ");
+                int start = text.IndexOf(@"<font ", StringComparison.Ordinal);
                 int end = text.IndexOf('>', start);
                 if (end > 0)
                 {
                     string fontTag = text.Substring(start + 4, end - (start + 4));
                     text = text.Remove(start, end - start + 1);
-                    text = text.Replace("</font>", string.Empty);
+                    int indexOfEndFont = text.IndexOf("</font>", start, StringComparison.Ordinal);
+                    if (indexOfEndFont > 0)
+                    { 
+                        text = text.Remove(indexOfEndFont, 7);
+                        if (indexOfEndFont < text.Length - 9)
+                            text = text.Insert(indexOfEndFont, "{\\c}");
+                    }  
 
                     fontTag = FormatTag(ref text, start, fontTag, "face=\"", "\"", "fn", "}");
                     fontTag = FormatTag(ref text, start, fontTag, "face='", "'", "fn", "}");
@@ -403,7 +409,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 }
                 count++;
             }
-            return text.Replace("}{", string.Empty);
+            return text.Replace("{\\c}", "@___@@").Replace("}{", string.Empty).Replace("@___@@", "{\\c}").Replace("{\\c}{\\c&", "{\\c&");
         }
 
         private static string FormatTag(ref string text, int start, string fontTag, string tag, string endSign, string ssaTagName, string endSsaTag)
@@ -510,7 +516,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         else
                             text = text.Insert(start, "<font color=\"" + color + "\"" + extraTags + ">");
                         int indexOfEndTag = text.IndexOf("{\\c}", start);
-                        if (indexOfEndTag > 0)
+                        int indexOfNextColorTag = text.IndexOf("{\\c&", start);
+                        if (indexOfNextColorTag > 0 && (indexOfNextColorTag < indexOfEndTag || indexOfEndTag == -1))
+                            text = text.Insert(indexOfNextColorTag, "</font>");
+                        else if (indexOfEndTag > 0)
                             text = text.Remove(indexOfEndTag, "{\\c}".Length).Insert(indexOfEndTag, "</font>");
                         else
                             text += "</font>";
