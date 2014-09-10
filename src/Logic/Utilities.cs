@@ -461,7 +461,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
                 int endIndex = -1;
                 if (tagFound)
-                    endIndex = s.IndexOf(">", six + 1, StringComparison.Ordinal);
+                    endIndex = s.IndexOf('>', six + 1);
 
                 if (tagFound && endIndex > 0)
                 {
@@ -552,7 +552,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (arr.Length == 2)
                 {
                     string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith("-", StringComparison.Ordinal) && arr[1].Trim().StartsWith("-", StringComparison.Ordinal) && (arr0.EndsWith(".", StringComparison.Ordinal) || arr0.EndsWith("!", StringComparison.Ordinal) || arr0.EndsWith("?", StringComparison.Ordinal)))
+                    if (arr0.StartsWith('-') && arr[1].Trim().StartsWith('-') && (arr0.EndsWith('.') || arr0.EndsWith('!') || arr0.EndsWith('?')))
                         return text;
                 }
             }
@@ -578,8 +578,7 @@ namespace Nikse.SubtitleEdit.Logic
                     foreach (string line in lines)
                     {
                         string cleanLine = RemoveHtmlTags(line).Trim();
-                        isDialog = isDialog && (cleanLine.StartsWith("-") ||
-                                                cleanLine.StartsWith("—"));
+                        isDialog = isDialog && (cleanLine.StartsWith('-') || cleanLine.StartsWith('—'));
                     }
                     if (isDialog)
                     {
@@ -595,18 +594,18 @@ namespace Nikse.SubtitleEdit.Logic
             while (six < s.Length)
             {
                 string letter = s[six].ToString();
-                bool tagFound = letter == "<" && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
-                                                s.Substring(six).StartsWith("</font") || s.Substring(six).StartsWith("</FONT") ||
-                                                s.Substring(six).StartsWith("</Font") || s.Substring(six).StartsWith("</Font") ||
-                                                s.Substring(six).StartsWith("<u") || s.Substring(six).StartsWith("</u") ||
-                                                s.Substring(six).StartsWith("<U") || s.Substring(six).StartsWith("</U") ||
-                                                s.Substring(six).StartsWith("<b") || s.Substring(six).StartsWith("</b") ||
-                                                s.Substring(six).StartsWith("<B") || s.Substring(six).StartsWith("</B") ||
-                                                s.Substring(six).StartsWith("<i") || s.Substring(six).StartsWith("</i") ||
-                                                s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
+                bool tagFound = letter == "<" && (s.Substring(six).StartsWith("<font ", StringComparison.Ordinal) || s.Substring(six).StartsWith("</font ", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("</font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</FONT", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("<u", StringComparison.Ordinal) || s.Substring(six).StartsWith("</u", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("<U", StringComparison.Ordinal) || s.Substring(six).StartsWith("</U", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("<b", StringComparison.Ordinal) || s.Substring(six).StartsWith("</b", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("<B", StringComparison.Ordinal) || s.Substring(six).StartsWith("</B", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("<i", StringComparison.Ordinal) || s.Substring(six).StartsWith("</i", StringComparison.Ordinal) ||
+                                                s.Substring(six).StartsWith("<I", StringComparison.Ordinal) || s.Substring(six).StartsWith("<I", StringComparison.Ordinal));
                 int endIndex = -1;
                 if (tagFound)
-                    endIndex = s.IndexOf(">", six + 1, StringComparison.Ordinal);
+                    endIndex = s.IndexOf('>', six + 1);
 
                 if (tagFound && endIndex > 0)
                 {
@@ -861,15 +860,15 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string RemoveSsaTags(string s)
         {
-            int k = s.IndexOf("{", StringComparison.Ordinal);
+            int k = s.IndexOf('{');
             while (k >= 0)
             {
-                int l = s.IndexOf("}", k, StringComparison.Ordinal);
+                int l = s.IndexOf('}', k);
                 if (l > k)
                 {
                     s = s.Remove(k, l - k + 1);
                     if (s.Length > 1 && s.Length > k)
-                        k = s.IndexOf("{", k, StringComparison.Ordinal);
+                        k = s.IndexOf('{', k);
                     else
                         k = -1;
                 }
@@ -892,7 +891,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (s.ToLower().Contains("<font"))
             {
                 int startIndex = s.ToLower().IndexOf("<font", StringComparison.Ordinal);
-                int endIndex = Math.Max(s.IndexOf(">", StringComparison.Ordinal), startIndex + 4);
+                int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
                 s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
@@ -907,7 +906,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (s.ToLower().Contains("<p "))
             {
                 int startIndex = s.IndexOf("<p ", StringComparison.OrdinalIgnoreCase);
-                int endIndex = Math.Max(s.IndexOf(">", StringComparison.Ordinal), startIndex + 4);
+                int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
                 s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
@@ -1127,7 +1126,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (string dic in Directory.GetFiles(dictionaryFolder, "*.dic"))
                 {
                     string name = Path.GetFileNameWithoutExtension(dic);
-                    if (!name.StartsWith("hyph"))
+                    if (!name.StartsWith("hyph", StringComparison.Ordinal))
                     {
                         try
                         {
@@ -1510,8 +1509,8 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (string name in dictionaryNames)
             {
                 string shortName = string.Empty;
-                int start = name.IndexOf("[", StringComparison.Ordinal);
-                int end = name.IndexOf("]", StringComparison.Ordinal);
+                int start = name.IndexOf('[');
+                int end = name.IndexOf(']');
                 if (start > 0 && end > start)
                 {
                     start++;
@@ -1793,7 +1792,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
                 {
-                    if (ext.StartsWith("*.") && !sb.ToString().ToLower().Contains(ext.ToLower()))
+                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().ToLower().Contains(ext.ToLower()))
                         AddExtension(sb, ext);
                 }
             }
@@ -2570,13 +2569,13 @@ namespace Nikse.SubtitleEdit.Logic
                 if (italicBeginTagCount == 1 && italicEndTagCount == 2)
                 {
                     int firstIndex = text.IndexOf(endTag, StringComparison.Ordinal);
-                    if (text.StartsWith("</i>-<i>-"))
+                    if (text.StartsWith("</i>-<i>-", StringComparison.Ordinal))
                         text = text.Remove(0, 5);
-                    else if (text.StartsWith("</i>- <i>-"))
+                    else if (text.StartsWith("</i>- <i>-", StringComparison.Ordinal))
                         text = text.Remove(0, 5);
-                    else if (text.StartsWith("</i>- <i> -"))
+                    else if (text.StartsWith("</i>- <i> -", StringComparison.Ordinal))
                         text = text.Remove(0, 5);
-                    else if (text.StartsWith("</i>-<i> -"))
+                    else if (text.StartsWith("</i>-<i> -", StringComparison.Ordinal))
                         text = text.Remove(0, 5);
                     else if (firstIndex == 0)
                         text = text.Remove(0, 4);
@@ -2587,7 +2586,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
                     var lines = text.Replace(Environment.NewLine, "\n").Split('\n');
-                    if (lines.Length == 2 && lines[0].StartsWith("<i>") && lines[0].EndsWith("</i>", StringComparison.Ordinal) &&
+                    if (lines.Length == 2 && lines[0].StartsWith("<i>", StringComparison.Ordinal) && lines[0].EndsWith("</i>", StringComparison.Ordinal) &&
                         lines[1].StartsWith("<i>", StringComparison.Ordinal))
                     {
                         text = text.TrimEnd() + "</i>";
@@ -2608,10 +2607,10 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 1 && italicEndTagCount == 0)
                 {
-                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
-                    int lastIndex = text.LastIndexOf(beginTag);
+                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
+                    int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
 
-                    if (text.StartsWith(beginTag))
+                    if (text.StartsWith(beginTag, StringComparison.Ordinal))
                         text += endTag;
                     else if (noOfLines == 2 && lastIndex == lastIndexWithNewLine)
                         text += endTag;
@@ -2625,7 +2624,7 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isFixed = false;
 
                     // Foo.</i>
-                    if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith("-", StringComparison.Ordinal) && !cleanText.Contains(Environment.NewLine + "-"))
+                    if (text.EndsWith(endTag, StringComparison.Ordinal) && !cleanText.StartsWith('-') && !cleanText.Contains(Environment.NewLine + "-"))
                     {
                         text = beginTag + text;
                         isFixed = true;
@@ -3635,7 +3634,7 @@ namespace Nikse.SubtitleEdit.Logic
                             break;
                         default:
                             code = code.TrimStart('#');
-                            if (code.StartsWith("x") || code.StartsWith("X"))
+                            if (code.StartsWith('x') || code.StartsWith('X'))
                             {
                                 code = code.TrimStart('x');
                                 code = code.TrimStart('X');
@@ -4004,10 +4003,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (string.IsNullOrEmpty(text))
                 return text;
 
-            if (text.StartsWith("\"", StringComparison.Ordinal) && text.Length > 1)
+            if (text.StartsWith('"') && text.Length > 1)
                 text = text.Substring(1);
 
-            if (text.EndsWith("\"", StringComparison.Ordinal) && text.Length >= 1)
+            if (text.EndsWith('"') && text.Length >= 1)
                 text = text.Substring(0, text.Length - 1);
 
             return text.Replace("\"\"", "\"");
@@ -4033,7 +4032,7 @@ namespace Nikse.SubtitleEdit.Logic
                         s = s.Trim('\'').Trim('"').Trim('\'');
                         try
                         {
-                            if (s.StartsWith("rgb("))
+                            if (s.StartsWith("rgb(", StringComparison.Ordinal))
                             {
                                 var arr = s.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
@@ -4070,14 +4069,14 @@ namespace Nikse.SubtitleEdit.Logic
                 int i = 0;
                 while (i < s.Length)
                 {
-                    if (ignoreLineBreaks && s.Substring(i).StartsWith(Environment.NewLine))
+                    if (ignoreLineBreaks && s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
                         word = new StringBuilder();
                         i += Environment.NewLine.Length;
                     }
-                    else if (s.Substring(i).StartsWith(Environment.NewLine))
+                    else if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
@@ -4222,7 +4221,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains(" " + Environment.NewLine))
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
 
-            if (text.EndsWith(" ", StringComparison.Ordinal))
+            if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
 
             text = text.Replace(". . ..", "...");
@@ -4312,7 +4311,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains(" </I>" + Environment.NewLine))
                 text = text.Replace(" </I>" + Environment.NewLine, "</I>" + Environment.NewLine);
 
-            if (text.StartsWith("<i> "))
+            if (text.StartsWith("<i> ", StringComparison.Ordinal))
                 text = "<i>" + text.Substring("<i> ".Length);
 
             if (text.Contains(Environment.NewLine + "<i> "))
@@ -4321,7 +4320,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             text = text.Trim();
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-            if (text.StartsWith("<I> "))
+            if (text.StartsWith("<I> ", StringComparison.Ordinal))
                 text = "<I>" + text.Substring("<I> ".Length);
 
             if (text.Contains(Environment.NewLine + "<I> "))
@@ -4334,7 +4333,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
                 if (text.ToLower().StartsWith("<i>", StringComparison.Ordinal))
-                    idx = text.IndexOf("- ", 5);
+                    idx = text.IndexOf("- ", 5, StringComparison.Ordinal);
                 while (idx > 0)
                 {
                     if (idx > 0 && idx < text.Length - 2)
@@ -4376,7 +4375,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                     if (idx + 1 < text.Length && idx != -1)
-                        idx = text.IndexOf("- ", idx + 1);
+                        idx = text.IndexOf("- ", idx + 1, StringComparison.Ordinal);
                     else
                         idx = -1;
                 }

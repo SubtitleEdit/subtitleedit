@@ -43,21 +43,21 @@ namespace Nikse.SubtitleEdit.Logic
 
                     // ASS/SSA codes like {\an9}
 
-                    if (text.StartsWith("{\\"))
+                    if (text.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        int endIndex = text.IndexOf("}", StringComparison.Ordinal);
-                        if (endIndex > 0 && (text.IndexOf("{", 1, StringComparison.Ordinal) == -1 || text.IndexOf("{", 1, StringComparison.Ordinal) > endIndex))
+                        int endIndex = text.IndexOf('}');
+                        if (endIndex > 0 && (text.IndexOf('{') == -1 || text.IndexOf('{') > endIndex))
                         {
-                            int index = text.IndexOf("}", StringComparison.Ordinal) + 1;
+                            int index = text.IndexOf('}') + 1;
                             Pre += text.Substring(0, index);
                             text = text.Substring(index);
                         }
                     }
 
                     // tags like <i> or <font color="#ff0000">
-                    if (text.StartsWith("<") && text.IndexOf(">", StringComparison.Ordinal) <= 21)
+                    if (text.StartsWith('<') && text.IndexOf('>') <= 21)
                     {
-                        int index = text.IndexOf(">", StringComparison.Ordinal) + 1;
+                        int index = text.IndexOf('>') + 1;
                         Pre += text.Substring(0, index);
                         text = text.Substring(index);
                     }
@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Substring(0, text.Length - 1);
                     }
 
-                    if (text.EndsWith(">", StringComparison.Ordinal))
+                    if (text.EndsWith('>'))
                     {
                         string lower = text.ToLower();
 
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private void ReplaceNames1Remove(List<string> namesEtc, List<string> replaceIds, List<string> replaceNames, List<string> originalNames)
         {
-            if (Post.StartsWith("."))
+            if (Post.StartsWith('.'))
             {
                 StrippedText += ".";
                 Post = Post.Remove(0, 1);
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (StrippedText.EndsWith(".", StringComparison.Ordinal))
+            if (StrippedText.EndsWith('.'))
             {
                 Post = "." + Post;
                 StrippedText = StrippedText.TrimEnd('.');
@@ -184,18 +184,18 @@ namespace Nikse.SubtitleEdit.Logic
                 string s = Utilities.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
-                                          s.EndsWith(".", StringComparison.Ordinal) ||
-                                          s.EndsWith("!", StringComparison.Ordinal) ||
-                                          s.EndsWith("?", StringComparison.Ordinal) ||
+                                          s.EndsWith('.') ||
+                                          s.EndsWith('!') ||
+                                          s.EndsWith('?') ||
                                           s.EndsWith(". ♪", StringComparison.Ordinal) ||
                                           s.EndsWith("! ♪", StringComparison.Ordinal) ||
                                           s.EndsWith("? ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith("]", StringComparison.Ordinal) ||
-                                          s.EndsWith(")", StringComparison.Ordinal) ||
-                                          s.EndsWith(":", StringComparison.Ordinal);
+                                          s.EndsWith(']') ||
+                                          s.EndsWith(')') ||
+                                          s.EndsWith(':');
 
                 // start with uppercase after music symbol - but only if next line not starts with music symbol
-                if (!startWithUppercase && (s.EndsWith("♪", StringComparison.Ordinal) || s.EndsWith("♫", StringComparison.Ordinal)))
+                if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
                 {
                     if (!Pre.Contains("♪") && !Pre.Contains("♫"))
                         startWithUppercase = true;
@@ -231,11 +231,11 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             sb.Append(s);
                         }
-                        else if ((sb.ToString().EndsWith("<", StringComparison.Ordinal) || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
+                        else if ((sb.ToString().EndsWith('<') || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.ToString().EndsWith("<", StringComparison.Ordinal) && s == "/" && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
+                        else if (sb.ToString().EndsWith('<') && s == "/" && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
                         { // tags
                             sb.Append(s);
                         }
@@ -262,9 +262,9 @@ namespace Nikse.SubtitleEdit.Logic
                         sb.Append(s);
                         if (".!?:;)]}([{".Contains(s))
                         {
-                            if (s == "]" && sb.ToString().IndexOf("[", StringComparison.Ordinal) > 1)
+                            if (s == "]" && sb.ToString().IndexOf('[') > 1)
                             { // I [Motor roaring] love you!
-                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf("[", StringComparison.Ordinal) - 1).Trim();
+                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf('[') - 1).Trim();
                                 if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1].ToString()))
                                     lastWasBreak = true;
                             }
