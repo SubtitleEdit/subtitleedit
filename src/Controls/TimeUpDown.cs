@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (TimeCodeChanged != null)
                     TimeCodeChanged.Invoke(this, e);
             }
-            numericUpDown1.Value = NumericUpDownValue;
+          //  numericUpDown1.Value = NumericUpDownValue;
         }
 
         public MaskedTextBox MaskedTextBox
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public void SetTotalMilliseconds(double milliseconds)
-        {
+        {            
             if (Mode == TimeMode.HHMMSSMS)
             {
                 if (Mode == TimeMode.HHMMSSMS && milliseconds < 0)
@@ -108,7 +108,8 @@ namespace Nikse.SubtitleEdit.Controls
             }
             else
             {
-                maskedTextBox1.Text = new TimeCode(milliseconds).ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(milliseconds));
+                var tc = new TimeCode(milliseconds);
+                maskedTextBox1.Text = tc.ToString().Substring(0, 9) + string.Format("{0:00}", Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFrames(tc.Milliseconds));
             }
         }
 
