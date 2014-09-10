@@ -1,7 +1,5 @@
-﻿<!-- This list contains names/words with specific casing - and specific to english only -->
+<!-- This list contains names/words with specific casing - and specific to english only -->
 <ignore_list>
-  <name>Aaden</name>
-  <name>Aarav</name>
   <name>Abbey</name>
   <name>Abbie</name>
   <name>Abbigail</name>
@@ -134,7 +132,6 @@
   <name>Averie</name>
   <name>Aviana</name>
   <name>Avianna</name>
-  <name>Ayaan</name>
   <name>Ayana</name>
   <name>Ayanna</name>
   <name>Aydan</name>
@@ -142,6 +139,7 @@
   <name>Ayla</name>
   <name>Ayleen</name>
   <name>Aylin</name>
+  <name>Ayaan</name>
   <name>Azaria</name>
   <name>Azog</name>
   <name>Bacharach</name>
@@ -268,6 +266,7 @@
   <name>Colten</name>
   <name>Columbo</name>
   <name>Colvin</name>
+  <name>Conklin</name>
   <name>Connery</name>
   <name>Cooper</name>
   <name>Corban</name>
@@ -359,8 +358,10 @@
   <name>Evie</name>
   <name>Ezequiel</name>
   <name>Ezra</name>
+  <name>F.O.B.</name>
   <name>Fabian</name>
   <name>Falcone</name>
+  <name>Farell</name>
   <name>Farrah</name>
   <name>Fassbach</name>
   <name>Felicity</name>
@@ -410,11 +411,13 @@
   <name>Greenway</name>
   <name>Greta</name>
   <name>Greyson</name>
+  <name>Grosvenor</name>
   <name>Guadalupe</name>
   <name>Guangzhou</name>
   <name>Guillermo</name>
   <name>Gutenberg</name>
   <name>Gyllenhaal</name>
+  <name>H.U.D.</name>
   <name>Hadassah</name>
   <name>Haiden</name>
   <name>Hailee</name>
@@ -718,7 +721,6 @@
   <name>Kyra</name>
   <name>Kyron</name>
   <name>Kyson</name>
-  <name>L'Hermitage</name>
   <name>Lahore</name>
   <name>Laila</name>
   <name>Lailah</name>
@@ -752,6 +754,7 @@
   <name>Lesly</name>
   <name>Levi</name>
   <name>Leyla</name>
+  <name>L'Hermitage</name>
   <name>Lia</name>
   <name>Liana</name>
   <name>Liberty</name>
@@ -865,6 +868,7 @@
   <name>Mckenzie</name>
   <name>Mckinley</name>
   <name>Meadow</name>
+  <name>Medina</name>
   <name>Mekhi</name>
   <name>Melany</name>
   <name>Melina</name>
@@ -929,14 +933,13 @@
   <name>Noemi</name>
   <name>Nola</name>
   <name>Nolan</name>
+  <name>Nora</name>
   <name>Norah</name>
   <name>Nova</name>
   <name>Nova Scotia</name>
   <name>Nutella</name>
   <name>Nyla</name>
   <name>Nylah</name>
-  <name>O'Regan</name>
-  <name>OMG</name>
   <name>Oakenshield</name>
   <name>Odin</name>
   <name>Oeufcocque Penteano</name>
@@ -945,12 +948,15 @@
   <name>Oleg</name>
   <name>Oliveira</name>
   <name>Omari</name>
+  <name>OMG</name>
   <name>Oprah Winfrey</name>
+  <name>O'Regan</name>
   <name>Orion</name>
   <name>Osaka</name>
   <name>Oslo</name>
   <name>Osvaldo</name>
   <name>Ottawa</name>
+  <name>P.A.</name>
   <name>Paisley</name>
   <name>Paityn</name>
   <name>Paltrow</name>
@@ -1033,7 +1039,6 @@
   <name>Ryleigh</name>
   <name>Rylen</name>
   <name>Rylie</name>
-  <name>Saanvi</name>
   <name>Sadie</name>
   <name>Sage</name>
   <name>Saige</name>
@@ -1045,11 +1050,11 @@
   <name>Samiyah</name>
   <name>Samson</name>
   <name>San Francisco</name>
-  <name>Sanaa</name>
   <name>Sandberg</name>
   <name>Saniya</name>
   <name>Saniyah</name>
   <name>Santino</name>
+  <name>Sanaa</name>
   <name>Sao Paulo</name>
   <name>Sarahi</name>
   <name>Sarai</name>
@@ -1098,6 +1103,7 @@
   <name>Sturridge</name>
   <name>Suez</name>
   <name>Sylas</name>
+  <name>Saanvi</name>
   <name>Taipei</name>
   <name>Talia</name>
   <name>Taliyah</name>
@@ -1156,6 +1162,7 @@
   <name>Vincenzo</name>
   <name>Viney</name>
   <name>Viviana</name>
+  <name>Vrataski</name>
   <name>Wade</name>
   <name>Wadsworth</name>
   <name>Warmbrunn</name>
@@ -1172,6 +1179,7 @@
   <name>Witkowski</name>
   <name>Witkowskis</name>
   <name>Wittenberg</name>
+  <name>Wozniacki</name>
   <name>Wuhan</name>
   <name>Wymer</name>
   <name>Xavi</name>
@@ -1216,4 +1224,6 @@
   <name>Zion</name>
   <name>Zoie</name>
   <name>Zuri</name>
+  <name>Aaden</name>
+  <name>Aarav</name>
 </ignore_list>
