@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Logic
                                           s.EndsWith(')') ||
                                           s.EndsWith(':');
 
-                // start with uppercase after music symbol - but only if next line not starts with music symbol
+                // start with uppercase after music symbol - but only if next line does not start with music symbol
                 if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
                 {
                     if (!Pre.Contains("♪") && !Pre.Contains("♫"))

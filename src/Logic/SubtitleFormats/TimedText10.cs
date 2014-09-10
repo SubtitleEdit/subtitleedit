@@ -532,7 +532,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private bool IsFrames(string timeCode)
+        private static bool IsFrames(string timeCode)
         {
             if (timeCode.Length == 12 && timeCode[8] == '.') // 00:00:08.292
                 return false;
