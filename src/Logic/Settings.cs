@@ -9,7 +9,7 @@ using System.Xml.Serialization;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    // The settings classes are build for easy xml-serialization (makes save/load code simple)
+    // The settings classes are built for easy xml-serialization (makes save/load code simple)
     // ...but the built-in serialization is too slow - so a custom (de-)serialization has been used!
 
     public class RecentFileEntry
