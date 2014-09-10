@@ -69,12 +69,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveSubStationAlphaFormatting(string s)
         {
-            int indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
-            while (indexOfBegin >= 0 && s.IndexOf("}", StringComparison.Ordinal) > indexOfBegin)
+            int indexOfBegin = s.IndexOf('{');
+            while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
             {
-                int indexOfEnd = s.IndexOf("}", StringComparison.Ordinal);
+                int indexOfEnd = s.IndexOf('}');
                 s = s.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
+                indexOfBegin = s.IndexOf('{');
             }
             return s;
         }

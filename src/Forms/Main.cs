@@ -6252,7 +6252,7 @@ namespace Nikse.SubtitleEdit.Forms
             string style = (sender as ToolStripItem).Text;
             if (!string.IsNullOrEmpty(style))
             {
-                int indexOfComment = style.IndexOf("[");
+                int indexOfComment = style.IndexOf('[');
                 if (indexOfComment > 0)
                     style = style.Substring(0, indexOfComment).Trim();
                 MakeHistoryForUndo("Set style: " + style);
@@ -6399,7 +6399,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                int indexOfEndBracket = original.Text.IndexOf("}");
+                                int indexOfEndBracket = original.Text.IndexOf('}');
                                 if (original.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                                     original.Text = string.Format("{2}<{0}>{1}</{0}>", tag, original.Text.Remove(0, indexOfEndBracket + 1), original.Text.Substring(0, indexOfEndBracket + 1));
                                 else
@@ -6416,7 +6416,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf("}");
+                        int indexOfEndBracket = _subtitle.Paragraphs[i].Text.IndexOf('}');
                         if (_subtitle.Paragraphs[i].Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             _subtitle.Paragraphs[i].Text = string.Format("{2}<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text.Remove(0, indexOfEndBracket + 1), _subtitle.Paragraphs[i].Text.Substring(0, indexOfEndBracket + 1));
                         else
@@ -6967,12 +6967,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string RemoveSsaStyle(string text)
         {
-            int indexOfBegin = text.IndexOf("{");
-            while (indexOfBegin >= 0 && text.IndexOf("}") > indexOfBegin)
+            int indexOfBegin = text.IndexOf('{');
+            while (indexOfBegin >= 0 && text.IndexOf('}') > indexOfBegin)
             {
-                int indexOfEnd = text.IndexOf("}");
+                int indexOfEnd = text.IndexOf('}');
                 text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = text.IndexOf("{");
+                indexOfBegin = text.IndexOf('{');
             }
             return text;
         }
@@ -6991,7 +6991,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        int indexOfEndBracket = p.Text.IndexOf("}");
+                        int indexOfEndBracket = p.Text.IndexOf('}');
                         if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
@@ -7233,10 +7233,10 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string s = next.Text.Trim();
                     // Find the first space.
-                    int idx = s.IndexOf(" ");
+                    int idx = s.IndexOf(' ');
                     // If the first space is after a "-", even if there is "{\an8}<i>" before, find the second space.
                     if (idx > 0 && s.Substring(idx - 1, 2) == "- ")
-                        idx = idx + 1 + s.Substring(idx + 1).IndexOf(" ");
+                        idx = idx + 1 + s.Substring(idx + 1).IndexOf(' ');
 
                     if (idx > 0 || s.Length > 0)
                     // A first word was found or next subtitle is not empty (has one word).
@@ -7283,9 +7283,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (firstWord.StartsWith("{") && firstWord.Contains("}"))
                         {
                             // Save the start tag.
-                            positionTag = firstWord.Substring(firstWord.IndexOf("{"), firstWord.IndexOf("}") + 1);
+                            positionTag = firstWord.Substring(firstWord.IndexOf('{'), firstWord.IndexOf('}') + 1);
                             // Remove the position tag from the first word.
-                            firstWord = firstWord.Remove(0, firstWord.IndexOf("}") + 1);
+                            firstWord = firstWord.Remove(0, firstWord.IndexOf('}') + 1);
                         }
 
                         // If the second subtitle (next) starts with a tag:
@@ -7299,7 +7299,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle ends with a tag and there's only one word in it:
-                        if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(" ") < 0)
+                        if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(' ') < 0)
                         {
                             // Remove the end tag.
                             next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
@@ -7382,7 +7382,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (lastWord.EndsWith(">") && lastWord.Contains("<"))
                         {
                             // Save the end tag.
-                            endTag = lastWord.Substring(lastWord.LastIndexOf('<'), lastWord.Length - lastWord.LastIndexOf("<"));
+                            endTag = lastWord.Substring(lastWord.LastIndexOf('<'), lastWord.Length - lastWord.LastIndexOf('<'));
                             // Remove the end tag from the last word.
                             lastWord = lastWord.Remove(lastWord.LastIndexOf('<'));
                         }
@@ -7400,9 +7400,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (next.Text.StartsWith("{") && next.Text.Contains("}"))
                         {
                             // Save the start tag.
-                            positionTag = next.Text.Substring(next.Text.IndexOf("{"), next.Text.IndexOf("}") + 1);
+                            positionTag = next.Text.Substring(next.Text.IndexOf('{'), next.Text.IndexOf('}') + 1);
                             // Remove the position tag from next subtitle.
-                            next.Text = next.Text.Remove(0, next.Text.IndexOf("}") + 1);
+                            next.Text = next.Text.Remove(0, next.Text.IndexOf('}') + 1);
                         }
 
                         // If the second subtitle (next) starts with a tag:
@@ -15879,7 +15879,7 @@ namespace Nikse.SubtitleEdit.Forms
                     templine = line;
 
                     string positionTag = string.Empty;
-                    int indexOfEndBracket = templine.IndexOf("}");
+                    int indexOfEndBracket = templine.IndexOf('}');
                     if (templine.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                     {
                         // Find position tag and remove it from string.
@@ -15933,7 +15933,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         // Add tags.
-                        int indexOfEndBracket = text.IndexOf("}");
+                        int indexOfEndBracket = text.IndexOf('}');
                         if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));
                         else
@@ -15983,7 +15983,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     // Add tags.
-                    int indexOfEndBracket = text.IndexOf("}");
+                    int indexOfEndBracket = text.IndexOf('}');
                     if (text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                     {
                         text = string.Format("{2}<{0}>{1}</{0}>", tag, text.Remove(0, indexOfEndBracket + 1), text.Substring(0, indexOfEndBracket + 1));

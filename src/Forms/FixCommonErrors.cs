@@ -1739,7 +1739,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                         }
-                        else if (line.Contains("\"") && line.IndexOf('"') > 2 && line.IndexOf("\"", StringComparison.Ordinal) < line.Length - 3)
+                        else if (line.Contains("\"") && line.IndexOf('"') > 2 && line.IndexOf('"') < line.Length - 3)
                         {
                             int index = line.IndexOf('"');
                             if (line[index - 1] == ' ')
@@ -1764,7 +1764,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                             }
-                            else if (line.Contains("\"") && line.IndexOf('"') > 2 && line.IndexOf("\"", StringComparison.Ordinal) < line.Length - 3)
+                            else if (line.Contains("\"") && line.IndexOf('"') > 2 && line.IndexOf('"') < line.Length - 3)
                             {
                                 int index = line.IndexOf('"');
                                 if (line[index - 1] == ' ')
@@ -4297,8 +4297,8 @@ namespace Nikse.SubtitleEdit.Forms
                                         speaker = part.Substring(0, speakerEnd + 1);
                                         part = part.Substring(speakerEnd + 1);
                                     }
-                                    speakerEnd = part.IndexOf("]", StringComparison.Ordinal);
-                                    if (part.StartsWith("[") && speakerEnd > 0 && speakerEnd < part.IndexOf(mark, StringComparison.Ordinal))
+                                    speakerEnd = part.IndexOf(']');
+                                    if (part.StartsWith('[') && speakerEnd > 0 && speakerEnd < part.IndexOf(mark, StringComparison.Ordinal))
                                     {
                                         while (Environment.NewLine.Contains(part[speakerEnd + 1].ToString()))
                                             speakerEnd++;

@@ -742,14 +742,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             string newText = text;
             string s = text;
-            if (s.StartsWith("[") && s.IndexOf("]", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenSquares)
-                newText = s.Remove(0, s.IndexOf("]", StringComparison.Ordinal) + 1);
-            else if (s.StartsWith("{") && s.IndexOf("}", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenBrackets)
-                newText = s.Remove(0, s.IndexOf("}", StringComparison.Ordinal) + 1);
-            else if (s.StartsWith("?") && s.IndexOf("?", 1, StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenQuestionMarks)
-                newText = s.Remove(0, s.IndexOf("?", 1, StringComparison.Ordinal) + 1);
-            else if (s.StartsWith("(") && s.IndexOf(")", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenParentheses)
-                newText = s.Remove(0, s.IndexOf(")", StringComparison.Ordinal) + 1);
+            if (s.StartsWith("[") && s.IndexOf(']') > 0 && Settings.RemoveTextBetweenSquares)
+                newText = s.Remove(0, s.IndexOf(']') + 1);
+            else if (s.StartsWith("{") && s.IndexOf('}') > 0 && Settings.RemoveTextBetweenBrackets)
+                newText = s.Remove(0, s.IndexOf('}') + 1);
+            else if (s.StartsWith("?") && s.IndexOf('?', 1) > 0 && Settings.RemoveTextBetweenQuestionMarks)
+                newText = s.Remove(0, s.IndexOf('?', 1) + 1);
+            else if (s.StartsWith("(") && s.IndexOf(')') > 0 && Settings.RemoveTextBetweenParentheses)
+                newText = s.Remove(0, s.IndexOf(')') + 1);
             else if (s.StartsWith("[") && s.IndexOf("]:", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenSquares)
                 newText = s.Remove(0, s.IndexOf("]:", StringComparison.Ordinal) + 2);
             else if (s.StartsWith("{") && s.IndexOf("}:", StringComparison.Ordinal) > 0 && Settings.RemoveTextBetweenBrackets)

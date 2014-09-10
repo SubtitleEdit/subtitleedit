@@ -2339,7 +2339,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static string RemoveSubStationAlphaFormatting(string s)
         {
-            int indexOfBegin = s.IndexOf("{", StringComparison.Ordinal);
+            int indexOfBegin = s.IndexOf('{');
             while (indexOfBegin >= 0 && s.IndexOf('}') > indexOfBegin)
             {
                 int indexOfEnd = s.IndexOf('}');

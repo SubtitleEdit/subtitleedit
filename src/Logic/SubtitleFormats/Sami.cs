@@ -200,9 +200,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {
                     string s = line.Trim();
-                    if (s.StartsWith(".") && s.IndexOf(" ") > 2)
+                    if (s.StartsWith('.') && s.IndexOf(' ') > 2)
                     {
-                        string name = s.Substring(1, s.IndexOf(" ") - 1);
+                        string name = s.Substring(1, s.IndexOf(' ') - 1);
                         list.Add(name);
                     }
                 }

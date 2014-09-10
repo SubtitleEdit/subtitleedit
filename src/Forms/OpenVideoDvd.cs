@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string s = comboBoxDrive.Items[comboBoxDrive.SelectedIndex].ToString();
                 if (s.Contains(" "))
-                    s = s.Substring(0, s.IndexOf(" "));
+                    s = s.Substring(0, s.IndexOf(' '));
                 DvdPath = s;
             }
             else

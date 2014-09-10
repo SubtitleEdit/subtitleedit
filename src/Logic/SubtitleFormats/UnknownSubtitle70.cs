@@ -55,10 +55,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
-            int index = line.IndexOf("]");
+            int index = line.IndexOf(']');
             if (index >= 0 && index < line.Length)
             {
-                index = line.IndexOf("]", index + 1);
+                index = line.IndexOf(']', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
                 {
                     if (line.IndexOf("[]") >= 0 && line.IndexOf("[]") < index)
@@ -67,9 +67,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(" ") >= 0 && line.IndexOf(" ") < index)
+                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
                     {
-                        line = line.Remove(line.IndexOf(" "), 1);
+                        line = line.Remove(line.IndexOf(' '), 1);
                         index--;
                     }
                 }
@@ -409,7 +409,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     else if (s.Contains("{c:$"))
                                     {
                                         int start = s.IndexOf("{c:$");
-                                        int end = s.IndexOf("}", start);
+                                        int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
                                             string tag = s.Substring(start, end - start);
@@ -425,7 +425,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     else if (s.Contains("{C:$")) // uppercase=all lines
                                     {
                                         int start = s.IndexOf("{C:$");
-                                        int end = s.IndexOf("}", start);
+                                        int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
                                             string tag = s.Substring(start, end - start);
@@ -441,7 +441,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     else if (s.Contains("{f:"))
                                     {
                                         int start = s.IndexOf("{f:");
-                                        int end = s.IndexOf("}", start);
+                                        int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
                                             string tag = s.Substring(start, end - start);
@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     else if (s.Contains("{F:")) // uppercase=all lines
                                     {
                                         int start = s.IndexOf("{F:");
-                                        int end = s.IndexOf("}", start);
+                                        int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
                                             string tag = s.Substring(start, end - start);
@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     else if (s.Contains("{s:"))
                                     {
                                         int start = s.IndexOf("{s:");
-                                        int end = s.IndexOf("}", start);
+                                        int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
                                             string tag = s.Substring(start, end - start);
@@ -489,7 +489,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     else if (s.Contains("{S:")) // uppercase=all lines
                                     {
                                         int start = s.IndexOf("{S:");
-                                        int end = s.IndexOf("}", start);
+                                        int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
                                             string tag = s.Substring(start, end - start);

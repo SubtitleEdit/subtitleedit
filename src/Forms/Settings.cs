@@ -1249,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.File.New.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileNew = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.File.Open.Replace("&", string.Empty))
@@ -1276,7 +1276,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Edit.Undo.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainEditUndo = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Edit.Redo.Replace("&", string.Empty))
@@ -1305,7 +1305,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainToolsFixCommonErrors = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Tools.StartNumberingFrom.Replace("&", string.Empty))
@@ -1330,7 +1330,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls.Replace("&", string.Empty))
@@ -1365,7 +1365,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.SpellCheck.Title.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainSpellCheck = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.SpellCheck.FindDoubleWords.Replace("&", string.Empty))
@@ -1380,7 +1380,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainSynchronizationAdjustTimes = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.Synchronization.VisualSync.Replace("&", string.Empty))
@@ -1397,7 +1397,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewItalic = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
@@ -1434,7 +1434,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxItalic = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition.Replace("&", string.Empty))
@@ -1461,7 +1461,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText.Replace("&", string.Empty))
@@ -1482,7 +1482,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Settings.CustomSearch1.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTranslateCustomSearch1 = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.CustomSearch2.Replace("&", string.Empty))
@@ -1503,7 +1503,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest.Replace("&", string.Empty))
@@ -1538,7 +1538,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (node.Text.Contains("["))
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == (Configuration.Settings.Language.WaveForm.ZoomIn).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomIn = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.WaveForm.ZoomOut).Replace("&", string.Empty))
@@ -2548,7 +2548,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string GetShortcut(string text)
         {
-            string shortcut = text.Substring(text.IndexOf("["));
+            string shortcut = text.Substring(text.IndexOf('['));
             shortcut = shortcut.TrimEnd(']').TrimStart('[');
             if (shortcut == Configuration.Settings.Language.General.None)
                 return string.Empty;
@@ -2559,7 +2559,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (treeViewShortcuts.SelectedNode != null && treeViewShortcuts.SelectedNode.Text.Contains("["))
             {
-                string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf("[")).Trim();
+                string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf('[')).Trim();
 
                 if (comboBoxShortcutKey.SelectedIndex == 0)
                 {

@@ -51,10 +51,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             string language = comboBoxDictionaries.Text;
-            if (language.IndexOf("[") > 0)
-                language = language.Substring(language.IndexOf("[")).TrimStart('[');
-            if (language.IndexOf("]") > 0)
-                language = language.Substring(0, language.IndexOf("]"));
+            if (language.IndexOf('[') > 0)
+                language = language.Substring(language.IndexOf('[')).TrimStart('[');
+            if (language.IndexOf(']') > 0)
+                language = language.Substring(0, language.IndexOf(']'));
 
             var userWordList = new List<string>();
 

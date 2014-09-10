@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 string s = line.Trim();
                 if (!s.ToUpper().Contains("BETA") && !s.Contains("x") && !s.Contains("*") && s.Contains("(") && s.Contains(")") && regex.IsMatch(s))
                 {
-                    int indexOfSpace = s.IndexOf(" ");
+                    int indexOfSpace = s.IndexOf(' ');
                     if (indexOfSpace > 0)
                         return s.Substring(0, indexOfSpace).Trim();
                 }
