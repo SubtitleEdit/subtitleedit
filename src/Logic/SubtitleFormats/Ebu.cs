@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 tti.SubtitleNumber = (ushort)subtitleNumber;
                 tti.TextField = p.Text;
-                int startTag = tti.TextField.IndexOf("}");
+                int startTag = tti.TextField.IndexOf('}');
                 if (tti.TextField.StartsWith("{\\") && startTag > 0 && startTag < 10)
                 {
                     tti.TextField = tti.TextField.Remove(0, startTag + 1);

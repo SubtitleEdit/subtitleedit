@@ -50,10 +50,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
-            int index = line.IndexOf("]");
+            int index = line.IndexOf(']');
             if (index >= 0 && index < line.Length)
             {
-                index = line.IndexOf("]", index + 1);
+                index = line.IndexOf(']', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
                 {
                     if (line.IndexOf("[]") >= 0 && line.IndexOf("[]") < index)
@@ -62,9 +62,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(" ") >= 0 && line.IndexOf(" ") < index)
+                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
                     {
-                        line = line.Remove(line.IndexOf(" "), 1);
+                        line = line.Remove(line.IndexOf(' '), 1);
                         index--;
                     }
                 }

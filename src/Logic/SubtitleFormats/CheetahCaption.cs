@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     buffer[8] = 0x1e; // align right (vertical)
                 }
 
-                int startTag = text.IndexOf("}");
+                int startTag = text.IndexOf('}');
                 if (text.StartsWith("{\\") && startTag > 0 && startTag < 10)
                 {
                     text = text.Remove(0, startTag + 1);

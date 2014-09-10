@@ -251,8 +251,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string GetSelectedFileName()
         {
             string fileName = listBoxFileNames.SelectedItem.ToString();
-            if (fileName.StartsWith("["))
-                fileName = fileName.Substring(fileName.IndexOf("]") + 1);
+            if (fileName.StartsWith('['))
+                fileName = fileName.Substring(fileName.IndexOf(']') + 1);
             return fileName.Trim();
         }
 
@@ -268,8 +268,8 @@ namespace Nikse.SubtitleEdit.Forms
         private string GetFileName(int index)
         {
             string fileName = listBoxFileNames.Items[index].ToString();
-            if (fileName.StartsWith("["))
-                fileName = fileName.Substring(fileName.IndexOf("]") + 1);
+            if (fileName.StartsWith('['))
+                fileName = fileName.Substring(fileName.IndexOf(']') + 1);
             return fileName.Trim();
         }
 
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var f = new FileStream(databaseName, FileMode.Open))
                 {
                     if (name.Contains("]"))
-                        name = name.Substring(name.IndexOf("]") + 1).Trim();
+                        name = name.Substring(name.IndexOf(']') + 1).Trim();
                     f.Position = Convert.ToInt64(name);
                     bmp = new ManagedBitmap(f).ToOldBitmap();
                 }

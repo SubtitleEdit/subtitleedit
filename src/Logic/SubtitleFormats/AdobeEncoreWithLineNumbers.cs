@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (regexTimeCodes.IsMatch(line))
                 {
                     string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
-                    temp = line.Substring(line.IndexOf(" ")).Trim();
+                    temp = line.Substring(line.IndexOf(' ')).Trim();
                     string start = temp.Substring(0, 11);
                     string end = temp.Substring(12, 11);
 

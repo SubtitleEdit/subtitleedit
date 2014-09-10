@@ -931,8 +931,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int endIndex2 = int.MaxValue;
             if (indexOfTag > 0)
             {
-                endIndex1 = s.IndexOf("\\", indexOfTag + 1, StringComparison.Ordinal);
-                endIndex2 = s.IndexOf("}", indexOfTag + 1, StringComparison.Ordinal);
+                endIndex1 = s.IndexOf('\\', indexOfTag + 1);
+                endIndex2 = s.IndexOf('}', indexOfTag + 1);
                 endIndex1 = Math.Min(endIndex1, endIndex2);
                 if (endIndex1 > 0)
                     s = s.Remove(indexOfTag, endIndex1 - indexOfTag);

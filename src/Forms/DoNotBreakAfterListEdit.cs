@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit
                 {
 
                     string s = System.IO.Path.GetFileName(fileName);
-                    string languageId = s.Substring(0, s.IndexOf("_"));
+                    string languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
                     comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
                     _languages.Add(fileName);
