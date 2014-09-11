@@ -1948,6 +1948,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/OverwriteModifiedFile":
                     language.Main.OverwriteModifiedFile = reader.Value;
                     break;
+                case "Main/FileXIsReadOnly":
+                    language.Main.FileXIsReadOnly = reader.Value;
+                    break;
                 case "Main/UnableToSaveSubtitleX":
                     language.Main.UnableToSaveSubtitleX = reader.Value;
                     break;

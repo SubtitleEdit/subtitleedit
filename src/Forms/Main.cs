@@ -3545,7 +3545,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (File.Exists(_fileName))
                 {
-                    DateTime fileOnDisk = File.GetLastWriteTime(_fileName);
+                    FileInfo fileInfo = new FileInfo(_fileName);
+                    DateTime fileOnDisk = fileInfo.LastWriteTime;
                     if (_fileDateTime != fileOnDisk && _fileDateTime != new DateTime())
                     {
                         if (MessageBox.Show(string.Format(_language.OverwriteModifiedFile,
@@ -3554,7 +3555,15 @@ namespace Nikse.SubtitleEdit.Forms
                                              Title + " - " + _language.FileOnDiskModified, MessageBoxButtons.YesNo) == DialogResult.No)
                             return DialogResult.No;
                     }
-                }
+                    if (fileInfo.IsReadOnly)
+                    {
+                        if (string.IsNullOrEmpty(_language.FileXIsReadOnly))
+                            MessageBox.Show("Cannot save " + _fileName + Environment.NewLine + "File is read-only!");
+                        else
+                            MessageBox.Show(string.Format(_language.FileXIsReadOnly, _fileName));
+                        return DialogResult.No;
+                    }
+                }            
 
                 if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
@@ -3605,8 +3614,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch (Exception exception)
             {
-                MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName));
-                System.Diagnostics.Debug.Write(exception.Message);
+                MessageBox.Show(exception.Message);
                 return DialogResult.Cancel;
             }
         }

@@ -793,6 +793,7 @@
             public string SavedOriginalSubtitleX { get; set; }
             public string FileOnDiskModified { get; set; }
             public string OverwriteModifiedFile { get; set; }
+            public string FileXIsReadOnly { get; set; }
             public string UnableToSaveSubtitleX { get; set; }
             public string BeforeNew { get; set; }
             public string New { get; set; }
