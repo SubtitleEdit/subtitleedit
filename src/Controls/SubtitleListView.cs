@@ -881,6 +881,44 @@ namespace Nikse.SubtitleEdit.Controls
                         item.SubItems[ColumnIndexEnd].Text = "-";
                     else
                         item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:00}", paragraph.Duration.Seconds, Logic.SubtitleFormats.SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds));
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
+                }
+                else
+                {
+                    if (paragraph.StartTime.IsMaxTime)
+                        item.SubItems[ColumnIndexStart].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToString();
+
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+
+                    item.SubItems[ColumnIndexDuration].Text = string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds);
+                    item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToString();
+                }
+            }
+        }
+
+        public void SetStartTimeAndDuration(int index, Paragraph paragraph)
+        {
+            if (index >= 0 && index < Items.Count)
+            {
+                ListViewItem item = Items[index];
+                if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+                {
+                    if (paragraph.StartTime.IsMaxTime)
+                        item.SubItems[ColumnIndexStart].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexStart].Text = paragraph.StartTime.ToHHMMSSFF();
+
+                    if (paragraph.EndTime.IsMaxTime)
+                        item.SubItems[ColumnIndexEnd].Text = "-";
+                    else
+                        item.SubItems[ColumnIndexEnd].Text = paragraph.EndTime.ToHHMMSSFF();
                 }
                 else
                 {

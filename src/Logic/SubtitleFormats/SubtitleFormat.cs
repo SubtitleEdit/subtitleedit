@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public bool IsVobSubIndexFile
         {
-            get { return Extension == new Idx().Extension; }
+            get { return string.CompareOrdinal(Extension, ".idx") == 0; }
         }
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
