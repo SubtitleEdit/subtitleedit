@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Forms;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
-using Nikse.SubtitleEdit.Forms;
 
 // The PAC format was developed by Screen Electronics
 // The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
@@ -1203,11 +1203,114 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
+        private int AutoDetectEncoding()
+        {
+            try
+            {
+                byte[] buffer = Utilities.ReadAllBytes(_fileName);
+                int index = 0;
+                int count = 0;
+                _codePage = 0;
+                while (index < buffer.Length)
+                {
+                    int start = index;
+                    Paragraph p = GetPacParagraph(ref index, buffer);
+                    if (p != null)
+                        count++;
+                    if (count == 2)
+                    {
+                        index = start;
+                        _codePage = 0;
+                        bool allOK = true;
+                        StringBuilder sb = new StringBuilder();
+                        for (int i = 0; i < LatinLetters.Count; i++)
+                            sb.Append(LatinLetters[i]);
+                        string latinLetters = sb.ToString() + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\")";
+                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        {
+                            if (!latinLetters.Contains(ch.ToString()))
+                                allOK = false;
+                        }
+                        if (allOK)
+                            return 0; // Latin
+
+                        index = start;
+                        _codePage = 1;
+                        p = GetPacParagraph(ref index, buffer);
+                        allOK = true;
+                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        {
+                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch.ToString()))
+                                allOK = false;
+                        }
+                        if (allOK)
+                            return 1; // Greek
+
+                        index = start;
+                        _codePage = 3;
+                        p = GetPacParagraph(ref index, buffer);
+                        allOK = true;
+                        sb = new StringBuilder();
+                        for (int i = 0; i < ArabicLetters.Count; i++)
+                            sb.Append(ArabicLetters[i]);
+                        string arabicLetters = sb.ToString() + "(1234567890, .!?-\r\n'\")";
+                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        {
+                            if (!arabicLetters.Contains(ch.ToString()))
+                                allOK = false;
+                        }
+                        if (allOK)
+                            return 3; // Arabic
+
+                        index = start;
+                        _codePage = 4;
+                        p = GetPacParagraph(ref index, buffer);
+                        allOK = true;
+                        sb = new StringBuilder();
+                        for (int i = 0; i < HebrewLetters.Count; i++)
+                            sb.Append(HebrewLetters[i]);
+                        string hebrewLetters = sb.ToString() + "(1234567890, .!?-\r\n'\")";
+                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        {
+                            if (!hebrewLetters.Contains(ch.ToString()))
+                                allOK = false;
+                        }
+                        if (allOK)
+                            return 4; // Hebrew
+
+                        index = start;
+                        _codePage = 4;
+                        p = GetPacParagraph(ref index, buffer);
+                        allOK = true;
+                        sb = new StringBuilder();
+                        for (int i = 0; i < CyrillicLetters.Count; i++)
+                            sb.Append(CyrillicLetters[i]);
+                        string cyrillicLetters = sb.ToString() + "(1234567890, .!?-\r\n'\")";
+                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        {
+                            if (!cyrillicLetters.Contains(ch.ToString()))
+                                allOK = false;
+                        }
+                        if (allOK)
+                            return 6; // Cyrillic
+
+                        return 0; // Latin
+                    }
+                }
+                return 0; // Latin
+            }
+            catch
+            {
+                return 0; // Latin
+            }
+        }
+
         private void GetCodePage(byte[] buffer, int index, int endDelimiter)
         {
             if (BatchMode)
             {
-                _codePage = -2;
+                if (_codePage == -1)
+                    _codePage = AutoDetectEncoding();
                 return;
             }
 
