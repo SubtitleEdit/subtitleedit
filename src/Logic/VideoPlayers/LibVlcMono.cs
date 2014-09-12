@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Text;
-using System.Threading;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
     internal class LibVlcMono : VideoPlayer, IDisposable
     {
-        private System.Windows.Forms.Timer _videoLoadedTimer;
-        private System.Windows.Forms.Timer _videoEndTimer;
+        private Timer _videoLoadedTimer;
+        private Timer _videoEndTimer;
         private IntPtr _libVlcDLL;
         private IntPtr _libVlc;
         private IntPtr _mediaPlayer;
-        private System.Windows.Forms.Control _ownerControl;
-        private System.Windows.Forms.Form _parentForm;
+        private Control _ownerControl;
+        private Form _parentForm;
 
         public override string PlayerName
         {
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
         }
 
-        public LibVlcMono MakeSecondMediaPlayer(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public LibVlcMono MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             LibVlcMono newVlc = new LibVlcMono();
             newVlc._libVlc = this._libVlc;
@@ -144,13 +144,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (onVideoEnded != null)
                 {
-                    newVlc._videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                    newVlc._videoEndTimer = new Timer { Interval = 500 };
                     newVlc._videoEndTimer.Tick += VideoEndTimerTick;
                     newVlc._videoEndTimer.Start();
                 }
 
                 NativeMethods.libvlc_media_player_play(newVlc._mediaPlayer);
-                newVlc._videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                newVlc._videoLoadedTimer = new Timer { Interval = 500 };
                 newVlc._videoLoadedTimer.Tick += new EventHandler(newVlc.VideoLoadedTimer_Tick);
                 newVlc._videoLoadedTimer.Start();
             }
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 OnVideoLoaded.Invoke(_mediaPlayer, new EventArgs());
         }
 
-        public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _ownerControl = ownerControl;
             if (ownerControl != null)
@@ -195,13 +195,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (onVideoEnded != null)
                 {
-                    _videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                    _videoEndTimer = new Timer { Interval = 500 };
                     _videoEndTimer.Tick += VideoEndTimerTick;
                     _videoEndTimer.Start();
                 }
 
                 NativeMethods.libvlc_media_player_play(_mediaPlayer);
-                _videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                _videoLoadedTimer = new Timer { Interval = 500 };
                 _videoLoadedTimer.Tick += new EventHandler(VideoLoadedTimer_Tick);
                 _videoLoadedTimer.Start();
             }
@@ -229,7 +229,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (_videoEndTimer != null)
                 _videoEndTimer.Stop();
 
-            ThreadPool.QueueUserWorkItem(DisposeVLC, this);
+            System.Threading.ThreadPool.QueueUserWorkItem(DisposeVLC, this);
         }
 
         private void DisposeVLC(object player)

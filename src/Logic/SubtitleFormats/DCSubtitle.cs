@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     bool isItalic = false;
                     int fontNo = 0;
-                    System.Collections.Generic.Stack<string> fontColors = new Stack<string>();
+                    Stack<string> fontColors = new Stack<string>();
                     foreach (string line in lines)
                     {
                         XmlNode textNode = xml.CreateElement("Text");

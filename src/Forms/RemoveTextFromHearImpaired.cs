@@ -114,9 +114,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
                 float fontSize = comboBoxCustomStart.Font.Size;
-                comboBoxCustomStart.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                comboBoxCustomEnd.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                comboBoxRemoveIfTextContains.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                comboBoxCustomStart.Font = new Font(unicodeFontName, fontSize);
+                comboBoxCustomEnd.Font = new Font(unicodeFontName, fontSize);
+                comboBoxRemoveIfTextContains.Font = new Font(unicodeFontName, fontSize);
             }
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
 
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxRemoveIfTextContains.Left = checkBoxRemoveWhereContains.Left + checkBoxRemoveWhereContains.Width;
             groupBoxLinesFound.Visible = false;
             int h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
-            MinimumSize = new System.Drawing.Size(MinimumSize.Width, h);
+            MinimumSize = new Size(MinimumSize.Width, h);
             this.Height = h;
         }
 

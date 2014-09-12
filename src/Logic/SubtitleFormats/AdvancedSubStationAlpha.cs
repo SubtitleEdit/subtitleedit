@@ -125,7 +125,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             const string commentWriteFormat = "Comment: {6},{0},{1},{3},{4},0,0,0,{5},{2}";
 
             var sb = new StringBuilder();
-            System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
+            Color fontColor = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
             List<string> styles = new List<string>();
             if (isValidAssHeader)
@@ -315,7 +315,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else
                             {
-                                c = System.Drawing.ColorTranslator.FromHtml(color);
+                                c = ColorTranslator.FromHtml(color);
                             }
                         }
                         catch
@@ -392,11 +392,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     text = text.Remove(start, end - start + 1);
                     int indexOfEndFont = text.IndexOf("</font>", start, StringComparison.Ordinal);
                     if (indexOfEndFont > 0)
-                    { 
+                    {
                         text = text.Remove(indexOfEndFont, 7);
                         if (indexOfEndFont < text.Length - 9)
                             text = text.Insert(indexOfEndFont, "{\\c}");
-                    }  
+                    }
 
                     fontTag = FormatTag(ref text, start, fontTag, "face=\"", "\"", "fn", "}");
                     fontTag = FormatTag(ref text, start, fontTag, "face='", "'", "fn", "}");
@@ -967,7 +967,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
                 try
                 {
-                    return System.Drawing.ColorTranslator.FromHtml(hexColor);
+                    return ColorTranslator.FromHtml(hexColor);
                 }
                 catch
                 {
@@ -980,7 +980,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
                 try
                 {
-                    var c = System.Drawing.ColorTranslator.FromHtml(hexColor);
+                    var c = ColorTranslator.FromHtml(hexColor);
 
                     return c;
                 }

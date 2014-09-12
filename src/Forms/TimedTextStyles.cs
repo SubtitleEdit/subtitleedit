@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    c = System.Drawing.ColorTranslator.FromHtml(color);
+                    c = ColorTranslator.FromHtml(color);
                 }
             }
             catch
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void listViewStyles_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void listViewStyles_SelectedIndexChanged(object sender, EventArgs e)
         {
             _doUpdate = false;
             if (listViewStyles.SelectedItems.Count == 1)
@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            color = System.Drawing.ColorTranslator.FromHtml(fontColor);
+                            color = ColorTranslator.FromHtml(fontColor);
                         }
                     }
                     catch (Exception exception)

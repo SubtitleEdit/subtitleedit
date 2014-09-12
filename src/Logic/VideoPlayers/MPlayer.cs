@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
     public class MPlayer : VideoPlayer, IDisposable
     {
         private Process _mplayer;
-        private System.Windows.Forms.Timer _timer;
+        private Timer _timer;
         private TimeSpan _lengthInSeconds;
         private TimeSpan _lastLengthInSeconds = TimeSpan.FromDays(0);
         private bool _paused;
@@ -85,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (value >= 0 && value <= 2.0)
                 {
                     _speed = value;
-                    SetProperty("speed", value.ToString(System.Globalization.CultureInfo.InvariantCulture), true);
+                    SetProperty("speed", value.ToString(CultureInfo.InvariantCulture), true);
                 }
             }
         }
@@ -127,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             get { return !_paused; }
         }
 
-        public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _loaded = false;
             _videoFileName = videoFileName;
@@ -154,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 }
                 catch
                 {
-                    System.Windows.Forms.MessageBox.Show("Unable to start MPlayer - make sure MPlayer is installed!");
+                    MessageBox.Show("Unable to start MPlayer - make sure MPlayer is installed!");
                     throw;
                 }
 
@@ -173,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 GetProperty("volume", true);
 
                 // start timer to collect variable properties
-                _timer = new System.Windows.Forms.Timer();
+                _timer = new Timer();
                 _timer.Interval = 1000;
                 _timer.Tick += new EventHandler(timer_Tick);
                 _timer.Start();
@@ -251,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     //  ANS_time_pos=8.299958, ANS_width=624, ANS_height=352, ANS_fps=23.976025, ANS_video_format=1145656920, ANS_video_format=1145656920, ANS_video_codec=ffodivx,
                     //  ANS_length=1351.600213, ANS_volume=100.000000
                     case "ANS_time_pos":
-                        _timePosition = Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                        _timePosition = Convert.ToDouble(value.Replace(",", "."), CultureInfo.InvariantCulture);
                         break;
                     case "ANS_width":
                         Width = Convert.ToInt32(value);
@@ -262,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     case "ANS_fps":
                         double d;
                         if (double.TryParse(value, out d))
-                            FramesPerSecond = (float)Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                            FramesPerSecond = (float)Convert.ToDouble(value.Replace(",", "."), CultureInfo.InvariantCulture);
                         else
                             FramesPerSecond = 25.0f;
                         break;
@@ -273,10 +275,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                         VideoCodec = value;
                         break;
                     case "ANS_length":
-                        _lengthInSeconds = TimeSpan.FromSeconds(Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
+                        _lengthInSeconds = TimeSpan.FromSeconds(Convert.ToDouble(value.Replace(",", "."), CultureInfo.InvariantCulture));
                         break;
                     case "ANS_volume":
-                        _volume = (float)Convert.ToDouble(value.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture);
+                        _volume = (float)Convert.ToDouble(value.Replace(",", "."), CultureInfo.InvariantCulture);
                         break;
                     case "ANS_pause":
                         if (value == "yes" || value == "1")
@@ -366,7 +368,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             while (i < 100 && _waitForChange)
             {
-                System.Windows.Forms.Application.DoEvents();
+                Application.DoEvents();
                 System.Threading.Thread.Sleep(2);
                 i++;
             }

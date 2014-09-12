@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillHeaderFromFile(string fileName)
         {
-            if (System.IO.File.Exists(fileName))
+            if (File.Exists(fileName))
             {
                 Ebu ebu = new Ebu();
                 Subtitle temp = new Subtitle();

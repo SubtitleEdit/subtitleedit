@@ -322,7 +322,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (bitmap != null)
             {
                 IntPtr Hicon = bitmap.GetHicon();
-                this.Icon = System.Drawing.Icon.FromHandle(Hicon);
+                this.Icon = Icon.FromHandle(Hicon);
             }
 
             _originalSubtitle = subtitle;

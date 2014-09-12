@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
 using System;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Controls
@@ -85,7 +86,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (TimeCodeChanged != null)
                     TimeCodeChanged.Invoke(this, e);
             }
-          //  numericUpDown1.Value = NumericUpDownValue;
+            //numericUpDown1.Value = NumericUpDownValue;
         }
 
         public MaskedTextBox MaskedTextBox
@@ -97,7 +98,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public void SetTotalMilliseconds(double milliseconds)
-        {            
+        {
             if (Mode == TimeMode.HHMMSSMS)
             {
                 if (Mode == TimeMode.HHMMSSMS && milliseconds < 0)
@@ -133,7 +134,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (Mode == TimeMode.HHMMSSMS)
                 {
-                    if (startTime.EndsWith(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
+                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
                         startTime += "000";
 
                     string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
@@ -164,7 +165,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (startTime.EndsWith(System.Globalization.CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(":"))
+                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(":"))
                         startTime += "00";
 
                     string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
+using System.IO;
 
 namespace Nikse.SubtitleEdit
 {
@@ -27,12 +28,12 @@ namespace Nikse.SubtitleEdit
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             radioButtonRegEx.Left = radioButtonText.Left + radioButtonText.Width + 10;
-            foreach (string fileName in System.IO.Directory.GetFiles(Configuration.DictionariesFolder, "*_NoBreakAfterList.xml"))
+            foreach (string fileName in Directory.GetFiles(Configuration.DictionariesFolder, "*_NoBreakAfterList.xml"))
             {
                 try
                 {
 
-                    string s = System.IO.Path.GetFileName(fileName);
+                    string s = Path.GetFileName(fileName);
                     string languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
                     comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void comboBoxDictionaries_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void comboBoxDictionaries_SelectedIndexChanged(object sender, EventArgs e)
         {
             int idx = comboBoxDictionaries.SelectedIndex;
             if (idx >= 0)
@@ -90,7 +91,7 @@ namespace Nikse.SubtitleEdit
             }
         }
 
-        private void buttonRemoveNameEtc_Click(object sender, System.EventArgs e)
+        private void buttonRemoveNameEtc_Click(object sender, EventArgs e)
         {
             int first = 0;
             var list = new List<int>();
@@ -114,7 +115,7 @@ namespace Nikse.SubtitleEdit
             comboBoxDictionaries.Enabled = false;
         }
 
-        private void buttonOK_Click(object sender, System.EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             int idx = comboBoxDictionaries.SelectedIndex;
             if (idx >= 0)
@@ -138,7 +139,7 @@ namespace Nikse.SubtitleEdit
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonAddNamesEtc_Click(object sender, System.EventArgs e)
+        private void buttonAddNamesEtc_Click(object sender, EventArgs e)
         {
             if (textBoxNoBreakAfter.Text.Trim().Length == 0)
                 return;

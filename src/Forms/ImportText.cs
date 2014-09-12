@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string line = string.Empty;
                 try
                 {
-                    line = System.IO.File.ReadAllText(item.Text).Trim();
+                    line = File.ReadAllText(item.Text).Trim();
                 }
                 catch
                 {

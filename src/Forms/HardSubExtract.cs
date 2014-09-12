@@ -242,10 +242,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                var fileName = Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".bmp");
+                var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".bmp");
                 _libVlc.TakeSnapshot(fileName, (uint)_videoInfo.Width, (uint)_videoInfo.Height);
                 System.Threading.Thread.Sleep(100);
-                if (System.IO.File.Exists(fileName))
+                if (File.Exists(fileName))
                 {
                     Bitmap bmp = null;
                     using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))

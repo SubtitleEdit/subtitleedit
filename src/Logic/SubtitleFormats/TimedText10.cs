@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     paragraph.AppendChild(br);
                 }
 
-                System.Collections.Generic.Stack<XmlNode> styles = new Stack<XmlNode>();
+                Stack<XmlNode> styles = new Stack<XmlNode>();
                 XmlNode currentStyle = xml.CreateTextNode(string.Empty);
                 paragraph.AppendChild(currentStyle);
                 int skipCount = 0;
@@ -615,17 +615,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 s = s.TrimEnd('s');
                 s = s.TrimEnd('m');
-                return new TimeCode(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
+                return new TimeCode(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
             else if (s.EndsWith("s"))
             {
                 s = s.TrimEnd('s');
-                return TimeCode.FromSeconds(double.Parse(s.Replace(",", "."), System.Globalization.CultureInfo.InvariantCulture));
+                return TimeCode.FromSeconds(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
             else if (s.EndsWith("t"))
             {
                 s = s.TrimEnd('t');
-                TimeSpan ts = TimeSpan.FromTicks(long.Parse(s, System.Globalization.CultureInfo.InvariantCulture));
+                TimeSpan ts = TimeSpan.FromTicks(long.Parse(s, CultureInfo.InvariantCulture));
                 return new TimeCode(ts.TotalMilliseconds);
             }
             string[] parts = s.Split(new[] { ':', '.', ',' });

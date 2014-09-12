@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Windows.Forms;
 using QuartzTypeLib;
 using System.ComponentModel;
@@ -20,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private IMediaPosition _mediaPosition;
         private bool _isPaused;
         private Control _owner;
-        private System.Windows.Forms.Timer _videoEndTimer;
+        private Timer _videoEndTimer;
         private BackgroundWorker _videoLoader;
         private int _sourceWidth;
         private int _sourceHeight;
@@ -176,7 +175,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
 
             OwnerControlResize(this, null);
-            _videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
+            _videoEndTimer = new Timer { Interval = 500 };
             _videoEndTimer.Tick += VideoEndTimerTick;
             _videoEndTimer.Start();
 
@@ -223,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             while (CurrentPosition < 1 && i < 100)
             {
                 Application.DoEvents();
-                Thread.Sleep(5);
+                System.Threading.Thread.Sleep(5);
                 i++;
             }
         }
@@ -279,7 +278,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         public override void DisposeVideoPlayer()
         {
-            ThreadPool.QueueUserWorkItem(DisposeQuarts, _quartzFilgraphManager);
+            System.Threading.ThreadPool.QueueUserWorkItem(DisposeQuarts, _quartzFilgraphManager);
         }
 
         private void DisposeQuarts(object player)

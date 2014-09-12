@@ -119,9 +119,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var last = _additions[_additions.Count - 1];
                 buttonLastEdit.Visible = true;
                 if (last.Italic)
-                    buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size, FontStyle.Italic);
+                    buttonLastEdit.Font = new Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size, FontStyle.Italic);
                 else
-                    buttonLastEdit.Font = new System.Drawing.Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);
+                    buttonLastEdit.Font = new Font(buttonLastEdit.Font.FontFamily, buttonLastEdit.Font.Size);
                 pictureBoxLastEdit.Visible = true;
                 pictureBoxLastEdit.Image = last.Image.GetBitmap();
                 buttonLastEdit.Text = string.Format(Configuration.Settings.Language.VobSubOcrCharacter.EditLastX, last.Text);
@@ -164,14 +164,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (checkBoxItalic.Checked)
             {
-                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
-                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+                labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
+                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
                 labelItalicOn.Visible = true;
             }
             else
             {
-                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
-                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+                labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
+                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
                 labelItalicOn.Visible = false;
             }
         }

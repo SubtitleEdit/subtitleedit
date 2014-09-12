@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.Enums;
 
@@ -130,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 catch (Exception exception)
                 {
-                    System.Windows.Forms.MessageBox.Show(exception.Message);
+                    MessageBox.Show(exception.Message);
                     encoding = Encoding.UTF8;
                     return null;
                 }
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     catch (Exception exception)
                     {
-                        System.Windows.Forms.MessageBox.Show(exception.Message);
+                        MessageBox.Show(exception.Message);
                         encoding = Encoding.UTF8;
                         return null;
                     }
@@ -320,7 +321,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void AdjustDisplayTimeUsingPercent(double percent, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        public void AdjustDisplayTimeUsingPercent(double percent, ListView.SelectedIndexCollection selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -339,7 +340,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void AdjustDisplayTimeUsingSeconds(double seconds, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        public void AdjustDisplayTimeUsingSeconds(double seconds, ListView.SelectedIndexCollection selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {
@@ -368,7 +369,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void RecalculateDisplayTimes(double maxCharactersPerSecond, System.Windows.Forms.ListView.SelectedIndexCollection selectedIndexes)
+        public void RecalculateDisplayTimes(double maxCharactersPerSecond, ListView.SelectedIndexCollection selectedIndexes)
         {
             for (int i = 0; i < _paragraphs.Count; i++)
             {

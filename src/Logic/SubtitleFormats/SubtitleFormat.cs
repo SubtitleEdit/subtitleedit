@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Xml;
@@ -238,7 +239,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 {
                                     try
                                     {
-                                        object pluginObject = System.Activator.CreateInstance(exportedType);
+                                        object pluginObject = Activator.CreateInstance(exportedType);
                                         var po = pluginObject as SubtitleFormat;
                                         if (po != null)
                                             _allSubtitleFormats.Insert(1, po);
@@ -322,12 +323,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MillisecondsToFrames(double milliseconds)
         {
-            return (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
         }
 
         public static int MillisecondsToFramesMaxFrameRate(double milliseconds)
         {
-            int frames = (int)System.Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int frames = (int)Math.Round(milliseconds / (1000.0 / Configuration.Settings.General.CurrentFrameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
                 frames = (int)(Configuration.Settings.General.CurrentFrameRate - 0.01);
             return frames;
@@ -335,12 +336,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int FramesToMilliseconds(double frames)
         {
-            return (int)System.Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            return (int)Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
         }
 
         public static int FramesToMillisecondsMax999(double frames)
         {
-            int ms = (int)System.Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
+            int ms = (int)Math.Round(frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate));
             if (ms > 999)
                 ms = 999;
             return ms;

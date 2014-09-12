@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             if (string.IsNullOrEmpty(fileName))
                 return;
-            string path = System.IO.Path.GetDirectoryName(fileName);
+            string path = Path.GetDirectoryName(fileName);
             foreach (string line in lines)
             {
                 string s = line;

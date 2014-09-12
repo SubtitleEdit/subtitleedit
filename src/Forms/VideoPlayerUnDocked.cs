@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 
@@ -123,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
         }
 
-        private void timer1_Tick(object sender, System.EventArgs e)
+        private void timer1_Tick(object sender, EventArgs e)
         {
             timer1.Stop();
             if (WindowState == FormWindowState.Maximized)
@@ -134,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void GoFullscreen()
         {
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            FormBorderStyle = FormBorderStyle.None;
             WindowState = FormWindowState.Maximized;
             _videoPlayerContainer.FontSizeFactor = 1.5F;
             _videoPlayerContainer.SetSubtitleFont();
@@ -153,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void NoFullscreen()
         {
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             WindowState = FormWindowState.Normal;
             _videoPlayerContainer.FontSizeFactor = 1.0F;
             _videoPlayerContainer.SetSubtitleFont();
@@ -164,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                 this.Close();
         }
 
-        private void VideoPlayerUnDocked_Shown(object sender, System.EventArgs e)
+        private void VideoPlayerUnDocked_Shown(object sender, EventArgs e)
         {
             this.Refresh();
         }

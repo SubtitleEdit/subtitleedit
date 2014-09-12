@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (div == null)
                 div = xml.DocumentElement.SelectSingleNode("//ttaf1:body", nsmgr).FirstChild;
 
-            var styleDic = new System.Collections.Generic.Dictionary<string, string>();
+            var styleDic = new Dictionary<string, string>();
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("//ttaf1:style", nsmgr))
             {
                 if (node.Attributes["tts:fontStyle"] != null && node.Attributes["xml:id"] != null)

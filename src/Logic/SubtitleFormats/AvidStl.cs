@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -22,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (buffer[i] == 0x8a)
                     buffer[i] = 0xa;
             }
-            p.Text = System.Text.Encoding.GetEncoding(1252).GetString(buffer, index, TextLength).Trim();
+            p.Text = Encoding.GetEncoding(1252).GetString(buffer, index, TextLength).Trim();
             p.Text = p.Text.Replace("\n", Environment.NewLine);
             return p;
         }
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.WriteByte(1);
             fs.WriteByte(2);
             fs.WriteByte(0);
-            var buffer = System.Text.Encoding.GetEncoding(1252).GetBytes(p.Text.Replace(Environment.NewLine, "Š"));
+            var buffer = Encoding.GetEncoding(1252).GetBytes(p.Text.Replace(Environment.NewLine, "Š"));
             if (buffer.Length <= 128)
             {
                 fs.Write(buffer, 0, buffer.Length);
@@ -99,11 +100,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 fs.WriteByte(0);
             string numberOfLines = subtitle.Paragraphs.Count.ToString().PadLeft(5, '0');
 
-            buffer = System.Text.Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
+            buffer = Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 0x15; i++)
                 fs.WriteByte(0);
-            buffer = System.Text.Encoding.ASCII.GetBytes("11");
+            buffer = Encoding.ASCII.GetBytes("11");
             fs.Write(buffer, 0, buffer.Length);
             while (fs.Length < 1024)
                 fs.WriteByte(0);

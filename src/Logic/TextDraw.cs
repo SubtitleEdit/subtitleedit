@@ -7,7 +7,7 @@ namespace Nikse.SubtitleEdit.Logic
     public static class TextDraw
     {
 
-        public static void DrawText(Font font, StringFormat sf, System.Drawing.Drawing2D.GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
+        public static void DrawText(Font font, StringFormat sf, GraphicsPath path, StringBuilder sb, bool isItalic, bool isBold, bool isUnderline, float left, float top, ref bool newLine, float leftMargin, ref int pathPointsStart)
         {
             var next = new PointF(left, top);
 

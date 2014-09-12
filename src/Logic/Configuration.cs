@@ -1,5 +1,5 @@
-﻿using System.IO;
-using System;
+﻿using System;
+using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -67,11 +67,11 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (IsRunningOnLinux() || IsRunningOnMac())
                 {
-                    if (System.IO.Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
+                    if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                         return "/usr/share/tesseract-ocr/tessdata";
-                    else if (System.IO.Directory.Exists("/usr/share/tesseract/tessdata"))
+                    else if (Directory.Exists("/usr/share/tesseract/tessdata"))
                         return "/usr/share/tesseract/tessdata";
-                    else if (System.IO.Directory.Exists("/usr/share/tessdata"))
+                    else if (Directory.Exists("/usr/share/tessdata"))
                         return "/usr/share/tessdata";
                 }
                 return TesseractFolder + "tessdata";
@@ -171,8 +171,8 @@ namespace Nikse.SubtitleEdit.Logic
                             {
                                 try
                                 {
-                                    System.IO.Directory.CreateDirectory(appDataRoamingPath);
-                                    System.IO.Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                                    Directory.CreateDirectory(appDataRoamingPath);
+                                    Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
                                     Instance._dataDir = appDataRoamingPath + Path.DirectorySeparatorChar;
                                 }
                                 catch

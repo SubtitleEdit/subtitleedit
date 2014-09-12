@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -48,9 +49,9 @@ namespace Nikse.SubtitleEdit.Forms
                     lines.Add(line);
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
-                    title = System.IO.Path.GetFileNameWithoutExtension(subtitleFileName);
+                    title = Path.GetFileNameWithoutExtension(subtitleFileName);
                 else if (!string.IsNullOrEmpty(videoFileName))
-                    title = System.IO.Path.GetFileNameWithoutExtension(videoFileName);
+                    title = Path.GetFileNameWithoutExtension(videoFileName);
                 ssa.LoadSubtitle(sub, lines, title);
                 header = sub.Header;
             }
@@ -254,8 +255,8 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.FileName = string.Empty;
             if (string.IsNullOrEmpty(openFileDialog1.InitialDirectory) && !string.IsNullOrEmpty(_videoFileName))
             {
-                openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(_videoFileName);
-                openFileDialog1.FileName = System.IO.Path.GetFileName(_videoFileName);
+                openFileDialog1.InitialDirectory = Path.GetDirectoryName(_videoFileName);
+                openFileDialog1.FileName = Path.GetFileName(_videoFileName);
             }
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)

@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxBorderWidth.SelectedIndex = 2;
             comboBoxHAlign.SelectedIndex = 1;
 
-            foreach (var x in System.Drawing.FontFamily.Families)
+            foreach (var x in FontFamily.Families)
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
                 if (string.Compare(x.Name, _subtitleFontName, true) == 0)
@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else
                                     {
-                                        c = System.Drawing.ColorTranslator.FromHtml(fontColor);
+                                        c = ColorTranslator.FromHtml(fontColor);
                                     }
                                 }
                                 catch

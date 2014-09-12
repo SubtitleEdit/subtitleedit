@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic
             BitmapData bitmapdata = inputBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
 
             //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
-            System.Runtime.InteropServices.Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
+            Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
             inputBitmap.UnlockBits(bitmapdata);
         }
 
@@ -863,7 +863,7 @@ namespace Nikse.SubtitleEdit.Logic
             Bitmap bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
             BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             IntPtr destination = bitmapdata.Scan0;
-            System.Runtime.InteropServices.Marshal.Copy(_bitmapData, 0, destination, _bitmapData.Length);
+            Marshal.Copy(_bitmapData, 0, destination, _bitmapData.Length);
             bitmap.UnlockBits(bitmapdata);
             return bitmap;
         }

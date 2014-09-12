@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void SETextBox_MouseDown(object sender, MouseEventArgs e)
         {
-            if (MouseButtons == System.Windows.Forms.MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
+            if (MouseButtons == MouseButtons.Left && !string.IsNullOrEmpty(_dragText))
             {
                 Point pt = new Point(e.X, e.Y);
                 int index = GetCharIndexFromPosition(pt);

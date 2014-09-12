@@ -3668,7 +3668,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         public static string UrlEncode(string text)
         {
-            return System.Uri.EscapeDataString(text);
+            return Uri.EscapeDataString(text);
         }
 
         /// <summary>
@@ -3679,7 +3679,7 @@ namespace Nikse.SubtitleEdit.Logic
             // pre-process for + sign space formatting since System.Uri doesn't handle it
             // plus literals are encoded as %2b normally so this should be safe
             text = text.Replace("+", " ");
-            return System.Uri.UnescapeDataString(text);
+            return Uri.UnescapeDataString(text);
         }
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
@@ -4039,7 +4039,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                             else
                             {
-                                return System.Drawing.ColorTranslator.FromHtml(s);
+                                return ColorTranslator.FromHtml(s);
                             }
                         }
                         catch

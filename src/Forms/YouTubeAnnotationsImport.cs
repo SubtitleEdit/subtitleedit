@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public System.Collections.Generic.List<string> SelectedStyles
+        public List<string> SelectedStyles
         {
             get
             {

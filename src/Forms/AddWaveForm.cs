@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 runningOnWindows = true;
                 exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
-                if (!System.IO.File.Exists(exeFilePath))
+                if (!File.Exists(exeFilePath))
                 {
                     if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
                     {
@@ -77,9 +77,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine +
                                             Environment.NewLine +
                                             Configuration.Settings.Language.AddWaveForm.GoToVlcMediaPlayerHomePage,
-                                           Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.Yes)
+                                           Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
-                            System.Diagnostics.Process.Start("http://www.videolan.org/");
+                            Process.Start("http://www.videolan.org/");
                         }
                         buttonRipWave.Enabled = true;
                         return;
@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
                 this.Refresh();
-                System.IO.Directory.CreateDirectory(_spectrogramDirectory);
+                Directory.CreateDirectory(_spectrogramDirectory);
                 SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
             }
             labelPleaseWait.Visible = false;

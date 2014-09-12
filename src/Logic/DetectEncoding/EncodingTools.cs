@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // get the IMultiLanguage3 interface
             MultiLanguage.IMultiLanguage3 multilang3 = new MultiLanguage.CMultiLanguageClass();
             if (multilang3 == null)
-                throw new System.Runtime.InteropServices.COMException("Failed to get IMultilang3");
+                throw new COMException("Failed to get IMultilang3");
             try
             {
                 int[] resultCodePages = new int[preferredEncodings != null ? preferredEncodings.Length : Encoding.GetEncodings().Length];
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // get the IMultiLanguage3 interface
             MultiLanguage.IMultiLanguage3 multilang3 = new MultiLanguage.CMultiLanguageClass();
             if (multilang3 == null)
-                throw new System.Runtime.InteropServices.COMException("Failed to get IMultilang3");
+                throw new COMException("Failed to get IMultilang3");
             try
             {
                 int[] resultCodePages = new int[preferredEncodings.Length];
@@ -405,7 +405,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
             // get the IMultiLanguage" interface
             MultiLanguage.IMultiLanguage2 multilang2 = new MultiLanguage.CMultiLanguageClass();
             if (multilang2 == null)
-                throw new System.Runtime.InteropServices.COMException("Failed to get IMultilang2");
+                throw new COMException("Failed to get IMultilang2");
             try
             {
                 MultiLanguage.DetectEncodingInfo[] detectedEncdings = new MultiLanguage.DetectEncodingInfo[maxEncodings];

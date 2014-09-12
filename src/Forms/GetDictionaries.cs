@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
             System.Diagnostics.Process.Start(dictionaryFolder);
         }
 
-        private void buttonDownload_Click(object sender, System.EventArgs e)
+        private void buttonDownload_Click(object sender, EventArgs e)
         {
             try
             {

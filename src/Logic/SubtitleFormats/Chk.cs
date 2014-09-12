@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (buffer[start] == 0x1f && buffer[start + 1] == 0x57 && buffer[start + 2] == 0x31 && buffer[start + 3] == 0x36) // W16
             {
                 if (end - start > 4)
-                    text = System.Text.Encoding.GetEncoding(950).GetString(buffer, start + 4, end - start - 4);
+                    text = Encoding.GetEncoding(950).GetString(buffer, start + 4, end - start - 4);
             }
             else
             {

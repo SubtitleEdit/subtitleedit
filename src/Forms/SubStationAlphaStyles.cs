@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -35,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
 
             comboBoxFontName.Items.Clear();
-            foreach (var x in System.Drawing.FontFamily.Families)
+            foreach (var x in FontFamily.Families)
                 comboBoxFontName.Items.Add(x.Name);
 
             var l = Configuration.Settings.Language.SubStationAlphaStyles;
@@ -1236,7 +1237,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (saveFileDialogStyle.ShowDialog(this) == DialogResult.OK)
             {
-                if (System.IO.File.Exists(saveFileDialogStyle.FileName))
+                if (File.Exists(saveFileDialogStyle.FileName))
                 {
                     Encoding encoding = null;
                     var s = new Subtitle();
@@ -1257,7 +1258,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bool stylesOn = false;
                         bool done = false;
                         string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
-                        foreach (string line in System.IO.File.ReadAllLines(saveFileDialogStyle.FileName))
+                        foreach (string line in File.ReadAllLines(saveFileDialogStyle.FileName))
                         {
                             if (line.ToLower().StartsWith("format:"))
                             {
@@ -1287,7 +1288,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 return;
                             }
                         }
-                        System.IO.File.WriteAllText(saveFileDialogStyle.FileName, sb.ToString(), Encoding.UTF8);
+                        File.WriteAllText(saveFileDialogStyle.FileName, sb.ToString(), Encoding.UTF8);
                     }
                 }
                 else
@@ -1312,7 +1313,7 @@ namespace Nikse.SubtitleEdit.Forms
                             "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +
                             "Dialogue: 0,0:00:31.91,0:00:33.91,Default,,0,0,0,,My Styles :)";
                     }
-                    System.IO.File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
+                    File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                 }
             }
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
