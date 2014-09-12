@@ -385,7 +385,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                return System.Text.Encoding.Default;
+                return Encoding.Default;
             }
         }
 
@@ -904,7 +904,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             catch (System.Web.Services.Protocols.SoapHeaderException exception)
                             {
-                                MessageBox.Show("Sorry, MS is closing their free api: " + exception.Message);
+                                MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
                                 overQuota = true;
                             }
                             sb = new StringBuilder();
@@ -927,7 +927,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     catch (System.Web.Services.Protocols.SoapHeaderException exception)
                     {
-                        MessageBox.Show("Sorry, MS is closing their free api: " + exception.Message);
+                        MessageBox.Show("Sorry, Microsoft is closing their free api: " + exception.Message);
                         overQuota = true;
                     }
                 }

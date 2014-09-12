@@ -78,16 +78,16 @@ namespace Nikse.SubtitleEdit.Forms
         private long _lastTextKeyDownTicks = 0;
         private long _lastHistoryTicks = 0;
         private double? _audioWaveFormRightClickSeconds = null;
-        private System.Windows.Forms.Timer _timerDoSyntaxColoring = new Timer();
-        private System.Windows.Forms.Timer _timerAutoSave = new Timer();
-        private System.Windows.Forms.Timer _timerClearStatus = new Timer();
+        private Timer _timerDoSyntaxColoring = new Timer();
+        private Timer _timerAutoSave = new Timer();
+        private Timer _timerClearStatus = new Timer();
         private string _textAutoSave;
         private string _textAutoSaveOriginal;
         private StringBuilder _statusLog = new StringBuilder();
         private bool _makeHistoryPaused = false;
 
         private Nikse.SubtitleEdit.Logic.Forms.CheckForUpdatesHelper _checkForUpdatesHelper;
-        private System.Windows.Forms.Timer _timerCheckForUpdates;
+        private Timer _timerCheckForUpdates;
 
         private NikseWebServiceSession _networkSession;
         private NetworkChat _networkChat = null;
@@ -1113,7 +1113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
                     Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
-                    System.IO.File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
+                    File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
                     Console.WriteLine(" done.");
                 }
             }
@@ -3563,7 +3563,7 @@ namespace Nikse.SubtitleEdit.Forms
                             MessageBox.Show(string.Format(_language.FileXIsReadOnly, _fileName));
                         return DialogResult.No;
                     }
-                }            
+                }
 
                 if (Control.ModifierKeys == (Keys.Control | Keys.Shift))
                     allText = allText.Replace("\r\n", "\n");
@@ -3593,7 +3593,7 @@ namespace Nikse.SubtitleEdit.Forms
                     FileStream fs = null;
                     try
                     {
-                        fs = System.IO.File.Open(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
+                        fs = File.Open(_fileName, FileMode.Create, FileAccess.Write, FileShare.Read);
                         using (StreamWriter sw = new StreamWriter(fs, currentEncoding))
                         {
                             fs = null;
@@ -6871,16 +6871,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 double charactersPerSecond = Utilities.GetCharactersPerSecond(paragraph);
                 if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds + 7)
-                    charsPerSecond.ForeColor = System.Drawing.Color.Red;
+                    charsPerSecond.ForeColor = Color.Red;
                 else if (charactersPerSecond > Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
-                    charsPerSecond.ForeColor = System.Drawing.Color.Orange;
+                    charsPerSecond.ForeColor = Color.Orange;
                 else
-                    charsPerSecond.ForeColor = System.Drawing.Color.Black;
+                    charsPerSecond.ForeColor = Color.Black;
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, charactersPerSecond);
             }
             else
             {
-                charsPerSecond.ForeColor = System.Drawing.Color.Red;
+                charsPerSecond.ForeColor = Color.Red;
                 charsPerSecond.Text = string.Format(_language.CharactersPerSecond, _languageGeneral.NotAvailable);
             }
         }
@@ -9388,7 +9388,7 @@ namespace Nikse.SubtitleEdit.Forms
             return subtitle;
         }
 
-        public static void CopyStream(System.IO.Stream input, System.IO.Stream output)
+        public static void CopyStream(Stream input, Stream output)
         {
             byte[] buffer = new byte[128000];
             int len;
@@ -9851,7 +9851,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //    }
                 }
 
-                text += System.Text.Encoding.Default.GetString(new byte[] { (byte)char_value });  //(char)active_set[char_value];
+                text += Encoding.Default.GetString(new byte[] { (byte)char_value });  //(char)active_set[char_value];
                 //continue loopi;
             }
 
@@ -10144,8 +10144,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string fileName = _dragAndDropFiles[0];
 
-                saveFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
-                openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
 
                 var fi = new FileInfo(fileName);
                 string ext = Path.GetExtension(fileName).ToLower();
@@ -10431,7 +10431,7 @@ namespace Nikse.SubtitleEdit.Forms
             var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
             fs.Read(buffer, 0, 4);
             fs.Close();
-            string s = System.Text.Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+            string s = Encoding.ASCII.GetString(buffer, 0, buffer.Length);
             return s == "Rar!";
         }
 
@@ -12865,7 +12865,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (timeCodeSubtitle.Paragraphs.Count != _subtitle.Paragraphs.Count && !string.IsNullOrEmpty(_language.ImportTimeCodesDifferentNumberOfLinesWarning))
                 {
-                    if (MessageBox.Show(string.Format(_language.ImportTimeCodesDifferentNumberOfLinesWarning, timeCodeSubtitle.Paragraphs.Count, _subtitle.Paragraphs.Count), _title, MessageBoxButtons.YesNo) == System.Windows.Forms.DialogResult.No)
+                    if (MessageBox.Show(string.Format(_language.ImportTimeCodesDifferentNumberOfLinesWarning, timeCodeSubtitle.Paragraphs.Count, _subtitle.Paragraphs.Count), _title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return;
                 }
 
@@ -14702,7 +14702,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _checkForUpdatesHelper = new Nikse.SubtitleEdit.Logic.Forms.CheckForUpdatesHelper();
                 _checkForUpdatesHelper.CheckForUpdates();
-                _timerCheckForUpdates = new System.Windows.Forms.Timer();
+                _timerCheckForUpdates = new Timer();
                 _timerCheckForUpdates.Interval = 7000;
                 _timerCheckForUpdates.Tick += TimerCheckForUpdatesTick;
                 _timerCheckForUpdates.Start();
@@ -15236,8 +15236,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrEmpty(_fileName))
                     {
-                        saveFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
-                        openFileDialog1.InitialDirectory = System.IO.Path.GetDirectoryName(fileName);
+                        saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                        openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
                     }
                     OpenVideo(fileName);
                 }
@@ -18406,21 +18406,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void ToolStripMenuItemRightToLeftModeClick(object sender, EventArgs e)
         {
             toolStripMenuItemRightToLeftMode.Checked = !toolStripMenuItemRightToLeftMode.Checked;
-            if (textBoxListViewText.RightToLeft == System.Windows.Forms.RightToLeft.Yes)
+            if (textBoxListViewText.RightToLeft == RightToLeft.Yes)
             {
-                textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.No;
-                SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.No;
-                textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.No;
+                textBoxListViewText.RightToLeft = RightToLeft.No;
+                SubtitleListview1.RightToLeft = RightToLeft.No;
+                textBoxSource.RightToLeft = RightToLeft.No;
                 if (mediaPlayer != null)
-                    mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.No;
+                    mediaPlayer.TextRightToLeft = RightToLeft.No;
             }
             else
             {
-                textBoxListViewText.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-                SubtitleListview1.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-                textBoxSource.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                textBoxListViewText.RightToLeft = RightToLeft.Yes;
+                SubtitleListview1.RightToLeft = RightToLeft.Yes;
+                textBoxSource.RightToLeft = RightToLeft.Yes;
                 if (mediaPlayer != null)
-                    mediaPlayer.TextRightToLeft = System.Windows.Forms.RightToLeft.Yes;
+                    mediaPlayer.TextRightToLeft = RightToLeft.Yes;
             }
         }
 
@@ -18659,8 +18659,8 @@ namespace Nikse.SubtitleEdit.Forms
             var f = new AlignmentPicker();
             f.TopMost = true;
             f.StartPosition = FormStartPosition.Manual;
-            f.Left = System.Windows.Forms.Cursor.Position.X - 150;
-            f.Top = System.Windows.Forms.Cursor.Position.Y - 75;
+            f.Left = Cursor.Position.X - 150;
+            f.Top = Cursor.Position.Y - 75;
             if (f.ShowDialog(this) == DialogResult.OK)
             {
                 string tag = string.Empty;

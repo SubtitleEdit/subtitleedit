@@ -64,15 +64,15 @@ namespace Nikse.SubtitleEdit.Logic
                 else if (f == "fontsize")
                     sb.Append(FontSize);
                 else if (f == "primarycolour")
-                    sb.Append(System.Drawing.ColorTranslator.ToWin32(Primary));
+                    sb.Append(ColorTranslator.ToWin32(Primary));
                 else if (f == "secondarycolour")
-                    sb.Append(System.Drawing.ColorTranslator.ToWin32(Secondary));
+                    sb.Append(ColorTranslator.ToWin32(Secondary));
                 else if (f == "tertiarycolour")
-                    sb.Append(System.Drawing.ColorTranslator.ToWin32(Tertiary));
+                    sb.Append(ColorTranslator.ToWin32(Tertiary));
                 else if (f == "outlinecolour")
-                    sb.Append(System.Drawing.ColorTranslator.ToWin32(Outline));
+                    sb.Append(ColorTranslator.ToWin32(Outline));
                 else if (f == "backcolour")
-                    sb.Append(System.Drawing.ColorTranslator.ToWin32(Background));
+                    sb.Append(ColorTranslator.ToWin32(Background));
                 else if (f == "bold")
                     sb.Append(Convert.ToInt32(Bold));
                 else if (f == "italic")

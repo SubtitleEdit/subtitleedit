@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -72,8 +73,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (match.Success)
                 {
                     if (p != null)
-                        p.Text = (p.Text + System.Environment.NewLine + text.ToString().Trim()).Trim();
-                    var parts = line.Substring(0, match.Length).Trim().Split("– ".ToCharArray(), System.StringSplitOptions.RemoveEmptyEntries);
+                        p.Text = (p.Text + Environment.NewLine + text.ToString().Trim()).Trim();
+                    var parts = line.Substring(0, match.Length).Trim().Split("– ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     try
                     {
                         p = new Paragraph();
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return;
             }
             if (p != null)
-                p.Text = (p.Text + System.Environment.NewLine + text.ToString().Trim()).Trim();
+                p.Text = (p.Text + Environment.NewLine + text.ToString().Trim()).Trim();
 
             subtitle.Renumber(1);
         }

@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     bool isItalic = false;
                     int fontNo = 0;
-                    System.Collections.Generic.Stack<string> fontColors = new Stack<string>();
+                    Stack<string> fontColors = new Stack<string>();
                     foreach (string line in lines)
                     {
                         XmlNode textNode = xml.CreateElement("dcst:Text", "dcst");
@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string[] parts = s.Split(new char[] { ':', '.', ',' });
 
-            int milliseconds = (int)System.Math.Round(int.Parse(parts[3]) * (1000.0 / frameRate));
+            int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (1000.0 / frameRate));
             if (milliseconds > 999)
                 milliseconds = 999;
 
@@ -773,7 +773,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static int MsToFramesMaxFrameRate(double milliseconds, double frameRate)
         {
-            int frames = (int)System.Math.Round(milliseconds / (1000.0 / frameRate));
+            int frames = (int)Math.Round(milliseconds / (1000.0 / frameRate));
             if (frames >= Configuration.Settings.General.CurrentFrameRate)
                 frames = (int)(frameRate - 0.01);
             return frames;

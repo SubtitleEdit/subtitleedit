@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -114,8 +115,8 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownParts.Maximum = _subtitle.Paragraphs.Count / 2;
 
             if (!string.IsNullOrEmpty(_fileName))
-                textBoxOutputFolder.Text = System.IO.Path.GetDirectoryName(_fileName);
-            else if (string.IsNullOrEmpty(Configuration.Settings.Tools.SplitOutputFolder) || !System.IO.Directory.Exists(Configuration.Settings.Tools.SplitOutputFolder))
+                textBoxOutputFolder.Text = Path.GetDirectoryName(_fileName);
+            else if (string.IsNullOrEmpty(Configuration.Settings.Tools.SplitOutputFolder) || !Directory.Exists(Configuration.Settings.Tools.SplitOutputFolder))
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             else
                 textBoxOutputFolder.Text = Configuration.Settings.Tools.SplitOutputFolder;
@@ -128,10 +129,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             _loading = true;
             _parts = new List<Subtitle>();
-            if (string.IsNullOrEmpty(textBoxOutputFolder.Text) || !System.IO.Directory.Exists(textBoxOutputFolder.Text))
+            if (string.IsNullOrEmpty(textBoxOutputFolder.Text) || !Directory.Exists(textBoxOutputFolder.Text))
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (fileNameNoExt.Trim().Length == 0)
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
             listViewParts.Items.Clear();
@@ -211,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             bool overwrite = false;
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            string fileNameNoExt = System.IO.Path.GetFileNameWithoutExtension(textBoxFileName.Text);
+            string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
             if (fileNameNoExt.Trim().Length == 0)
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
 
@@ -220,15 +221,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (Subtitle sub in _parts)
                 {
-                    string fileName = System.IO.Path.Combine(textBoxOutputFolder.Text, fileNameNoExt + ".Part" + number + format.Extension);
+                    string fileName = Path.Combine(textBoxOutputFolder.Text, fileNameNoExt + ".Part" + number + format.Extension);
                     string allText = sub.ToText(format);
-                    if (System.IO.File.Exists(fileName) && !overwrite)
+                    if (File.Exists(fileName) && !overwrite)
                     {
                         if (MessageBox.Show(Configuration.Settings.Language.SplitSubtitle.OverwriteExistingFiles, "", MessageBoxButtons.YesNo) == DialogResult.No)
                             return;
                         overwrite = true;
                     }
-                    System.IO.File.WriteAllText(fileName, allText, GetCurrentEncoding());
+                    File.WriteAllText(fileName, allText, GetCurrentEncoding());
                     number++;
                 }
             }
@@ -330,7 +331,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOpenOutputFolder_Click(object sender, EventArgs e)
         {
-            if (System.IO.Directory.Exists(textBoxOutputFolder.Text))
+            if (Directory.Exists(textBoxOutputFolder.Text))
                 System.Diagnostics.Process.Start(textBoxOutputFolder.Text);
             else
                 MessageBox.Show(string.Format(Configuration.Settings.Language.SplitSubtitle.FolderNotFoundX, textBoxOutputFolder.Text));

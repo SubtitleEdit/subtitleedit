@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (index > 0)
                 _successCount++;
-            return System.Text.Encoding.UTF8.GetString(buffer, 0, index);
+            return Encoding.UTF8.GetString(buffer, 0, index);
         }
 
         public CheckForUpdatesHelper()

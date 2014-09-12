@@ -50,7 +50,7 @@ namespace Test
         //    foreach (String cultureName in _list) //Loop over all language files
         //    {
         //        //Load language
-        //        var reader = new System.IO.StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
+        //        var reader = new StreamReader(Path.Combine(Configuration.BaseDirectory, "Languages") + Path.DirectorySeparatorChar + cultureName + ".xml");
         //        Language lang = Language.Load(reader);
 
         //        //Loop over all field in language

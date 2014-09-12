@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -160,13 +161,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             saveFileDialog1.Title = Configuration.Settings.Language.ExportCustomText.SaveSubtitleAs;
             if (!string.IsNullOrEmpty(_title))
-                saveFileDialog1.FileName = System.IO.Path.GetFileNameWithoutExtension(_title) + ".txt";
+                saveFileDialog1.FileName = Path.GetFileNameWithoutExtension(_title) + ".txt";
             saveFileDialog1.Filter = Configuration.Settings.Language.General.AllFiles + "|*.*";
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 try
                 {
-                    System.IO.File.WriteAllText(saveFileDialog1.FileName, GenerateText(_subtitle, _translated, _title), GetCurrentEncoding());
+                    File.WriteAllText(saveFileDialog1.FileName, GenerateText(_subtitle, _translated, _title), GetCurrentEncoding());
                     LogMessage = string.Format(Configuration.Settings.Language.ExportCustomText.SubtitleExportedInCustomFormatToX, saveFileDialog1.FileName);
                     DialogResult = DialogResult.OK;
                 }
@@ -185,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (title == null)
                 title = string.Empty;
             else
-                title = System.IO.Path.GetFileNameWithoutExtension(title);
+                title = Path.GetFileNameWithoutExtension(title);
 
             try
             {

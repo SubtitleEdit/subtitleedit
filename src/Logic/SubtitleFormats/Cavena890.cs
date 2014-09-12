@@ -300,15 +300,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static byte[] GetFontBytesFromLanguageId(int languageId)
         {
-            var buffer = System.Text.Encoding.ASCII.GetBytes("HLV23N");
+            var buffer = Encoding.ASCII.GetBytes("HLV23N");
             if (languageId == LanguageIdChineseTraditional || languageId == LanguageIdChineseSimplified)
-                buffer = System.Text.Encoding.ASCII.GetBytes("CCKM44");
+                buffer = Encoding.ASCII.GetBytes("CCKM44");
             else if (languageId == LanguageIdArabic)
-                buffer = System.Text.Encoding.ASCII.GetBytes("ARA19N");
+                buffer = Encoding.ASCII.GetBytes("ARA19N");
             else if (languageId == LanguageIdRussian)
-                buffer = System.Text.Encoding.ASCII.GetBytes("KYRIL2");
+                buffer = Encoding.ASCII.GetBytes("KYRIL2");
             else if (languageId == LanguageIdHebrew)
-                buffer = System.Text.Encoding.ASCII.GetBytes("HEBNOA");
+                buffer = Encoding.ASCII.GetBytes("HEBNOA");
             return buffer;
         }
 
@@ -624,8 +624,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 _languageIdLine2 = 1;
             Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 = _languageIdLine2;
 
-            _fontNameLine1 = System.Text.Encoding.ASCII.GetString(buffer, 187, 6);
-            _fontNameLine2 = System.Text.Encoding.ASCII.GetString(buffer, 246, 6);
+            _fontNameLine1 = Encoding.ASCII.GetString(buffer, 187, 6);
+            _fontNameLine2 = Encoding.ASCII.GetString(buffer, 246, 6);
 
             // Hebrew
             if (!string.IsNullOrEmpty(_fontNameLine1) && _fontNameLine1 == "HEBNOA")

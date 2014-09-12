@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
 
@@ -87,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void ButtonOkClick(object sender, System.EventArgs e)
+        private void ButtonOkClick(object sender, EventArgs e)
         {
             if (listViewHistory.SelectedItems.Count > 0)
             {
@@ -100,7 +101,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonCompareClick(object sender, System.EventArgs e)
+        private void ButtonCompareClick(object sender, EventArgs e)
         {
             if (listViewHistory.SelectedItems.Count == 1)
             {
@@ -115,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ListViewHistorySelectedIndexChanged(object sender, System.EventArgs e)
+        private void ListViewHistorySelectedIndexChanged(object sender, EventArgs e)
         {
             buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1;
             buttonCompare.Enabled = listViewHistory.SelectedItems.Count == 1;
@@ -123,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonRollback.Enabled = listViewHistory.SelectedItems.Count == 1 && listViewHistory.SelectedItems[0].Index <= _undoIndex;
         }
 
-        private void ButtonCompareHistoryClick(object sender, System.EventArgs e)
+        private void ButtonCompareHistoryClick(object sender, EventArgs e)
         {
             if (listViewHistory.SelectedItems.Count == 2)
             {

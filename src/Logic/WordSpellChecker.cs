@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic
             _mainHandle = main.Handle;
             SetLanguageId(languageId);
 
-            _wordApplicationType = System.Type.GetTypeFromProgID("Word.Application");
+            _wordApplicationType = Type.GetTypeFromProgID("Word.Application");
             _wordApplication = Activator.CreateInstance(_wordApplicationType);
 
             Application.DoEvents();
@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void NewDocument()
         {
-            _wordDocumentType = System.Type.GetTypeFromProgID("Word.Document");
+            _wordDocumentType = Type.GetTypeFromProgID("Word.Document");
             _wordDocument = Activator.CreateInstance(_wordDocumentType);
         }
 

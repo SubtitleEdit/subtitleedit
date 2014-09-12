@@ -747,7 +747,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Timer1Tick(object sender, EventArgs e)
         {
             char activeListView;
-            var p = PointToClient(System.Windows.Forms.Control.MousePosition);
+            var p = PointToClient(Control.MousePosition);
             if (p.X >= subtitleListView1.Left && p.X <= subtitleListView1.Left + subtitleListView1.Width + 2)
                 activeListView = 'L';
             else if (p.X >= subtitleListView2.Left && p.X <= subtitleListView2.Left + subtitleListView2.Width + 2)

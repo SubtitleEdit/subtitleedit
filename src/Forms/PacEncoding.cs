@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
                 DialogResult = DialogResult.Cancel;
         }
 
-        private void comboBoxCodePage_SelectedIndexChanged(object sender, System.EventArgs e)
+        private void comboBoxCodePage_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBoxCodePage.SelectedIndex >= 0)
             {
@@ -92,12 +93,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
-        private void buttonOK_Click(object sender, System.EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
         }
 
-        private void buttonCancel_Click(object sender, System.EventArgs e)
+        private void buttonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }

@@ -725,14 +725,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (checkBoxItalic.Checked)
             {
-                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
-                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
+                labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size, FontStyle.Italic);
+                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size, FontStyle.Italic);
                 labelItalicOn.Visible = true;
             }
             else
             {
-                labelCharactersAsText.Font = new System.Drawing.Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
-                textBoxCharacters.Font = new System.Drawing.Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
+                labelCharactersAsText.Font = new Font(labelCharactersAsText.Font.FontFamily, labelCharactersAsText.Font.Size);
+                textBoxCharacters.Font = new Font(textBoxCharacters.Font.FontFamily, textBoxCharacters.Font.Size);
                 labelItalicOn.Visible = false;
             }
         }

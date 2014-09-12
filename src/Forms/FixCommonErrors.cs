@@ -5030,17 +5030,17 @@ namespace Nikse.SubtitleEdit.Forms
             buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
-                labelTextLineTotal.ForeColor = System.Drawing.Color.Black;
+                labelTextLineTotal.ForeColor = Color.Black;
                 labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
             }
             else if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 2.1)
             {
-                labelTextLineTotal.ForeColor = System.Drawing.Color.Orange;
+                labelTextLineTotal.ForeColor = Color.Orange;
                 labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
             }
             else
             {
-                labelTextLineTotal.ForeColor = System.Drawing.Color.Red;
+                labelTextLineTotal.ForeColor = Color.Red;
                 labelTextLineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
                 buttonSplitLine.Visible = true;
             }

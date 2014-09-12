@@ -287,13 +287,13 @@ namespace Nikse.SubtitleEdit.Forms
         private int _tesseractAsyncIndex = 0;
         private BackgroundWorker _tesseractThread = null;
 
-        public static void SetDoubleBuffered(System.Windows.Forms.Control c)
+        public static void SetDoubleBuffered(Control c)
         {
             //Taxes: Remote Desktop Connection and painting http://blogs.msdn.com/oldnewthing/archive/2006/01/03/508694.aspx
-            if (System.Windows.Forms.SystemInformation.TerminalServerSession)
+            if (SystemInformation.TerminalServerSession)
                 return;
 
-            System.Reflection.PropertyInfo aProp = typeof(System.Windows.Forms.Control).GetProperty("DoubleBuffered", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            PropertyInfo aProp = typeof(Control).GetProperty("DoubleBuffered", BindingFlags.NonPublic | BindingFlags.Instance);
             aProp.SetValue(c, true, null);
         }
 
@@ -961,7 +961,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (form == null)
                     form = this;
                 ChooseLanguage.Activate();
-                if (ChooseLanguage.ShowDialog(form) == System.Windows.Forms.DialogResult.OK)
+                if (ChooseLanguage.ShowDialog(form) == DialogResult.OK)
                 {
                     _vobSubMergedPackist = ChooseLanguage.SelectedVobSubMergedPacks;
                     SetTesseractLanguageFromLanguageString(ChooseLanguage.SelectedLanguageString);
@@ -4183,7 +4183,7 @@ namespace Nikse.SubtitleEdit.Forms
         public static List<NOcrChar> LoadNOcrForTesseract(string xmlRessourceName)
         {
             var nocrChars = new List<NOcrChar>();
-            System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
+            Assembly asm = Assembly.GetExecutingAssembly();
             Stream strm = asm.GetManifestResourceStream(xmlRessourceName);
             if (strm != null)
             {
@@ -6607,9 +6607,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(Configuration.TesseractFolder);
                 if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
                 {
-                    System.Diagnostics.Process process = new System.Diagnostics.Process();
-                    System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-                    startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+                    Process process = new Process();
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
                     startInfo.FileName = "xcopy";
                     startInfo.Arguments = "\"" + Path.Combine(Configuration.TesseractOriginalFolder, "*.*") + "\" \"" + Configuration.TesseractFolder + "\" /s";
                     MessageBox.Show(startInfo.Arguments);
@@ -6624,7 +6624,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var list = new List<string>();
                 comboBoxTesseractLanguages.Items.Clear();
-                foreach (var culture in System.Globalization.CultureInfo.GetCultures(System.Globalization.CultureTypes.NeutralCultures))
+                foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
                     string tesseractName = culture.ThreeLetterISOLanguageName;
                     if (culture.LCID == 0x4 && !File.Exists(dir + Path.DirectorySeparatorChar + tesseractName + ".traineddata"))
@@ -8020,7 +8020,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.Contains(":"))
                 {
                     text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
-                    System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
+                    Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
                 }
             }
         }

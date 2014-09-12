@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < 11; i++)
                 fs.WriteByte(0);
             fs.WriteByte(0x11);
-            byte[] footerBuffer = System.Text.Encoding.ASCII.GetBytes("dummy end of file");
+            byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
             fs.Write(footerBuffer, 0, footerBuffer.Length);
 
             fs.Close();

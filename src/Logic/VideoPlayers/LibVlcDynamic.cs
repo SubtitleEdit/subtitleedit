@@ -2,20 +2,21 @@
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 {
     public class LibVlcDynamic : VideoPlayer, IDisposable
     {
-        private System.Windows.Forms.Timer _videoLoadedTimer;
-        private System.Windows.Forms.Timer _videoEndTimer;
-        private System.Windows.Forms.Timer _mouseTimer;
+        private Timer _videoLoadedTimer;
+        private Timer _videoEndTimer;
+        private Timer _mouseTimer;
 
         private IntPtr _libVlcDLL;
         private IntPtr _libVlc;
         private IntPtr _mediaPlayer;
-        private System.Windows.Forms.Control _ownerControl;
-        private System.Windows.Forms.Form _parentForm;
+        private Control _ownerControl;
+        private Form _parentForm;
         private double? _pausePosition = null; // Hack to hold precise seeking when paused
 
         // LibVLC Core - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__core.html
@@ -413,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return _libvlc_video_take_snapshot(_mediaPlayer, 0, Encoding.UTF8.GetBytes(fileName + "\0"), width, height) == 1;
         }
 
-        public LibVlcDynamic MakeSecondMediaPlayer(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public LibVlcDynamic MakeSecondMediaPlayer(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             LibVlcDynamic newVlc = new LibVlcDynamic();
             newVlc._libVlc = this._libVlc;
@@ -439,17 +440,17 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 if (onVideoEnded != null)
                 {
-                    newVlc._videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                    newVlc._videoEndTimer = new Timer { Interval = 500 };
                     newVlc._videoEndTimer.Tick += VideoEndTimerTick;
                     newVlc._videoEndTimer.Start();
                 }
 
                 _libvlc_media_player_play(newVlc._mediaPlayer);
-                newVlc._videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                newVlc._videoLoadedTimer = new Timer { Interval = 500 };
                 newVlc._videoLoadedTimer.Tick += new EventHandler(newVlc.VideoLoadedTimer_Tick);
                 newVlc._videoLoadedTimer.Start();
 
-                newVlc._mouseTimer = new System.Windows.Forms.Timer { Interval = 25 };
+                newVlc._mouseTimer = new Timer { Interval = 25 };
                 newVlc._mouseTimer.Tick += newVlc.MouseTimerTick;
                 newVlc._mouseTimer.Start();
             }
@@ -557,11 +558,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (File.Exists(path))
                 return path;
 
-            path = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VideoLAN\VLC\" + fileName);
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VideoLAN\VLC\" + fileName);
             if (File.Exists(path))
                 return path;
 
-            path = Path.Combine(System.Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VLC\" + fileName);
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"VLC\" + fileName);
             if (File.Exists(path))
                 return path;
 
@@ -599,7 +600,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             return true;
         }
 
-        public override void Initialize(System.Windows.Forms.Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
+        public override void Initialize(Control ownerControl, string videoFileName, EventHandler onVideoLoaded, EventHandler onVideoEnded)
         {
             _ownerControl = ownerControl;
             if (ownerControl != null)
@@ -638,24 +639,24 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     for (int j = 0; j < 50; j++)
                     {
                         System.Threading.Thread.Sleep(10);
-                        System.Windows.Forms.Application.DoEvents();
+                        Application.DoEvents();
                     }
                     _libvlc_media_player_set_hwnd(_mediaPlayer, ownerControl.Handle); // windows
                 }
 
                 if (onVideoEnded != null)
                 {
-                    _videoEndTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                    _videoEndTimer = new Timer { Interval = 500 };
                     _videoEndTimer.Tick += VideoEndTimerTick;
                     _videoEndTimer.Start();
                 }
 
                 _libvlc_media_player_play(_mediaPlayer);
-                _videoLoadedTimer = new System.Windows.Forms.Timer { Interval = 500 };
+                _videoLoadedTimer = new Timer { Interval = 500 };
                 _videoLoadedTimer.Tick += new EventHandler(VideoLoadedTimer_Tick);
                 _videoLoadedTimer.Start();
 
-                _mouseTimer = new System.Windows.Forms.Timer { Interval = 25 };
+                _mouseTimer = new Timer { Interval = 25 };
                 _mouseTimer.Tick += MouseTimerTick;
                 _mouseTimer.Start();
             }
@@ -673,7 +674,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             _mouseTimer.Stop();
             if (_parentForm != null && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
             {
-                var p = _ownerControl.PointToClient(System.Windows.Forms.Control.MousePosition);
+                var p = _ownerControl.PointToClient(Control.MousePosition);
                 if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)
                 {
                     if (IsPlaying)
@@ -684,7 +685,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     while (IsLeftMouseButtonDown() && i < 200)
                     {
                         System.Threading.Thread.Sleep(2);
-                        System.Windows.Forms.Application.DoEvents();
+                        Application.DoEvents();
                         i++;
                     }
                 }

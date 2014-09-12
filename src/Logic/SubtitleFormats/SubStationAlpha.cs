@@ -71,7 +71,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             const string commentWriteFormat = "Comment: Marked={4},{0},{1},{3},{5},0000,0000,0000,{6},{2}";
 
             var sb = new StringBuilder();
-            System.Drawing.Color fontColor = System.Drawing.Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
+            Color fontColor = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4 Styles]");
             List<string> styles = new List<string>();
             if (isValidAssHeader)
@@ -96,7 +96,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                             title,
                                             Configuration.Settings.SubtitleSettings.SsaFontName,
                                             (int)Configuration.Settings.SubtitleSettings.SsaFontSize,
-                                            System.Drawing.ColorTranslator.ToWin32(fontColor),
+                                            ColorTranslator.ToWin32(fontColor),
                                             Configuration.Settings.SubtitleSettings.SsaOutline,
                                             Configuration.Settings.SubtitleSettings.SsaShadow
                                             ));
@@ -126,7 +126,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                     sb.AppendLine(string.Format(paragraphWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, layer, actor, effect));
             }
             return sb.ToString().Trim();
-        }       
+        }
 
         private static void LoadStylesFromAdvancedSubstationAlpha(Subtitle subtitle, string title, string header, string headerNoStyles, StringBuilder sb)
         {
@@ -262,7 +262,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             }
                             else
                             {
-                                c = System.Drawing.ColorTranslator.FromHtml(color);
+                                c = ColorTranslator.FromHtml(color);
                             }
                         }
                         catch

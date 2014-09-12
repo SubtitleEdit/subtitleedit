@@ -167,7 +167,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxCustomSearchUrl5.Text = Configuration.Settings.VideoControls.CustomSearchUrl5;
             textBoxCustomSearchUrl6.Text = Configuration.Settings.VideoControls.CustomSearchUrl6;
 
-            foreach (var x in System.Drawing.FontFamily.Families)
+            foreach (var x in FontFamily.Families)
             {
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
@@ -185,8 +185,8 @@ namespace Nikse.SubtitleEdit.Forms
             _ssaFontName = ssa.SsaFontName;
             _ssaFontSize = ssa.SsaFontSize;
             _ssaFontColor = ssa.SsaFontColorArgb;
-            fontDialogSSAStyle.Font = new System.Drawing.Font(ssa.SsaFontName, (float)ssa.SsaFontSize);
-            fontDialogSSAStyle.Color = System.Drawing.Color.FromArgb(_ssaFontColor);
+            fontDialogSSAStyle.Font = new Font(ssa.SsaFontName, (float)ssa.SsaFontSize);
+            fontDialogSSAStyle.Color = Color.FromArgb(_ssaFontColor);
             if (ssa.SsaOutline >= numericUpDownSsaOutline.Minimum && ssa.SsaOutline <= numericUpDownSsaOutline.Maximum)
                 numericUpDownSsaOutline.Value = ssa.SsaOutline;
             if (ssa.SsaShadow >= numericUpDownSsaShadow.Minimum && ssa.SsaShadow <= numericUpDownSsaShadow.Maximum)
@@ -543,15 +543,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
                 string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
-                listBoxNamesEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                listBoxUserWordLists.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                listBoxOcrFixList.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                comboBoxToolsMusicSymbol.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxMusicSymbolsToReplace.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxNameEtc.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxUserWord.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxOcrFixKey.Font = new System.Drawing.Font(unicodeFontName, fontSize);
-                textBoxOcrFixValue.Font = new System.Drawing.Font(unicodeFontName, fontSize);
+                listBoxNamesEtc.Font = new Font(unicodeFontName, fontSize);
+                listBoxUserWordLists.Font = new Font(unicodeFontName, fontSize);
+                listBoxOcrFixList.Font = new Font(unicodeFontName, fontSize);
+                comboBoxToolsMusicSymbol.Font = new Font(unicodeFontName, fontSize);
+                textBoxMusicSymbolsToReplace.Font = new Font(unicodeFontName, fontSize);
+                textBoxNameEtc.Font = new Font(unicodeFontName, fontSize);
+                textBoxUserWord.Font = new Font(unicodeFontName, fontSize);
+                textBoxOcrFixKey.Font = new Font(unicodeFontName, fontSize);
+                textBoxOcrFixValue.Font = new Font(unicodeFontName, fontSize);
             }
 
             comboBoxToolsMusicSymbol.Items.Clear();
@@ -1687,7 +1687,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     g.DrawPath(new Pen(Color.Black, outline), path);
                 }
-                g.FillPath(new SolidBrush(System.Drawing.Color.FromArgb(_ssaFontColor)), path);
+                g.FillPath(new SolidBrush(Color.FromArgb(_ssaFontColor)), path);
 
             }
             pictureBoxPreview.Image = bmp;
@@ -1695,7 +1695,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonSsaChooseColorClick(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = System.Drawing.Color.FromArgb(_ssaFontColor);
+            colorDialogSSAStyle.Color = Color.FromArgb(_ssaFontColor);
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
                 _ssaFontColor = colorDialogSSAStyle.Color.ToArgb();
