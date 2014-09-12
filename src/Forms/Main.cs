@@ -247,8 +247,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (format.Name.ToLower().Trim() == subtitleFormatName.ToLower().Trim() ||
-                    format.FriendlyName.ToLower().Trim() == subtitleFormatName.ToLower().Trim())
+                if (string.Compare(format.Name.Trim(), subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) == 0 ||
+                    string.Compare(format.FriendlyName.Trim(), subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     SetCurrentFormat(format);
                     return;
@@ -1025,7 +1025,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var newSub = new Subtitle();
                             foreach (Paragraph p in sub.Paragraphs)
                             {
-                                if (p.Extra != null && p.Extra.ToLower().Trim() == className.ToLower().Trim())
+                                if (p.Extra != null && string.Compare(p.Extra.Trim(), className.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
                                     newSub.Paragraphs.Add(p);
                             }
                             if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
@@ -5310,7 +5310,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                     bool alreadyExists = false;
                                                     foreach (string currentStyleName in currentStyles)
                                                     {
-                                                        if (currentStyleName.ToLower().Trim() == styleName.ToLower().Trim())
+                                                        if (string.Compare(currentStyleName.Trim(), styleName.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
                                                             alreadyExists = true;
                                                     }
                                                     if (!alreadyExists)

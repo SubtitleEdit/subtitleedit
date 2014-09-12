@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         public static bool IsAscii(string data)
         {
             // assume empty string to be ascii
-            if ((data == null) || (data.Length == 0))
+            if (string.IsNullOrEmpty(data))
                 return true;
             foreach (char c in data)
             {

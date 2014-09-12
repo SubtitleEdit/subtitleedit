@@ -347,7 +347,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 if (!eventsStarted)
                     header.AppendLine(line);
 
-                if (line.Trim().ToLower() == "[events]")
+                if (string.Compare(line.Trim(), "[events]", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     eventsStarted = true;
                 }
@@ -365,17 +365,17 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             format = line.ToLower().Substring(8).Split(',');
                             for (int i = 0; i < format.Length; i++)
                             {
-                                if (format[i].Trim().ToLower() == "layer")
+                                if (string.Compare(format[i].Trim(), "layer", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexLayer = i;
-                                else if (format[i].Trim().ToLower() == "start")
+                                else if (string.Compare(format[i].Trim(), "start", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexStart = i;
-                                else if (format[i].Trim().ToLower() == "end")
+                                else if (string.Compare(format[i].Trim(), "end", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexEnd = i;
-                                else if (format[i].Trim().ToLower() == "text")
+                                else if (string.Compare(format[i].Trim(), "text", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexText = i;
-                                else if (format[i].Trim().ToLower() == "effect")
+                                else if (string.Compare(format[i].Trim(), "effect", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexEffect = i;
-                                else if (format[i].Trim().ToLower() == "style")
+                                else if (string.Compare(format[i].Trim(), "style", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexStyle = i;
                             }
                         }

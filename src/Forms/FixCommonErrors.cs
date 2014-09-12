@@ -1451,7 +1451,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!isMatchAbbreviation && word.Contains("@")) // skip emails
                                 isMatchAbbreviation = true;
 
-                            if (match.Value.ToLower() == "h.d" && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).ToLower() == "ph.d")
+                            if (string.Compare(match.Value, "h.d", StringComparison.OrdinalIgnoreCase) == 0 && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).ToLower() == "ph.d")
                                 isMatchAbbreviation = true;
 
                             if (!isMatchAbbreviation && AllowFix(p, fixAction))
@@ -1911,9 +1911,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (AllowFix(p, fixAction))
                         {
-                            if (word.ToLower() == "internal" ||
-                                word.ToLower() == "island" ||
-                                word.ToLower() == "islands")
+                            if (string.Compare(word, "internal", StringComparison.OrdinalIgnoreCase) == 0 ||
+                                string.Compare(word, "island", StringComparison.OrdinalIgnoreCase) == 0 ||
+                                string.Compare(word, "islands", StringComparison.OrdinalIgnoreCase) == 0)
                             {
                             }
                             else if (match.Index == 0)
@@ -4404,7 +4404,11 @@ namespace Nikse.SubtitleEdit.Forms
             //Sra. (same as Mrs.)
             //Ud.
             //Uds.
-            if (word.ToLower() == "dr" || word.ToLower() == "sr" || word.ToLower() == "sra" || word.ToLower() == "ud" || word.ToLower() == "uds")
+            if (string.Compare(word, "dr", StringComparison.OrdinalIgnoreCase) == 0 ||
+                string.Compare(word, "sr", StringComparison.OrdinalIgnoreCase) == 0 ||
+                string.Compare(word, "sra", StringComparison.OrdinalIgnoreCase) == 0 ||
+                string.Compare(word, "ud", StringComparison.OrdinalIgnoreCase) == 0 ||
+                string.Compare(word, "uds", StringComparison.OrdinalIgnoreCase) == 0)
                 return true;
 
             List<string> abbreviations = GetAbbreviations();

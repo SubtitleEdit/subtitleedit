@@ -703,13 +703,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     graphicsStarted = false;
                 }
 
-                if (line.Trim().ToLower() == "[events]")
+                if (string.Compare(line.Trim(), "[events]", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
                 }
-                else if (line.Trim().ToLower() == "[fonts]")
+                else if (string.Compare(line.Trim(), "[fonts]", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     eventsStarted = false;
                     fontsStarted = true;
@@ -717,7 +717,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     footer.AppendLine();
                     footer.AppendLine("[Fonts]");
                 }
-                else if (line.Trim().ToLower() == "[graphics]")
+                else if (string.Compare(line.Trim(), "[graphics]", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     eventsStarted = false;
                     fontsStarted = false;
@@ -743,19 +743,19 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             format = line.ToLower().Substring(8).Split(',');
                             for (int i = 0; i < format.Length; i++)
                             {
-                                if (format[i].Trim().ToLower() == "start")
+                                if (string.Compare(format[i].Trim(), "start", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexStart = i;
-                                else if (format[i].Trim().ToLower() == "end")
+                                else if (string.Compare(format[i].Trim(), "end", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexEnd = i;
-                                else if (format[i].Trim().ToLower() == "text")
+                                else if (string.Compare(format[i].Trim(), "text", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexText = i;
-                                else if (format[i].Trim().ToLower() == "style")
+                                else if (string.Compare(format[i].Trim(), "style", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexStyle = i;
-                                else if (format[i].Trim().ToLower() == "actor")
+                                else if (string.Compare(format[i].Trim(), "actor", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexActor = i;
-                                else if (format[i].Trim().ToLower() == "effect")
+                                else if (string.Compare(format[i].Trim(), "effect", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexEffect = i;
-                                else if (format[i].Trim().ToLower() == "layer")
+                                else if (string.Compare(format[i].Trim(), "layer", StringComparison.OrdinalIgnoreCase) == 0)
                                     indexLayer = i;
                             }
                         }
@@ -1265,7 +1265,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
             foreach (string line in header.Replace(Environment.NewLine, "\n").Split('\n'))
             {
-                if (line.ToLower() == "[V4+ Styles]".ToLower() || line.ToLower() == "[V4 Styles]".ToLower())
+                if (string.Compare(line, "[V4+ Styles]", StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(line, "[V4 Styles]", StringComparison.OrdinalIgnoreCase) == 0)
                     stylesStarted = true;
                 if (line.ToLower().StartsWith("format:", StringComparison.Ordinal))
                     styleFormat = line;
@@ -1449,7 +1449,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                         }
                     }
-                    if (styleName != null && style.Name != null && styleName.ToLower() == style.Name.ToLower())
+                    if (styleName != null && style.Name != null && string.Compare(styleName, style.Name, StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         style.LoadedFromHeader = true;
                         return style;

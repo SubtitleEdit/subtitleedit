@@ -70,17 +70,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            if (string.IsNullOrEmpty(Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat))
+            var ss = Configuration.Settings.SubtitleSettings;
+            if (string.IsNullOrEmpty(ss.TimedText10TimeCodeFormat))
                 return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "seconds")
+            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "seconds", StringComparison.OrdinalIgnoreCase) == 0)
                 return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}s", time.TotalSeconds);
-            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "milliseconds")
+            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "milliseconds", StringComparison.OrdinalIgnoreCase) == 0)
                 return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
-            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "ticks")
+            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "ticks", StringComparison.OrdinalIgnoreCase) == 0)
                 return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
-            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "hh:mm:ss.msec")
+            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "hh:mm:ss.msec", StringComparison.OrdinalIgnoreCase) == 0)
                 return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
-            else if (Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower() == "hh:mm:ss.ff")
+            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "hh:mm:ss.ff", StringComparison.OrdinalIgnoreCase) == 0)
                 return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
