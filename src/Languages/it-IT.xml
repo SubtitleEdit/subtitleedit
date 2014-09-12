@@ -102,7 +102,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>File video sorgente:</SourceVideoFile>
     <GenerateWaveFormData>Genera forma d'onda</GenerateWaveFormData>
     <PleaseWait>Ci potrebbero volere alcuni minuti. Attendere...</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player non trovato</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player non trovato</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit richiede VLC media player 1.1.x o successivo per estrarre i dati audio.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Vuoi andare alla home page di VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generazione file di picco...</GeneratingPeakFile>
@@ -1496,8 +1496,8 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code da DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll da VLC Media Player 1.1.0 o successivo</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll da VLC media player 1.1.0 o successivo</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Percorso di VLC (necessaria solo se si sta utilizzando la versione portatile di VLC)</VlcBrowseToLabel>
     <ShowStopButton>Mostra pulsante stop</ShowStopButton>
     <ShowMuteButton>Mostra pulsante muto</ShowMuteButton>

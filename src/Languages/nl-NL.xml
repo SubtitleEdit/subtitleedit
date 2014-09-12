@@ -100,7 +100,7 @@ Suggesties zijn van harte welkom
     <SourceVideoFile>Bron videobestand:</SourceVideoFile>
     <GenerateWaveFormData>Genereer golfvorm data</GenerateWaveFormData>
     <PleaseWait>Dit kan enkele minuten duren - even geduld</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player niet gevonden</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player niet gevonden</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit heeft VLC media player 1.1.x of nieuwer nodig voor de extractie van audiogegevens.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Wilt u naar de VLC media player home pagina?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Genereren peak-bestand...</GeneratingPeakFile>
@@ -1482,8 +1482,8 @@ Suggesties zijn van harte welkom
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET Managed code van DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll van VLC Media Player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll van VLC media player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC pad (alleen nodig als je met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
     <ShowStopButton>Toon stopknop</ShowStopButton>
     <ShowMuteButton>Toon mute-knop</ShowMuteButton>

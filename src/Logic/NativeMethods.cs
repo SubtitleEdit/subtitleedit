@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Logic
         [DllImport("libvlc")]
         internal static extern void libvlc_audio_set_volume(IntPtr mediaPlayer, int volume);
 
-        // LibVLC Media Player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
+        // LibVLC media player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
         [DllImport("libvlc")]
         internal static extern void libvlc_media_player_play(IntPtr mediaPlayer);
 

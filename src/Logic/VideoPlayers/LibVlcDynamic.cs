@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private delegate Int64 libvlc_audio_get_delay(IntPtr mediaPlayer);
         private libvlc_audio_get_delay _libvlc_audio_get_delay;
 
-        // LibVLC Media Player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
+        // LibVLC media player - http://www.videolan.org/developers/vlc/doc/doxygen/html/group__libvlc__media__player.html
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate IntPtr libvlc_media_player_new_from_media(IntPtr media);
         private libvlc_media_player_new_from_media _libvlc_media_player_new_from_media;

@@ -102,9 +102,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Fitxer origen vídeo:</SourceVideoFile>
     <GenerateWaveFormData>Genera dades d'ona wave</GenerateWaveFormData>
     <PleaseWait>Açò pot trigar uns minuts - espereu si us plau</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>No s'ha trobat VLC Media Player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit li cal VLC Media Player 1.1.x o superior per extreure dades d'audio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Voleu anar a la web de VLC Media Player?</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFoundTitle>No s'ha trobat VLC media player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit li cal VLC media player 1.1.x o superior per extreure dades d'audio.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Voleu anar a la web de VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generant fitxer de pics...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generant espectrògrama...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraient audio: {0:0.0} segons</ExtractingSeconds>
@@ -1477,8 +1477,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET codi gestionat per DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll de VLC Media Player 1.1.0 o superior</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 o superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ruta del VLC (Sols en cas d'emprar la versió portable de VLC)</VlcBrowseToLabel>
     <ShowStopButton>Mostra botó d'aturada</ShowStopButton>
     <ShowMuteButton>Mostra botó silencia</ShowMuteButton>

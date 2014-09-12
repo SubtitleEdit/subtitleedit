@@ -101,7 +101,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Kaynak video dosyası:</SourceVideoFile>
     <GenerateWaveFormData>Dalga formu verisi oluştur</GenerateWaveFormData>
     <PleaseWait>Bu işlem birkaç dakika sürebilir - lütfen bekleyin</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player bulunamadı</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player bulunamadı</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit, ses verisini ayıklamak için VLC media player 1.1.x veya daha üstü bir versiyona gerek duyuyor.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>VLC media player ana sayfasına gitmek ister misiniz?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
@@ -1240,8 +1240,8 @@ Yeni oturum başlatın.</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>VLC Media Player 1.1.0 veya daha yeni sürümünden libvlc.dll dosyası</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>VLC media player 1.1.0 veya daha yeni sürümünden libvlc.dll dosyası</VlcMediaPlayerDescription>
     <ShowStopButton>Durdurma butonunu göster</ShowStopButton>
     <ShowMuteButton>Ses düğmesini göster</ShowMuteButton>
     <ShowFullscreenButton>Tam ekran butonunu göster</ShowFullscreenButton>

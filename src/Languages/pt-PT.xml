@@ -104,9 +104,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Ficheiro fonte de vídeo:</SourceVideoFile>
     <GenerateWaveFormData>Gerar dados em forma de onda</GenerateWaveFormData>
     <PleaseWait>Isto pode levar alguns minutos - por favor, aguarde</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player não encontrado</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player não encontrado</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>O Subtitle Edit necessita do VLC media player 1.1.x ou superior para extrair áudio.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Deseja visitar a página do VLC Media Player na Internet?</GoToVlcMediaPlayerHomePage>
+    <GoToVlcMediaPlayerHomePage>Deseja visitar a página do VLC media player na Internet?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>A gerar o ficheiro de pico...</GeneratingPeakFile>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
@@ -1496,8 +1496,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerado pelo DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll do VLC Media Player 1.1.0 ou superior</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll do VLC media player 1.1.0 ou superior</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Directoria do VLC (só é necessário se estiver a usar a versão portátil do VLC)</VlcBrowseToLabel>
     <ShowStopButton>Mostrar botão parar</ShowStopButton>
     <ShowMuteButton>Mostrar botão (Sem som)</ShowMuteButton>

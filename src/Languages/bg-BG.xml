@@ -102,7 +102,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Видео файл на източника:</SourceVideoFile>
     <GenerateWaveFormData>Създаване на данни за формата на звуковия сигнал</GenerateWaveFormData>
     <PleaseWait>Това ще отнеме няколко минути - моля, изчакайте</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Не е намерен VLC Media Player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>Не е намерен VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit се нуждае от VLC media player 1.1.x или по-нова за извличане на аудио данните.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Искате ли да отидете до официалния сайт на VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Създаване на файл с пикове...</GeneratingPeakFile>
@@ -1481,8 +1481,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll от VLC Media Player 1.1.0 или по-нова</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll от VLC media player 1.1.0 или по-нова</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC път (трябва само ако се ползва портабъл версията на VLC)</VlcBrowseToLabel>
     <ShowStopButton>Показване на бутон за спиране</ShowStopButton>
     <ShowMuteButton>Показване на бутона "Без звук"</ShowMuteButton>

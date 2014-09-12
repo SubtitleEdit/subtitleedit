@@ -102,9 +102,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Quellvideodatei:</SourceVideoFile>
     <GenerateWaveFormData>Wellenformdaten generieren</GenerateWaveFormData>
     <PleaseWait>Das könnte ein paar Minuten dauern - bitte warten</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player nicht gefunden</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit benötigt VLC Media Player 1.1.x oder höher um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Zur Webseite vom VLC Media Player wechseln?</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFoundTitle>VLC media player nicht gefunden</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit benötigt VLC media player 1.1.x oder höher um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Zur Webseite vom VLC media player wechseln?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Wellenformdatei wird erzeugt...</GeneratingPeakFile>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
@@ -1494,8 +1494,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - von .NET verwalteter Code aus DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll aus VLC Media Player 1.1.0 oder höher</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll aus VLC media player 1.1.0 oder höher</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC-Pfad (nur für VLC Portable benötigt)</VlcBrowseToLabel>
     <ShowStopButton>Stopp-Knopf anzeigen</ShowStopButton>
     <ShowMuteButton>Ton-aus-Knopf anzeigen</ShowMuteButton>

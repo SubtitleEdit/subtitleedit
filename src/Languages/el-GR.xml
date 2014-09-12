@@ -105,9 +105,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Πηγαίο αρχείο βίντεο:</SourceVideoFile>
     <GenerateWaveFormData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveFormData>
     <PleaseWait>Αυτό μπορεί να πάρει μερικά λεπτά - παρακαλώ περιμένετε</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Δεν βρέθηκε το πρόγραμμα VLC Media Player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Το Subtitle Edit χρειάζεται το πρόγραμμα VLC Media Player 1.1.χ ή νεότερη έκδοση για την εξαγωγή δεδομένων ήχου.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Θέλετε να μεταβείτε στην αρχική σελίδα του VLC Media Player;</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFoundTitle>Δεν βρέθηκε το πρόγραμμα VLC media player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Το Subtitle Edit χρειάζεται το πρόγραμμα VLC media player 1.1.χ ή νεότερη έκδοση για την εξαγωγή δεδομένων ήχου.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Θέλετε να μεταβείτε στην αρχική σελίδα του VLC media player;</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Δημιουργία αρχείου αιχμής...</GeneratingPeakFile>
     <GeneratingSpectrogram>Δημιουργία φασματογραφήματος...</GeneratingSpectrogram>
     <ExtractingSeconds>Εξαγωγή ήχου: {0:0.0} δευτερόλεπτα</ExtractingSeconds>
@@ -1488,8 +1488,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - διαχείριση κώδικα .NET από DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll από VLC Media Player 1.1.0 ή νεότερο</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll από VLC media player 1.1.0 ή νεότερο</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Διαδρομή του VLC (χρειάζεται μόνο εάν χρησιμοποιείται την φορητή έκδοση του VLC)</VlcBrowseToLabel>
     <ShowStopButton>Εμφάνιση κουμπιού διακοπής</ShowStopButton>
     <ShowMuteButton>Εμφάνιση κουμπιού σίγασης</ShowMuteButton>

@@ -106,7 +106,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SourceVideoFile>Исходный файл видео:</SourceVideoFile>
     <GenerateWaveFormData>Создать форму сигнала</GenerateWaveFormData>
     <PleaseWait>Эта операция займет некоторое время - подождите...</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player не найден</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player не найден</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Для извлечения аудио данных редактору субтитров требуется VLC media player 1.1.x или новее.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Вы хотите перейти на домашнюю страницу VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Создание файла пиков...</GeneratingPeakFile>
@@ -1503,8 +1503,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll из VLC Media Player 1.1.0 или новее</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll из VLC media player 1.1.0 или новее</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Путь к VLC (только для переносной версии VLC)</VlcBrowseToLabel>
     <ShowStopButton>Показывать кнопку "Стоп"</ShowStopButton>
     <ShowMuteButton>Показывать кнопку "Заглушить"</ShowMuteButton>
