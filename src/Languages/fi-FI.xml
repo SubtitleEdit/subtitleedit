@@ -99,11 +99,11 @@ Sähköposti: mailto:nikse.dk@gmail.com
     <SourceVideoFile>Lähdevideotiedosto:</SourceVideoFile>
     <GenerateWaveFormData>Muodosta aaltomuoto tiedoista</GenerateWaveFormData>
     <PleaseWait>Tämä voi kestää muutamia minuutteja - odota</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Playeria ei löydy</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee äänidatan purkamiseksi VLC Media Playerin (1.1.x tai uudemman).
+    <VlcMediaPlayerNotFoundTitle>VLC media playeria ei löydy</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee äänidatan purkamiseksi VLC media playerin (1.1.x tai uudemman).
         </VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>
-Siirrytäänkö VLC Media Playerin kotisivulle?
+Siirrytäänkö VLC media playerin kotisivulle?
         </GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Muodostetaan huipputiedosto...</GeneratingPeakFile>
     <GeneratingSpectrogram>Muodostetaan spectrogrammi...</GeneratingSpectrogram>
@@ -1312,7 +1312,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <Start>Käynnistä</Start>
   </NetworkStart>
   <OpenVideoDvd>
-    <Title>Avaa VLC Media Playerillä</Title>
+    <Title>Avaa VLC media playerillä</Title>
     <OpenDvdFrom>Avaa DVD kohteesta...</OpenDvdFrom>
     <Disc>Levy</Disc>
     <Folder>Kansio</Folder>
@@ -1485,8 +1485,8 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback- .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>VLC Media Player 1.1.0 libvlc.dll tai uudempi</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>VLC media player 1.1.0 libvlc.dll tai uudempi</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC:n sijainti (tarvitaan vain mikäli käytössä on siirrettävä VLC-versio)</VlcBrowseToLabel>
     <ShowStopButton>Pysäytyspainike</ShowStopButton>
     <ShowMuteButton>Vaimennuspainike</ShowMuteButton>

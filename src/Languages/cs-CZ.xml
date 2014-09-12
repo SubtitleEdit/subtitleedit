@@ -1494,8 +1494,8 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET spravovaný kód z DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 nebo novějšího</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 nebo novějšího</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Cesta k VLC (pouze pokud používáte přenosnou verzi VLC)</VlcBrowseToLabel>
     <ShowStopButton>Zobrazit tlačítko zastavení</ShowStopButton>
     <ShowMuteButton>Zobrazit tlačítko ztlumení</ShowMuteButton>

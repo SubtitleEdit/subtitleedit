@@ -102,8 +102,8 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Izvorna video datoteka:</SourceVideoFile>
     <GenerateWaveFormData>&amp;Generiraj valni podatak</GenerateWaveFormData>
     <PleaseWait>Ovo može potrajati nekoliko minuta. Pričekajte.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player nije pronađen</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Program zahtijeva VLC Media Player 1.1.x ili noviji za vađenje podataka o zvuku.</VlcMediaPlayerNotFound>
+    <VlcMediaPlayerNotFoundTitle>VLC media player nije pronađen</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Program zahtijeva VLC media player 1.1.x ili noviji za vađenje podataka o zvuku.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Želite li posjetiti internet stranicu programa?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generiranje glavne datoteke</GeneratingPeakFile>
     <GeneratingSpectrogram>Generiranje spektrograma</GeneratingSpectrogram>

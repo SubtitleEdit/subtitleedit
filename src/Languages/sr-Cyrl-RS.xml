@@ -82,8 +82,8 @@
     <SourceVideoFile>Изворна видео датотека:</SourceVideoFile>
     <GenerateWaveFormData>&amp;Сачини таласни облик</GenerateWaveFormData>
     <PleaseWait>Ова радња може потрајати. Сачекајте неколико тренутака.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player није пронађен</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Програм захтева VLC Media Player 1.1.x или новији за вађење података о звуку.</VlcMediaPlayerNotFound>
+    <VlcMediaPlayerNotFoundTitle>VLC media player није пронађен</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Програм захтева VLC media player 1.1.x или новији за вађење података о звуку.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Желите ли да посетите интернет страницу програма?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Правим датотеку за таласни облик…</GeneratingPeakFile>
     <GeneratingSpectrogram>Правим спектрограм…</GeneratingSpectrogram>

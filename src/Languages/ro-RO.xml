@@ -1487,8 +1487,8 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET cod gestionat de DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll din VLC Media Player 1.1.0 sau mai nou</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll din VLC media player 1.1.0 sau mai nou</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Calea VLC (necesar doar dacă folosești versiunea portabilă a VLC)</VlcBrowseToLabel>
     <ShowStopButton>Arată butonul Stop</ShowStopButton>
     <ShowMuteButton>Arată butonul Mut</ShowMuteButton>

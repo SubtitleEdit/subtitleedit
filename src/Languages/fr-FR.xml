@@ -102,7 +102,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Fichier vidéo source:</SourceVideoFile>
     <GenerateWaveFormData>Générer forme à partir des données</GenerateWaveFormData>
     <PleaseWait>Ceci peut prendre quelques minutes - Veuillez patienter...</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player introuvable</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player introuvable</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Génération du fichier des pics...</GeneratingPeakFile>
@@ -1494,8 +1494,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code de DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll de VLC Media Player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll de VLC media player 1.1.0 ou plus récent</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Chemin uniquement pour la version portable de VLC :</VlcBrowseToLabel>
     <ShowStopButton>Afficher touche stop</ShowStopButton>
     <ShowMuteButton>Afficher touche sourdine</ShowMuteButton>

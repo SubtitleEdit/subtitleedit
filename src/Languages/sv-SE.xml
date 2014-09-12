@@ -1483,8 +1483,8 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET hanterad kod från DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>Libvlc.dll från VLC Media Player 1.1.0 eller senare</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>Libvlc.dll från VLC media player 1.1.0 eller senare</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC sökväg (behövs endast om du använder den bärbara versionen av VLC)</VlcBrowseToLabel>
     <ShowStopButton>Visa stoppknapp</ShowStopButton>
     <ShowMuteButton>Visa mute-knapp</ShowMuteButton>

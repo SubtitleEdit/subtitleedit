@@ -101,7 +101,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SourceVideoFile>ソース ビデオ ファイル:</SourceVideoFile>
     <GenerateWaveFormData>波形データの生成</GenerateWaveFormData>
     <PleaseWait>これには数分かかる可能性があります - お待ちください</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player が見つかりません</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player が見つかりません</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLC media player 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>VLC media player のホーム ページへ移動しますか?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>ピーク ファイルを生成しています...</GeneratingPeakFile>
@@ -1240,8 +1240,8 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - DirectX の .NET Managed コード</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>VLC Media Player 1.1.0 以降の libvlc.dll</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>VLC media player 1.1.0 以降の libvlc.dll</VlcMediaPlayerDescription>
     <ShowStopButton>停止ボタンを表示する</ShowStopButton>
     <ShowMuteButton>ミュート ボタンを表示する</ShowMuteButton>
     <ShowFullscreenButton>全画面表示ボタンを表示する</ShowFullscreenButton>

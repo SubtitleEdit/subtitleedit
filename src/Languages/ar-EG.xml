@@ -1473,7 +1473,7 @@ Continue?</SubtitleAppendPrompt>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC ميديا ​​بلاير</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll from VLC Media Player 1.1.0 or newer</VlcMediaPlayerDescription>
+    <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
     <ShowStopButton>عرض زر توقف</ShowStopButton>
     <ShowMuteButton>
     </ShowMuteButton>

@@ -1761,7 +1761,7 @@
             this.labelVideoPlayerVLC.Name = "labelVideoPlayerVLC";
             this.labelVideoPlayerVLC.Size = new System.Drawing.Size(209, 11);
             this.labelVideoPlayerVLC.TabIndex = 13;
-            this.labelVideoPlayerVLC.Text = "libvlc.dll from VLC Media Player (1.1.0 or newer)";
+            this.labelVideoPlayerVLC.Text = "libvlc.dll from VLC media player (1.1.0 or newer)";
             // 
             // radioButtonVideoPlayerVLC
             // 

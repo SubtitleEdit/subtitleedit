@@ -102,9 +102,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Źródłowy plik wideo:</SourceVideoFile>
     <GenerateWaveFormData>Generowanie danych wykresu falowego</GenerateWaveFormData>
     <PleaseWait>Proszę czekać... może to potrwać kilka minut</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Nie znaleziono VLC Media Player</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Do wyodrębnienia danych audio Subtitle Edit potrzebuje VLC Media Player v.1.1.x lub nowszego.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Chcesz przejść na stronę domową VLC Media Player?</GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFoundTitle>Nie znaleziono VLC media player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Do wyodrębnienia danych audio Subtitle Edit potrzebuje VLC media player v.1.1.x lub nowszego.</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Chcesz przejść na stronę domową VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generowanie pliku wartości szczytowych...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
@@ -1494,8 +1494,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll z VLC Media Player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll z VLC media player 1.1.0 lub nowszego</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>Ścieżka do VLC (potrzebna tylko wtedy, gdy używasz wersji portable VLC)</VlcBrowseToLabel>
     <ShowStopButton>Pokaż przycisk "Stop"</ShowStopButton>
     <ShowMuteButton>Pokaż przycisk "Wycisz"</ShowMuteButton>

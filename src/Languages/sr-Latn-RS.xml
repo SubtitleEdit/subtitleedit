@@ -101,8 +101,8 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Izvorna Video datoteka:</SourceVideoFile>
     <GenerateWaveFormData>&amp;Sačinite Talasni oblik</GenerateWaveFormData>
     <PleaseWait>Ova radnja može potrajati. Sačekajte nekoliko trenutaka.</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player nije pronađen</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Program zahteva VLC Media Player 1.1.x ili noviji za vađenje podataka o zvuku.</VlcMediaPlayerNotFound>
+    <VlcMediaPlayerNotFoundTitle>VLC media player nije pronađen</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFound>Program zahteva VLC media player 1.1.x ili noviji za vađenje podataka o zvuku.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Želite li da posetite internet stranicu programa?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Pravim datoteku za talasni oblik…</GeneratingPeakFile>
     <GeneratingSpectrogram>Pravim Spektrogram…</GeneratingSpectrogram>
@@ -1240,8 +1240,8 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback —  .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer 2/MPlayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll iz VLC Media Player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll iz VLC media player-a 1.1.0 ili novijeg izdanja</VlcMediaPlayerDescription>
     <ShowStopButton>&amp;Dugme za zaustavljanje</ShowStopButton>
     <ShowMuteButton>Pokaži dugme za isključivanje zvuka</ShowMuteButton>
     <ShowFullscreenButton>Prikaži dugme za puni ekran</ShowFullscreenButton>

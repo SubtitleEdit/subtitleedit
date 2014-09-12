@@ -102,7 +102,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Kilde video-fil:</SourceVideoFile>
     <GenerateWaveFormData>Generer lyd kurve data</GenerateWaveFormData>
     <PleaseWait>Dette kan tage et par minutter - vent venligst</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player ikke fundet</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player ikke fundet</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit behøver VLC media player 1.1.x eller nyere for kunne udpakke lyd data.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Ønsker du at gå til VLC media player hjemmeside?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Genererer peak-fil...</GeneratingPeakFile>
@@ -1493,8 +1493,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET Managed kode fra DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll fra VLC Media Player 1.1.0 eller nyere</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll fra VLC media player 1.1.0 eller nyere</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC sti (kun nødvendig, hvis du bruger den portable version af VLC)</VlcBrowseToLabel>
     <ShowStopButton>Vis stop-knap</ShowStopButton>
     <ShowMuteButton>Vis mute-knap</ShowMuteButton>

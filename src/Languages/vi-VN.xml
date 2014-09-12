@@ -107,7 +107,7 @@ Rất hân hạnh được chào đón.
     <SourceVideoFile>Tập tin video nguồn:</SourceVideoFile>
     <GenerateWaveFormData>Tạo ra dữ liệu dạng sóng:</GenerateWaveFormData>
     <PleaseWait>Điều này có thể mất một vài phút - vui lòng chờ</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>Không tìm thấy VLC Media Player</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>Không tìm thấy VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Chỉnh sửa phụ đề cần VLC media player 1.1.x hoặc phiên bản mới hơn cho việc giải nén dữ liệu âm thanh.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Bạn có muốn ghé thăm trang chủ VLC media player ?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Tạo ra tập tin đỉnh cao ...</GeneratingPeakFile>
@@ -1261,8 +1261,8 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback-.NET quản lý từ DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll từ VLC Media Player 1.1.0 hoặc phiên bản mới hơn</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll từ VLC media player 1.1.0 hoặc phiên bản mới hơn</VlcMediaPlayerDescription>
     <ShowStopButton>Hiển thị nút dừng</ShowStopButton>
     <ShowMuteButton>Hiển thị nút ngắt</ShowMuteButton>
     <ShowFullscreenButton>Hiển thị nút toàn màn hình</ShowFullscreenButton>
