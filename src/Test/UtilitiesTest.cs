@@ -90,6 +90,15 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags6()
+        {
+            string s1 = "- <i>Text1!</i>" + Environment.NewLine + "- <i>Text2.</i>";
+            string s2 = Utilities.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "<i>- Text1!" + Environment.NewLine + "- Text2.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesDoubleSpace1()
         {
             string s1 = "This is  a test";
