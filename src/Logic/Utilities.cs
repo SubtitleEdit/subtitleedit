@@ -2679,6 +2679,24 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         var firstLine = text.Substring(0, index).Trim();
                         var secondLine = text.Substring(index + 2).Trim();
+
+                        if (firstLine.Length > 10 && firstLine.StartsWith("- <i>") && firstLine.EndsWith(endTag))
+                        {
+                            text = "<i>- " + firstLine.Remove(0, 5) + Environment.NewLine + secondLine;
+                            text = text.Replace("<i>-  ", "<i>- ");
+                            index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                            firstLine = text.Substring(0, index).Trim();
+                            secondLine = text.Substring(index + 2).Trim();
+                        }
+                        if (secondLine.Length > 10 && secondLine.StartsWith("- <i>") && secondLine.EndsWith(endTag))
+                        {
+                            text = firstLine + Environment.NewLine + "<i>- " + secondLine.Remove(0, 5);
+                            text = text.Replace("<i>-  ", "<i>- ");
+                            index = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                            firstLine = text.Substring(0, index).Trim();
+                            secondLine = text.Substring(index + 2).Trim();
+                        }
+
                         if (StartsAndEndsWithTag(firstLine, beginTag, endTag) && StartsAndEndsWithTag(secondLine, beginTag, endTag))
                         {
                             text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty);
