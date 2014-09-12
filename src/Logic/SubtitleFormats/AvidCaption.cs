@@ -68,12 +68,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool endFound = false;
             foreach (string line in lines)
             {
-                string tmp = line.Trim();
-                if (string.Compare(tmp, "<begin subtitles>", StringComparison.OrdinalIgnoreCase) == 0)
+                string tline = line.Trim();
+                if (string.Compare(tline, "<begin subtitles>", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     beginFound = true;
                 }
-                else if (string.Compare(tmp, "<end subtitles>", StringComparison.OrdinalIgnoreCase) == 0)
+                else if (string.Compare(tline, "<end subtitles>", StringComparison.OrdinalIgnoreCase) == 0)
                 {
                     endFound = true;
                     break;
@@ -93,11 +93,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.Trim().Length == 0 || line.Trim().StartsWith("@"))
+                else if (tline.Length == 0 || tline[0] == '@')
                 {
                     // skip these lines
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (tline.Length > 0 && p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line;
