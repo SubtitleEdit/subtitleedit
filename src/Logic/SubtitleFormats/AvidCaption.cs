@@ -68,16 +68,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool endFound = false;
             foreach (string line in lines)
             {
-                if (line.Trim().ToLower() == "<begin subtitles>")
-                    beginFound = true;
-
-                if (line.Trim().ToLower() == "<end subtitles>")
+                string tmp = line.Trim().ToLower();
+                if (tmp.StartsWith('<'))
                 {
-                    endFound = true;
-                    break;
+                    if (tmp == "<begin subtitles>")
+                        beginFound = true;
+
+                    if (tmp == "<begin subtitles>")
+                        beginFound = true;
+
+                    if (tmp == "<end subtitles>")
+                    {
+                        endFound = true;
+                        break;
+                    }
                 }
 
-                if (regexTimeCodes.IsMatch(line))
+                if (line.IndexOf(':') == 2 && regexTimeCodes.IsMatch(line))
                 {
                     string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
                     string start = temp.Substring(0, 11);

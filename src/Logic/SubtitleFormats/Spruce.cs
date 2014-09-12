@@ -111,7 +111,7 @@ $ColorIndex4    = 3
                 regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (line.IndexOf(':') == 2 && regexTimeCodes.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(12, 11);
