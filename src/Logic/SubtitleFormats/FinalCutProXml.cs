@@ -550,9 +550,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                             var styleNameNode = valueEntries[no].SelectSingleNode("name");
                                             if (styleNameNode != null)
                                             {
-                                                string styleName = styleNameNode.InnerText;
-                                                italic = styleName.ToLower().Trim() == "italic" || styleName.ToLower().Trim() == "bold/italic";
-                                                bold = styleName.ToLower().Trim() == "bold" || styleName.ToLower().Trim() == "bold/italic";
+                                                string styleName = styleNameNode.InnerText.ToLower().Trim();
+                                                italic = styleName == "italic" || styleName == "bold/italic";
+                                                bold = styleName == "bold" || styleName == "bold/italic";
                                             }
                                         }
                                     }
@@ -575,9 +575,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                                 var styleNameNode = valueEntries[no].SelectSingleNode("name");
                                                 if (styleNameNode != null)
                                                 {
-                                                    string styleName = styleNameNode.InnerText;
-                                                    italic = styleName.ToLower().Trim() == "italic" || styleName.ToLower().Trim() == "bold/italic";
-                                                    bold = styleName.ToLower().Trim() == "bold" || styleName.ToLower().Trim() == "bold/italic";
+                                                    string styleName = styleNameNode.InnerText.ToLower().Trim();
+                                                    italic = styleName == "italic" || styleName == "bold/italic";
+                                                    bold = styleName == "bold" || styleName == "bold/italic";
                                                 }
                                             }
                                         }

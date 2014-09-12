@@ -406,7 +406,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
-                        if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.ToLower() == "true")
+                        if (node.Attributes["RegEx"] != null && string.Compare(node.Attributes["RegEx"].InnerText, "true", StringComparison.OrdinalIgnoreCase) == 0)
                         {
                             Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
                             _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
@@ -4352,7 +4352,7 @@ namespace Nikse.SubtitleEdit.Logic
                             after = after + text[k].ToString();
                             k++;
                         }
-                        if (after.Length > 0 && after.ToLower() == before.ToLower())
+                        if (after.Length > 0 && string.Compare(after, before, StringComparison.OrdinalIgnoreCase) == 0)
                             text = text.Remove(idx + 1, 1);
                         else if (before.Length > 0)
                         {
