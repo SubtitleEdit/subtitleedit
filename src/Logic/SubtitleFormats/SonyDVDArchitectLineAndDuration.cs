@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitectLineAndDuration : SubtitleFormat
     {
+        private static Regex regex = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -61,30 +63,33 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {   //22    00:04:19:12 00:04:21:09 00:00:01:21
-
-            var regex = new Regex(@"^\d+\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d\t\d\d:\d\d:\d\d:\d\d$", RegexOptions.Compiled);
             _errorCount = 0;
             Paragraph lastParagraph = null;
             int count = 0;
             foreach (string line in lines)
             {
                 string s = line;
+                bool isTimeCode = false;
                 if (s.Length > 0)
                 {
                     bool success = false;
-                    var match = regex.Match(s);
-                    if (s.Length > 31 && match.Success)
+                    if (s.Length > 31 && s.IndexOf(':') > 1)
                     {
-                        if (lastParagraph != null)
-                            subtitle.Paragraphs.Add(lastParagraph);
+                        var match = regex.Match(s);
+                        if (match.Success)
+                        {
+                            isTimeCode = true;
+                            if (lastParagraph != null)
+                                subtitle.Paragraphs.Add(lastParagraph);
 
-                        var arr = s.Split('\t');
-                        TimeCode start = DecodeTimeCode(arr[1]);
-                        TimeCode end = DecodeTimeCode(arr[2]);
-                        lastParagraph = new Paragraph(start, end, string.Empty);
-                        success = true;
+                            var arr = s.Split('\t');
+                            TimeCode start = DecodeTimeCode(arr[1]);
+                            TimeCode end = DecodeTimeCode(arr[2]);
+                            lastParagraph = new Paragraph(start, end, string.Empty);
+                            success = true;
+                        }
                     }
-                    else if (line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                    if (!isTimeCode && line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
                     {
                         lastParagraph.Text = (lastParagraph.Text + Environment.NewLine + line).Trim();
                         success = true;
@@ -112,5 +117,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
             return tc;
         }
+
     }
 }

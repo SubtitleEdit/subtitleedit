@@ -7,6 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SpruceWithSpace : SubtitleFormat
     {
+
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".stl"; }
@@ -89,10 +92,9 @@ $TapeOffset         =   FALSE
             //00:01:54:19,00:01:56:17,We should be thankful|they accepted our offer.
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d, \d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (line.IndexOf(':') == 2 && regexTimeCodes.IsMatch(line))
                 {
                     string start = line.Substring(0, 11);
                     string end = line.Substring(13, 11);

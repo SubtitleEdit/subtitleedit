@@ -7,6 +7,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class StructuredTitles : SubtitleFormat
     {
+        private static Regex regexTimeCodes = new Regex(@"^\d\d\d\d : \d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,\d\d", RegexOptions.Compiled);
+        private static Regex regexSomeCodes = new Regex(@"^\d\d \d\d \d\d", RegexOptions.Compiled);
+        private static Regex regexText = new Regex(@"^[A-Z]\d[A-Z]\d\d ", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -73,12 +77,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
-            var regexTimeCodes = new Regex(@"^\d\d\d\d : \d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,\d\d", RegexOptions.Compiled);
-            var regexSomeCodes = new Regex(@"^\d\d \d\d \d\d", RegexOptions.Compiled);
-            var regexText = new Regex(@"^[A-Z]\d[A-Z]\d\d ", RegexOptions.Compiled);
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (line.IndexOf(':') == 5 && regexTimeCodes.IsMatch(line))
                 {
                     if (p != null)
                         subtitle.Paragraphs.Add(p);
@@ -100,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         p.Text += Environment.NewLine + line.Substring(5).Trim();
                 }
-                else if (regexSomeCodes.IsMatch(line))
+                else if (line.Length < 10 && regexSomeCodes.IsMatch(line))
                 {
                 }
                 else if (line.Trim().Length == 0)

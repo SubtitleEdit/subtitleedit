@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -764,7 +765,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (code.Length == 4)
                     {
                         sb.Append(code + " ");
-                        if (code.StartsWith("9") || code.StartsWith("8")) // control codes must be double
+                        if (code.StartsWith('9') || code.StartsWith('8')) // control codes must be double
                             sb.Append(code + " ");
                         code = string.Empty;
                     }
@@ -849,7 +850,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static SCCPositionAndStyle GetColorAndPosition(string code)
         {
-            switch (code.ToLower())
+            switch (code.ToLower(CultureInfo.InvariantCulture))
             {
 
                 //NO x-coordinate?
@@ -1598,7 +1599,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
                     string text = GetSccText(s.Substring(match.Index), ref _errorCount);
 
-                    if (text == "942c 942c" || text == "942c")
+                    if (string.Compare(text, "942c 942c", StringComparison.Ordinal) == 0 || string.Compare(text, "942c", StringComparison.Ordinal) == 0)
                     {
                         p.EndTime = new TimeCode(startTime.TotalMilliseconds);
                     }
@@ -1638,13 +1639,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (part == "94ae" || part == "9420" || string.Compare(part, "94ad", StringComparison.OrdinalIgnoreCase) == 0 || part == "9426")
+                    if (string.Compare(part, "94ae", StringComparison.Ordinal) == 0 || string.Compare(part, "9420", StringComparison.Ordinal) == 0 || string.Compare(part, "94ad", StringComparison.OrdinalIgnoreCase) == 0 || part == "9426")
                     {
                     }
                     else
                     {
                         string nextPart = string.Empty;
-                        if (part.StartsWith("9") || part.StartsWith("8"))
+                        if (part.StartsWith('9') || part.StartsWith('8'))
                         {
                             if (k + 1 < parts.Length && parts[k + 1] == part)
                                 k++;
@@ -1717,7 +1718,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string GetLetter(string hexCode)
         {
-            int index = _letterCodes.IndexOf(hexCode.ToLower());
+            int index = _letterCodes.IndexOf(hexCode.ToLower(CultureInfo.InvariantCulture));
             if (index < 0)
                 return null;
 

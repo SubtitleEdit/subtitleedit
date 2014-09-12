@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            int index = newText.ToLower().IndexOf(findWhat.ToLower());
+                            int index = newText.IndexOf(findWhat, StringComparison.OrdinalIgnoreCase);
                             while (index >= 0)
                             {
                                 if (index < newText.Length)
@@ -194,7 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     newText = newText.Substring(0, index) + replaceWith;
 
                                 hit = true;
-                                index = newText.ToLower().IndexOf(findWhat.ToLower(), index + replaceWith.Length);
+                                index = newText.IndexOf(findWhat, index + replaceWith.Length, StringComparison.OrdinalIgnoreCase);
                             }
                         }
                     }
