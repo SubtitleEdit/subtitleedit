@@ -991,6 +991,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>file on disk modified</FileOnDiskModified>
     <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Cannot save {0}
+
+File is read-only!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Unable to save subtitle file {0}
 Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!</UnableToSaveSubtitleX>
     <BeforeNew>Before new</BeforeNew>

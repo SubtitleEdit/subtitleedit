@@ -5,8 +5,11 @@ using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
+
     public class UleadSubtitleFormat : SubtitleFormat
     {
+        private static Regex regexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -75,11 +78,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
-            var regexTimeCodes = new Regex(@"^#\d+ \d\d;\d\d;\d\d;\d\d \d\d;\d\d;\d\d;\d\d", RegexOptions.Compiled);
             foreach (string l2 in lines)
             {
                 string line = l2.TrimEnd('ഀ');
-                if (regexTimeCodes.IsMatch(line))
+                if (line.StartsWith('#') && regexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length >= 3)

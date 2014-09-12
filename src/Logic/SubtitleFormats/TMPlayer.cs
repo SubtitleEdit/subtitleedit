@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
     public class TMPlayer : SubtitleFormat
     {
+        private static Regex regex = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
+
         public override string Extension
         {
             get { return ".txt"; }
@@ -66,12 +68,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         { // 0:02:36:You've returned to the village|after 2 years, Shekhar.
             // 00:00:50:America has made my fortune.
-            var regex = new Regex(@"^\d+:\d\d:\d\d[: ].*$", RegexOptions.Compiled); // accept a " " instead of the last ":" too
             _errorCount = 0;
             foreach (string line in lines)
             {
                 bool success = false;
-                if (regex.Match(line).Success)
+                if (line.IndexOf(':') > 0 && regex.Match(line).Success)
                 {
                     try
                     {
