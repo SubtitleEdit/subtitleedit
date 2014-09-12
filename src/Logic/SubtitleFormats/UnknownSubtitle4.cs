@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class UnknownSubtitle4 : SubtitleFormat
     {
+        private static Regex regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+, \d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
+
         private enum ExpectingLine
         {
             TimeCodes,
@@ -74,8 +76,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d.\d+, \d\d:\d\d:\d\d.\d+$", RegexOptions.Compiled);
-
             var paragraph = new Paragraph();
             ExpectingLine expecting = ExpectingLine.TimeCodes;
             _errorCount = 0;
@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (regexTimeCodes.IsMatch(line))
+                if (line.IndexOf(':') == 2 && regexTimeCodes.IsMatch(line))
                 {
                     string[] parts = line.Split(new[] { ':', ',', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 8)

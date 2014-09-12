@@ -102,7 +102,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Source video file:</SourceVideoFile>
     <GenerateWaveFormData>Generate wave form data</GenerateWaveFormData>
     <PleaseWait>This may take a few minutes - please wait</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC Media Player not found</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player not found</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit needs VLC media player 1.1.x or newer for extracting audio data.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Do you want to go to the VLC media player home page?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generating peak file...</GeneratingPeakFile>
@@ -1497,8 +1497,8 @@ can edit in same subtitle file (collaboration)</Information>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
-    <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
-    <VlcMediaPlayerDescription>libvlc.dll from VLC Media Player 1.1.0 or newer</VlcMediaPlayerDescription>
+    <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
+    <VlcMediaPlayerDescription>libvlc.dll from VLC media player 1.1.0 or newer</VlcMediaPlayerDescription>
     <VlcBrowseToLabel>VLC path (only needed if you're using the portable version of VLC)</VlcBrowseToLabel>
     <ShowStopButton>Show stop button</ShowStopButton>
     <ShowMuteButton>Show mute button</ShowMuteButton>

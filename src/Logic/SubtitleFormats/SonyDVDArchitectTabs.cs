@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitectTabs : SubtitleFormat
     {
+        private static Regex regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ \t]+\d\d:\d\d:\d\d:\d\d[ \t]+", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".sub"; }
@@ -49,7 +51,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //00:02:14:02   00:02:16:41 - Var det den rigtige der vandt?- Ja, bestemt.
             //newline = \r (0D)
 
-            var regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ \t]+\d\d:\d\d:\d\d:\d\d[ \t]+", RegexOptions.Compiled);
             _errorCount = 0;
             Paragraph lastParagraph = null;
             foreach (string line in lines)
@@ -57,37 +58,42 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (line.Trim().Length > 0)
                 {
                     bool success = false;
-                    var match = regex.Match(line);
-                    if (line.Length > 26 && match.Success)
+                    bool isTimeCode = false;
+                    if (line.Length > 26 && line.IndexOf(':') == 2)
                     {
-                        string s = line.Substring(0, match.Length);
-                        s = s.Replace("\t", ":");
-                        s = s.Replace(" ", string.Empty);
-                        s = s.Trim().TrimEnd(':').TrimEnd();
-                        string[] parts = s.Split(':');
-                        if (parts.Length == 8)
+                        var match = regex.Match(line);
+                        if (match.Success)
                         {
-                            int hours = int.Parse(parts[0]);
-                            int minutes = int.Parse(parts[1]);
-                            int seconds = int.Parse(parts[2]);
-                            int milliseconds = int.Parse(parts[3]) * 10;
-                            var start = new TimeCode(hours, minutes, seconds, milliseconds);
+                            isTimeCode = true;
+                            string s = line.Substring(0, match.Length);
+                            s = s.Replace("\t", ":");
+                            s = s.Replace(" ", string.Empty);
+                            s = s.Trim().TrimEnd(':').TrimEnd();
+                            string[] parts = s.Split(':');
+                            if (parts.Length == 8)
+                            {
+                                int hours = int.Parse(parts[0]);
+                                int minutes = int.Parse(parts[1]);
+                                int seconds = int.Parse(parts[2]);
+                                int milliseconds = int.Parse(parts[3]) * 10;
+                                var start = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                            hours = int.Parse(parts[4]);
-                            minutes = int.Parse(parts[5]);
-                            seconds = int.Parse(parts[6]);
-                            milliseconds = int.Parse(parts[7]) * 10;
-                            var end = new TimeCode(hours, minutes, seconds, milliseconds);
+                                hours = int.Parse(parts[4]);
+                                minutes = int.Parse(parts[5]);
+                                seconds = int.Parse(parts[6]);
+                                milliseconds = int.Parse(parts[7]) * 10;
+                                var end = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                            string text = line.Substring(match.Length).TrimStart();
-                            text = text.Replace("|", Environment.NewLine);
+                                string text = line.Substring(match.Length).TrimStart();
+                                text = text.Replace("|", Environment.NewLine);
 
-                            lastParagraph = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(lastParagraph);
-                            success = true;
-                        }
+                                lastParagraph = new Paragraph(start, end, text);
+                                subtitle.Paragraphs.Add(lastParagraph);
+                                success = true;
+                            }
+                        }                        
                     }
-                    else if (line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                    if (!isTimeCode && line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
                     {
                         lastParagraph.Text += Environment.NewLine + line.Trim();
                         success = true;
