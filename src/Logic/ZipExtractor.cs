@@ -107,11 +107,11 @@ namespace System.IO.Compression
         /// <summary>
         /// Method to open an existing storage file
         /// </summary>
-        /// <param name="_filename">Full path of Zip file to open</param>
+        /// <param name="filename">Full path of Zip file to open</param>
         /// <returns>A valid ZipStorer object</returns>
-        public static ZipExtractor Open(string _filename)
+        public static ZipExtractor Open(string filename)
         {
-            Stream stream = new FileStream(_filename, FileMode.Open, FileAccess.Read);
+            Stream stream = new FileStream(filename, FileMode.Open, FileAccess.Read);
             ZipExtractor zip = Open(stream);
             return zip;
         }
@@ -119,12 +119,12 @@ namespace System.IO.Compression
         /// <summary>
         /// Method to open an existing storage from stream
         /// </summary>
-        /// <param name="_stream">Already opened stream with zip contents</param>
+        /// <param name="stream">Already opened stream with zip contents</param>
         /// <returns>A valid ZipStorer object</returns>
-        public static ZipExtractor Open(Stream _stream)
+        public static ZipExtractor Open(Stream stream)
         {
             ZipExtractor zip = new ZipExtractor();
-            zip.ZipFileStream = _stream;
+            zip.ZipFileStream = stream;
 
             if (zip.ReadFileInfo())
                 return zip;
@@ -200,73 +200,72 @@ namespace System.IO.Compression
         /// <summary>
         /// Copy the contents of a stored file into a physical file
         /// </summary>
-        /// <param name="_zfe">Entry information of file to extract</param>
-        /// <param name="_filename">Name of file to store uncompressed data</param>
+        /// <param name="zfe">Entry information of file to extract</param>
+        /// <param name="filename">Name of file to store uncompressed data</param>
         /// <returns>True if success, false if not.</returns>
         /// <remarks>Unique compression methods are Store and Deflate</remarks>
-        public bool ExtractFile(ZipFileEntry _zfe, string _filename)
+        public bool ExtractFile(ZipFileEntry zfe, string filename)
         {
             // Make sure the parent directory exist
-            string path = System.IO.Path.GetDirectoryName(_filename);
-
+            string path = System.IO.Path.GetDirectoryName(filename);
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
+
             // Check it is directory. If so, do nothing
-            if (Directory.Exists(_filename))
+            if (Directory.Exists(filename))
                 return true;
 
-            Stream output = new FileStream(_filename, FileMode.Create, FileAccess.Write);
-            bool result = ExtractFile(_zfe, output);
-            if (result)
-                output.Close();
-
-            File.SetCreationTime(_filename, _zfe.ModifyTime);
-            File.SetLastWriteTime(_filename, _zfe.ModifyTime);
-
+            bool result = false;
+            using (Stream output = new FileStream(filename, FileMode.Create, FileAccess.Write))
+            {
+                result = ExtractFile(zfe, output);
+            }
+            File.SetCreationTime(filename, zfe.ModifyTime);
+            File.SetLastWriteTime(filename, zfe.ModifyTime);
             return result;
         }
 
         /// <summary>
         /// Copy the contents of a stored file into an opened stream
         /// </summary>
-        /// <param name="_zfe">Entry information of file to extract</param>
-        /// <param name="_stream">Stream to store the uncompressed data</param>
+        /// <param name="zfe">Entry information of file to extract</param>
+        /// <param name="stream">Stream to store the uncompressed data</param>
         /// <returns>True if success, false if not.</returns>
         /// <remarks>Unique compression methods are Store and Deflate</remarks>
-        public bool ExtractFile(ZipFileEntry _zfe, Stream _stream)
+        public bool ExtractFile(ZipFileEntry zfe, Stream stream)
         {
-            if (!_stream.CanWrite)
+            if (!stream.CanWrite)
                 throw new InvalidOperationException("Stream cannot be written");
 
             // check signature
             byte[] signature = new byte[4];
-            this.ZipFileStream.Seek(_zfe.HeaderOffset, SeekOrigin.Begin);
+            this.ZipFileStream.Seek(zfe.HeaderOffset, SeekOrigin.Begin);
             this.ZipFileStream.Read(signature, 0, 4);
             if (BitConverter.ToUInt32(signature, 0) != 0x04034b50)
                 return false;
 
             // Select input stream for inflating or just reading
             Stream inStream;
-            if (_zfe.Method == Compression.Store)
+            if (zfe.Method == Compression.Store)
                 inStream = this.ZipFileStream;
-            else if (_zfe.Method == Compression.Deflate)
+            else if (zfe.Method == Compression.Deflate)
                 inStream = new DeflateStream(this.ZipFileStream, CompressionMode.Decompress, true);
             else
                 return false;
 
             // Buffered copy
             byte[] buffer = new byte[16384];
-            this.ZipFileStream.Seek(_zfe.FileOffset, SeekOrigin.Begin);
-            uint bytesPending = _zfe.FileSize;
+            this.ZipFileStream.Seek(zfe.FileOffset, SeekOrigin.Begin);
+            uint bytesPending = zfe.FileSize;
             while (bytesPending > 0)
             {
                 int bytesRead = inStream.Read(buffer, 0, (int)Math.Min(bytesPending, buffer.Length));
-                _stream.Write(buffer, 0, bytesRead);
+                stream.Write(buffer, 0, bytesRead);
                 bytesPending -= (uint)bytesRead;
             }
-            _stream.Flush();
+            stream.Flush();
 
-            if (_zfe.Method == Compression.Deflate)
+            if (zfe.Method == Compression.Deflate)
                 inStream.Dispose();
             return true;
         }
@@ -278,17 +277,17 @@ namespace System.IO.Compression
         /// <summary>
         /// Calculate the file offset by reading the corresponding local header
         /// </summary>
-        private uint GetFileOffset(uint _headerOffset)
+        private uint GetFileOffset(uint headerOffset)
         {
             byte[] buffer = new byte[2];
 
-            this.ZipFileStream.Seek(_headerOffset + 26, SeekOrigin.Begin);
+            this.ZipFileStream.Seek(headerOffset + 26, SeekOrigin.Begin);
             this.ZipFileStream.Read(buffer, 0, 2);
             ushort filenameSize = BitConverter.ToUInt16(buffer, 0);
             this.ZipFileStream.Read(buffer, 0, 2);
             ushort extraSize = BitConverter.ToUInt16(buffer, 0);
 
-            return (uint)(30 + filenameSize + extraSize + _headerOffset);
+            return (uint)(30 + filenameSize + extraSize + headerOffset);
         }
         /* Local file header:
             local file header signature     4 bytes  (0x04034b50)
@@ -359,15 +358,15 @@ namespace System.IO.Compression
                 11-15 Hour (0–23 on a 24-hour clock)
         */
 
-        private static DateTime DosTimeToDateTime(uint _dt)
+        private static DateTime DosTimeToDateTime(uint dt)
         {
             return new DateTime(
-                (int)(_dt >> 25) + 1980,
-                (int)(_dt >> 21) & 15,
-                (int)(_dt >> 16) & 31,
-                (int)(_dt >> 11) & 31,
-                (int)(_dt >> 5) & 63,
-                (int)(_dt & 31) * 2);
+                (int)(dt >> 25) + 1980,
+                (int)(dt >> 21) & 15,
+                (int)(dt >> 16) & 31,
+                (int)(dt >> 11) & 31,
+                (int)(dt >> 5) & 63,
+                (int)(dt & 31) * 2);
         }
 
         // Reads the end-of-central-directory record

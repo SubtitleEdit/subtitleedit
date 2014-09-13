@@ -201,12 +201,12 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_bitmap == null)
                 {
                     var bitmap = new Bitmap(_nocrChar.Width, _nocrChar.Height);
-                    NikseBitmap nbmp = new NikseBitmap(bitmap);
+                    var nbmp = new NikseBitmap(bitmap);
                     nbmp.Fill(Color.White);
-                    bitmap = nbmp.GetBitmap();
-                    pictureBoxCharacter.Image = bitmap;
+                    pictureBoxCharacter.Image = nbmp.GetBitmap(); 
                     SizePictureBox();
                     ShowOcrPoints();
+                    bitmap.Dispose();
                 }
             }
         }

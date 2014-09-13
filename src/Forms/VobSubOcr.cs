@@ -7106,6 +7106,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     MessageBox.Show(exception.Message);
                 }
+                finally
+                {
+                    if (bmp != null)
+                    {
+                        bmp.Dispose();
+                        bmp = null;
+                    }
+                }
             }
         }
 

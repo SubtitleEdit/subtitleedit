@@ -75,6 +75,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var rtBox = new RichTextBox();
                     rtBox.Rtf = textBoxText.Text;
                     textBoxText.Text = rtBox.Text;
+                    rtBox.Dispose();
                 }
             }
             catch (Exception ex)
