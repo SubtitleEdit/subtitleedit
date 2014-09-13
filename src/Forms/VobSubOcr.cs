@@ -6427,6 +6427,8 @@ namespace Nikse.SubtitleEdit.Forms
         private static string FixItalics(string s)
         {
             int italicStartCount = Utilities.CountTagInText(s, "<i>");
+            if (italicStartCount == 0)
+                return s;
 
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -6451,7 +6453,8 @@ namespace Nikse.SubtitleEdit.Forms
                      s.IndexOf("<i>", StringComparison.Ordinal) > 1 && s.IndexOf("<i>", StringComparison.Ordinal) < 10 && s.EndsWith("</i>"))
                 s = "<i>" + s.Replace("<i>", string.Empty).Replace("</i>", string.Empty) + "</i>";
             s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
-            return s;
+
+            return Utilities.FixInvalidItalicTags(s);
         }
 
         private void LogUnknownWords()
