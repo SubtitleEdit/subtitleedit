@@ -1,6 +1,26 @@
 ﻿Subtitle Edit Changelog
 
 
+3.4.3 (xth October 2014)
+* NEW:
+   * 
+* IMPROVED:
+   * Updated French language file - thx JM GBT
+   * Improved "Fix invalid italic tags"
+   * Allows for hh:mm:ss.msec input in timed text 1.0
+   * Better error messages when saving a file fails - thx Andrew
+   * Minor performance improvements
+* FIXED:
+   * Fixed subtitle drag-n-drop bug - thx Andrew
+   * Fixed bug in 'frame-up-down-box' - thx Markus
+   * Fixed font-end-tag in ssa/ass - thx Milad
+   * Fixed bug in "Add missing dashes" + "remove unneeded spaces" - thx Andrew
+   * Fixed bug in "Fix missing spaces"
+   * Version number in Romanian language file so it's possible to use
+   * Removed batch-convert prompt asking for PAC encoding
+   * Fixed possible crash when opening a video file
+
+
 3.4.2 (7th September 2014)
 * NEW:
    * Added new subtitle format (200+ formats supported)
