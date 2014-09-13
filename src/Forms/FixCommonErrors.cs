@@ -4399,7 +4399,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             //Common Spanish abbreviations
-            //Dr. (same as english)
+            //Dr. (same as English)
             //Sr. (same as Mr.)
             //Sra. (same as Mrs.)
             //Ud.

@@ -1014,7 +1014,7 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
                     }
-                    else if (tl.Text.StartsWith("English") && languageString.StartsWith("english"))
+                    else if (tl.Text.StartsWith("English") && languageString.StartsWith("English"))
                     {
                         comboBoxTesseractLanguages.SelectedIndex = i;
                         break;
