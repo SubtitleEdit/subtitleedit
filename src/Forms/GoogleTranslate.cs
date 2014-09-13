@@ -378,6 +378,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var webClient = new WebClient();
                 webClient.Proxy = Utilities.GetProxy();
                 string result = webClient.DownloadString(url).ToLower();
+                webClient.Dispose();
                 int idx = result.IndexOf("charset");
                 int end = result.IndexOf('"', idx + 8);
                 string charset = result.Substring(idx, end - idx).Replace("charset=", string.Empty);
@@ -408,6 +409,7 @@ namespace Nikse.SubtitleEdit.Forms
             webClient.Proxy = Utilities.GetProxy();
             webClient.Encoding = encoding;
             string result = webClient.DownloadString(url);
+            webClient.Dispose();
             int startIndex = result.IndexOf("<span id=result_box");
             var sb = new StringBuilder();
             if (startIndex > 0)

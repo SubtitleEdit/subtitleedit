@@ -246,6 +246,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (sb.Length > 0)
                 TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+            sf.Dispose();
 
             if (_borderWidth > 0)
                 g.DrawPath(new Pen(_borderColor, _borderWidth), path);

@@ -4686,6 +4686,7 @@ namespace Nikse.SubtitleEdit.Forms
                         before[before.Length - (i + 3)] == after[after.Length - (i + 3)] &&
                         before[before.Length - (i + 4)] == after[after.Length - (i + 4)])
                     {
+                        continue;
                     }
                     else
                     {

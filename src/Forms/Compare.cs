@@ -620,6 +620,7 @@ namespace Nikse.SubtitleEdit.Forms
                         richTextBox1.Text[richTextBox1.Text.Length - (i + 3)] == richTextBox2.Text[richTextBox2.Text.Length - (i + 3)] &&
                         richTextBox1.Text[richTextBox1.Text.Length - (i + 4)] == richTextBox2.Text[richTextBox2.Text.Length - (i + 4)])
                     {
+                        continue;
                     }
                     else
                     {
