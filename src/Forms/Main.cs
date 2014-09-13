@@ -3736,8 +3736,7 @@ namespace Nikse.SubtitleEdit.Forms
             _converted = false;
 
             SetUndockedWindowsTitle();
-            if (mediaPlayer != null)
-                mediaPlayer.SubtitleText = string.Empty;
+            mediaPlayer.SubtitleText = string.Empty;
             ShowStatus(_language.New);
         }
 
@@ -8618,6 +8617,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
+            timeUpDownStartTime.TimeCode = null;
+
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
                 MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
@@ -10938,7 +10939,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && !textBoxSource.Focused && mediaPlayer.VideoPlayer != null)
                 {
-                    if (audioVisualizer != null && audioVisualizer.Focused || mediaPlayer != null && mediaPlayer.Focused || SubtitleListview1.Focused && mediaPlayer != null)
+                    if (audioVisualizer != null && audioVisualizer.Focused || mediaPlayer.Focused || SubtitleListview1.Focused)
                     {
                         _endSeconds = -1;
                         mediaPlayer.TogglePlayPause();
@@ -11144,42 +11145,42 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                     UndockVideoControlsToolStripMenuItemClick(null, null);
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameLeft)
             {
                 MoveVideoSeconds(-1.0 / Configuration.Settings.General.CurrentFrameRate);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1FrameRight)
             {
                 MoveVideoSeconds(1.0 / Configuration.Settings.General.CurrentFrameRate);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsLeft)
             {
                 MoveVideoSeconds(-0.1);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video100MsRight)
             {
                 MoveVideoSeconds(0.1);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsLeft)
             {
                 MoveVideoSeconds(-0.5);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video500MsRight)
             {
                 MoveVideoSeconds(0.5);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsLeft)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsLeft)
             {
                 MoveVideoSeconds(-1.0);
                 e.SuppressKeyPress = true;
             }
-            else if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsRight)
+            else if (mediaPlayer.VideoPlayer != null && e.KeyData == _video1000MsRight)
             {
                 MoveVideoSeconds(1.0);
                 e.SuppressKeyPress = true;
@@ -11546,7 +11547,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlayFirstSelectedSubtitle()
         {
-            if (_subtitleListViewIndex >= 0 && mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            if (_subtitleListViewIndex >= 0 && mediaPlayer.VideoPlayer != null)
             {
                 GotoSubtitleIndex(_subtitleListViewIndex);
                 var paragraph = _subtitle.Paragraphs[_subtitleListViewIndex];
@@ -11657,7 +11658,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoFullscreen()
         {
-            if (mediaPlayer == null || mediaPlayer.VideoPlayer == null)
+            if (mediaPlayer.VideoPlayer == null)
                 return;
 
             mediaPlayer.ShowFullScreenControls();
@@ -13285,14 +13286,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void GoBackSeconds(double seconds)
         {
-            if (mediaPlayer != null)
-            {
-                if (mediaPlayer.CurrentPosition > seconds)
-                    mediaPlayer.CurrentPosition -= seconds;
-                else
-                    mediaPlayer.CurrentPosition = 0;
-                ShowSubtitle();
-            }
+            if (mediaPlayer.CurrentPosition > seconds)
+                mediaPlayer.CurrentPosition -= seconds;
+            else
+                mediaPlayer.CurrentPosition = 0;
+            ShowSubtitle();
         }
 
         private void ButtonStartHalfASecondBackClick(object sender, EventArgs e)
@@ -13371,8 +13369,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void HideVideoPlayer()
         {
-            if (mediaPlayer != null)
-                mediaPlayer.Pause();
+            mediaPlayer.Pause();
 
             int textHeight = splitContainerListViewAndText.Height - splitContainerListViewAndText.SplitterDistance;
 
@@ -13660,7 +13657,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GotoSubtitleIndex(int index)
         {
-            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null && mediaPlayer.Duration > 0)
+            if (mediaPlayer.VideoPlayer != null && mediaPlayer.Duration > 0)
             {
                 mediaPlayer.CurrentPosition = _subtitle.Paragraphs[index].StartTime.TotalSeconds;
             }
@@ -13668,7 +13665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlayPart(Paragraph paragraph)
         {
-            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            if (mediaPlayer.VideoPlayer != null)
             {
                 double startSeconds = paragraph.StartTime.TotalSeconds;
                 if (startSeconds > 0.2)
@@ -14132,7 +14129,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            if (mediaPlayer.VideoPlayer != null)
             {
                 if (!mediaPlayer.IsPaused)
                 {
@@ -15165,9 +15162,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TimerAutoSaveTick(object sender, EventArgs e)
         {
-            string currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
+            string currentText = string.Empty;
             if (_subtitle != null && _subtitle.Paragraphs.Count > 0)
             {
+                currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
                 if (_textAutoSave == null)
                     _textAutoSave = _changeSubtitleToString;
                 if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && currentText.Trim().Length > 0)
@@ -15349,8 +15347,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                if (mediaPlayer != null)
-                    mediaPlayer.Pause();
+                mediaPlayer.Pause();
                 var addWaveForm = new AddWaveForm();
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
@@ -15555,7 +15552,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemWaveFormPlaySelection_Click(object sender, EventArgs e)
         {
-            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            if (mediaPlayer.VideoPlayer != null)
             {
                 Paragraph p = audioVisualizer.NewSelectionParagraph;
                 if (p == null)
@@ -16860,8 +16857,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Configuration.Settings.General.Undocked)
                 return;
 
-            if (mediaPlayer != null)
-                mediaPlayer.ShowNonFullScreenControls();
+            mediaPlayer.ShowNonFullScreenControls();
 
             SaveUndockedPositions();
 
@@ -16895,8 +16891,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ReDockVideoPlayer(control);
                 _videoPlayerUnDocked.Close();
                 _videoPlayerUnDocked = null;
-                if (mediaPlayer != null)
-                    mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
+                mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             }
 
             _isVideoControlsUnDocked = false;
@@ -17021,7 +17016,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void CloseVideoToolStripMenuItemClick(object sender, EventArgs e)
         {
             timer1.Stop();
-            if (mediaPlayer != null && mediaPlayer.VideoPlayer != null)
+            if (mediaPlayer.VideoPlayer != null)
             {
                 mediaPlayer.SubtitleText = string.Empty;
                 mediaPlayer.VideoPlayer.DisposeVideoPlayer();
@@ -18406,16 +18401,14 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxListViewText.RightToLeft = RightToLeft.No;
                 SubtitleListview1.RightToLeft = RightToLeft.No;
                 textBoxSource.RightToLeft = RightToLeft.No;
-                if (mediaPlayer != null)
-                    mediaPlayer.TextRightToLeft = RightToLeft.No;
+                mediaPlayer.TextRightToLeft = RightToLeft.No;
             }
             else
             {
                 textBoxListViewText.RightToLeft = RightToLeft.Yes;
                 SubtitleListview1.RightToLeft = RightToLeft.Yes;
                 textBoxSource.RightToLeft = RightToLeft.Yes;
-                if (mediaPlayer != null)
-                    mediaPlayer.TextRightToLeft = RightToLeft.Yes;
+                mediaPlayer.TextRightToLeft = RightToLeft.Yes;
             }
         }
 

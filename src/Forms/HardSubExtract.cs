@@ -122,10 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TimerRefreshProgressbarTick(object sender, EventArgs e)
         {
-            if (mediaPlayer != null)
-            {
-                mediaPlayer.RefreshProgressBar();
-            }
+            mediaPlayer.RefreshProgressBar();
         }
 
         private void numericUpDownPixelsBottom_ValueChanged(object sender, EventArgs e)

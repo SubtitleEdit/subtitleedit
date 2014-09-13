@@ -675,9 +675,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
-                Paragraph target = p; // subtitle to display when clicking on fix in top list view
-                if (prev != null)
-                    target = prev;
+                Paragraph target = prev;
                 string oldCurrent = p.ToString();
                 string oldPrevious = prev.ToString();
                 double prevWantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(prev.Text, Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds);
@@ -689,7 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
                     canBeEqual = Configuration.Settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart;
 
                 double diff = prev.EndTime.TotalMilliseconds - p.StartTime.TotalMilliseconds;
-                if (prev != null && !prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && diff == 0))
+                if (!prev.StartTime.IsMaxTime && !p.StartTime.IsMaxTime && diff >= 0 && !(canBeEqual && diff == 0))
                 {
 
                     int diffHalf = (int)(diff / 2);
