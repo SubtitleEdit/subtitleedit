@@ -43,7 +43,7 @@ namespace UpdateAssemblyInfo
         {
             if (args.Length != 2)
             {
-                Console.WriteLine("UpdateAssemblyInfo 0.9");
+                Console.WriteLine("UpdateAssemblyInfo 1.0");
                 Console.WriteLine("UpdateAssemblyInfo <template with [GITHASH]> <target file>");
                 Console.WriteLine("Wrong number of arguments: " + args.Length);
                 return 1;
@@ -69,7 +69,7 @@ namespace UpdateAssemblyInfo
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Error: " + e.Message);
                 }
             }
             else
@@ -77,17 +77,18 @@ namespace UpdateAssemblyInfo
                 try
                 {
                     // allow to compile without git
+                    Console.WriteLine("Warning: Could not run Git - build number will be 9999!");
                     DoUpdateAssembly("[GITHASH]", string.Empty, template, target);
-                    DoUpdateAssembly("[REVNO]", "0", target, target);
+                    DoUpdateAssembly("[REVNO]", "9999", target, target);
+                    return 0;
                 }
                 catch
                 {
+                    Console.WriteLine("Error running Git");
+                    Console.WriteLine(" - Git folder: " + workingFolder);
+                    Console.WriteLine(" - Template: " + template);
+                    Console.WriteLine(" - Target: " + target);
                 }
-
-                Console.WriteLine("Error running Git");
-                Console.WriteLine(" - Git folder: " + workingFolder);
-                Console.WriteLine(" - Template: " + template);
-                Console.WriteLine(" - Target: " + target);
             }
             return 1;
         }
