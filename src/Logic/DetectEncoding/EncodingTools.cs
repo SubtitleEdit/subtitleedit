@@ -294,7 +294,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 
                 // get unmanaged arrays
                 IntPtr pPrefEncs = Marshal.AllocCoTaskMem(sizeof(uint) * preferredEncodings.Length);
-                IntPtr pDetectedEncs = preferredEncodings == null ? IntPtr.Zero : Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
+                IntPtr pDetectedEncs = Marshal.AllocCoTaskMem(sizeof(uint) * resultCodePages.Length);
 
                 try
                 {

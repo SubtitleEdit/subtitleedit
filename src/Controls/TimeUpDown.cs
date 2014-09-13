@@ -195,28 +195,25 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
+                if (value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1 || value == null)
                 {
                     maskedTextBox1.Text = string.Empty;
                     return;
                 }
 
-                if (Mode == TimeMode.HHMMSSMS && value != null && value.TotalMilliseconds < 0)
-                    maskedTextBox1.Mask = "-00:00:00.000";
-                else if (Mode == TimeMode.HHMMSSMS)
-                    maskedTextBox1.Mask = "00:00:00.000";
-                else
-                    maskedTextBox1.Mask = "00:00:00:00";
-                if (value != null)
+                if (Mode == TimeMode.HHMMSSMS)
                 {
-                    if (Mode == TimeMode.HHMMSSMS)
-                        maskedTextBox1.Text = value.ToString();
-                    else
-                        maskedTextBox1.Text = value.ToHHMMSSFF();
+                    if (value.TotalMilliseconds < 0)
+                        maskedTextBox1.Mask = "-00:00:00.000";
+                    else 
+                        maskedTextBox1.Mask = "00:00:00.000";
+
+                    maskedTextBox1.Text = value.ToString();
                 }
                 else
                 {
-                    maskedTextBox1.Text = new TimeCode(0).ToString();
+                    maskedTextBox1.Mask = "00:00:00:00";
+                    maskedTextBox1.Text = value.ToHHMMSSFF();
                 }
             }
         }

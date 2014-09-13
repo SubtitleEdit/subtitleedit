@@ -507,7 +507,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var tti = new EbuTextTimingInformation();
 
                 int rows;
-                if (header == null || !int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
                     rows = 23;
 
                 if (header != null && header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
@@ -1076,7 +1076,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 tti.TextField = sb.ToString().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).TrimEnd() + endTags;
 
                 int rows;
-                if (header == null || !int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
+                if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
                     rows = 23;
                 if (tti.VerticalPosition < 3)
                 {

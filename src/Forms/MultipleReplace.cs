@@ -80,8 +80,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle)
         {
-            _subtitle = subtitle;
+            if (subtitle == null)
+                throw new ArgumentNullException("subtitle");
 
+            _subtitle = subtitle;
             foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
             {
                 AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
@@ -89,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             GeneratePreview();
-            if (subtitle == null || subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
+            if (subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
                 groupBoxLinesFound.Enabled = false;
         }
 

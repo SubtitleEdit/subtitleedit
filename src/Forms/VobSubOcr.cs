@@ -3688,6 +3688,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
             string name = pos.ToString(CultureInfo.InvariantCulture);
 
+            if (_compareDoc == null)
+            {
+                _compareDoc = new XmlDocument();
+                _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
+            }
             if (_compareBitmaps == null)
                 _compareBitmaps = new List<CompareItem>();
             _compareBitmaps.Add(new CompareItem(new ManagedBitmap(newTarget), name, isItalic, expandCount, text));
@@ -3709,12 +3714,6 @@ namespace Nikse.SubtitleEdit.Forms
                 element.Attributes.Append(italic);
             }
             element.InnerText = pos.ToString(CultureInfo.InvariantCulture);
-
-            if (_compareDoc == null)
-            {
-                _compareDoc = new XmlDocument();
-                _compareDoc.LoadXml("<OcrBitmaps></OcrBitmaps>");
-            }
             _compareDoc.DocumentElement.AppendChild(element);
             _compareDoc.Save(path + "Images.xml");
             return name;
