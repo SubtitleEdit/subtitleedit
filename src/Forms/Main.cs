@@ -755,11 +755,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if (x.CodecId.ToUpper() == "S_VOBSUB")
                                         {
-                                            Console.WriteLine(string.Format("{0}: {1} - Cannot convert from VobSub image based format!", fileName, toFormat));
+                                            Console.WriteLine("{0}: {1} - Cannot convert from VobSub image based format!", fileName, toFormat);
                                         }
                                         else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
                                         {
-                                            Console.WriteLine(string.Format("{0}: {1} - Cannot convert from Blu-ray image based format!", fileName, toFormat));
+                                            Console.WriteLine("{0}: {1} - Cannot convert from Blu-ray image based format!", fileName, toFormat);
                                         }
                                         else
                                         {
@@ -924,9 +924,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (format == null)
                         {
                             if (fi.Length < 1024 * 1024) // max 1 mb
-                                Console.WriteLine(string.Format("{0}: {1} - input file format unknown!", fileName, toFormat));
+                                Console.WriteLine("{0}: {1} - input file format unknown!", fileName, toFormat);
                             else
-                                Console.WriteLine(string.Format("{0}: {1} - input file too large!", fileName, toFormat));
+                                Console.WriteLine("{0}: {1} - input file too large!", fileName, toFormat);
                         }
                         else if (!done)
                         {
@@ -935,7 +935,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        Console.WriteLine(string.Format("{0}: {1} - file not found!", count, fileName));
+                        Console.WriteLine("{0}: {1} - file not found!", count, fileName);
                         errors++;
                     }
                 }
@@ -948,7 +948,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             Console.WriteLine();
-            Console.WriteLine(string.Format("{0} file(s) converted", converted));
+            Console.WriteLine("{0} file(s) converted", converted);
             Console.WriteLine();
             Console.Write(currentDir + ">");
 
@@ -993,7 +993,7 @@ namespace Nikse.SubtitleEdit.Forms
                     targetFormatFound = true;
                     sf.BatchMode = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
                         sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
                     else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
@@ -1051,7 +1051,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     Ebu.Save(outputFileName, sub, true);
                     Console.WriteLine(" done.");
                 }
@@ -1066,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Forms
                         pac.CodePage = Convert.ToInt32(pacCodePage);
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     pac.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
@@ -1078,7 +1078,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     cavena890.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
@@ -1090,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     CheetahCaption.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
@@ -1102,7 +1102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     CapMakerPlus.Save(outputFileName, sub);
                     Console.WriteLine(" done.");
                 }
@@ -1113,14 +1113,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
-                    Console.Write(string.Format("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName));
+                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
                     File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
                     Console.WriteLine(" done.");
                 }
             }
             if (!targetFormatFound)
             {
-                Console.WriteLine(string.Format("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat));
+                Console.WriteLine("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat);
                 errors++;
                 return false;
             }
