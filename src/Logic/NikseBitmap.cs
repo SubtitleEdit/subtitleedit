@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int Length { get { return Buffer1.Length + Buffer2.Length; } }
     }
 
-    unsafe public class NikseBitmap
+    public class NikseBitmap
     {
         public int Width { get; private set; }
         public int Height { get; private set; }

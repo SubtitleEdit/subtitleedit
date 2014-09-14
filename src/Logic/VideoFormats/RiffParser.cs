@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// </summary>
         /// <param name="filename">File to examine</param>
         /// <returns>True if file is a RIFF file</returns>
-        public unsafe void OpenFile(string filename)
+        public void OpenFile(string filename)
         {
             // Sanity check
             if (null != m_stream)

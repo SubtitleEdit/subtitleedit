@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 namespace Nikse.SubtitleEdit.Logic
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct AVIMAINHEADER
+    internal struct AVIMAINHEADER
     {    // 'avih'
         public int dwMicroSecPerFrame;
         public int dwMaxBytesPerSec;
