@@ -12851,9 +12851,9 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             if (openFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                Encoding encoding = null;
+                Encoding encoding;
                 Subtitle timeCodeSubtitle = new Subtitle();
-                SubtitleFormat format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
+                SubtitleFormat format = timeCodeSubtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
                 if (format == null)
                 {
                     ShowUnknownSubtitle();
@@ -16943,9 +16943,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MakeHistoryForUndo(string.Format(_language.BeforeInsertLine, openFileDialog1.FileName));
 
-                Encoding encoding = null;
+                Encoding encoding;
                 var subtitle = new Subtitle();
-                SubtitleFormat format = subtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
+                SubtitleFormat format = subtitle.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
 
                 if (format != null)
                 {
@@ -19191,9 +19191,9 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                Encoding encoding = null;
+                Encoding encoding;
                 var tmp = new Subtitle();
-                SubtitleFormat format = tmp.LoadSubtitle(openFileDialog1.FileName, out encoding, encoding);
+                SubtitleFormat format = tmp.LoadSubtitle(openFileDialog1.FileName, out encoding, null);
 
                 if (format != null)
                 {
