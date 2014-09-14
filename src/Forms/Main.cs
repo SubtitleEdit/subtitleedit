@@ -8617,8 +8617,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
         {
-            timeUpDownStartTime.TimeCode = null;
-
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
                 MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
