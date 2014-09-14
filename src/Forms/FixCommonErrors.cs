@@ -4699,15 +4699,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = before.Substring(i, 1);
                 if (beforeColors.ContainsKey(i) && beforeBackgroundColors.ContainsKey(i))
                 {
-                    sb.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(beforeColors[i]), ColorTranslator.ToHtml(beforeBackgroundColors[i]), s));
+                    sb.AppendFormat("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(beforeColors[i]), ColorTranslator.ToHtml(beforeBackgroundColors[i]), s);
                 }
                 else if (beforeColors.ContainsKey(i))
                 {
-                    sb.Append(string.Format("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(beforeColors[i]), s));
+                    sb.AppendFormat("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(beforeColors[i]), s);
                 }
                 else if (beforeBackgroundColors.ContainsKey(i))
                 {
-                    sb.Append(string.Format("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(beforeBackgroundColors[i]), s));
+                    sb.AppendFormat("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(beforeBackgroundColors[i]), s);
                 }
                 else
                 {
@@ -4720,15 +4720,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = after.Substring(i, 1);
                 if (afterColors.ContainsKey(i) && afterBackgroundColors.ContainsKey(i))
                 {
-                    sb2.Append(string.Format("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(afterColors[i]), ColorTranslator.ToHtml(afterBackgroundColors[i]), s));
+                    sb2.AppendFormat("<span style=\"color:{0}; background-color: {1}\">{2}</span>", ColorTranslator.ToHtml(afterColors[i]), ColorTranslator.ToHtml(afterBackgroundColors[i]), s);
                 }
                 else if (afterColors.ContainsKey(i))
                 {
-                    sb2.Append(string.Format("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(afterColors[i]), s));
+                    sb2.AppendFormat("<span style=\"color:{0}; \">{1}</span>", ColorTranslator.ToHtml(afterColors[i]), s);
                 }
                 else if (afterBackgroundColors.ContainsKey(i))
                 {
-                    sb2.Append(string.Format("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(afterBackgroundColors[i]), s));
+                    sb2.AppendFormat("<span style=\"background-color: {0}\">{1}</span>", ColorTranslator.ToHtml(afterBackgroundColors[i]), s);
                 }
                 else
                 {

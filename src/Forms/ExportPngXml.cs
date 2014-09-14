@@ -896,7 +896,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
-                        sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
+                        sb.AppendFormat(paragraphWriteFormat, startTime, endTime, fileName);
 
                         param.Saved = true;
                     }

@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string s = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine).Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
-                sb.Append(string.Format(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, s));
+                sb.AppendFormat(paragraphWriteFormat, p.Number, p.StartTime, p.EndTime, s);
             }
             return sb.ToString().Trim() + Environment.NewLine + Environment.NewLine;
         }

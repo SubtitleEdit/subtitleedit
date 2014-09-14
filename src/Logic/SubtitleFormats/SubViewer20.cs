@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //00:00:06.61,00:00:13.75
             //text1[br]text2
             var sb = new StringBuilder();
-            sb.Append(string.Format(header, title));
+            sb.AppendFormat(header, title);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text.Replace(Environment.NewLine, "[br]");
