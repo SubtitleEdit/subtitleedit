@@ -6,8 +6,6 @@
     <Word from="acólico" to="acólito" />
     <Word from="açoreano" to="açoriano" />
     <Word from="actuacao" to="actuação" />
-    <Word from="acucar" to="açúcar" />
-    <Word from="açucar" to="açúcar" />
     <Word from="advinhar" to="adivinhar" />
     <Word from="africa" to="África" />
     <Word from="ajuisar" to="ajuizar" />
@@ -34,8 +32,6 @@
     <Word from="artifícial" to="artificial" />
     <Word from="ascenção" to="ascensão" />
     <Word from="Associacao" to="Associação" />
-    <!-- <Word from="assucar" to="açúcar" /> assucar é uma palavra existente no dicionário -->
-    <Word from="assúcar" to="açúcar" />
     <Word from="aste" to="haste" />
     <Word from="asterístico" to="asterisco" />
     <Word from="averção" to="aversão" />
@@ -93,7 +89,6 @@
     <Word from="corçario" to="corsário" />
     <Word from="corçário" to="corsário" />
     <Word from="cornprimidosinbo" to="comprimidozinho" />
-    <!-- <Word from="cota-parte" to="quota-parte" /> é uma palavra existente no dicionário -->
     <Word from="crâneo" to="crânio" />
     <Word from="dE" to="de" />
     <Word from="defenição" to="definição" />
@@ -419,28 +414,12 @@
     <Word from="suavisar" to="suavizar" />
     <Word from="substituido" to="substituído" />
     <Word from="suburbio" to="subúrbio" />
-    <!--<Word from="sues" to="seus" /> sues existe "Cuidado, não sues muito." -->
     <Word from="sufciente" to="suficiente" />
     <Word from="sufeciente" to="suficiente" />
     <Word from="suI" to="sul" />
-    <Word from="Suiça" to="Suíça" />
-    <Word from="suiças" to="suíças" />
-    <Word from="suiço" to="suíço" />
-    <Word from="suiços" to="suíços" />
-    <Word from="Suissa" to="Suíça" />
-    <Word from="Suíssa" to="Suíça" />
-    <Word from="suissas" to="suíças" />
-    <Word from="suíssas" to="suíças" />
-    <Word from="suisso" to="suíço" />
-    <Word from="suísso" to="suíço" />
-    <Word from="suissos" to="suíços" />
-    <Word from="suíssos" to="suíços" />
     <Word from="supôr" to="supor" />
     <Word from="tabeliões" to="tabeliães" />
     <Word from="taínha" to="tainha" />
-    <Word from="tambem" to="também" />
-    <Word from="tanbem" to="também" />
-    <Word from="tanbém" to="também" />
     <Word from="tava" to="estava" />
     <Word from="têem" to="têm" />
     <Word from="telemovel" to="telemóvel" />
@@ -516,10 +495,19 @@
     <RegEx find="(\\d) +º" replaceWith="$1º" />
     <RegEx find="\Bcao\b" replaceWith="ção" />
     <RegEx find="\Bcoes\b" replaceWith="ções" />
-    <!-- <RegEx find="\Bccao\b" replaceWith="cção" /> não faz sentido ter este e ter a linha de cima-->
-    <!-- <RegEx find="\Bccoes\b" replaceWith="cções" /> não faz sentido ter este e ter a linha de cima-->
     <RegEx find="\b([mM])ae\b" replaceWith="$1ãe" />
     <RegEx find="\Bdmnis\B" replaceWith="dminis" />
     <RegEx find="\Blcól\B" replaceWith="lcoól" />
+    <!-- suiças, suiço, suiços, suissas, suíssas, suisso, suísso, suíssos, Suíssa...etc -> Suíça -->
+    <RegEx find="\b([sS])u[ií](ss|ç|s)([oa])(s?)\b" replaceWith="$1uíç$3$4" />
+    <!-- acucar, acúcar, açucar, assúcar -> açúcar  -->
+    <RegEx find="\b([aA])(cu|çu|cú|ssú)car\b" replaceWith="$1çúcar" />
+    <!-- tambem, também, tanbem, também, tanbém...etc  -> também -->
+    <RegEx find="\b([tT])[ãáâa][nm][vb][eé][nm]\b" replaceWith="$1ambém" />
+    <!-- amarei-te -> amar-te-ei | ajudarei-te -> ajudar-te-ei -->
+    <RegEx find="\b([a-zA-Z][a-zA-Z]+)arei-te\b" replaceWith="$1ar-te-ei" />
+    <!-- a muito tempo -> há muito tempo -->
+    <RegEx find="\b[aáà] (muito|bastante|pouco|algum|alguns|um|uns)(s?) (tempo|dia|hora|minuto|segundo)(s?)\b" replaceWith="há $1$2 $3$4" />
+    <RegEx find="\b[AÁÀ] (muito|bastante|pouco|algum|alguns|um|uns)(s?) (tempo|dia|hora|minuto|segundo)(s?)\b" replaceWith="Há $1$2 $3$4" />
   </RegularExpressions>
 </OCRFixReplaceList>
