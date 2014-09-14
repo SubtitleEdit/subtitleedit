@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
     /// <summary>
     ///   Summary description for ColorChooser.
     /// </summary>
-    public class ColorChooser : Form, IDisposable
+    public class ColorChooser : Form
     {
         /// <summary>
         ///   Required designer variable.
