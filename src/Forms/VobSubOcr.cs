@@ -7440,8 +7440,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Subtitle sub = new Subtitle();
-                Encoding encoding = null;
-                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, encoding);
+                Encoding encoding;
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
                 if (format == null || sub == null)
                     return;
 
@@ -8376,8 +8376,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Subtitle sub = new Subtitle();
-                Encoding encoding = null;
-                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, encoding);
+                Encoding encoding;
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
                 if (format == null || sub == null)
                     return;
 
