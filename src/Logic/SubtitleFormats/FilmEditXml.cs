@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var p = new Paragraph();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name.ToString())
+                        switch (innerNode.Name)
                         {
                             case "text":
                                 p.Text = innerNode.InnerText.Replace("\\N", Environment.NewLine);

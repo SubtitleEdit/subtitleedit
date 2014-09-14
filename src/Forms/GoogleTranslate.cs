@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
                     string text = string.Format("{1} {0} |", p.Text.Replace("|", _newlineString), _splitterString);
-                    if (Utilities.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
+                    if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
                         sb = new StringBuilder();
@@ -898,7 +898,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("{1}{0}|", p.Text, _splitterString);
                     if (!overQuota)
                     {
-                        if ((Utilities.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
+                        if ((Utilities.UrlEncode(sb + text)).Length >= textMaxSize)
                         {
                             try
                             {

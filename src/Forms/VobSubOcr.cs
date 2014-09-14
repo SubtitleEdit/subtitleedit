@@ -3894,7 +3894,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -3932,7 +3932,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
             return line;
@@ -4103,7 +4103,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4141,7 +4141,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
             return line;
@@ -4408,7 +4408,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4446,7 +4446,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
             return line;
@@ -4766,7 +4766,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line.Append(temp);
                 }
 
-                paragraph.Append(line.ToString());
+                paragraph.Append(line);
                 paragraph.Append(appendString);
             }
             line = new StringBuilder();
@@ -4791,7 +4791,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line.Append("</i>");
                     isItalic = false;
                 }
-                line.Append(word.ToString());
+                line.Append(word);
                 line.Append(appendString);
                 wordNonItalics++;
             }
@@ -5841,9 +5841,9 @@ namespace Nikse.SubtitleEdit.Forms
             // fix italics
             textWithOutFixes = FixItalics(textWithOutFixes);
 
-            int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+            int numberOfWords = textWithOutFixes.Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
-            string line = textWithOutFixes.ToString().Trim();
+            string line = textWithOutFixes.Trim();
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
@@ -5900,7 +5900,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length < 2)
                 {
                     if (_bluRaySubtitles != null && !line.Contains("<i>"))
                     {
@@ -5963,7 +5963,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (checkBoxTesseractItalicsOn.Checked)
                 {
-                    if (line.Contains("<i>") || wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                    if (line.Contains("<i>") || wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length < 2)
                     {
                         _ocrFixEngine.AutoGuessesUsed.Clear();
                         _ocrFixEngine.UnknownWordsFound.Clear();
@@ -6275,7 +6275,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length < 2)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -6404,11 +6404,11 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
             }
 
-            if (textWithOutFixes.ToString().Trim() != line.Trim())
+            if (textWithOutFixes.Trim() != line.Trim())
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(index, textWithOutFixes.ToString(), line);
+                LogOcrFix(index, textWithOutFixes, line);
             }
 
             if (_vobSubMergedPackist != null)
@@ -6460,7 +6460,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
             string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId, null);
-            if (result.ToString().Trim().Length == 0)
+            if (result.Trim().Length == 0)
                 result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId, "-psm 7");
             return result.TrimEnd();
         }
@@ -6768,7 +6768,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxOcrMethod.SelectedIndex == 4)
             {
-                _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem.ToString() + ".db";
+                _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
             }
 
             LoadImageCompareBitmaps();

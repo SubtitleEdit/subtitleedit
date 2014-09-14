@@ -265,7 +265,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeText(string s)
         {
-            s = s.ToString();
             s = s.Replace("<b>", string.Empty).Replace("<B>", string.Empty).Replace("</b>", string.Empty).Replace("</B>", string.Empty);
             s = s.Replace("<u>", string.Empty).Replace("<U>", string.Empty).Replace("</u>", string.Empty).Replace("</U>", string.Empty);
             s = Utilities.RemoveHtmlFontTag(s);

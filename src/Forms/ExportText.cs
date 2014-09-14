@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (showTimecodes)
                 {
                     if (timeCodeSrt)
-                        sb.Append(p.StartTime.ToString() + timeCodeSeperator + p.EndTime.ToString());
+                        sb.Append(p.StartTime + timeCodeSeperator + p.EndTime);
                     else if (timeCodeHHMMSSFF)
                         sb.Append(p.StartTime.ToHHMMSSFF() + timeCodeSeperator + p.EndTime.ToHHMMSSFF());
                     else

@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     StringBuilder pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name.ToString())
+                        switch (innerNode.Name)
                         {
                             case "key":
                                 lastKey = innerNode.InnerText;

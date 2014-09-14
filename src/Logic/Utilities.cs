@@ -3794,7 +3794,7 @@ namespace Nikse.SubtitleEdit.Logic
                     else if (numbersOn)
                     {
                         numbersOn = false;
-                        s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
+                        s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers);
                         numbers = string.Empty;
                     }
                     else if (reverseChars.Contains(s.Substring(i, 1)))
@@ -3806,7 +3806,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (numbersOn)
                 {
                     int i = s.Length;
-                    s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers.ToString());
+                    s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers);
                     numbers = string.Empty;
                 }
 

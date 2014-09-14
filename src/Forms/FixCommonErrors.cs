@@ -4489,7 +4489,7 @@ namespace Nikse.SubtitleEdit.Forms
             // build log
             textBoxFixedIssues.Text = string.Empty;
             if (_newLog.Length >= 0)
-                textBoxFixedIssues.AppendText(_newLog.ToString() + Environment.NewLine);
+                textBoxFixedIssues.AppendText(_newLog + Environment.NewLine);
             textBoxFixedIssues.AppendText(_appliedLog.ToString());
             subtitleListView1.EndUpdate();
         }

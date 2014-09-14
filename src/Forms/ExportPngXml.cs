@@ -1481,7 +1481,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                     if (sb.Length > 0)
                     {
-                        lastText.Append(sb.ToString());
+                        lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     if (path.PointCount > 0)

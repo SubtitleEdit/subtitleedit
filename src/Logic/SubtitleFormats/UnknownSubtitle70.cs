@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 lineSb.Append(pre + s + singlePost);
                                 count++;
                             }
-                            text = lineSb.ToString() + post;
+                            text = lineSb + post;
                             subtitle.Paragraphs.Add(new Paragraph(startFrame, endFrame, text));
                         }
                     }
