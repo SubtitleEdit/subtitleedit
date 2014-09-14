@@ -5,6 +5,7 @@ using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.Networking;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoFormats;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
@@ -17048,9 +17049,9 @@ namespace Nikse.SubtitleEdit.Forms
             setVideoOffsetToolStripMenuItem.Visible = !string.IsNullOrEmpty(_videoFileName) && Configuration.Settings.General.ShowBetaStuff;
 
             toolStripMenuItemSetAudioTrack.Visible = false;
-            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlcDynamic)
+            var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
+            if (libVlc != null)
             {
-                var libVlc = (Logic.VideoPlayers.LibVlcDynamic)mediaPlayer.VideoPlayer;
                 int numberOfTracks = libVlc.AudioTrackCount;
                 _videoAudioTrackNumber = libVlc.AudioTrackNumber;
                 if (numberOfTracks > 1)
@@ -17080,9 +17081,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChooseAudioTrack(object sender, EventArgs e)
         {
-            if (mediaPlayer.VideoPlayer != null && mediaPlayer.VideoPlayer is Logic.VideoPlayers.LibVlcDynamic)
+            var libVlc = mediaPlayer.VideoPlayer as LibVlcDynamic;
+            if (libVlc != null)
             {
-                var libVlc = (Logic.VideoPlayers.LibVlcDynamic)mediaPlayer.VideoPlayer;
                 var item = sender as ToolStripItem;
 
                 int number = int.Parse(item.Text);
