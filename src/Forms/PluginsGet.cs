@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
                 wc.Encoding = System.Text.Encoding.UTF8;
                 wc.Headers.Add("Accept-Encoding", "");
-                wc.DownloadStringCompleted += new DownloadStringCompletedEventHandler(wc_DownloadStringCompleted);
+                wc.DownloadStringCompleted += wc_DownloadStringCompleted;
                 wc.DownloadStringAsync(new Uri(url));
             }
             catch (Exception exception)
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _downloadedPluginName = _pluginDoc.DocumentElement.SelectNodes("Plugin")[index].SelectSingleNode("Name").InnerText;
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(wc_DownloadDataCompleted);
+                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadDataAsync(new Uri(url));
                 Cursor = Cursors.Default;
             }
@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = 0; i < _updateAllListUrls.Count; i++)
                 {
                     var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                    wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(wc_DownloadDataCompleted);
+                    wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                     wc.DownloadDataAsync(new Uri(_updateAllListUrls[i]));
                 }
                 Cursor = Cursors.Default;

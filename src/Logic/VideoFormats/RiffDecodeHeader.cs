@@ -288,8 +288,8 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="length"></param>
         private void ProcessAVIList(RiffParser rp, int FourCC, int length)
         {
-            RiffParser.ProcessChunkElement pac = new RiffParser.ProcessChunkElement(ProcessAVIChunk);
-            RiffParser.ProcessListElement pal = new RiffParser.ProcessListElement(ProcessAVIList);
+            RiffParser.ProcessChunkElement pac = ProcessAVIChunk;
+            RiffParser.ProcessListElement pal = ProcessAVIList;
 
             // Is this the header?
             if ((AviRiffData.ckidAVIHeaderList == FourCC)
@@ -313,8 +313,8 @@ namespace Nikse.SubtitleEdit.Logic
             Clear();
             int length = Parser.DataSize;
 
-            RiffParser.ProcessChunkElement pdc = new RiffParser.ProcessChunkElement(ProcessAVIChunk);
-            RiffParser.ProcessListElement pal = new RiffParser.ProcessListElement(ProcessAVIList);
+            RiffParser.ProcessChunkElement pdc = ProcessAVIChunk;
+            RiffParser.ProcessListElement pal = ProcessAVIList;
 
             while (length > 0)
             {
@@ -438,8 +438,8 @@ namespace Nikse.SubtitleEdit.Logic
             Clear();
             int length = Parser.DataSize;
 
-            RiffParser.ProcessChunkElement pdc = new RiffParser.ProcessChunkElement(ProcessWaveChunk);
-            RiffParser.ProcessListElement pal = new RiffParser.ProcessListElement(ProcessList);
+            RiffParser.ProcessChunkElement pdc = ProcessWaveChunk;
+            RiffParser.ProcessListElement pal = ProcessList;
 
             while (length > 0)
             {

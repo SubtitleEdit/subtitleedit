@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer.StartInfo.RedirectStandardInput = true;
                 _mplayer.StartInfo.RedirectStandardOutput = true;
                 _mplayer.StartInfo.CreateNoWindow = true;
-                _mplayer.OutputDataReceived += new DataReceivedEventHandler(MPlayerOutputDataReceived);
+                _mplayer.OutputDataReceived += MPlayerOutputDataReceived;
 
                 try
                 {
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 // start timer to collect variable properties
                 _timer = new Timer();
                 _timer.Interval = 1000;
-                _timer.Tick += new EventHandler(timer_Tick);
+                _timer.Tick += timer_Tick;
                 _timer.Start();
 
                 OnVideoLoaded = onVideoLoaded;

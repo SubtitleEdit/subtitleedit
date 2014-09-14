@@ -442,7 +442,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 _libvlc_media_player_play(newVlc._mediaPlayer);
                 newVlc._videoLoadedTimer = new Timer { Interval = 500 };
-                newVlc._videoLoadedTimer.Tick += new EventHandler(newVlc.VideoLoadedTimer_Tick);
+                newVlc._videoLoadedTimer.Tick += newVlc.VideoLoadedTimer_Tick;
                 newVlc._videoLoadedTimer.Start();
 
                 newVlc._mouseTimer = new Timer { Interval = 25 };
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 _libvlc_media_player_play(_mediaPlayer);
                 _videoLoadedTimer = new Timer { Interval = 500 };
-                _videoLoadedTimer.Tick += new EventHandler(VideoLoadedTimer_Tick);
+                _videoLoadedTimer.Tick += VideoLoadedTimer_Tick;
                 _videoLoadedTimer.Start();
 
                 _mouseTimer = new Timer { Interval = 25 };

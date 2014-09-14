@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             _interjectionList.Add(pascalCasing);
                     }
                 }
-                _interjectionList.Sort(new Comparison<string>(CompareLength));
+                _interjectionList.Sort(CompareLength);
             }
 
             bool doRepeat = true;
