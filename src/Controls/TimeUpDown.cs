@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1 || value == null)
+                if (value == null && value.TotalMilliseconds >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
                 {
                     maskedTextBox1.Text = string.Empty;
                     return;
