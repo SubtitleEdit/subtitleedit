@@ -5,7 +5,7 @@ namespace MultiLanguage
     using System.Runtime.InteropServices;
 
     [ComImport, TypeLibType((short)2), ClassInterface((short)0), Guid("275C23E2-3747-11D0-9FEA-00AA003F8646")]
-    public class CMultiLanguageClass : IMultiLanguage, CMultiLanguage, IMLangCodePages, IMLangFontLink, IMLangLineBreakConsole, IMultiLanguage2, IMLangFontLink2, IMultiLanguage3
+    public class CMultiLanguageClass : CMultiLanguage, IMLangFontLink, IMLangLineBreakConsole, IMLangFontLink2, IMultiLanguage3
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void BreakLineA([In] uint locale, [In] uint uCodePage, [In] ref sbyte pszSrc, [In] int cchSrc, [In] int cMaxColumns, out int pcchLine, out int pcchSkip);
