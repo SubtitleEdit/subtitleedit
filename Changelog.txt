@@ -53,11 +53,11 @@
    * Fixed issue regarding "Fix start with uppercase after paragraph" - thx XhmikosR
    * Fixed PAC reading (regarding W16)
    * Fixed PAC reading (stopped before end of file in some files) - thx Massimo
-   * Fixed bad xml tag in spanish OCR fix list - thx DavidGDFC
-   * Fixed "MicroDvd" sub compare - thx SimplyTheBOSS
+   * Fixed bad XML tag in Spanish OCR fix list - thx DavidGDFC
+   * Fixed "MicroDVD" sub compare - thx SimplyTheBOSS
    * Fixed regular expression replace in main window - thx ivandrofly
    * Fixed bug in "Fix invalid italic tags" - thx XhmikosR
-   * Can now load Norwegian Tesseract dic - thx Stian
+   * Can now load Norwegian Tesseract dictionary - thx Stian
 
 
 3.4.1 (8th August 2014)
@@ -169,7 +169,7 @@
    * Updated Polish language file - thx Admas
    * Updated Argentinian Spanish language file - thx walterh78
    * Updated Spanish (Mexico) language file - thx pakitonaranjo
-   * HTML encoding of SAMI files is now again default false
+   * HTML encoding of SAMI files is now again false by default
    * Better reading of time codes of Blu-ray sup in mkv - thx Rach78
 * FIXED:
    * Fixed VobSub writing compatibility with gpac/mp4box + handbrake - thx Ryan
@@ -229,19 +229,19 @@
    * Better handling of apostrophe in spell check - thx Betsy25
    * Better grouping of general settings in options
    * Added setting for HTML encoding text in SAMI files (default on)
-   * Export to DOST, buttom margin + no spaces in file names - thx Andreas
-   * Save unicode to ansi, warning + also auto converts some symbols - thx SimplyTheBOSS
+   * Export to DOST, bottom margin + no spaces in file names - thx Andreas
+   * Save Unicode to ANSI, warning + also auto converts some symbols - thx SimplyTheBOSS
 * FIXED:
   * Waveform/spectrogram: Moving start/end with ALT down now always works - thx Leon
   * Waveform/spectrogram: Move border left/right now also always works even 
     when it's near next/prev border
   * Fixed transparent background in "OCR window" regarding transport streams
-  * Now Viewnamese language actually shows in the "Choose language" dialog
+  * Now Vietnamese language actually shows in the "Choose language" dialog
   * Timed Text - List view context menu "Set language" had wrong text
   * Subtitle preview can now show both font and italic for same text - thx Drago
-  * Fixed bug decoding dvb sub - thx aMvEL
+  * Fixed bug decoding DVB sub - thx aMvEL
   * Fixed possible crash in OCR window (if no language is available)
-  * "OCR window" - Norweigan bokmål now works as spell check language
+  * "OCR window" - Norwegian Bokmål now works as spell check language
   * Disabled saving of empty files
   * Fixed bug in centering of exported images - thx minhjirachi
   * Fixed crash in Spell check - Get dictionaries (if no internet connection) - thx Krystian
@@ -261,7 +261,7 @@
    * Added "Tools -> Merge lines with same text"
    * Importing from plain text file,  "One line is one subtitle" now has a 
      "Line break" option - thx Adrian   
-   * Added xml subtitle format "FLVCoreCuePoints" - thx Jon
+   * Added XML subtitle format "FLVCoreCuePoints" - thx Jon
    * Added some support for fxpxml 1.3
    * Added link to Sinhala spell check dictionary
 * IMPROVED:
@@ -284,10 +284,10 @@
   * Fixed bug in "Fix common errors: Remove hyphen" - thx honeybunny
   * Fixed bug in "Remove text for HI" issue - thx cipry15
   * Fixed bug in "Auto br" - thx XhmikosR
-  * Split up D-Cinema smtp to 2007 and 2010 versions - thx Knut
+  * Split up D-Cinema SMTP to 2007 and 2010 versions - thx Knut
   * Missing outline/shadow in export images - thx minhjirachi
   * Fixed some missing characters in PAC format - thx Adrian
-  * Fixed some bugs in "Youtube transcript" format - thx tony
+  * Fixed some bugs in "YouTube Transcript" format - thx tony
   * Fixed bug in reading of end-tags in ASS - thx Null
   * "Delete" context menu in text box did not work - thx ivandrofly
 
@@ -473,7 +473,7 @@
    * Fixed multi line color tags when outputting DCinema - thx lillian
    * Fixed "line-breaks" in csv formats
    * Fixed dead spell check download links (no more OpenOffice links)
-   * Some fixes for DCinema smtp - thx Andrew
+   * Some fixes for DCinema SMTP - thx Andrew
    * Fixed bug regarding decoding &aring; to å - thx Jesper
 
 
@@ -632,7 +632,7 @@
    * Easy import of auto-backup files (File -> Restore auto-backup...)
    * Advanced Substation Alpha style viewer/creator (right click in list view)
    * Timed Text style view/creator (right click in list view)
-   * File -> D-Cinema properties (for both smtpe and interop)
+   * File -> D-Cinema properties (for both SMTPE and interop)
    * Can now display frames instead of milliseconds in main window
      (see Options -> Settings)
    * New setting in Options: "Max. chars/second"
@@ -739,7 +739,7 @@
    * Can now import binary Cheetah Caption subtitle format
  * IMPROVED:
    * VLC audio extraction now generates smaller wave file - thx utocne
-     (transcoding parameters now in Settings.xml)
+     (transcoding parameters now in settings.xml)
    * Added "Find text" to Point Sync + Set Sync Point - thx eMWu
    * Unbreak/auto-break buttons now also work on selected lines - thx XhmikosR
    * EBU STL now also accepts STL 2.4 (besides STL25/STL30) - Thx Axel
@@ -868,7 +868,7 @@
    * Fixed milliseconds in timed text - thx Calle
    * Names with spaces now works in spell check - thx DrJackson
    * Do not use frame rate if it's zero (audio files) - thx dixie.fever
-   * Fixed possible crash when saving xml files - thx Peter
+   * Fixed possible crash when saving XML files - thx Peter
 
 
 3.2.2 (19th October 2011)
@@ -896,7 +896,7 @@
  * NEW:
    * Can now display spectrogram (and/or waveform)
    * Subtitle formats: D-Cinema, Cavena890, Timed Text 1.0, Captionate, 
-     Flash xml, YouTube annotations and more
+     Flash XML, YouTube annotations and more
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/OCR bdn-xml/images
    * Added "Point sync via other subtitle" (thx ioannis)
