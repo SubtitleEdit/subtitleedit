@@ -1,3 +1,5 @@
+// (c) Giora Tamir (giora@gtamir.com), 2005
+
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -94,9 +96,6 @@ namespace Nikse.SubtitleEdit.Logic
         public short cbSize;
     }
 
-    /// <copyright>
-    /// Giora Tamir (giora@gtamir.com), 2005
-    /// </copyright>
     internal static class AviRiffData
     {
         #region AVI constants

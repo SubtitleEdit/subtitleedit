@@ -1,11 +1,10 @@
+// (c) Giora Tamir (giora@gtamir.com), 2005
+
 using System;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    /// <copyright>
-    /// Giora Tamir (giora@gtamir.com), 2005
-    /// </copyright>
     public class RiffDecodeHeader
     {
 
