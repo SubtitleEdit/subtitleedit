@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             var waveFile = new WavePeakGenerator(targetFile);
 
             int sampleRate = Configuration.Settings.VideoControls.WaveFormMininumSampleRate; // Normally 128
-            while (!(waveFile.Header.SampleRate % sampleRate == 0) && sampleRate < 5000)
+            while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
 
             labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;

@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _ended = false;
             }
 
-            if (OnVideoLoaded != null && _loaded == true)
+            if (OnVideoLoaded != null && _loaded)
             {
                 _timer.Stop();
                 _loaded = false;
