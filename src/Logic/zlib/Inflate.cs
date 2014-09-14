@@ -375,8 +375,8 @@ namespace ComponentAce.Compression.Libs.zlib
 			z.istate.mode = BLOCKS;
 			return Z_OK;
 		}
-		
-		private static byte[] mark = new byte[]{(byte) 0, (byte) 0, (byte) SupportClass.Identity(0xff), (byte) SupportClass.Identity(0xff)};
+
+	    private static byte[] mark = { 0, 0, (byte) SupportClass.Identity(0xff), (byte) SupportClass.Identity(0xff) };
 		
 		internal int inflateSync(ZStream z)
 		{

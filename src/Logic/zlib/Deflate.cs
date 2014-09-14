@@ -77,7 +77,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		private const int SLOW = 2;
 		private static Config[] config_table;
 				
-		private static readonly System.String[] z_errmsg = new System.String[]{"need dictionary", "stream end", "", "file error", "stream error", "data error", "insufficient memory", "buffer error", "incompatible version", ""};
+		private static readonly string[] z_errmsg = { "need dictionary", "stream end", "", "file error", "stream error", "data error", "insufficient memory", "buffer error", "incompatible version", "" };
 		
 		// block not completed, need more input or more output
 		private const int NeedMore = 0;
