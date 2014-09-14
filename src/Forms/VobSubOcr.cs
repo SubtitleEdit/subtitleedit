@@ -7391,7 +7391,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownStartNumber.Value = last.Index + 1;
                 Timer t = new Timer();
                 t.Interval = 200;
-                t.Tick += new EventHandler(t_Tick);
+                t.Tick += t_Tick;
                 t.Start();
             }
         }
