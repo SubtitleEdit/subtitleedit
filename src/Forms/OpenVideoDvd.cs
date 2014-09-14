@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         try
                         {
-                            comboBoxDrive.Items.Add(drive.ToString() + "  " + drive.VolumeLabel);
+                            comboBoxDrive.Items.Add(drive + "  " + drive.VolumeLabel);
                         }
                         catch
                         {

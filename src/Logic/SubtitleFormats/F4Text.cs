@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
-            var arr = text.ToString().Trim().Split("#".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var arr = text.Trim().Split("#".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             var currentText = new StringBuilder();
             foreach (string line in arr)
             {

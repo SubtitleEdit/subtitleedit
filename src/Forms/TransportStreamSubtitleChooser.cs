@@ -86,9 +86,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var start = new TimeCode(sub.StartMilliseconds);
                 var end = new TimeCode(sub.EndMilliseconds);
                 if (string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine))
-                    listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.NumberOfImages));
+                    listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start, end, sub.NumberOfImages));
                 else
-                    listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start.ToString(), end.ToString(), sub.NumberOfImages));
+                    listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start, end, sub.NumberOfImages));
             }
             if (list.Count > 0)
                 listBoxSubtitles.SelectedIndex = 0;

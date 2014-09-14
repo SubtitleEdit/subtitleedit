@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (s.Length > 1 && hashtable.ContainsKey(s))
                 {
-                    int hits = int.Parse(hashtable[s].ToString());
+                    int hits = int.Parse(hashtable[s]);
                     hits++;
                     hashtable[s] = hits.ToString();
                 }
@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (hashtable.ContainsKey(s))
                 {
-                    int hits = int.Parse(hashtable[s].ToString());
+                    int hits = int.Parse(hashtable[s]);
                     hits++;
                     hashtable[s] = hits.ToString();
                 }

@@ -393,7 +393,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int index = 0;
                             foreach (Paragraph p in _subtitle.Paragraphs)
                             {
-                                if (tc == p.StartTime.ToString() + " --> " + p.EndTime.ToString())
+                                if (tc == p.StartTime + " --> " + p.EndTime)
                                 {
                                     SubtitleListview1.SelectNone();
                                     SubtitleListview1.Items[0].Selected = false;
@@ -8503,7 +8503,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1).ToString() + ": " + timeUpDownStartTime.TimeCode.ToString()));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.StarTimeAdjustedX, "#" + (_subtitleListViewIndex + 1) + ": " + timeUpDownStartTime.TimeCode));
 
                 int firstSelectedIndex = FirstSelectedIndex;
                 Paragraph oldParagraph = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
@@ -8656,7 +8656,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Paragraph p = _subtitle.GetParagraphOrDefault(FirstSelectedIndex);
                         if (p != null)
                         {
-                            string tc = p.StartTime.ToString() + " --> " + p.EndTime.ToString();
+                            string tc = p.StartTime + " --> " + p.EndTime;
                             int start = textBoxSource.Text.IndexOf(tc);
                             if (start > 0)
                             {
@@ -8720,7 +8720,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int index = 0;
                             foreach (Paragraph p in _subtitle.Paragraphs)
                             {
-                                if (tc == p.StartTime.ToString() + " --> " + p.EndTime.ToString())
+                                if (tc == p.StartTime + " --> " + p.EndTime)
                                 {
                                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                                     break;
@@ -9538,7 +9538,7 @@ namespace Nikse.SubtitleEdit.Forms
                         catch (Exception exception)
                         {
                             var tc = new TimeCode(p.StartMilliseconds);
-                            lastError = tc.ToString() + ": " + exception.Message + ": " + exception.StackTrace;
+                            lastError = tc + ": " + exception.Message + ": " + exception.StackTrace;
                             noOfErrors++;
                         }
                         finally
@@ -11576,7 +11576,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds || offset > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     return;
 
-                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc.ToString());
+                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc);
 
                 numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
                 _subtitle.Paragraphs[index].EndTime.TotalSeconds = videoPosition;
@@ -13816,7 +13816,7 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPositionInMilliseconds -= Configuration.Settings.General.SetStartEndHumanDelay;
 
             var tc = new TimeCode(videoPositionInMilliseconds);
-            MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc.ToString());
+            MakeHistoryForUndo(_language.BeforeInsertSubtitleAtVideoPosition + "  " + tc);
 
             // find index where to insert
             int index = 0;
@@ -14006,7 +14006,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void ShowEarlierOrLater(double adjustMilliseconds, SelectionChoice selection)
         {
             var tc = new TimeCode(adjustMilliseconds);
-            MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater + ": " + tc.ToString());
+            MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater + ": " + tc);
             if (adjustMilliseconds < 0)
             {
                 if (selection == SelectionChoice.AllLines)
@@ -14465,7 +14465,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tc = TimeCode.FromSeconds(videoPosition);
                 timeUpDownStartTime.TimeCode = tc;
 
-                MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc.ToString());
+                MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc);
 
                 double offset = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds - tc.TotalMilliseconds;
 
@@ -14533,7 +14533,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldDuration = _subtitle.Paragraphs[index].Duration.ToString();
                 var temp = new Paragraph(_subtitle.Paragraphs[index]);
                 temp.EndTime.TotalMilliseconds = TimeCode.FromSeconds(videoPosition).TotalMilliseconds;
-                MakeHistoryForUndo(string.Format(_language.DisplayTimeAdjustedX, "#" + _subtitle.Paragraphs[index].Number + ": " + oldDuration + " -> " + temp.Duration.ToString()));
+                MakeHistoryForUndo(string.Format(_language.DisplayTimeAdjustedX, "#" + _subtitle.Paragraphs[index].Number + ": " + oldDuration + " -> " + temp.Duration));
                 _makeHistoryPaused = true;
 
                 if (_subtitle.Paragraphs[index].StartTime.IsMaxTime)
@@ -17388,7 +17388,7 @@ namespace Nikse.SubtitleEdit.Forms
             double totalMillisecondsEnd = mediaPlayer.CurrentPosition * 1000.0;
 
             var tc = new TimeCode(totalMillisecondsEnd - durationTotalMilliseconds);
-            MakeHistoryForUndo(_language.BeforeSetEndAndVideoPosition + "  " + tc.ToString());
+            MakeHistoryForUndo(_language.BeforeSetEndAndVideoPosition + "  " + tc);
             _makeHistoryPaused = true;
 
             if (p.StartTime.IsMaxTime)

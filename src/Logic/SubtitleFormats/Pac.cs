@@ -1225,7 +1225,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < LatinLetters.Count; i++)
                             sb.Append(LatinLetters[i]);
-                        string latinLetters = sb.ToString() + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\")";
+                        string latinLetters = sb + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!latinLetters.Contains(ch.ToString()))
@@ -1253,7 +1253,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         for (int i = 0; i < ArabicLetters.Count; i++)
                             sb.Append(ArabicLetters[i]);
-                        string arabicLetters = sb.ToString() + "(1234567890, .!?-\r\n'\")";
+                        string arabicLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!arabicLetters.Contains(ch.ToString()))
@@ -1269,7 +1269,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         for (int i = 0; i < HebrewLetters.Count; i++)
                             sb.Append(HebrewLetters[i]);
-                        string hebrewLetters = sb.ToString() + "(1234567890, .!?-\r\n'\")";
+                        string hebrewLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!hebrewLetters.Contains(ch.ToString()))
@@ -1285,7 +1285,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         for (int i = 0; i < CyrillicLetters.Count; i++)
                             sb.Append(CyrillicLetters[i]);
-                        string cyrillicLetters = sb.ToString() + "(1234567890, .!?-\r\n'\")";
+                        string cyrillicLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!cyrillicLetters.Contains(ch.ToString()))

@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var pText = new StringBuilder();
                     foreach (XmlNode innerNode in node.SelectSingleNode("Text").ChildNodes)
                     {
-                        switch (innerNode.Name.ToString())
+                        switch (innerNode.Name)
                         {
                             case "br":
                                 pText.AppendLine();

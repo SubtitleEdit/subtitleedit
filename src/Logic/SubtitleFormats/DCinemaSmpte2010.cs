@@ -566,7 +566,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name.ToString())
+                        switch (innerNode.Name)
                         {
                             case "Text":
                                 if (innerNode.Attributes["Vposition"] != null)
@@ -629,7 +629,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                             else if (alignRight)
                                                 pre = "{\\an3}";
                                         }
-                                        string temp = pre + pText.ToString();
+                                        string temp = pre + pText;
                                         pText = new StringBuilder();
                                         pText.Append(temp);
                                     }
