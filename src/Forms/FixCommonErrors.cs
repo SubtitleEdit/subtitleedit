@@ -2052,7 +2052,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (IsOneLineUrl(p.Text) || p.Text.Contains("♪") || p.Text.Contains("♫") || p.Text.EndsWith("'", StringComparison.Ordinal))
                 {
-                    ; // ignore urls
+                    // ignore urls
                 }
                 else if (!string.IsNullOrEmpty(nextText) && next != null &&
                     next.Text.Length > 0 &&

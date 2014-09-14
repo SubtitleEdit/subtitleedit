@@ -11834,7 +11834,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         sb.AppendLine("- " + line);
                 }
-                string text = sb.ToString().Trim(); ;
+                string text = sb.ToString().Trim();
                 _subtitle.Paragraphs[index].Text = text;
                 SubtitleListview1.SetText(index, text);
                 if (index == _subtitleListViewIndex)
@@ -11858,7 +11858,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         sb.AppendLine(line);
                 }
-                string text = sb.ToString().Trim(); ;
+                string text = sb.ToString().Trim();
                 _subtitle.Paragraphs[index].Text = text;
                 SubtitleListview1.SetText(index, text);
                 if (index == _subtitleListViewIndex)
