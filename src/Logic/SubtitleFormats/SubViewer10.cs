@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 ******** END SCRIPT ********
 ";
             var sb = new StringBuilder();
-            sb.Append(string.Format(header, title));
+            sb.AppendFormat(header, title);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "|"));

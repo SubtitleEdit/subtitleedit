@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append(string.Format(paragraphWriteFormat, FormatTime(p.StartTime), FormatTime(p.EndTime), p.Text));
+                sb.AppendFormat(paragraphWriteFormat, FormatTime(p.StartTime), FormatTime(p.EndTime), p.Text);
             }
             return sb.ToString().Trim();
         }

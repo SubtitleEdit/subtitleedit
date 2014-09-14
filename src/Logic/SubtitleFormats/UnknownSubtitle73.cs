@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index++;
                 string text = Utilities.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\n\n");
-                sb.Append(string.Format("{0}:{1} {2} {3}\n{4}\n\n", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeDuration(p), text));
+                sb.AppendFormat("{0}:{1} {2} {3}\n{4}\n\n", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeDuration(p), text);
             }
             return sb.ToString();
         }
