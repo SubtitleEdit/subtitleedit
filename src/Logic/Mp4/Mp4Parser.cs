@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
                 if (Size < 8)
                     return;
 
-                if (Name == "moov")
+                if (Name == "moov" && Moov != null)
                     Moov = new Moov(fs, Position);
 
                 count++;
