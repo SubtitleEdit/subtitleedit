@@ -12935,7 +12935,7 @@ namespace Nikse.SubtitleEdit.Forms
                 openFileDialog1.Title = Configuration.Settings.Language.General.OpenOriginalSubtitleFile;
                 openFileDialog1.FileName = string.Empty;
                 openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
-                if (!(openFileDialog1.ShowDialog(this) == DialogResult.OK))
+                if (openFileDialog1.ShowDialog(this) != DialogResult.OK)
                     return;
 
                 if (!LoadAlternateSubtitleFile(openFileDialog1.FileName))
