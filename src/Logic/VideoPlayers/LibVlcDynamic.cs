@@ -578,7 +578,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             Directory.SetCurrentDirectory(Path.GetDirectoryName(dllFile));
             _libVlcDLL = NativeMethods.LoadLibrary(dllFile);
             LoadLibVlcDynamic();
-            string[] initParameters = new string[] { "--no-skip-frames" };
+            string[] initParameters = { "--no-skip-frames" };
             _libVlc = _libvlc_new(initParameters.Length, initParameters);
             IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
             _mediaPlayer = _libvlc_media_player_new_from_media(media);
@@ -617,7 +617,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (!string.IsNullOrEmpty(videoFileName))
             {
-                string[] initParameters = new string[] { "--no-sub-autodetect-file" }; //, "--no-video-title-show" }; //TODO: Put in options/config file
+                string[] initParameters = { "--no-sub-autodetect-file" }; //, "--no-video-title-show" }; //TODO: Put in options/config file
                 _libVlc = _libvlc_new(initParameters.Length, initParameters);
                 IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
                 _mediaPlayer = _libvlc_media_player_new_from_media(media);
