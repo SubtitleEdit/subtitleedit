@@ -472,9 +472,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
                 return null;
 
-            string path;
-
-            path = Path.Combine(Configuration.BaseDirectory, @"VLC\" + fileName);
+            var path = Path.Combine(Configuration.BaseDirectory, @"VLC\" + fileName);
             if (File.Exists(path))
                 return path;
 

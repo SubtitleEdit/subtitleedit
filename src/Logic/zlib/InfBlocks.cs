@@ -431,7 +431,7 @@ namespace ComponentAce.Compression.Libs.zlib
 							}
 							
 							
-							int i, j, c;
+							int i, j;
 							
 							t = bb[0];
 							
@@ -460,7 +460,7 @@ namespace ComponentAce.Compression.Libs.zlib
 							}
 							
 							t = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 1];
-							c = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 2];
+							var c = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 2];
 							
 							if (c < 16)
 							{
@@ -646,16 +646,12 @@ namespace ComponentAce.Compression.Libs.zlib
 		// copy as much as possible from the sliding window to the output area
 		internal int inflate_flush(ZStream z, int r)
 		{
-			int n;
-			int p;
-			int q;
-			
-			// local copies of source and destination pointers
-			p = z.next_out_index;
-			q = read;
+		    // local copies of source and destination pointers
+			var p = z.next_out_index;
+			var q = read;
 			
 			// compute number of bytes to copy as far as end of window
-			n = (int) ((q <= write?write:end) - q);
+		    var n = (q <= write ? write : end) - q;
 			if (n > z.avail_out)
 				n = z.avail_out;
 			if (n != 0 && r == Z_BUF_ERROR)

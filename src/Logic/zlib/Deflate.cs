@@ -1606,9 +1606,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int deflate(ZStream strm, int flush)
 		{
-			int old_flush;
-			
-			if (flush > Z_FINISH || flush < 0)
+		    if (flush > Z_FINISH || flush < 0)
 			{
 				return Z_STREAM_ERROR;
 			}
@@ -1625,7 +1623,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			}
 			
 			this.strm = strm; // just in case
-			old_flush = last_flush;
+			var old_flush = last_flush;
 			last_flush = flush;
 			
 			// Write the zlib header

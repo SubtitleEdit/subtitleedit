@@ -91,26 +91,17 @@ namespace ComponentAce.Compression.Libs.zlib
 			int a; // counter for codes of length k
 			int[] c = new int[BMAX + 1]; // bit length count table
 			int f; // i repeats in table every f entries
-			int g; // maximum code length
-			int h; // table level
-			int i; // counter, current code
 			int j; // counter
-			int k; // number of bits in current code
-			int l; // bits per table (returned in m)
 			int mask; // (1 << w) - 1, to avoid cc -O bug on HP
-			int p; // pointer into c[], b[], or v[]
-			int q; // points to current table
 			int[] r = new int[3]; // table entry for structure assignment
 			int[] u = new int[BMAX]; // table stack
-			int w; // bits before this table == (l * h)
 			int[] x = new int[BMAX + 1]; // bit offsets, then code stack
-			int xp; // pointer into x
 			int y; // number of dummy codes added
-			int z; // number of entries in current table
 			
 			// Generate counts for each bit length
-			
-			p = 0; i = n;
+
+            var p = 0; // pointer into c[], b[], or v[]
+            var i = n; // counter, current code
 			do 
 			{
 				c[b[bindex + p]]++; p++; i--; // assume all entries <= BMAX
@@ -126,11 +117,11 @@ namespace ComponentAce.Compression.Libs.zlib
 			}
 			
 			// Find minimum and maximum length, bound *m by those
-			l = m[0];
+            var l = m[0]; // bits per table (returned in m)
 			for (j = 1; j <= BMAX; j++)
 				if (c[j] != 0)
 					break;
-			k = j; // minimum code length
+            var k = j; // number of bits in current code: minimum code length
 			if (l < j)
 			{
 				l = j;
@@ -140,7 +131,7 @@ namespace ComponentAce.Compression.Libs.zlib
 				if (c[i] != 0)
 					break;
 			}
-			g = i; // maximum code length
+			var g = i; // maximum code length
 			if (l > i)
 			{
 				l = i;
@@ -163,7 +154,8 @@ namespace ComponentAce.Compression.Libs.zlib
 			
 			// Generate starting offsets into the value table for each length
 			x[1] = j = 0;
-			p = 1; xp = 2;
+			p = 1;
+            var xp = 2; // pointer into x
 			while (--i != 0)
 			{
 				// note that i == g from above
@@ -188,11 +180,11 @@ namespace ComponentAce.Compression.Libs.zlib
 			// Generate the Huffman codes and for each, make the table entries
 			x[0] = i = 0; // first Huffman code is zero
 			p = 0; // grab values in bit order
-			h = - 1; // no tables yet--level -1
-			w = - l; // bits decoded == (l * h)
+		    var h = -1; // table level: no tables yet
+            var w = -l; // bits before this table == (l * h): bits decoded
 			u[0] = 0; // just to keep compilers happy
-			q = 0; // ditto
-			z = 0; // ditto
+            var q = 0; // points to current table
+            var z = 0; // number of entries in current table
 			
 			// go through the bit lengths (k already is bits in shortest code)
 			for (; k <= g; k++)
@@ -298,12 +290,10 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal static int inflate_trees_bits(int[] c, int[] bb, int[] tb, int[] hp, ZStream z)
 		{
-			int r;
-			int[] hn = new int[1]; // hufts used in space
+		    int[] hn = new int[1]; // hufts used in space
 			int[] v = new int[19]; // work area for huft_build 
 			
-			r = huft_build(c, 0, 19, 19, null, null, tb, bb, hp, hn, v);
-			
+			var r = huft_build(c, 0, 19, 19, null, null, tb, bb, hp, hn, v);
 			if (r == Z_DATA_ERROR)
 			{
 				z.msg = "oversubscribed dynamic bit lengths tree";
@@ -318,12 +308,11 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal static int inflate_trees_dynamic(int nl, int nd, int[] c, int[] bl, int[] bd, int[] tl, int[] td, int[] hp, ZStream z)
 		{
-			int r;
-			int[] hn = new int[1]; // hufts used in space
+		    int[] hn = new int[1]; // hufts used in space
 			int[] v = new int[288]; // work area for huft_build
 			
 			// build literal/length tree
-			r = huft_build(c, 0, nl, 257, cplens, cplext, tl, bl, hp, hn, v);
+			var r = huft_build(c, 0, nl, 257, cplens, cplext, tl, bl, hp, hn, v);
 			if (r != Z_OK || bl[0] == 0)
 			{
 				if (r == Z_DATA_ERROR)

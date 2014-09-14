@@ -155,14 +155,13 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int inflate(ZStream z, int f)
 		{
-			int r;
-			int b;
+            int b;
 			
 			if (z == null || z.istate == null || z.next_in == null)
 				return Z_STREAM_ERROR;
 			f = f == Z_FINISH?Z_BUF_ERROR:Z_OK;
-			r = Z_BUF_ERROR;
-			while (true)
+            var r = Z_BUF_ERROR;
+            while (true)
 			{
 				//System.out.println("mode: "+z.istate.mode);
 				switch (z.istate.mode)
@@ -381,9 +380,6 @@ namespace ComponentAce.Compression.Libs.zlib
 		internal int inflateSync(ZStream z)
 		{
 			int n; // number of bytes to look at
-			int p; // pointer to bytes
-			int m; // number of marker bytes found in a row
-			long r, w; // temporaries to save total_in and total_out
 			
 			// set up
 			if (z == null || z.istate == null)
@@ -395,8 +391,8 @@ namespace ComponentAce.Compression.Libs.zlib
 			}
 			if ((n = z.avail_in) == 0)
 				return Z_BUF_ERROR;
-			p = z.next_in_index;
-			m = z.istate.marker;
+            var p = z.next_in_index; // pointer to bytes
+            var m = z.istate.marker; // number of marker bytes found in a row
 			
 			// search
 			while (n != 0 && m < 4)
@@ -427,7 +423,8 @@ namespace ComponentAce.Compression.Libs.zlib
 			{
 				return Z_DATA_ERROR;
 			}
-			r = z.total_in; w = z.total_out;
+            var r = z.total_in; // temporary to save total_in
+            var w = z.total_out; // temporary to save total_out
 			inflateReset(z);
 			z.total_in = r; z.total_out = w;
 			z.istate.mode = BLOCKS;
