@@ -139,9 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 var textBytes = new List<byte>();
-                bool italic = false;
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
-                    italic = true;
+                var italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
                 text = Utilities.RemoveHtmlTags(text);
                 int j = 0;
                 if (italic)

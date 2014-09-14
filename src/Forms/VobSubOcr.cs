@@ -2814,18 +2814,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var cutBitmap = parentBitmap.CopyRectangle(new Rectangle(targetItem.X, minY, compareItem.Bitmap.Width, compareItem.Bitmap.Height));
                         int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem.Bitmap, cutBitmap);
-                        if (dif < smallestDifference)
+                        if (dif < smallestDifference && (Math.Abs(target.Height - compareItem.Bitmap.Height) <= 5 || compareItem.Text != "\""))
                         {
-                            bool allow = true;
-                            if (Math.Abs(target.Height - compareItem.Bitmap.Height) > 5 && compareItem.Text == "\"")
-                                allow = false;
-                            if (allow)
-                            {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
-                            }
+                            smallestDifference = dif;
+                            smallestIndex = index;
+                            if (dif == 0)
+                                break; // foreach ending
                         }
                     }
                 }
