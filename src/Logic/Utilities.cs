@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Height = mp4Parser.VideoResolution.Y;
                     info.TotalMilliseconds = mp4Parser.Duration.TotalSeconds;
                     info.VideoCodec = "MP4";
+                    info.FramesPerSecond = mp4Parser.FrameRate;
                     info.Success = true;
                 }
             }

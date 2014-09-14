@@ -45,6 +45,22 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
             return list;
         }
 
+        public List<Trak> GetVideoTracks()
+        {
+            var list = new List<Trak>();
+            if (Moov != null && Moov.Tracks != null)
+            {
+                foreach (var trak in Moov.Tracks)
+                {
+                    if (trak.Mdia != null && trak.Mdia.IsVideo)
+                    {
+                        list.Add(trak);
+                    }
+                }
+            }
+            return list;
+        }
+
         public TimeSpan Duration
         {
             get
@@ -125,6 +141,25 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
                 fs.Seek((long)Position, SeekOrigin.Begin);
             }
             fs.Close();
+        }
+
+        internal double FrameRate
+        {
+            get
+            {
+                // Formula: moov.mdia.stbl.stsz.samplecount / (moov.trak.tkhd.duration / moov.mvhd.timescale) - http://www.w3.org/2008/WebVideo/Annotations/drafts/ontology10/CR/test.php?table=containerMPEG4
+                if (Moov != null && Moov.Mvhd != null && Moov.Mvhd.TimeScale > 0)
+                {
+                    var videoTracks = GetVideoTracks();
+                    if (videoTracks.Count > 0 && videoTracks[0].Tkhd != null && videoTracks[0].Mdia != null && videoTracks[0].Mdia.Minf != null && videoTracks[0].Mdia.Minf.Stbl != null)
+                    {
+                        double duration = videoTracks[0].Tkhd.Duration;
+                        double sampleCount = videoTracks[0].Mdia.Minf.Stbl.StszSampleCount;
+                        return sampleCount / (duration / Moov.Mvhd.TimeScale);
+                    }
+                }
+                return 0;
+            }
         }
 
     }

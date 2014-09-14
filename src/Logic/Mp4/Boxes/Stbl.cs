@@ -12,6 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
         public List<SubPicture> SubPictures = new List<SubPicture>();
         public List<double> StartTimeCodes = new List<double>();
         public List<double> EndTimeCodes = new List<double>();
+        public ulong StszSampleCount = 0;
         private Mdia _mdia;
 
         public Stbl(FileStream fs, ulong maximumLength, UInt32 timeScale, string handlerType, Mdia mdia)
@@ -62,6 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                     int version = Buffer[0];
                     uint uniformSizeOfEachSample = GetUInt(4);
                     uint numberOfSampleSizes = GetUInt(8);
+                    StszSampleCount = numberOfSampleSizes;
                     for (int i = 0; i < numberOfSampleSizes; i++)
                     {
                         if (12 + i * 4 + 4 < Buffer.Length)
