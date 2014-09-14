@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     ObjectId = objId,
                     ObjectVersion = objVer,
                     Fragment = info,
-                    Message = "ObjId: " + objId + ", ver: " + objVer + ", seq: " + (first ? "first" : "") + ((first && last) ? "/" : "") + (last ? "" + "last" : "") + ", width: " + width + ", height: " + height,
+                    Message = "ObjId: " + objId + ", ver: " + objVer + ", seq: first" + (last ? "/" : "") + (last ? "" + "last" : "") + ", width: " + width + ", height: " + height,
                 };
             }
             else

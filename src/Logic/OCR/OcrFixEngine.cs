@@ -1312,7 +1312,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
-            if ((lastLine == null || !lastLine.Contains("\"")) && input != null &&
+            if ((lastLine == null || !lastLine.Contains("\"")) &&
                 input.EndsWith("\".") && input.IndexOf('"') == input.LastIndexOf('"') && input.Length > 3)
             {
                 string lastChar = input.Substring(input.Length - 3, 1);

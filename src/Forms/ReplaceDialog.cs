@@ -79,15 +79,12 @@ namespace Nikse.SubtitleEdit.Forms
             _left = findHelper.WindowPositionLeft;
             _top = findHelper.WindowPositionTop;
 
-            if (findHelper != null)
-            {
-                if (findHelper.FindType == FindType.RegEx)
-                    radioButtonRegEx.Checked = true;
-                else if (findHelper.FindType == FindType.CaseSensitive)
-                    radioButtonCaseSensitive.Checked = true;
-                else
-                    radioButtonNormal.Checked = true;
-            }
+            if (findHelper.FindType == FindType.RegEx)
+                radioButtonRegEx.Checked = true;
+            else if (findHelper.FindType == FindType.CaseSensitive)
+                radioButtonCaseSensitive.Checked = true;
+            else
+                radioButtonNormal.Checked = true;
         }
 
         private void ButtonReplaceClick(object sender, EventArgs e)

@@ -67,9 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     xmlAsString = xmlAsString.Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2010/DCST\"", string.Empty);
                     xml.LoadXml(xmlAsString);
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
-                    if (subtitles != null && subtitles.Count >= 0)
-                        return subtitles != null && subtitles.Count > 0;
-                    return false;
+                    return subtitles != null && subtitles.Count > 0;
                 }
                 catch (Exception ex)
                 {

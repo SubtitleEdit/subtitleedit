@@ -883,7 +883,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
-                            if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                            if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
                                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
 
@@ -937,7 +937,6 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (diffMs < 1000 &&
                              Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
                              p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             next != null &&
                              (nextNext == null || next.EndTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MininumMillisecondsBetweenLines * 2 < nextNext.StartTime.TotalMilliseconds))
                     {
                         if (AllowFix(p, fixAction))
@@ -956,8 +955,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // Make next subtitle duration shorter +  make current subtitle duration longer
                     else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
-                             next != null && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (AllowFix(p, fixAction))
                         {
@@ -973,8 +971,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
                     else if (diffMs < 500 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
-                             next != null && nextNext != null &&
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && nextNext != null &&
                              Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MininumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (AllowFix(p, fixAction))
@@ -4206,7 +4203,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string trimmedStart = p.Text.TrimStart(("- ").ToCharArray());
                 if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && trimmedStart[0].ToString() == trimmedStart[0].ToString().ToLower())
                     wasLastLineClosed = false;
-                if (!wasLastLineClosed && last != null && last.Text == last.Text.ToUpper())
+                if (!wasLastLineClosed && last.Text == last.Text.ToUpper())
                     wasLastLineClosed = true;
 
                 string oldText = p.Text;

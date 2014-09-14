@@ -51,9 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     xml.LoadXml(xmlAsString);
 
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
-                    if (subtitles != null)
-                        return subtitles != null && subtitles.Count > 0;
-                    return false;
+                    return subtitles != null && subtitles.Count > 0;
                 }
                 catch (Exception ex)
                 {

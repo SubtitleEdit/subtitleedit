@@ -5282,7 +5282,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (format != null)
                             {
-                                if (subtitleToAppend != null && subtitleToAppend.Paragraphs.Count > 1)
+                                if (subtitleToAppend.Paragraphs.Count > 1)
                                 {
                                     var visualSync = new VisualSync();
                                     visualSync.Initialize(toolStripButtonVisualSync.Image as Bitmap, subtitleToAppend, _fileName, _language.AppendViaVisualSyncTitle, CurrentFrameRate);
@@ -7715,13 +7715,10 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                 }
-                if (currentParagraph != null && newParagraph != null)
-                {
-                    if (currentParagraph.Text.StartsWith("<i> "))
-                        currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
-                    if (newParagraph.Text.StartsWith("<i> "))
-                        newParagraph.Text = newParagraph.Text.Remove(3, 1);
-                }
+                if (currentParagraph.Text.StartsWith("<i> "))
+                    currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
+                if (newParagraph.Text.StartsWith("<i> "))
+                    newParagraph.Text = newParagraph.Text.Remove(3, 1);
 
                 double startFactor = 0;
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
@@ -11959,7 +11956,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             InsertAfter();
                             textBoxListViewText.Text = p.Text;
-                            if (lastParagraph != null && lastTempParagraph != null)
+                            if (lastParagraph != null)
                             {
                                 double millisecondsBetween = p.StartTime.TotalMilliseconds - lastTempParagraph.EndTime.TotalMilliseconds;
                                 timeUpDownStartTime.TimeCode = new TimeCode(lastParagraph.EndTime.TotalMilliseconds + millisecondsBetween);

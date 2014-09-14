@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mergedSubtitle.Paragraphs.Add(p);
                 }
                 Paragraph next = subtitle.GetParagraphOrDefault(i);
-                if (p != null && next != null)
+                if (next != null)
                 {
                     if (QualifiesForMerge(p, next, maxMillisecondsBetweenLines, maxCharacters) && IsFixAllowed(p))
                     {
