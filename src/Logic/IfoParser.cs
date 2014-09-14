@@ -131,12 +131,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         private void ParseVtsVobs()
         {
-            string data;
             byte[] buffer = new byte[16];
 
             //retrieve video info
             _fs.Position = 0x200;
-            data = IntToBin(GetEndian(2), 16);
+            var data = IntToBin(GetEndian(2), 16);
             _vtsVobs.VideoStream.CodingMode = ArrayOfCodingMode[BinToInt(MidStr(data, 0, 2))];
             _vtsVobs.VideoStream.Standard = ArrayOfStandard[BinToInt(MidStr(data, 2, 2))];
             _vtsVobs.VideoStream.Aspect = ArrayOfAspect[BinToInt(MidStr(data, 4, 2))];
@@ -344,12 +343,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static int TimeToMs(int time)
         {
-            int result;
-            string temp;
             double fps;
 
-            temp = IntToBin(time, 32);
-            result = StrToInt(IntToHex(BinToInt(MidStr(temp, 0, 8)), 1)) * 3600000;
+            var temp = IntToBin(time, 32);
+            var result = StrToInt(IntToHex(BinToInt(MidStr(temp, 0, 8)), 1)) * 3600000;
             result = result + StrToInt(IntToHex(BinToInt(MidStr(temp, 8, 8)), 2)) * 60000;
             result = result + StrToInt(IntToHex(BinToInt(MidStr(temp, 16, 8)), 2)) * 1000;
             if (temp.Substring(24, 2) == "11")
