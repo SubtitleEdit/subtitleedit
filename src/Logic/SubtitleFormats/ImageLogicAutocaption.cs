@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(string.Format("{0}\t{1}\t{2}\t", count.ToString().PadLeft(5, ' '), MakeTimeCode(p.StartTime), text));
                 sb.AppendLine("\t\t\t\t");
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
-                if (next == null || (next != null && Math.Abs(p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) > 50))
+                if (next == null || Math.Abs(p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) > 50)
                 {
                     count++;
                     sb.AppendLine(string.Format("{0}\t{1}", count.ToString().PadLeft(5, ' '), MakeTimeCode(p.EndTime)));

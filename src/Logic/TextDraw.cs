@@ -75,11 +75,10 @@ namespace Nikse.SubtitleEdit.Logic
             var path = new GraphicsPath();
 
             var sb = new StringBuilder(text);
-            bool isItalic = false;
             bool newLine = false;
             int leftMargin = 0;
             int pathPointsStart = -1;
-            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
+            DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float width = 0;
             PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
@@ -109,11 +108,10 @@ namespace Nikse.SubtitleEdit.Logic
             var path = new GraphicsPath();
 
             var sb = new StringBuilder(text);
-            bool isItalic = false;
             bool newLine = false;
             int leftMargin = 0;
             int pathPointsStart = -1;
-            TextDraw.DrawText(font, sf, path, sb, isItalic, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
+            DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
             float height = 0;
             PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!

@@ -510,9 +510,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
                     rows = 23;
 
-                if (header != null && header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
+                if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
                     rows = 23;
-                else if (header != null && header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
+                else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
                     rows = 15;
 
                 if (p.Text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"))
@@ -1011,7 +1011,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        if (b >= 0 && b <= 0x17)
+                        if (b <= 0x17)
                         {
                             switch (b)
                             {

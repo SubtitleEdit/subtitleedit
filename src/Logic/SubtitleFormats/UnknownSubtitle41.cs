@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            if (textOn && sb.Length > 0 && p != null)
+            if (textOn && sb.Length > 0)
             {
                 p.Text = sb.ToString().TrimEnd();
                 subtitle.Paragraphs.Add(p);

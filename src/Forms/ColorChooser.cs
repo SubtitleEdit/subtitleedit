@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (disposing)
             {
-                base.Dispose(disposing);
+                base.Dispose(true);
                 if (myColorWheel != null)
                 {
                     myColorWheel.Dispose();

@@ -1820,7 +1820,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var currentLengthInSeconds = XPositionToSeconds(i - begin) - StartPositionSeconds;
                     if (currentLengthInSeconds > 1.0)
                     {
-                        subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i);
+                        subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, true, i);
                         if (!subtitleOn)
                         {
                             begin = i + minBetween;
@@ -1831,7 +1831,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         for (int j = 0; j < 20; j++)
                         {
-                            subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, subtitleOn, i + (j * length50Ms));
+                            subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, true, i + (j * length50Ms));
                             if (!subtitleOn)
                             {
                                 i += (j * length50Ms);

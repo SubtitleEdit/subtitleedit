@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (!expectStartTime)
                         _errorCount++;
 
-                    if (p != null && p.StartTime.TotalMilliseconds > 0)
+                    if (p.StartTime.TotalMilliseconds > 0)
                     {
                         subtitle.Paragraphs.Add(p);
                         if (string.IsNullOrEmpty(p.Text))
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            if (p != null && p.StartTime.TotalMilliseconds > 0)
+            if (p.StartTime.TotalMilliseconds > 0)
                 subtitle.Paragraphs.Add(p);
 
             bool allNullEndTime = true;
