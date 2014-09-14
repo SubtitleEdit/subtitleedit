@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             header.TotalNumberOfSubtitles = (subtitle.Paragraphs.Count.ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
-            string today = string.Format("{0:00}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);
+            string today = string.Format("{0}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);
             if (today.Length == 6)
             {
                 header.CreationDate = today;
