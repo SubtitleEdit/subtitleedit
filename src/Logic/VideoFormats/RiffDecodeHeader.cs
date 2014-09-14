@@ -1,15 +1,11 @@
 using System;
 using System.Text;
 
-/// <copyright>
-/// Giora Tamir (giora@gtamir.com), 2005
-/// </copyright>
-
 namespace Nikse.SubtitleEdit.Logic
 {
-    /// <summary>
-    /// Summary description for RiffDecodeHeader.
-    /// </summary>
+    /// <copyright>
+    /// Giora Tamir (giora@gtamir.com), 2005
+    /// </copyright>
     public class RiffDecodeHeader
     {
 

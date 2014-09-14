@@ -387,7 +387,7 @@ namespace NHunspell
         /// The word. 
         /// </param>
         /// <returns>
-        /// The <see cref="List"/>.
+        /// The <see cref="List{T}"/> of <see cref="String"/>.
         /// </returns>
         /// <exception cref="ObjectDisposedException">
         /// </exception>

@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         /// <summary>
         /// Translate Text using Google Translate API's
-        /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
+        /// Google URL - http://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".

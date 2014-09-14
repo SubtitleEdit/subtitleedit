@@ -9798,7 +9798,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!ascii)
                 {
-                    text += " "; /// (char)active_set[32];
+                    text += " "; // (char)active_set[32];
                     continue;
                 }
 

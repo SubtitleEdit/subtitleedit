@@ -1,9 +1,5 @@
 using System.Runtime.InteropServices;
 
-/// <copyright>
-/// Giora Tamir (giora@gtamir.com), 2005
-/// </copyright>
-
 namespace Nikse.SubtitleEdit.Logic
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
@@ -98,6 +94,9 @@ namespace Nikse.SubtitleEdit.Logic
         public short cbSize;
     }
 
+    /// <copyright>
+    /// Giora Tamir (giora@gtamir.com), 2005
+    /// </copyright>
     internal static class AviRiffData
     {
         #region AVI constants
@@ -145,6 +144,5 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly int ckidWaveFMT = RiffParser.ToFourCC("fmt ");
 
         #endregion AVI constants
-
     }
 }
