@@ -9,9 +9,7 @@ namespace Nikse.SubtitleEdit.Logic
     [Serializable]
     public class RiffParserException : ApplicationException
     {
-
         public RiffParserException()
-            : base()
         {
         }
 
@@ -146,10 +144,6 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         #endregion public Members
-
-        public RiffParser()
-        {
-        }
 
         /// <summary>
         /// Determine if the file is a valid RIFF file
