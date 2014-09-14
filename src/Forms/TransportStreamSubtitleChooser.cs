@@ -54,9 +54,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);
             foreach (int id in tsParser.SubtitlePacketIds)
             {
-                string s = string.Format(string.Format("Transport Packet Identifier (PID) = {0}, number of subtitles = {1}", id, tsParser.GetDvbSubtitles(id).Count));
+                string s = string.Format("Transport Packet Identifier (PID) = {0}, number of subtitles = {1}", id, tsParser.GetDvbSubtitles(id).Count);
                 if (!string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine))
-                    s = string.Format(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count));
+                    s = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count);
                 listBoxTracks.Items.Add(s);
             }
             listBoxTracks.SelectedIndex = 0;
