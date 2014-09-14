@@ -2,10 +2,6 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 
-/// <copyright>
-/// Giora Tamir (giora@gtamir.com), 2005
-/// </copyright>
-
 namespace Nikse.SubtitleEdit.Logic
 {
     #region RiffParserException
@@ -37,9 +33,9 @@ namespace Nikse.SubtitleEdit.Logic
 
     #endregion RiffParserException
 
-    /// <summary>
-    /// Summary description for RiffParser
-    /// </summary>
+    /// <copyright>
+    /// Giora Tamir (giora@gtamir.com), 2005
+    /// </copyright>
     public class RiffParser : IDisposable
     {
         #region CONSTANTS

@@ -1142,7 +1142,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         }
 
         /// <summary>
-        /// Fix italic tags, lines starting with ">" - whole line is italic, words between <> is italic
+        /// Fix italic tags, lines starting with ">" - whole line is italic, words between &lt;&gt; is italic
         /// </summary>
         private static string FixItalics(string text)
         {

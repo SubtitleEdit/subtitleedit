@@ -941,7 +941,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         }
 
         /// <summary>
-        /// BGR color like this: &HBBGGRR& (where BB, GG, and RR are hex values in uppercase)
+        /// BGR color like this: &amp;HBBGGRR&amp; (where BB, GG, and RR are hex values in uppercase)
         /// </summary>
         /// <param name="f">Input string</param>
         /// <param name="defaultColor">Default color</param>

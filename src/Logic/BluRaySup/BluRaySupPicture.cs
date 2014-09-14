@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// Create the binary stream representation of one caption
         /// </summary>
         /// <param name="pic">SubPicture object containing caption info</param>
-        /// <param name="bm">bitmap</param>
+        /// <param name="bmp">bitmap</param>
         /// <param name="fps">frames per second</param>
         /// <param name="bottomMargin">image bottom margin</param>
         /// <returns>byte buffer containing the binary stream representation of one caption</returns>
