@@ -3623,7 +3623,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private unsafe static int CalculateNumberOfForegroundColors(NikseBitmap nikseBitmap)
+        private static int CalculateNumberOfForegroundColors(NikseBitmap nikseBitmap)
         {
             int count = 0;
             for (int y = 0; y < nikseBitmap.Height; y++)
