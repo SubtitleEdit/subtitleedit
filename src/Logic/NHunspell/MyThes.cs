@@ -233,18 +233,7 @@ namespace NHunspell
                     string[] tokens = lineText.Split('|');
                     if (tokens.Length > 0)
                     {
-                        bool wordLine = true;
-                        if (tokens[0].StartsWith("-"))
-                        {
-                            wordLine = false;
-                        }
-
-                        if (tokens[0].StartsWith("(") && tokens[0].EndsWith(")"))
-                        {
-                            wordLine = false;
-                        }
-
-                        if (wordLine)
+                        if (!tokens[0].StartsWith("-") && !(tokens[0].StartsWith("(") && tokens[0].EndsWith(")")))
                         {
                             lock (this.dictionaryLock)
                             {
