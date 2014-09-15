@@ -41,7 +41,7 @@
     <FrameRateX>Ρυθμός καρέ: {0:0.0###}</FrameRateX>
     <TotalFramesX>Σύνολο καρέ: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Κωδικοποίηση βίντεο: {0}</VideoEncodingX>
-    <SingleLineLengths>Μήκος μονής γραμμής:</SingleLineLengths>
+    <SingleLineLengths>Μήκος απλής γραμμής:</SingleLineLengths>
     <TotalLengthX>Συνολικό μήκος: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Συνολικό μήκος: {0} (Χωρισμός γραμμής!)</TotalLengthXSplitLine>
     <SplitLine>Χωρισμός γραμμής!</SplitLine>
@@ -150,7 +150,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Αφαίρεση ετικετών μορφοποίησης</RemoveFormatting>
     <RemoveTextForHI>Αφαίρεση κειμένου από HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Αντικατάσταση αρχικών αρχείων (νέα επέκταση, εάν η μορφή έχει αλλάξει)</OverwriteOriginalFiles>
-    <ReDoCasing>Re-do casing</ReDoCasing>
+    <ReDoCasing>Επανάληψη του casing</ReDoCasing>
     <Convert>Μετατροπή</Convert>
     <NothingToConvert>Δεν υπάρχει κάτι για μετατροπή!</NothingToConvert>
     <PleaseChooseOutputFolder>Παρακαλώ επιλέξτε τον φάκελο εξαγωγής</PleaseChooseOutputFolder>
@@ -1250,7 +1250,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
     <Title>Συγχώνευση γραμμών με ίδιους κωδικούς χρόνου</Title>
-    <MaxDifferenceMilliseconds>Μέγιστη διαφορά milliseconds</MaxDifferenceMilliseconds>
+    <MaxDifferenceMilliseconds>Μέγιστη διαφορά χιλιοστών δευτερολέπτου</MaxDifferenceMilliseconds>
     <ReBreakLines>Επαναδιαχωρισμός γραμμών</ReBreakLines>
     <NumberOfMergesX>Αριθμός συγχωνεύσεων: {0}</NumberOfMergesX>
     <MergedText>Συγχωνευμένο κείμενο</MergedText>
@@ -1467,9 +1467,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MainListViewVideoGoToPositionAndPause>Μετάβαση στη θέση του βίντεο και παύση</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Μετάβαση στη θέση του βίντεο και αναπαραγωγή</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Μετάβαση στη πλαίσιο επεξεργασίας κειμένου</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video pos - 1 sec and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video pos - 0.5 sec and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video pos - 1 sec and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Πήγαινε στη θέση του βίντεο - 1 δευτ. και παύση</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Πήγαινε στη θέση του βίντεο - 0.5 δευτ. και παύση</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Πήγαινε στη θέση του βίντεο - 1 δευτ. και αναπαραγωγή</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Πηγαίνετε να επεξεργαστείτε το πλαίσιο κειμένου, και παύση στη θέση βίντεο</MainListViewEditTextAndPause>
     <AutoBackup>Αυτόματα αντίγραφα ασφαλείας</AutoBackup>
     <AutoBackupEveryMinute>Κάθε λεπτό</AutoBackupEveryMinute>
