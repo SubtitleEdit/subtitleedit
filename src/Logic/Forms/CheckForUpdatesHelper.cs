@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             foreach (string line in latestChangeLog.Replace(Environment.NewLine, "\n").Split('\n'))
             {
                 string s = line.Trim();
-                if (!s.ToUpper().Contains("BETA") && !s.Contains("x") && !s.Contains("*") && s.Contains("(") && s.Contains(")") && regex.IsMatch(s))
+                if (!s.ToUpper().Contains("BETA") && !s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && regex.IsMatch(s))
                 {
                     int indexOfSpace = s.IndexOf(' ');
                     if (indexOfSpace > 0)
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                 if (!releaseOn)
                 {
-                    if (!s.Contains("x") && !s.Contains("*") && s.Contains("(") && s.Contains(")") && regex.IsMatch(s))
+                    if (!s.Contains('x') && !s.Contains('*') && s.Contains('(') && s.Contains(')') && regex.IsMatch(s))
                         releaseOn = true;
                 }
 

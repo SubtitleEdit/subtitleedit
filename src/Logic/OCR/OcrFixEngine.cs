@@ -646,25 +646,25 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 while (word.Contains("--"))
                     word = word.Replace("--", "-");
 
-                if (word.Contains("’"))
+                if (word.Contains('’'))
                     word = word.Replace('’', '\'');
 
-                if (word.Contains("`"))
+                if (word.Contains('`'))
                     word = word.Replace('`', '\'');
 
-                if (word.Contains("‘"))
+                if (word.Contains('‘'))
                     word = word.Replace('‘', '\'');
 
-                if (word.Contains("—"))
+                if (word.Contains('—'))
                     word = word.Replace('—', '-');
 
-                if (word.Contains("|"))
+                if (word.Contains('|'))
                     word = word.Replace("|", "l");
 
                 if (word.Contains("vx/"))
                     word = word.Replace("vx/", "w");
 
-                if (word.Contains("¤"))
+                if (word.Contains('¤'))
                 {
                     var regex = new Regex("[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]¤");
                     if (regex.IsMatch(word))
@@ -759,7 +759,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (word.Length == 0)
                 return preWordPost;
 
-            if (word.Contains("?"))
+            if (word.Contains('?'))
             {
                 Match match = RegExQuestion.Match(word);
                 if (match.Success)
@@ -936,15 +936,15 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (StartEndEndsWithNumber.IsMatch(word))
                 return word;
 
-            if (word.Contains("1") ||
-                word.Contains("2") ||
-                word.Contains("3") ||
-                word.Contains("4") ||
-                word.Contains("5") ||
-                word.Contains("6") ||
-                word.Contains("7") ||
-                word.Contains("8") ||
-                word.Contains("9") ||
+            if (word.Contains('1') ||
+                word.Contains('2') ||
+                word.Contains('3') ||
+                word.Contains('4') ||
+                word.Contains('5') ||
+                word.Contains('6') ||
+                word.Contains('7') ||
+                word.Contains('8') ||
+                word.Contains('9') ||
                 word.EndsWith("a.m", StringComparison.Ordinal) ||
                 word.EndsWith("p.m", StringComparison.Ordinal) ||
                 word.EndsWith("am", StringComparison.Ordinal) ||
@@ -999,14 +999,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (StartEndEndsWithNumber.IsMatch(word))
                 return word;
 
-            if (word.Contains("2") ||
-                word.Contains("3") ||
-                word.Contains("4") ||
-                word.Contains("5") ||
-                word.Contains("6") ||
-                word.Contains("7") ||
-                word.Contains("8") ||
-                word.Contains("9"))
+            if (word.Contains('2') ||
+                word.Contains('3') ||
+                word.Contains('4') ||
+                word.Contains('5') ||
+                word.Contains('6') ||
+                word.Contains('7') ||
+                word.Contains('8') ||
+                word.Contains('9'))
                 return word;
 
             if (HexNumber.IsMatch(word))
@@ -1046,7 +1046,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             if (word.Length > 3 && word.Replace("l", string.Empty).ToUpper() == word.Replace("l", string.Empty))
             {
-                if (!word.Contains("<") && !word.Contains(">") && !word.Contains("'"))
+                if (!word.Contains('<') && !word.Contains('>') && !word.Contains('\''))
                 {
                     word = word.Replace("l", "I");
                 }
@@ -1312,7 +1312,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // lines ending with ". should often end at ... (of no other quotes exists near by)
-            if ((lastLine == null || !lastLine.Contains("\"")) &&
+            if ((lastLine == null || !lastLine.Contains('"')) &&
                 input.EndsWith("\".") && input.IndexOf('"') == input.LastIndexOf('"') && input.Length > 3)
             {
                 string lastChar = input.Substring(input.Length - 3, 1);
@@ -1324,7 +1324,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // change '<number><space>1' to '<number>1'
-            if (input.Contains("1"))
+            if (input.Contains('1'))
             {
                 Match match = RegExNumber1.Match(input);
                 while (match.Success)
@@ -1350,7 +1350,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             input = input.Replace("''", "\"");
 
             // change 'sequeI of' to 'sequel of'
-            if (input.Contains("I"))
+            if (input.Contains('I'))
             {
                 var match = RegExUppercaseI.Match(input);
                 while (match.Success)
@@ -1372,7 +1372,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // change 'NlCE' to 'NICE'
-            if (input.Contains("l"))
+            if (input.Contains('l'))
             {
                 var match = RegExLowercaseL.Match(input);
                 while (match.Success)
@@ -1578,7 +1578,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         }
                     }
 
-                    if (!correct && word.Contains("/") && !word.Contains("//"))
+                    if (!correct && word.Contains('/') && !word.Contains("//"))
                     {
                         var slashedWords = word.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         bool allSlashedCorrect = true;
@@ -1616,7 +1616,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
 
-                                if (word.Contains("$"))
+                                if (word.Contains('$'))
                                     guesses.Add(word.Replace("$", "s"));
 
                                 string wordWithCasingChanged = GetWordWithDominatedCasing(word);
@@ -1638,7 +1638,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 guesses.Add(word.Replace("ﬁ", "fi"));
                                 guesses.Add(word.Replace("ﬁ", "fj"));
                                 guesses.Add(word.Replace("ﬂ", "fl"));
-                                if (word.Contains("$"))
+                                if (word.Contains('$'))
                                     guesses.Add(word.Replace("$", "s"));
                                 if (!word.EndsWith('€') && !word.StartsWith('€'))
                                     guesses.Add(word.Replace("€", "e"));
@@ -1771,7 +1771,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     try
                     {
                         string s = _spellCheck.Word.Trim();
-                        if (s.Contains(" "))
+                        if (s.Contains(' '))
                             _namesEtcMultiWordList.Add(s);
                         else
                         {
@@ -1989,7 +1989,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (IsWordKnownOrNumber(word, word))
                         return true;
 
-                    if (s.Length > 10 && s.Contains("/"))
+                    if (s.Length > 10 && s.Contains('/'))
                     {
                         string[] ar = s.Split('/');
                         if (ar.Length == 2)

@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (i + 1 < lines.Count)
                     next = lines[i + 1];
 
-                if (line.Contains(":") && !next.Contains(":") && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
+                if (line.Contains(':') && !next.Contains(':') && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
                 {
                     paragraph = new Paragraph();
                     if (TryReadTimeCodesLine(line, paragraph))

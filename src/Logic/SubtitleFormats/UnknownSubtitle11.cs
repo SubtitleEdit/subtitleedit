@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int errors = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0 && line.Contains("{"))
+                if (line.Trim().Length > 0 && line.Contains('{'))
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                     if (_regexMicroDvdLine.IsMatch(s))
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
+                    while (line.Contains(' ') && line.IndexOf(' ') < index)
                     {
                         line = line.Remove(line.IndexOf(' '), 1);
                         index--;

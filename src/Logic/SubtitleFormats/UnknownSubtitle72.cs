@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string line = lines[i].TrimEnd();
 
-                if (line.Contains(":") && RegexTimeCodes.IsMatch(line))
+                if (line.Contains(':') && RegexTimeCodes.IsMatch(line))
                 {
                     if (paragraph != null && string.IsNullOrEmpty(paragraph.Text))
                         _errorCount++;

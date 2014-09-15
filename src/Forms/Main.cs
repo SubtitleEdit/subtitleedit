@@ -702,7 +702,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(inputFolder))
                     inputDirectory = inputFolder;
 
-                if (pattern.Contains(",") && !File.Exists(pattern))
+                if (pattern.Contains(',') && !File.Exists(pattern))
                 {
                     files = pattern.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     for (int k = 0; k < files.Length; k++)
@@ -3514,7 +3514,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains("♪") || allText.Contains("♫") || allText.Contains("♥") || allText.Contains("—") || allText.Contains("―") || allText.Contains("…"))) // ANSI & music/unicode symbols
+                if (!isUnicode && (allText.Contains('♪') || allText.Contains('♫') || allText.Contains('♥') || allText.Contains('—') || allText.Contains('―') || allText.Contains('…'))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
@@ -3627,7 +3627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = _subtitleAlternate.ToText(format).Trim();
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains("♪") || allText.Contains("♫") || allText.Contains("♥") || allText.Contains("—") || allText.Contains("―") || allText.Contains("…"))) // ANSI & music/unicode symbols
+                if (!isUnicode && (allText.Contains('♪') || allText.Contains('♫') || allText.Contains('♥') || allText.Contains('—') || allText.Contains('―') || allText.Contains('…'))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
@@ -7263,7 +7263,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
-                        if (p.Text.EndsWith('>') && p.Text.Contains("<"))
+                        if (p.Text.EndsWith('>') && p.Text.Contains('<'))
                         {
                             // Save the end tag.
                             endTag = p.Text.Substring(p.Text.LastIndexOf('<'), p.Text.Length - p.Text.LastIndexOf('<'));
@@ -7281,7 +7281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
                         String positionTag = "";
-                        if (firstWord.StartsWith('{') && firstWord.Contains("}"))
+                        if (firstWord.StartsWith('{') && firstWord.Contains('}'))
                         {
                             // Save the start tag.
                             positionTag = firstWord.Substring(firstWord.IndexOf('{'), firstWord.IndexOf('}') + 1);
@@ -7291,7 +7291,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a tag:
                         String startTag = "";
-                        if (firstWord.StartsWith('<') && firstWord.Contains(">"))
+                        if (firstWord.StartsWith('<') && firstWord.Contains('>'))
                         {
                             // Save the start tag.
                             startTag = firstWord.Substring(firstWord.IndexOf('<'), firstWord.IndexOf('>') + 1);
@@ -7300,7 +7300,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle ends with a tag and there's only one word in it:
-                        if (next.Text.EndsWith('>') && next.Text.Contains("<") && next.Text.IndexOf(' ') < 0)
+                        if (next.Text.EndsWith('>') && next.Text.Contains('<') && next.Text.IndexOf(' ') < 0)
                         {
                             // Remove the end tag.
                             next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
@@ -7380,7 +7380,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
-                        if (lastWord.EndsWith('>') && lastWord.Contains("<"))
+                        if (lastWord.EndsWith('>') && lastWord.Contains('<'))
                         {
                             // Save the end tag.
                             endTag = lastWord.Substring(lastWord.LastIndexOf('<'), lastWord.Length - lastWord.LastIndexOf('<'));
@@ -7398,7 +7398,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
                         String positionTag = "";
-                        if (next.Text.StartsWith('{') && next.Text.Contains("}"))
+                        if (next.Text.StartsWith('{') && next.Text.Contains('}'))
                         {
                             // Save the start tag.
                             positionTag = next.Text.Substring(next.Text.IndexOf('{'), next.Text.IndexOf('}') + 1);
@@ -7408,7 +7408,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a tag:
                         String startTag = "";
-                        if (next.Text.StartsWith('<') && next.Text.Contains(">"))
+                        if (next.Text.StartsWith('<') && next.Text.Contains('>'))
                         {
                             // Save the start tag.
                             startTag = next.Text.Substring(next.Text.IndexOf('<'), next.Text.IndexOf('>') + 1);
@@ -13273,7 +13273,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenVideo(movieFileName);
             }
-            else if (fileNameNoExtension.Contains("."))
+            else if (fileNameNoExtension.Contains('.'))
             {
                 fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
                 TryToFindAndOpenVideoFile(fileNameNoExtension);

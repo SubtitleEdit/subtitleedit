@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (s.Length > 0)
                 {
-                    if (s.Contains(" "))
+                    if (s.Contains(' '))
                     {
                         hashtable.Add(s, "1");
                     }

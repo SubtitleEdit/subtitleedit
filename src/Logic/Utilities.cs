@@ -553,7 +553,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return text;
 
             // do not autobreak dialogues
-            if (text.Contains("-") && text.Contains(Environment.NewLine))
+            if (text.Contains('-') && text.Contains(Environment.NewLine))
             {
                 string dialogS = Utilities.RemoveHtmlTags(text);
                 var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
@@ -823,7 +823,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (s == null)
                 return null;
 
-            if (!s.Contains("<"))
+            if (!s.Contains('<'))
                 return s;
 
             if (s.Contains("< "))
@@ -2184,7 +2184,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (XmlNode node in namesEtcDoc.DocumentElement.SelectNodes("name"))
                 {
                     string s = node.InnerText.Trim();
-                    if (s.Contains(" "))
+                    if (s.Contains(' '))
                     {
                         if (!namesEtcMultiWordList.Contains(s))
                             namesEtcMultiWordList.Add(s);
@@ -2223,7 +2223,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (XmlNode node in namesEtcDoc.DocumentElement.SelectNodes("name"))
                 {
                     string s = node.InnerText.Trim();
-                    if (s.Contains(" "))
+                    if (s.Contains(' '))
                     {
                         if (!namesEtcMultiWordList.Contains(s))
                             namesEtcMultiWordList.Add(s);
@@ -2253,7 +2253,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (XmlNode node in namesEtcDoc.DocumentElement.SelectNodes("name"))
                 {
                     string s = node.InnerText.Trim();
-                    if (s.Contains(" "))
+                    if (s.Contains(' '))
                     {
                         if (!namesEtcMultiWordList.Contains(s))
                             namesEtcMultiWordList.Add(s);
@@ -2285,7 +2285,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (XmlNode node in namesEtcDoc.DocumentElement.SelectNodes("name"))
                 {
                     string s = node.InnerText.Trim();
-                    if (s.Contains(" "))
+                    if (s.Contains(' '))
                     {
                         if (!namesEtcMultiWordList.Contains(s))
                             namesEtcMultiWordList.Add(s);

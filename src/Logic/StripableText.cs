@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (text.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         int endIndex = text.IndexOf('}');
-                        if (endIndex > 0 && (text.IndexOf('{') == -1 || text.IndexOf('{') > endIndex))
+                        if (endIndex > 0 && (!text.Contains('{') || text.IndexOf('{') > endIndex))
                         {
                             int index = text.IndexOf('}') + 1;
                             Pre += text.Substring(0, index);
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // start with uppercase after music symbol - but only if next line does not start with music symbol
                 if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
                 {
-                    if (!Pre.Contains("♪") && !Pre.Contains("♫"))
+                    if (!Pre.Contains('♪') && !Pre.Contains('♫'))
                         startWithUppercase = true;
                 }
 
@@ -208,17 +208,17 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             if (makeUppercaseAfterBreak &&
-                (StrippedText.Contains(".") ||
-                StrippedText.Contains("!") ||
-                StrippedText.Contains("?") ||
-                StrippedText.Contains(":") ||
-                StrippedText.Contains(";") ||
-                StrippedText.Contains(")") ||
-                StrippedText.Contains("]") ||
-                StrippedText.Contains("}") ||
-                StrippedText.Contains("(") ||
-                StrippedText.Contains("[") ||
-                StrippedText.Contains("{")))
+                (StrippedText.Contains('.') ||
+                StrippedText.Contains('!') ||
+                StrippedText.Contains('?') ||
+                StrippedText.Contains(':') ||
+                StrippedText.Contains(';') ||
+                StrippedText.Contains(')') ||
+                StrippedText.Contains(']') ||
+                StrippedText.Contains('}') ||
+                StrippedText.Contains('(') ||
+                StrippedText.Contains('[') ||
+                StrippedText.Contains('{')))
             {
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;

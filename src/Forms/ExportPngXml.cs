@@ -829,7 +829,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
             }
 
-            if (text.Contains("("))
+            if (text.Contains('('))
                 text = text.Remove(0, text.IndexOf('(')).Trim();
             text = text.TrimStart('(').TrimEnd(')').Trim();
             string[] arr = text.Split('x');
@@ -1836,7 +1836,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 baseLinePadding = 9;
             if (lines.Length > 0)
             {
-                if (lines[lines.Length - 1].Contains("g") || lines[lines.Length - 1].Contains("j") || lines[lines.Length - 1].Contains("p") || lines[lines.Length - 1].Contains("q") || lines[lines.Length - 1].Contains("y") || lines[lines.Length - 1].Contains(","))
+                if (lines[lines.Length - 1].Contains('g') || lines[lines.Length - 1].Contains('j') || lines[lines.Length - 1].Contains('p') || lines[lines.Length - 1].Contains('q') || lines[lines.Length - 1].Contains('y') || lines[lines.Length - 1].Contains(','))
                 {
                     string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
                     baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
@@ -2758,7 +2758,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //set language
             if (!string.IsNullOrEmpty(languageString))
             {
-                if (languageString.Contains("(") && languageString[0] != '(')
+                if (languageString.Contains('(') && languageString[0] != '(')
                     languageString = languageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
                 for (int i = 0; i < comboBoxLanguage.Items.Count; i++)
                 {

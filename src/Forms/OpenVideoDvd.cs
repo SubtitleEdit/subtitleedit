@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (radioButtonDisc.Checked)
             {
                 string s = comboBoxDrive.Items[comboBoxDrive.SelectedIndex].ToString();
-                if (s.Contains(" "))
+                if (s.Contains(' '))
                     s = s.Substring(0, s.IndexOf(' '));
                 DvdPath = s;
             }

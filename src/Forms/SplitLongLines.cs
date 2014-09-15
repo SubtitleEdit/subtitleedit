@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool isDialog = false;
                         string dialogText = string.Empty;
-                        if (p.Text.Contains("-"))
+                        if (p.Text.Contains('-'))
                         {
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
                             string[] arr = dialogText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
