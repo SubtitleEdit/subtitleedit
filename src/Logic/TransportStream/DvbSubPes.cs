@@ -4,7 +4,6 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Logic.TransportStream
 {
-
     public class DvbSubPes
     {
         public const int HeaderLength = 6;
@@ -32,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
         public readonly int? SubPictureStreamId;
 
-        public readonly byte[] DataBuffer;
+        private readonly byte[] _dataBuffer;
 
         public DvbSubPes(byte[] buffer, int index)
         {
@@ -94,8 +93,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     return;
             }
 
-            DataBuffer = new byte[dataSize + 1];
-            Buffer.BlockCopy(buffer, dataIndex - 1, DataBuffer, 0, DataBuffer.Length); // why subtract one from  dataIndex ?????
+            _dataBuffer = new byte[dataSize + 1];
+            Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from  dataIndex ?????
         }
 
         public DvbSubPes(int index, byte[] buffer)
@@ -132,12 +131,12 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
             Length = index;
             int size = index - start;
-            DataBuffer = new byte[size];
-            Buffer.BlockCopy(buffer, start, DataBuffer, 0, DataBuffer.Length);
+            _dataBuffer = new byte[size];
+            Buffer.BlockCopy(buffer, start, _dataBuffer, 0, _dataBuffer.Length);
 
             // Parse segments
             index = 2;
-            ss = new SubtitleSegment(DataBuffer, index);
+            ss = new SubtitleSegment(_dataBuffer, index);
             while (ss.SyncByte == Helper.B00001111)
             {
                 SubtitleSegments.Add(ss);
@@ -159,8 +158,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
 
                 index += 6 + ss.SegmentLength;
-                if (index + 6 < DataBuffer.Length)
-                    ss = new SubtitleSegment(DataBuffer, index);
+                if (index + 6 < _dataBuffer.Length)
+                    ss = new SubtitleSegment(_dataBuffer, index);
                 else
                     ss.SyncByte = Helper.B11111111;
             }
@@ -175,10 +174,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         {
             get
             {
-                if (DataBuffer == null || DataBuffer.Length < 2)
-                    return 0;
-
-                return DataBuffer[0];
+                return _dataBuffer.Length < 2 ? 0 : _dataBuffer[0];
             }
         }
 
@@ -186,10 +182,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         {
             get
             {
-                if (DataBuffer == null || DataBuffer.Length < 2)
-                    return 0;
-
-                return DataBuffer[1];
+                return _dataBuffer.Length < 2 ? 0 : _dataBuffer[1];
             }
         }
 
@@ -198,6 +191,15 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public List<RegionCompositionSegment> RegionCompositions { get; set; }
         public List<PageCompositionSegment> PageCompositions { get; set; }
         public List<ObjectDataSegment> ObjectDataList { get; set; }
+
+        public byte[] DataBuffer
+        {
+            get
+            {
+                // TODO: Return a copy instead? This should be readonly afterall.
+                return _dataBuffer;
+            }
+        }
 
         public void ParseSegments()
         {
@@ -211,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             ObjectDataList = new List<ObjectDataSegment>();
 
             int index = 2;
-            var ss = new SubtitleSegment(DataBuffer, index);
+            var ss = new SubtitleSegment(_dataBuffer, index);
             while (ss.SyncByte == Helper.B00001111)
             {
                 SubtitleSegments.Add(ss);
@@ -233,8 +235,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
 
                 index += 6 + ss.SegmentLength;
-                if (index + 6 < DataBuffer.Length)
-                    ss = new SubtitleSegment(DataBuffer, index);
+                if (index + 6 < _dataBuffer.Length)
+                    ss = new SubtitleSegment(_dataBuffer, index);
                 else
                     ss.SyncByte = Helper.B11111111;
             }
@@ -306,7 +308,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 return ods.Image;
 
             ClutDefinitionSegment cds = GetClutDefinitionSegment(ods);
-            ods.DecodeImage(DataBuffer, ods.BufferIndex, cds);
+            ods.DecodeImage(_dataBuffer, ods.BufferIndex, cds);
             return ods.Image;
         }
 

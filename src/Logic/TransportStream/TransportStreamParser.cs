@@ -184,14 +184,14 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     foreach (var item in list)
                     {
                         bdMs.Write(item.DataBuffer, 0, item.DataBuffer.Length);
-                        if (item.DataBuffer[0] == 0x16)
+                        if (item.DataIdentifier == 0x16)
                         {
                             if (startMsList.Count <= endMsList.Count)
                                 startMsList.Add(item.PresentationTimeStampToMilliseconds());
                             else
                                 endMsList.Add(item.PresentationTimeStampToMilliseconds());
                         }
-                        //else if (item.DataBuffer[0] == 0x80)
+                        //else if (item.DataIdentifier == 0x80)
                         //{ //TODO Load bd sub after 0x80, so we can be sure to get correct time code???
                         //    endMsList.Add(item.PresentationTimeStampToMilliseconds() / 90);
                         //}
