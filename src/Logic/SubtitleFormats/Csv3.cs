@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string s = csv.Substring(i, 1);
                 if (s == "\"" && csv.Substring(i).StartsWith("\"\""))
                 {
-                    sb.Append("\"");
+                    sb.Append('"');
                 }
                 else if (s == "\"")
                 {
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (i == 0 || i == csv.Length - 1 || sb.ToString().EndsWith(Environment.NewLine))
                     {
-                        sb.Append("\"");
+                        sb.Append('"');
                     }
                     else
                     {

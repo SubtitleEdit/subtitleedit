@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 else
                                     sb.Append(f);
                                 if (i < format.Length - 1)
-                                    sb.Append(",");
+                                    sb.Append(',');
                             }
                             sb.AppendLine();
                         }

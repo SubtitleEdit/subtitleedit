@@ -170,13 +170,20 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (string extension in GetMovieFileExtensions())
             {
                 if (i > 0)
-                    sb.Append(";");
-                sb.Append("*" + extension);
+                    sb.Append(';');
+                sb.Append('*');
+                sb.Append(extension);
                 i++;
             }
             if (includeAudioFiles && !string.IsNullOrEmpty(Configuration.Settings.Language.General.AudioFiles))
-                sb.Append("|" + Configuration.Settings.Language.General.AudioFiles + "|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac");
-            sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
+            {
+                sb.Append('|');
+                sb.Append(Configuration.Settings.Language.General.AudioFiles);
+                sb.Append("|*.mp3;*.wav;*.wma;*.ogg;*.mpa;*.m4a;*.ape;*.aiff;*.flac;*.aac");
+            }
+            sb.Append('|');
+            sb.Append(Configuration.Settings.Language.General.AllFiles);
+            sb.Append("|*.*");
             return sb.ToString();
         }
 
@@ -1760,7 +1767,11 @@ namespace Nikse.SubtitleEdit.Logic
         private static void AddExtension(StringBuilder sb, string extension)
         {
             if (!sb.ToString().ToLower().Contains("*" + extension.ToLower() + ";"))
-                sb.Append("*" + extension.TrimStart('*') + ";");
+            {
+                sb.Append('*');
+                sb.Append(extension.TrimStart('*'));
+                sb.Append(';');
+            }
         }
 
         public static string GetOpenDialogFilter()
@@ -1799,7 +1810,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
             AddExtension(sb, ".son");
 
-            sb.Append("|" + Configuration.Settings.Language.General.AllFiles + "|*.*");
+            sb.Append('|');
+            sb.Append(Configuration.Settings.Language.General.AllFiles);
+            sb.Append("|*.*");
             return sb.ToString();
         }
 
@@ -1932,7 +1945,7 @@ namespace Nikse.SubtitleEdit.Logic
                 string line = lines[i];
                 if (i > 0)
                 {
-                    sb.Append("/");
+                    sb.Append('/');
                 }
 
                 if (i > max)
@@ -3406,247 +3419,247 @@ namespace Nikse.SubtitleEdit.Logic
                             sb.Append('&');
                             break;
                         case "apos":
-                            sb.Append("'");
+                            sb.Append('\'');
                             break;
                         case "nbsp":
-                            sb.Append(" ");
+                            sb.Append(' ');
                             break;
                         case "ndash":
-                            sb.Append("–");
+                            sb.Append('–');
                             break;
                         case "mdash":
-                            sb.Append("—");
+                            sb.Append('—');
                             break;
                         case "iexcl":
-                            sb.Append("¡");
+                            sb.Append('¡');
                             break;
                         case "iquest":
-                            sb.Append("¿");
+                            sb.Append('¿');
                             break;
                         case "ldquo":
-                            sb.Append("“");
+                            sb.Append('“');
                             break;
                         case "rdquo":
-                            sb.Append("”");
+                            sb.Append('”');
                             break;
                         case "lsquo":
-                            sb.Append("‘");
+                            sb.Append('‘');
                             break;
                         case "rsquo":
-                            sb.Append("’");
+                            sb.Append('’');
                             break;
                         case "laquo":
-                            sb.Append("«");
+                            sb.Append('«');
                             break;
                         case "raquo":
-                            sb.Append("»");
+                            sb.Append('»');
                             break;
                         case "cent":
-                            sb.Append("¢");
+                            sb.Append('¢');
                             break;
                         case "copy":
-                            sb.Append("©");
+                            sb.Append('©');
                             break;
                         case "divide":
-                            sb.Append("÷");
+                            sb.Append('÷');
                             break;
                         case "micro":
-                            sb.Append("µ");
+                            sb.Append('µ');
                             break;
                         case "middot":
-                            sb.Append("·");
+                            sb.Append('·');
                             break;
                         case "para":
-                            sb.Append("¶");
+                            sb.Append('¶');
                             break;
                         case "plusmn":
-                            sb.Append("±");
+                            sb.Append('±');
                             break;
                         case "euro":
-                            sb.Append("€");
+                            sb.Append('€');
                             break;
                         case "pound":
-                            sb.Append("£");
+                            sb.Append('£');
                             break;
                         case "reg":
-                            sb.Append("®");
+                            sb.Append('®');
                             break;
                         case "sect":
-                            sb.Append("§");
+                            sb.Append('§');
                             break;
                         case "trade":
-                            sb.Append("™");
+                            sb.Append('™');
                             break;
                         case "yen":
-                            sb.Append("¥");
+                            sb.Append('¥');
                             break;
                         case "aacute":
-                            sb.Append("á ");
+                            sb.Append('á');
                             break;
                         case "Aacute":
-                            sb.Append("Á");
+                            sb.Append('Á');
                             break;
                         case "agrave":
-                            sb.Append("à");
+                            sb.Append('à');
                             break;
                         case "Agrave":
-                            sb.Append("À");
+                            sb.Append('À');
                             break;
                         case "acirc":
-                            sb.Append("â");
+                            sb.Append('â');
                             break;
                         case "Acirc":
-                            sb.Append("Â");
+                            sb.Append('Â');
                             break;
                         case "aring":
-                            sb.Append("å");
+                            sb.Append('å');
                             break;
                         case "Aring":
-                            sb.Append("Å");
+                            sb.Append('Å');
                             break;
                         case "atilde":
-                            sb.Append("ã");
+                            sb.Append('ã');
                             break;
                         case "Atilde":
-                            sb.Append("Ã");
+                            sb.Append('Ã');
                             break;
                         case "auml":
-                            sb.Append("ä");
+                            sb.Append('ä');
                             break;
                         case "Auml":
-                            sb.Append("Ä");
+                            sb.Append('Ä');
                             break;
                         case "aelig":
-                            sb.Append("æ");
+                            sb.Append('æ');
                             break;
                         case "AElig":
-                            sb.Append("Æ");
+                            sb.Append('Æ');
                             break;
                         case "ccedil":
-                            sb.Append("ç");
+                            sb.Append('ç');
                             break;
                         case "Ccedil":
-                            sb.Append("Ç");
+                            sb.Append('Ç');
                             break;
                         case "eacute":
-                            sb.Append("é");
+                            sb.Append('é');
                             break;
                         case "Eacute":
-                            sb.Append("É");
+                            sb.Append('É');
                             break;
                         case "egrave":
-                            sb.Append("è");
+                            sb.Append('è');
                             break;
                         case "Egrave":
-                            sb.Append("È");
+                            sb.Append('È');
                             break;
                         case "ecirc":
-                            sb.Append("ê");
+                            sb.Append('ê');
                             break;
                         case "Ecirc":
-                            sb.Append("Ê");
+                            sb.Append('Ê');
                             break;
                         case "euml":
-                            sb.Append("ë");
+                            sb.Append('ë');
                             break;
                         case "Euml":
-                            sb.Append("Ë");
+                            sb.Append('Ë');
                             break;
                         case "iacute":
-                            sb.Append("í");
+                            sb.Append('í');
                             break;
                         case "Iacute":
-                            sb.Append("Í");
+                            sb.Append('Í');
                             break;
                         case "igrave":
-                            sb.Append("ì");
+                            sb.Append('ì');
                             break;
                         case "Igrave":
-                            sb.Append("Ì");
+                            sb.Append('Ì');
                             break;
                         case "icirc":
-                            sb.Append("î");
+                            sb.Append('î');
                             break;
                         case "Icirc":
-                            sb.Append("Î");
+                            sb.Append('Î');
                             break;
                         case "iuml":
-                            sb.Append("ï ");
+                            sb.Append('ï');
                             break;
                         case "Iuml":
-                            sb.Append("Ï");
+                            sb.Append('Ï');
                             break;
                         case "ntilde":
-                            sb.Append("ñ");
+                            sb.Append('ñ');
                             break;
                         case "Ntilde":
-                            sb.Append("Ñ");
+                            sb.Append('Ñ');
                             break;
                         case "oacute":
-                            sb.Append("ó");
+                            sb.Append('ó');
                             break;
                         case "Oacute":
-                            sb.Append("Ó");
+                            sb.Append('Ó');
                             break;
                         case "ograve":
-                            sb.Append("ò");
+                            sb.Append('ò');
                             break;
                         case "Ograve":
-                            sb.Append("Ò");
+                            sb.Append('Ò');
                             break;
                         case "ocirc":
-                            sb.Append("ô");
+                            sb.Append('ô');
                             break;
                         case "Ocirc":
-                            sb.Append("Ô");
+                            sb.Append('Ô');
                             break;
                         case "oslash":
-                            sb.Append("ø");
+                            sb.Append('ø');
                             break;
                         case "Oslash":
-                            sb.Append("Ø");
+                            sb.Append('Ø');
                             break;
                         case "otilde":
-                            sb.Append("õ");
+                            sb.Append('õ');
                             break;
                         case "Otilde":
-                            sb.Append("Õ");
+                            sb.Append('Õ');
                             break;
                         case "ouml":
-                            sb.Append("ö");
+                            sb.Append('ö');
                             break;
                         case "Ouml":
-                            sb.Append("Ö");
+                            sb.Append('Ö');
                             break;
                         case "szlig":
-                            sb.Append("ß");
+                            sb.Append('ß');
                             break;
                         case "uacute":
-                            sb.Append("ú");
+                            sb.Append('ú');
                             break;
                         case "Uacute":
-                            sb.Append("Ú");
+                            sb.Append('Ú');
                             break;
                         case "ugrave":
-                            sb.Append("ù");
+                            sb.Append('ù');
                             break;
                         case "Ugrave":
-                            sb.Append("Ù");
+                            sb.Append('Ù');
                             break;
                         case "ucirc":
-                            sb.Append("û");
+                            sb.Append('û');
                             break;
                         case "Ucirc":
-                            sb.Append("Û");
+                            sb.Append('Û');
                             break;
                         case "uuml":
-                            sb.Append("ü");
+                            sb.Append('ü');
                             break;
                         case "Uuml":
-                            sb.Append("Ü");
+                            sb.Append('Ü');
                             break;
                         case "yuml":
-                            sb.Append("ÿ");
+                            sb.Append('ÿ');
                             break;
                         case "":
                             sb.Append("");

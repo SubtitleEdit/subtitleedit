@@ -36,10 +36,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 sb.Append(p.StartTime.TotalMilliseconds);
-                sb.Append(",");
+                sb.Append(',');
                 sb.Append(p.EndTime.TotalMilliseconds);
                 if (i < subtitle.Paragraphs.Count - 1)
-                    sb.Append(",");
+                    sb.Append(',');
             }
             sb.Append("],");
 
@@ -48,23 +48,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 sb.Append("[\"w1\",\"w3\"],[\"w1\",\"w3\"]");
                 if (i < subtitle.Paragraphs.Count - 1)
-                    sb.Append(",");
+                    sb.Append(',');
             }
             sb.Append("],");
 
             sb.Append("\"text_content\":[");
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
-                sb.Append("[");
+                sb.Append('[');
                 Paragraph p = subtitle.Paragraphs[i];
                 var lines = p.Text.Replace(Environment.NewLine, "\n").Split('\n');
                 for (int j = 0; j < lines.Length; j++)
                 {
-                    sb.Append("\"");
+                    sb.Append('"');
                     sb.Append(Json.EncodeJsonText(lines[j]));
-                    sb.Append("\"");
+                    sb.Append('"');
                     if (j < lines.Length - 1)
-                        sb.Append(",");
+                        sb.Append(',');
                 }
                 sb.Append("],");
                 if (i < subtitle.Paragraphs.Count - 1)
@@ -79,25 +79,25 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 sb.Append("[\"s1\",\"s2\"],[\"s1\",\"s2\"]");
                 if (i < subtitle.Paragraphs.Count - 1)
-                    sb.Append(",");
+                    sb.Append(',');
             }
             sb.Append("],");
 
             sb.Append("\"timerange\":[");
             Paragraph timerageP = subtitle.GetParagraphOrDefault(0);
             if (timerageP == null)
-                sb.Append("0");
+                sb.Append('0');
             else
                 sb.Append(timerageP.StartTime.TotalMilliseconds);
-            sb.Append(",");
+            sb.Append(',');
             timerageP = subtitle.GetParagraphOrDefault(subtitle.Paragraphs.Count - 1);
             if (timerageP == null)
-                sb.Append("0");
+                sb.Append('0');
             else
                 sb.Append(timerageP.EndTime.TotalMilliseconds);
-            sb.Append("]");
+            sb.Append(']');
 
-            sb.Append("}");
+            sb.Append('}');
 
             return sb.ToString().Trim();
         }
@@ -137,7 +137,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 var innerTextLines = Json.ReadArray("{\"text\":" + t + "}", "text");
                                 foreach (string innerLine in innerTextLines)
                                 {
-                                    innerSb.Append(" " + innerLine);
+                                    innerSb.Append(' ');
+                                    innerSb.Append(innerLine);
                                 }
                                 textSb.AppendLine(innerSb.ToString().Trim());
                             }

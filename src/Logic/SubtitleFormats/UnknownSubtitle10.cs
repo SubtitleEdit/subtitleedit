@@ -37,10 +37,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (i > 0)
-                    sb.Append(",");
-                sb.Append("{");
+                    sb.Append(',');
+                sb.Append('{');
                 sb.AppendFormat("\"content\":\"{0}\",\"start_time\":{1},\"end_time\":{2}", p.Text.Replace(Environment.NewLine, " <br> "), p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds);
-                sb.Append("}");
+                sb.Append('}');
                 i++;
             }
             sb.Append("]}");

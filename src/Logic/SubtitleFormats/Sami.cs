@@ -137,12 +137,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             total.Append(EncodeText(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
-                            total.Append("<");
+                            total.Append('<');
                         }
                         else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append(">");
+                            total.Append('>');
                         }
                         else if (!tagOn)
                         {
@@ -360,12 +360,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             total.Append(Utilities.HtmlDecode(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
-                            total.Append("<");
+                            total.Append('<');
                         }
                         else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append(">");
+                            total.Append('>');
                         }
                         else if (!tagOn)
                         {

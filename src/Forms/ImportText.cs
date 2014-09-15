@@ -380,11 +380,20 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (string word in input.Replace(Environment.NewLine, " ").Replace("  ", " ").Split(' '))
                     {
                         if (first.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-                            first.Append(" " + word);
+                        {
+                            first.Append(' ');
+                            first.Append(word);
+                        }
                         else if (second.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
-                            second.Append(" " + word);
+                        {
+                            second.Append(' ');
+                            second.Append(word);
+                        }
                         else
-                            third.Append(" " + word);
+                        {
+                            third.Append(' ');
+                            third.Append(word);
+                        }
                     }
                     if (first.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
                         second.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&

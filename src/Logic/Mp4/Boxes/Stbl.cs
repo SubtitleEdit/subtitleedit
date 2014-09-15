@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                                 h = "0" + h;
                             sb.Append(h);
                             if (j % 2 == 1)
-                                sb.Append(" ");
+                                sb.Append(' ');
                         }
                         string hex = sb.ToString();
                         int errorCount = 0;
