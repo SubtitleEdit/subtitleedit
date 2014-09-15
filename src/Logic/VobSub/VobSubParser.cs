@@ -22,9 +22,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         public void Open(string fileName)
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            Open(fs);
-            fs.Close();
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                Open(fs);
+            }
         }
 
         /// <summary>
