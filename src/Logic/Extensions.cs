@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -8,6 +9,11 @@ namespace Nikse.SubtitleEdit.Logic
         public static bool StartsWith(this String s, char c)
         {
             return s.Length > 0 && s[0] == c;
+        }
+
+        public static bool StartsWith(this StringBuilder sb, char c)
+        {
+            return sb.Length > 0 && sb[0] == c;
         }
 
         public static bool EndsWith(this String s, char c)
