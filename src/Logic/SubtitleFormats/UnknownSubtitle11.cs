@@ -121,8 +121,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else if (line.StartsWith("<u>") || underlineOn)
                     {
                         italicOn = false;
-                        boldOn = true;
-                        underlineOn = false;
+                        boldOn = false;
+                        underlineOn = true;
                         lineSb.Append("{y:u}"); // underline single line
                     }
 
