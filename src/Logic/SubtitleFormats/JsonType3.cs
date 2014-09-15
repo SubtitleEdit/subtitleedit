@@ -74,8 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     double startSeconds;
                     double durationSeconds;
                     if (double.TryParse(start, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out startSeconds) &&
-                        double.TryParse(duration, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out durationSeconds) &&
-                        content != null)
+                        double.TryParse(duration, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out durationSeconds))
                     {
                         subtitle.Paragraphs.Add(new Paragraph(Json.DecodeJsonText(content), startSeconds, startSeconds + durationSeconds));
                     }

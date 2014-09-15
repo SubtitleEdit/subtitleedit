@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string name = node.InnerText;
                         foreach (VobSubOcr.ImageCompareAddition a in additions)
                         {
-                            if (name == a.Name && text != null)
+                            if (name == a.Name)
                             {
                                 listBoxFileNames.Items.Add("[" + text + "] " + node.InnerText);
                                 _italics.Add(node.Attributes["Italic"] != null);

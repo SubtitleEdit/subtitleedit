@@ -54,9 +54,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Text = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.Title, fileName);
             foreach (int id in tsParser.SubtitlePacketIds)
             {
-                string s = string.Format(string.Format("Transport Packet Identifier (PID) = {0}, number of subtitles = {1}", id, tsParser.GetDvbSubtitles(id).Count));
+                string s = string.Format("Transport Packet Identifier (PID) = {0}, number of subtitles = {1}", id, tsParser.GetDvbSubtitles(id).Count);
                 if (!string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine))
-                    s = string.Format(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count));
+                    s = string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.PidLine, id, tsParser.GetDvbSubtitles(id).Count);
                 listBoxTracks.Items.Add(s);
             }
             listBoxTracks.SelectedIndex = 0;
@@ -86,9 +86,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var start = new TimeCode(sub.StartMilliseconds);
                 var end = new TimeCode(sub.EndMilliseconds);
                 if (string.IsNullOrEmpty(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine))
-                    listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start.ToString(), end.ToString(), sub.NumberOfImages));
+                    listBoxSubtitles.Items.Add(string.Format("{0}:  {1} --> {2},  {3} image(s)", i, start, end, sub.NumberOfImages));
                 else
-                    listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start.ToString(), end.ToString(), sub.NumberOfImages));
+                    listBoxSubtitles.Items.Add(string.Format(Configuration.Settings.Language.TransportStreamSubtitleChooser.SubLine, i, start, end, sub.NumberOfImages));
             }
             if (list.Count > 0)
                 listBoxSubtitles.SelectedIndex = 0;

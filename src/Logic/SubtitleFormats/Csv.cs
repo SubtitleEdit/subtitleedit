@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (continuation)
                     {
-                        if (p != null && p.Text.Length < 300)
+                        if (p.Text.Length < 300)
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
                         continuation = !line.Trim().EndsWith("\"");
                     }

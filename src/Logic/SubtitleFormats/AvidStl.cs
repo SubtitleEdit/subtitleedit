@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static void Save(string fileName, Subtitle subtitle)
         {
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            byte[] buffer = new byte[] { 0x38, 0x35, 0x30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x30, 0x30, 0x30, 0x39 };
+            byte[] buffer = { 0x38, 0x35, 0x30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x30, 0x30, 0x30, 0x39 };
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 0xde; i++)
                 fs.WriteByte(0);

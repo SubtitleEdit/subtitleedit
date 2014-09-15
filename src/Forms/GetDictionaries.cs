@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string url = _dictionaryDownloadLinks[index];
 
                 var wc = new WebClient { Proxy = Utilities.GetProxy() };
-                wc.DownloadDataCompleted += new DownloadDataCompletedEventHandler(wc_DownloadDataCompleted);
+                wc.DownloadDataCompleted += wc_DownloadDataCompleted;
                 wc.DownloadDataAsync(new Uri(url));
                 Cursor = Cursors.Default;
             }

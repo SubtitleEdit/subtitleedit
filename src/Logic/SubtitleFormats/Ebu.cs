@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             header.TotalNumberOfSubtitles = (subtitle.Paragraphs.Count.ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
-            string today = string.Format("{0:00}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);
+            string today = string.Format("{0}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);
             if (today.Length == 6)
             {
                 header.CreationDate = today;
@@ -510,9 +510,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (!int.TryParse(header.MaximumNumberOfDisplayableRows, out rows))
                     rows = 23;
 
-                if (header != null && header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
+                if (header.DisplayStandardCode == "1" || header.DisplayStandardCode == "2") // teletext
                     rows = 23;
-                else if (header != null && header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
+                else if (header.DisplayStandardCode == "0" && header.MaximumNumberOfDisplayableRows == "02") // open subtitling
                     rows = 15;
 
                 if (p.Text.StartsWith("{\\an7}") || p.Text.StartsWith("{\\an8}") || p.Text.StartsWith("{\\an9}"))
@@ -1011,7 +1011,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        if (b >= 0 && b <= 0x17)
+                        if (b <= 0x17)
                         {
                             switch (b)
                             {

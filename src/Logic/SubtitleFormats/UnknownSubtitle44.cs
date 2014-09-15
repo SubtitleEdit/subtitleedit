@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text.Append(Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
                 while (text.Length < 34)
                     text.Append(" ");
-                sb.Append(string.Format("{0}{1}", text, EncodeTimeCode(p.StartTime)));
+                sb.AppendFormat("{0}{1}", text, EncodeTimeCode(p.StartTime));
                 if (index % 50 == 1)
                 {
                     index2++;

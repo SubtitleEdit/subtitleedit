@@ -1183,7 +1183,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double newEndTime = p.StartTime.TotalMilliseconds + Configuration.Settings.VobSubOcr.DefaultMillisecondsForUnknownDurations;
                     if (next == null || (newEndTime < next.StartTime.TotalMilliseconds))
                         p.EndTime.TotalMilliseconds = newEndTime;
-                    else if (next != null)
+                    else
                         p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - 1;
                 }
             }
@@ -2814,18 +2814,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         var cutBitmap = parentBitmap.CopyRectangle(new Rectangle(targetItem.X, minY, compareItem.Bitmap.Width, compareItem.Bitmap.Height));
                         int dif = NikseBitmapImageSplitter.IsBitmapsAlike(compareItem.Bitmap, cutBitmap);
-                        if (dif < smallestDifference)
+                        if (dif < smallestDifference && (Math.Abs(target.Height - compareItem.Bitmap.Height) <= 5 || compareItem.Text != "\""))
                         {
-                            bool allow = true;
-                            if (Math.Abs(target.Height - compareItem.Bitmap.Height) > 5 && compareItem.Text == "\"")
-                                allow = false;
-                            if (allow)
-                            {
-                                smallestDifference = dif;
-                                smallestIndex = index;
-                                if (dif == 0)
-                                    break; // foreach ending
-                            }
+                            smallestDifference = dif;
+                            smallestIndex = index;
+                            if (dif == 0)
+                                break; // foreach ending
                         }
                     }
                 }
@@ -3629,7 +3623,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private unsafe static int CalculateNumberOfForegroundColors(NikseBitmap nikseBitmap)
+        private static int CalculateNumberOfForegroundColors(NikseBitmap nikseBitmap)
         {
             int count = 0;
             for (int y = 0; y < nikseBitmap.Height; y++)
@@ -3900,7 +3894,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -3938,7 +3932,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
             return line;
@@ -3952,65 +3946,101 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine == null)
                 LoadOcrFixEngine(null, LanguageString);
 
-            const string threadText = null;
-            //if (_icThreadResults != null && !string.IsNullOrEmpty(_icThreadResults[listViewIndex]))
-            //    threadText = _icThreadResults[listViewIndex];
-
             string line = string.Empty;
-            if (threadText == null)
+            var matches = new List<CompareMatch>();
+            var parentBitmap = new NikseBitmap(bitmap);
+            int minLineHeight = _binOcrLastLowercaseHeight - 3;
+            if (minLineHeight < 5)
+                minLineHeight = _nocrLastLowercaseHeight;
+            if (minLineHeight < 5)
+                minLineHeight = 6;
+            List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int) numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
+            int index = 0;
+            bool expandSelection = false;
+            bool shrinkSelection = false;
+            var expandSelectionList = new List<ImageSplitterItem>();
+            while (index < list.Count)
             {
-                var matches = new List<CompareMatch>();
-                var parentBitmap = new NikseBitmap(bitmap);
-                int minLineHeight = _binOcrLastLowercaseHeight - 3;
-                if (minLineHeight < 5)
-                    minLineHeight = _nocrLastLowercaseHeight;
-                if (minLineHeight < 5)
-                    minLineHeight = 6;
-                List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLettersNew(parentBitmap, (int)numericUpDownPixelsIsSpace.Value, checkBoxRightToLeft.Checked, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
-                int index = 0;
-                bool expandSelection = false;
-                bool shrinkSelection = false;
-                var expandSelectionList = new List<ImageSplitterItem>();
-                while (index < list.Count)
+                ImageSplitterItem item = list[index];
+                if (expandSelection || shrinkSelection)
                 {
-                    ImageSplitterItem item = list[index];
-                    if (expandSelection || shrinkSelection)
+                    expandSelection = false;
+                    if (shrinkSelection && index > 0)
                     {
-                        expandSelection = false;
-                        if (shrinkSelection && index > 0)
-                        {
-                            shrinkSelection = false;
-                        }
-                        else if (index + 1 < list.Count && list[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
-                        {
+                        shrinkSelection = false;
+                    }
+                    else if (index + 1 < list.Count && list[index + 1].NikseBitmap != null) // only allow expand to EndOfLine or space
+                    {
+                        index++;
+                        expandSelectionList.Add(list[index]);
+                    }
+                    item = GetExpandedSelectionNew(parentBitmap, expandSelectionList);
 
-                            index++;
-                            expandSelectionList.Add(list[index]);
-                        }
-                        item = GetExpandedSelectionNew(parentBitmap, expandSelectionList);
+                    _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, null, _lastAdditions, this);
+                    DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
+                    _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
+                    if (result == DialogResult.OK && _vobSubOcrCharacter.ShrinkSelection)
+                    {
+                        shrinkSelection = true;
+                        index--;
+                        if (expandSelectionList.Count > 0)
+                            expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
+                    }
+                    else if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
+                    {
+                        expandSelection = true;
+                    }
+                    else if (result == DialogResult.OK)
+                    {
+                        string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
+                        string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, expandSelectionList);
+                        var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
+                        _lastAdditions.Add(addition);
+                        matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count, null));
+                        expandSelectionList = new List<ImageSplitterItem>();
+                    }
+                    else if (result == DialogResult.Abort)
+                    {
+                        _abort = true;
+                    }
+                    else
+                    {
+                        matches.Add(new CompareMatch("*", false, 0, null));
+                    }
+                    _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
+                }
+                else if (item.NikseBitmap == null)
+                {
+                    matches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
+                }
+                else
+                {
+                    CompareMatch bestGuess;
+                    CompareMatch match = GetCompareMatchNew(item, out bestGuess, list, index);
+                    if (match == null) // Try line OCR if no image compare match
+                    {
+                        if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0)
+                            match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, true, true);
+                    }
 
-                        _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, expandSelectionList.Count > 1, null, _lastAdditions, this);
+                    if (match == null)
+                    {
+                        _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this);
                         DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
                         _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
-                        if (result == DialogResult.OK && _vobSubOcrCharacter.ShrinkSelection)
+                        if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
                         {
-                            shrinkSelection = true;
-                            index--;
-                            if (expandSelectionList.Count > 0)
-                                expandSelectionList.RemoveAt(expandSelectionList.Count - 1);
-                        }
-                        else if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
-                        {
+                            expandSelectionList.Add(item);
                             expandSelection = true;
                         }
                         else if (result == DialogResult.OK)
                         {
                             string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-                            string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, expandSelectionList);
+                            string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
                             var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
                             _lastAdditions.Add(addition);
-                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, expandSelectionList.Count, null));
-                            expandSelectionList = new List<ImageSplitterItem>();
+                            matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
+                            SetBinOcrLowercaseUppercase(item.NikseBitmap.Height, text);
                         }
                         else if (result == DialogResult.Abort)
                         {
@@ -4021,75 +4051,27 @@ namespace Nikse.SubtitleEdit.Forms
                             matches.Add(new CompareMatch("*", false, 0, null));
                         }
                         _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
-
                     }
-                    else if (item.NikseBitmap == null)
+                    else // found image match
                     {
-                        matches.Add(new CompareMatch(item.SpecialCharacter, false, 0, null));
-                    }
-                    else
-                    {
-                        CompareMatch bestGuess;
-                        CompareMatch match = GetCompareMatchNew(item, out bestGuess, list, index);
-                        if (match == null) // Try line OCR if no image compare match
-                        {
-                            if (_nOcrDb != null && _nOcrDb.OcrCharacters.Count > 0)
-                                match = GetNOcrCompareMatchNew(item, parentBitmap, _nOcrDb, true, true);
-                        }
-
-                        if (match == null)
-                        {
-                            _vobSubOcrCharacter.Initialize(bitmap, item, _manualOcrDialogPosition, _italicCheckedLast, false, bestGuess, _lastAdditions, this);
-                            DialogResult result = _vobSubOcrCharacter.ShowDialog(this);
-                            _manualOcrDialogPosition = _vobSubOcrCharacter.FormPosition;
-                            if (result == DialogResult.OK && _vobSubOcrCharacter.ExpandSelection)
-                            {
-                                expandSelectionList.Add(item);
-                                expandSelection = true;
-                            }
-                            else if (result == DialogResult.OK)
-                            {
-                                string text = _vobSubOcrCharacter.ManualRecognizedCharacters;
-                                string name = SaveCompareItemNew(item, text, _vobSubOcrCharacter.IsItalic, null);
-                                var addition = new ImageCompareAddition(name, text, item.NikseBitmap, _vobSubOcrCharacter.IsItalic, listViewIndex);
-                                _lastAdditions.Add(addition);
-                                matches.Add(new CompareMatch(text, _vobSubOcrCharacter.IsItalic, 0, null));
-                                SetBinOcrLowercaseUppercase(item.NikseBitmap.Height, text);
-                            }
-                            else if (result == DialogResult.Abort)
-                            {
-                                _abort = true;
-                            }
-                            else
-                            {
-                                matches.Add(new CompareMatch("*", false, 0, null));
-                            }
-                            _italicCheckedLast = _vobSubOcrCharacter.IsItalic;
-                        }
-                        else // found image match
-                        {
-                            matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
-                            if (match.ExpandCount > 0)
-                                index += match.ExpandCount - 1;
-                        }
-                    }
-                    if (_abort)
-                        return string.Empty;
-                    if (!expandSelection && !shrinkSelection)
-                        index++;
-                    if (shrinkSelection && expandSelectionList.Count < 2)
-                    {
-                        shrinkSelection = false;
-                        expandSelectionList = new List<ImageSplitterItem>();
+                        matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
+                        if (match.ExpandCount > 0)
+                            index += match.ExpandCount - 1;
                     }
                 }
-
-                line = GetStringWithItalicTags(matches);
+                if (_abort)
+                    return string.Empty;
+                if (!expandSelection && !shrinkSelection)
+                    index++;
+                if (shrinkSelection && expandSelectionList.Count < 2)
+                {
+                    shrinkSelection = false;
+                    expandSelectionList = new List<ImageSplitterItem>();
+                }
             }
-            //else
-            //{
-            //    line = threadText;
-            //}
+
+            line = GetStringWithItalicTags(matches);
+
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
                 line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
 
@@ -4109,7 +4091,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4147,7 +4129,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
             return line;
@@ -4414,7 +4396,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4452,7 +4434,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(listViewIndex, textWithOutFixes.ToString(), line);
+                LogOcrFix(listViewIndex, textWithOutFixes, line);
             }
 
             return line;
@@ -4772,7 +4754,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line.Append(temp);
                 }
 
-                paragraph.Append(line.ToString());
+                paragraph.Append(line);
                 paragraph.Append(appendString);
             }
             line = new StringBuilder();
@@ -4797,7 +4779,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line.Append("</i>");
                     isItalic = false;
                 }
-                line.Append(word.ToString());
+                line.Append(word);
                 line.Append(appendString);
                 wordNonItalics++;
             }
@@ -5615,7 +5597,6 @@ namespace Nikse.SubtitleEdit.Forms
             // change yellow color to white - easier for Tesseract
             var nbmp = new NikseBitmap(bmp);
             nbmp.ReplaceYellowWithWhite(); // optimized replace
-            const bool useHocr = true;
 
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
             var b = nbmp.GetBitmap();
@@ -5634,8 +5615,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(psmMode))
                 process.StartInfo.Arguments += " " + psmMode.Trim();
 
-            if (useHocr)
-                process.StartInfo.Arguments += " hocr";
+            process.StartInfo.Arguments += " hocr";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
@@ -5661,39 +5641,20 @@ namespace Nikse.SubtitleEdit.Forms
             process.WaitForExit(5000);
 
             string result = string.Empty;
-            if (useHocr)
+            string outputFileName = tempTextFileName + ".html";
+            try
             {
-                string outputFileName = tempTextFileName + ".html";
-                try
+                if (File.Exists(outputFileName))
                 {
-                    if (File.Exists(outputFileName))
-                    {
-                        result = File.ReadAllText(outputFileName);
-                        result = ParseHocr(result);
-                        File.Delete(outputFileName);
-                    }
-                    File.Delete(tempTiffFileName);
+                    result = File.ReadAllText(outputFileName);
+                    result = ParseHocr(result);
+                    File.Delete(outputFileName);
                 }
-                catch
-                {
-                }
+                File.Delete(tempTiffFileName);
             }
-            //else
-            //{
-            //    string outputFileName = tempTextFileName + ".txt";
-            //    try
-            //    {
-            //        if (File.Exists(outputFileName))
-            //        {
-            //            result = File.ReadAllText(outputFileName);
-            //            File.Delete(outputFileName);
-            //        }
-            //        File.Delete(tempTiffFileName);
-            //    }
-            //    catch
-            //    {
-            //    }
-            //}
+            catch
+            {
+            }
             return result;
         }
 
@@ -5847,9 +5808,9 @@ namespace Nikse.SubtitleEdit.Forms
             // fix italics
             textWithOutFixes = FixItalics(textWithOutFixes);
 
-            int numberOfWords = textWithOutFixes.ToString().Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+            int numberOfWords = textWithOutFixes.Split((" " + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
 
-            string line = textWithOutFixes.ToString().Trim();
+            string line = textWithOutFixes.Trim();
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
                 if (checkBoxAutoFixCommonErrors.Checked)
@@ -5906,7 +5867,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length < 2)
                 {
                     if (_bluRaySubtitles != null && !line.Contains("<i>"))
                     {
@@ -5969,7 +5930,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (checkBoxTesseractItalicsOn.Checked)
                 {
-                    if (line.Contains("<i>") || wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                    if (line.Contains("<i>") || wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length < 2)
                     {
                         _ocrFixEngine.AutoGuessesUsed.Clear();
                         _ocrFixEngine.UnknownWordsFound.Clear();
@@ -6281,7 +6242,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.ToString().Replace("~", string.Empty).Trim().Length < 2)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length < 2)
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -6410,11 +6371,11 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
             }
 
-            if (textWithOutFixes.ToString().Trim() != line.Trim())
+            if (textWithOutFixes.Trim() != line.Trim())
             {
                 _tesseractOcrAutoFixes++;
                 labelFixesMade.Text = string.Format(" - {0}", _tesseractOcrAutoFixes);
-                LogOcrFix(index, textWithOutFixes.ToString(), line);
+                LogOcrFix(index, textWithOutFixes, line);
             }
 
             if (_vobSubMergedPackist != null)
@@ -6466,7 +6427,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
             string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId, null);
-            if (result.ToString().Trim().Length == 0)
+            if (result.Trim().Length == 0)
                 result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId, "-psm 7");
             return result.TrimEnd();
         }
@@ -6774,7 +6735,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (comboBoxOcrMethod.SelectedIndex == 4)
             {
-                _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem.ToString() + ".db";
+                _binaryOcrDbFileName = Configuration.OcrFolder + comboBoxCharacterDatabase.SelectedItem + ".db";
             }
 
             LoadImageCompareBitmaps();
@@ -7107,11 +7068,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 finally
                 {
-                    if (bmp != null)
-                    {
-                        bmp.Dispose();
-                        bmp = null;
-                    }
+                    bmp.Dispose();
                 }
             }
         }
@@ -7397,7 +7354,7 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownStartNumber.Value = last.Index + 1;
                 Timer t = new Timer();
                 t.Interval = 200;
-                t.Tick += new EventHandler(t_Tick);
+                t.Tick += t_Tick;
                 t.Start();
             }
         }
@@ -7446,9 +7403,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Subtitle sub = new Subtitle();
-                Encoding encoding = null;
-                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, encoding);
-                if (format == null || sub == null)
+                Encoding encoding;
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
+                if (format == null)
                     return;
 
                 int index = 0;
@@ -8382,9 +8339,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 Subtitle sub = new Subtitle();
-                Encoding encoding = null;
-                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, encoding);
-                if (format == null || sub == null)
+                Encoding encoding;
+                SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
+                if (format == null)
                     return;
 
                 int index = 0;

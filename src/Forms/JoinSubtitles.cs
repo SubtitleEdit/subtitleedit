@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (sub.Header != null)
                             header = sub.Header;
 
-                        if (lastFormat == null || (lastFormat != null && lastFormat.FriendlyName == format.FriendlyName))
+                        if (lastFormat == null || lastFormat.FriendlyName == format.FriendlyName)
                             lastFormat = format;
                         else
                             lastFormat = new Logic.SubtitleFormats.SubRip(); // default subtitle format

@@ -1096,7 +1096,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         {
             byte b;
             bool done;
-            UInt32 matroskaId;
             int sizeOfSize;
             long dataSize;
             long afterPosition;
@@ -1106,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
             _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-            matroskaId = GetMatroskaId();
+            var matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
             {
                 isValid = false;
@@ -1385,7 +1384,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         {
             byte b;
             bool done;
-            UInt32 matroskaId;
             int sizeOfSize;
             long dataSize;
             long afterPosition;
@@ -1393,7 +1391,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
             _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-            matroskaId = GetMatroskaId();
+            var matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
             {
                 isValid = false;
@@ -1456,7 +1454,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         {
             byte b;
             bool done;
-            UInt32 matroskaId;
             int sizeOfSize;
             long dataSize;
             long afterPosition;
@@ -1465,7 +1462,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
             _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-            matroskaId = GetMatroskaId();
+            var matroskaId = GetMatroskaId();
             if (matroskaId != 0x1A45DFA3) // matroska file must start with ebml header
             {
                 isValid = false;

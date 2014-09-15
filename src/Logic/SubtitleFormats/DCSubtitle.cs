@@ -51,9 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     xml.LoadXml(xmlAsString);
 
                     var subtitles = xml.DocumentElement.SelectNodes("//Subtitle");
-                    if (subtitles != null)
-                        return subtitles != null && subtitles.Count > 0;
-                    return false;
+                    return subtitles != null && subtitles.Count > 0;
                 }
                 catch (Exception ex)
                 {
@@ -372,7 +370,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             else if (html.Length > 0 && html.ToString().StartsWith("<Font "))
                             {
                                 XmlDocument temp = new XmlDocument();
-                                temp.LoadXml("<root>" + html.ToString() + "</root>");
+                                temp.LoadXml("<root>" + html + "</root>");
                                 XmlNode fontNode = xml.CreateElement("Font");
                                 fontNode.InnerXml = temp.DocumentElement.SelectSingleNode("Font").InnerXml;
                                 foreach (XmlAttribute a in temp.DocumentElement.SelectSingleNode("Font").Attributes)
@@ -521,7 +519,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string lastVPosition = string.Empty;
                     foreach (XmlNode innerNode in node.ChildNodes)
                     {
-                        switch (innerNode.Name.ToString())
+                        switch (innerNode.Name)
                         {
                             case "Text":
                                 if (innerNode.Attributes["VPosition"] != null)
@@ -584,7 +582,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                             else if (alignRight)
                                                 pre = "{\\an3}";
                                         }
-                                        string temp = pre + pText.ToString();
+                                        string temp = pre + pText;
                                         pText = new StringBuilder();
                                         pText.Append(temp);
                                     }

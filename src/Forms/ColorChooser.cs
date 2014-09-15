@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
     /// <summary>
     ///   Summary description for ColorChooser.
     /// </summary>
-    public class ColorChooser : Form, IDisposable
+    public class ColorChooser : Form
     {
         /// <summary>
         ///   Required designer variable.
@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (disposing)
             {
-                base.Dispose(disposing);
+                base.Dispose(true);
                 if (myColorWheel != null)
                 {
                     myColorWheel.Dispose();

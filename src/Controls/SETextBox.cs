@@ -19,11 +19,11 @@ namespace Nikse.SubtitleEdit.Controls
         public SETextBox()
         {
             AllowDrop = true;
-            DragEnter += new DragEventHandler(SETextBox_DragEnter);
-            //   DragOver += new DragEventHandler(SETextBox_DragOver); could draw some gfx where drop position is...
-            DragDrop += new DragEventHandler(SETextBox_DragDrop);
-            MouseDown += new MouseEventHandler(SETextBox_MouseDown);
-            MouseUp += new MouseEventHandler(SETextBox_MouseUp);
+            DragEnter += SETextBox_DragEnter;
+            //DragOver += SETextBox_DragOver; could draw some gfx where drop position is...
+            DragDrop += SETextBox_DragDrop;
+            MouseDown += SETextBox_MouseDown;
+            MouseUp += SETextBox_MouseUp;
             KeyDown += SETextBox_KeyDown;
         }
 

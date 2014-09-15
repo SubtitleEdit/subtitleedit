@@ -834,7 +834,7 @@ namespace Nikse.SubtitleEdit.Logic
             return list;
         }
 
-        internal static unsafe int IsBitmapsAlike(ManagedBitmap bmp1, NikseBitmap bmp2)
+        internal static int IsBitmapsAlike(ManagedBitmap bmp1, NikseBitmap bmp2)
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
@@ -852,7 +852,7 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
-        internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, ManagedBitmap bmp2)
+        internal static int IsBitmapsAlike(NikseBitmap bmp1, ManagedBitmap bmp2)
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
@@ -870,7 +870,7 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
-        internal static unsafe int IsBitmapsAlike(Ocr.Binary.BinaryOcrBitmap bmp1, NikseBitmap bmp2)
+        internal static int IsBitmapsAlike(Ocr.Binary.BinaryOcrBitmap bmp1, NikseBitmap bmp2)
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;
@@ -889,7 +889,7 @@ namespace Nikse.SubtitleEdit.Logic
             return different;
         }
 
-        internal static unsafe int IsBitmapsAlike(NikseBitmap bmp1, Ocr.Binary.BinaryOcrBitmap bmp2)
+        internal static int IsBitmapsAlike(NikseBitmap bmp1, Ocr.Binary.BinaryOcrBitmap bmp2)
         {
             int different = 0;
             int maxDiff = bmp1.Width * bmp1.Height / 5;

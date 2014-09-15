@@ -35,11 +35,11 @@ namespace Nikse.SubtitleEdit.Logic
             int w = bmp.Width;
             int h = bmp.Height;
             int v;
-            int x, y, len, color, nibble_end;
+            int len, color;
             int nibbleOffset = 0;
-            nibble_end = buf.Length * 2;
-            x = 0;
-            y = 0;
+            var nibble_end = buf.Length * 2;
+            var x = 0;
+            var y = 0;
             for (; ; )
             {
                 if (nibbleOffset >= nibble_end)

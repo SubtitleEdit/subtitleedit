@@ -292,7 +292,7 @@ namespace NHunspell
         /// The sample. 
         /// </param>
         /// <returns>
-        /// The <see cref="List"/>.
+        /// The <see cref="List{T}"/> of <see cref="String"/>.
         /// </returns>
         public List<string> Generate(string word, string sample)
         {

@@ -147,10 +147,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         public void CheckForUpdates()
         {
             // load github release json
-            //StartDownloadString(ReleasesUrl, "application/json", new AsyncCallback(FinishWebRequestReleases));
+            //StartDownloadString(ReleasesUrl, "application/json", FinishWebRequestReleases);
 
             // load change log
-            StartDownloadString(ChangeLogUrl, null, new AsyncCallback(FinishWebRequestChangeLog));
+            StartDownloadString(ChangeLogUrl, null, FinishWebRequestChangeLog);
         }
 
         public bool IsUpdateAvailable()

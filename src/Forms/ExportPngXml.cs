@@ -896,7 +896,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
                         string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
                         string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
-                        sb.Append(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
+                        sb.AppendFormat(paragraphWriteFormat, startTime, endTime, fileName);
 
                         param.Saved = true;
                     }
@@ -1481,7 +1481,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                     if (sb.Length > 0)
                     {
-                        lastText.Append(sb.ToString());
+                        lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     }
                     if (path.PointCount > 0)
@@ -2444,7 +2444,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             checkBoxSimpleRender.Text = Configuration.Settings.Language.ExportPngXml.SimpleRendering;
             checkBoxTransAntiAliase.Text = Configuration.Settings.Language.ExportPngXml.AntiAliasingWithTransparency;
 
-            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal; ;
+            normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.BoxSingleLine)) //TODO: Remove in SE 3.4
             {

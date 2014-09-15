@@ -77,7 +77,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		private const int SLOW = 2;
 		private static Config[] config_table;
 				
-		private static readonly System.String[] z_errmsg = new System.String[]{"need dictionary", "stream end", "", "file error", "stream error", "data error", "insufficient memory", "buffer error", "incompatible version", ""};
+		private static readonly string[] z_errmsg = { "need dictionary", "stream end", "", "file error", "stream error", "data error", "insufficient memory", "buffer error", "incompatible version", "" };
 		
 		// block not completed, need more input or more output
 		private const int NeedMore = 0;
@@ -1606,9 +1606,7 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int deflate(ZStream strm, int flush)
 		{
-			int old_flush;
-			
-			if (flush > Z_FINISH || flush < 0)
+		    if (flush > Z_FINISH || flush < 0)
 			{
 				return Z_STREAM_ERROR;
 			}
@@ -1625,7 +1623,7 @@ namespace ComponentAce.Compression.Libs.zlib
 			}
 			
 			this.strm = strm; // just in case
-			old_flush = last_flush;
+			var old_flush = last_flush;
 			last_flush = flush;
 			
 			// Write the zlib header

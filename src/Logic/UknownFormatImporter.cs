@@ -266,7 +266,7 @@ namespace Nikse.SubtitleEdit.Logic
                             p = new Paragraph();
                             p.StartTime = DecodeTime(tc);
                         }
-                        else if (p != null)
+                        else
                         {
                             p.EndTime = DecodeTime(tc);
                         }

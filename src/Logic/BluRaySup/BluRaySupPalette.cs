@@ -50,13 +50,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         private static int[] YCbCr2Rgb(int y, int cb, int cr, bool useBt601)
         {
             int[] rgb = new int[3];
-            double y1, r, g, b;
+            double r, g, b;
 
             y -= 16;
             cb -= 128;
             cr -= 128;
 
-            y1 = y * 1.164383562;
+            var y1 = y * 1.164383562;
             if (useBt601)
             {
                 /* BT.601 for YCbCr 16..235 -> RGB 0..255 (PC) */

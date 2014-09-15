@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (listViewBackups.SelectedItems.Count == 1)
                 {
-                    string argument = @"/select, " + listViewBackups.SelectedItems[0].Tag.ToString();
+                    string argument = @"/select, " + listViewBackups.SelectedItems[0].Tag;
                     System.Diagnostics.Process.Start("explorer.exe", argument);
                 }
                 else

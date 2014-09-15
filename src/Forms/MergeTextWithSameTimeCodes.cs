@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 Paragraph next = subtitle.GetParagraphOrDefault(i);
                 Paragraph afterNext = subtitle.GetParagraphOrDefault(i + 1);
-                if (p != null && next != null)
+                if (next != null)
                 {
                     if (QualifiesForMerge(p, next, maxMsBetween) && IsFixAllowed(p))
                     {

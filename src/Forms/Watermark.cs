@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.Text.Length > 1)
                         p.Text = p.Text.Insert(p.Text.Length / 2, sb.ToString());
                     else
-                        p.Text = sb.ToString() + p.Text;
+                        p.Text = sb + p.Text;
                 }
             }
             else
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.Text.Length > 1)
                         p.Text = p.Text.Insert(p.Text.Length / 2, sb.ToString());
                     else
-                        p.Text = sb.ToString() + p.Text;
+                        p.Text = sb + p.Text;
                     j++;
                 }
             }
