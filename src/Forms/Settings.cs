@@ -2564,8 +2564,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var sb = new StringBuilder();
-                sb.Append("[");
+                var sb = new StringBuilder(@"[");
                 if (checkBoxShortcutsControl.Checked)
                     sb.Append("Control+");
                 if (checkBoxShortcutsAlt.Checked)
@@ -2573,7 +2572,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxShortcutsShift.Checked)
                     sb.Append("Shift+");
                 sb.Append(comboBoxShortcutKey.Items[comboBoxShortcutKey.SelectedIndex]);
-                sb.Append("]");
+                sb.Append(']');
 
                 if (sb.Length < 3 || sb.ToString().EndsWith("+]"))
                 {

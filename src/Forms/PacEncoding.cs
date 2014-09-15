@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
                             index += 2;
                         }
                         else if (_previewBuffer[index] == 0xFF)
-                            sb.Append(" ");
+                            sb.Append(' ');
                         else if (CodePageIndex == 0)
                             sb.Append(Pac.GetLatinString(encoding, _previewBuffer, ref index));
                         else if (CodePageIndex == 3)

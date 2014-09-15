@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             {
                 string s = string.Format("{0:X}", buffer[i]);
                 if (s.Length < 2)
-                    sb.Append("0");
+                    sb.Append('0');
                 sb.Append(s);
             }
             return "0x" + sb;

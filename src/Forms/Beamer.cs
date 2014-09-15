@@ -330,8 +330,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
-                            sb = new StringBuilder();
-                            sb.Append(" " + t);
+                            sb.Clear();
+                            sb.Append(' ');
+                            sb.Append(t);
                         }
 
                         float addLeft = 0;
@@ -381,8 +382,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                     {
                         string t = sb.ToString();
-                        sb = new StringBuilder();
-                        sb.Append(" " + t);
+                        sb.Clear();
+                        sb.Append(' ');
+                        sb.Append(t);
                     }
                     TextDraw.DrawText(font, sf, path, sb, isItalic, subtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                     isItalic = false;

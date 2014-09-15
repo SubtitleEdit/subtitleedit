@@ -77,11 +77,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append("[");
+                sb.Append('[');
                 sb.Append(((int)(p.StartTime.TotalMilliseconds / 100)).ToString());
                 sb.Append("][");
                 sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)).ToString());
-                sb.Append("]");
+                sb.Append(']');
 
                 string[] parts = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 int count = 0;
@@ -89,12 +89,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (string line in parts)
                 {
                     if (count > 0)
-                        sb.Append("|");
+                        sb.Append('|');
 
                     if (line.StartsWith("<i>") || italicOn)
                     {
                         italicOn = true;
-                        sb.Append("/");
+                        sb.Append('/');
                     }
 
                     if (line.Contains("</i>"))

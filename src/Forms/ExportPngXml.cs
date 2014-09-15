@@ -1550,8 +1550,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
-                            sb = new StringBuilder();
-                            sb.Append(" " + t);
+                            sb.Clear();
+                            sb.Append(' ');
+                            sb.Append(t);
                         }
 
                         float addLeft = 0;
@@ -1606,8 +1607,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                     {
                         string t = sb.ToString();
-                        sb = new StringBuilder();
-                        sb.Append(" " + t);
+                        sb.Clear();
+                        sb.Append(' ');
+                        sb.Append(t);
                     }
                     lastText.Append(sb);
                     TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -1629,8 +1631,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                     {
                         string t = sb.ToString();
-                        sb = new StringBuilder();
-                        sb.Append(" " + t);
+                        sb.Clear();
+                        sb.Append(' ');
+                        sb.Append(t);
                     }
                     lastText.Append(sb);
                     TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -2091,8 +2094,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                             {
                                 string t = sb.ToString();
-                                sb = new StringBuilder();
-                                sb.Append(" " + t);
+                                sb.Clear();
+                                sb.Append(' ');
+                                sb.Append(t);
                             }
 
                             float addLeft = 0;
@@ -2147,8 +2151,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
-                            sb = new StringBuilder();
-                            sb.Append(" " + t);
+                            sb.Clear();
+                            sb.Append(' ');
+                            sb.Append(t);
                         }
                         lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -2170,8 +2175,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (lastText.ToString().EndsWith(" ") && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
-                            sb = new StringBuilder();
-                            sb.Append(" " + t);
+                            sb.Clear();
+                            sb.Append(' ');
+                            sb.Append(t);
                         }
                         lastText.Append(sb);
                         TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);

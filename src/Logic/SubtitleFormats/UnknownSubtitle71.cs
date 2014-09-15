@@ -46,12 +46,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (string.IsNullOrEmpty(text))
                 return " ";
 
-            var sb = new StringBuilder();
-            sb.Append(" ");
+            var sb = new StringBuilder(@" ");
             for (int i = 0; i < text.Length; i++)
             {
                 sb.Append(text.Substring(i, 1));
-                sb.Append(" ");
+                sb.Append(' ');
             }
             return sb.ToString();
         }
