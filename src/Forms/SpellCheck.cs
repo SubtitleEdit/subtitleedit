@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _noOfSkippedWords++;
                     _skipAllList.Add(ChangeWord.ToUpper());
                     if (ChangeWord.EndsWith('\'') || ChangeWord.StartsWith('\''))
-                        _skipAllList.Add(ChangeWord.ToUpper().Trim("'".ToCharArray()));
+                        _skipAllList.Add(ChangeWord.ToUpper().Trim('\''));
                     break;
                 case SpellCheckAction.AddToDictionary:
                     if (_userWordList.IndexOf(ChangeWord) < 0)
@@ -632,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
-                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim('\'')) >= 0)
                     {
                         _noOfNamesEtc++;
                     }
@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfSkippedWords++;
                     }
-                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim('\'')) >= 0)
                     {
                         _noOfSkippedWords++;
                     }
@@ -648,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
-                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim('\'').ToLower()) >= 0)
                     {
                         _noOfCorrectWords++;
                     }
@@ -657,10 +657,10 @@ namespace Nikse.SubtitleEdit.Forms
                         _noOfChangedWords++;
                         _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord, ref _firstChange);
                     }
-                    else if (_changeAllDictionary.ContainsKey(_currentWord.Trim("'".ToCharArray())))
+                    else if (_changeAllDictionary.ContainsKey(_currentWord.Trim('\'')))
                     {
                         _noOfChangedWords++;
-                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim("'".ToCharArray()), ref _firstChange);
+                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim('\''), ref _firstChange);
                     }
                     else if (_namesEtcListUppercase.IndexOf(_currentWord) >= 0)
                     {
@@ -788,13 +788,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     _prefix = string.Empty;
                                     _currentSpellCheckWord.Index += 2;
-                                    _currentWord = _currentWord.Trim("'".ToCharArray());
+                                    _currentWord = _currentWord.Trim('\'');
                                 }
                                 if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
                                 {
                                     _prefix = string.Empty;
                                     _currentSpellCheckWord.Index++;
-                                    _currentWord = _currentWord.Trim("'".ToCharArray());
+                                    _currentWord = _currentWord.Trim('\'');
                                 }
 
                                 if (_postfix != null && _postfix == "'")

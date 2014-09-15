@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         className.Append(text[indexClass].ToString());
                         indexClass++;
                     }
-                    p.Extra = className.ToString().Trim(" '\"".ToCharArray());
+                    p.Extra = className.ToString().Trim(' ', '\'', '"');
                 }
 
                 if (text.Contains("ID=\"Source\"") || text.Contains("ID=Source"))
