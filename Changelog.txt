@@ -3,7 +3,7 @@
 
 3.4.3 (xth October 2014)
 * NEW:
-   *
+   Added Thai language file - thx Bonfelder Straße
 * IMPROVED:
    * Updated French language file - thx JM GBT
    * Improved "Fix invalid italic tags"
