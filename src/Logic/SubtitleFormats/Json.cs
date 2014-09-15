@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (nextTag > 0)
                     {
                         string newValue = res.Substring(oldStart, nextTag - oldStart);
-                        if (newValue.EndsWith("]"))
+                        if (newValue.EndsWith(']'))
                         {
                             newValue = newValue.TrimEnd(']');
                             tagLevel = -10; // return
@@ -262,7 +262,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var list = new List<string>();
             text = text.Trim();
-            if (text.StartsWith('[') && text.EndsWith("]"))
+            if (text.StartsWith('[') && text.EndsWith(']'))
             {
                 text = text.Trim('[');
                 text = text.Trim(']');

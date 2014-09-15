@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     expecting = ExpectingLine.TimeStart;
                 }
 
-                if (line.TrimEnd().EndsWith(".", StringComparison.Ordinal) && Utilities.IsInteger(RemoveSpaces(line.Trim().TrimEnd('.').Trim())))
+                if (line.TrimEnd().EndsWith('.') && Utilities.IsInteger(RemoveSpaces(line.Trim().TrimEnd('.').Trim())))
                 {
                     if (paragraph != null)
                         subtitle.Paragraphs.Add(paragraph);

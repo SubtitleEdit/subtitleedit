@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string text = elements[1].Trim();
                     if (text.StartsWith('"'))
                         text = text.Remove(0, 1);
-                    if (text.EndsWith("\""))
+                    if (text.EndsWith('"'))
                         text = text.Remove(text.Length - 1, 1);
 
                     long number;
