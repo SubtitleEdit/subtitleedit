@@ -89,6 +89,21 @@ namespace Nikse.SubtitleEdit.Forms
                 if (node != null && node.Attributes["region"] != null && region == node.Attributes["region"].Value)
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
             }
+
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower();
+            if (string.IsNullOrEmpty(timeCodeFormat))
+                comboBoxTimeCodeFormat.SelectedIndex = 0;
+            else if (string.Compare(timeCodeFormat, "seconds", StringComparison.Ordinal) == 0)
+                comboBoxTimeCodeFormat.SelectedIndex = 2;
+            else if (string.Compare(timeCodeFormat, "milliseconds", StringComparison.Ordinal) == 0)
+                comboBoxTimeCodeFormat.SelectedIndex = 3;
+            else if (string.Compare(timeCodeFormat, "ticks", StringComparison.Ordinal) == 0)
+                comboBoxTimeCodeFormat.SelectedIndex = 4;
+            else if (string.Compare(timeCodeFormat, "hh:mm:ss.msec", StringComparison.Ordinal) == 0)
+                comboBoxTimeCodeFormat.SelectedIndex = 1;
+            else if (string.Compare(timeCodeFormat, "hh:mm:ss:ff", StringComparison.Ordinal) == 0)
+                comboBoxTimeCodeFormat.SelectedIndex = 0;
+            comboBoxTimeCodeFormat.SelectedIndex = 0;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -252,6 +267,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _subtitle.Header = _xml.OuterXml;
+
+            Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat = comboBoxTimeCodeFormat.SelectedItem.ToString();
 
             DialogResult = DialogResult.OK;
         }
