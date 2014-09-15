@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
             }
 
-            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower();
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower(CultureInfo.InvariantCulture);
             if (string.IsNullOrEmpty(timeCodeFormat))
                 comboBoxTimeCodeFormat.SelectedIndex = 0;
             else if (string.Compare(timeCodeFormat, "seconds", StringComparison.Ordinal) == 0)
@@ -103,7 +103,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxTimeCodeFormat.SelectedIndex = 1;
             else if (string.Compare(timeCodeFormat, "hh:mm:ss:ff", StringComparison.Ordinal) == 0)
                 comboBoxTimeCodeFormat.SelectedIndex = 0;
-            comboBoxTimeCodeFormat.SelectedIndex = 0;
+            else
+                comboBoxTimeCodeFormat.SelectedIndex = 0;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
