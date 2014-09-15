@@ -37,7 +37,7 @@
             this.textBoxTitle = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.comboBoxDefaultRegion = new System.Windows.Forms.ComboBox();
-            this.label5 = new System.Windows.Forms.Label();
+            this.labelDefaultRegion = new System.Windows.Forms.Label();
             this.comboBoxDropMode = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -49,13 +49,15 @@
             this.labelCollision = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
+            this.comboBoxTimeCodeFormat = new System.Windows.Forms.ComboBox();
+            this.labelTimeCode = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOK.Location = new System.Drawing.Point(335, 328);
+            this.buttonOK.Location = new System.Drawing.Point(335, 364);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 1;
@@ -67,7 +69,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(416, 328);
+            this.buttonCancel.Location = new System.Drawing.Point(416, 364);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 2;
@@ -80,13 +82,15 @@
             this.groupBoxOptions.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxOptions.Controls.Add(this.comboBoxTimeCodeFormat);
+            this.groupBoxOptions.Controls.Add(this.labelTimeCode);
             this.groupBoxOptions.Controls.Add(this.comboBoxFrameRateMultiplier);
             this.groupBoxOptions.Controls.Add(this.textBoxDescription);
             this.groupBoxOptions.Controls.Add(this.label7);
             this.groupBoxOptions.Controls.Add(this.textBoxTitle);
             this.groupBoxOptions.Controls.Add(this.label6);
             this.groupBoxOptions.Controls.Add(this.comboBoxDefaultRegion);
-            this.groupBoxOptions.Controls.Add(this.label5);
+            this.groupBoxOptions.Controls.Add(this.labelDefaultRegion);
             this.groupBoxOptions.Controls.Add(this.comboBoxDropMode);
             this.groupBoxOptions.Controls.Add(this.label4);
             this.groupBoxOptions.Controls.Add(this.label3);
@@ -100,7 +104,7 @@
             this.groupBoxOptions.Controls.Add(this.labelWrapStyle);
             this.groupBoxOptions.Location = new System.Drawing.Point(12, 12);
             this.groupBoxOptions.Name = "groupBoxOptions";
-            this.groupBoxOptions.Size = new System.Drawing.Size(479, 310);
+            this.groupBoxOptions.Size = new System.Drawing.Size(479, 346);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
             // 
@@ -157,14 +161,14 @@
             this.comboBoxDefaultRegion.Size = new System.Drawing.Size(263, 21);
             this.comboBoxDefaultRegion.TabIndex = 8;
             // 
-            // label5
+            // labelDefaultRegion
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(6, 273);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(73, 13);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "Default region";
+            this.labelDefaultRegion.AutoSize = true;
+            this.labelDefaultRegion.Location = new System.Drawing.Point(6, 273);
+            this.labelDefaultRegion.Name = "labelDefaultRegion";
+            this.labelDefaultRegion.Size = new System.Drawing.Size(73, 13);
+            this.labelDefaultRegion.TabIndex = 12;
+            this.labelDefaultRegion.Text = "Default region";
             // 
             // comboBoxDropMode
             // 
@@ -273,11 +277,35 @@
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
             // 
+            // comboBoxTimeCodeFormat
+            // 
+            this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTimeCodeFormat.FormattingEnabled = true;
+            this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
+            "hh:mm:ss:ff",
+            "hh:mm:ss.msec",
+            "Seconds",
+            "Milliseconds",
+            "Ticks"});
+            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
+            this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
+            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxTimeCodeFormat.TabIndex = 19;
+            // 
+            // labelTimeCode
+            // 
+            this.labelTimeCode.AutoSize = true;
+            this.labelTimeCode.Location = new System.Drawing.Point(6, 312);
+            this.labelTimeCode.Name = "labelTimeCode";
+            this.labelTimeCode.Size = new System.Drawing.Size(89, 13);
+            this.labelTimeCode.TabIndex = 20;
+            this.labelTimeCode.Text = "Time code format";
+            // 
             // TimedTextProperties
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(503, 361);
+            this.ClientSize = new System.Drawing.Size(503, 397);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.groupBoxOptions);
@@ -313,11 +341,13 @@
         private System.Windows.Forms.ComboBox comboBoxDefaultStyle;
         private System.Windows.Forms.Label labelWrapStyle;
         private System.Windows.Forms.ComboBox comboBoxDefaultRegion;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label labelDefaultRegion;
         private System.Windows.Forms.TextBox textBoxDescription;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox textBoxTitle;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox comboBoxFrameRateMultiplier;
+        private System.Windows.Forms.ComboBox comboBoxTimeCodeFormat;
+        private System.Windows.Forms.Label labelTimeCode;
     }
 }

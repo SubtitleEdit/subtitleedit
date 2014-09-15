@@ -70,19 +70,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            var ss = Configuration.Settings.SubtitleSettings;
-            if (string.IsNullOrEmpty(ss.TimedText10TimeCodeFormat))
-                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "seconds", StringComparison.OrdinalIgnoreCase) == 0)
-                return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}s", time.TotalSeconds);
-            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "milliseconds", StringComparison.OrdinalIgnoreCase) == 0)
-                return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
-            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "ticks", StringComparison.OrdinalIgnoreCase) == 0)
-                return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
-            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "hh:mm:ss.msec", StringComparison.OrdinalIgnoreCase) == 0)
-                return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
-            else if (string.Compare(ss.TimedText10TimeCodeFormat.Trim(), "hh:mm:ss.ff", StringComparison.OrdinalIgnoreCase) == 0)
-                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower();
+            if (!string.IsNullOrEmpty(timeCodeFormat))
+            {
+                if (string.Compare(timeCodeFormat, "seconds", StringComparison.Ordinal) == 0)
+                    return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}s", time.TotalSeconds);
+                else if (string.Compare(timeCodeFormat, "milliseconds", StringComparison.Ordinal) == 0)
+                    return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
+                else if (string.Compare(timeCodeFormat, "ticks", StringComparison.Ordinal) == 0)
+                    return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
+                else if (string.Compare(timeCodeFormat, "hh:mm:ss.msec", StringComparison.Ordinal) == 0)
+                    return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+            }
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
