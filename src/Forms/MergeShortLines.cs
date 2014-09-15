@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
             text = text.Trim();
-            if (!text.StartsWith("<"))
+            if (!text.StartsWith('<'))
                 return string.Empty;
 
             string startTag = string.Empty;

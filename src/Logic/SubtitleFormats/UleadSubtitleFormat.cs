@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length == 0 || line.StartsWith("#"))
+                else if (line.Trim().Length == 0 || line.StartsWith('#'))
                 {
                     // skip these lines
                 }

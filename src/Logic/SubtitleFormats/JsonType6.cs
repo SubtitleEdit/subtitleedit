@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string milliseconds = elements[0].Trim('"').Trim();
                     string text = elements[1].Trim();
-                    if (text.StartsWith("\""))
+                    if (text.StartsWith('"'))
                         text = text.Remove(0, 1);
                     if (text.EndsWith("\""))
                         text = text.Remove(text.Length - 1, 1);

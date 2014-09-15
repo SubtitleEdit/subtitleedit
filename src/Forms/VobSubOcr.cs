@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxCustomFourColors.Checked = true;
 
             _importLanguageString = languageString;
-            if (_importLanguageString.Contains("(") && !_importLanguageString.StartsWith("("))
+            if (_importLanguageString.Contains("(") && !_importLanguageString.StartsWith('('))
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
         }
 
@@ -4463,7 +4463,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (line.Contains("l"))
             {
-                if (line.StartsWith("l"))
+                if (line.StartsWith('l'))
                     line = line.Remove(0, 1).Insert(0, "I");
                 if (line.StartsWith("<i>l"))
                     line = line.Remove(3, 1).Insert(3, "I");
@@ -4737,7 +4737,7 @@ namespace Nikse.SubtitleEdit.Forms
                 paragraph.Append("<i>" + temp + "</i>");
                 paragraph.Append(appendString);
             }
-            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith("-"))
+            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith('-'))
             {
                 string temp = line.ToString().Replace("<i>", "").Replace("</i>", "");
                 paragraph.Append("<i>" + temp + "</i>");
@@ -6012,7 +6012,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith("J'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
+                                    if (unItalicText.StartsWith("J'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6036,7 +6036,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith(";'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
+                                    if (unItalicText.StartsWith(";'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6044,7 +6044,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith(",{*") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
+                                    if (unItalicText.StartsWith(",{*") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6053,7 +6053,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
 
-                                    if (unItalicText.EndsWith("J'") && (line.EndsWith("♪") || textWithOutFixes.EndsWith("♪") || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith("♪")))
+                                    if (unItalicText.EndsWith("J'") && (line.EndsWith("♪") || textWithOutFixes.EndsWith("♪") || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6063,13 +6063,13 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
 
-                                if (unItalicText.StartsWith("[") && !line.StartsWith("["))
+                                if (unItalicText.StartsWith('[') && !line.StartsWith('['))
                                 {
                                     unItalicText = unItalicText.Remove(0, 1);
                                     if (unItalicText.EndsWith("]"))
                                         unItalicText = unItalicText.TrimEnd(']');
                                 }
-                                if (unItalicText.StartsWith("{") && !line.StartsWith("{"))
+                                if (unItalicText.StartsWith('{') && !line.StartsWith('{'))
                                 {
                                     unItalicText = unItalicText.Remove(0, 1);
                                     if (unItalicText.EndsWith("}"))

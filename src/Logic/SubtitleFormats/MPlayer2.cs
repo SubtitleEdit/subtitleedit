@@ -124,9 +124,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (textIndex < s.Length)
                         {
                             string text = s.Substring(textIndex);
-                            if (text.StartsWith("/") && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
+                            if (text.StartsWith('/') && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
                                 text = "<i>" + text.TrimStart('/').Replace("|/", Environment.NewLine) + "</i>";
-                            else if (text.StartsWith("/") && text.Contains("|") && !text.Contains("|/"))
+                            else if (text.StartsWith('/') && text.Contains("|") && !text.Contains("|/"))
                                 text = "<i>" + text.TrimStart('/').Replace("|", "</i>" + Environment.NewLine);
                             else if (text.Contains("|/"))
                                 text = text.Replace("|/", Environment.NewLine + "<i>") + "</i>";

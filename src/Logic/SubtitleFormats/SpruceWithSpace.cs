@@ -109,7 +109,7 @@ $TapeOffset         =   FALSE
                         _errorCount++;
                     }
                 }
-                else if (line.Trim().Length > 0 && !line.StartsWith("//") && !line.StartsWith("$"))
+                else if (line.Trim().Length > 0 && !line.StartsWith("//") && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }

@@ -178,13 +178,13 @@ namespace Nikse.SubtitleEdit.Logic.Mp4.Boxes
                         string hex = sb.ToString();
                         int errorCount = 0;
                         text = SubtitleFormats.ScenaristClosedCaptions.GetSccText(hex, ref errorCount);
-                        if (text.StartsWith("n") && text.Length > 1)
+                        if (text.StartsWith('n') && text.Length > 1)
                             text = "<i>" + text.Substring(1) + "</i>";
                         if (text.StartsWith("-n"))
                             text = text.Remove(0, 2);
                         if (text.StartsWith("-N"))
                             text = text.Remove(0, 2);
-                        if (text.StartsWith("-") && !text.Contains(Environment.NewLine + "-"))
+                        if (text.StartsWith('-') && !text.Contains(Environment.NewLine + "-"))
                             text = text.Remove(0, 1);
                     }
                     Texts.Add(text.Replace(Environment.NewLine, "\n").Replace("\n", Environment.NewLine));

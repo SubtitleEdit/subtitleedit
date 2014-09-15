@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 Paragraph p = subtitle.Paragraphs[i];
                 string text = p.Text;
-                if (text.StartsWith("{") && text.Length > 6 && text[6] == '}')
+                if (text.StartsWith('{') && text.Length > 6 && text[6] == '}')
                     text = text.Remove(0, 6);
                 if (text.StartsWith("<i>") && text.EndsWith("</i>"))
                 {
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (s.StartsWith("$"))
+                else if (s.StartsWith('$'))
                 {
                     if (s.Replace(" ", string.Empty).ToLower() == "$italic=true")
                     {
