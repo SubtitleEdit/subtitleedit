@@ -134,6 +134,7 @@ Name: sl;   MessagesFile: compiler:Languages\Slovenian.isl
 Name: srC;  MessagesFile: compiler:Languages\SerbianCyrillic.isl
 Name: srL;  MessagesFile: compiler:Languages\SerbianLatin.isl
 Name: sv;   MessagesFile: Languages\Swedish.isl
+Name: th;   MessagesFile: Languages\Thai.isl
 Name: tr;   MessagesFile: compiler:Languages\Turkish.isl
 Name: vi;   MessagesFile: Languages\Vietnamese.isl
 Name: zh;   MessagesFile: Languages\ChineseSimplified.isl
