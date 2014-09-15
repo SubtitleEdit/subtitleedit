@@ -231,11 +231,11 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             sb.Append(s);
                         }
-                        else if ((sb.ToString().EndsWith('<') || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
+                        else if ((sb.EndsWith('<') || sb.ToString().EndsWith("</", StringComparison.Ordinal)) && i + 1 < StrippedText.Length && StrippedText[i + 1] == '>')
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.ToString().EndsWith('<') && s == "/" && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
+                        else if (sb.EndsWith('<') && s == "/" && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
                         { // tags
                             sb.Append(s);
                         }

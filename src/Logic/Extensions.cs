@@ -21,5 +21,10 @@ namespace Nikse.SubtitleEdit.Logic
             return s.Length > 0 && s[s.Length - 1] == c;
         }
 
+        public static bool EndsWith(this StringBuilder sb, char c)
+        {
+            return sb.Length > 0 && sb[sb.Length - 1] == c;
+        }
+
     }
 }

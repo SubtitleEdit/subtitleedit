@@ -1547,7 +1547,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
-                        if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                        if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
                             sb.Clear();
@@ -1604,7 +1604,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
                 {
-                    if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                    if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
                         string t = sb.ToString();
                         sb.Clear();
@@ -1628,7 +1628,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
                 {
-                    if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                    if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
                         string t = sb.ToString();
                         sb.Clear();
@@ -2091,7 +2091,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                         {
-                            if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                            if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                             {
                                 string t = sb.ToString();
                                 sb.Clear();
@@ -2148,7 +2148,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
                     {
-                        if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                        if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
                             sb.Clear();
@@ -2172,7 +2172,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
                     {
-                        if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                        if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
                             sb.Clear();
