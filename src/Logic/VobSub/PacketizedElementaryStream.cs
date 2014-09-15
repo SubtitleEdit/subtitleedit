@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
         public readonly int? SubPictureStreamId;
 
-        public readonly byte[] DataBuffer;
+        private readonly byte[] _dataBuffer;
 
         public PacketizedElementaryStream(byte[] buffer, int index)
         {
@@ -99,8 +99,17 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     return;
             }
 
-            DataBuffer = new byte[dataSize];
-            Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
+            _dataBuffer = new byte[dataSize];
+            Buffer.BlockCopy(buffer, dataIndex, _dataBuffer, 0, dataSize);
+        }
+
+        public byte[] DataBuffer
+        {
+            get
+            {
+                // TODO: Return a copy instead? This should be readonly afterall.
+                return _dataBuffer;
+            }
         }
     }
 }
