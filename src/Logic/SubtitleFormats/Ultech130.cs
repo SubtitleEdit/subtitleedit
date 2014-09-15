@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             byte b2 = buffer[k + 1];
                             skipCount = 1;
-                            if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine) && !sb.ToString().EndsWith('>'))
+                            if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine) && !sb.EndsWith('>'))
                             {
                                 if (font)
                                     sb.Append("</font>");

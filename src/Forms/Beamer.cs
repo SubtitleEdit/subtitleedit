@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
-                        if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                        if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
                             string t = sb.ToString();
                             sb.Clear();
@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
                 {
-                    if (lastText.ToString().EndsWith(' ') && !sb.StartsWith(' '))
+                    if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
                         string t = sb.ToString();
                         sb.Clear();

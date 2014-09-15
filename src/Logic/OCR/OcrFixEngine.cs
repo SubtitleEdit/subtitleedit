@@ -427,7 +427,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         else
                         {
                             bool doFixWord = true;
-                            if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith('-'))
+                            if (word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'))
                                 doFixWord = false;
                             if (doFixWord)
                                 fixedWord = FixCommonWordErrors(word.ToString());
@@ -449,7 +449,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 string fixedWord;
                 bool doFixWord = true;
-                if (word.Length == 1 && sb.Length > 1 && sb.ToString().EndsWith('-'))
+                if (word.Length == 1 && sb.Length > 1 && sb.EndsWith('-'))
                     doFixWord = false;
                 if (doFixWord)
                     fixedWord = FixCommonWordErrors(word.ToString());
