@@ -499,6 +499,22 @@ sv.tsk_ResetSettings=Reset Subtitle Edit's settings
 sv.types_custom=Custom installation
 sv.types_default=Default installation
 
+; Thai
+th.comp_translations=Translations
+th.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
+th.msg_DeleteSettings=Do you also want to delete Subtitle Edit's settings and any custom changes you made in the dictionaries?%n%nIf you plan on reinstalling Subtitle Edit you do not have to delete them.
+th.msg_OptimizingPerformance=Optimizing performance...
+th.msg_SetupIsRunningWarning=Subtitle Edit Setup is already running!
+th.run_VisitWebsite=Visit Subtitle Edit's Website
+th.sm_com_Changelog=Subtitle Edit's Changelog
+th.tsk_AllUsers=For all users
+th.tsk_CurrentUser=For the current user only
+th.tsk_Other=Other:
+th.tsk_ResetDictionaries=Reset Dictionaries and delete any custom names
+th.tsk_ResetSettings=Reset Subtitle Edit's settings
+th.types_custom=Custom installation
+th.types_default=Default installation
+
 ; Turkish
 tr.comp_translations=Translations
 tr.msg_AskToDownNET=Subtitle Edit requires the .NET Framework 4.0. Please download and install the .NET Framework and run setup again.%n%nDo you want to download the .NET Framework 4.0 now?
