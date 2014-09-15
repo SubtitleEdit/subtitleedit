@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
+                    while (line.Contains(' ') && line.IndexOf(' ') < index)
                     {
                         line = line.Remove(line.IndexOf(' '), 1);
                         index--;
@@ -126,7 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string text = s.Substring(textIndex);
                             if (text.StartsWith('/') && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
                                 text = "<i>" + text.TrimStart('/').Replace("|/", Environment.NewLine) + "</i>";
-                            else if (text.StartsWith('/') && text.Contains("|") && !text.Contains("|/"))
+                            else if (text.StartsWith('/') && text.Contains('|') && !text.Contains("|/"))
                                 text = "<i>" + text.TrimStart('/').Replace("|", "</i>" + Environment.NewLine);
                             else if (text.Contains("|/"))
                                 text = text.Replace("|/", Environment.NewLine + "<i>") + "</i>";

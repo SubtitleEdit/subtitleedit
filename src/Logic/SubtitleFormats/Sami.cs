@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
                 string text = p.Text;
 
-                if (text.Contains("<") && text.Contains(">"))
+                if (text.Contains('<') && text.Contains('>'))
                 {
                     var total = new StringBuilder();
                     var partial = new StringBuilder();
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (text.StartsWith("<FONT COLOR=") && !text.Contains("</font>") && !text.Contains("</FONT>"))
                     text += "</FONT>";
 
-                if (text.IndexOf('<') >= 0 && text.IndexOf('>') >= 0)
+                if (text.Contains('<') && text.Contains('>'))
                 {
                     var total = new StringBuilder();
                     var partial = new StringBuilder();

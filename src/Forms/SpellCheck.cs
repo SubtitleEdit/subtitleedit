@@ -296,7 +296,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                     {
                         string word = node.InnerText.Trim().ToLower();
-                        if (word.Contains(" "))
+                        if (word.Contains(' '))
                             _userPhraseList.Add(word);
                         else
                             _userWordList.Add(word);
@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfAddedWords++;
                         string s = ChangeWord.Trim().ToLower();
-                        if (s.Contains(" "))
+                        if (s.Contains(' '))
                             _userPhraseList.Add(s);
                         else
                             _userWordList.Add(s);
@@ -588,28 +588,28 @@ namespace Nikse.SubtitleEdit.Forms
                     minLength = 1;
 
                 if (_currentWord.Trim().Length >= minLength &&
-                    !_currentWord.Contains("0") &&
-                    !_currentWord.Contains("1") &&
-                    !_currentWord.Contains("2") &&
-                    !_currentWord.Contains("3") &&
-                    !_currentWord.Contains("4") &&
-                    !_currentWord.Contains("5") &&
-                    !_currentWord.Contains("6") &&
-                    !_currentWord.Contains("7") &&
-                    !_currentWord.Contains("8") &&
-                    !_currentWord.Contains("9") &&
-                    !_currentWord.Contains("%") &&
-                    !_currentWord.Contains("&") &&
-                    !_currentWord.Contains("@") &&
-                    !_currentWord.Contains("$") &&
-                    !_currentWord.Contains("*") &&
-                    !_currentWord.Contains("=") &&
-                    !_currentWord.Contains("£") &&
-                    !_currentWord.Contains("#") &&
-                    !_currentWord.Contains("_") &&
-                    !_currentWord.Contains("½") &&
-                    !_currentWord.Contains("^") &&
-                    !_currentWord.Contains("£")
+                    !_currentWord.Contains('0') &&
+                    !_currentWord.Contains('1') &&
+                    !_currentWord.Contains('2') &&
+                    !_currentWord.Contains('3') &&
+                    !_currentWord.Contains('4') &&
+                    !_currentWord.Contains('5') &&
+                    !_currentWord.Contains('6') &&
+                    !_currentWord.Contains('7') &&
+                    !_currentWord.Contains('8') &&
+                    !_currentWord.Contains('9') &&
+                    !_currentWord.Contains('%') &&
+                    !_currentWord.Contains('&') &&
+                    !_currentWord.Contains('@') &&
+                    !_currentWord.Contains('$') &&
+                    !_currentWord.Contains('*') &&
+                    !_currentWord.Contains('=') &&
+                    !_currentWord.Contains('£') &&
+                    !_currentWord.Contains('#') &&
+                    !_currentWord.Contains('_') &&
+                    !_currentWord.Contains('½') &&
+                    !_currentWord.Contains('^') &&
+                    !_currentWord.Contains('£')
                     )
                 {
                     _prefix = string.Empty;
@@ -909,11 +909,11 @@ namespace Nikse.SubtitleEdit.Forms
             string[] wordsWithDash = text.Split(" .,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
             {
-                if (w.Contains("-") && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
+                if (w.Contains('-') && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
                     _wordsWithDashesOrPeriods.Add(w);
             }
 
-            if (text.Contains(".") || text.Contains("-"))
+            if (text.Contains('.') || text.Contains('-'))
             {
                 int i = 0;
                 string id = string.Format("_@{0}_", i);
@@ -1079,7 +1079,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                 {
                     string word = node.InnerText.Trim().ToLower();
-                    if (word.Contains(" "))
+                    if (word.Contains(' '))
                         _userPhraseList.Add(word);
                     else
                         _userWordList.Add(word);
@@ -1091,12 +1091,12 @@ namespace Nikse.SubtitleEdit.Forms
             _wordsWithDashesOrPeriods.AddRange(_namesEtcMultiWordList);
             foreach (string name in _namesEtcList)
             {
-                if (name.Contains(".") || name.Contains("-"))
+                if (name.Contains('.') || name.Contains('-'))
                     _wordsWithDashesOrPeriods.Add(name);
             }
             foreach (string word in _userWordList)
             {
-                if (word.Contains(".") || word.Contains("-"))
+                if (word.Contains('.') || word.Contains('-'))
                     _wordsWithDashesOrPeriods.Add(word);
             }
             _wordsWithDashesOrPeriods.AddRange(_userPhraseList);

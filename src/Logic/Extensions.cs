@@ -26,5 +26,10 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.Length > 0 && sb[sb.Length - 1] == c;
         }
 
+        public static bool Contains(this string s, char c)
+        {
+            return s.IndexOf(c) != -1;
+        }
+
     }
 }

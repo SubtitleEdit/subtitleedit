@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 isItalic = false;
                                 i += 3;
                             }
-                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains(">"))
+                            else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains('>'))
                             {
                                 int endOfFont = line.IndexOf(">", i);
                                 if (txt.Length > 0)
@@ -718,7 +718,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string[] parts = s.Split(new char[] { ':', '.', ',' });
 
             int milliseconds = (int)(int.Parse(parts[3]) * 4); // 000 to 249
-            if (s.Contains("."))
+            if (s.Contains('.'))
                 milliseconds = int.Parse(parts[3].PadRight(3, '0'));
             if (milliseconds > 999)
                 milliseconds = 999;

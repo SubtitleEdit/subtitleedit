@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (line.Trim().Length > 0)
                 {
-                    if (line.Contains("["))
+                    if (line.Contains('['))
                     {
                         string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                         if (_regexMicroDvdLine.IsMatch(s))
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
+                    while (line.Contains(' ') && line.IndexOf(' ') < index)
                     {
                         line = line.Remove(line.IndexOf(' '), 1);
                         index--;

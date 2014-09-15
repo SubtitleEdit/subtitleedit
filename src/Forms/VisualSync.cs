@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenVideo(movieFileName);
             }
-            else if (fileNameNoExtension.Contains("."))
+            else if (fileNameNoExtension.Contains('.'))
             {
                 fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
                 TryToFindAndOpenMovieFile(fileNameNoExtension);
