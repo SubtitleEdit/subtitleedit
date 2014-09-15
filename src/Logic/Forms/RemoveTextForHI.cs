@@ -201,12 +201,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     int colonIndex = s2.IndexOf(":", StringComparison.Ordinal);
                                     string start = s2.Substring(0, colonIndex);
 
-                                    bool doContinue = true;
-                                    if (Settings.RemoveTextBeforeColonOnlyUppercase && start != start.ToUpper())
-                                        doContinue = false;
-                                    if (doContinue)
+                                    if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpper())
                                     {
-
                                         int periodIndex = start.LastIndexOf(". ", StringComparison.Ordinal);
                                         int questIndex = start.LastIndexOf("? ", StringComparison.Ordinal);
                                         int exclaIndex = start.LastIndexOf("! ", StringComparison.Ordinal);
@@ -276,9 +272,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                     if (removedInFirstLine && !removedInSecondLine && !text.StartsWith("-") && !text.StartsWith("<i>-"))
                     {
-                        if (insertDash && removedInFirstLine && (arr[1].StartsWith("-") || arr[1].StartsWith("<i>-")))
-                            insertDash = true;
-                        else
+                        if (!insertDash || (!arr[1].StartsWith("-") && !arr[1].StartsWith("<i>-")))
                             insertDash = false;
                     }
                 }
@@ -456,8 +450,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = st.Pre + text + st.Post;
 
             if (oldText.Trim().StartsWith("- ") &&
-                (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ")) &&
-                text != null && !text.Contains(Environment.NewLine))
+                (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ")) && !text.Contains(Environment.NewLine))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
@@ -586,7 +579,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             _interjectionList.Add(pascalCasing);
                     }
                 }
-                _interjectionList.Sort(new Comparison<string>(CompareLength));
+                _interjectionList.Sort(CompareLength);
             }
 
             bool doRepeat = true;

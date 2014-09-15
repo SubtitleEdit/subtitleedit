@@ -250,8 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
                         ms.Position = 0;
                         bmp = ((Bitmap)Bitmap.FromStream(ms)); // avoid locking file
                     }
-                    if (bmp != null)
-                        pictureBox2.Image = bmp;
+                    pictureBox2.Image = bmp;
                     System.Threading.Thread.Sleep(50);
                     File.Delete(fileName);
                 }

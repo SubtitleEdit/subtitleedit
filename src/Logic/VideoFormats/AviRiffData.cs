@@ -1,13 +1,11 @@
-using System.Runtime.InteropServices;
+// (c) Giora Tamir (giora@gtamir.com), 2005
 
-/// <copyright>
-/// Giora Tamir (giora@gtamir.com), 2005
-/// </copyright>
+using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
 {
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
-    internal unsafe struct AVIMAINHEADER
+    internal struct AVIMAINHEADER
     {    // 'avih'
         public int dwMicroSecPerFrame;
         public int dwMaxBytesPerSec;
@@ -145,6 +143,5 @@ namespace Nikse.SubtitleEdit.Logic
         public static readonly int ckidWaveFMT = RiffParser.ToFourCC("fmt ");
 
         #endregion AVI constants
-
     }
 }

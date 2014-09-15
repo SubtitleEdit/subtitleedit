@@ -298,8 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 
                 try
                 {
-                    if (preferredEncodings != null)
-                        Marshal.Copy(preferredEncodings, 0, pPrefEncs, preferredEncodings.Length);
+                    Marshal.Copy(preferredEncodings, 0, pPrefEncs, preferredEncodings.Length);
 
                     Marshal.Copy(resultCodePages, 0, pDetectedEncs, resultCodePages.Length);
 
@@ -307,13 +306,12 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                     if (preserveOrder)
                         options |= MultiLanguage.MLCPF.MLDETECTF_PRESERVE_ORDER;
 
-                    if (preferredEncodings != null)
-                        options |= MultiLanguage.MLCPF.MLDETECTF_PREFERRED_ONLY;
+                    options |= MultiLanguage.MLCPF.MLDETECTF_PREFERRED_ONLY;
 
                     // finally... call to DetectOutboundCodePage
                     multilang3.DetectOutboundCodePage(options,
                         input, (uint)input.Length,
-                        pPrefEncs, (uint)(preferredEncodings == null ? 0 : preferredEncodings.Length),
+                        pPrefEncs, (uint)preferredEncodings.Length,
                         pDetectedEncs, ref detectedCodepages,
                         ref specialChar);
 

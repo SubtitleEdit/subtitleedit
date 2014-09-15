@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (_bdSup != null)
                 return _bdSup.GetBitmap();
 
-            if (ActiveImageIndex.HasValue && ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
+            if (ActiveImageIndex.HasValue && ActiveImageIndex >= 0 && ActiveImageIndex < Pes.ObjectDataList.Count)
                 return (Bitmap)Pes.GetImage(Pes.ObjectDataList[ActiveImageIndex.Value]).Clone();
             return Pes.GetImageFull();
         }

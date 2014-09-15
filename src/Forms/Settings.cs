@@ -1645,11 +1645,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 sb.Append("This is a test!");
 
-                bool bold = false;
-                bool italic = false;
-                bool underline = false;
-                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), bold) + 1;
-                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), bold) + 1;
+                var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), false) + 1;
+                var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), false) + 1;
 
                 float left = 5;
                 left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
@@ -1665,7 +1662,7 @@ namespace Nikse.SubtitleEdit.Forms
                     g.FillRectangle(new SolidBrush(Color.Black), left, top, measuredWidth + 3, measuredHeight + 3);
                 }
 
-                TextDraw.DrawText(font, sf, path, sb, italic, bold, underline, left, top, ref newLine, leftMargin, ref pathPointsStart);
+                TextDraw.DrawText(font, sf, path, sb, false, false, false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
                 int outline = (int)numericUpDownSsaOutline.Value;
 
@@ -1678,7 +1675,7 @@ namespace Nikse.SubtitleEdit.Forms
                         sb = new StringBuilder();
                         sb.Append("This is a test!");
                         int pathPointsStart2 = -1;
-                        TextDraw.DrawText(font, sf, shadowPath, sb, italic, bold, underline, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
+                        TextDraw.DrawText(font, sf, shadowPath, sb, false, false, false, left + i + outline, top + i + outline, ref newLine, leftMargin, ref pathPointsStart2);
                         g.FillPath(new SolidBrush(Color.FromArgb(200, Color.Black)), shadowPath);
                     }
                 }

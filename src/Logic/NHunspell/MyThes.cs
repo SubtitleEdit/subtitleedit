@@ -228,23 +228,12 @@ namespace NHunspell
                 currentLength = GetLineLength(dictionaryBytes, currentPos);
                 string lineText = enc.GetString(dictionaryBytes, currentPos, currentLength).Trim();
 
-                if (lineText != null && lineText.Length > 0)
+                if (lineText.Length > 0)
                 {
                     string[] tokens = lineText.Split('|');
                     if (tokens.Length > 0)
                     {
-                        bool wordLine = true;
-                        if (tokens[0].StartsWith("-"))
-                        {
-                            wordLine = false;
-                        }
-
-                        if (tokens[0].StartsWith("(") && tokens[0].EndsWith(")"))
-                        {
-                            wordLine = false;
-                        }
-
-                        if (wordLine)
+                        if (!tokens[0].StartsWith("-") && !(tokens[0].StartsWith("(") && tokens[0].EndsWith(")")))
                         {
                             lock (this.dictionaryLock)
                             {

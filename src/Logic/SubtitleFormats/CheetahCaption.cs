@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
 
-            byte[] buffer = new byte[] { 0xEA, 0x22, 1, 0 }; // header
+            byte[] buffer = { 0xEA, 0x22, 1, 0 }; // header
             fs.Write(buffer, 0, buffer.Length);
 
             int numberOfLines = subtitle.Paragraphs.Count;
@@ -139,9 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 var textBytes = new List<byte>();
-                bool italic = false;
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
-                    italic = true;
+                var italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
                 text = Utilities.RemoveHtmlTags(text);
                 int j = 0;
                 if (italic)

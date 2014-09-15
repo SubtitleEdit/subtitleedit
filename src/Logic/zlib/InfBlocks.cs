@@ -50,10 +50,10 @@ namespace ComponentAce.Compression.Libs.zlib
 		private const int MANY = 1440;
 		
 		// And'ing with mask[n] masks the lower n bits		
-		private static readonly int[] inflate_mask = new int[]{0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff};
+		private static readonly int[] inflate_mask = { 0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff };
 		
 		// Table for deflate from PKZIP's appnote.txt.		
-		internal static readonly int[] border = new int[]{16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
+		internal static readonly int[] border = { 16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15 };
 		
 		private const int Z_OK = 0;
 		private const int Z_STREAM_END = 1;
@@ -172,7 +172,6 @@ namespace ComponentAce.Compression.Libs.zlib
 								write = q;
 								return inflate_flush(z, r);
 							}
-							;
 							n--;
 							b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
@@ -254,7 +253,6 @@ namespace ComponentAce.Compression.Libs.zlib
 								write = q;
 								return inflate_flush(z, r);
 							}
-							;
 							n--;
 							b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
@@ -340,7 +338,6 @@ namespace ComponentAce.Compression.Libs.zlib
 								write = q;
 								return inflate_flush(z, r);
 							}
-							;
 							n--;
 							b |= (z.next_in[p++] & 0xff) << k;
 							k += 8;
@@ -386,7 +383,6 @@ namespace ComponentAce.Compression.Libs.zlib
 									write = q;
 									return inflate_flush(z, r);
 								}
-								;
 								n--;
 								b |= (z.next_in[p++] & 0xff) << k;
 								k += 8;
@@ -435,7 +431,7 @@ namespace ComponentAce.Compression.Libs.zlib
 							}
 							
 							
-							int i, j, c;
+							int i, j;
 							
 							t = bb[0];
 							
@@ -453,7 +449,6 @@ namespace ComponentAce.Compression.Libs.zlib
 									write = q;
 									return inflate_flush(z, r);
 								}
-								;
 								n--;
 								b |= (z.next_in[p++] & 0xff) << k;
 								k += 8;
@@ -465,7 +460,7 @@ namespace ComponentAce.Compression.Libs.zlib
 							}
 							
 							t = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 1];
-							c = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 2];
+							var c = hufts[(tb[0] + (b & inflate_mask[t])) * 3 + 2];
 							
 							if (c < 16)
 							{
@@ -492,7 +487,6 @@ namespace ComponentAce.Compression.Libs.zlib
 										write = q;
 										return inflate_flush(z, r);
 									}
-									;
 									n--;
 									b |= (z.next_in[p++] & 0xff) << k;
 									k += 8;
@@ -652,16 +646,12 @@ namespace ComponentAce.Compression.Libs.zlib
 		// copy as much as possible from the sliding window to the output area
 		internal int inflate_flush(ZStream z, int r)
 		{
-			int n;
-			int p;
-			int q;
-			
-			// local copies of source and destination pointers
-			p = z.next_out_index;
-			q = read;
+		    // local copies of source and destination pointers
+			var p = z.next_out_index;
+			var q = read;
 			
 			// compute number of bytes to copy as far as end of window
-			n = (int) ((q <= write?write:end) - q);
+		    var n = (q <= write ? write : end) - q;
 			if (n > z.avail_out)
 				n = z.avail_out;
 			if (n != 0 && r == Z_BUF_ERROR)

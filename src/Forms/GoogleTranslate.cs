@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
                     string text = string.Format("{1} {0} |", p.Text.Replace("|", _newlineString), _splitterString);
-                    if (Utilities.UrlEncode(sb.ToString() + text).Length >= textMaxSize)
+                    if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
                         sb = new StringBuilder();
@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         /// <summary>
         /// Translate Text using Google Translate API's
-        /// Google URL - http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}
+        /// Google URL - http://www.google.com/translate_t?hl=en&amp;ie=UTF8&amp;text={0}&amp;langpair={1}
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
@@ -898,7 +898,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = string.Format("{1}{0}|", p.Text, _splitterString);
                     if (!overQuota)
                     {
-                        if ((Utilities.UrlEncode(sb.ToString() + text)).Length >= textMaxSize)
+                        if ((Utilities.UrlEncode(sb + text)).Length >= textMaxSize)
                         {
                             try
                             {

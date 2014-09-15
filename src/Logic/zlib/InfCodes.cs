@@ -47,8 +47,8 @@ namespace ComponentAce.Compression.Libs.zlib
 	
 	sealed class InfCodes
 	{
-				
-		private static readonly int[] inflate_mask = new int[]{0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff};
+
+	    private static readonly int[] inflate_mask = { 0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff };
 		
 		private const int Z_OK = 0;
 		private const int Z_STREAM_END = 1;
@@ -120,28 +120,23 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int proc(InfBlocks s, ZStream z, int r)
 		{
-			int j; // temporary storage
-			 //int[] t; // temporary pointer
-			int tindex; // temporary pointer
-			int e; // extra bits or operation
-			int b = 0; // bit buffer
-			int k = 0; // bits in bit buffer
-			int p = 0; // input data pointer
-			int n; // bytes available there
-			int q; // output window write pointer
-			int m; // bytes to end of window or read pointer
-			int f; // pointer to copy strings from
-			
-			// copy input/output information to locals (UPDATE macro restores)
-			p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;
-			q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
+		    // copy input/output information to locals (UPDATE macro restores)
+            var p = z.next_in_index; // input data pointer
+            var n = z.avail_in; // bytes available there
+            var b = s.bitb; // bit buffer
+            var k = s.bitk; // bits in bit buffer
+            var q = s.write; // output window write pointer
+            var m = q < s.read ? s.read - q - 1 : s.end - q; // bytes to end of window or read pointer
 			
 			// process input and output based on current state
 			while (true)
 			{
-				switch (mode)
+			    int j; // temporary storage
+			    int tindex; // temporary pointer
+			    int e; // extra bits or operation
+
+			    switch (mode)
 				{
-					
 					// waiting for "i:"=input, "o:"=output, "x:"=nothing
 					case START:  // x: set up for LEN
 						if (m >= 258 && n >= 10)
@@ -341,7 +336,7 @@ namespace ComponentAce.Compression.Libs.zlib
 						goto case COPY;
 					
 					case COPY:  // o: copying bytes in window, waiting for space
-						f = q - dist;
+						var f = q - dist; // pointer to copy strings from
 						while (f < 0)
 						{
 							// modulo window size-"while" instead
@@ -481,29 +476,19 @@ namespace ComponentAce.Compression.Libs.zlib
 		
 		internal int inflate_fast(int bl, int bd, int[] tl, int tl_index, int[] td, int td_index, InfBlocks s, ZStream z)
 		{
-			int t; // temporary pointer
-			int[] tp; // temporary pointer
-			int tp_index; // temporary pointer
-			int e; // extra bits or operation
-			int b; // bit buffer
-			int k; // bits in bit buffer
-			int p; // input data pointer
-			int n; // bytes available there
-			int q; // output window write pointer
-			int m; // bytes to end of window or read pointer
-			int ml; // mask for literal/length tree
-			int md; // mask for distance tree
-			int c; // bytes to copy
-			int d; // distance back to copy from
-			int r; // copy source pointer
-			
-			// load input, output, bit values
-			p = z.next_in_index; n = z.avail_in; b = s.bitb; k = s.bitk;
-			q = s.write; m = q < s.read?s.read - q - 1:s.end - q;
+		    int c; // bytes to copy
+
+		    // load input, output, bit values
+            var p = z.next_in_index; // input data pointer
+            var n = z.avail_in; // bytes available there
+            var b = s.bitb; // bit buffer
+            var k = s.bitk; // bits in bit buffer
+            var q = s.write; // output window write pointer
+            var m = q < s.read ? s.read - q - 1 : s.end - q; // bytes to end of window or read pointer
 			
 			// initialize masks
-			ml = inflate_mask[bl];
-			md = inflate_mask[bd];
+            var ml = inflate_mask[bl]; // mask for literal/length tree
+            var md = inflate_mask[bd]; // mask for distance tree
 			
 			// do until not enough input or output space for fast loop
 			do 
@@ -517,10 +502,11 @@ namespace ComponentAce.Compression.Libs.zlib
 					b |= (z.next_in[p++] & 0xff) << k; k += 8;
 				}
 				
-				t = b & ml;
-				tp = tl;
-				tp_index = tl_index;
-				if ((e = tp[(tp_index + t) * 3]) == 0)
+				var t = b & ml; // temporary pointer
+				var tp = tl; // temporary pointer
+				var tp_index = tl_index; // temporary pointer
+			    int e; // extra bits or operation
+			    if ((e = tp[(tp_index + t) * 3]) == 0)
 				{
 					b >>= (tp[(tp_index + t) * 3 + 1]); k -= (tp[(tp_index + t) * 3 + 1]);
 					
@@ -555,7 +541,6 @@ namespace ComponentAce.Compression.Libs.zlib
 						
 						do 
 						{
-							
 							b >>= (tp[(tp_index + t) * 3 + 1]); k -= (tp[(tp_index + t) * 3 + 1]);
 							
 							if ((e & 16) != 0)
@@ -569,13 +554,14 @@ namespace ComponentAce.Compression.Libs.zlib
 									b |= (z.next_in[p++] & 0xff) << k; k += 8;
 								}
 								
-								d = tp[(tp_index + t) * 3 + 2] + (b & inflate_mask[e]);
+								var d = tp[(tp_index + t) * 3 + 2] + (b & inflate_mask[e]); // distance back to copy from
 								
 								b >>= (e); k -= (e);
 								
 								// do the copy
 								m -= c;
-								if (q >= d)
+							    int r; // copy source pointer
+							    if (q >= d)
 								{
 									// offset before dest
 									//  just copy

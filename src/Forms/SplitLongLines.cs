@@ -235,11 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
                                     string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text);
-                                    bool p1Ends = false;
                                     if (p1.EndsWith(".") || p1.EndsWith("!") || p1.EndsWith("?") || p1.EndsWith(":") || p1.EndsWith(")") || p1.EndsWith("]") || p1.EndsWith("♪"))
-                                        p1Ends = true;
-
-                                    if (p1Ends)
                                     {
                                         if (newParagraph1.Text.StartsWith("-") && newParagraph2.Text.StartsWith("-"))
                                         {

@@ -221,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 lineSb.Append(s);
                                 count++;
                             }
-                            text = lineSb.ToString() + post;
+                            text = lineSb + post;
                             subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
 
                         }

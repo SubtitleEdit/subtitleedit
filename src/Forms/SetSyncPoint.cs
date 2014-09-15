@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(subtitle);
             _guess = subtitle.Paragraphs[index].StartTime.TimeSpan;
             subtitleListView1.Items[index].Selected = true;
-            Text = string.Format(Configuration.Settings.Language.SetSyncPoint.Title, subtitle.Paragraphs[index].Number.ToString() + ": " + subtitle.Paragraphs[index].ToString());
+            Text = string.Format(Configuration.Settings.Language.SetSyncPoint.Title, subtitle.Paragraphs[index].Number.ToString() + ": " + subtitle.Paragraphs[index]);
             labelSubtitle.Text = string.Empty;
             labelVideoFileName.Text = Configuration.Settings.Language.General.NoVideoLoaded;
 
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             videoPlayerContainer1.Pause();
 
-            if (_guess != null && _guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / 1000.0 < videoPlayerContainer1.VideoPlayer.Duration)
+            if (_guess.TotalMilliseconds > 0 && _guess.TotalMilliseconds / 1000.0 < videoPlayerContainer1.VideoPlayer.Duration)
             {
                 videoPlayerContainer1.VideoPlayer.CurrentPosition = _guess.TotalMilliseconds / 1000.0;
                 videoPlayerContainer1.RefreshProgressBar();

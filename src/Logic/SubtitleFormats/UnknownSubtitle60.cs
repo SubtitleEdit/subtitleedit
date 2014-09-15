@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var match = regexTimeCodes1.Match(s);
                 if (match.Success && s.Length == 11)
                 {
-                    if (p != null && p.StartTime.TotalMilliseconds > 0)
+                    if (p.StartTime.TotalMilliseconds > 0)
                         subtitle.Paragraphs.Add(p);
 
                     p = new Paragraph();
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            if (p != null && p.StartTime.TotalMilliseconds > 0)
+            if (p.StartTime.TotalMilliseconds > 0)
                 subtitle.Paragraphs.Add(p);
 
             bool allNullEndTime = true;

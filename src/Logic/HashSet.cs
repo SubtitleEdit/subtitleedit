@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Logic
 		}
 
 		[Serializable]
-		public struct Enumerator : IEnumerator<T>, IDisposable {
+		public struct Enumerator : IEnumerator<T> {
 
 			HashSet<T> hashset;
 			int next;

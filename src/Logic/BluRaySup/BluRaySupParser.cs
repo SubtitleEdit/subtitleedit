@@ -387,9 +387,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <summary>
         /// Parse an PCS packet which contains width/height info
         /// </summary>
-        /// <param name="segment">object containing info about the current segment</param>
-        /// <param name="pic">SubPicture object containing info about the current caption</param>
-        /// <param name="msg">reference to message string</param>
         /// <param name="buffer">Raw data buffer, starting right after segment</param>
         private static PcsObject ParsePcs(byte[] buffer, int offset)
         {
@@ -468,8 +465,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         /// <param name="buffer">Buffer of raw byte data, starting right after segment</param>
         /// <param name="segment">object containing info about the current segment</param>
-        /// <param name="pic">SubPicture object containing info about the current caption</param>
-        /// <param name="msg">reference to message string</param>
         /// <returns>number of valid palette entries (-1 for fault)</returns>
         private static PdsData ParsePds(byte[] buffer, SupSegment segment)
         {
@@ -500,8 +495,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// </summary>
         /// <param name="buffer">raw byte date, starting right after segment</param>
         /// <param name="segment">object containing info about the current segment</param>
-        /// <param name="pic">SubPicture object containing info about the current caption</param>
-        /// <param name="msg">reference to message string</param>
         /// <returns>true if this is a valid new object (neither invalid nor a fragment)</returns>
         private static OdsData ParseOds(byte[] buffer, SupSegment segment, bool forceFirst)
         {
@@ -529,7 +522,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     ObjectId = objId,
                     ObjectVersion = objVer,
                     Fragment = info,
-                    Message = "ObjId: " + objId + ", ver: " + objVer + ", seq: " + (first ? "first" : "") + ((first && last) ? "/" : "") + (last ? "" + "last" : "") + ", width: " + width + ", height: " + height,
+                    Message = "ObjId: " + objId + ", ver: " + objVer + ", seq: first" + (last ? "/" : "") + (last ? "" + "last" : "") + ", width: " + width + ", height: " + height,
                 };
             }
             else

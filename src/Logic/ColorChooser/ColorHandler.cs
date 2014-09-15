@@ -56,19 +56,15 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             // point within the circle). HSV.Saturation and HSV.value must be
             // scaled to be between 0 and 1.
 
-            double h;
-            double s;
-            double v;
-
             double r = 0;
             double g = 0;
             double b = 0;
 
             // Scale Hue to be between 0 and 360. Saturation
             // and value scale to be between 0 and 1.
-            h = ((double)HSV.Hue / 255 * 360) % 360;
-            s = (double)HSV.Saturation / 255;
-            v = (double)HSV.Value / 255;
+            var h = ((double)HSV.Hue / 255 * 360) % 360;
+            var s = (double)HSV.Saturation / 255;
+            var v = (double)HSV.Value / 255;
 
             if (s == 0)
             {
@@ -155,13 +151,13 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             double g = (double)argb.Green / 255;
             double b = (double)argb.Blue / 255;
 
-            double h;
-            double s;
-            double v;
-
             double min = Math.Min(Math.Min(r, g), b);
             double max = Math.Max(Math.Max(r, g), b);
-            v = max;
+
+            double h;
+            double s;
+            var v = max;
+            
             double delta = max - min;
             if (max == 0 || delta == 0)
             {

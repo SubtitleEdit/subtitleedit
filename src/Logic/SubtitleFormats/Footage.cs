@@ -60,11 +60,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 count++;
-                bool italic = false;
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
-                    italic = true;
                 string text = Utilities.RemoveHtmlTags(p.Text);
-                if (italic)
+                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
                     text = "#" + text;
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine, count));
             }

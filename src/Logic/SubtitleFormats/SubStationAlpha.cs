@@ -194,7 +194,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                 if (styleFound)
                 {
-                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles.ToString()));
+                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles));
                     subtitle.Header = sb.ToString();
                 }
                 else
@@ -284,7 +284,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                 if (stylexmlCount > 0)
                 {
-                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles.ToString()));
+                    sb.AppendLine(string.Format(headerNoStyles, title, ttStyles));
                     subtitle.Header = sb.ToString();
                 }
                 else

@@ -95,14 +95,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (line.Trim().Length == 0)
                 {
-                    if (p != null)
-                    {
-                        if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0)
-                            _errorCount++;
-                        else
-                            subtitle.Paragraphs.Add(p);
-                        p = new Paragraph();
-                    }
+                    if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0)
+                        _errorCount++;
+                    else
+                        subtitle.Paragraphs.Add(p);
+                    p = new Paragraph();
                 }
                 else if (line.Trim().Length > 0 && !expectStartTime)
                 {

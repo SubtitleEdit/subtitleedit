@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             partial.Append(text.Substring(i, 1));
                         }
-                        else if (tagOn)
+                        else
                         {
                             total.Append(text.Substring(i, 1));
                         }
