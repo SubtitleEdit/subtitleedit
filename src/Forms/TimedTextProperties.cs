@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 var desc = _xml.CreateElement("ttml", "desc", _nsmgr.LookupNamespace("ttml"));
-                desc.InnerText = textBoxTitle.Text;
+                desc.InnerText = textBoxDescription.Text;
                 metadata.AppendChild(desc);
             }
 
