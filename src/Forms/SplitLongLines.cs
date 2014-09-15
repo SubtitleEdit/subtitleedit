@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
                             string[] arr = dialogText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                            if (arr.Length == 2 && (arr[0].StartsWith("-") || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith("-") || arr[1].StartsWith("<i>-")))
+                            if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
                                 isDialog = true;
 
                         }
@@ -237,12 +237,12 @@ namespace Nikse.SubtitleEdit.Forms
                                     string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text);
                                     if (p1.EndsWith(".") || p1.EndsWith("!") || p1.EndsWith("?") || p1.EndsWith(":") || p1.EndsWith(")") || p1.EndsWith("]") || p1.EndsWith("♪"))
                                     {
-                                        if (newParagraph1.Text.StartsWith("-") && newParagraph2.Text.StartsWith("-"))
+                                        if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))
                                         {
                                             newParagraph1.Text = newParagraph1.Text.Remove(0, 1).Trim();
                                             newParagraph2.Text = newParagraph2.Text.Remove(0, 1).Trim();
                                         }
-                                        else if (newParagraph1.Text.StartsWith("<i>-") && newParagraph2.Text.StartsWith("-"))
+                                        else if (newParagraph1.Text.StartsWith("<i>-") && newParagraph2.Text.StartsWith('-'))
                                         {
                                             newParagraph1.Text = newParagraph1.Text.Remove(3, 1).Trim();
                                             if (newParagraph1.Text.StartsWith("<i> "))

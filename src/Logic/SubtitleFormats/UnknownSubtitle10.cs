@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static double GetMilliseconds(string start)
         {
-            while (start.Length > 1 && !start.StartsWith(":"))
+            while (start.Length > 1 && !start.StartsWith(':'))
                 start = start.Remove(0, 1);
             start = start.Trim().Trim(':').Trim('"').Trim();
 

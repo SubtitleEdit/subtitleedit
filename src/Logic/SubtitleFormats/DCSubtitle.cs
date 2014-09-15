@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 }
                                 string c = line.Substring(i + 12, endOfFont - (i + 12));
                                 c = c.Trim('"').Trim('\'').Trim();
-                                if (c.StartsWith("#"))
+                                if (c.StartsWith('#'))
                                     c = c.TrimStart('#').ToUpper().PadLeft(8, 'F');
                                 fontColors.Push(c);
                                 fontNo++;
@@ -702,7 +702,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Replace("e", string.Empty).
                 Replace("f", string.Empty).Length == 0)
             {
-                if (s.StartsWith("#"))
+                if (s.StartsWith('#'))
                     return s;
                 else
                     return "#" + s;

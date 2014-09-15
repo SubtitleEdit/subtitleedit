@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -177,12 +178,12 @@ namespace Nikse.SubtitleEdit.Controls
 
                 // fix start spaces
                 int endIndex = index + newText.Length;
-                if (index > 0 && !newText.StartsWith(" ") && Text[index - 1] != ' ')
+                if (index > 0 && !newText.StartsWith(' ') && Text[index - 1] != ' ')
                 {
                     Text = Text.Insert(index, " ");
                     endIndex++;
                 }
-                else if (index > 0 && newText.StartsWith(" ") && Text[index - 1] == ' ')
+                else if (index > 0 && newText.StartsWith(' ') && Text[index - 1] == ' ')
                 {
                     Text = Text.Remove(index, 1);
                     endIndex--;

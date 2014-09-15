@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
                     _skipAllList.Add(ChangeWord.ToUpper());
-                    if (ChangeWord.EndsWith("'") || ChangeWord.StartsWith("'"))
+                    if (ChangeWord.EndsWith("'") || ChangeWord.StartsWith('\''))
                         _skipAllList.Add(ChangeWord.ToUpper().Trim("'".ToCharArray()));
                     break;
                 case SpellCheckAction.AddToDictionary:
@@ -616,12 +616,12 @@ namespace Nikse.SubtitleEdit.Forms
                     _postfix = string.Empty;
                     if (_currentWord.Length > 1)
                     {
-                        if (_currentWord.StartsWith("'"))
+                        if (_currentWord.StartsWith('\''))
                         {
                             _prefix = "'";
                             _currentWord = _currentWord.Substring(1);
                         }
-                        if (_currentWord.StartsWith("`"))
+                        if (_currentWord.StartsWith('`'))
                         {
                             _prefix = "`";
                             _currentWord = _currentWord.Substring(1);
@@ -632,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
                     {
                         _noOfNamesEtc++;
                     }
@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfSkippedWords++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
                     {
                         _noOfSkippedWords++;
                     }
@@ -648,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
+                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
                     {
                         _noOfCorrectWords++;
                     }
@@ -1254,7 +1254,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     case SpellCheckAction.SkipAll:
                         _skipAllList.Remove(undo.UndoWord.ToUpper());
-                        if (undo.UndoWord.EndsWith("'") || undo.UndoWord.StartsWith("'"))
+                        if (undo.UndoWord.EndsWith("'") || undo.UndoWord.StartsWith('\''))
                             _skipAllList.Remove(undo.UndoWord.ToUpper().Trim('\''));
                         break;
                     case SpellCheckAction.AddToDictionary:

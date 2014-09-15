@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             tagOn = true;
                             total.Append("<");
                         }
-                        else if (text.Substring(i).StartsWith(">") && tagOn)
+                        else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
                             total.Append(">");
@@ -349,7 +349,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     for (int i = 0; i < text.Length; i++)
                     {
                         string tmp = text.Substring(i);
-                        if (tmp.StartsWith("<", StringComparison.Ordinal) &&
+                        if (tmp.StartsWith('<') &&
                             (tmp.StartsWith("<font", StringComparison.Ordinal) ||
                              tmp.StartsWith("<div", StringComparison.Ordinal) ||
                              tmp.StartsWith("<i", StringComparison.Ordinal) ||
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             tagOn = true;
                             total.Append("<");
                         }
-                        else if (text.Substring(i).StartsWith(">", StringComparison.Ordinal) && tagOn)
+                        else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
                             total.Append(">");

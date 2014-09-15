@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
 
                     string text = texts[i];
-                    if (text.StartsWith("["))
+                    if (text.StartsWith('['))
                     {
                         var textLines = Json.ReadArray("{\"text\":" + texts[i] + "}", "text");
                         var textSb = new StringBuilder();

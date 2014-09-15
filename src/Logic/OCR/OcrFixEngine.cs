@@ -521,7 +521,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith(".") || lastLine.EndsWith("!") || lastLine.EndsWith("?");
                 if (start < text.Length - 4)
                 {
-                    if (start == 1 && text.StartsWith("-", StringComparison.Ordinal))
+                    if (start == 1 && text.StartsWith('-'))
                         endingBeforeThis = true;
 
                     if (endingBeforeThis || Utilities.UppercaseLetters.Contains(text.Substring(start + 3, 1)))
@@ -1062,7 +1062,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                if (input.StartsWith("~", StringComparison.Ordinal))
+                if (input.StartsWith('~'))
                     input = ("- " + input.Remove(0, 1)).Replace("  ", " ");
 
                 input = input.Replace(Environment.NewLine + "~", Environment.NewLine + "- ").Replace("  ", " ");
@@ -1116,7 +1116,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     lastLine.EndsWith("?", StringComparison.Ordinal))
                 {
                     var st = new StripableText(l);
-                    if (st.StrippedText.StartsWith("i", StringComparison.Ordinal) && !st.Pre.EndsWith("[", StringComparison.Ordinal) && !st.Pre.EndsWith("(", StringComparison.Ordinal) && !st.Pre.EndsWith("...", StringComparison.Ordinal))
+                    if (st.StrippedText.StartsWith('i') && !st.Pre.EndsWith("[", StringComparison.Ordinal) && !st.Pre.EndsWith("(", StringComparison.Ordinal) && !st.Pre.EndsWith("...", StringComparison.Ordinal))
                     {
                         if (string.IsNullOrEmpty(lastLine) || (!lastLine.EndsWith("...", StringComparison.Ordinal) && !EndsWithAbbreviation(lastLine, _abbreviationList)))
                             l = st.Pre + "I" + st.StrippedText.Remove(0, 1) + st.Post;
@@ -1161,7 +1161,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 pre = "- ";
                 input = input.Remove(0, 2);
             }
-            else if (input.StartsWith("-", StringComparison.Ordinal))
+            else if (input.StartsWith('-'))
             {
                 pre = "-";
                 input = input.Remove(0, 1);
@@ -1436,7 +1436,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             s = s.Replace("! " + Environment.NewLine + from, "! " + Environment.NewLine + _beginLineReplaceList[from]);
                         if (s.Contains("? " + Environment.NewLine + from))
                             s = s.Replace("? " + Environment.NewLine + from, "? " + Environment.NewLine + _beginLineReplaceList[from]);
-                        if (s.StartsWith("\"") && !from.StartsWith("\"") && s.StartsWith("\"" + from))
+                        if (s.StartsWith('"') && !from.StartsWith('"') && s.StartsWith("\"" + from))
                             s = s.Replace("\"" + from, "\"" + _beginLineReplaceList[from]);
                     }
                 }
@@ -1640,7 +1640,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 guesses.Add(word.Replace("ﬂ", "fl"));
                                 if (word.Contains("$"))
                                     guesses.Add(word.Replace("$", "s"));
-                                if (!word.EndsWith("€") && !word.StartsWith("€"))
+                                if (!word.EndsWith("€") && !word.StartsWith('€'))
                                     guesses.Add(word.Replace("€", "e"));
                                 guesses.Add(word.Replace("/", "l"));
                                 guesses.Add(word.Replace(")/", "y"));
@@ -1856,7 +1856,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         bool startOk = i == 0;
                         if (!startOk)
                             startOk = (" ¡¿<>-\"”“()[]'‘`´¶♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(text.Substring(i - 1, 1));
-                        if (!startOk && word.StartsWith(" "))
+                        if (!startOk && word.StartsWith(' '))
                             startOk = true;
                         if (startOk)
                         {

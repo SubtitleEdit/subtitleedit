@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     fine++;
                     string s = line.Remove(0, m.Length);
-                    continuation = s.StartsWith("\"");
+                    continuation = s.StartsWith('"');
                 }
                 else if (line.Trim().Length > 0)
                 {
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             var start = DecodeTimeCode(parts[1]);
                             var end = DecodeTimeCode(parts[2]);
                             string text = line.Remove(0, m.Length);
-                            continuation = text.StartsWith("\"") && !text.EndsWith("\"");
+                            continuation = text.StartsWith('"') && !text.EndsWith("\"");
                             text = text.Trim('"');
                             p = new Paragraph(start, end, text);
                             subtitle.Paragraphs.Add(p);

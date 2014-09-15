@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (line.Length > 0)
                         {
                             string s = line.Trim();
-                            if (s.StartsWith("#"))
+                            if (s.StartsWith('#'))
                                 s = "<i>" + s.Remove(0, 1) + "</i>";
                             paragraph.Text = (paragraph.Text + Environment.NewLine + s).Trim();
                             paragraph.Text = paragraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);

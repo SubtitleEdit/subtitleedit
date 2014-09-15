@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         return;
                     }
                 }
-                else if (s.Length > 0 && !s.StartsWith("ý"))
+                else if (s.Length > 0 && !s.StartsWith('ý'))
                 {
                     _errorCount++;
                 }
