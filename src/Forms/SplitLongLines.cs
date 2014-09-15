@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
                                     string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text);
-                                    if (p1.EndsWith(".") || p1.EndsWith("!") || p1.EndsWith("?") || p1.EndsWith(":") || p1.EndsWith(")") || p1.EndsWith("]") || p1.EndsWith("♪"))
+                                    if (p1.EndsWith('.') || p1.EndsWith('!') || p1.EndsWith('?') || p1.EndsWith(':') || p1.EndsWith(')') || p1.EndsWith(']') || p1.EndsWith('♪'))
                                     {
                                         if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))
                                         {
@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     else
                                     {
-                                        bool endsWithComma = newParagraph1.Text.EndsWith(",") || newParagraph1.Text.EndsWith(",</i>");
+                                        bool endsWithComma = newParagraph1.Text.EndsWith(',') || newParagraph1.Text.EndsWith(",</i>");
 
                                         string post = string.Empty;
                                         if (newParagraph1.Text.EndsWith("</i>"))

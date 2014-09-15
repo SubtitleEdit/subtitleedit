@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(":"))
+                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
                         startTime += "00";
 
                     string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

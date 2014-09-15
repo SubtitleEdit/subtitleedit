@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     {
                         StripableText st = new StripableText(pre);
                         if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(s, ":") == 1 &&
-                            !newText.EndsWith(".") && !newText.EndsWith("!") && !newText.EndsWith("?") && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
+                            !newText.EndsWith('.') && !newText.EndsWith('!') && !newText.EndsWith('?') && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
                             s != s.ToUpper())
                         {
                             if (pre.Contains("<i>") && s.Contains("</i>"))
@@ -109,13 +109,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 newText = newText + Environment.NewLine + "<b>" + s;
                             else if (pre.Contains("[") && s.Contains("]"))
                                 newText = newText + Environment.NewLine + "[" + s;
-                            else if (pre.Contains("(") && s.EndsWith(")"))
+                            else if (pre.Contains("(") && s.EndsWith(')'))
                                 newText = newText + Environment.NewLine + "(" + s;
                             else
                                 newText = newText + Environment.NewLine + s;
                         }
                         else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && s.Substring(0, indexOfColon).Contains(" ") && Utilities.CountTagInText(s, ":") == 1 &&
-                            !newText.EndsWith(".") && !newText.EndsWith("!") && !newText.EndsWith("?") && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
+                            !newText.EndsWith('.') && !newText.EndsWith('!') && !newText.EndsWith('?') && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
                             s != s.ToUpper())
                         {
                             if (pre.Contains("<i>") && s.Contains("</i>"))
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 newText = newText + Environment.NewLine + "<b>" + s;
                             else if (pre.Contains("[") && s.Contains("]"))
                                 newText = newText + Environment.NewLine + "[" + s;
-                            else if (pre.Contains("(") && s.EndsWith(")"))
+                            else if (pre.Contains("(") && s.EndsWith(')'))
                                 newText = newText + Environment.NewLine + "(" + s;
                             else
                                 newText = newText + Environment.NewLine + s;
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                         newText = newText + Environment.NewLine + "<b>" + content;
                                     else if (pre.Contains("[") && content.Contains("]"))
                                         newText = newText + Environment.NewLine + "[" + content;
-                                    else if (pre.Contains("(") && content.EndsWith(")"))
+                                    else if (pre.Contains("(") && content.EndsWith(')'))
                                         newText = newText + Environment.NewLine + "(" + content;
                                     else
                                         newText = newText + Environment.NewLine + content;
@@ -171,7 +171,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 }
                                 newText = newText.Trim();
 
-                                if (text.StartsWith('(') && newText.EndsWith(")") && !newText.Contains("("))
+                                if (text.StartsWith('(') && newText.EndsWith(')') && !newText.Contains("("))
                                     newText = newText.TrimEnd(')');
                                 else if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
                                     newText = "<i>" + newText;
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             insertDash = false;
                     }
 
-                    if (arr0.Length > 0 && arr1.Length > 1 && !(arr[0].EndsWith(".") || arr[0].EndsWith("!") || arr[0].EndsWith("?") || arr[0].EndsWith("</i>")) &&
+                    if (arr0.Length > 0 && arr1.Length > 1 && !(arr[0].EndsWith('.') || arr[0].EndsWith('!') || arr[0].EndsWith('?') || arr[0].EndsWith("</i>")) &&
                         !(new StripableText(arr[1]).Pre.Contains("-")))
                     {
                         insertDash = false;
@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 string[] arr = text.Split(Environment.NewLine.ToCharArray());
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
-                if (!part0.EndsWith(",") && (!part0.EndsWith("-") || noOfNamesRemovedNotInLineOne > 0))
+                if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                 {
                     if (part0.Length > 0 && ".!?".Contains(part0.Substring(part0.Length - 1)))
                     {
@@ -673,7 +673,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 {
                                     pre = text.Substring(0, index);
                                     temp = temp.Remove(0, index);
-                                    if (pre.EndsWith("-") && temp.StartsWith('-'))
+                                    if (pre.EndsWith('-') && temp.StartsWith('-'))
                                         temp = temp.Remove(0, 1);
                                     if (pre.EndsWith("- ") && temp.StartsWith('-'))
                                         temp = temp.Remove(0, 1);
@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     doRepeat = true;
                                 }
 
-                                if (pre.EndsWith(" ") && temp.StartsWith('-'))
+                                if (pre.EndsWith(' ') && temp.StartsWith('-'))
                                     temp = temp.Remove(0, 1);
 
                                 temp = pre + temp;
@@ -817,10 +817,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         private bool StartAndEndsWithHearImpariedTags(string text)
         {
-            return (text.StartsWith('[') && text.EndsWith("]") && !text.Trim('[').Contains("[") && Settings.RemoveTextBetweenSquares) ||
-                   (text.StartsWith('{') && text.EndsWith("}") && !text.Trim('{').Contains("{") && Settings.RemoveTextBetweenBrackets) ||
-                   (text.StartsWith('?') && text.EndsWith("?") && !text.Trim('?').Contains("?") && Settings.RemoveTextBetweenQuestionMarks) ||
-                   (text.StartsWith('(') && text.EndsWith(")") && !text.Trim('(').Contains("(") && Settings.RemoveTextBetweenParentheses) ||
+            return (text.StartsWith('[') && text.EndsWith(']') && !text.Trim('[').Contains("[") && Settings.RemoveTextBetweenSquares) ||
+                   (text.StartsWith('{') && text.EndsWith('}') && !text.Trim('{').Contains("{") && Settings.RemoveTextBetweenBrackets) ||
+                   (text.StartsWith('?') && text.EndsWith('?') && !text.Trim('?').Contains("?") && Settings.RemoveTextBetweenQuestionMarks) ||
+                   (text.StartsWith('(') && text.EndsWith(')') && !text.Trim('(').Contains("(") && Settings.RemoveTextBetweenParentheses) ||
                    (text.StartsWith('[') && text.EndsWith("]:") && !text.Trim('[').Contains("[") && Settings.RemoveTextBetweenSquares) ||
                    (text.StartsWith('{') && text.EndsWith("}:") && !text.Trim('{').Contains("{") && Settings.RemoveTextBetweenBrackets) ||
                    (text.StartsWith('?') && text.EndsWith("?:") && !text.Trim('?').Contains("?") && Settings.RemoveTextBetweenQuestionMarks) ||

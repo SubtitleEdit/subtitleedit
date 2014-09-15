@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (line.EndsWith(".", StringComparison.Ordinal) && Utilities.IsInteger(line.TrimEnd('.')))
+                if (line.EndsWith('.') && Utilities.IsInteger(line.TrimEnd('.')))
                 {
                     if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
                         subtitle.Paragraphs.Add(paragraph);

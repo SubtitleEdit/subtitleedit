@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             csv = csv.Trim();
             if (csv.StartsWith('"'))
                 csv = csv.Remove(0, 1);
-            if (csv.EndsWith("\""))
+            if (csv.EndsWith('"'))
                 csv = csv.Remove(csv.Length - 1, 1);
             bool isBreak = false;
             for (int i = 0; i < csv.Length; i++)

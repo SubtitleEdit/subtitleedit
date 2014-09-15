@@ -466,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
                     _skipAllList.Add(ChangeWord.ToUpper());
-                    if (ChangeWord.EndsWith("'") || ChangeWord.StartsWith('\''))
+                    if (ChangeWord.EndsWith('\'') || ChangeWord.StartsWith('\''))
                         _skipAllList.Add(ChangeWord.ToUpper().Trim("'".ToCharArray()));
                     break;
                 case SpellCheckAction.AddToDictionary:
@@ -486,17 +486,17 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _namesEtcList.Add(ChangeWord);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                        if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith("s"))
+                        if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith('s'))
                         {
                             _namesEtcList.Add(ChangeWord + "s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
                         }
-                        if (!ChangeWord.ToLower().EndsWith("s"))
+                        if (!ChangeWord.ToLower().EndsWith('s'))
                         {
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
                         }
-                        if (!ChangeWord.EndsWith("'"))
+                        if (!ChangeWord.EndsWith('\''))
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'");
                         Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
                     }
@@ -632,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
                     {
                         _noOfNamesEtc++;
                     }
@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfSkippedWords++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
                     {
                         _noOfSkippedWords++;
                     }
@@ -648,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
                     {
                         _noOfCorrectWords++;
                     }
@@ -689,11 +689,11 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (_currentWord.Length > 1)
                         {
                             correct = DoSpell(_currentWord);
-                            if (!correct && (_currentWord.EndsWith("'") || _currentWord.EndsWith("`")))
+                            if (!correct && (_currentWord.EndsWith('\'') || _currentWord.EndsWith('`')))
                                 correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
                             if (!correct && _currentWord.EndsWith("'s") && _currentWord.Length > 4)
                                 correct = DoSpell(_currentWord.TrimEnd('s').TrimEnd('\''));
-                            if (!correct && _currentWord.EndsWith("'") && DoSpell(_currentWord.TrimEnd("'".ToCharArray())))
+                            if (!correct && _currentWord.EndsWith('\'') && DoSpell(_currentWord.TrimEnd("'".ToCharArray())))
                             {
                                 _currentWord = _currentWord.TrimEnd("'".ToCharArray());
                                 correct = true;
@@ -741,7 +741,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (_currentSpellCheckWord.Index > 3)
                                         {
                                             string ending = _currentParagraph.Text.Substring(0, _currentSpellCheckWord.Index - 1).Trim();
-                                            if (!ending.EndsWith(".") && !ending.EndsWith("!") && !ending.EndsWith("?"))
+                                            if (!ending.EndsWith('.') && !ending.EndsWith('!') && !ending.EndsWith('?'))
                                             {
                                                 for (int i = 0; i < suggestions.Count; i++)
                                                 {
@@ -790,7 +790,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     _currentSpellCheckWord.Index += 2;
                                     _currentWord = _currentWord.Trim("'".ToCharArray());
                                 }
-                                if (_prefix != null && _prefix == "'" && _currentWord.EndsWith("'"))
+                                if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
                                 {
                                     _prefix = string.Empty;
                                     _currentSpellCheckWord.Index++;
@@ -1058,12 +1058,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string namesItem in _namesEtcList)
                 {
-                    if (!namesItem.EndsWith("s"))
+                    if (!namesItem.EndsWith('s'))
+                    {
                         _namesEtcListWithApostrophe.Add(namesItem + "'s");
-                    if (!namesItem.EndsWith("s"))
                         _namesEtcListWithApostrophe.Add(namesItem + "’s");
-                    else if (!namesItem.EndsWith("'"))
+                    }
+                    else if (!namesItem.EndsWith('\''))
+                    {
                         _namesEtcListWithApostrophe.Add(namesItem + "'");
+                    }
                 }
             }
 
@@ -1254,7 +1257,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     case SpellCheckAction.SkipAll:
                         _skipAllList.Remove(undo.UndoWord.ToUpper());
-                        if (undo.UndoWord.EndsWith("'") || undo.UndoWord.StartsWith('\''))
+                        if (undo.UndoWord.EndsWith('\'') || undo.UndoWord.StartsWith('\''))
                             _skipAllList.Remove(undo.UndoWord.ToUpper().Trim('\''));
                         break;
                     case SpellCheckAction.AddToDictionary:
@@ -1267,17 +1270,17 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _namesEtcList.Remove(undo.UndoWord);
                             _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper());
-                            if (_languageName.StartsWith("en_") && !undo.UndoWord.ToLower().EndsWith("s"))
+                            if (_languageName.StartsWith("en_") && !undo.UndoWord.ToLower().EndsWith('s'))
                             {
                                 _namesEtcList.Remove(undo.UndoWord + "s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "S");
                             }
-                            if (!undo.UndoWord.ToLower().EndsWith("s"))
+                            if (!undo.UndoWord.ToLower().EndsWith('s'))
                             {
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "'S");
                             }
-                            if (!undo.UndoWord.EndsWith("'"))
+                            if (!undo.UndoWord.EndsWith('\''))
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
 
                             Utilities.RemoveFromLocalNamesEtcList(undo.UndoWord, _languageName);

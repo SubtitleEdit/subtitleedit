@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     bool merge = !(p.Text.Contains(Environment.NewLine) || next == null);
 
-                    if (merge && (p.Text.TrimEnd().EndsWith("!") || p.Text.TrimEnd().EndsWith(".") || p.Text.TrimEnd().EndsWith("!")))
+                    if (merge && (p.Text.TrimEnd().EndsWith('!') || p.Text.TrimEnd().EndsWith('.')))
                     {
                         var st = new StripableText(p.Text);
                         if (st.StrippedText.Length > 0 && Utilities.UppercaseLetters.Contains(st.StrippedText[0].ToString(CultureInfo.InvariantCulture)))

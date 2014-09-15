@@ -1534,8 +1534,8 @@ namespace Nikse.SubtitleEdit.Forms
                         !newText.Substring(1).StartsWith('♪') && !newText.Substring(1).StartsWith('♫'))
                         newText = newText.Insert(1, " ");
                     if ("#♪♫".Contains(newText[newText.Length - 1].ToString()) && !" >".Contains(newText[newText.Length - 2].ToString()) &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith(Environment.NewLine, StringComparison.Ordinal) && !newText.Substring(0, newText.Length - 1).EndsWith("♪") &&
-                        !newText.Substring(0, newText.Length - 1).EndsWith("♫", StringComparison.Ordinal))
+                        !newText.Substring(0, newText.Length - 1).EndsWith(Environment.NewLine, StringComparison.Ordinal) && !newText.Substring(0, newText.Length - 1).EndsWith('♪') &&
+                        !newText.Substring(0, newText.Length - 1).EndsWith('♫'))
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
@@ -1701,7 +1701,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (betweenMilliseconds > 1500)
                             next = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (next.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
-                                 next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith("\"", StringComparison.Ordinal) &&
+                                 next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
                                  Utilities.CountTagInText(next.Text, "\"") == 2)
                             next = null; // seems to have valid quotes, so no spanning
                     }
@@ -1713,7 +1713,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (betweenMilliseconds > 1500)
                             prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
-                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith("\"", StringComparison.Ordinal) &&
+                                 prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
                                  Utilities.CountTagInText(prev.Text, "\"") == 2)
                             prev = null; // seems to have valid quotes, so no spanning
                     }
@@ -1725,12 +1725,12 @@ namespace Nikse.SubtitleEdit.Forms
                         lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         string line = lines[0].Trim();
 
-                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith(".", StringComparison.Ordinal) || line.EndsWith("!", StringComparison.Ordinal) || line.EndsWith("?", StringComparison.Ordinal)))
+                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
                         {
                             p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
                             p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
                         }
-                        else if (line.Length > 5 && line.EndsWith("\"", StringComparison.Ordinal) && line.IndexOf("- ", StringComparison.Ordinal) >= 0 && line.IndexOf("- ", StringComparison.Ordinal) < 4)
+                        else if (line.Length > 5 && line.EndsWith('"') && line.IndexOf("- ", StringComparison.Ordinal) >= 0 && line.IndexOf("- ", StringComparison.Ordinal) < 4)
                         {
                             p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                         }
@@ -1751,11 +1751,11 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (lines[1].Contains("\""))
                         {
                             line = lines[1].Trim();
-                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith(".", StringComparison.Ordinal) || line.EndsWith("!", StringComparison.Ordinal) || line.EndsWith("?", StringComparison.Ordinal)))
+                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
                             {
                                 p.Text = p.Text.Trim() + "\"";
                             }
-                            else if (line.Length > 5 && line.EndsWith("\"", StringComparison.Ordinal) && p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) >= 0)
+                            else if (line.Length > 5 && line.EndsWith('"') && p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) >= 0)
                             {
                                 p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                             }
@@ -1786,7 +1786,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (next == null || !next.Text.Contains("\""))
                                 p.Text = p.Text.Replace("</i>", "\"</i>");
                         }
-                        else if (p.Text.EndsWith("\"", StringComparison.Ordinal))
+                        else if (p.Text.EndsWith('"'))
                         {
                             if (prev == null || !prev.Text.Contains("\""))
                                 p.Text = "\"" + p.Text;
@@ -1821,7 +1821,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 int index = text.IndexOf('"');
                                 if (text[index - 1] == ' ')
                                 {
-                                    if (p.Text.EndsWith(",", StringComparison.Ordinal))
+                                    if (p.Text.EndsWith(','))
                                         p.Text = p.Text.Insert(p.Text.Length - 1, "\"").Trim();
                                     else
                                         p.Text = p.Text.Trim() + "\"";
@@ -2047,7 +2047,7 @@ namespace Nikse.SubtitleEdit.Forms
                     nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
                 string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
 
-                if (IsOneLineUrl(p.Text) || p.Text.Contains("♪") || p.Text.Contains("♫") || p.Text.EndsWith("'", StringComparison.Ordinal))
+                if (IsOneLineUrl(p.Text) || p.Text.Contains("♪") || p.Text.Contains("♫") || p.Text.EndsWith('\''))
                 {
                     // ignore urls
                 }
@@ -2071,7 +2071,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (AllowFix(p, fixAction))
                                     {
                                         string oldText = p.Text;
-                                        if (p.Text.EndsWith(">", StringComparison.Ordinal))
+                                        if (p.Text.EndsWith('>'))
                                         {
                                             int lastLT = p.Text.LastIndexOf('<');
                                             if (lastLT > 0)
@@ -2079,9 +2079,9 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else
                                         {
-                                            if (p.Text.EndsWith("“", StringComparison.Ordinal) && tempNoHtml.StartsWith('„'))
+                                            if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
                                                 p.Text = p.Text.TrimEnd('“') + ".“";
-                                            else if (p.Text.EndsWith("\"", StringComparison.Ordinal) && tempNoHtml.StartsWith('"'))
+                                            else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
                                                 p.Text = p.Text.TrimEnd('"') + ".\"";
                                             else
                                                 p.Text += ".";
@@ -2146,9 +2146,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 string text = p.Text.Substring(0, indexOfNewLine);
                                 StripableText st = new StripableText(text);
-                                if (st.Pre.TrimEnd().EndsWith("¿", StringComparison.Ordinal)) // Spanish ¿
+                                if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
                                     p.Text = p.Text.Insert(indexOfNewLine, "?");
-                                else if (st.Pre.TrimEnd().EndsWith("¡", StringComparison.Ordinal)) // Spanish ¡
+                                else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡
                                     p.Text = p.Text.Insert(indexOfNewLine, "!");
                                 else
                                     p.Text = p.Text.Insert(indexOfNewLine, ".");
@@ -2214,7 +2214,7 @@ namespace Nikse.SubtitleEdit.Forms
             _abbreviationList = new List<string>();
             foreach (string name in _namesEtcList)
             {
-                if (name.EndsWith(".", StringComparison.Ordinal))
+                if (name.EndsWith('.'))
                     _abbreviationList.Add(name);
             }
             return _abbreviationList;
@@ -2489,12 +2489,12 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = p.Text.Substring(indexOfNewLine + len);
                     StripableText st = new StripableText(text);
 
-                    if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText, encoding, language) && !st.Pre.EndsWith("[", StringComparison.Ordinal) && !st.Pre.Contains("..."))
+                    if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText, encoding, language) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
                     {
                         text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, GetTurkishUppercaseLetter(st.StrippedText, encoding)) + st.Post;
                         p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
                     }
-                    else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith("[", StringComparison.Ordinal) && !st.Pre.Contains("..."))
+                    else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
                     {
                         text = st.Pre + st.StrippedText.Remove(0, 1).Insert(0, st.StrippedText[0].ToString().ToUpper()) + st.Post;
                         p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
@@ -2539,11 +2539,11 @@ namespace Nikse.SubtitleEdit.Forms
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
             bool isPrevEndOfLine = prevText.Length > 1 &&
                                    !prevText.EndsWith("...", StringComparison.Ordinal) &&
-                                   (prevText.EndsWith(".", StringComparison.Ordinal) ||
-                                    prevText.EndsWith("!", StringComparison.Ordinal) ||
-                                    prevText.EndsWith("?", StringComparison.Ordinal));
+                                   (prevText.EndsWith('.') ||
+                                    prevText.EndsWith('!') ||
+                                    prevText.EndsWith('?'));
 
-            if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith(".", StringComparison.Ordinal) &&
+            if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith('.') &&
                 prevText[prevText.Length - 3] == '.' &&
                 Utilities.AllLetters.Contains(prevText[prevText.Length - 2].ToString()))
                 isPrevEndOfLine = false;
@@ -2630,7 +2630,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (last != null)
                 {
                     string lastText = Utilities.RemoveHtmlTags(last.Text);
-                    if (lastText.EndsWith(":", StringComparison.Ordinal) || lastText.EndsWith(";", StringComparison.Ordinal))
+                    if (lastText.EndsWith(':') || lastText.EndsWith(';'))
                     {
                         var st = new StripableText(p.Text);
                         if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]))
@@ -3001,7 +3001,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
 
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith("-", StringComparison.Ordinal))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith('-'))
                     {
                         var lines = Utilities.RemoveHtmlTags(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                         int startHyphenCount = 0;
@@ -3301,7 +3301,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text.StartsWith("<i>... "))
                         text = text.Remove(6, 1);
                 }
-                //if (text.EndsWith("-"))
+                //if (text.EndsWith('-'))
                 //{
                 //    text = text.Substring(0, text.Length - 1) + "...";
                 //    text = text.Replace(" ...", "...");
@@ -3317,7 +3317,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text = text.Remove(0, 1);
                     text = text.Insert(0, "...");
                 }
-                if (p.Text.EndsWith("—", StringComparison.Ordinal))
+                if (p.Text.EndsWith('—'))
                 {
                     text = text.Substring(0, text.Length - 1) + "...";
                     text = text.Replace(" ...", "...");
@@ -4198,8 +4198,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph last = _subtitle.GetParagraphOrDefault(i - 1);
 
-                bool wasLastLineClosed = last == null || last.Text.EndsWith("?", StringComparison.Ordinal) || last.Text.EndsWith("!", StringComparison.Ordinal) || last.Text.EndsWith(".", StringComparison.Ordinal) ||
-                                         last.Text.EndsWith(":", StringComparison.Ordinal) || last.Text.EndsWith(")", StringComparison.Ordinal) || last.Text.EndsWith("]", StringComparison.Ordinal);
+                bool wasLastLineClosed = last == null || last.Text.EndsWith('?') || last.Text.EndsWith('!') || last.Text.EndsWith('.') ||
+                                         last.Text.EndsWith(':') || last.Text.EndsWith(')') || last.Text.EndsWith(']');
                 string trimmedStart = p.Text.TrimStart(("- ").ToCharArray());
                 if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && trimmedStart[0].ToString() == trimmedStart[0].ToString().ToLower())
                     wasLastLineClosed = false;
@@ -5365,7 +5365,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string oldText = currentParagraph.Text;
                 string[] lines = currentParagraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length == 2 && (lines[0].EndsWith(".", StringComparison.Ordinal) || lines[0].EndsWith("!", StringComparison.Ordinal) || lines[0].EndsWith("?", StringComparison.Ordinal)))
+                if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                     newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);

@@ -374,7 +374,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode GetTimeCode(string s)
         {
-            if (s.EndsWith("s"))
+            if (s.EndsWith('s'))
             {
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s));
