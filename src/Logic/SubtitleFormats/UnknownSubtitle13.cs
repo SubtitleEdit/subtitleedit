@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string timeCode)
         {
-            string[] arr = timeCode.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = timeCode.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             int hours = int.Parse(arr[0]);
             int minutes = int.Parse(arr[1]);
             int seconds = int.Parse(arr[2]);

@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
 
-                        var arr = tcBegin.ToString().Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        var arr = tcBegin.ToString().Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 3 || arr.Length == 4)
                         {
                             var p = new Paragraph();
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 p.StartTime = DecodeTimeCode(arr);
                                 if (tcEnd.Length > 0)
                                 {
-                                    arr = tcEnd.ToString().Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                    arr = tcEnd.ToString().Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
                                     p.EndTime = DecodeTimeCode(arr);
                                 }
                                 subtitle.Paragraphs.Add(p);

@@ -57,11 +57,11 @@ namespace Nikse.SubtitleEdit.Forms
         public static List<string> LoadCharacters(string fileName)
         {
             int lineNumber = 0;
-            const string Seperator = ";";
+            var separator = new[] { ';' };
             List<string> characters = new List<string>();
             foreach (string line in System.IO.File.ReadAllLines(fileName))
             {
-                string[] parts = line.Split(Seperator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = line.Split(separator, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length > 0)
                 {
                     try

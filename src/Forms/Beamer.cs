@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (subtitleAlignLeft)
                     lefts.Add(5);
@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string fontContent = text.Substring(i, endIndex);
                         if (fontContent.Contains(" color="))
                         {
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(new[] {' '}, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     colorStack.Push(c); // save old color
                                     if (fontColor.StartsWith("rgb("))
                                     {
-                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                         c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                                     }
                                     else

@@ -54,13 +54,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (regexTimeCode.IsMatch(line) && line.Length > 24)
                 {
-                    string[] parts = line.Substring(0, 11).Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, 11).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
                         {
                             var start = DecodeTimeCode(parts);
-                            parts = line.Substring(12, 11).Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            parts = line.Substring(12, 11).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             var end = DecodeTimeCode(parts);
                             paragraph = new Paragraph();
                             paragraph.StartTime = start;

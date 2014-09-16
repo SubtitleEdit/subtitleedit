@@ -56,10 +56,10 @@ SRPSKI
             {
                 string firstLine = string.Empty;
                 string secondLine = string.Empty;
-                string[] lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 2)
                 {
-                    lines = Utilities.AutoBreakLine(p.Text).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    lines = Utilities.AutoBreakLine(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 }
                 if (lines.Length > 0)
                     firstLine = lines[0];

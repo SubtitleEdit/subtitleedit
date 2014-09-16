@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
 
             string newText = string.Empty;
-            string[] parts = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             int noOfNames = 0;
             int count = 0;
             bool removedInFirstLine = false;
@@ -250,7 +250,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
-                string[] arr = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] arr = newText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
                     string arr0 = new StripableText(arr[0]).StrippedText;
@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             var st = new StripableText(text, pre, post);
             var sb = new StringBuilder();
-            string[] parts = st.StrippedText.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = st.StrippedText.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             int lineNumber = 0;
             bool removedDialogInFirstLine = false;
             int noOfNamesRemoved = 0;
@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             // fix 3 lines to two liners - if only two lines
             if (noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 2)
             {
-                string[] a = Utilities.RemoveHtmlTags(text).Replace(" ", string.Empty).Split("!?.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] a = Utilities.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(new[] { '!', '?', '.' }, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length == 2)
                 {
                     StripableText temp = new StripableText(text);
@@ -429,7 +429,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             if (!text.StartsWith('-') && noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1)
             {
-                string[] arr = text.Split(Environment.NewLine.ToCharArray());
+                string[] arr = text.Split(Utilities.NewLineChars);
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
                 if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                 {
@@ -490,9 +490,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         private bool IsHIDescription(string text)
         {
+            text = text.Trim(' ', '(', ')', '[', ']', '?', '{', '}');
             text = text.ToLower();
-            text = text.TrimEnd(" ()[]?{}".ToCharArray());
-            text = text.TrimStart(" ()[]?{}".ToCharArray());
 
             if (text.Trim().Replace("mr. ", string.Empty).Replace("mrs. ", string.Empty).Replace("dr. ", string.Empty).Contains(' '))
                 AddWarning();
@@ -541,8 +540,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 result = oldText.Substring(0, oldText.Length - newText.Length);
             else
                 result = oldText.Substring(newText.Length);
-            result = result.TrimEnd(" ()[]?{}".ToCharArray());
-            result = result.TrimStart(" ()[]?{}".ToCharArray());
+            result = result.Trim(' ', '(', ')', '[', ']', '?', '{', '}');
             return result;
         }
 
@@ -555,7 +553,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             string oldText = text;
 
-            string[] arr = Configuration.Settings.Tools.Interjections.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             if (_interjectionList == null)
             {
                 _interjectionList = new List<string>();
@@ -711,7 +709,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     }
                 }
             }
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             if (text != oldText && lines.Length == 2)
             {
                 if (lines[0] == "-" && lines[1] == "-")
@@ -867,7 +865,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             foreach (string line in lines)
             {
                 string lineNoHtml = Utilities.RemoveHtmlTags(line);
-                string tmp = lineNoHtml.TrimEnd(new[] { '.', '!', '?', ':', }).Trim();
+                string tmp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim();
                 if (lineNoHtml != lineNoHtml.ToLower() && lineNoHtml == lineNoHtml.ToUpper())
                 {
                     if (tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp == "HI" || tmp.Length == 1)

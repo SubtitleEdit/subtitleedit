@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string code)
         {
-            string[] parts = code.Split(":.,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = code.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             //00:00:07:12
             string hour = parts[0];

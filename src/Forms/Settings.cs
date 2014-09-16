@@ -2511,7 +2511,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string shortcut = GetShortcut(e.Node.Text);
 
-                string[] parts = shortcut.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = shortcut.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string k in parts)
                 {
                     if (k.ToUpper() == "CONTROL")

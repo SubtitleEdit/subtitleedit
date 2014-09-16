@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
-                var arr = line.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var arr = line.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length >= 8 && Utilities.IsInteger(arr[0]) && Utilities.IsInteger(arr[1]))
                 {
                     Paragraph p = new Paragraph();
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode GetTimeCode(string code)
         {
             code = code.Trim().Trim('"');
-            var arr = code.Split(":.,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var arr = code.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
             int h = int.Parse(arr[0]);
             int m = int.Parse(arr[1]);
             int s = int.Parse(arr[2]);

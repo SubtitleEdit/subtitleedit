@@ -109,8 +109,8 @@ ST 0 EB 3.10
                         string start = temp[0];
                         string end = temp[1];
 
-                        string[] startParts = start.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 2 && endParts.Length == 2)
                         {
                             p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);

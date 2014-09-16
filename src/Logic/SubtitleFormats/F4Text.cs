@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             Paragraph p = null;
             subtitle.Paragraphs.Clear();
-            var arr = text.Trim().Split("#".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var arr = text.Trim().Split(new[] { '#' }, StringSplitOptions.RemoveEmptyEntries);
             var currentText = new StringBuilder();
             foreach (string line in arr)
             {
@@ -99,11 +99,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     if (p.StartTime.TotalMilliseconds == 0 || currentText.Length == 0)
                     {
-                        p.StartTime = DecodeTimeCode(line.Split(":-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
+                        p.StartTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
                     }
                     else
                     {
-                        p.EndTime = DecodeTimeCode(line.Split(":-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
+                        p.EndTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
                         p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                         p.Text = p.Text.Trim('\n');
                         p.Text = p.Text.Trim('\r');

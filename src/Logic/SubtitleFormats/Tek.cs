@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (paragraph != null)
                         subtitle.Paragraphs.Add(paragraph);
                     paragraph = new Paragraph();
-                    string[] parts = line.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 5)
                     {
                         try
