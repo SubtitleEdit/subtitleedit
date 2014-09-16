@@ -183,8 +183,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     var endMsList = new List<ulong>();
                     foreach (var item in list)
                     {
-                        bdMs.Write(item.DataBuffer, 0, item.DataBuffer.Length);
-                        if (item.DataBuffer[0] == 0x16)
+                        item.WriteToStream(bdMs);
+                        if (item.DataIdentifier == 0x16)
                         {
                             if (startMsList.Count <= endMsList.Count)
                                 startMsList.Add(item.PresentationTimeStampToMilliseconds());

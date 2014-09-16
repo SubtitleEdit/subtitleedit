@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             }
                         }
                         lastIdxParagraph = p.IdxLine;
-                        ms.Write(p.PacketizedElementaryStream.DataBuffer, 0, p.PacketizedElementaryStream.DataBuffer.Length);
+                        p.PacketizedElementaryStream.WriteToStream(ms);
                     }
                 }
                 if (ms.Length > 0)
