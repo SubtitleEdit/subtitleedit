@@ -316,9 +316,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("<BR>", Environment.NewLine);
                 text = text.Replace("<BR/>", Environment.NewLine);
                 text = text.Replace("<BR />", Environment.NewLine);
+
                 text = text.Replace("<br>", Environment.NewLine);
                 text = text.Replace("<br/>", Environment.NewLine);
                 text = text.Replace("<br />", Environment.NewLine);
+
+                text = text.Replace("<Br>", Environment.NewLine);
+                text = text.Replace("<Br/>", Environment.NewLine);
+                text = text.Replace("<Br />", Environment.NewLine);
+
+                text = text.Replace("<bR>", Environment.NewLine);
+                text = text.Replace("<bR/>", Environment.NewLine);
+                text = text.Replace("<bR />", Environment.NewLine);
+
                 while (text.Contains("  "))
                     text = text.Replace("  ", " ");
                 text = text.Replace("</BODY>", string.Empty).Replace("</SAMI>", string.Empty).TrimEnd();
