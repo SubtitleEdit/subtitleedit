@@ -267,6 +267,13 @@ namespace Nikse.SubtitleEdit.Forms
                     cleanText = cleanText.Replace("</ i>", "</i>");
                     cleanText = cleanText.Replace("</ I>", "</i>");
                     cleanText = cleanText.Replace("</I>", "</i>");
+                    cleanText = cleanText.Replace("< i >", "<i>");
+                    if (cleanText.StartsWith("<i> "))
+                        cleanText = cleanText.Remove(3, 1);
+                    if (cleanText.EndsWith(" </i>"))
+                        cleanText = cleanText.Remove(cleanText.Length -5, 1);
+                    cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
+                    cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
                     _translatedSubtitle.Paragraphs[index].Text = cleanText;
                 }
                 index++;
