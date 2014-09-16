@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 200 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.ToLower().EndsWith(".cap"))
+                    if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
                         byte[] buffer = Utilities.ReadAllBytes(fileName);
                         for (int i = 0; i < buffer.Length - 20; i++)

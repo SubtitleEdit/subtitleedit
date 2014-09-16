@@ -1551,7 +1551,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         correct = true; // already fixed
 
                     if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng && wordNotEndTrimmed.EndsWith('\'') &&
-                        SpellCheckDictionaryName.StartsWith("en_") && word.ToLower().EndsWith("in"))
+                        SpellCheckDictionaryName.StartsWith("en_") && word.EndsWith("in", StringComparison.OrdinalIgnoreCase))
                     {
                         correct = DoSpell(word + "g");
                     }

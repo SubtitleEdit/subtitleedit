@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             return true;
                         }
 
-                        if (fileName.ToLower().EndsWith(".stl") &&
+                        if (fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase) &&
                             buffer.Length > 1283 &&
                             buffer[1024] == 0 &&
                             buffer[1025] == 1 &&

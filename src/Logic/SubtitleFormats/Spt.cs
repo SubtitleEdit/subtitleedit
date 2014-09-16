@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                         if (buffer[00] > 10 &&
                             buffer[01] == 0 &&
-                            fileName.ToLower().EndsWith(".spt"))
+                            fileName.EndsWith(".spt", StringComparison.OrdinalIgnoreCase))
                             return true;
                     }
                 }

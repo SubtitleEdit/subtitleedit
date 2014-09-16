@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName.ToLower().EndsWith(".chk"))
+            if (fileName.EndsWith(".chk", StringComparison.OrdinalIgnoreCase))
             {
                 var buffer = Utilities.ReadAllBytes(fileName);
                 return buffer.Length > 0 && buffer[0] == 0x1d;

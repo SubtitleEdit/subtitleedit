@@ -2616,7 +2616,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (fileName.ToLower().EndsWith(".dost", StringComparison.Ordinal))
+                if (fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
@@ -2823,7 +2823,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
-                        if (fileName.ToLower().EndsWith(".rtf", StringComparison.Ordinal) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
+                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
                         {
                             var rtBox = new RichTextBox();
                             rtBox.Rtf = s;
@@ -3023,7 +3023,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".xml", StringComparison.Ordinal))
+                        if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                         {
                             string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                             var sb = new StringBuilder();
@@ -9243,7 +9243,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
-                if (fileName.ToLower().EndsWith(".mkv") || fileName.ToLower().EndsWith(".mks"))
+                if (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
                 {
                     _fileName = fileName.Substring(0, fileName.Length - 4);
                     Text = Title + " - " + _fileName;
@@ -10091,7 +10091,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
-                if (fileName.ToLower().EndsWith(".mp4") || fileName.ToLower().EndsWith(".m4v"))
+                if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
                 {
                     _fileName = fileName.Substring(0, fileName.Length - 4);
                     Text = Title + " - " + _fileName;

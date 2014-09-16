@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Remove(0, text.IndexOf('>') + 1);
                 text = text.TrimEnd();
 
-                if (text.ToLower().EndsWith("</sync>", StringComparison.Ordinal))
+                if (text.EndsWith("</sync>", StringComparison.OrdinalIgnoreCase))
                     text = text.Substring(0, text.Length - 7).TrimEnd();
 
                 if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.Ordinal))

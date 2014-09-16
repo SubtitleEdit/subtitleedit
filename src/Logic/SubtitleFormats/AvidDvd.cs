@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && fileName.ToLower().EndsWith(".dost"))
+            if (fileName != null && fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
                 return false;
 
             var subtitle = new Subtitle();

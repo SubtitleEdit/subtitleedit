@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
@@ -34,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.ToLower().EndsWith(".cap"))
+                    if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
                         byte[] buffer = Utilities.ReadAllBytes(fileName);
 

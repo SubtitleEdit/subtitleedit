@@ -145,7 +145,7 @@ DIGITAL_CINEMA=YES
                             if (line.ToLower().StartsWith("[i]"))
                             {
                                 s = "<i>" + s.Remove(0, 3);
-                                if (s.ToLower().EndsWith("[/i]"))
+                                if (s.EndsWith("[/i]", StringComparison.OrdinalIgnoreCase))
                                     s = s.Remove(s.Length - 4, 4);
                                 s += "</i>";
                             }
