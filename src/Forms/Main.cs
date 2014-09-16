@@ -16332,8 +16332,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (!update.Text.Contains(Environment.NewLine))
                             update.Text = update.Text.Replace("\n", Environment.NewLine);
-                        //                        update.Text = HttpUtility.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
-                        update.Text = Utilities.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
+                        update.Text = WebUtility.HtmlDecode(update.Text).Replace("<br />", Environment.NewLine);
                     }
                     if (update.User.Ip != _networkSession.CurrentUser.Ip || update.User.UserName != _networkSession.CurrentUser.UserName)
                     {
