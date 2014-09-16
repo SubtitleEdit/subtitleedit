@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Forms
                     maxLength = s.Length;
                     maxLengthIndex = i;
                 }
-                string[] arr = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] arr = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in arr)
                 {
                     if (line.Length > singleLineMaxLengthIndex)
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p.Text.Contains('-'))
                         {
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
-                            string[] arr = dialogText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string[] arr = dialogText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
                                 isDialog = true;
 
@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 text = dialogText;
                             if (text.Contains(Environment.NewLine))
                             {
-                                string[] arr = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                string[] arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                                 if (arr.Length == 2)
                                 {
                                     int spacing1 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;

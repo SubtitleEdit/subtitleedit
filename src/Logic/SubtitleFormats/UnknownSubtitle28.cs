@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 paragraph.AppendChild(time);
 
-                string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < arr.Length; i++)
                 {
                     XmlNode text = xml.CreateElement("text" + (i + 1).ToString());
@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static double ParseTimeCode(string start)
         {
-            string[] arr = start.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = start.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             TimeSpan ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
             return ts.TotalMilliseconds;
         }

@@ -216,11 +216,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             Paragraph paragraph = null;
             sb = new StringBuilder();
-            foreach (string line in text.Split(Environment.NewLine.ToCharArray()))
+            foreach (string line in text.Split(Utilities.NewLineChars))
             {
                 if (RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Substring(4, 11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(4, 11).Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
 
                             var start = DecodeTimeCode(parts);
-                            parts = line.Substring(16, 11).Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            parts = line.Substring(16, 11).Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                             var end = DecodeTimeCode(parts);
                             paragraph = new Paragraph { StartTime = start, EndTime = end };
                             subtitle.Paragraphs.Add(paragraph);

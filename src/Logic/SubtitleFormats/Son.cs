@@ -68,8 +68,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = temp.Substring(5, 11);
                     string end = temp.Substring(12 + 5, 11);
 
-                    string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         int lastIndexOfTab = line.LastIndexOf('\t');

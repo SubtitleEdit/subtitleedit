@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (RegexTimeCodes.Match(line).Success)
                     {
-                        string[] threePart = line.Split(",".ToCharArray(), StringSplitOptions.None);
+                        string[] threePart = line.Split(new[] { ',' }, StringSplitOptions.None);
                         p = new Paragraph();
                         if (threePart.Length > 2 &&
                             line.Length > 32 &&

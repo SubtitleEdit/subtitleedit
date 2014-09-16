@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string temp = line.Substring(0, regexTimeCodes.Match(line).Length);
 
-                    string[] parts = temp.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = temp.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (parts.Length > 3)
                     {

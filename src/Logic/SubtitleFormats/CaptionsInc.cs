@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     text.Add(0x21); // 2 lines?
 
-                var lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None);
+                var lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.None);
                 foreach (string line in lines)
                 {
                     foreach (char ch in line)

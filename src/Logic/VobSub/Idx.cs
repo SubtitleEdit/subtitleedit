@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                 else if (line.ToLower().StartsWith("palette:") && line.Length > 10)
                 {
                     string s = line.Substring("palette:".Length + 1);
-                    string[] colors = s.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] colors = s.Split(new[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string hex in colors)
                     {
                         Palette.Add(HexToColor(hex));
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     //id: en, index: 1
                     //id: es, index: 2
                     string s = line.Substring("id:".Length + 1);
-                    string[] parts = s.Split(":, ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(new[] { ':', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length > 0)
                     {
                         try

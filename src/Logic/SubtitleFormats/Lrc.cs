@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string s = line;
                     s = line.Substring(1, 8);
-                    string[] parts = s.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {
                         try
@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string s = p.Text.Substring(1, 8);
                     p.Text = p.Text.Remove(0, 10).Trim();
-                    string[] parts = s.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     try
                     {
                         int minutes = int.Parse(parts[0]);

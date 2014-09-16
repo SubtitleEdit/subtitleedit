@@ -140,11 +140,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 2)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
-                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (start.Length == 1 && end.Length == 1)
                         {
                             if (p != null)
@@ -176,9 +176,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else if (arr.Length == 3)
                     {
-                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] duration = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (end.Length == 1 && duration.Length == 1)
                         {
@@ -251,10 +251,10 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 1)
                     {
-                        string[] tc = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] tc = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (p == null || (p.EndTime.TotalMilliseconds != 0))
                         {
                             if (p != null)
@@ -308,7 +308,7 @@ namespace Nikse.SubtitleEdit.Logic
                     matches = regexTimeCodes2.Matches(line);
                 if (matches.Count == 2)
                 {
-                    string[] start = matches[0].ToString().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] start = matches[0].ToString().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (Utilities.IsInteger(start[0]))
                     {
                         int i = int.Parse(start[0]);
@@ -343,8 +343,8 @@ namespace Nikse.SubtitleEdit.Logic
                     matches = regexTimeCodes2.Matches(line);
                 if (matches.Count == 2)
                 {
-                    string[] start = matches[0].ToString().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] end = matches[1].ToString().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] start = matches[0].ToString().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] end = matches[1].ToString().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                     {
                         if (p != null)
@@ -426,8 +426,8 @@ namespace Nikse.SubtitleEdit.Logic
                     matches = regexTimeCodes2.Matches(line);
                 if (matches.Count == 2)
                 {
-                    string[] start = matches[0].ToString().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] end = matches[1].ToString().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] start = matches[0].ToString().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] end = matches[1].ToString().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                     {
                         if (p != null)
@@ -478,11 +478,11 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
-                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                         {
                             if (p != null)
@@ -498,9 +498,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else if (arr.Length == 3)
                     {
-                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] duration = arr[2].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[2].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (start.Length < 3)
                         {
@@ -582,17 +582,17 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
-                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if ((start.Length == 3 || start.Length == 4) && (end.Length == 3 || end.Length == 4))
                         {
                             if (start.Length == 3)
-                                start = (arr[0].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                start = (arr[0].Trim() + ".000").Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                             if (end.Length == 3)
-                                end = (arr[1].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                end = (arr[1].Trim() + ".000").Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                             if (p != null)
                             {
@@ -607,16 +607,16 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else if (arr.Length == 3)
                     {
-                        string[] start = arr[0].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] end = arr[1].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] duration = arr[2].Trim().Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] end = arr[1].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] duration = arr[2].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (start.Length == 3)
-                            start = (arr[0].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            start = (arr[0].Trim() + ".000").Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (end.Length == 3)
-                            end = (arr[1].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            end = (arr[1].Trim() + ".000").Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (duration.Length == 3)
-                            duration = (arr[2].Trim() + ".000").Split(".,;:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            duration = (arr[2].Trim() + ".000").Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (start.Length < 3)
                         {

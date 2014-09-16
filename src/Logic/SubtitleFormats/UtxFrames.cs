@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (line.StartsWith('#'))
                 {
-                    var timeParts = line.Split("#,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var timeParts = line.Split(new[] { '#', ',' }, StringSplitOptions.RemoveEmptyEntries);
                     if (timeParts.Length == 2)
                     {
                         try

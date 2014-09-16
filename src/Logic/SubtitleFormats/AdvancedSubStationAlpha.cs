@@ -310,7 +310,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             if (color.StartsWith("rgb(", StringComparison.Ordinal))
                             {
-                                string[] arr = color.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
                             else
@@ -357,7 +357,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             if (headerLines == null)
                 headerLines = DefaultStyle;
 
-            foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in headerLines.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (line.ToLower().StartsWith("style:", StringComparison.Ordinal))
                 {
@@ -1033,7 +1033,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int marginVIndex = -1;
             int borderStyleIndex = -1;
 
-            foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim().ToLower();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
@@ -1304,7 +1304,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int marginVIndex = -1;
             int borderStyleIndex = -1;
 
-            foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim().ToLower();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
