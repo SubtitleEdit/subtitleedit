@@ -159,7 +159,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _quartzVideo.SetWindowPosition(0, 0, ownerControl.Width, ownerControl.Height);
                 _quartzVideo.WindowStyle = wsChild;
             }
-            _quartzFilgraphManager.Run();
+            //Play();
+            
 
             if (!isAudio)
                 (_quartzFilgraphManager as IBasicVideo).GetVideoSize(out _sourceWidth, out _sourceHeight);
@@ -218,13 +219,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
         private void VideoLoaderDoWork(object sender, DoWorkEventArgs e)
         {
-            int i = 0;
-            while (CurrentPosition < 1 && i < 100)
-            {
+            //int i = 0;
+            //while (CurrentPosition < 1 && i < 100)
+            //{
                 Application.DoEvents();
-                System.Threading.Thread.Sleep(5);
-                i++;
-            }
+            //    System.Threading.Thread.Sleep(5);
+            //    i++;
+            //}
         }
 
         private void VideoLoaderRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
