@@ -59,6 +59,7 @@
     <Compile Include="SubtitleFormatsTest.cs" />
     <Compile Include="BinaryOcrTest.cs" />
     <Compile Include="NOcrTest.cs" />
+    <Compile Include="Logic\BluRaySup\ToolBoxTest.cs" />
     <Compile Include="UtilitiesTest.cs" />
   </ItemGroup>
   <ItemGroup>
