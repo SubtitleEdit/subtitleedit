@@ -306,10 +306,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                             s = s.Remove(start, end - start + 1);
                                             if (veryFirstColor == null)
                                                 veryFirstColor = GetNearestEbuColorCode(color, encoding);
-                                            if (firstColor == null)
-                                                firstColor = GetNearestEbuColorCode(color, encoding);
-                                            else
-                                                s = s.Insert(start, GetNearestEbuColorCode(color, encoding));
+                                            firstColor = GetNearestEbuColorCode(color, encoding);
                                         }
                                     }
                                 }
