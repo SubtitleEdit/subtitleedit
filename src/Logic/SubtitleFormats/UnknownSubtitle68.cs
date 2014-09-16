@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < lines.Count; i++)
             {
                 string line = lines[i].Trim();
-                if (subtitle.Paragraphs.Count == 0 && line.StartsWith(";") || line.Length == 0)
+                if (subtitle.Paragraphs.Count == 0 && line.StartsWith(';') || line.Length == 0)
                 {
                     header.AppendLine(line);
                 }

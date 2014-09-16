@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
+                    while (line.Contains(' ') && line.IndexOf(' ') < index)
                     {
                         line = line.Remove(line.IndexOf(' '), 1);
                         index--;
@@ -77,11 +77,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append("[");
+                sb.Append('[');
                 sb.Append(((int)(p.StartTime.TotalMilliseconds / 100)).ToString());
                 sb.Append("][");
                 sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)).ToString());
-                sb.Append("]");
+                sb.Append(']');
 
                 string[] parts = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 int count = 0;
@@ -89,12 +89,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (string line in parts)
                 {
                     if (count > 0)
-                        sb.Append("|");
+                        sb.Append('|');
 
                     if (line.StartsWith("<i>") || italicOn)
                     {
                         italicOn = true;
-                        sb.Append("/");
+                        sb.Append('/');
                     }
 
                     if (line.Contains("</i>"))
@@ -124,9 +124,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (textIndex < s.Length)
                         {
                             string text = s.Substring(textIndex);
-                            if (text.StartsWith("/") && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
+                            if (text.StartsWith('/') && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
                                 text = "<i>" + text.TrimStart('/').Replace("|/", Environment.NewLine) + "</i>";
-                            else if (text.StartsWith("/") && text.Contains("|") && !text.Contains("|/"))
+                            else if (text.StartsWith('/') && text.Contains('|') && !text.Contains("|/"))
                                 text = "<i>" + text.TrimStart('/').Replace("|", "</i>" + Environment.NewLine);
                             else if (text.Contains("|/"))
                                 text = text.Replace("|/", Environment.NewLine + "<i>") + "</i>";

@@ -218,7 +218,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     scriptInfoOn = true;
                 }
-                else if (line.StartsWith("["))
+                else if (line.StartsWith('['))
                 {
                     if (!found && scriptInfoOn && !remove)
                         sb.AppendLine(tag + ": " + text);

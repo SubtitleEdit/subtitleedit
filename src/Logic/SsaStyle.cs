@@ -94,18 +94,18 @@ namespace Nikse.SubtitleEdit.Logic
                 else if (f == "borderstyle")
                     sb.Append(BorderStyle);
                 else if (f == "encoding")
-                    sb.Append("1");
+                    sb.Append('1');
                 else if (f == "strikeout")
-                    sb.Append("0");
+                    sb.Append('0');
                 else if (f == "scalex")
                     sb.Append("100");
                 else if (f == "scaley")
                     sb.Append("100");
                 else if (f == "spacing")
-                    sb.Append("0");
+                    sb.Append('0');
                 else if (f == "angle")
-                    sb.Append("0");
-                sb.Append(",");
+                    sb.Append('0');
+                sb.Append(',');
             }
             string s = sb.ToString().Trim();
             return s.Substring(0, s.Length - 1);
@@ -156,18 +156,18 @@ namespace Nikse.SubtitleEdit.Logic
                 else if (f == "borderstyle")
                     sb.Append(BorderStyle);
                 else if (f == "encoding")
-                    sb.Append("1");
+                    sb.Append('1');
                 else if (f == "strikeout")
-                    sb.Append("0");
+                    sb.Append('0');
                 else if (f == "scalex")
                     sb.Append("100");
                 else if (f == "scaley")
                     sb.Append("100");
                 else if (f == "spacing")
-                    sb.Append("0");
+                    sb.Append('0');
                 else if (f == "angle")
-                    sb.Append("0");
-                sb.Append(",");
+                    sb.Append('0');
+                sb.Append(',');
             }
             string s = sb.ToString().Trim();
             return s.Substring(0, s.Length - 1);

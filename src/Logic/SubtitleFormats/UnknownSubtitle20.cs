@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(p.EndTime.ToHHMMSSFF());
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append((number2 / 7 + 1).ToString().PadLeft(3, '0'));
-                sb.Append("-");
+                sb.Append('-');
                 sb.Append((number2 % 7 + 1).ToString().PadLeft(2, '0'));
                 sb.Append(string.Empty.PadLeft(10, ' '));
                 sb.AppendLine(line2);

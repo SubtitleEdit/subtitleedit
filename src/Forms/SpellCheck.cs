@@ -296,7 +296,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                     {
                         string word = node.InnerText.Trim().ToLower();
-                        if (word.Contains(" "))
+                        if (word.Contains(' '))
                             _userPhraseList.Add(word);
                         else
                             _userWordList.Add(word);
@@ -466,15 +466,15 @@ namespace Nikse.SubtitleEdit.Forms
                 case SpellCheckAction.SkipAll:
                     _noOfSkippedWords++;
                     _skipAllList.Add(ChangeWord.ToUpper());
-                    if (ChangeWord.EndsWith("'") || ChangeWord.StartsWith("'"))
-                        _skipAllList.Add(ChangeWord.ToUpper().Trim("'".ToCharArray()));
+                    if (ChangeWord.EndsWith('\'') || ChangeWord.StartsWith('\''))
+                        _skipAllList.Add(ChangeWord.ToUpper().Trim('\''));
                     break;
                 case SpellCheckAction.AddToDictionary:
                     if (_userWordList.IndexOf(ChangeWord) < 0)
                     {
                         _noOfAddedWords++;
                         string s = ChangeWord.Trim().ToLower();
-                        if (s.Contains(" "))
+                        if (s.Contains(' '))
                             _userPhraseList.Add(s);
                         else
                             _userWordList.Add(s);
@@ -486,17 +486,17 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _namesEtcList.Add(ChangeWord);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                        if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith("s"))
+                        if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith('s'))
                         {
                             _namesEtcList.Add(ChangeWord + "s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
                         }
-                        if (!ChangeWord.ToLower().EndsWith("s"))
+                        if (!ChangeWord.ToLower().EndsWith('s'))
                         {
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
                         }
-                        if (!ChangeWord.EndsWith("'"))
+                        if (!ChangeWord.EndsWith('\''))
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'");
                         Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
                     }
@@ -588,40 +588,40 @@ namespace Nikse.SubtitleEdit.Forms
                     minLength = 1;
 
                 if (_currentWord.Trim().Length >= minLength &&
-                    !_currentWord.Contains("0") &&
-                    !_currentWord.Contains("1") &&
-                    !_currentWord.Contains("2") &&
-                    !_currentWord.Contains("3") &&
-                    !_currentWord.Contains("4") &&
-                    !_currentWord.Contains("5") &&
-                    !_currentWord.Contains("6") &&
-                    !_currentWord.Contains("7") &&
-                    !_currentWord.Contains("8") &&
-                    !_currentWord.Contains("9") &&
-                    !_currentWord.Contains("%") &&
-                    !_currentWord.Contains("&") &&
-                    !_currentWord.Contains("@") &&
-                    !_currentWord.Contains("$") &&
-                    !_currentWord.Contains("*") &&
-                    !_currentWord.Contains("=") &&
-                    !_currentWord.Contains("£") &&
-                    !_currentWord.Contains("#") &&
-                    !_currentWord.Contains("_") &&
-                    !_currentWord.Contains("½") &&
-                    !_currentWord.Contains("^") &&
-                    !_currentWord.Contains("£")
+                    !_currentWord.Contains('0') &&
+                    !_currentWord.Contains('1') &&
+                    !_currentWord.Contains('2') &&
+                    !_currentWord.Contains('3') &&
+                    !_currentWord.Contains('4') &&
+                    !_currentWord.Contains('5') &&
+                    !_currentWord.Contains('6') &&
+                    !_currentWord.Contains('7') &&
+                    !_currentWord.Contains('8') &&
+                    !_currentWord.Contains('9') &&
+                    !_currentWord.Contains('%') &&
+                    !_currentWord.Contains('&') &&
+                    !_currentWord.Contains('@') &&
+                    !_currentWord.Contains('$') &&
+                    !_currentWord.Contains('*') &&
+                    !_currentWord.Contains('=') &&
+                    !_currentWord.Contains('£') &&
+                    !_currentWord.Contains('#') &&
+                    !_currentWord.Contains('_') &&
+                    !_currentWord.Contains('½') &&
+                    !_currentWord.Contains('^') &&
+                    !_currentWord.Contains('£')
                     )
                 {
                     _prefix = string.Empty;
                     _postfix = string.Empty;
                     if (_currentWord.Length > 1)
                     {
-                        if (_currentWord.StartsWith("'"))
+                        if (_currentWord.StartsWith('\''))
                         {
                             _prefix = "'";
                             _currentWord = _currentWord.Substring(1);
                         }
-                        if (_currentWord.StartsWith("`"))
+                        if (_currentWord.StartsWith('`'))
                         {
                             _prefix = "`";
                             _currentWord = _currentWord.Substring(1);
@@ -632,7 +632,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfNamesEtc++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _namesEtcList.IndexOf(_currentWord.Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim('\'')) >= 0)
                     {
                         _noOfNamesEtc++;
                     }
@@ -640,7 +640,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfSkippedWords++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim("'".ToCharArray())) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim('\'')) >= 0)
                     {
                         _noOfSkippedWords++;
                     }
@@ -648,7 +648,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _noOfCorrectWords++;
                     }
-                    else if ((_currentWord.EndsWith("'") || _currentWord.StartsWith("'")) && _userWordList.IndexOf(_currentWord.Trim("'".ToCharArray()).ToLower()) >= 0)
+                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim('\'').ToLower()) >= 0)
                     {
                         _noOfCorrectWords++;
                     }
@@ -657,10 +657,10 @@ namespace Nikse.SubtitleEdit.Forms
                         _noOfChangedWords++;
                         _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord, ref _firstChange);
                     }
-                    else if (_changeAllDictionary.ContainsKey(_currentWord.Trim("'".ToCharArray())))
+                    else if (_changeAllDictionary.ContainsKey(_currentWord.Trim('\'')))
                     {
                         _noOfChangedWords++;
-                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim("'".ToCharArray()), ref _firstChange);
+                        _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim('\''), ref _firstChange);
                     }
                     else if (_namesEtcListUppercase.IndexOf(_currentWord) >= 0)
                     {
@@ -689,11 +689,11 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (_currentWord.Length > 1)
                         {
                             correct = DoSpell(_currentWord);
-                            if (!correct && (_currentWord.EndsWith("'") || _currentWord.EndsWith("`")))
+                            if (!correct && (_currentWord.EndsWith('\'') || _currentWord.EndsWith('`')))
                                 correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
                             if (!correct && _currentWord.EndsWith("'s") && _currentWord.Length > 4)
                                 correct = DoSpell(_currentWord.TrimEnd('s').TrimEnd('\''));
-                            if (!correct && _currentWord.EndsWith("'") && DoSpell(_currentWord.TrimEnd("'".ToCharArray())))
+                            if (!correct && _currentWord.EndsWith('\'') && DoSpell(_currentWord.TrimEnd("'".ToCharArray())))
                             {
                                 _currentWord = _currentWord.TrimEnd("'".ToCharArray());
                                 correct = true;
@@ -741,7 +741,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (_currentSpellCheckWord.Index > 3)
                                         {
                                             string ending = _currentParagraph.Text.Substring(0, _currentSpellCheckWord.Index - 1).Trim();
-                                            if (!ending.EndsWith(".") && !ending.EndsWith("!") && !ending.EndsWith("?"))
+                                            if (!ending.EndsWith('.') && !ending.EndsWith('!') && !ending.EndsWith('?'))
                                             {
                                                 for (int i = 0; i < suggestions.Count; i++)
                                                 {
@@ -788,13 +788,13 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     _prefix = string.Empty;
                                     _currentSpellCheckWord.Index += 2;
-                                    _currentWord = _currentWord.Trim("'".ToCharArray());
+                                    _currentWord = _currentWord.Trim('\'');
                                 }
-                                if (_prefix != null && _prefix == "'" && _currentWord.EndsWith("'"))
+                                if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
                                 {
                                     _prefix = string.Empty;
                                     _currentSpellCheckWord.Index++;
-                                    _currentWord = _currentWord.Trim("'".ToCharArray());
+                                    _currentWord = _currentWord.Trim('\'');
                                 }
 
                                 if (_postfix != null && _postfix == "'")
@@ -909,11 +909,11 @@ namespace Nikse.SubtitleEdit.Forms
             string[] wordsWithDash = text.Split(" .,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
             {
-                if (w.Contains("-") && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
+                if (w.Contains('-') && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))
                     _wordsWithDashesOrPeriods.Add(w);
             }
 
-            if (text.Contains(".") || text.Contains("-"))
+            if (text.Contains('.') || text.Contains('-'))
             {
                 int i = 0;
                 string id = string.Format("_@{0}_", i);
@@ -1058,12 +1058,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string namesItem in _namesEtcList)
                 {
-                    if (!namesItem.EndsWith("s"))
+                    if (!namesItem.EndsWith('s'))
+                    {
                         _namesEtcListWithApostrophe.Add(namesItem + "'s");
-                    if (!namesItem.EndsWith("s"))
                         _namesEtcListWithApostrophe.Add(namesItem + "’s");
-                    else if (!namesItem.EndsWith("'"))
+                    }
+                    else if (!namesItem.EndsWith('\''))
+                    {
                         _namesEtcListWithApostrophe.Add(namesItem + "'");
+                    }
                 }
             }
 
@@ -1076,7 +1079,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
                 {
                     string word = node.InnerText.Trim().ToLower();
-                    if (word.Contains(" "))
+                    if (word.Contains(' '))
                         _userPhraseList.Add(word);
                     else
                         _userWordList.Add(word);
@@ -1088,12 +1091,12 @@ namespace Nikse.SubtitleEdit.Forms
             _wordsWithDashesOrPeriods.AddRange(_namesEtcMultiWordList);
             foreach (string name in _namesEtcList)
             {
-                if (name.Contains(".") || name.Contains("-"))
+                if (name.Contains('.') || name.Contains('-'))
                     _wordsWithDashesOrPeriods.Add(name);
             }
             foreach (string word in _userWordList)
             {
-                if (word.Contains(".") || word.Contains("-"))
+                if (word.Contains('.') || word.Contains('-'))
                     _wordsWithDashesOrPeriods.Add(word);
             }
             _wordsWithDashesOrPeriods.AddRange(_userPhraseList);
@@ -1254,7 +1257,7 @@ namespace Nikse.SubtitleEdit.Forms
                         break;
                     case SpellCheckAction.SkipAll:
                         _skipAllList.Remove(undo.UndoWord.ToUpper());
-                        if (undo.UndoWord.EndsWith("'") || undo.UndoWord.StartsWith("'"))
+                        if (undo.UndoWord.EndsWith('\'') || undo.UndoWord.StartsWith('\''))
                             _skipAllList.Remove(undo.UndoWord.ToUpper().Trim('\''));
                         break;
                     case SpellCheckAction.AddToDictionary:
@@ -1267,17 +1270,17 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _namesEtcList.Remove(undo.UndoWord);
                             _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper());
-                            if (_languageName.StartsWith("en_") && !undo.UndoWord.ToLower().EndsWith("s"))
+                            if (_languageName.StartsWith("en_") && !undo.UndoWord.ToLower().EndsWith('s'))
                             {
                                 _namesEtcList.Remove(undo.UndoWord + "s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "S");
                             }
-                            if (!undo.UndoWord.ToLower().EndsWith("s"))
+                            if (!undo.UndoWord.ToLower().EndsWith('s'))
                             {
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "'S");
                             }
-                            if (!undo.UndoWord.EndsWith("'"))
+                            if (!undo.UndoWord.EndsWith('\''))
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
 
                             Utilities.RemoveFromLocalNamesEtcList(undo.UndoWord, _languageName);

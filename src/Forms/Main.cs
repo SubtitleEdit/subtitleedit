@@ -702,7 +702,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(inputFolder))
                     inputDirectory = inputFolder;
 
-                if (pattern.Contains(",") && !File.Exists(pattern))
+                if (pattern.Contains(',') && !File.Exists(pattern))
                 {
                     files = pattern.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     for (int k = 0; k < files.Length; k++)
@@ -972,7 +972,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         TimeSpan ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
-                        if (parts[1].StartsWith("-"))
+                        if (parts[1].StartsWith('-'))
                             sub.AddTimeToAllParagraphs(ts.Negate());
                         else
                             sub.AddTimeToAllParagraphs(ts);
@@ -3467,7 +3467,7 @@ namespace Nikse.SubtitleEdit.Forms
                         bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                         if (!extOk)
                         {
-                            if (_fileName.EndsWith(".", StringComparison.Ordinal))
+                            if (_fileName.EndsWith('.'))
                                 _fileName = _fileName.Substring(0, _fileName.Length - 1);
                             _fileName += format.Extension;
                         }
@@ -3514,7 +3514,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains("♪") || allText.Contains("♫") || allText.Contains("♥") || allText.Contains("—") || allText.Contains("―") || allText.Contains("…"))) // ANSI & music/unicode symbols
+                if (!isUnicode && (allText.Contains('♪') || allText.Contains('♫') || allText.Contains('♥') || allText.Contains('—') || allText.Contains('―') || allText.Contains('…'))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
@@ -3627,7 +3627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string allText = _subtitleAlternate.ToText(format).Trim();
                 var currentEncoding = GetCurrentEncoding();
                 bool isUnicode = currentEncoding == Encoding.Unicode || currentEncoding == Encoding.UTF32 || currentEncoding == Encoding.UTF7 || currentEncoding == Encoding.UTF8;
-                if (!isUnicode && (allText.Contains("♪") || allText.Contains("♫") || allText.Contains("♥") || allText.Contains("—") || allText.Contains("―") || allText.Contains("…"))) // ANSI & music/unicode symbols
+                if (!isUnicode && (allText.Contains('♪') || allText.Contains('♫') || allText.Contains('♥') || allText.Contains('—') || allText.Contains('―') || allText.Contains('…'))) // ANSI & music/unicode symbols
                 {
                     if (MessageBox.Show(string.Format(_language.UnicodeMusicSymbolsAnsiWarning), Title, MessageBoxButtons.YesNo) == DialogResult.No)
                         return DialogResult.No;
@@ -7263,7 +7263,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
-                        if (p.Text.EndsWith(">", StringComparison.Ordinal) && p.Text.Contains("<"))
+                        if (p.Text.EndsWith('>') && p.Text.Contains('<'))
                         {
                             // Save the end tag.
                             endTag = p.Text.Substring(p.Text.LastIndexOf('<'), p.Text.Length - p.Text.LastIndexOf('<'));
@@ -7281,7 +7281,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
                         String positionTag = "";
-                        if (firstWord.StartsWith("{") && firstWord.Contains("}"))
+                        if (firstWord.StartsWith('{') && firstWord.Contains('}'))
                         {
                             // Save the start tag.
                             positionTag = firstWord.Substring(firstWord.IndexOf('{'), firstWord.IndexOf('}') + 1);
@@ -7291,7 +7291,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a tag:
                         String startTag = "";
-                        if (firstWord.StartsWith("<") && firstWord.Contains(">"))
+                        if (firstWord.StartsWith('<') && firstWord.Contains('>'))
                         {
                             // Save the start tag.
                             startTag = firstWord.Substring(firstWord.IndexOf('<'), firstWord.IndexOf('>') + 1);
@@ -7300,7 +7300,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle ends with a tag and there's only one word in it:
-                        if (next.Text.EndsWith(">") && next.Text.Contains("<") && next.Text.IndexOf(' ') < 0)
+                        if (next.Text.EndsWith('>') && next.Text.Contains('<') && next.Text.IndexOf(' ') < 0)
                         {
                             // Remove the end tag.
                             next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
@@ -7308,7 +7308,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a dialogue ("-"):
                         String dialogueMarker = "";
-                        if (firstWord.StartsWith("-"))
+                        if (firstWord.StartsWith('-'))
                         {
                             // Save the dialogue marker ("-" or "- ").
                             dialogueMarker = (firstWord.StartsWith("- ") ? "- " : "-");
@@ -7380,7 +7380,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the first subtitle ends with a tag (</i>):
                         String endTag = "";
-                        if (lastWord.EndsWith(">") && lastWord.Contains("<"))
+                        if (lastWord.EndsWith('>') && lastWord.Contains('<'))
                         {
                             // Save the end tag.
                             endTag = lastWord.Substring(lastWord.LastIndexOf('<'), lastWord.Length - lastWord.LastIndexOf('<'));
@@ -7398,7 +7398,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a position tag, like {\an8}:
                         String positionTag = "";
-                        if (next.Text.StartsWith("{") && next.Text.Contains("}"))
+                        if (next.Text.StartsWith('{') && next.Text.Contains('}'))
                         {
                             // Save the start tag.
                             positionTag = next.Text.Substring(next.Text.IndexOf('{'), next.Text.IndexOf('}') + 1);
@@ -7408,7 +7408,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a tag:
                         String startTag = "";
-                        if (next.Text.StartsWith("<") && next.Text.Contains(">"))
+                        if (next.Text.StartsWith('<') && next.Text.Contains('>'))
                         {
                             // Save the start tag.
                             startTag = next.Text.Substring(next.Text.IndexOf('<'), next.Text.IndexOf('>') + 1);
@@ -7418,7 +7418,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         // If the second subtitle (next) starts with a dialogue ("-"):
                         String dialogueMarker = "";
-                        if (next.Text.StartsWith("-"))
+                        if (next.Text.StartsWith('-'))
                         {
                             // Save the dialogue marker ("-" or "- ").
                             dialogueMarker = (next.Text.StartsWith("- ") ? "- " : "-");
@@ -7561,8 +7561,8 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a + "</b>";
                         b = "<b>" + b;
                     }
-                    else if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
-                        b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                    else if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
+                        b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.TrimStart('-').TrimStart();
@@ -7573,14 +7573,14 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a.Remove(3, 1).Replace("  ", " ");
                         b = b.Remove(3, 1).Replace("  ", " ");
                     }
-                    else if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
+                    else if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
                         b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.Remove(3, 1).Replace("  ", " ").Trim();
                     }
                     else if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
-                        b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                        b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
                     {
                         a = a.Remove(3, 1).Replace("  ", " ").Trim();
                         b = b.TrimStart('-').TrimStart();
@@ -7591,7 +7591,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
+                    if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
@@ -7619,7 +7619,7 @@ namespace Nikse.SubtitleEdit.Forms
                             currentParagraph.Text = currentParagraph.Text.Remove(3, 1);
                             newParagraph.Text = newParagraph.Text.Remove(3, 1);
                         }
-                        else if (lines[0].StartsWith("-") && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")) &&
+                        else if (lines[0].StartsWith('-') && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')) &&
                                                                       lines[1].StartsWith("<i>-") && (lines[1].EndsWith(".</i>") || lines[1].EndsWith("!</i>") || lines[1].EndsWith("?</i>")))
                         {
                             currentParagraph.Text = lines[0].TrimStart('-').TrimStart();
@@ -7641,14 +7641,14 @@ namespace Nikse.SubtitleEdit.Forms
                             if (newParagraph.Text[3] == ' ')
                                 newParagraph.Text = newParagraph.Text.Remove(3, 1);
                         }
-                        else if (lines[0].StartsWith("-") && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")) &&
+                        else if (lines[0].StartsWith('-') && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')) &&
                                                 lines[1].StartsWith("<i>-") && (lines[1].EndsWith(".</i>") || lines[1].EndsWith("!</i>") || lines[1].EndsWith("?</i>")))
                         {
                             currentParagraph.Text = lines[0].TrimStart('-').TrimStart();
                             newParagraph.Text = lines[1].Remove(3, 1).Replace("  ", " ").Trim();
                         }
                         else if (lines[0].StartsWith("<i>-") && (lines[0].EndsWith(".</i>") || lines[0].EndsWith("!</i>") || lines[0].EndsWith("?</i>")) &&
-                            lines[1].StartsWith("-") && (lines[1].EndsWith(".") || lines[1].EndsWith("!") || lines[1].EndsWith("?")))
+                            lines[1].StartsWith('-') && (lines[1].EndsWith('.') || lines[1].EndsWith('!') || lines[1].EndsWith('?')))
                         {
                             currentParagraph.Text = lines[0].Remove(3, 1).Replace("  ", " ").Trim();
                             newParagraph.Text = lines[1].TrimStart('-').TrimStart();
@@ -7780,8 +7780,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 originalCurrent.Text = originalCurrent.Text + "</b>";
                                 originalNew.Text = "<b>" + originalNew.Text;
                             }
-                            if (originalCurrent.Text.StartsWith("-") && (originalCurrent.Text.EndsWith(".") || originalCurrent.Text.EndsWith("!")) &&
-                                originalNew.Text.StartsWith("-") && (originalNew.Text.EndsWith(".") || originalNew.Text.EndsWith("!")))
+                            if (originalCurrent.Text.StartsWith('-') && (originalCurrent.Text.EndsWith('.') || originalCurrent.Text.EndsWith('!')) &&
+                                originalNew.Text.StartsWith('-') && (originalNew.Text.EndsWith('.') || originalNew.Text.EndsWith('!')))
                             {
                                 originalCurrent.Text = originalCurrent.Text.Remove(0, 1).Trim();
                                 originalNew.Text = originalNew.Text.Remove(0, 1).Trim();
@@ -7800,7 +7800,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             lines = new string[0];
                         }
-                        else if (lines.Length == 2 && (lines[0].EndsWith(".") || lines[0].EndsWith("!") || lines[0].EndsWith("?")))
+                        else if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                         {
                             string a = lines[0].Trim();
                             string b = lines[1].Trim();
@@ -7816,8 +7816,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 a = a + "</b>";
                                 b = "<b>" + b;
                             }
-                            if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
-                                b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                            if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
+                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
                             {
                                 a = a.TrimStart('-').TrimStart();
                                 b = b.TrimStart('-').TrimStart();
@@ -7871,8 +7871,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 a = a + "</b>";
                                 b = "<b>" + b;
                             }
-                            if (a.StartsWith("-") && (a.EndsWith(".") || a.EndsWith("!") || a.EndsWith("?")) &&
-                                b.StartsWith("-") && (b.EndsWith(".") || b.EndsWith("!") || b.EndsWith("?")))
+                            if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
+                                b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
                             {
                                 a = a.TrimStart('-').TrimStart();
                                 b = b.TrimStart('-').TrimStart();
@@ -8168,7 +8168,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (insertDash)
                             {
                                 string s = Utilities.UnbreakLine(original.Text);
-                                if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                                if (s.StartsWith('-') || s.StartsWith("<i>-"))
                                     original.Text = s;
                                 else if (s.StartsWith("<i>"))
                                     original.Text = s.Insert(3, "- ");
@@ -8176,7 +8176,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     original.Text = "- " + s;
 
                                 s = Utilities.UnbreakLine(originalNext.Text);
-                                if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                                if (s.StartsWith('-') || s.StartsWith("<i>-"))
                                     original.Text += Environment.NewLine + s;
                                 else if (s.StartsWith("<i>"))
                                     original.Text += Environment.NewLine + s.Insert(3, "- ");
@@ -8213,7 +8213,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (insertDash)
                 {
                     string s = Utilities.UnbreakLine(currentParagraph.Text);
-                    if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                    if (s.StartsWith('-') || s.StartsWith("<i>-"))
                         currentParagraph.Text = s;
                     else if (s.StartsWith("<i>"))
                         currentParagraph.Text = s.Insert(3, "- ");
@@ -8221,7 +8221,7 @@ namespace Nikse.SubtitleEdit.Forms
                         currentParagraph.Text = "- " + s;
 
                     s = Utilities.UnbreakLine(nextParagraph.Text);
-                    if (s.StartsWith("-") || s.StartsWith("<i>-"))
+                    if (s.StartsWith('-') || s.StartsWith("<i>-"))
                         currentParagraph.Text += Environment.NewLine + s;
                     else if (s.StartsWith("<i>"))
                         currentParagraph.Text += Environment.NewLine + s.Insert(3, "- ");
@@ -11804,7 +11804,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] lines = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith("-") || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    if (line.Trim().StartsWith('-') || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
                         hasStartDash = true;
                 }
                 MakeHistoryForUndo(_language.BeforeToggleDialogueDashes);
@@ -11824,7 +11824,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith("-") || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    if (line.Trim().StartsWith('-') || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
                         sb.AppendLine(line);
                     else if (line.Trim().StartsWith("<i>") && line.Trim().Length > 3)
                         sb.AppendLine("<i>-" + line.Substring(3));
@@ -11848,7 +11848,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith("-"))
+                    if (line.Trim().StartsWith('-'))
                         sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
                     else if (line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
                         sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
@@ -13273,7 +13273,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 OpenVideo(movieFileName);
             }
-            else if (fileNameNoExtension.Contains("."))
+            else if (fileNameNoExtension.Contains('.'))
             {
                 fileNameNoExtension = fileNameNoExtension.Substring(0, fileNameNoExtension.LastIndexOf('.'));
                 TryToFindAndOpenVideoFile(fileNameNoExtension);
@@ -13342,12 +13342,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (string.CompareOrdinal(_changeSubtitleToString, SerializeSubtitle(_subtitle)) != 0)
             {
-                if (!Text.EndsWith("*"))
+                if (!Text.EndsWith('*'))
                     Text = Text.TrimEnd() + "*";
             }
             else
             {
-                if (Text.EndsWith("*"))
+                if (Text.EndsWith('*'))
                     Text = Text.TrimEnd('*').TrimEnd();
             }
             ShowSubtitleTimer.Start();
@@ -15879,7 +15879,7 @@ namespace Nikse.SubtitleEdit.Forms
                         templine = templine.Remove(0, indexOfEndBracket + 1);
                     }
 
-                    if (templine.StartsWith("-") || templine.StartsWith("<" + tag + ">" + "-"))
+                    if (templine.StartsWith('-') || templine.StartsWith("<" + tag + ">-"))
                     {
                         isDialogue = true;
                         // Apply tags to current line (it is the selected line). Or remove them.
@@ -15942,9 +15942,9 @@ namespace Nikse.SubtitleEdit.Forms
                 string pre = string.Empty;
                 // There is text selected
                 text = tb.SelectedText;
-                while (text.EndsWith(" ") || text.EndsWith(Environment.NewLine) || text.StartsWith(" ") || text.StartsWith(Environment.NewLine))
+                while (text.EndsWith(' ') || text.EndsWith(Environment.NewLine) || text.StartsWith(' ') || text.StartsWith(Environment.NewLine))
                 {
-                    if (text.EndsWith(" "))
+                    if (text.EndsWith(' '))
                     {
                         post += " ";
                         text = text.Remove(text.Length - 1);
@@ -15954,7 +15954,7 @@ namespace Nikse.SubtitleEdit.Forms
                         post += Environment.NewLine;
                         text = text.Remove(text.Length - 2);
                     }
-                    if (text.StartsWith(" "))
+                    if (text.StartsWith(' '))
                     {
                         pre += " ";
                         text = text.Remove(0, 1);
@@ -17874,7 +17874,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == ebu.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += ebu.Extension;
                 }
@@ -17907,7 +17907,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == cavena890.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += cavena890.Extension;
                 }
@@ -17940,7 +17940,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == pac.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += pac.Extension;
                 }
@@ -18465,7 +18465,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == capMakerPlus.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += capMakerPlus.Extension;
                 }
@@ -18498,7 +18498,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == cheetahCaption.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += cheetahCaption.Extension;
                 }
@@ -18531,7 +18531,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == captionInc.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += captionInc.Extension;
                 }
@@ -18564,7 +18564,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == ultech130.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += ultech130.Extension;
                 }
@@ -18906,7 +18906,7 @@ namespace Nikse.SubtitleEdit.Forms
                             bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                             if (!extOk)
                             {
-                                if (fileName.EndsWith("."))
+                                if (fileName.EndsWith('.'))
                                     fileName = fileName.Substring(0, _fileName.Length - 1);
                                 fileName += format.Extension;
                             }
@@ -19318,7 +19318,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool extOk = ext == avidStl.Extension.ToLower();
                 if (!extOk)
                 {
-                    if (fileName.EndsWith("."))
+                    if (fileName.EndsWith('.'))
                         fileName = fileName.Substring(0, fileName.Length - 1);
                     fileName += avidStl.Extension;
                 }

@@ -255,11 +255,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int endMilliseconds = int.Parse(parts[7]);
 
                     paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                    if (parts[0].StartsWith("-", StringComparison.Ordinal) && paragraph.StartTime.TotalMilliseconds > 0)
+                    if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
                         paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
 
                     paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                    if (parts[4].StartsWith("-", StringComparison.Ordinal) && paragraph.EndTime.TotalMilliseconds > 0)
+                    if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
                         paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
 
                     return true;

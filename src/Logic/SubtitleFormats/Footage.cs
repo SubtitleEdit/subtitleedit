@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (line.EndsWith(".", StringComparison.Ordinal) && Utilities.IsInteger(line.TrimEnd('.')))
+                if (line.EndsWith('.') && Utilities.IsInteger(line.TrimEnd('.')))
                 {
                     if (paragraph != null && !string.IsNullOrEmpty(paragraph.Text))
                         subtitle.Paragraphs.Add(paragraph);
@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (line.Length > 0)
                         {
                             string s = line.Trim();
-                            if (s.StartsWith("#"))
+                            if (s.StartsWith('#'))
                                 s = "<i>" + s.Remove(0, 1) + "</i>";
                             paragraph.Text = (paragraph.Text + Environment.NewLine + s).Trim();
                             paragraph.Text = paragraph.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
