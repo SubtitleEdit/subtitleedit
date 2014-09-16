@@ -423,7 +423,7 @@ namespace Nikse.SubtitleEdit.Forms
                         startIndex++;
                         int endIndex = result.IndexOf("</span>", startIndex);
                         string translatedText = result.Substring(startIndex, endIndex - startIndex);
-                        string test = Utilities.HtmlDecode(translatedText);
+                        string test = WebUtility.HtmlDecode(translatedText);
                         sb.Append(test);
                         startIndex = result.IndexOf("<span title=", startIndex);
                     }

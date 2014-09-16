@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -354,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                              tmp.StartsWith("<s", StringComparison.Ordinal) ||
                              tmp.StartsWith("</", StringComparison.Ordinal)))
                         {
-                            total.Append(Utilities.HtmlDecode(partial.ToString()));
+                            total.Append(WebUtility.HtmlDecode(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
                             total.Append('<');
@@ -373,12 +374,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             total.Append(text.Substring(i, 1));
                         }
                     }
-                    total.Append(Utilities.HtmlDecode(partial.ToString()));
+                    total.Append(WebUtility.HtmlDecode(partial.ToString()));
                     text = total.ToString();
                 }
                 else
                 {
-                    text = Utilities.HtmlDecode(text);
+                    text = WebUtility.HtmlDecode(text);
                 }
 
                 string cleanText = text;
