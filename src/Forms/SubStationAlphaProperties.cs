@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool found = false;
             foreach (string line in _subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.ToLower().StartsWith("[script info]"))
+                if (line.StartsWith("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
                     scriptInfoOn = true;
                 }

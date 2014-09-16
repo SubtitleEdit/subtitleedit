@@ -331,7 +331,7 @@ namespace Nikse.SubtitleEdit.Controls
                 Color fontColor = Color.White;
                 while (i < text.Length)
                 {
-                    if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                    if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         _subtitleTextBox.AppendText(sb.ToString());
                         sb = new StringBuilder();
@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Controls
                         italicBegin = letterCount;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
+                    else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                     {
                         italicLookups.Add(italicBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - italicBegin);
                         _subtitleTextBox.AppendText(sb.ToString());
@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Controls
                         isItalic = false;
                         i += 3;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         string s = text.Substring(i);
                         bool fontFound = false;
@@ -403,7 +403,7 @@ namespace Nikse.SubtitleEdit.Controls
                             fontColorBegin = letterCount;
                         }
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal) && isFontColor)
+                    else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase) && isFontColor)
                     {
                         fontColorLookups.Add(new Point(fontColorBegin, _subtitleTextBox.Text.Length + sb.ToString().Length - fontColorBegin), fontColor);
                         _subtitleTextBox.AppendText(sb.ToString());

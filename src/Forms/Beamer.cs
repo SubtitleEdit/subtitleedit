@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             var lastText = new StringBuilder();
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<font "))
+                if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
 
                     float addLeft = 0;
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
                         i += endIndex;
                     }
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     i += 6;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<i>"))
+                else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
                     isItalic = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                 {
                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {

@@ -2171,13 +2171,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (s.Contains(' ') || s.Contains(Environment.NewLine))
                 return false;
 
-            if (s.ToLower().StartsWith("http://"))
+            if (s.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (s.ToLower().StartsWith("https://"))
+            if (s.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (s.ToLower().StartsWith("www."))
+            if (s.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
                 return true;
 
             string[] parts = s.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

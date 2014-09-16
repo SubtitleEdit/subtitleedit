@@ -1054,7 +1054,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string namesItem in _namesEtcList)
                 _namesEtcListUppercase.Add(namesItem.ToUpper());
 
-            if (_languageName.ToLower().StartsWith("en_"))
+            if (_languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string namesItem in _namesEtcList)
                 {

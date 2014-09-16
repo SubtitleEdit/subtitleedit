@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (lines.Count > 0 && lines[0].ToUpper().StartsWith("WEBVTT", StringComparison.Ordinal))
+            if (lines.Count > 0 && lines[0].StartsWith("WEBVTT", StringComparison.OrdinalIgnoreCase))
                 return false;
 
             var subtitle = new Subtitle();
