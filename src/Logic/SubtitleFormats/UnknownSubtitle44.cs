@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 StringBuilder text = new StringBuilder();
                 text.Append(Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
                 while (text.Length < 34)
-                    text.Append(" ");
+                    text.Append(' ');
                 sb.AppendFormat("{0}{1}", text, EncodeTimeCode(p.StartTime));
                 if (index % 50 == 1)
                 {
@@ -64,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     text = new StringBuilder();
                     while (text.Length < 34)
-                        text.Append(" ");
+                        text.Append(' ');
                     sb.AppendLine(string.Format("{0}{1}", text, EncodeTimeCode(p.EndTime)));
                 }
             }

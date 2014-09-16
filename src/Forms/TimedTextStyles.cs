@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         fontSize = Convert.ToInt32(textBoxFontSize.Text.Replace("px", string.Empty));
                     }
-                    else if (textBoxFontSize.Text.EndsWith("%"))
+                    else if (textBoxFontSize.Text.EndsWith('%'))
                     {
                         int num;
                         if (int.TryParse(textBoxFontSize.Text.TrimEnd('%'), out num))

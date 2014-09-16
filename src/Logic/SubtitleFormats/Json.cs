@@ -76,13 +76,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();
-            sb.Append("[");
+            var sb = new StringBuilder(@"[");
             int count = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
-                    sb.Append(",");
+                    sb.Append(',');
                 sb.Append("{\"start\":");
                 sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"end\":");
@@ -92,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append("\"}");
                 count++;
             }
-            sb.Append("]");
+            sb.Append(']');
             return sb.ToString().Trim();
         }
 
@@ -156,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (startIndex == -1)
                 return null;
             string res = s.Substring(startIndex + 3 + tag.Length).Trim().TrimStart(':').TrimStart();
-            if (res.StartsWith("\""))
+            if (res.StartsWith('"'))
             { // text
                 res = Json.ConvertJsonSpecialCharacters(res);
                 res = res.Replace("\\\"", "@__1");
@@ -222,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (nextTag > 0)
                     {
                         string newValue = res.Substring(oldStart, nextTag - oldStart);
-                        if (newValue.EndsWith("]"))
+                        if (newValue.EndsWith(']'))
                         {
                             newValue = newValue.TrimEnd(']');
                             tagLevel = -10; // return
@@ -263,7 +262,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var list = new List<string>();
             text = text.Trim();
-            if (text.StartsWith("[") && text.EndsWith("]"))
+            if (text.StartsWith('[') && text.EndsWith(']'))
             {
                 text = text.Trim('[');
                 text = text.Trim(']');

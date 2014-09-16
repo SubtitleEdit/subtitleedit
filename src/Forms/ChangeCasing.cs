@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.LoadNamesEtcWordLists(tmp, tmp, language);
             foreach (string s in tmp)
             {
-                if (s.Contains("."))
+                if (s.Contains('.'))
                     namesEtc.Add(s);
             }
 
@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = FixCasing(p.Text, lastLine, namesEtc);
 
                 // fix casing of English alone i to I
-                if (radioButtonNormal.Checked && language.StartsWith("en") && p.Text.Contains("i"))
+                if (radioButtonNormal.Checked && language.StartsWith("en") && p.Text.Contains('i'))
                 {
                     Match match = AloneI.Match(p.Text);
                     while (match.Success)

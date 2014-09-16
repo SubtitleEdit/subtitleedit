@@ -30,8 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();
-            sb.Append("[");
+            var sb = new StringBuilder(@"[");
             int count = 0;
 
             string guid = Guid.NewGuid().ToString();
@@ -41,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string id = Guid.NewGuid().ToString().Replace("-", string.Empty).Substring(0, 24);
                 if (count > 0)
-                    sb.Append(",");
+                    sb.Append(',');
                 sb.Append("{\"hitType\":\"tag\",\"subTrack\":null,\"tags\":[],\"track\":\"Closed Captioning\",\"startTime\":");
                 sb.Append(p.StartTime.TotalSeconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"guid\":\"" + guid + "\",\"segmentTypeId\":\"" + segmentTypeId + "\",\"endTime\":");
@@ -52,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(",\"ID\":\"\",\"Language\":\"en\"}}");
                 count++;
             }
-            sb.Append("]");
+            sb.Append(']');
             return sb.ToString().Trim();
         }
 

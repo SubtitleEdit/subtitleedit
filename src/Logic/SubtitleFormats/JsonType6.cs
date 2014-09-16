@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append("\",\"");
                     sb.Append(Json.EncodeJsonText(words[j]));
                     sb.Append("\"]");
-                    sb.Append(",");
+                    sb.Append(',');
                 }
                 var next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next == null || next.StartTime.TotalMilliseconds - 200 < p.EndTime.TotalMilliseconds)
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.Append(Convert.ToInt64(p.EndTime.TotalMilliseconds).ToString());
                     sb.Append("\",\"");
                     sb.Append("\"]");
-                    sb.Append(",");
+                    sb.Append(',');
                 }
             }
             return sb.ToString().Trim().TrimEnd(',') + "],\"paragraphs\":[],\"speakers\":{}}";
@@ -97,9 +97,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string milliseconds = elements[0].Trim('"').Trim();
                     string text = elements[1].Trim();
-                    if (text.StartsWith("\""))
+                    if (text.StartsWith('"'))
                         text = text.Remove(0, 1);
-                    if (text.EndsWith("\""))
+                    if (text.EndsWith('"'))
                         text = text.Remove(text.Length - 1, 1);
 
                     long number;
@@ -134,7 +134,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000) // long time to next sub
                 {
                     if (p.Text.Trim().Length > 0)
-                        sb.Append(" " + p.Text);
+                    {
+                        sb.Append(' ');
+                        sb.Append(p.Text);
+                    }
                     var newParagraph = new Paragraph(sb.ToString(), startMilliseconds, next.StartTime.TotalMilliseconds);
                     sub.Paragraphs.Add(newParagraph);
                     sb = new StringBuilder();
@@ -154,7 +157,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (sb.Length == 0)
                         startMilliseconds = p.StartTime.TotalMilliseconds;
                     if (p.Text.Trim().Length > 0)
-                        sb.Append(" " + p.Text);
+                    {
+                        sb.Append(' ');
+                        sb.Append(p.Text);
+                    }
                 }
             }
             if (sb.Length > 0)

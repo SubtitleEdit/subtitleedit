@@ -1052,7 +1052,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         else if (b == underlineOff)
                             sb.Append("</u>");
                         //else if (b == 0xD0) // em-dash
-                        //    sb.Append("–");
+                        //    sb.Append('–');
                         else if (b == textFieldTerminator)
                             break;
                         else if ((b >= 0x20 && b <= 0x7F) || b >= 0xA1)

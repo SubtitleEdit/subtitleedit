@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (timeCode != "--:--:--:--" && !GetTimeCode(p.EndTime, timeCode))
                         _errorCount++;
                 }
-                else if (p != null && !line.StartsWith("#"))
+                else if (p != null && !line.StartsWith('#'))
                 {
                     if (p.Text.Length > 500)
                     {

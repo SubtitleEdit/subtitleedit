@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            if (folderName.Contains("?") || folderName.Contains("/") || folderName.Contains("\\"))
+            if (folderName.Contains('?') || folderName.Contains('/') || folderName.Contains("\\"))
             {
                 MessageBox.Show("Please correct invalid characters");
                 textBoxFolder.Focus();

@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (addNewlineAfterLineNumber)
                         sb.AppendLine();
                     else
-                        sb.Append(" ");
+                        sb.Append(' ');
                 }
                 if (showTimecodes)
                 {
@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (addNewlineAfterTimeCodes)
                         sb.AppendLine();
                     else
-                        sb.Append(" ");
+                        sb.Append(' ');
 
                 }
                 string s = p.Text;
@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxAddNewLine2)
                     sb.AppendLine();
                 if (!addAfterText && !checkBoxAddNewLine2)
-                    sb.Append(" ");
+                    sb.Append(' ');
             }
             string text = sb.ToString().Trim();
             if (formatMergeAll)
