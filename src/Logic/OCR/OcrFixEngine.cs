@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (word.Length > 0)
                     {
                         string fixedWord;
-                        if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
+                        if (lastWord != null && lastWord.Contains("COLOR=", StringComparison.OrdinalIgnoreCase))
                         {
                             fixedWord = word.ToString();
                         }
@@ -585,12 +585,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             var word = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
-                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i].ToString())) // removed $
+                if (" ¡¿,.!?:;()[]{}+-£\"#&%\r\n".Contains(text[i])) // removed $
                 {
                     if (word.Length > 0)
                     {
                         string fixedWord;
-                        if (lastWord != null && lastWord.ToUpper().Contains("COLOR="))
+                        if (lastWord != null && lastWord.Contains("COLOR=", StringComparison.OrdinalIgnoreCase))
                             fixedWord = word.ToString();
                         else
                             fixedWord = FixCommonWordErrorsQuick(word.ToString());

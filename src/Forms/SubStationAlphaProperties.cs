@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (_subtitle.Header == null || !_subtitle.Header.ToLower().Contains("[script info]"))
+            if (_subtitle.Header == null || !_subtitle.Header.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 _subtitle.Header = GetDefaultHeader();
 
             string title = textBoxTitle.Text;

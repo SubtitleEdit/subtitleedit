@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxCheckForUpdates.Checked = Configuration.Settings.General.CheckForUpdates;
 
-            if (gs.SpellChecker.ToLower().Contains("word"))
+            if (gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
                 comboBoxSpellChecker.SelectedIndex = 1;
             else
                 comboBoxSpellChecker.SelectedIndex = 0;

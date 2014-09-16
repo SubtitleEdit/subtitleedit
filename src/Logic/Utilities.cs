@@ -896,7 +896,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("<font>", string.Empty);
             s = s.Replace("<FONT>", string.Empty);
             s = s.Replace("<Font>", string.Empty);
-            while (s.ToLower().Contains("<font"))
+            while (s.Contains("<font", StringComparison.OrdinalIgnoreCase))
             {
                 int startIndex = s.ToLower().IndexOf("<font", StringComparison.Ordinal);
                 int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
@@ -911,7 +911,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</P>", string.Empty);
             s = s.Replace("<p>", string.Empty);
             s = s.Replace("<P>", string.Empty);
-            while (s.ToLower().Contains("<p "))
+            while (s.Contains("<p ", StringComparison.OrdinalIgnoreCase))
             {
                 int startIndex = s.IndexOf("<p ", StringComparison.OrdinalIgnoreCase);
                 int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
@@ -1766,7 +1766,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void AddExtension(StringBuilder sb, string extension)
         {
-            if (!sb.ToString().ToLower().Contains("*" + extension.ToLower() + ";"))
+            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
             {
                 sb.Append('*');
                 sb.Append(extension.TrimStart('*'));
@@ -1804,7 +1804,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
                 {
-                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().ToLower().Contains(ext.ToLower()))
+                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().Contains(ext, StringComparison.OrdinalIgnoreCase))
                         AddExtension(sb, ext);
                 }
             }

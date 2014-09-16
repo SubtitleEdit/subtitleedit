@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             Header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;
-            if (Header == null || !Header.ToLower().Contains("style:"))
+            if (Header == null || !Header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
 
             _subtitle = subtitle;
