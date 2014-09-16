@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string all = sb.ToString();
-            if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".ass", StringComparison.Ordinal) && !all.Contains("[V4 Styles]"))
+            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }
             else if (!all.ToLower().Contains("dialogue:"))

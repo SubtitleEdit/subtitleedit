@@ -687,7 +687,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 sb +
                                 "</DCSubtitle>");
                     string fName = saveFileDialog1.FileName;
-                    if (!fName.ToLower().EndsWith(".xml"))
+                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                         fName += ".xml";
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));

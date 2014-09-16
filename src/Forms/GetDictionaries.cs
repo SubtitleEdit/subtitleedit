@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (ZipExtractor.ZipFileEntry entry in dir)
                 {
-                    if (entry.FilenameInZip.ToLower().EndsWith(".zip", StringComparison.Ordinal))
+                    if (entry.FilenameInZip.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
                     {
                         var innerMs = new MemoryStream();
                         zip.ExtractFile(entry, innerMs);
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (ZipExtractor.ZipFileEntry entry in dir)
             {
-                if (entry.FilenameInZip.ToLower().EndsWith(".dic") || entry.FilenameInZip.ToLower().EndsWith(".aff"))
+                if (entry.FilenameInZip.EndsWith(".dic", StringComparison.OrdinalIgnoreCase) || entry.FilenameInZip.EndsWith(".aff", StringComparison.OrdinalIgnoreCase))
                 {
                     string fileName = Path.GetFileName(entry.FilenameInZip);
 

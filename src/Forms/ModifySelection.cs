@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionEndsWith) // Ends with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().EndsWith(text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.EndsWith(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionNotContains) // Not contains

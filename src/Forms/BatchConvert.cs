@@ -680,16 +680,16 @@ namespace Nikse.SubtitleEdit.Forms
                     var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
                     bool isVobSub = false;
                     bool isMatroska = false;
-                    if (format == null && fileName.ToLower().EndsWith(".sup") && Main.IsBluRaySupFile(fileName))
+                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && Main.IsBluRaySupFile(fileName))
                     {
                         var log = new StringBuilder();
                         bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
                     }
-                    else if (format == null && fileName.ToLower().EndsWith(".sub") && Main.HasVobSubHeader(fileName))
+                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && Main.HasVobSubHeader(fileName))
                     {
                         isVobSub = true;
                     }
-                    else if (format == null && fileName.ToLower().EndsWith(".mkv") && item.SubItems[2].Text.StartsWith("Matroska"))
+                    else if (format == null && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) && item.SubItems[2].Text.StartsWith("Matroska"))
                     {
                         isMatroska = true;
                     }

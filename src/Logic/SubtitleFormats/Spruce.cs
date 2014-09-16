@@ -107,7 +107,7 @@ $ColorIndex4    = 3
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             var regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,.+", RegexOptions.Compiled);
-            if (fileName != null && fileName.ToLower().EndsWith(".stl")) // allow empty text if extension is ".stl"...
+            if (fileName != null && fileName.EndsWith(".stl", StringComparison.OrdinalIgnoreCase)) // allow empty text if extension is ".stl"...
                 regexTimeCodes = new Regex(@"^\d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,", RegexOptions.Compiled);
             foreach (string line in lines)
             {
