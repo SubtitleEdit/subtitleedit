@@ -811,9 +811,9 @@ namespace Nikse.SubtitleEdit.Forms
                             if (checkBoxRemoveFormatting.Checked)
                             {
                                 p.Text = Utilities.RemoveHtmlTags(p.Text);
-                                if (p.Text.StartsWith("{") && p.Text.Length > 6 && p.Text[5] == '}')
+                                if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[5] == '}')
                                     p.Text = p.Text.Remove(0, 6);
-                                if (p.Text.StartsWith("{") && p.Text.Length > 6 && p.Text[4] == '}')
+                                if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[4] == '}')
                                     p.Text = p.Text.Remove(0, 5);
                             }
                         }

@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     fine++;
                     string s = line.Remove(0, m.Length);
-                    continuation = s.StartsWith("\"");
+                    continuation = s.StartsWith('"');
                 }
                 else if (line.Trim().Length > 0)
                 {
@@ -131,9 +131,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var sb = new StringBuilder();
             csv = csv.Trim();
-            if (csv.StartsWith("\""))
+            if (csv.StartsWith('"'))
                 csv = csv.Remove(0, 1);
-            if (csv.EndsWith("\""))
+            if (csv.EndsWith('"'))
                 csv = csv.Remove(csv.Length - 1, 1);
             bool isBreak = false;
             for (int i = 0; i < csv.Length; i++)
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string s = csv.Substring(i, 1);
                 if (s == "\"" && csv.Substring(i).StartsWith("\"\""))
                 {
-                    sb.Append("\"");
+                    sb.Append('"');
                 }
                 else if (s == "\"")
                 {
@@ -151,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (i == 0 || i == csv.Length - 1 || sb.ToString().EndsWith(Environment.NewLine))
                     {
-                        sb.Append("\"");
+                        sb.Append('"');
                     }
                     else
                     {

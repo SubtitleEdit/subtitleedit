@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             string elementName = "Word";
             string parentName = "WholeWords";
 
-            if (key.Contains(" "))
+            if (key.Contains(' '))
             {
                 dictionary = ocrFixPartialLines;
                 elementName = "LinePart";

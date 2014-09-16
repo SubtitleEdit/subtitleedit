@@ -30,13 +30,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            var sb = new StringBuilder();
-            sb.Append("[");
+            var sb = new StringBuilder(@"[");
             int count = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 if (count > 0)
-                    sb.Append(",");
+                    sb.Append(',');
                 sb.Append("{\"duration\":");
                 sb.Append(p.Duration.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
                 sb.Append(",\"content\":\"");
@@ -44,10 +43,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(",\"startOfParagraph\":false");
                 sb.Append(",\"startTime\":");
                 sb.Append(p.StartTime.TotalMilliseconds.ToString(System.Globalization.CultureInfo.InvariantCulture));
-                sb.Append("}");
+                sb.Append('}');
                 count++;
             }
-            sb.Append("]");
+            sb.Append(']');
             return sb.ToString().Trim();
         }
 

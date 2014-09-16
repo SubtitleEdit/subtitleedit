@@ -726,7 +726,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 text = line.Trim();
                 if (count > 0)
-                    sb.Append(" ");
+                    sb.Append(' ');
                 sb.Append(GetCenterCodes(text, count, lines.Length));
                 count++;
                 int i = 0;

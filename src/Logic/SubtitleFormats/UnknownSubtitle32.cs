@@ -108,7 +108,7 @@ Sony,Sony DVD/UMD,1:85,16x9
                 else if (paragraph != null && s.Length > 0)
                 {
                     bool italicOn = false;
-                    while (s.Contains("#"))
+                    while (s.Contains('#'))
                     {
                         int index = s.IndexOf('#');
                         if (italicOn)

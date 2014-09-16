@@ -1070,7 +1070,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (buffer[index] == 0xFF)
                 {
-                    sb.Append(" ");
+                    sb.Append(' ');
                 }
                 else if (buffer[index] == 0xFE)
                 {

@@ -1214,7 +1214,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
                     if (text == Configuration.Settings.Language.Settings.GoToFirstSelectedLine.Replace("&", string.Empty))
@@ -1247,7 +1247,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main File
             foreach (TreeNode node in treeViewShortcuts.Nodes[1].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.File.New.Replace("&", string.Empty))
@@ -1274,7 +1274,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main Edit
             foreach (TreeNode node in treeViewShortcuts.Nodes[2].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Edit.Undo.Replace("&", string.Empty))
@@ -1303,7 +1303,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main Tools
             foreach (TreeNode node in treeViewShortcuts.Nodes[3].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Tools.FixCommonErrors.Replace("&", string.Empty))
@@ -1328,7 +1328,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main Video
             foreach (TreeNode node in treeViewShortcuts.Nodes[4].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo.Replace("&", string.Empty))
@@ -1363,7 +1363,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main Spell check
             foreach (TreeNode node in treeViewShortcuts.Nodes[5].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.SpellCheck.Title.Replace("&", string.Empty))
@@ -1378,7 +1378,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main Sync
             foreach (TreeNode node in treeViewShortcuts.Nodes[6].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.Menu.Synchronization.AdjustAllTimes.Replace("&", string.Empty))
@@ -1395,7 +1395,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main List view
             foreach (TreeNode node in treeViewShortcuts.Nodes[7].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
@@ -1432,7 +1432,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Main text box
             foreach (TreeNode node in treeViewShortcuts.Nodes[8].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.General.Italic.Replace("&", string.Empty))
@@ -1459,7 +1459,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Create
             foreach (TreeNode node in treeViewShortcuts.Nodes[9].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
@@ -1480,7 +1480,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Translate
             foreach (TreeNode node in treeViewShortcuts.Nodes[10].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Settings.CustomSearch1.Replace("&", string.Empty))
@@ -1501,7 +1501,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Adjust
             foreach (TreeNode node in treeViewShortcuts.Nodes[11].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext.Replace("&", string.Empty))
@@ -1536,7 +1536,7 @@ namespace Nikse.SubtitleEdit.Forms
             //Audio-visualizer
             foreach (TreeNode node in treeViewShortcuts.Nodes[12].Nodes)
             {
-                if (node.Text.Contains("["))
+                if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
                     if (text == (Configuration.Settings.Language.WaveForm.ZoomIn).Replace("&", string.Empty))
@@ -2103,7 +2103,7 @@ namespace Nikse.SubtitleEdit.Forms
             string elementName = "Word";
             string parentName = "WholeWords";
 
-            if (key.Contains(" "))
+            if (key.Contains(' '))
             {
                 dictionary = _ocrFixPartialLines;
                 elementName = "LinePart";
@@ -2554,7 +2554,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonUpdateShortcut_Click(object sender, EventArgs e)
         {
-            if (treeViewShortcuts.SelectedNode != null && treeViewShortcuts.SelectedNode.Text.Contains("["))
+            if (treeViewShortcuts.SelectedNode != null && treeViewShortcuts.SelectedNode.Text.Contains('['))
             {
                 string text = treeViewShortcuts.SelectedNode.Text.Substring(0, treeViewShortcuts.SelectedNode.Text.IndexOf('[')).Trim();
 
@@ -2564,8 +2564,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                var sb = new StringBuilder();
-                sb.Append("[");
+                var sb = new StringBuilder(@"[");
                 if (checkBoxShortcutsControl.Checked)
                     sb.Append("Control+");
                 if (checkBoxShortcutsAlt.Checked)
@@ -2573,7 +2572,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (checkBoxShortcutsShift.Checked)
                     sb.Append("Shift+");
                 sb.Append(comboBoxShortcutKey.Items[comboBoxShortcutKey.SelectedIndex]);
-                sb.Append("]");
+                sb.Append(']');
 
                 if (sb.Length < 3 || sb.ToString().EndsWith("+]"))
                 {

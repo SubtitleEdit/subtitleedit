@@ -158,14 +158,14 @@ namespace Nikse.SubtitleEdit.Controls
                             milliSeconds = int.Parse(times[3].PadRight(3, '0'));
 
                         var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
-                        if (times[0].StartsWith("-") && tc.TotalMilliseconds > 0)
+                        if (times[0].StartsWith('-') && tc.TotalMilliseconds > 0)
                             tc.TotalMilliseconds = tc.TotalMilliseconds * -1;
                         return tc;
                     }
                 }
                 else
                 {
-                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(":"))
+                    if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
                         startTime += "00";
 
                     string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);

@@ -200,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
             text = text.Trim();
-            if (!text.EndsWith(">"))
+            if (!text.EndsWith('>'))
                 return string.Empty;
 
             string endTag = string.Empty;
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(text))
                 return string.Empty;
             text = text.Trim();
-            if (!text.StartsWith("<"))
+            if (!text.StartsWith('<'))
                 return string.Empty;
 
             string startTag = string.Empty;
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrEmpty(s))
                         return true;
-                    bool isLineContinuation = s.EndsWith(",") || s.EndsWith("-") || s.EndsWith("...") || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
+                    bool isLineContinuation = s.EndsWith(',') || s.EndsWith('-') || s.EndsWith("...") || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
 
                     if (!checkBoxOnlyContinuationLines.Checked)
                         return true;

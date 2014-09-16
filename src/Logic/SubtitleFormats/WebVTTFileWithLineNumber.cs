@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                if (p.Text.IndexOf('<') >= 0)
+                if (p.Text.Contains('<'))
                 {
                     string text = p.Text;
                     text = RemoveTag("v", text);
