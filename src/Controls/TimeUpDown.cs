@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (TimeCodeChanged != null)
                     TimeCodeChanged.Invoke(this, e);
             }
-            //numericUpDown1.Value = NumericUpDownValue;
+            numericUpDown1.Value = NumericUpDownValue;
         }
 
         public MaskedTextBox MaskedTextBox
