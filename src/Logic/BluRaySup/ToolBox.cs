@@ -49,18 +49,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             return "0x" + s;
         }
 
-        /// <summary>
-        /// Convert an integer to a string with leading zeroes
-        /// </summary>
-        /// <param name="i">Integer value to convert</param>
-        /// <param name="digits">Number of digits to display - note that a 32bit number can have only 10 digits</param>
-        /// <returns>String version of integer with trailing zeroes</returns>
-        public static string ZeroTrim(int i, int digits)
-        {
-            string s = i.ToString();
-            return s.PadLeft(digits, '0');
-        }
-
         /**
          * Convert time in milliseconds to array containing hours, minutes, seconds and milliseconds
          * @param ms Time in milliseconds
@@ -90,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         public static string PtsToTimeString(long pts)
         {
             int[] time = MillisecondsToTime((pts + 45) / 90);
-            return ZeroTrim(time[0], 2) + ":" + ZeroTrim(time[1], 2) + ":" + ZeroTrim(time[2], 2) + "." + ZeroTrim(time[3], 3);
+            return string.Format(@"{0:D2}:{1:D2}:{2:D2}.{3:D3}", time[0], time[1], time[2], time[3]);
         }
 
         /// <summary>
