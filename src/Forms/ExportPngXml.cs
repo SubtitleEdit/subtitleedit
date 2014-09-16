@@ -1855,7 +1855,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
             var lefts = new List<float>();
-            if (text.ToLower().Contains("<font") || text.ToLower().Contains("<i>"))
+            if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {

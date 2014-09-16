@@ -1431,8 +1431,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if (!p.Text.ToLower().Contains("www.") &&
-                            !p.Text.ToLower().Contains("http://") &&
+                        if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
+                            !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
                             !UrlCom.IsMatch(p.Text) &&
                             !UrlNet.IsMatch(p.Text) &&
                             !UrlOrg.IsMatch(p.Text)) // urls are skipped
@@ -2585,7 +2585,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
-                                else if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.ToLower().Contains(subText.StrippedText[0].ToString()))
+                                else if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.Contains(subText.StrippedText[0].ToString(), StringComparison.OrdinalIgnoreCase))
                                 {
                                     if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains('\'') && subText.StrippedText.StartsWith('s')))
                                     {

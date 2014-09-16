@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (comboBoxRule.SelectedIndex == FunctionContains) // Contains
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && p.Text.ToLower().Contains(text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionStartsWith) // Starts with
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionNotContains) // Not contains
                         {
-                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && !p.Text.ToLower().Contains(text.ToLower()))
+                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && !p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionRegEx) // RegEx

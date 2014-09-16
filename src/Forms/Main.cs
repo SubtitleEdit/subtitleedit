@@ -5836,7 +5836,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck(bool autoDetect, int startFromLine)
         {
-            //if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
+            //if (Configuration.Settings.General.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
             //{
             //    SpellCheckViaWord();
             //    return;
@@ -9093,9 +9093,9 @@ namespace Nikse.SubtitleEdit.Forms
             List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
             if (isValid)
             {
-                if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
+                if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                    if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                         format = new SubStationAlpha();
                     else
                         format = new AdvancedSubStationAlpha();
@@ -9160,9 +9160,9 @@ namespace Nikse.SubtitleEdit.Forms
                     ResetSubtitle();
                 _subtitle.Paragraphs.Clear();
 
-                if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
+                if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                    if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                         format = new SubStationAlpha();
                     else
                         format = new AdvancedSubStationAlpha();

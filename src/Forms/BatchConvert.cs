@@ -736,9 +736,9 @@ namespace Nikse.SubtitleEdit.Forms
                                                 List<SubtitleSequence> mkvSub = mkv.GetMatroskaSubtitle(fileName, (int)x.TrackNumber, out isValid, MatroskaProgress);
 
                                                 bool isSsa = false;
-                                                if (x.CodecPrivate.ToLower().Contains("[script info]"))
+                                                if (x.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                                                 {
-                                                    if (x.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                                                    if (x.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                                                         format = new SubStationAlpha();
                                                     else
                                                         format = new AdvancedSubStationAlpha();
