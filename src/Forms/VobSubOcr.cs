@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxCustomFourColors.Checked = true;
 
             _importLanguageString = languageString;
-            if (_importLanguageString.Contains("(") && !_importLanguageString.StartsWith("("))
+            if (_importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
         }
 
@@ -4461,9 +4461,9 @@ namespace Nikse.SubtitleEdit.Forms
                 start++;
                 start = line.IndexOf("l", start, StringComparison.Ordinal);
             }
-            if (line.Contains("l"))
+            if (line.Contains('l'))
             {
-                if (line.StartsWith("l"))
+                if (line.StartsWith('l'))
                     line = line.Remove(0, 1).Insert(0, "I");
                 if (line.StartsWith("<i>l"))
                     line = line.Remove(3, 1).Insert(3, "I");
@@ -4505,7 +4505,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line = line.Replace(" ln", " In");
                 line = line.Replace(" lm", " Im");
             }
-            if (line.Contains("I"))
+            if (line.Contains('I'))
             {
                 line = line.Replace("II", "ll");
             }
@@ -4523,7 +4523,7 @@ namespace Nikse.SubtitleEdit.Forms
             line = line.Replace(" ,", ",");
 
             // fix O => 0
-            if (line.Contains("O"))
+            if (line.Contains('O'))
             {
                 line = line.Replace(", OOO", ",000");
                 line = line.Replace(",OOO", ",000");
@@ -4737,7 +4737,7 @@ namespace Nikse.SubtitleEdit.Forms
                 paragraph.Append("<i>" + temp + "</i>");
                 paragraph.Append(appendString);
             }
-            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith("-"))
+            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith('-'))
             {
                 string temp = line.ToString().Replace("<i>", "").Replace("</i>", "");
                 paragraph.Append("<i>" + temp + "</i>");
@@ -5704,7 +5704,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!_ocrFixEngine.IsDictionaryLoaded || !_ocrFixEngine.SpellCheckDictionaryName.StartsWith("en_"))
                 return false;
 
-            if (line.Contains("[") && line.Contains("]"))
+            if (line.Contains('[') && line.Contains(']'))
                 line = line.Replace("[", string.Empty).Replace("]", string.Empty);
 
             int count = 0;
@@ -5754,39 +5754,39 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (psm.Length > textWithOutFixes.Length)
                     {
-                        if (!psm.Contains("9") && textWithOutFixes.Contains("9") ||
-                            !psm.Contains("6") && textWithOutFixes.Contains("6") ||
-                            !psm.Contains("5") && textWithOutFixes.Contains("5") ||
-                            !psm.Contains("3") && textWithOutFixes.Contains("3") ||
-                            !psm.Contains("1") && textWithOutFixes.Contains("1") ||
-                            !psm.Contains("$") && textWithOutFixes.Contains("$") ||
-                            !psm.Contains("•") && textWithOutFixes.Contains("•") ||
-                            !psm.Contains("Y") && textWithOutFixes.Contains("Y") ||
-                            !psm.Contains("'") && textWithOutFixes.Contains("'") ||
-                            !psm.Contains("€") && textWithOutFixes.Contains("€"))
+                        if (!psm.Contains('9') && textWithOutFixes.Contains('9') ||
+                            !psm.Contains('6') && textWithOutFixes.Contains('6') ||
+                            !psm.Contains('5') && textWithOutFixes.Contains('5') ||
+                            !psm.Contains('3') && textWithOutFixes.Contains('3') ||
+                            !psm.Contains('1') && textWithOutFixes.Contains('1') ||
+                            !psm.Contains('$') && textWithOutFixes.Contains('$') ||
+                            !psm.Contains('•') && textWithOutFixes.Contains('•') ||
+                            !psm.Contains('Y') && textWithOutFixes.Contains('Y') ||
+                            !psm.Contains('\'') && textWithOutFixes.Contains('\'') ||
+                            !psm.Contains('€') && textWithOutFixes.Contains('€'))
 
                             textWithOutFixes = psm;
                     }
                     else if (psm.Length == textWithOutFixes.Length &&
-                             (!psm.Contains("0") && textWithOutFixes.Contains("0") ||  // these chars are often mistaken
-                              !psm.Contains("9") && textWithOutFixes.Contains("9") ||
-                              !psm.Contains("8") && textWithOutFixes.Contains("8") ||
-                              !psm.Contains("5") && textWithOutFixes.Contains("5") ||
-                              !psm.Contains("3") && textWithOutFixes.Contains("3") ||
-                              !psm.Contains("1") && textWithOutFixes.Contains("1") ||
-                              !psm.Contains("$") && textWithOutFixes.Contains("$") ||
-                              !psm.Contains("€") && textWithOutFixes.Contains("€") ||
-                              !psm.Contains("•") && textWithOutFixes.Contains("•") ||
-                              !psm.Contains("Y") && textWithOutFixes.Contains("Y") ||
-                              !psm.Contains("'") && textWithOutFixes.Contains("'") ||
-                              !psm.Contains("/") && textWithOutFixes.Contains("/") ||
-                              !psm.Contains("(") && textWithOutFixes.Contains("(") ||
-                              !psm.Contains(")") && textWithOutFixes.Contains(")") ||
-                              !psm.Contains("_") && textWithOutFixes.Contains("_")))
+                             (!psm.Contains('0') && textWithOutFixes.Contains('0') ||  // these chars are often mistaken
+                              !psm.Contains('9') && textWithOutFixes.Contains('9') ||
+                              !psm.Contains('8') && textWithOutFixes.Contains('8') ||
+                              !psm.Contains('5') && textWithOutFixes.Contains('5') ||
+                              !psm.Contains('3') && textWithOutFixes.Contains('3') ||
+                              !psm.Contains('1') && textWithOutFixes.Contains('1') ||
+                              !psm.Contains('$') && textWithOutFixes.Contains('$') ||
+                              !psm.Contains('€') && textWithOutFixes.Contains('€') ||
+                              !psm.Contains('•') && textWithOutFixes.Contains('•') ||
+                              !psm.Contains('Y') && textWithOutFixes.Contains('Y') ||
+                              !psm.Contains('\'') && textWithOutFixes.Contains('\'') ||
+                              !psm.Contains('/') && textWithOutFixes.Contains('/') ||
+                              !psm.Contains('(') && textWithOutFixes.Contains('(') ||
+                              !psm.Contains(')') && textWithOutFixes.Contains(')') ||
+                              !psm.Contains('_') && textWithOutFixes.Contains('_')))
                     {
                         textWithOutFixes = psm;
                     }
-                    else if (psm.Length == textWithOutFixes.Length && psm.EndsWith(".") && !textWithOutFixes.EndsWith("."))
+                    else if (psm.Length == textWithOutFixes.Length && psm.EndsWith('.') && !textWithOutFixes.EndsWith('.'))
                     {
                         textWithOutFixes = psm;
                     }
@@ -5829,32 +5829,32 @@ namespace Nikse.SubtitleEdit.Forms
                     string newText = _ocrFixEngine.FixOcrErrors(newUnfixedText, index, _lastLine, true, GetAutoGuessLevel());
                     int newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
 
-                    if (wordsNotFound == 1 && newWordsNotFound == 1 && newUnfixedText.EndsWith("!!") && textWithOutFixes.EndsWith("u") && newText.Length > 1)
+                    if (wordsNotFound == 1 && newWordsNotFound == 1 && newUnfixedText.EndsWith("!!") && textWithOutFixes.EndsWith('u') && newText.Length > 1)
                     {
                         _ocrFixEngine.UnknownWordsFound.Clear();
                         newText = textWithOutFixes.Substring(0, textWithOutFixes.Length - 1) + "!!";
                         newWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(newText, out correctWords);
                     }
-                    else if ((!newText.Contains("9") || textWithOutFixes.Contains("9")) &&
-                             (!newText.Replace("</i>", string.Empty).Contains("/") || textWithOutFixes.Replace("</i>", string.Empty).Contains("/")) &&
+                    else if ((!newText.Contains('9') || textWithOutFixes.Contains('9')) &&
+                             (!newText.Replace("</i>", string.Empty).Contains('/') || textWithOutFixes.Replace("</i>", string.Empty).Contains('/')) &&
                              newUnfixedText.Trim().Length > 0 &&
-                             newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith("!") && textWithOutFixes.EndsWith("l")))
+                             newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith('!') && textWithOutFixes.EndsWith('l')))
                     {
                         wordsNotFound = newWordsNotFound;
-                        if (textWithOutFixes.Length > 3 && textWithOutFixes.EndsWith("...") && !newText.EndsWith(".") && !newText.EndsWith(",") && !newText.EndsWith("!") &&
-                            !newText.EndsWith("?") && !newText.EndsWith("</i>"))
+                        if (textWithOutFixes.Length > 3 && textWithOutFixes.EndsWith("...") && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
+                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
                             newText = newText.TrimEnd() + "...";
-                        else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith(".") && !newText.EndsWith(".") && !newText.EndsWith(",") && !newText.EndsWith("!") &&
-                            !newText.EndsWith("?") && !newText.EndsWith("</i>"))
+                        else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith('.') && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
+                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
                             newText = newText.TrimEnd() + ".";
-                        else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith("?") && !newText.EndsWith(".") && !newText.EndsWith(",") && !newText.EndsWith("!") &&
-                            !newText.EndsWith("?") && !newText.EndsWith("</i>"))
+                        else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith('?') && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
+                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
                             newText = newText.TrimEnd() + "?";
 
                         textWithOutFixes = newUnfixedText;
                         line = FixItalics(newText);
                     }
-                    else if (correctWords > oldCorrectWords + 1 || (correctWords > oldCorrectWords && !textWithOutFixes.Contains(" ")))
+                    else if (correctWords > oldCorrectWords + 1 || (correctWords > oldCorrectWords && !textWithOutFixes.Contains(' ')))
                     {
                         wordsNotFound = newWordsNotFound;
                         textWithOutFixes = newUnfixedText;
@@ -5884,13 +5884,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (oneColorText.Length > 1 &&
                             !oneColorText.Contains("CD") &&
-                            (!oneColorText.Contains("0") || line.Contains("0")) &&
-                            (!oneColorText.Contains("2") || line.Contains("2")) &&
-                            (!oneColorText.Contains("3") || line.Contains("4")) &&
-                            (!oneColorText.Contains("5") || line.Contains("5")) &&
-                            (!oneColorText.Contains("9") || line.Contains("9")) &&
-                            (!oneColorText.Contains("•") || line.Contains("•")) &&
-                            (!oneColorText.Contains(")") || line.Contains(")")) &&
+                            (!oneColorText.Contains('0') || line.Contains('0')) &&
+                            (!oneColorText.Contains('2') || line.Contains('2')) &&
+                            (!oneColorText.Contains('3') || line.Contains('4')) &&
+                            (!oneColorText.Contains('5') || line.Contains('5')) &&
+                            (!oneColorText.Contains('9') || line.Contains('9')) &&
+                            (!oneColorText.Contains('•') || line.Contains('•')) &&
+                            (!oneColorText.Contains(')') || line.Contains(')')) &&
                             Utilities.CountTagInText(oneColorText, "(") < 2 && Utilities.CountTagInText(oneColorText, ")") < 2 &&
                             Utilities.CountTagInText(oneColorText, Environment.NewLine) < 3)
                         {
@@ -5916,7 +5916,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (checkBoxAutoFixCommonErrors.Checked)
                                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
                             }
-                            else if (wordsNotFound == modiWordsNotFound && oneColorText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ")))
+                            else if (wordsNotFound == modiWordsNotFound && oneColorText.EndsWith('!') && (line.EndsWith('l') || line.EndsWith('ﬂ')))
                             {
                                 line = FixItalics(oneColorText);
                                 wordsNotFound = modiWordsNotFound;
@@ -5959,7 +5959,7 @@ namespace Nikse.SubtitleEdit.Forms
                             bool ok = modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0);
 
                             if (!ok)
-                                ok = wordsNotFound == modiWordsNotFound && unItalicText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ"));
+                                ok = wordsNotFound == modiWordsNotFound && unItalicText.EndsWith('!') && (line.EndsWith('l') || line.EndsWith('ﬂ'));
 
                             if (!ok)
                                 ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>") && line.EndsWith("</i>");
@@ -6012,7 +6012,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith("J'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
+                                    if (unItalicText.StartsWith("J'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6036,7 +6036,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith(";'") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
+                                    if (unItalicText.StartsWith(";'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6044,7 +6044,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if (unItalicText.StartsWith(",{*") && (line.StartsWith("♪") || textWithOutFixes.StartsWith("♪") || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith("♪")))
+                                    if (unItalicText.StartsWith(",{*") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6053,7 +6053,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
 
-                                    if (unItalicText.EndsWith("J'") && (line.EndsWith("♪") || textWithOutFixes.EndsWith("♪") || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith("♪")))
+                                    if (unItalicText.EndsWith("J'") && (line.EndsWith('♪') || textWithOutFixes.EndsWith('♪') || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6063,19 +6063,19 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                 }
 
-                                if (unItalicText.StartsWith("[") && !line.StartsWith("["))
+                                if (unItalicText.StartsWith('[') && !line.StartsWith('['))
                                 {
                                     unItalicText = unItalicText.Remove(0, 1);
-                                    if (unItalicText.EndsWith("]"))
+                                    if (unItalicText.EndsWith(']'))
                                         unItalicText = unItalicText.TrimEnd(']');
                                 }
-                                if (unItalicText.StartsWith("{") && !line.StartsWith("{"))
+                                if (unItalicText.StartsWith('{') && !line.StartsWith('{'))
                                 {
                                     unItalicText = unItalicText.Remove(0, 1);
-                                    if (unItalicText.EndsWith("}"))
+                                    if (unItalicText.EndsWith('}'))
                                         unItalicText = unItalicText.TrimEnd('}');
                                 }
-                                if (unItalicText.EndsWith("}") && !line.EndsWith("}"))
+                                if (unItalicText.EndsWith('}') && !line.EndsWith('}'))
                                     unItalicText = unItalicText.TrimEnd('}');
 
                                 if (line.EndsWith("...") && unItalicText.EndsWith("”!"))
@@ -6083,7 +6083,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (line.EndsWith("...") && unItalicText.EndsWith("\"!"))
                                     unItalicText = unItalicText.TrimEnd('!').TrimEnd('"') + ".";
 
-                                if (line.EndsWith(".") && !unItalicText.EndsWith(".") && !unItalicText.EndsWith(".</i>"))
+                                if (line.EndsWith('.') && !unItalicText.EndsWith('.') && !unItalicText.EndsWith(".</i>"))
                                 {
                                     string post = string.Empty;
                                     if (unItalicText.EndsWith("</i>"))
@@ -6091,11 +6091,11 @@ namespace Nikse.SubtitleEdit.Forms
                                         post = "</i>";
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 4);
                                     }
-                                    if (unItalicText.EndsWith("'") && !line.EndsWith("'."))
+                                    if (unItalicText.EndsWith('\'') && !line.EndsWith("'."))
                                         unItalicText = unItalicText.TrimEnd('\'');
                                     unItalicText += "." + post;
                                 }
-                                if (unItalicText.EndsWith(".") && !unItalicText.EndsWith("...") && !unItalicText.EndsWith("...</i>") && line.EndsWith("..."))
+                                if (unItalicText.EndsWith('.') && !unItalicText.EndsWith("...") && !unItalicText.EndsWith("...</i>") && line.EndsWith("..."))
                                 {
                                     string post = string.Empty;
                                     if (unItalicText.EndsWith("</i>"))
@@ -6116,7 +6116,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     unItalicText += "." + post;
                                 }
 
-                                if (line.EndsWith("!") && !unItalicText.EndsWith("!") && !unItalicText.EndsWith("!</i>"))
+                                if (line.EndsWith('!') && !unItalicText.EndsWith('!') && !unItalicText.EndsWith("!</i>"))
                                 {
                                     if (unItalicText.EndsWith("!'"))
                                     {
@@ -6140,7 +6140,7 @@ namespace Nikse.SubtitleEdit.Forms
                                             }
                                             unItalicText = unItalicText.Insert(unItalicText.Length - 4, "!");
                                         }
-                                        else if (unItalicText.EndsWith("l") && _ocrFixEngine != null)
+                                        else if (unItalicText.EndsWith('l') && _ocrFixEngine != null)
                                         {
                                             string w = unItalicText;
                                             int wIdx = w.Length - 1;
@@ -6163,7 +6163,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                     }
                                 }
-                                if (line.EndsWith("?") && !unItalicText.EndsWith("?") && !unItalicText.EndsWith("?</i>"))
+                                if (line.EndsWith('?') && !unItalicText.EndsWith('?') && !unItalicText.EndsWith("?</i>"))
                                 {
                                     if (unItalicText.EndsWith("?'"))
                                         unItalicText = unItalicText.TrimEnd('\'');
@@ -6174,7 +6174,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 line = unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty);
                                 if (checkBoxAutoFixCommonErrors.Checked)
                                 {
-                                    if (line.Contains("'.") && !textWithOutFixes.Contains("'.") && textWithOutFixes.Contains(":") && !line.EndsWith("'.") && Configuration.Settings.Tools.OcrFixUseHardcodedRules)
+                                    if (line.Contains("'.") && !textWithOutFixes.Contains("'.") && textWithOutFixes.Contains(':') && !line.EndsWith("'.") && Configuration.Settings.Tools.OcrFixUseHardcodedRules)
                                     {
                                         line = line.Replace("'.", ":");
                                     }
@@ -6185,10 +6185,10 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 unItalicText = unItalicText.Replace("</i>", string.Empty);
-                                if (line.EndsWith("</i>") && unItalicText.EndsWith("."))
+                                if (line.EndsWith("</i>") && unItalicText.EndsWith('.'))
                                 {
                                     line = line.Remove(line.Length - 4, 4);
-                                    if (line.EndsWith("-"))
+                                    if (line.EndsWith('-'))
                                         line = line.TrimEnd('-') + ".";
                                     if (Utilities.AllLetters.Contains(line.Substring(line.Length - 1)))
                                         line += ".";
@@ -6259,13 +6259,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (modiText.Length > 1 &&
                             !modiText.Contains("CD") &&
-                            (!modiText.Contains("0") || line.Contains("0")) &&
-                            (!modiText.Contains("2") || line.Contains("2")) &&
-                            (!modiText.Contains("3") || line.Contains("4")) &&
-                            (!modiText.Contains("5") || line.Contains("5")) &&
-                            (!modiText.Contains("9") || line.Contains("9")) &&
-                            (!modiText.Contains("•") || line.Contains("•")) &&
-                            (!modiText.Contains(")") || line.Contains(")")) &&
+                            (!modiText.Contains('0') || line.Contains('0')) &&
+                            (!modiText.Contains('2') || line.Contains('2')) &&
+                            (!modiText.Contains('3') || line.Contains('4')) &&
+                            (!modiText.Contains('5') || line.Contains('5')) &&
+                            (!modiText.Contains('9') || line.Contains('9')) &&
+                            (!modiText.Contains('•') || line.Contains('•')) &&
+                            (!modiText.Contains(')') || line.Contains(')')) &&
                             Utilities.CountTagInText(modiText, "(") < 2 && Utilities.CountTagInText(modiText, ")") < 2 &&
                             Utilities.CountTagInText(modiText, Environment.NewLine) < 3)
                         {
@@ -6282,7 +6282,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (modiWordsNotFound < wordsNotFound || (textWithOutFixes.Length == 1 && modiWordsNotFound == 0))
                                 line = modiText; // use the modi OCR'ed text
-                            else if (wordsNotFound == modiWordsNotFound && modiText.EndsWith("!") && (line.EndsWith("l") || line.EndsWith("ﬂ")))
+                            else if (wordsNotFound == modiWordsNotFound && modiText.EndsWith('!') && (line.EndsWith('l') || line.EndsWith('ﬂ')))
                                 line = modiText;
                         }
 
@@ -6318,16 +6318,16 @@ namespace Nikse.SubtitleEdit.Forms
                 //            post = "</i>";
                 //            line = line.Remove(line.Length - 4, 4).Trim();
                 //        }
-                //        if (text.EndsWith("."))
+                //        if (text.EndsWith('.'))
                 //        {
                 //            line = line.TrimEnd('.').Trim();
-                //            while (text.EndsWith(".") || text.EndsWith(" "))
+                //            while (text.EndsWith('.') || text.EndsWith(' '))
                 //            {
                 //                line += text.Substring(text.Length - 1).Trim();
                 //                text = text.Remove(text.Length - 1, 1);
                 //            }
                 //        }
-                //        else if (text.EndsWith("l") && text.EndsWith("!") && !text.EndsWith("l!"))
+                //        else if (text.EndsWith('l') && text.EndsWith('!') && !text.EndsWith("l!"))
                 //        {
                 //            line = line.Remove(line.Length - 1, 1) + "!";
                 //        }
@@ -6347,7 +6347,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
                 if (wordsNotFound == 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (wordsNotFound == 1 || line.Length == 1 || line.Contains("_") || HasSingleLetters(line))
+                else if (wordsNotFound == 1 || line.Length == 1 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
                 else if (line.Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
@@ -6363,7 +6363,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Red);
                 else if (badWords >= numberOfWords / 2)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
-                else if (badWords > 0 || line.Contains("_") || HasSingleLetters(line))
+                else if (badWords > 0 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
                 else if (line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim().Length == 0)
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
@@ -6977,7 +6977,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (lb != null && lb.SelectedIndex >= 0)
             {
                 string text = lb.Items[lb.SelectedIndex].ToString();
-                if (text.Contains(":"))
+                if (text.Contains(':'))
                 {
                     string number = text.Substring(1, text.IndexOf(":", StringComparison.Ordinal) - 1);
                     subtitleListView1.SelectIndexAndEnsureVisible(int.Parse(number) - 1);
@@ -7912,7 +7912,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(":"))
+                if (text.Contains(':'))
                 {
                     if (_ocrFixEngine == null)
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
@@ -7938,7 +7938,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(":"))
+                if (text.Contains(':'))
                 {
                     text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
                     var form = new AddToUserDic();
@@ -7961,7 +7961,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(":"))
+                if (text.Contains(':'))
                 {
                     text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
                     var form = new AddToOcrReplaceList();
@@ -7984,7 +7984,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxUnknownWords.Items.Count > 0 && listBoxUnknownWords.SelectedItems.Count > 0)
             {
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
-                if (text.Contains(":"))
+                if (text.Contains(':'))
                 {
                     text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
                     Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));

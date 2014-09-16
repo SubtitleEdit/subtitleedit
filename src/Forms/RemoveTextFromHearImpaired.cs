@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (s.EndsWith("</U>") && s.Length > 4)
                 s = s.Substring(0, s.Length - 4);
 
-            if (s.StartsWith("-") && s.Length > 2)
+            if (s.StartsWith('-') && s.Length > 2)
                 s = s.TrimStart('-');
 
             return s.Trim();

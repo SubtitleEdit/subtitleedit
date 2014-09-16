@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonAddToDictionaryClick(object sender, EventArgs e)
         {
             string s = textBoxWord.Text.Trim();
-            if (s.Length == 0 || s.Contains(" "))
+            if (s.Length == 0 || s.Contains(' '))
             {
                 MessageBox.Show("Word should be one single word");
                 return;

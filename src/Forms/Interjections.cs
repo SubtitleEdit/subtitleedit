@@ -20,7 +20,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var sb = new StringBuilder();
             foreach (string s in _interjections)
-                sb.Append(";" + s.Trim());
+            {
+                sb.Append(';');
+                sb.Append(s.Trim());
+            }
             return sb.ToString().Trim(';');
         }
 

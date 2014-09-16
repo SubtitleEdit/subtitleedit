@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph next = subtitle.GetParagraphOrDefault(count);
                 string text = p.Text;
 
-                if (text.Contains("<") && text.Contains(">"))
+                if (text.Contains('<') && text.Contains('>'))
                 {
                     var total = new StringBuilder();
                     var partial = new StringBuilder();
@@ -137,12 +137,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             total.Append(EncodeText(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
-                            total.Append("<");
+                            total.Append('<');
                         }
-                        else if (text.Substring(i).StartsWith(">") && tagOn)
+                        else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append(">");
+                            total.Append('>');
                         }
                         else if (!tagOn)
                         {
@@ -285,7 +285,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         className.Append(text[indexClass].ToString());
                         indexClass++;
                     }
-                    p.Extra = className.ToString().Trim(" '\"".ToCharArray());
+                    p.Extra = className.ToString().Trim(' ', '\'', '"');
                 }
 
                 if (text.Contains("ID=\"Source\"") || text.Contains("ID=Source"))
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (text.StartsWith("<FONT COLOR=") && !text.Contains("</font>") && !text.Contains("</FONT>"))
                     text += "</FONT>";
 
-                if (text.IndexOf('<') >= 0 && text.IndexOf('>') >= 0)
+                if (text.Contains('<') && text.Contains('>'))
                 {
                     var total = new StringBuilder();
                     var partial = new StringBuilder();
@@ -349,7 +349,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     for (int i = 0; i < text.Length; i++)
                     {
                         string tmp = text.Substring(i);
-                        if (tmp.StartsWith("<", StringComparison.Ordinal) &&
+                        if (tmp.StartsWith('<') &&
                             (tmp.StartsWith("<font", StringComparison.Ordinal) ||
                              tmp.StartsWith("<div", StringComparison.Ordinal) ||
                              tmp.StartsWith("<i", StringComparison.Ordinal) ||
@@ -360,12 +360,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             total.Append(Utilities.HtmlDecode(partial.ToString()));
                             partial = new StringBuilder();
                             tagOn = true;
-                            total.Append("<");
+                            total.Append('<');
                         }
-                        else if (text.Substring(i).StartsWith(">", StringComparison.Ordinal) && tagOn)
+                        else if (text.Substring(i).StartsWith('>') && tagOn)
                         {
                             tagOn = false;
-                            total.Append(">");
+                            total.Append('>');
                         }
                         else if (!tagOn)
                         {

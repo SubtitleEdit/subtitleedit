@@ -849,7 +849,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     string s = p.Text;
-                    if (s.Contains("{") && s.Contains("}"))
+                    if (s.Contains('{') && s.Contains('}'))
                     {
                         s = s.Replace(@"\u0", string.Empty);
                         s = s.Replace(@"\u1", string.Empty);

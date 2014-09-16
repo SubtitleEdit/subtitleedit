@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.Trim().Length == 0 || line.StartsWith("Display_Area") || line.StartsWith("#") || line.StartsWith("Color") || index < 10)
+                else if (line.Trim().Length == 0 || line.StartsWith("Display_Area") || line.StartsWith('#') || line.StartsWith("Color") || index < 10)
                 {
                     // skip these lines
                 }

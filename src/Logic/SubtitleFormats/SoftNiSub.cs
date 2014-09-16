@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                                 Boolean positionTop = false;
                                 // If text starts with "}", subtitle appears at the top
-                                if (text.StartsWith("}"))
+                                if (text.StartsWith('}'))
                                 {
                                     positionTop = true;
                                     // Remove the tag "{"
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     // skip empty lines
                 }
-                else if (line.StartsWith("*"))
+                else if (line.StartsWith('*'))
                 {
                     // skip start
                 }

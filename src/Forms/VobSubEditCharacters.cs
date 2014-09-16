@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var f = new FileStream(databaseName, FileMode.Open))
                 {
-                    if (name.Contains("]"))
+                    if (name.Contains(']'))
                         name = name.Substring(name.IndexOf(']') + 1).Trim();
                     f.Position = Convert.ToInt64(name);
                     bmp = new ManagedBitmap(f).ToOldBitmap();

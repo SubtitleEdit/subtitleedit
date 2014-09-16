@@ -616,12 +616,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 s = s.TrimEnd('m');
                 return new TimeCode(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
-            else if (s.EndsWith("s"))
+            else if (s.EndsWith('s'))
             {
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
-            else if (s.EndsWith("t"))
+            else if (s.EndsWith('t'))
             {
                 s = s.TrimEnd('t');
                 TimeSpan ts = TimeSpan.FromTicks(long.Parse(s, CultureInfo.InvariantCulture));

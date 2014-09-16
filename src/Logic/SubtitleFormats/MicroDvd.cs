@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (line.Trim().Length > 0)
                 {
-                    if (line.Contains("{"))
+                    if (line.Contains('{'))
                     {
                         string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                         if (_regexMicroDvdLine.IsMatch(s))
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         index++;
                     }
 
-                    while (line.IndexOf(' ') >= 0 && line.IndexOf(' ') < index)
+                    while (line.Contains(' ') && line.IndexOf(' ') < index)
                     {
                         line = line.Remove(line.IndexOf(' '), 1);
                         index--;
@@ -82,11 +82,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.Append("{");
+                sb.Append('{');
                 sb.Append(p.StartFrame.ToString());
                 sb.Append("}{");
                 sb.Append(p.EndFrame.ToString());
-                sb.Append("}");
+                sb.Append('}');
 
                 //{y:b} is italics for single line
                 //{Y:b} is italics for both lines
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (string line in parts)
                 {
                     if (count > 0)
-                        lineSb.Append("|");
+                        lineSb.Append('|');
 
                     bool alreadyItalic = italicOn;
                     bool alreadyBold = boldOn;

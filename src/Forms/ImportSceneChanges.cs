@@ -60,11 +60,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Encoding encoding = Utilities.GetEncodingFromFile(fileName);
                 string s = File.ReadAllText(fileName, encoding).Trim();
-                if (s.Contains("."))
+                if (s.Contains('.'))
                     radioButtonSeconds.Checked = true;
-                if (s.Contains(".") && s.Contains(":"))
+                if (s.Contains('.') && s.Contains(':'))
                     radioButtonHHMMSSMS.Checked = true;
-                if (!s.Contains(Environment.NewLine) && s.Contains(";"))
+                if (!s.Contains(Environment.NewLine) && s.Contains(';'))
                 {
                     var sb = new StringBuilder();
                     foreach (string line in s.Split(';'))

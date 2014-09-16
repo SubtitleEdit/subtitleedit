@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             Configuration.Settings.General.CurrentFrameRate = f;
                     }
                 }
-                else if (line.Trim().Length == 0 || line.StartsWith("$"))
+                else if (line.Trim().Length == 0 || line.StartsWith('$'))
                 {
                     // skip empty lines or lines starting with $
                 }
