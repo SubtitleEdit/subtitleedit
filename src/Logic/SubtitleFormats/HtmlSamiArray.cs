@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -79,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb.Append(line.Substring(i, 1));
                     }
                     p.Text = sb.ToString().Trim();
-                    p.Text = Utilities.HtmlDecode(p.Text);
+                    p.Text = WebUtility.HtmlDecode(p.Text);
                     p.Text = ConvertJavaSpecialCharacters(p.Text);
                     subtitle.Paragraphs.Add(p);
                 }

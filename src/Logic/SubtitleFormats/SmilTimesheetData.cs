@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -204,7 +205,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             foreach (Paragraph p2 in subtitle.Paragraphs)
-                p2.Text = Utilities.HtmlDecode(p2.Text);
+                p2.Text = WebUtility.HtmlDecode(p2.Text);
 
             subtitle.Renumber(1);
         }
