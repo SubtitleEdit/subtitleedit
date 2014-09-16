@@ -837,7 +837,6 @@
     <Compile Include="Logic\Enums\SelectionChoice.cs" />
     <Compile Include="Logic\FastBitmap.cs" />
     <Compile Include="Logic\Fourier.cs" />
-    <Compile Include="Logic\HashSet.cs" />
     <Compile Include="Logic\IfoParser.cs" />
     <Compile Include="Logic\Language.cs" />
     <Compile Include="Logic\ManagedBitmap.cs" />
