@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -313,21 +314,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("  ", " ");
 
                 text = text.TrimEnd();
-                text = text.Replace("<BR>", Environment.NewLine);
-                text = text.Replace("<BR/>", Environment.NewLine);
-                text = text.Replace("<BR />", Environment.NewLine);
-
-                text = text.Replace("<br>", Environment.NewLine);
-                text = text.Replace("<br/>", Environment.NewLine);
-                text = text.Replace("<br />", Environment.NewLine);
-
-                text = text.Replace("<Br>", Environment.NewLine);
-                text = text.Replace("<Br/>", Environment.NewLine);
-                text = text.Replace("<Br />", Environment.NewLine);
-
-                text = text.Replace("<bR>", Environment.NewLine);
-                text = text.Replace("<bR/>", Environment.NewLine);
-                text = text.Replace("<bR />", Environment.NewLine);
+                text = Regex.Replace(text, @"<br {0,2}/?>", Environment.NewLine, RegexOptions.IgnoreCase);
 
                 while (text.Contains("  "))
                     text = text.Replace("  ", " ");
