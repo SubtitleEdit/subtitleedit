@@ -1260,11 +1260,11 @@ namespace Nikse.SubtitleEdit.Forms
                         string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
                         foreach (string line in File.ReadAllLines(saveFileDialogStyle.FileName))
                         {
-                            if (line.ToLower().StartsWith("format:"))
+                            if (line.StartsWith("format:", StringComparison.OrdinalIgnoreCase))
                             {
                                 styleFormat = line;
                             }
-                            else if (line.ToLower().StartsWith("style:"))
+                            else if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                             {
                                 stylesOn = true;
                             }
@@ -1282,7 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             sb.AppendLine(line);
-                            if (stylesOn && line.Replace(" ", string.Empty).Trim().ToLower().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim().ToLower() + ","))
+                            if (stylesOn && line.Replace(" ", string.Empty).Trim().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
                             {
                                 MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
                                 return;
@@ -1296,7 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var sb = new StringBuilder();
                     foreach (string line in Header.Replace(Environment.NewLine, "\n").Split('\n'))
                     {
-                        if (line.ToLower().StartsWith("style:"))
+                        if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                         {
                             if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim()))
                                 sb.AppendLine(line);

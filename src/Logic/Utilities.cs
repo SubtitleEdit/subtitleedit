@@ -4051,7 +4051,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains("- ") && text.Length > 5)
             {
                 int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
-                if (text.ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     idx = text.IndexOf("- ", 5, StringComparison.Ordinal);
                 while (idx > 0)
                 {

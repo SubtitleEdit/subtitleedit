@@ -359,7 +359,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             foreach (string line in headerLines.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.ToLower().StartsWith("style:", StringComparison.Ordinal))
+                if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                 {
                     int end = line.IndexOf(',');
                     if (end > 0)
@@ -696,7 +696,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip comment lines
                 }
-                else if (line.Trim().ToLower().StartsWith("dialogue:", StringComparison.Ordinal)) // fix faulty font tags...
+                else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -955,13 +955,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             //Black = &H000000&
             string s = f.Trim().Trim('&');
 
-            if (s.ToLower().StartsWith('h') && s.Length < 7)
+            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length < 7)
             {
                 while (s.Length < 7)
                     s = s.Insert(1, "0");
             }
 
-            if (s.ToLower().StartsWith('h') && s.Length == 7)
+            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 7)
             {
                 s = s.Substring(1);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -974,7 +974,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            else if (s.ToLower().StartsWith('h') && s.Length == 9)
+            else if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 9)
             {
                 s = s.Substring(3);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -1267,7 +1267,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 if (string.Compare(line, "[V4+ Styles]", StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(line, "[V4 Styles]", StringComparison.OrdinalIgnoreCase) == 0)
                     stylesStarted = true;
-                if (line.ToLower().StartsWith("format:", StringComparison.Ordinal))
+                if (line.StartsWith("format:", StringComparison.OrdinalIgnoreCase))
                     styleFormat = line;
                 if (!line.StartsWith("Style: " + style.Name + ",", StringComparison.Ordinal)) // overwrite existing style
                     sb.AppendLine(line);

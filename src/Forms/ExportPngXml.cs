@@ -1472,7 +1472,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
+                if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
                     float addLeft = 0;
                     int oldPathPointIndex = path.PointCount;
@@ -1543,7 +1543,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         i += endIndex;
                     }
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal))
+                else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
@@ -1592,7 +1592,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     i += 6;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (sb.Length > 0)
                     {
@@ -1602,7 +1602,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isItalic = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
+                else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                 {
                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
@@ -1616,7 +1616,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isItalic = false;
                     i += 3;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<b>", StringComparison.Ordinal))
+                else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (sb.Length > 0)
                     {
@@ -1626,7 +1626,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isBold = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
+                else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
                 {
                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
@@ -2016,7 +2016,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var lastText = new StringBuilder();
                 while (i < text.Length)
                 {
-                    if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
+                    if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         float addLeft = 0;
                         int oldPathPointIndex = path.PointCount;
@@ -2087,7 +2087,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             i += endIndex;
                         }
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                         {
@@ -2136,7 +2136,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         i += 6;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (sb.ToString().Trim().Length > 0)
                         {
@@ -2146,7 +2146,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isItalic = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
+                    else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
@@ -2160,7 +2160,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isItalic = false;
                         i += 3;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<b>", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (sb.ToString().Trim().Length > 0)
                         {
@@ -2170,7 +2170,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isBold = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
+                    else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {

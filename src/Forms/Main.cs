@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (args.Length >= 2)
                 {
                     fileName = args[1];
-                    if (args.Length > 2 && args[2].ToLower().StartsWith("/srcline:"))
+                    if (args.Length > 2 && args[2].StartsWith("/srcline:", StringComparison.OrdinalIgnoreCase))
                     {
                         string srcLine = args[2].Remove(0, 9);
                         if (!int.TryParse(srcLine, out srcLineNumber))
@@ -625,12 +625,12 @@ namespace Nikse.SubtitleEdit.Forms
                 string toFormat = args[3];
                 string offset = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/offset:"))
+                    if (args.Length > idx && args[idx].StartsWith("/offset:", StringComparison.OrdinalIgnoreCase))
                         offset = args[idx].ToLower();
 
                 string fps = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/fps:"))
+                    if (args.Length > idx && args[idx].StartsWith("/fps:", StringComparison.OrdinalIgnoreCase))
                         fps = args[idx].ToLower();
                 if (fps.Length > 6)
                 {
@@ -645,7 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string targetEncodingName = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/encoding:"))
+                    if (args.Length > idx && args[idx].StartsWith("/encoding:", StringComparison.OrdinalIgnoreCase))
                         targetEncodingName = args[idx].ToLower();
                 Encoding targetEncoding = Encoding.UTF8;
                 try
@@ -665,7 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string outputFolder = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/outputfolder:"))
+                    if (args.Length > idx && args[idx].StartsWith("/outputfolder:", StringComparison.OrdinalIgnoreCase))
                         outputFolder = args[idx].ToLower();
                 if (outputFolder.Length > "/outputFolder:".Length)
                 {
@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string inputFolder = Directory.GetCurrentDirectory();
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/inputFolder:"))
+                    if (args.Length > idx && args[idx].StartsWith("/inputFolder:", StringComparison.OrdinalIgnoreCase))
                         inputFolder = args[idx].ToLower();
                 if (inputFolder.Length > "/inputFolder:".Length)
                 {
@@ -687,7 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string pacCodePage = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/pac-codepage:"))
+                    if (args.Length > idx && args[idx].StartsWith("/pac-codepage:", StringComparison.OrdinalIgnoreCase))
                         pacCodePage = args[idx].ToLower();
                 if (pacCodePage.Length > "/pac-codepage:".Length)
                     pacCodePage = pacCodePage.Remove(0, "/pac-codepage:".Length);
@@ -9203,7 +9203,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.Trim().ToLower().StartsWith("dialogue:"))
+                            else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;

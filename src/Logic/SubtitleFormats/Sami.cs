@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 ";
 
             bool useExtra = false;
-            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.ToLower().StartsWith("<style"))
+            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.StartsWith("<style", StringComparison.OrdinalIgnoreCase))
             {
                 useExtra = true;
                 header =
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static List<string> GetStylesFromHeader(string header)
         {
             var list = new List<string>();
-            if (!string.IsNullOrEmpty(header) && header.ToLower().StartsWith("<style"))
+            if (!string.IsNullOrEmpty(header) && header.StartsWith("<style", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 {

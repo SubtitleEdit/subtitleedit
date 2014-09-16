@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (parts.Length > 1)
                                     text = text + " [" + Utilities.FixQuotes(parts[1]) + "]";
 
-                                if (lineNumber == 0 && (text.ToLower().StartsWith("character [") || text.ToLower() == "character"))
+                                if (lineNumber == 0 && (text.StartsWith("character [", StringComparison.OrdinalIgnoreCase) || text.ToLower() == "character"))
                                 {
                                 }
                                 else

@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string folder = Configuration.BaseDirectory;
 
-            if (string.IsNullOrEmpty(fileName) || !fileName.ToUpper().StartsWith(folder.Substring(0, 2)))
+            if (string.IsNullOrEmpty(fileName) || !fileName.StartsWith(folder.Substring(0, 2), StringComparison.OrdinalIgnoreCase))
                 return string.Empty;
 
             Uri pathUri = new Uri(fileName);
@@ -2307,7 +2307,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (string s in listBox.Items)
             {
-                if (s.ToLower().StartsWith(_listBoxSearchString.ToLower()))
+                if (s.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
                 {
                     listBox.SelectedIndex = i;
                     break;
