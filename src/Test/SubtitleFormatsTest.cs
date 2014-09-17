@@ -627,7 +627,7 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
             var sub2 = new Subtitle();
 
             List<string> lines = new List<string>();
-            foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 lines.Add(line);
 
             target.LoadSubtitle(sub2, lines, null);
