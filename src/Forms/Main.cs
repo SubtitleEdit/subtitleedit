@@ -13234,7 +13234,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VideoLoaded(object sender, EventArgs e)
         {
-            mediaPlayer.Stop();
             mediaPlayer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
             timer1.Start();
 
@@ -13246,6 +13245,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoLoadedGoToSubPosAndPause = false;
                 GotoSubPositionAndPause();
             }
+            mediaPlayer.Pause();
         }
 
         private void VideoEnded(object sender, EventArgs e)
