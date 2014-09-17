@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             _autoDetectGoogleLanguage = Utilities.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(_autoDetectGoogleLanguage))
                 _autoDetectGoogleLanguage = Utilities.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
-            if (_autoDetectGoogleLanguage.ToLower() == "zh")
+            if (_autoDetectGoogleLanguage.Equals("zh", StringComparison.OrdinalIgnoreCase))
                 _autoDetectGoogleLanguage = "zh-CHS"; // Note that "zh-CHS" (Simplified Chinese) and "zh-CHT" (Traditional Chinese) are neutral cultures
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
@@ -1446,7 +1446,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!isMatchAbbreviation && word.Contains('@')) // skip emails
                                 isMatchAbbreviation = true;
 
-                            if (string.Compare(match.Value, "h.d", StringComparison.OrdinalIgnoreCase) == 0 && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).ToLower() == "ph.d")
+                            if (string.Compare(match.Value, "h.d", StringComparison.OrdinalIgnoreCase) == 0 && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
                                 isMatchAbbreviation = true;
 
                             if (!isMatchAbbreviation && AllowFix(p, fixAction))
@@ -4201,7 +4201,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool wasLastLineClosed = last == null || last.Text.EndsWith('?') || last.Text.EndsWith('!') || last.Text.EndsWith('.') ||
                                          last.Text.EndsWith(':') || last.Text.EndsWith(')') || last.Text.EndsWith(']');
                 string trimmedStart = p.Text.TrimStart(("- ").ToCharArray());
-                if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && trimmedStart[0].ToString() == trimmedStart[0].ToString().ToLower())
+                if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && char.IsLower(trimmedStart[0]))
                     wasLastLineClosed = false;
                 if (!wasLastLineClosed && last.Text == last.Text.ToUpper())
                     wasLastLineClosed = true;

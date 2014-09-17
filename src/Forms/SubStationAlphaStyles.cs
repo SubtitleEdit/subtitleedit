@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string f = format[i].Trim();
                             if (i == nameIndex)
-                                correctLine = f.ToLower() == styleName.ToLower();
+                                correctLine = f.Equals(styleName, StringComparison.OrdinalIgnoreCase);
                         }
                         if (correctLine)
                         {

@@ -645,7 +645,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j - 1] == ' ')
                         {
                             string rest = s.Substring(mid + j + 1).TrimStart();
-                            if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
+                            if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
                                 splitPos = mid + j;
                                 break;
@@ -657,7 +657,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (s[mid - j] == '-' && s[mid - j + 1] == ' ' && s[mid - j - 1] == ' ')
                         {
                             string rest = s.Substring(mid - j + 1).TrimStart();
-                            if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
+                            if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
                                 if (mid - j > 5 && s[mid - j - 1] == ' ' && "!?.".Contains(s[mid - j - 2].ToString()))
                                 {
@@ -4075,16 +4075,16 @@ namespace Nikse.SubtitleEdit.Logic
                             text = text.Remove(idx + 1, 1);
                         else if (before.Length > 0)
                         {
-                            if ((language == "en" && (after.ToLower() == "and" || after.ToLower() == "or")) ||
-                                (language == "es" && (after.ToLower() == "y" || after.ToLower() == "o")) ||
-                                (language == "da" && (after.ToLower() == "og" || after.ToLower() == "eller")) ||
-                                (language == "de" && (after.ToLower() == "und" || after.ToLower() == "oder")) ||
-                                (language == "fi" && (after.ToLower() == "ja" || after.ToLower() == "tai")) ||
-                                (language == "fr" && (after.ToLower() == "et" || after.ToLower() == "ou")) ||
-                                (language == "it" && (after.ToLower() == "e" || after.ToLower() == "o")) ||
-                                (language == "nl" && (after.ToLower() == "en" || after.ToLower() == "of")) ||
-                                (language == "pl" && (after.ToLower() == "i" || after.ToLower() == "czy")) ||
-                                (language == "pt" && (after.ToLower() == "e" || after.ToLower() == "ou")))
+                            if ((language == "en" && (after.Equals("and", StringComparison.OrdinalIgnoreCase) || after.Equals("or", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "es" && (after.Equals("y", StringComparison.OrdinalIgnoreCase) || after.Equals("o", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "da" && (after.Equals("og", StringComparison.OrdinalIgnoreCase) || after.Equals("eller", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "de" && (after.Equals("und", StringComparison.OrdinalIgnoreCase) || after.Equals("oder", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "fi" && (after.Equals("ja", StringComparison.OrdinalIgnoreCase) || after.Equals("tai", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "fr" && (after.Equals("et", StringComparison.OrdinalIgnoreCase) || after.Equals("ou", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "it" && (after.Equals("e", StringComparison.OrdinalIgnoreCase) || after.Equals("o", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "nl" && (after.Equals("en", StringComparison.OrdinalIgnoreCase) || after.Equals("of", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "pl" && (after.Equals("i", StringComparison.OrdinalIgnoreCase) || after.Equals("czy", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "pt" && (after.Equals("e", StringComparison.OrdinalIgnoreCase) || after.Equals("ou", StringComparison.OrdinalIgnoreCase))))
                             {
                             }
                             else
