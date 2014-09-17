@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var bitmap = new Bitmap(_nocrChar.Width, _nocrChar.Height);
                     var nbmp = new NikseBitmap(bitmap);
                     nbmp.Fill(Color.White);
-                    pictureBoxCharacter.Image = nbmp.GetBitmap(); 
+                    pictureBoxCharacter.Image = nbmp.GetBitmap();
                     SizePictureBox();
                     ShowOcrPoints();
                     bitmap.Dispose();

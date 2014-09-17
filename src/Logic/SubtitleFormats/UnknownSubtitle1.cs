@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (p != null)
                         p.Text = (p.Text + Environment.NewLine + text.ToString().Trim()).Trim();
-                    var parts = line.Substring(0, match.Length).Trim().Split(new[] { '–', ' '}, StringSplitOptions.RemoveEmptyEntries);
+                    var parts = line.Substring(0, match.Length).Trim().Split(new[] { '–', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     try
                     {
                         p = new Paragraph();

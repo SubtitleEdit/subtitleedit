@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.ColorChooser
             double h;
             double s;
             var v = max;
-            
+
             double delta = max - min;
             if (max == 0 || delta == 0)
             {
