@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
                 text = Utilities.AutoBreakLine(p.Text);
 
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             int textLengthFirstLine = 0;
             int textLengthSecondLine = 0;
             if (lines.Length > 0)

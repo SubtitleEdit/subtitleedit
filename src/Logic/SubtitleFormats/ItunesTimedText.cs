@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 bool first = true;
-                foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (!first)
                     {
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 string fontContent = line.Substring(i, skipCount);
                                 if (fontContent.Contains(" color="))
                                 {
-                                    string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                    string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length > 0)
                                     {
                                         string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');

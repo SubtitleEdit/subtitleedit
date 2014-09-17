@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string timeCode)
         {
-            string[] arr = timeCode.Split(":;,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = timeCode.Split(new[] { ':', ';', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
         }
 
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             subtitle.Paragraphs.Add(p);
                         }
                         sb = new StringBuilder();
-                        string[] arr = s.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] arr = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 3)
                             p = new Paragraph(DecodeTimeCode(arr[1]), DecodeTimeCode(arr[2]), string.Empty);
                     }

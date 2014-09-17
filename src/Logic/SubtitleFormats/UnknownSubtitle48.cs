@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (RegexTimeCodes.Match(line).Success)
                 {
-                    string[] parts = line.Split(" ".ToCharArray(), StringSplitOptions.None);
+                    string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.None);
                     var p = new Paragraph();
                     if (parts.Length > 2 &&
                         GetTimeCode(p.StartTime, parts[0].Trim()) &&
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             try
             {
-                string[] timeParts = timeString.Split(":.".ToCharArray());
+                string[] timeParts = timeString.Split(new[] { ':', '.' });
                 timeCode.Hours = int.Parse(timeParts[0]);
                 timeCode.Minutes = int.Parse(timeParts[1]);
                 timeCode.Seconds = int.Parse(timeParts[2]);

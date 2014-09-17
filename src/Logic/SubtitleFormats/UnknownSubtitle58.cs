@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var match = regexTimeCodes.Match(s);
                 if (match.Success)
                 {
-                    string[] parts = s.Replace("[", string.Empty).Replace("]", string.Empty).Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Replace("[", string.Empty).Replace("]", string.Empty).Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 1)
                     {
                         try
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string part)
         {
-            string[] parts = part.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             //00:00:07:12
             string hour = parts[0];

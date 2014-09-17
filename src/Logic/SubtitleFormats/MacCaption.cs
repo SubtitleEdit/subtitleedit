@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string GetSccText(string s)
         {
-            string[] parts = s.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = s.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();
             foreach (string part in ExecuteReplacesAndGetParts(parts))
             {
@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode ParseTimeCode(string start)
         {
-            string[] arr = start.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(arr[3]));
             if (milliseconds > 999)
