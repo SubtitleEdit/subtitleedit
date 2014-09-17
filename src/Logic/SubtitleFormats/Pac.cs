@@ -948,7 +948,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             //buffer[21] < 10 && // start from number
                             //buffer[22] == 0 &&
                             buffer[23] == 0x60 &&
-                            fileName.ToLower().EndsWith(".pac"))
+                            fileName.EndsWith(".pac", StringComparison.OrdinalIgnoreCase))
                             return true;
                     }
                 }

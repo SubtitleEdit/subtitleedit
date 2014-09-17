@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             _autoDetectGoogleLanguage = Utilities.AutoDetectGoogleLanguage(encoding); // Guess language via encoding
             if (string.IsNullOrEmpty(_autoDetectGoogleLanguage))
                 _autoDetectGoogleLanguage = Utilities.AutoDetectGoogleLanguage(subtitle); // Guess language based on subtitle contents
-            if (_autoDetectGoogleLanguage.ToLower() == "zh")
+            if (_autoDetectGoogleLanguage.Equals("zh", StringComparison.OrdinalIgnoreCase))
                 _autoDetectGoogleLanguage = "zh-CHS"; // Note that "zh-CHS" (Simplified Chinese) and "zh-CHT" (Traditional Chinese) are neutral cultures
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
             string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
@@ -1431,8 +1431,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if (!p.Text.ToLower().Contains("www.") &&
-                            !p.Text.ToLower().Contains("http://") &&
+                        if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
+                            !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
                             !UrlCom.IsMatch(p.Text) &&
                             !UrlNet.IsMatch(p.Text) &&
                             !UrlOrg.IsMatch(p.Text)) // urls are skipped
@@ -1446,7 +1446,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!isMatchAbbreviation && word.Contains('@')) // skip emails
                                 isMatchAbbreviation = true;
 
-                            if (string.Compare(match.Value, "h.d", StringComparison.OrdinalIgnoreCase) == 0 && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).ToLower() == "ph.d")
+                            if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
                                 isMatchAbbreviation = true;
 
                             if (!isMatchAbbreviation && AllowFix(p, fixAction))
@@ -1906,9 +1906,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (AllowFix(p, fixAction))
                         {
-                            if (string.Compare(word, "internal", StringComparison.OrdinalIgnoreCase) == 0 ||
-                                string.Compare(word, "island", StringComparison.OrdinalIgnoreCase) == 0 ||
-                                string.Compare(word, "islands", StringComparison.OrdinalIgnoreCase) == 0)
+                            if (word.Equals("internal", StringComparison.OrdinalIgnoreCase) ||
+                                word.Equals("island", StringComparison.OrdinalIgnoreCase) ||
+                                word.Equals("islands", StringComparison.OrdinalIgnoreCase))
                             {
                             }
                             else if (match.Index == 0)
@@ -2171,13 +2171,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (s.Contains(' ') || s.Contains(Environment.NewLine))
                 return false;
 
-            if (s.ToLower().StartsWith("http://"))
+            if (s.StartsWith("http://", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (s.ToLower().StartsWith("https://"))
+            if (s.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
                 return true;
 
-            if (s.ToLower().StartsWith("www."))
+            if (s.StartsWith("www.", StringComparison.OrdinalIgnoreCase))
                 return true;
 
             string[] parts = s.Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
@@ -2585,7 +2585,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                     }
                                 }
-                                else if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.ToLower().Contains(subText.StrippedText[0].ToString()))
+                                else if (subText.StrippedText.Length > 0 && Configuration.Settings.General.UppercaseLetters.Contains(subText.StrippedText[0].ToString(), StringComparison.OrdinalIgnoreCase))
                                 {
                                     if (subText.StrippedText.Length > 1 && !(subText.Pre.Contains('\'') && subText.StrippedText.StartsWith('s')))
                                     {
@@ -4201,7 +4201,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool wasLastLineClosed = last == null || last.Text.EndsWith('?') || last.Text.EndsWith('!') || last.Text.EndsWith('.') ||
                                          last.Text.EndsWith(':') || last.Text.EndsWith(')') || last.Text.EndsWith(']');
                 string trimmedStart = p.Text.TrimStart('-', ' ');
-                if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && trimmedStart[0].ToString() == trimmedStart[0].ToString().ToLower())
+                if (last != null && last.Text.EndsWith("...", StringComparison.Ordinal) && trimmedStart.Length > 0 && char.IsLower(trimmedStart[0]))
                     wasLastLineClosed = false;
                 if (!wasLastLineClosed && last.Text == last.Text.ToUpper())
                     wasLastLineClosed = true;
@@ -4399,11 +4399,11 @@ namespace Nikse.SubtitleEdit.Forms
             //Sra. (same as Mrs.)
             //Ud.
             //Uds.
-            if (string.Compare(word, "dr", StringComparison.OrdinalIgnoreCase) == 0 ||
-                string.Compare(word, "sr", StringComparison.OrdinalIgnoreCase) == 0 ||
-                string.Compare(word, "sra", StringComparison.OrdinalIgnoreCase) == 0 ||
-                string.Compare(word, "ud", StringComparison.OrdinalIgnoreCase) == 0 ||
-                string.Compare(word, "uds", StringComparison.OrdinalIgnoreCase) == 0)
+            if (word.Equals("dr", StringComparison.OrdinalIgnoreCase) ||
+                word.Equals("sr", StringComparison.OrdinalIgnoreCase) ||
+                word.Equals("sra", StringComparison.OrdinalIgnoreCase) ||
+                word.Equals("ud", StringComparison.OrdinalIgnoreCase) ||
+                word.Equals("uds", StringComparison.OrdinalIgnoreCase))
                 return true;
 
             List<string> abbreviations = GetAbbreviations();

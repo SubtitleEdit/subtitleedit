@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (index > _startFindIndex)
                     {
-                        if (p.Text.ToLower().Contains(textBoxFindText.Text.ToLower()))
+                        if (p.Text.Contains(textBoxFindText.Text, StringComparison.OrdinalIgnoreCase))
                         {
                             subtitleListView1.Items[index].Selected = true;
                             subtitleListView1.HideSelection = false;

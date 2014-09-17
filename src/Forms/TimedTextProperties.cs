@@ -93,15 +93,15 @@ namespace Nikse.SubtitleEdit.Forms
             var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower(CultureInfo.InvariantCulture);
             if (string.IsNullOrEmpty(timeCodeFormat))
                 comboBoxTimeCodeFormat.SelectedIndex = 0;
-            else if (string.Compare(timeCodeFormat, "seconds", StringComparison.Ordinal) == 0)
+            else if (timeCodeFormat.Equals("seconds", StringComparison.Ordinal))
                 comboBoxTimeCodeFormat.SelectedIndex = 2;
-            else if (string.Compare(timeCodeFormat, "milliseconds", StringComparison.Ordinal) == 0)
+            else if (timeCodeFormat.Equals("milliseconds", StringComparison.Ordinal))
                 comboBoxTimeCodeFormat.SelectedIndex = 3;
-            else if (string.Compare(timeCodeFormat, "ticks", StringComparison.Ordinal) == 0)
+            else if (timeCodeFormat.Equals("ticks", StringComparison.Ordinal))
                 comboBoxTimeCodeFormat.SelectedIndex = 4;
-            else if (string.Compare(timeCodeFormat, "hh:mm:ss.msec", StringComparison.Ordinal) == 0)
+            else if (timeCodeFormat.Equals("hh:mm:ss.msec", StringComparison.Ordinal))
                 comboBoxTimeCodeFormat.SelectedIndex = 1;
-            else if (string.Compare(timeCodeFormat, "hh:mm:ss:ff", StringComparison.Ordinal) == 0)
+            else if (timeCodeFormat.Equals("hh:mm:ss:ff", StringComparison.Ordinal))
                 comboBoxTimeCodeFormat.SelectedIndex = 0;
             else
                 comboBoxTimeCodeFormat.SelectedIndex = 0;

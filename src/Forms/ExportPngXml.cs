@@ -687,7 +687,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 sb +
                                 "</DCSubtitle>");
                     string fName = saveFileDialog1.FileName;
-                    if (!fName.ToLower().EndsWith(".xml"))
+                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                         fName += ".xml";
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
@@ -1270,18 +1270,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             int i;
                             for (i = 0; i < comboBoxSubtitleFont.Items.Count; i++)
                             {
-                                if (string.Compare(comboBoxSubtitleFont.Items[i].ToString(), style.FontName, true) == 0)
+                                if (comboBoxSubtitleFont.Items[i].ToString().Equals(style.FontName, StringComparison.OrdinalIgnoreCase))
                                     comboBoxSubtitleFont.SelectedIndex = i;
                             }
                             for (i = 0; i < comboBoxSubtitleFontSize.Items.Count; i++)
                             {
-                                if (string.Compare(comboBoxSubtitleFontSize.Items[i].ToString(), style.FontSize.ToString(), true) == 0)
+                                if (comboBoxSubtitleFontSize.Items[i].ToString().Equals(style.FontSize.ToString(), StringComparison.OrdinalIgnoreCase))
                                     comboBoxSubtitleFontSize.SelectedIndex = i;
                             }
                             checkBoxBold.Checked = style.Bold;
                             for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
                             {
-                                if (string.Compare(Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()), style.OutlineWidth.ToString(), true) == 0)
+                                if (Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()).Equals(style.OutlineWidth.ToString(), StringComparison.OrdinalIgnoreCase))
                                     comboBoxBorderWidth.SelectedIndex = i;
                             }
                         }
@@ -1472,7 +1472,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
+                if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
                     float addLeft = 0;
                     int oldPathPointIndex = path.PointCount;
@@ -1543,7 +1543,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         i += endIndex;
                     }
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal))
+                else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
@@ -1592,7 +1592,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     i += 6;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (sb.Length > 0)
                     {
@@ -1602,7 +1602,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isItalic = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
+                else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                 {
                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
@@ -1616,7 +1616,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isItalic = false;
                     i += 3;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<b>", StringComparison.Ordinal))
+                else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (sb.Length > 0)
                     {
@@ -1626,7 +1626,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     isBold = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
+                else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
                 {
                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {
@@ -1855,7 +1855,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
             var lefts = new List<float>();
-            if (text.ToLower().Contains("<font") || text.ToLower().Contains("<i>"))
+            if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
@@ -2016,7 +2016,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var lastText = new StringBuilder();
                 while (i < text.Length)
                 {
-                    if (text.Substring(i).ToLower().StartsWith("<font ", StringComparison.Ordinal))
+                    if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                     {
                         float addLeft = 0;
                         int oldPathPointIndex = path.PointCount;
@@ -2087,7 +2087,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             i += endIndex;
                         }
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</font>", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                         {
@@ -2136,7 +2136,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         i += 6;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (sb.ToString().Trim().Length > 0)
                         {
@@ -2146,7 +2146,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isItalic = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</i>", StringComparison.Ordinal) && isItalic)
+                    else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
@@ -2160,7 +2160,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isItalic = false;
                         i += 3;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("<b>", StringComparison.Ordinal))
+                    else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                     {
                         if (sb.ToString().Trim().Length > 0)
                         {
@@ -2170,7 +2170,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         isBold = true;
                         i += 2;
                     }
-                    else if (text.Substring(i).ToLower().StartsWith("</b>", StringComparison.Ordinal) && isBold)
+                    else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
                     {
                         if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                         {
@@ -2643,7 +2643,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (String.Compare(x.Name, _subtitleFontName, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                         comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }

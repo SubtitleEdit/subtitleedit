@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
             }
 
-            if (Configuration.Settings.Tools.SplitVia.Trim().ToLower() == "lines")
+            if (Configuration.Settings.Tools.SplitVia.Trim().Equals("lines", StringComparison.OrdinalIgnoreCase))
                 RadioButtonLines.Checked = true;
             else
                 radioButtonCharacters.Checked = true;

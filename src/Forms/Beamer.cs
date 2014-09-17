@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var x in FontFamily.Families)
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
-                if (string.Compare(x.Name, _subtitleFontName, true) == 0)
+                if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
             if (_subtitleFontSize > 10 && _subtitleFontSize < 100)
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             var lastText = new StringBuilder();
             while (i < text.Length)
             {
-                if (text.Substring(i).ToLower().StartsWith("<font "))
+                if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
 
                     float addLeft = 0;
@@ -323,7 +323,7 @@ namespace Nikse.SubtitleEdit.Forms
                         i += endIndex;
                     }
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</font>"))
+                else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
                 {
                     if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
                     {
@@ -367,7 +367,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     i += 6;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("<i>"))
+                else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     italicFromStart = i == 0;
                     if (sb.Length > 0)
@@ -377,7 +377,7 @@ namespace Nikse.SubtitleEdit.Forms
                     isItalic = true;
                     i += 2;
                 }
-                else if (text.Substring(i).ToLower().StartsWith("</i>") && isItalic)
+                else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                 {
                     if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                     {

@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
-                        if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.ToLower() == "true")
+                        if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
                             Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
                             _noBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));

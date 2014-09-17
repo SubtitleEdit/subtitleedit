@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (string.IsNullOrEmpty(p.Extra) && name.Trim() == "Default")
                     count++;
-                else if (p.Extra != null && string.Compare(name.Trim(), p.Extra.TrimStart(), StringComparison.OrdinalIgnoreCase) == 0)
+                else if (p.Extra != null && name.Trim().Equals(p.Extra.TrimStart(), StringComparison.OrdinalIgnoreCase))
                     count++;
             }
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
@@ -305,14 +305,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // normal | italic | oblique
                     comboBoxFontStyle.SelectedIndex = 0;
-                    if (string.Compare(fontStyle, "italic", StringComparison.OrdinalIgnoreCase) == 0)
+                    if (fontStyle.Equals("italic", StringComparison.OrdinalIgnoreCase))
                         comboBoxFontStyle.SelectedIndex = 1;
-                    if (string.Compare(fontStyle, "oblique", StringComparison.OrdinalIgnoreCase) == 0)
+                    if (fontStyle.Equals("oblique", StringComparison.OrdinalIgnoreCase))
                         comboBoxFontStyle.SelectedIndex = 2;
 
                     // normal | bold
                     comboBoxFontWeight.SelectedIndex = 0;
-                    if (string.Compare(fontStyle, "bold", StringComparison.OrdinalIgnoreCase) == 0)
+                    if (fontStyle.Equals("bold", StringComparison.OrdinalIgnoreCase))
                         comboBoxFontStyle.SelectedIndex = 1;
 
                     Color color = Color.White;

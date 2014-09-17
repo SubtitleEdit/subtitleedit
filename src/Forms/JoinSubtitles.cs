@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool alreadyInList = false;
                 foreach (string existingFileName in _fileNamesToJoin)
                 {
-                    if (existingFileName.ToLower() == fileName.ToLower())
+                    if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                         alreadyInList = true;
                 }
                 if (!alreadyInList)
@@ -202,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
                     bool alreadyInList = false;
                     foreach (string existingFileName in _fileNamesToJoin)
                     {
-                        if (existingFileName.ToLower() == fileName.ToLower())
+                        if (existingFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                             alreadyInList = true;
                     }
                     if (!alreadyInList)

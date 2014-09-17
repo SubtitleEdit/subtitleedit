@@ -81,9 +81,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
                 radioButtonAutoSplit.Checked = true;
-            else if (Configuration.Settings.Tools.ImportTextSplitting.ToLower() == "blank lines")
+            else if (Configuration.Settings.Tools.ImportTextSplitting.Equals("blank lines", StringComparison.OrdinalIgnoreCase))
                 radioButtonSplitAtBlankLines.Checked = true;
-            else if (Configuration.Settings.Tools.ImportTextSplitting.ToLower() == "line")
+            else if (Configuration.Settings.Tools.ImportTextSplitting.Equals("line", StringComparison.OrdinalIgnoreCase))
                 radioButtonLineMode.Checked = true;
             checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
 

@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic
                         bool hasDictionaryFolder = Directory.Exists(Path.Combine(BaseDirectory, "Dictionaries"));
                         string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
 
-                        if ((installerPath != null && installerPath.ToLower().TrimEnd(Path.DirectorySeparatorChar) == BaseDirectory.ToLower().TrimEnd(Path.DirectorySeparatorChar)) ||
+                        if ((installerPath != null && installerPath.TrimEnd(Path.DirectorySeparatorChar).Equals(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase)) ||
                             hasUninstallFiles ||
                             (!hasDictionaryFolder && Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
                         {

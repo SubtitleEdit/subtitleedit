@@ -248,8 +248,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (string.Compare(format.Name.Trim(), subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) == 0 ||
-                    string.Compare(format.FriendlyName.Trim(), subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
+                if (format.Name.Trim().Equals(subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) ||
+                    format.FriendlyName.Trim().Equals(subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
                     SetCurrentFormat(format);
                     return;
@@ -351,7 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = string.Empty;
                 string[] args = Environment.GetCommandLineArgs();
                 int srcLineNumber = -1;
-                if (args.Length >= 2 && args[1].ToLower() == "/convert")
+                if (args.Length >= 2 && args[1].Equals("/convert", StringComparison.OrdinalIgnoreCase))
                 {
                     BatchConvert(args);
                     return;
@@ -359,7 +359,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (args.Length >= 2)
                 {
                     fileName = args[1];
-                    if (args.Length > 2 && args[2].ToLower().StartsWith("/srcline:"))
+                    if (args.Length > 2 && args[2].StartsWith("/srcline:", StringComparison.OrdinalIgnoreCase))
                     {
                         string srcLine = args[2].Remove(0, 9);
                         if (!int.TryParse(srcLine, out srcLineNumber))
@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (args.Length < 4)
             {
-                if (args.Length == 3 && (args[2].ToLower() == "/list" || args[2].ToLower() == "-list"))
+                if (args.Length == 3 && (args[2].Equals("/list", StringComparison.OrdinalIgnoreCase) || args[2].Equals("-list", StringComparison.OrdinalIgnoreCase)))
                 {
                     Console.WriteLine("- Supported formats (input/output):");
                     foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
@@ -625,12 +625,12 @@ namespace Nikse.SubtitleEdit.Forms
                 string toFormat = args[3];
                 string offset = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/offset:"))
+                    if (args.Length > idx && args[idx].StartsWith("/offset:", StringComparison.OrdinalIgnoreCase))
                         offset = args[idx].ToLower();
 
                 string fps = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/fps:"))
+                    if (args.Length > idx && args[idx].StartsWith("/fps:", StringComparison.OrdinalIgnoreCase))
                         fps = args[idx].ToLower();
                 if (fps.Length > 6)
                 {
@@ -645,7 +645,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string targetEncodingName = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/encoding:"))
+                    if (args.Length > idx && args[idx].StartsWith("/encoding:", StringComparison.OrdinalIgnoreCase))
                         targetEncodingName = args[idx].ToLower();
                 Encoding targetEncoding = Encoding.UTF8;
                 try
@@ -665,7 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string outputFolder = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/outputfolder:"))
+                    if (args.Length > idx && args[idx].StartsWith("/outputfolder:", StringComparison.OrdinalIgnoreCase))
                         outputFolder = args[idx].ToLower();
                 if (outputFolder.Length > "/outputFolder:".Length)
                 {
@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string inputFolder = Directory.GetCurrentDirectory();
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/inputFolder:"))
+                    if (args.Length > idx && args[idx].StartsWith("/inputFolder:", StringComparison.OrdinalIgnoreCase))
                         inputFolder = args[idx].ToLower();
                 if (inputFolder.Length > "/inputFolder:".Length)
                 {
@@ -687,14 +687,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string pacCodePage = string.Empty;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower().StartsWith("/pac-codepage:"))
+                    if (args.Length > idx && args[idx].StartsWith("/pac-codepage:", StringComparison.OrdinalIgnoreCase))
                         pacCodePage = args[idx].ToLower();
                 if (pacCodePage.Length > "/pac-codepage:".Length)
                     pacCodePage = pacCodePage.Remove(0, "/pac-codepage:".Length);
 
                 bool overwrite = false;
                 for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].ToLower() == ("/overwrite"))
+                    if (args.Length > idx && args[idx].Equals("/overwrite", StringComparison.OrdinalIgnoreCase))
                         overwrite = true;
 
                 string[] files;
@@ -735,7 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
                         SubtitleFormat format = null;
                         bool done = false;
 
-                        if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                        if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
                         {
                             Matroska mkv = new Matroska();
                             bool isValid = false;
@@ -753,11 +753,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     foreach (MatroskaSubtitleInfo x in subtitleList)
                                     {
-                                        if (x.CodecId.ToUpper() == "S_VOBSUB")
+                                        if (x.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                         {
                                             Console.WriteLine("{0}: {1} - Cannot convert from VobSub image based format!", fileName, toFormat);
                                         }
-                                        else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
+                                        else if (x.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                         {
                                             Console.WriteLine("{0}: {1} - Cannot convert from Blu-ray image based format!", fileName, toFormat);
                                         }
@@ -778,7 +778,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                                     foreach (SubtitleFormat sf in formats)
                                                     {
-                                                        if (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower())
+                                                        if (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                                                         {
                                                             format.RemoveNativeFormatting(sub, sf);
                                                             break;
@@ -988,7 +988,7 @@ namespace Nikse.SubtitleEdit.Forms
             string outputFileName;
             foreach (SubtitleFormat sf in formats)
             {
-                if (sf.IsTextBased && (sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || sf.Name.ToLower().Replace(" ", string.Empty) == toFormat.Replace(" ", string.Empty).ToLower()))
+                if (sf.IsTextBased && (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase)))
                 {
                     targetFormatFound = true;
                     sf.BatchMode = true;
@@ -1026,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var newSub = new Subtitle();
                             foreach (Paragraph p in sub.Paragraphs)
                             {
-                                if (p.Extra != null && string.Compare(p.Extra.Trim(), className.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
+                                if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
                                     newSub.Paragraphs.Add(p);
                             }
                             if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
@@ -1047,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var ebu = new Ebu();
-                if (ebu.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower().Replace(" ", string.Empty))
+                if (ebu.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
@@ -1059,7 +1059,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var pac = new Pac();
-                if (pac.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower() || toFormat.ToLower() == "pac" || toFormat.ToLower() == ".pac")
+                if (pac.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || toFormat.Equals("pac", StringComparison.OrdinalIgnoreCase) || toFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase))
                 {
                     pac.BatchMode = true;
                     if (!string.IsNullOrEmpty(pacCodePage) && Utilities.IsInteger(pacCodePage))
@@ -1074,7 +1074,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var cavena890 = new Cavena890();
-                if (cavena890.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                if (cavena890.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite);
@@ -1086,7 +1086,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var cheetahCaption = new CheetahCaption();
-                if (cheetahCaption.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                if (cheetahCaption.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
@@ -1098,7 +1098,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!targetFormatFound)
             {
                 var capMakerPlus = new CapMakerPlus();
-                if (capMakerPlus.Name.ToLower().Replace(" ", string.Empty) == toFormat.ToLower())
+                if (capMakerPlus.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
@@ -1109,7 +1109,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (!targetFormatFound)
             {
-                if (Configuration.Settings.Language.BatchConvert.PlainText == toFormat || Configuration.Settings.Language.BatchConvert.PlainText.ToLower().Replace(" ", string.Empty) == toFormat.ToLower().Replace(" ", string.Empty))
+                if (Configuration.Settings.Language.BatchConvert.PlainText == toFormat || Configuration.Settings.Language.BatchConvert.PlainText.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
                 {
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
@@ -2616,7 +2616,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (fileName.ToLower().EndsWith(".dost", StringComparison.Ordinal))
+                if (fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {
@@ -2823,7 +2823,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
-                        if (fileName.ToLower().EndsWith(".rtf", StringComparison.Ordinal) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
+                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
                         {
                             var rtBox = new RichTextBox();
                             rtBox.Rtf = s;
@@ -2884,7 +2884,7 @@ namespace Nikse.SubtitleEdit.Forms
                         s2.Paragraphs.Clear();
                         foreach (Paragraph p in _subtitle.Paragraphs)
                         {
-                            if (p.Extra != null && p.Extra.ToLower() == classes[0].ToLower())
+                            if (p.Extra != null && p.Extra.Equals(classes[0], StringComparison.OrdinalIgnoreCase))
                                 s1.Paragraphs.Add(p);
                             else
                                 s2.Paragraphs.Add(p);
@@ -3023,7 +3023,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".xml", StringComparison.Ordinal))
+                        if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                         {
                             string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                             var sb = new StringBuilder();
@@ -3382,7 +3382,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var x in Configuration.Settings.RecentFiles.Files)
             {
-                if (string.Compare(fileName, x.FileName, true) == 0)
+                if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     int sIndex = x.FirstSelectedIndex;
                     if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
@@ -3464,7 +3464,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // only allow current extension or ".txt"
                         string ext = Path.GetExtension(_fileName).ToLower();
-                        bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                        bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                         if (!extOk)
                         {
                             if (_fileName.EndsWith('.'))
@@ -5310,7 +5310,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                     bool alreadyExists = false;
                                                     foreach (string currentStyleName in currentStyles)
                                                     {
-                                                        if (string.Compare(currentStyleName.Trim(), styleName.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
+                                                        if (currentStyleName.Trim().Equals(styleName.Trim(), StringComparison.OrdinalIgnoreCase))
                                                             alreadyExists = true;
                                                     }
                                                     if (!alreadyExists)
@@ -5651,7 +5651,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (string.Compare(oldFileName, _fileName, true) == 0)
+                    if (oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
                     comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -5690,7 +5690,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
                             textBoxListViewTextAlternate.SelectionStart =
                                 _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
-                        if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
+                        if (_subtitle.HistoryItems[_undoIndex].RedoFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                             _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
                         _subtitleAlternateFileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
@@ -5736,7 +5736,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = _subtitle.UndoHistory(showHistory.SelectedIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
 
-                    if (string.Compare(oldFileName, _fileName, true) == 0)
+                    if (oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
                     SetTitle();
@@ -5836,7 +5836,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheck(bool autoDetect, int startFromLine)
         {
-            //if (Configuration.Settings.General.SpellChecker.ToLower().Contains("word"))
+            //if (Configuration.Settings.General.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
             //{
             //    SpellCheckViaWord();
             //    return;
@@ -9046,14 +9046,14 @@ namespace Nikse.SubtitleEdit.Forms
                             if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                             {
                                 LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
-                                if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                                if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
                                     OpenVideo(fileName);
                             }
                         }
                         else
                         {
                             LoadMatroskaSubtitle(subtitleList[0], fileName, false);
-                            if (Path.GetExtension(fileName).ToLower() == ".mkv")
+                            if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
                                 OpenVideo(fileName);
                         }
                     }
@@ -9081,11 +9081,11 @@ namespace Nikse.SubtitleEdit.Forms
             var matroska = new Matroska();
             SubtitleFormat format;
 
-            if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_VOBSUB")
+            if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
                 return subtitle;
             }
-            if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_HDMV/PGS")
+            if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
             {
                 return subtitle;
             }
@@ -9093,9 +9093,9 @@ namespace Nikse.SubtitleEdit.Forms
             List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
             if (isValid)
             {
-                if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
+                if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                    if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                         format = new SubStationAlpha();
                     else
                         format = new AdvancedSubStationAlpha();
@@ -9132,14 +9132,14 @@ namespace Nikse.SubtitleEdit.Forms
             var matroska = new Matroska();
             SubtitleFormat format;
 
-            if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_VOBSUB")
+            if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
                 if (batchMode)
                     return;
                 LoadVobSubFromMatroska(matroskaSubtitleInfo, fileName);
                 return;
             }
-            if (matroskaSubtitleInfo.CodecId.ToUpper() == "S_HDMV/PGS")
+            if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
             {
                 if (batchMode)
                     return;
@@ -9160,9 +9160,9 @@ namespace Nikse.SubtitleEdit.Forms
                     ResetSubtitle();
                 _subtitle.Paragraphs.Clear();
 
-                if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[script info]"))
+                if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (matroskaSubtitleInfo.CodecPrivate.ToLower().Contains("[V4 Styles]".ToLower()))
+                    if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                         format = new SubStationAlpha();
                     else
                         format = new AdvancedSubStationAlpha();
@@ -9203,25 +9203,25 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.Trim().ToLower().StartsWith("dialogue:"))
+                            else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
                                 graphicsStarted = false;
                             }
-                            else if (line.Trim().ToLower() == "[events]")
+                            else if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
                                 graphicsStarted = false;
                             }
-                            else if (line.Trim().ToLower() == "[fonts]")
+                            else if (line.Trim().Equals("[fonts]", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = false;
                                 fontsStarted = true;
                                 graphicsStarted = false;
                             }
-                            else if (line.Trim().ToLower() == "[graphics]")
+                            else if (line.Trim().Equals("[graphics]", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = false;
                                 fontsStarted = false;
@@ -9243,7 +9243,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
-                if (fileName.ToLower().EndsWith(".mkv") || fileName.ToLower().EndsWith(".mks"))
+                if (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase))
                 {
                     _fileName = fileName.Substring(0, fileName.Length - 4);
                     Text = Title + " - " + _fileName;
@@ -10091,7 +10091,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.SubtitleImportedFromMatroskaFile);
                 _subtitle.Renumber(1);
                 _subtitle.WasLoadedWithFrameNumbers = false;
-                if (fileName.ToLower().EndsWith(".mp4") || fileName.ToLower().EndsWith(".m4v"))
+                if (fileName.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
                 {
                     _fileName = fileName.Substring(0, fileName.Length - 4);
                     Text = Title + " - " + _fileName;
@@ -12698,13 +12698,13 @@ namespace Nikse.SubtitleEdit.Forms
                 string fileName = openFileDialog1.FileName;
 
                 //TODO: Check for mkv etc
-                if (Path.GetExtension(fileName).ToLower() == ".sub" && IsVobSubFile(fileName, false))
+                if (Path.GetExtension(fileName).Equals(".sub", StringComparison.OrdinalIgnoreCase) && IsVobSubFile(fileName, false))
                 {
                     MessageBox.Show("VobSub files not supported here");
                     return;
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".sup")
+                if (Path.GetExtension(fileName).Equals(".sup", StringComparison.OrdinalIgnoreCase))
                 {
                     if (IsBluRaySupFile(fileName))
                     {
@@ -12718,7 +12718,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
                 {
                     Matroska mkv = new Matroska();
                     bool isValid = false;
@@ -12765,7 +12765,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (Path.GetExtension(fileName).ToLower() == ".divx" || Path.GetExtension(fileName).ToLower() == ".avi")
+                if (Path.GetExtension(fileName).Equals(".divx", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".avi", StringComparison.OrdinalIgnoreCase))
                 {
                     MessageBox.Show("Divx files not supported here");
                     return;
@@ -12773,7 +12773,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if ((Path.GetExtension(fileName).ToLower() == ".mp4" || Path.GetExtension(fileName).ToLower() == ".m4v" || Path.GetExtension(fileName).ToLower() == ".3gp")
+                if ((Path.GetExtension(fileName).Equals(".mp4", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m4v", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".3gp", StringComparison.OrdinalIgnoreCase))
                     && fi.Length > 10000)
                 {
                     var mp4Parser = new Logic.Mp4.MP4Parser(fileName);
@@ -12952,7 +12952,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!File.Exists(fileName))
                 return false;
 
-            if (Path.GetExtension(fileName).ToLower() == ".sub" && IsVobSubFile(fileName, false))
+            if (Path.GetExtension(fileName).Equals(".sub", StringComparison.OrdinalIgnoreCase) && IsVobSubFile(fileName, false))
                 return false;
 
             var fi = new FileInfo(fileName);
@@ -15006,7 +15006,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(shortcut))
                             item.ShortcutKeys = Utilities.GetKeys(shortcut);
 
-                        if (String.Compare(actionType, "File", StringComparison.OrdinalIgnoreCase) == 0)
+                        if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
                         {
                             if (filePluginCount == 0)
                             {
@@ -15018,7 +15018,7 @@ namespace Nikse.SubtitleEdit.Forms
                             fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
                             filePluginCount++;
                         }
-                        else if (String.Compare(actionType, "Tool", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("Tool", StringComparison.OrdinalIgnoreCase))
                         {
                             if (toolsPluginCount == 0)
                             {
@@ -15030,7 +15030,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolsToolStripMenuItem.DropDownItems.Add(item);
                             toolsPluginCount++;
                         }
-                        else if (String.Compare(actionType, "Sync", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("Sync", StringComparison.OrdinalIgnoreCase))
                         {
                             if (syncPluginCount == 0)
                             {
@@ -15042,7 +15042,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemSyncronization.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                        else if (String.Compare(actionType, "Translate", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
                         {
                             if (syncPluginCount == 0)
                             {
@@ -15054,7 +15054,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                        else if (String.Compare(actionType, "SpellCheck", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
                         {
                             if (syncPluginCount == 0)
                             {
@@ -17810,7 +17810,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var next = _subtitle.GetParagraphOrDefault(i + 1);
                 if (current != null && next != null)
                 {
-                    if (current.Text.Trim().ToLower() == next.Text.Trim().ToLower())
+                    if (current.Text.Trim().Equals(next.Text.Trim(), StringComparison.OrdinalIgnoreCase))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(i);
                         SubtitleListview1.Items[i + 1].Selected = true;
@@ -17869,8 +17869,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == ebu.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(ebu.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -17902,8 +17902,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == cavena890.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(cavena890.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -17935,8 +17935,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == pac.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(pac.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -18227,7 +18227,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (Configuration.Settings.Tools.MusicSymbolStyle.ToLower() == "single")
+                                if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
                                     original.Text = string.Format("{0} {1}", tag, original.Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
                                 else
                                     original.Text = string.Format("{0} {1} {0}", tag, original.Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
@@ -18242,7 +18242,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (Configuration.Settings.Tools.MusicSymbolStyle.ToLower() == "single")
+                        if (Configuration.Settings.Tools.MusicSymbolStyle.Equals("single", StringComparison.OrdinalIgnoreCase))
                             _subtitle.Paragraphs[i].Text = string.Format("{0} {1}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, Environment.NewLine + tag + " "));
                         else
                             _subtitle.Paragraphs[i].Text = string.Format("{0} {1} {0}", tag, _subtitle.Paragraphs[i].Text.Replace(Environment.NewLine, " " + tag + Environment.NewLine + tag + " "));
@@ -18460,8 +18460,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == capMakerPlus.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(capMakerPlus.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -18493,8 +18493,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == cheetahCaption.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(cheetahCaption.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -18526,8 +18526,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == captionInc.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(captionInc.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -18559,8 +18559,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == ultech130.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(ultech130.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))
@@ -18597,7 +18597,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 bool found = false;
                                 foreach (string s in styleList)
                                 {
-                                    if (s.ToLower() == p.Extra.ToLower())
+                                    if (s.Equals(p.Extra, StringComparison.OrdinalIgnoreCase))
                                         found = true;
                                 }
                                 if (!found)
@@ -18902,7 +18902,7 @@ namespace Nikse.SubtitleEdit.Forms
                             // only allow current extension or ".txt"
                             string fileName = saveFileDialog1.FileName;
                             string ext = Path.GetExtension(fileName).ToLower();
-                            bool extOk = ext == format.Extension.ToLower() || format.AlternateExtensions.Contains(ext) || ext == ".txt";
+                            bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                             if (!extOk)
                             {
                                 if (fileName.EndsWith('.'))
@@ -19313,8 +19313,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 openFileDialog1.InitialDirectory = saveFileDialog1.InitialDirectory;
                 string fileName = saveFileDialog1.FileName;
-                string ext = Path.GetExtension(fileName).ToLower();
-                bool extOk = ext == avidStl.Extension.ToLower();
+                string ext = Path.GetExtension(fileName);
+                bool extOk = ext.Equals(avidStl.Extension, StringComparison.OrdinalIgnoreCase);
                 if (!extOk)
                 {
                     if (fileName.EndsWith('.'))

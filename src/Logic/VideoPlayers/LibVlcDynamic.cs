@@ -493,7 +493,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
             {
-                if (Configuration.Settings.General.VlcLocation.ToUpper().EndsWith(".exe", StringComparison.Ordinal))
+                if (Configuration.Settings.General.VlcLocation.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                     Configuration.Settings.General.VlcLocation = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
 
                 path = Path.Combine(Configuration.Settings.General.VlcLocation, fileName);
@@ -506,7 +506,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 try
                 {
                     path = Configuration.Settings.General.VlcLocationRelative;
-                    if (path.ToUpper().EndsWith(".exe", StringComparison.Ordinal))
+                    if (path.EndsWith(".exe", StringComparison.OrdinalIgnoreCase))
                         path = Path.GetDirectoryName(path);
 
                     path = Path.Combine(path, fileName);

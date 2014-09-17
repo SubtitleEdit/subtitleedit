@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
-                if (!fileName.ToLower().EndsWith(".cin"))
+                if (!fileName.EndsWith(".cin", StringComparison.OrdinalIgnoreCase))
                     return false;
 
                 var sub = new Subtitle();
