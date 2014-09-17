@@ -143,14 +143,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 try
                 {
                     string start = line.Substring(5, 11);
-                    parts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    parts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     int startHours = int.Parse(parts[0]);
                     int startMinutes = int.Parse(parts[1]);
                     int startSeconds = int.Parse(parts[2]);
                     int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
 
                     string end = line.Substring(17, 11);
-                    parts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    parts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     int endHours = int.Parse(parts[0]);
                     int endMinutes = int.Parse(parts[1]);
                     int endSeconds = int.Parse(parts[2]);

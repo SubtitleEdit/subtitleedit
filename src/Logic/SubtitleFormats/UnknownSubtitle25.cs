@@ -81,7 +81,7 @@ NOTE=
                             subtitle.Paragraphs.Add(p);
                         }
                         sb = new StringBuilder();
-                        string[] arr = s.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] arr = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (arr.Length == 2)
                         {
                             double secondsSinceLast = double.Parse(arr[0]);

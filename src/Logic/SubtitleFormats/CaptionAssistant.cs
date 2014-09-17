@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string s)
         {
-            var parts = s.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var parts = s.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
             string hour = parts[0];
             string minutes = parts[1];
             string seconds = parts[2];

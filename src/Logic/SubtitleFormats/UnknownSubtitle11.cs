@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //{y:b} is italics for single line
                 //{Y:b} is italics for both lines
 
-                string[] parts = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 int count = 0;
                 bool italicOn = false;
                 bool boldOn = false;
@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string timeCode)
         {
-            string[] arr = timeCode.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = timeCode.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
         }
 
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             TimeCode endTime = DecodeTimeCode(frames[1]);
 
                             string post = string.Empty;
-                            string[] parts = text.Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string[] parts = text.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
                             StringBuilder lineSb = new StringBuilder();
                             foreach (string s2 in parts)

@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static double DecodeTimeToMilliseconds(string time)
         {
-            string[] parts = time.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = time.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
             TimeSpan ts = new TimeSpan(0, int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), (int)(int.Parse(parts[3]) * 10.0));
             return ts.TotalMilliseconds;
         }

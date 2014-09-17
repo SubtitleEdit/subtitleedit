@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
                         startTime += "000";
 
-                    string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
                         startTime += "00";
 
-                    string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (value.TotalMilliseconds < 0)
                         maskedTextBox1.Mask = "-00:00:00.000";
-                    else 
+                    else
                         maskedTextBox1.Mask = "00:00:00.000";
 
                     maskedTextBox1.Text = value.ToString();

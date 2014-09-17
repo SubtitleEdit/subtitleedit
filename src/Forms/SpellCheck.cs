@@ -693,9 +693,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
                             if (!correct && _currentWord.EndsWith("'s") && _currentWord.Length > 4)
                                 correct = DoSpell(_currentWord.TrimEnd('s').TrimEnd('\''));
-                            if (!correct && _currentWord.EndsWith('\'') && DoSpell(_currentWord.TrimEnd("'".ToCharArray())))
+                            if (!correct && _currentWord.EndsWith('\'') && DoSpell(_currentWord.TrimEnd('\'')))
                             {
-                                _currentWord = _currentWord.TrimEnd("'".ToCharArray());
+                                _currentWord = _currentWord.TrimEnd('\'');
                                 correct = true;
                             }
                         }
@@ -905,8 +905,7 @@ namespace Nikse.SubtitleEdit.Forms
         /// </summary>
         private string GetTextWithoutUserWordsAndNames(List<string> replaceIds, List<string> replaceNames, string text)
         {
-
-            string[] wordsWithDash = text.Split(" .,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] wordsWithDash = text.Split(new[] { ' ', '.', ',', '?', '!', ':', ';', '"', '“', '”', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n', '¿', '¡', '…', '—', '–', '♪', '♫', '„', '“' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string w in wordsWithDash)
             {
                 if (w.Contains('-') && DoSpell(w) && !_wordsWithDashesOrPeriods.Contains(w))

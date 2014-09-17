@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {
-            var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             bool allOk = true;
             foreach (string line in lines)
             {
@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return text;
 
             text = Utilities.AutoBreakLine(text, 1, 4, language);
-            lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             allOk = true;
             foreach (string line in lines)
             {
@@ -596,7 +596,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return text;
 
             text = AutoBreakLineMax4Lines(text, 32);
-            lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             allOk = true;
             foreach (string line in lines)
             {
@@ -718,7 +718,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //text = text.Replace("ã", "aã");
             //text = text.Replace("õ", "oõ");
 
-            var lines = text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             int italic = 0;
             var sb = new StringBuilder();
             int count = 1;
@@ -1629,7 +1629,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static string GetSccText(string s, ref int errorCount)
         {
             int y = 0;
-            string[] parts = s.Split(" \t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = s.Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();
             bool first = true;
             bool italicOn = false;
@@ -1727,7 +1727,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode ParseTimeCode(string start)
         {
-            string[] arr = start.Split(":;,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(arr[3]));
             if (milliseconds > 999)

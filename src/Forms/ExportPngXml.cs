@@ -1517,7 +1517,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         string fontContent = text.Substring(i, endIndex);
                         if (fontContent.Contains(" color="))
                         {
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -1526,7 +1526,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     colorStack.Push(c); // save old color
                                     if (fontColor.StartsWith("rgb("))
                                     {
-                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                        arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                         c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                                     }
                                     else
@@ -1828,7 +1828,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g = Graphics.FromImage(bmp);
 
             // align lines with gjpqy, a bit lower
-            var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             int baseLinePadding = 13;
             if (parameter.SubtitleFontSize < 30)
                 baseLinePadding = 12;
@@ -1857,7 +1857,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var lefts = new List<float>();
             if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
                     string lineNoHtml = Utilities.RemoveHtmlFontTag(line.Replace("<i>", string.Empty).Replace("</i>", string.Empty));
                     if (parameter.AlignLeft)
@@ -1870,7 +1870,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (parameter.AlignLeft)
                         lefts.Add(5);
@@ -2061,7 +2061,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             string fontContent = text.Substring(i, endIndex);
                             if (fontContent.Contains(" color="))
                             {
-                                string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                 if (arr.Length > 0)
                                 {
                                     string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -2070,7 +2070,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         colorStack.Push(c); // save old color
                                         if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
                                         {
-                                            arr = fontColor.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                            arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                             c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                                         }
                                         else

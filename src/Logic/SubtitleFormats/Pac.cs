@@ -860,7 +860,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return "<" + Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
 
             var sb = new StringBuilder();
-            string[] parts = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in parts)
             {
                 string s = line.Trim();

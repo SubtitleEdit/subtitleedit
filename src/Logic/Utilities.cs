@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class Utilities
     {
+        public static readonly char[] NewLineChars = Environment.NewLine.ToCharArray();
         public const string WinXP2KUnicodeFontName = "Times New Roman";
 
         public static byte[] ReadAllBytes(String path)
@@ -439,7 +440,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             string s = AutoBreakLine(text, 0, 0, language);
 
-            var arr = s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var arr = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
@@ -579,7 +580,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (temp.Length < mergeLinesShorterThan)
             {
-                string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 1)
                 {
                     bool isDialog = true;
@@ -1694,7 +1695,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
-            foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = RemoveHtmlTags(line, true);
                 if (s.Length > maxLength)
@@ -1801,7 +1802,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {
-                var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
                 {
                     if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().Contains(ext, StringComparison.OrdinalIgnoreCase))
@@ -3458,7 +3459,7 @@ namespace Nikse.SubtitleEdit.Logic
                     AllKeys.Add("capslock", Keys.CapsLock);
             }
 
-            string[] parts = keysInString.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = keysInString.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
             Keys resultKeys = Keys.None;
             foreach (string k in parts)
             {
@@ -3471,7 +3472,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
-            string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -3753,7 +3754,7 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             if (s.StartsWith("rgb(", StringComparison.Ordinal))
                             {
-                                var arr = s.Remove(0, 4).TrimEnd(')').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
                             else

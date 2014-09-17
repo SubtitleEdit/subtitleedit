@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (header != null)
             {
-                foreach (string line in header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
                     string s = line.ToLower().Trim();
                     if (s.StartsWith("title:"))
@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Environment.NewLine.ToCharArray());
+            string[] lineArray = text.Split(Utilities.NewLineChars);
             var lines = new List<string>();
             foreach (string line in lineArray)
                 lines.Add(line);
@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool scriptInfoOn = false;
             var sb = new StringBuilder();
             bool found = false;
-            foreach (string line in _subtitle.Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in _subtitle.Header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (line.StartsWith("[script info]", StringComparison.OrdinalIgnoreCase))
                 {

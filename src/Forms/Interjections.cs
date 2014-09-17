@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(string semiColonSeperatedList)
         {
             _interjections = new List<string>();
-            string[] arr = semiColonSeperatedList.Split(";".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = semiColonSeperatedList.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
                 _interjections.Add(s.Trim());
