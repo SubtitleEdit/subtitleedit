@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
-                if (p.Text.Trim().StartsWith("<i>") && p.Text.Trim().EndsWith("</i>"))
+                if (p.Text.TrimStart().StartsWith("<i>") && p.Text.TrimEnd().EndsWith("</i>"))
                     layoutIndex.InnerText = "4";
                 else
                     layoutIndex.InnerText = "0";

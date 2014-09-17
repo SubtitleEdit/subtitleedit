@@ -1720,7 +1720,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     string oldText = p.Text;
                     string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                    if (lines.Length == 2 && lines[0].Trim().StartsWith('-') && lines[1].Trim().StartsWith('-'))
+                    if (lines.Length == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
                     { // dialogue
                         lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         string line = lines[0].Trim();
@@ -2814,9 +2814,9 @@ namespace Nikse.SubtitleEdit.Forms
                     string temp = Utilities.AutoBreakLine(text, Language);
                     var arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                    if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].Trim().StartsWith('-') && arrTemp[1].Trim().StartsWith('-'))
+                    if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith('-') && arrTemp[1].TrimStart().StartsWith('-'))
                         text = temp;
-                    else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].Trim().StartsWith("<i>-") && arrTemp[1].Trim().StartsWith("<i>-"))
+                    else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-") && arrTemp[1].TrimStart().StartsWith("<i>-"))
                         text = temp;
                 }
                 else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -")) && !text.Contains(Environment.NewLine))
@@ -2825,7 +2825,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     if (arrTemp.Length == 2)
                     {
-                        if (arrTemp[1].Trim().StartsWith('-') || arrTemp[1].Trim().StartsWith("<i>-"))
+                        if (arrTemp[1].TrimStart().StartsWith('-') || arrTemp[1].TrimStart().StartsWith("<i>-"))
                             text = temp;
                     }
                     else
@@ -2947,7 +2947,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (match.Index > 1)
                             wholePrev = s.Substring(0, match.Index - 1);
 
-                        if (prev != ">" && next != ">" && next != "}" && !wholePrev.Trim().EndsWith("...", StringComparison.Ordinal))
+                        if (prev != ">" && next != ">" && next != "}" && !wholePrev.TrimEnd().EndsWith("...", StringComparison.Ordinal))
                         {
                             bool fix = true;
 
@@ -2987,11 +2987,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
 
-                if (text.Trim().StartsWith('-') ||
-                    text.Trim().StartsWith("<i>-") ||
-                    text.Trim().StartsWith("<i> -") ||
-                    text.Trim().StartsWith("<I>-") ||
-                    text.Trim().StartsWith("<I> -") ||
+                if (text.TrimStart().StartsWith('-') ||
+                    text.TrimStart().StartsWith("<i>-") ||
+                    text.TrimStart().StartsWith("<i> -") ||
+                    text.TrimStart().StartsWith("<I>-") ||
+                    text.TrimStart().StartsWith("<I> -") ||
                     text.Contains(Environment.NewLine + '-') ||
                     text.Contains(Environment.NewLine + " -") ||
                     text.Contains(Environment.NewLine + "<i>-") ||
@@ -3001,13 +3001,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
 
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith('-'))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                     {
                         var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         int startHyphenCount = 0;
                         foreach (string line in lines)
                         {
-                            if (line.Trim().StartsWith('-'))
+                            if (line.TrimStart().StartsWith('-'))
                                 startHyphenCount++;
                         }
                         if (startHyphenCount == 1)
@@ -3019,9 +3019,9 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                if (parts[0].Trim().StartsWith('-') && parts[1].Contains(": "))
+                                if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(": "))
                                     remove = false;
-                                if (parts[1].Trim().StartsWith('-') && parts[0].Contains(": "))
+                                if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(": "))
                                     remove = false;
                             }
 
@@ -3088,7 +3088,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else if (text.StartsWith("<font ", StringComparison.Ordinal))
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith('-'))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                     {
                         string oldText = p.Text;
                         var st = new StripableText(text);
@@ -3122,11 +3122,11 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[i];
                 string text = p.Text;
 
-                if (text.Trim().StartsWith('-') ||
-                    text.Trim().StartsWith("<i>-") ||
-                    text.Trim().StartsWith("<i> -") ||
-                    text.Trim().StartsWith("<I>-") ||
-                    text.Trim().StartsWith("<I> -") ||
+                if (text.TrimStart().StartsWith('-') ||
+                    text.TrimStart().StartsWith("<i>-") ||
+                    text.TrimStart().StartsWith("<i> -") ||
+                    text.TrimStart().StartsWith("<I>-") ||
+                    text.TrimStart().StartsWith("<I> -") ||
                     text.Contains(Environment.NewLine + "-") ||
                     text.Contains(Environment.NewLine + " -") ||
                     text.Contains(Environment.NewLine + "<i>-") ||
@@ -3136,13 +3136,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
 
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).Trim().EndsWith('-'))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                     {
                         var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         int startHyphenCount = 0;
                         foreach (string line in lines)
                         {
-                            if (line.Trim().StartsWith('-'))
+                            if (line.TrimStart().StartsWith('-'))
                                 startHyphenCount++;
                         }
                         if (startHyphenCount == 1)
@@ -3152,11 +3152,11 @@ namespace Nikse.SubtitleEdit.Forms
                             string[] parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                             if (parts.Length == 2)
                             {
-                                bool doAdd = parts[0].Trim().EndsWith('.') || parts[0].Trim().EndsWith('!') || parts[0].Trim().EndsWith('?') || Language == "ko";
+                                bool doAdd = parts[0].TrimEnd().EndsWith('.') || parts[0].TrimEnd().EndsWith('!') || parts[0].TrimEnd().EndsWith('?') || Language == "ko";
 
-                                if (parts[0].Trim().StartsWith('-') && parts[1].Contains(':'))
+                                if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':'))
                                     doAdd = false;
-                                if (parts[1].Trim().StartsWith('-') && parts[0].Contains(':'))
+                                if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':'))
                                     doAdd = false;
 
                                 if (doAdd)

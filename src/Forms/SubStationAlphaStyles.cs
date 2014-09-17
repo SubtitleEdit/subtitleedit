@@ -1282,7 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             sb.AppendLine(line);
-                            if (stylesOn && line.Replace(" ", string.Empty).Trim().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
+                            if (stylesOn && line.Replace(" ", string.Empty).TrimStart().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
                             {
                                 MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
                                 return;
@@ -1307,7 +1307,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     string content = sb.ToString();
-                    if (content.Trim().EndsWith("[Events]"))
+                    if (content.TrimEnd().EndsWith("[Events]"))
                     {
                         content = content.Trim() + Environment.NewLine +
                             "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +

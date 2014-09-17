@@ -4737,7 +4737,7 @@ namespace Nikse.SubtitleEdit.Forms
                 paragraph.Append("<i>" + temp + "</i>");
                 paragraph.Append(appendString);
             }
-            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith('-'))
+            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().TrimStart().StartsWith('-'))
             {
                 string temp = line.ToString().Replace("<i>", "").Replace("</i>", "");
                 paragraph.Append("<i>" + temp + "</i>");
@@ -6304,7 +6304,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 //check tesseract... find some otherway to do this...
                 //string tmp = Utilities.RemoveHtmlTags(line).Trim();
-                //if (!tmp.Trim().EndsWith("..."))
+                //if (!tmp.TrimEnd().EndsWith("..."))
                 //{
                 //    tmp = tmp.TrimEnd('.').TrimEnd();
                 //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp.Substring(tmp.Length - 1, 1)))

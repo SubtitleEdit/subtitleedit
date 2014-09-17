@@ -83,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p.Text.Length < 300)
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
-                        continuation = !line.Trim().EndsWith('"');
+                        continuation = !line.TrimEnd().EndsWith('"');
                     }
                     else
                     {

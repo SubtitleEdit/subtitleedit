@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        if (!line.Trim().EndsWith(": --:--:--:--,--:--:--:--,-1"))
+                        if (!line.TrimEnd().EndsWith(": --:--:--:--,--:--:--:--,-1"))
                         {
                             if (string.IsNullOrEmpty(p.Text))
                                 p.Text = line.Trim();
