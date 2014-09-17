@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (color.StartsWith("rgb("))
                 {
-                    string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new [] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = color.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                     c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                 }
                 else

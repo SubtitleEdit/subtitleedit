@@ -160,7 +160,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _quartzVideo.WindowStyle = wsChild;
             }
             //Play();
-            
 
             if (!isAudio)
                 (_quartzFilgraphManager as IBasicVideo).GetVideoSize(out _sourceWidth, out _sourceHeight);
@@ -222,7 +221,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             //int i = 0;
             //while (CurrentPosition < 1 && i < 100)
             //{
-                Application.DoEvents();
+            Application.DoEvents();
             //    System.Threading.Thread.Sleep(5);
             //    i++;
             //}

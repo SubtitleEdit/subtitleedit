@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (value.TotalMilliseconds < 0)
                         maskedTextBox1.Mask = "-00:00:00.000";
-                    else 
+                    else
                         maskedTextBox1.Mask = "00:00:00.000";
 
                     maskedTextBox1.Text = value.ToString();
