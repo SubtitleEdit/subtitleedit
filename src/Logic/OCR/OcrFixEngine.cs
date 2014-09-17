@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if (name.Length > 5)
                                     name = name.Substring(0, 5);
                                 var ci = new CultureInfo(name);
-                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || string.Compare(ci.ThreeLetterWindowsLanguageName, threeLetterIsoLanguageName, true) == 0)
+                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     dictionaryFileName = dic;
                                     break;
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if (name.Length > 5)
                                     name = name.Substring(0, 5);
                                 var ci = new CultureInfo(name);
-                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || string.Compare(ci.ThreeLetterWindowsLanguageName, threeLetterIsoLanguageName, true) == 0)
+                                if (ci.ThreeLetterISOLanguageName == threeLetterIsoLanguageName || ci.ThreeLetterWindowsLanguageName.Equals(threeLetterIsoLanguageName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     dictionaryFileName = dic;
                                     break;
@@ -465,7 +465,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
                 text = FixLowercaseIToUppercaseI(text, lastLine);
-                if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || string.Compare(_threeLetterIsoLanguageName, "eng", StringComparison.Ordinal) == 0)
+                if (SpellCheckDictionaryName.StartsWith("en_", StringComparison.Ordinal) || _threeLetterIsoLanguageName.Equals("eng", StringComparison.Ordinal))
                 {
                     string oldText = text;
                     text = FixCommonErrors.FixAloneLowercaseIToUppercaseLine(RegexAloneI, oldText, text, 'i');

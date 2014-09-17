@@ -135,9 +135,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (node.Attributes.GetNamedItem("Align") != null)
                         {
                             string align = node.Attributes.GetNamedItem("Align").InnerText.Trim();
-                            if (string.Compare(align, "left", StringComparison.OrdinalIgnoreCase) == 0)
+                            if (align.Equals("left", StringComparison.OrdinalIgnoreCase))
                                 text = "{\\an1}" + text;
-                            else if (string.Compare(align, "right", StringComparison.OrdinalIgnoreCase) == 0)
+                            else if (align.Equals("right", StringComparison.OrdinalIgnoreCase))
                                 text = "{\\an3}" + text;
                         }
 

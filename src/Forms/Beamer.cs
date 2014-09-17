@@ -66,7 +66,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var x in FontFamily.Families)
             {
                 comboBoxSubtitleFont.Items.Add(x.Name);
-                if (string.Compare(x.Name, _subtitleFontName, true) == 0)
+                if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                     comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
             }
             if (_subtitleFontSize > 10 && _subtitleFontSize < 100)

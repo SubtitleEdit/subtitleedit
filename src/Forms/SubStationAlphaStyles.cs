@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default")
                     count++;
-                else if (p.Extra != null && string.Compare(ssaStyle.Name.TrimStart('*'), p.Extra.TrimStart('*'), StringComparison.OrdinalIgnoreCase) == 0)
+                else if (p.Extra != null && ssaStyle.Name.TrimStart('*').Equals(p.Extra.TrimStart('*'), StringComparison.OrdinalIgnoreCase))
                     count++;
             }
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
