@@ -2823,7 +2823,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
-                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
+                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
                         {
                             var rtBox = new RichTextBox();
                             rtBox.Rtf = s;
@@ -8131,7 +8131,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool allLinesStartAndEndsWithItalic = text.Contains("<i>");
             foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (!line.Trim().StartsWith("<i>") || !line.Trim().EndsWith("</i>"))
+                if (!line.TrimStart().StartsWith("<i>") || !line.TrimEnd().EndsWith("</i>"))
                     allLinesStartAndEndsWithItalic = false;
             }
             if (allLinesStartAndEndsWithItalic)
@@ -9220,7 +9220,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
+                            else if (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
@@ -11825,7 +11825,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith('-') || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         hasStartDash = true;
                 }
                 MakeHistoryForUndo(_language.BeforeToggleDialogueDashes);
@@ -11845,9 +11845,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith('-') || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         sb.AppendLine(line);
-                    else if (line.Trim().StartsWith("<i>") && line.Trim().Length > 3)
+                    else if (line.TrimStart().StartsWith("<i>") && line.Trim().Length > 3)
                         sb.AppendLine("<i>-" + line.Substring(3));
                     else
                         sb.AppendLine("- " + line);
@@ -11869,9 +11869,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith('-'))
+                    if (line.TrimStart().StartsWith('-'))
                         sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
-                    else if (line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    else if (line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
                     else
                         sb.AppendLine(line);

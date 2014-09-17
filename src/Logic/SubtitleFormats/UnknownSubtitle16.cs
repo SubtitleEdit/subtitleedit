@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            if (lines.Count == 0 || !lines[0].Trim().StartsWith("{\\rtf1"))
+            if (lines.Count == 0 || !lines[0].TrimStart().StartsWith("{\\rtf1"))
                 return;
 
             // load as text via RichTextBox

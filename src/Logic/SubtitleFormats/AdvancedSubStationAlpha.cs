@@ -692,11 +692,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip empty lines
                 }
-                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(';'))
+                else if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
                 {
                     // skip comment lines
                 }
-                else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
+                else if (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -1271,7 +1271,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     styleFormat = line;
                 if (!line.StartsWith("Style: " + style.Name + ",", StringComparison.Ordinal)) // overwrite existing style
                     sb.AppendLine(line);
-                if (!styleAdded && stylesStarted && line.ToLower().Trim().StartsWith("style:", StringComparison.Ordinal))
+                if (!styleAdded && stylesStarted && line.TrimStart().StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                 {
                     sb.AppendLine(style.ToRawAss(styleFormat));
                     styleAdded = true;

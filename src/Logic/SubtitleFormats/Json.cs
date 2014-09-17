@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            if (!sb.ToString().Trim().StartsWith("[{\"start"))
+            if (!sb.ToString().TrimStart().StartsWith("[{\"start"))
                 return;
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))

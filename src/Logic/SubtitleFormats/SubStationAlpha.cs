@@ -351,7 +351,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 {
                     eventsStarted = true;
                 }
-                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(';'))
+                else if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
                 {
                     // skip comment lines
                 }

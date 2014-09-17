@@ -449,7 +449,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!string.IsNullOrEmpty(text))
                 text = st.Pre + text + st.Post;
 
-            if (oldText.Trim().StartsWith("- ") &&
+            if (oldText.TrimStart().StartsWith("- ") &&
                 (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ")) && !text.Contains(Environment.NewLine))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
