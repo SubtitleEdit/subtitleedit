@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
                     maximumCharsSec = charsSec;
                 totalCharsSec += charsSec;
 
-                foreach (string line in p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
                     len = line.Length;
                     if (len < minimumSingleLineLength)
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
             lastLine = lastLine.Replace("</b>", ".");
             lastLine = lastLine.Replace("<B>", "");
             lastLine = lastLine.Replace("</B>", ".");
-            string[] words = lastLine.Split(" ,!?.:;-_@<>/0123456789".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] words = lastLine.Split(new[] { ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string word in words)
             {

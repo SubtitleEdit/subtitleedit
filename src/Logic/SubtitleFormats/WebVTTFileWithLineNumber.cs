@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     try
                     {
-                        string[] parts = s.Replace("-->", "@").Split("@".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] parts = s.Replace("-->", "@").Split(new[] { '@' }, StringSplitOptions.RemoveEmptyEntries);
                         p = new Paragraph();
                         p.StartTime = GetTimeCodeFromString(parts[0]);
                         p.EndTime = GetTimeCodeFromString(parts[1]);

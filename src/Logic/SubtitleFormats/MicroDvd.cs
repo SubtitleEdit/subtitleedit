@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //{y:b} is italics for single line
                 //{Y:b} is italics for both lines
 
-                string[] parts = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 int count = 0;
                 bool italicOn = false;
                 bool boldOn = false;
@@ -301,7 +301,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int endFrame = int.Parse(frames[1]);
 
                             string post = string.Empty;
-                            string[] parts = text.Split("|".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                            string[] parts = text.Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
                             int count = 0;
                             var lineSb = new StringBuilder();
 

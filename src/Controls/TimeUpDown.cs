@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
                         startTime += "000";
 
-                    string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {
@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
                         startTime += "00";
 
-                    string[] times = startTime.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] times = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
 
                     if (times.Length == 4)
                     {

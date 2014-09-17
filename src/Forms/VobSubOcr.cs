@@ -1235,7 +1235,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
                 {
-                    string[] fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     var bitmaps = new List<Bitmap>();
                     int maxWidth = 0;
                     int totalHeight = 0;
@@ -5710,7 +5710,7 @@ namespace Nikse.SubtitleEdit.Forms
             int count = 0;
             var arr = line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Replace("a.m", string.Empty).Replace("p.m", string.Empty).
                            Replace("o.r", string.Empty).Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty).
-                           Split(" .?!()\r\n\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                           Split(new [] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
                 if (s.Length == 1 && !"♪♫-:'”1234567890&aAI\"".Contains(s))

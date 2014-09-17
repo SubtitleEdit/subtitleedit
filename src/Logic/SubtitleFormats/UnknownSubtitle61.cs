@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
                     p = new Paragraph();
-                    string[] parts = s.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try

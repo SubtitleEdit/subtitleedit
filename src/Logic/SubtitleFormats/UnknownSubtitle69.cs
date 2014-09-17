@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (RegexTimeCode.IsMatch(line))
                 {
-                    var timeParts = line.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var timeParts = line.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (timeParts.Length > 4)
                     {
                         try
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string timePart)
         {
             string s = timePart.Substring(0, 11);
-            var parts = s.Split(":F".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var parts = s.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
         }
 

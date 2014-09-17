@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string timecode = line.Remove(0, 10).Replace("AUTO", string.Empty).Trim();
                     if (timecode != "--:--")
                     {
-                        var arr = timecode.Split(": ".ToCharArray());
+                        var arr = timecode.Split(new[] { ':', ' ' });
                         if (arr.Length > 1)
                         {
                             int sec;
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             try
             {
-                string[] timeParts = timeString.Split(":.".ToCharArray());
+                string[] timeParts = timeString.Split(new[] { ':', '.' });
                 timeCode.Hours = int.Parse(timeParts[0]);
                 timeCode.Minutes = int.Parse(timeParts[1]);
                 timeCode.Seconds = int.Parse(timeParts[2]);

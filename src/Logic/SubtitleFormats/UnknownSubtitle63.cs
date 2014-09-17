@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var match = regexTimeCodes.Match(s);
                 if (match.Success)
                 {
-                    string[] parts = s.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = s.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string part)
         {
-            string[] parts = part.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             string hour = parts[0];
             string minutes = parts[1];

@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Forms
             int propertyIndex = -1;
             int nameIndex = -1;
             var sb = new StringBuilder();
-            foreach (string line in Header.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.None))
+            foreach (string line in Header.Split(Utilities.NewLineChars, StringSplitOptions.None))
             {
                 string s = line.Trim().ToLower();
                 if (s.StartsWith("format:"))

@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             listViewFixes.Items.Add(item);
 
-            foreach (string number in lineNumbers.TrimEnd(',').Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string number in lineNumbers.TrimEnd(',').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 _isFixAllowedList.Add(Convert.ToInt32(number), true);
             }
@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_loading)
                 return;
 
-            foreach (string number in e.Item.SubItems[1].Text.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string number in e.Item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 int no = Convert.ToInt32(number);
                 if (_isFixAllowedList.ContainsKey(no))
