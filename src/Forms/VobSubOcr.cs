@@ -831,7 +831,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     for (int i = 0; i < comboBoxCharacterDatabase.Items.Count; i++)
                     {
-                        if (string.Compare(comboBoxCharacterDatabase.Items[i].ToString(), _vobSubOcrSettings.LastImageCompareFolder, true) == 0)
+                        if (comboBoxCharacterDatabase.Items[i].ToString().Equals(_vobSubOcrSettings.LastImageCompareFolder, StringComparison.OrdinalIgnoreCase))
                             comboBoxCharacterDatabase.SelectedIndex = i;
                     }
                     if (comboBoxCharacterDatabase.SelectedIndex < 0)

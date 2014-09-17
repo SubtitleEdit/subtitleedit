@@ -119,9 +119,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
                 numericUpDownMinGapMs.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
 
-            if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0 && LibVlcDynamic.IsInstalled)
+            if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
-            else if (string.Compare(gs.VideoPlayer.Trim(), "MPlayer", true) == 0 && Utilities.IsMPlayerAvailable)
+            else if (gs.VideoPlayer.Trim().Equals("MPlayer", StringComparison.OrdinalIgnoreCase) && Utilities.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
             else if (Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Checked = true;
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (string.Compare(x.Name, gs.SubtitleFontName, true) == 0)
+                    if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
                         comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }

@@ -1599,7 +1599,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
                     string text = GetSccText(s.Substring(match.Index), ref _errorCount);
 
-                    if (string.Compare(text, "942c 942c", StringComparison.Ordinal) == 0 || string.Compare(text, "942c", StringComparison.Ordinal) == 0)
+                    if (text.Equals("942c 942c", StringComparison.Ordinal) || text.Equals("942c", StringComparison.Ordinal))
                     {
                         p.EndTime = new TimeCode(startTime.TotalMilliseconds);
                     }
@@ -1639,7 +1639,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (string.Compare(part, "94ae", StringComparison.Ordinal) == 0 || string.Compare(part, "9420", StringComparison.Ordinal) == 0 || string.Compare(part, "94ad", StringComparison.OrdinalIgnoreCase) == 0 || part == "9426")
+                    if (part.Equals("94ae", StringComparison.Ordinal) || part.Equals("9420", StringComparison.Ordinal) || part.Equals("94ad", StringComparison.OrdinalIgnoreCase) || part == "9426")
                     {
                     }
                     else

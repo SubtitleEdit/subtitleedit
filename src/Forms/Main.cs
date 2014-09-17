@@ -248,8 +248,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
             {
-                if (string.Compare(format.Name.Trim(), subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) == 0 ||
-                    string.Compare(format.FriendlyName.Trim(), subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
+                if (format.Name.Trim().Equals(subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase) ||
+                    format.FriendlyName.Trim().Equals(subtitleFormatName.Trim(), StringComparison.OrdinalIgnoreCase))
                 {
                     SetCurrentFormat(format);
                     return;
@@ -1026,7 +1026,7 @@ namespace Nikse.SubtitleEdit.Forms
                             var newSub = new Subtitle();
                             foreach (Paragraph p in sub.Paragraphs)
                             {
-                                if (p.Extra != null && string.Compare(p.Extra.Trim(), className.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
+                                if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
                                     newSub.Paragraphs.Add(p);
                             }
                             if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
@@ -3382,7 +3382,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (var x in Configuration.Settings.RecentFiles.Files)
             {
-                if (string.Compare(fileName, x.FileName, true) == 0)
+                if (fileName.Equals(x.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     int sIndex = x.FirstSelectedIndex;
                     if (sIndex >= 0 && sIndex < SubtitleListview1.Items.Count)
@@ -5310,7 +5310,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                     bool alreadyExists = false;
                                                     foreach (string currentStyleName in currentStyles)
                                                     {
-                                                        if (string.Compare(currentStyleName.Trim(), styleName.Trim(), StringComparison.OrdinalIgnoreCase) == 0)
+                                                        if (currentStyleName.Trim().Equals(styleName.Trim(), StringComparison.OrdinalIgnoreCase))
                                                             alreadyExists = true;
                                                     }
                                                     if (!alreadyExists)
@@ -5651,7 +5651,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (string.Compare(oldFileName, _fileName, true) == 0)
+                    if (oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
                     comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
@@ -5690,7 +5690,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.HistoryItems[_undoIndex].RedoLineIndex == FirstSelectedIndex)
                             textBoxListViewTextAlternate.SelectionStart =
                                 _subtitle.HistoryItems[_undoIndex].RedoLinePositionAlternate;
-                        if (string.Compare(_subtitle.HistoryItems[_undoIndex].RedoFileName, _fileName, true) == 0)
+                        if (_subtitle.HistoryItems[_undoIndex].RedoFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                             _fileDateTime = _subtitle.HistoryItems[_undoIndex].RedoFileModified;
                         _fileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
                         _subtitleAlternateFileName = _subtitle.HistoryItems[_undoIndex].RedoFileName;
@@ -5736,7 +5736,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = _subtitle.UndoHistory(showHistory.SelectedIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
 
-                    if (string.Compare(oldFileName, _fileName, true) == 0)
+                    if (oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
                     SetTitle();
@@ -15006,7 +15006,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(shortcut))
                             item.ShortcutKeys = Utilities.GetKeys(shortcut);
 
-                        if (String.Compare(actionType, "File", StringComparison.OrdinalIgnoreCase) == 0)
+                        if (actionType.Equals("File", StringComparison.OrdinalIgnoreCase))
                         {
                             if (filePluginCount == 0)
                             {
@@ -15018,7 +15018,7 @@ namespace Nikse.SubtitleEdit.Forms
                             fileToolStripMenuItem.DropDownItems.Insert(fileToolStripMenuItem.DropDownItems.Count - 2, item);
                             filePluginCount++;
                         }
-                        else if (String.Compare(actionType, "Tool", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("Tool", StringComparison.OrdinalIgnoreCase))
                         {
                             if (toolsPluginCount == 0)
                             {
@@ -15030,7 +15030,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolsToolStripMenuItem.DropDownItems.Add(item);
                             toolsPluginCount++;
                         }
-                        else if (String.Compare(actionType, "Sync", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("Sync", StringComparison.OrdinalIgnoreCase))
                         {
                             if (syncPluginCount == 0)
                             {
@@ -15042,7 +15042,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemSyncronization.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                        else if (String.Compare(actionType, "Translate", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
                         {
                             if (syncPluginCount == 0)
                             {
@@ -15054,7 +15054,7 @@ namespace Nikse.SubtitleEdit.Forms
                             toolStripMenuItemAutoTranslate.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
-                        else if (String.Compare(actionType, "SpellCheck", StringComparison.OrdinalIgnoreCase) == 0)
+                        else if (actionType.Equals("SpellCheck", StringComparison.OrdinalIgnoreCase))
                         {
                             if (syncPluginCount == 0)
                             {

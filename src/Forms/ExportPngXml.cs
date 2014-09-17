@@ -1270,18 +1270,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             int i;
                             for (i = 0; i < comboBoxSubtitleFont.Items.Count; i++)
                             {
-                                if (string.Compare(comboBoxSubtitleFont.Items[i].ToString(), style.FontName, true) == 0)
+                                if (comboBoxSubtitleFont.Items[i].ToString().Equals(style.FontName, StringComparison.OrdinalIgnoreCase))
                                     comboBoxSubtitleFont.SelectedIndex = i;
                             }
                             for (i = 0; i < comboBoxSubtitleFontSize.Items.Count; i++)
                             {
-                                if (string.Compare(comboBoxSubtitleFontSize.Items[i].ToString(), style.FontSize.ToString(), true) == 0)
+                                if (comboBoxSubtitleFontSize.Items[i].ToString().Equals(style.FontSize.ToString(), StringComparison.OrdinalIgnoreCase))
                                     comboBoxSubtitleFontSize.SelectedIndex = i;
                             }
                             checkBoxBold.Checked = style.Bold;
                             for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
                             {
-                                if (string.Compare(Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()), style.OutlineWidth.ToString(), true) == 0)
+                                if (Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()).Equals(style.OutlineWidth.ToString(), StringComparison.OrdinalIgnoreCase))
                                     comboBoxBorderWidth.SelectedIndex = i;
                             }
                         }
@@ -2643,7 +2643,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (x.IsStyleAvailable(FontStyle.Regular) || x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (String.Compare(x.Name, _subtitleFontName, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (x.Name.Equals(_subtitleFontName, StringComparison.OrdinalIgnoreCase))
                         comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
