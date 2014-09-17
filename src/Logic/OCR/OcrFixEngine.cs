@@ -136,22 +136,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (!Directory.Exists(dictionaryFolder))
                 return;
 
-            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_gb" && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
+            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_gb", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_GB.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-GB"), "en_GB.dic", true);
                 return;
             }
-            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_ca" && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
+            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-CA"), "en_CA.dic", true);
                 return;
             }
-            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_au" && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
+            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_au", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-AU"), "en_AU.dic", true);
                 return;
             }
-            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.ToLower() == "en_za" && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
+            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_za", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-ZA"), "en_ZA.dic", true);
                 return;
@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 _namesEtcListUppercase.Add(name.ToUpper());
 
             _namesEtcListWithApostrophe = new HashSet<string>();
-            if (threeLetterIsoLanguageName.ToLower() == "eng")
+            if (threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string namesItem in _namesEtcList)
                 {
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (name.EndsWith('.'))
                     _abbreviationList.Add(name);
             }
-            if (threeLetterIsoLanguageName.ToLower() == "eng")
+            if (threeLetterIsoLanguageName.Equals("eng", StringComparison.OrdinalIgnoreCase))
             {
                 if (_abbreviationList.Contains("a.m."))
                     _abbreviationList.Add("a.m.");
@@ -1080,7 +1080,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     {
                         string lastWord = words[words.Length - 1].Trim();
                         if (lastWord.Length > 2 &&
-                            lastWord[0].ToString() == lastWord[0].ToString().ToLower() &&
+                            char.IsLower(lastWord[0]) &&
                             !IsWordOrWordsCorrect(lastWord) &&
                             IsWordOrWordsCorrect(lastWord.Substring(0, lastWord.Length - 1)))
                             input = input.Substring(0, input.Length - 2) + "...";
@@ -1628,7 +1628,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                                 if (word[0] == 'L')
                                     guesses.Add("I" + word.Substring(1));
 
-                                if (word.Length > 2 && word[0] == 'I' && word[1].ToString().ToUpper() != word[1].ToString())
+                                if (word.Length > 2 && word[0] == 'I' && char.IsLower(word[1]))
                                     guesses.Add("l" + word.Substring(1));
 
                                 if (i == 0)

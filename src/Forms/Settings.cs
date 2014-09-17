@@ -2514,15 +2514,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] parts = shortcut.ToLower().Split("+".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                 foreach (string k in parts)
                 {
-                    if (k.ToUpper() == "CONTROL")
+                    if (k.Equals("CONTROL", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxShortcutsControl.Checked = true;
                     }
-                    else if (k.ToUpper() == "ALT")
+                    else if (k.Equals("ALT", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxShortcutsAlt.Checked = true;
                     }
-                    else if (k.ToUpper() == "SHIFT")
+                    else if (k.Equals("SHIFT", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxShortcutsShift.Checked = true;
                     }
@@ -2531,7 +2531,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int i = 0;
                         foreach (string value in comboBoxShortcutKey.Items)
                         {
-                            if (value.ToUpper() == k.ToUpper())
+                            if (value.Equals(k, StringComparison.OrdinalIgnoreCase))
                             {
                                 comboBoxShortcutKey.SelectedIndex = i;
                                 break;

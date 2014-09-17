@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (ListViewItem lvi in listViewInputFiles.Items)
                 {
-                    if (lvi.Text.ToLower() == fileName.ToLower())
+                    if (lvi.Text.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                         return;
                 }
 
@@ -369,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         item.SubItems.Add("VobSub");
                     }
-                    else if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                    else if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
                     {
                         var mkv = new Matroska();
                         bool isValid = false;
@@ -388,15 +388,15 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 foreach (MatroskaSubtitleInfo x in subtitleList)
                                 {
-                                    if (x.CodecId.ToUpper() == "S_VOBSUB")
+                                    if (x.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                     {
                                         //TODO: convert from VobSub image based format!
                                     }
-                                    else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
+                                    else if (x.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                     {
                                         //TODO: convert from Blu-ray image based format!
                                     }
-                                    else if (x.CodecId.ToUpper() == "S_TEXT/UTF8" || x.CodecId.ToUpper() == "S_TEXT/SSA" || x.CodecId.ToUpper() == "S_TEXT/ASS")
+                                    else if (x.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || x.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || x.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                     {
                                         mkvCount++;
                                     }
@@ -704,7 +704,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (isMatroska)
                         {
-                            if (Path.GetExtension(fileName).ToLower() == ".mkv" || Path.GetExtension(fileName).ToLower() == ".mks")
+                            if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
                             {
                                 Matroska mkv = new Matroska();
                                 bool isValid = false;
@@ -722,15 +722,15 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         foreach (MatroskaSubtitleInfo x in subtitleList)
                                         {
-                                            if (x.CodecId.ToUpper() == "S_VOBSUB")
+                                            if (x.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                             {
                                                 //TODO: convert from VobSub image based format
                                             }
-                                            else if (x.CodecId.ToUpper() == "S_HDMV/PGS")
+                                            else if (x.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                             {
                                                 //TODO: convert from Blu-ray image based format
                                             }
-                                            else if (x.CodecId.ToUpper() == "S_TEXT/UTF8" || x.CodecId.ToUpper() == "S_TEXT/SSA" || x.CodecId.ToUpper() == "S_TEXT/ASS")
+                                            else if (x.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || x.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || x.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                             {
                                                 _matroskaListViewItem = item;
                                                 List<SubtitleSequence> mkvSub = mkv.GetMatroskaSubtitle(fileName, (int)x.TrackNumber, out isValid, MatroskaProgress);

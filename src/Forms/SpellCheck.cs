@@ -704,9 +704,9 @@ namespace Nikse.SubtitleEdit.Forms
                             correct = false;
                             if (_currentWord == "'")
                                 correct = true;
-                            else if (_languageName.StartsWith("en_") && (_currentWord.ToLower() == "a" || _currentWord == "I"))
+                            else if (_languageName.StartsWith("en_") && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
                                 correct = true;
-                            else if (_languageName.StartsWith("da_") && _currentWord.ToLower() == "i")
+                            else if (_languageName.StartsWith("da_") && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
                                 correct = true;
                         }
 

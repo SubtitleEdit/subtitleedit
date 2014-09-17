@@ -642,7 +642,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     foreach (XmlNode innerInnerNode in innerNode)
                                     {
                                         if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Italic"] != null &&
-                                            innerInnerNode.Attributes["Italic"].InnerText.ToLower() == "yes")
+                                            innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
                                         {
                                             if (innerInnerNode.Attributes["Color"] != null)
                                                 pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
@@ -651,7 +651,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         }
                                         else if (innerInnerNode.Name == "Font" && innerInnerNode.Attributes["Color"] != null)
                                         {
-                                            if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.ToLower() == "yes")
+                                            if (innerInnerNode.Attributes["Italic"] != null && innerInnerNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase))
                                                 pText.Append("<i><font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font><i>");
                                             else
                                                 pText.Append("<font color=\"" + GetColorStringFromDCinema(innerInnerNode.Attributes["Color"].Value) + "\">" + innerInnerNode.InnerText + "</font>");
@@ -671,7 +671,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = node.Attributes["TimeIn"].InnerText;
                     string end = node.Attributes["TimeOut"].InnerText;
 
-                    if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.ToLower() == "yes" &&
+                    if (node.ParentNode.Name == "Font" && node.ParentNode.Attributes["Italic"] != null && node.ParentNode.Attributes["Italic"].InnerText.Equals("yes", StringComparison.OrdinalIgnoreCase) &&
                         !pText.ToString().Contains("<i>"))
                     {
                         string text = pText.ToString();
