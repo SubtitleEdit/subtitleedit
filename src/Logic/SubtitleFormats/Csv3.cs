@@ -66,11 +66,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine(string.Format(format, Seperator, "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Line 1", "Line 2"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                var arr = p.Text.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var arr = p.Text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length > 3)
                 {
                     string s = Utilities.AutoBreakLine(p.Text);
-                    arr = s.Trim().Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    arr = s.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 }
                 string line1 = string.Empty;
                 string line2 = string.Empty;
@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string part)
         {
-            string[] parts = part.Split(".:".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = part.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             //00:00:07:12
             string hour = parts[0];

@@ -1,12 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Language Name="อังกฤษ">
+<?xml version="1.0" encoding="utf-8"?>
+<Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.0</Version>
+    <Version>3.4.2</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
-    <HelpFile />
-    <OK>&amp;ตกลง</OK>
+    <HelpFile>
+    </HelpFile>
+    <Ok>&amp;ตกลง</Ok>
     <Cancel>&amp;ยกเลิก</Cancel>
     <Apply>ใช้งาน</Apply>
     <None>ไม่กำหนด</None>
@@ -160,6 +161,7 @@
     <ScanningFolder>กำลังสแกน {0} และโฟลเดอร์ย่อยเพื่อหาไฟล์ซับไตเติ้ล...</ScanningFolder>
     <Recursive>รวมโฟลเดอร์ย่อย</Recursive>
     <SetMinMsBetweenSubtitles>กำหนดวินาทีต่ำสุดระหว่างซับไตเติ้ล</SetMinMsBetweenSubtitles>
+    <PlainText>ข้อความล้วน</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>บีมเมอร์</Title>
@@ -192,6 +194,9 @@
   <ChangeSpeedInPercent>
     <Title>ปรับความเร็วเป็นเปอร์เซนต์</Title>
     <Info>ปรับความเร็วของซับไตเติ้ลเป็นเปอร์เซนต์</Info>
+    <Custom>กำหนดเอง</Custom>
+    <ToDropFrame>เป็นเฟรมดร็อป</ToDropFrame>
+    <FromDropFrame>จากเฟรมดร็อป</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>ตรวจสอบอัพเดต</Title>
@@ -311,37 +316,37 @@
     <SubtitleImageXofYAndWidthXHeight>อิมเมจซับไตเติ้ล {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>อิมเมจซับไตเติ้ล</SubtitleImage>
   </DvdSubRipChooseLanguage>
-  <EbuSaveOtpions>
-    <Title>ตัวเลือกบันทึก EBU</Title>
+  <EbuSaveOptions>
+    <Title>ตัวเลือกบันทึกเป็น EBU</Title>
     <GeneralSubtitleInformation>ข้อมูลซับไตเติ้ลทั่วไป</GeneralSubtitleInformation>
     <CodePageNumber>หมายเลขโค้ดเพจ</CodePageNumber>
     <DiskFormatCode>รหัสรูปแบบดิสก์</DiskFormatCode>
-    <DisplayStandardCode>รหัสมาตรฐานหน้าจอ</DisplayStandardCode>
+    <DisplayStandardCode>รหัสมาตรฐานแสดงผล</DisplayStandardCode>
     <CharacterCodeTable>ตารางตัวอักษร</CharacterCodeTable>
     <LanguageCode>รหัสภาษา</LanguageCode>
-    <OriginalProgramTitle>ชื่อโปรแกรมต้นแบบ</OriginalProgramTitle>
-    <OriginalEpisodeTitle>ชื่อตอนต้นแบบ</OriginalEpisodeTitle>
-    <TranslatedProgramTitle>ชื่อโปรแกรมที่แปลแล้ว</TranslatedProgramTitle>
-    <TranslatedEpisodeTitle>ชื่อตอนที่แปลแล้ว</TranslatedEpisodeTitle>
+    <OriginalProgramTitle>ไตเติ้ลโปรแกรมต้นฉบับ</OriginalProgramTitle>
+    <OriginalEpisodeTitle>ไตเติ้ลตอนต้นฉบับ</OriginalEpisodeTitle>
+    <TranslatedProgramTitle>ไตเติ้ลโปรแกรมแปลแล้ว</TranslatedProgramTitle>
+    <TranslatedEpisodeTitle>ไตเติ้ลตอนแปลแล้ว</TranslatedEpisodeTitle>
     <TranslatorsName>ชื่อผู้แปล</TranslatorsName>
     <SubtitleListReferenceCode>รหัสอ้างอิงรายการซับไตเติ้ล</SubtitleListReferenceCode>
-    <CountryOfOrigin>ประเทศต้นกำเนิด</CountryOfOrigin>
-    <RevisionNumber>หมายเลขริวิชั่น</RevisionNumber>
-    <MaxNoOfDisplayableChars>จำนวนอักษรต่อบรรทัดสูงสุด</MaxNoOfDisplayableChars>
+    <CountryOfOrigin>ประเทศต้นทาง</CountryOfOrigin>
+    <RevisionNumber>หมายเลขรีวิชัน</RevisionNumber>
+    <MaxNoOfDisplayableChars>จำนวนอักษรสูงสุดต่อบรรทัด</MaxNoOfDisplayableChars>
     <MaxNumberOfDisplayableRows>จำนวนบรรทัดสูงสุด</MaxNumberOfDisplayableRows>
-    <DiskSequenceNumber>หมายเลขลำดับดิสก์</DiskSequenceNumber>
+    <DiskSequenceNumber>หมายเลขซีเควนซ์ดิสก์</DiskSequenceNumber>
     <TotalNumberOfDisks>จำนวนดิสก์รวม</TotalNumberOfDisks>
     <Import>อิมพอร์ต...</Import>
-    <TextAndTimingInformation>ข้อมูลข้อความและเวลา</TextAndTimingInformation>
+    <TextAndTimingInformation>ข้อความและเวลา</TextAndTimingInformation>
     <JustificationCode>รหัสเหตุผล</JustificationCode>
     <Errors>ข้อผิดพลาด</Errors>
     <ErrorsX>ข้อผิดพลาด: {0}</ErrorsX>
-    <MaxLengthError>บรรทัดที่ {0} เกินความยาวสูงสุด ({1}) ที่ {2}: {3}</MaxLengthError>
+    <MaxLengthError>บรรทัด {0} ความยาวเกิน ({1}) ไป {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>การแสดงผลไม่เปลี่ยนแปลง</TextUnchangedPresentation>
     <TextLeftJustifiedText>ข้อความชิดซ้าย</TextLeftJustifiedText>
     <TextCentredText>ข้อความวางศูนย์</TextCentredText>
     <TextRightJustifiedText>ข้อความชิดขวา</TextRightJustifiedText>
-  </EbuSaveOtpions>
+  </EbuSaveOptions>
   <EffectKaraoke>
     <Title>เอฟเฟ็กต์แบบคาราโอเกะ</Title>
     <ChooseColor>เลือกสี:</ChooseColor>
@@ -558,22 +563,17 @@
     <AutoBreak>แทรก &amp;br อัตโนมัติ</AutoBreak>
     <Unbreak>&amp;ไม่แยก</Unbreak>
     <FixDoubleDash>แก้ '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>ลบ &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleGreaterThan>ลบ &gt; </FixDoubleGreaterThan>
     <FixEllipsesStart>ลบที่ขึ้นต้นด้วย '...'</FixEllipsesStart>
     <FixMissingOpenBracket>แก้ [ ที่หายไปในบรรทัด</FixMissingOpenBracket>
     <FixMusicNotation>แทนที่สัญลักษณ์ดนตรี (e.g. âTª) ด้วยสัญลักษณ์ที่ชอบ</FixMusicNotation>
-    <FixDoubleDashs>แก้ '--'s -&gt; '...'s </FixDoubleDashs>
-    <FixDoubleGreaterThans>ลบ &gt;&gt; จากจุดเริ่มต้น</FixDoubleGreaterThans>
-    <FixEllipsesStarts>ลบ ... จากจุดเริ่มต้น</FixEllipsesStarts>
-    <FixMissingOpenBrackets>แก้ [ ที่หายไป</FixMissingOpenBrackets>
-    <FixMusicNotations>แทนที่ âTª's ด้วย *'s</FixMusicNotations>
     <XFixDoubleDash>{0} '--' ที่แก้แล้ว</XFixDoubleDash>
-    <XFixDoubleGreaterThan>{0} &gt;&gt; ที่ลบแล้ว</XFixDoubleGreaterThan>
+    <XFixDoubleGreaterThan>{0} &gt; ที่ลบแล้ว</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} '...' ขึ้นต้นที่ลบแล้ว</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ ที่หายไปในบรรทัดที่แก้แล้ว</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} สัญลักษณ์ดนตรีในบรรทัดที่แก้แล้ว</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -689,6 +689,8 @@
         <RestoreAutoBackup>เรียกคืนจากแบ็คอัพอัตโนมัติ...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>คุณสมบัติ Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>คุณสมบัติ Sub Station Alpha...</SubStationAlphaProperties>
+        <EbuProperties>คุณสมบัติ EBU stl...</EbuProperties>
+        <PacProperties>คุณสมบัติ PAC...</PacProperties>
         <OpenOriginal>เปิดซับไตเติ้ลต้นฉบับ (โหมดนักแปล)...</OpenOriginal>
         <SaveOriginal>บันทึกซับไตเติ้ลต้นฉบับ</SaveOriginal>
         <CloseOriginal>ปิดซับไตเติ้ลต้นฉบับ</CloseOriginal>
@@ -944,15 +946,15 @@
       <Pause>พัก</Pause>
       <GoToSubtitlePositionAndPause>ไปที่ตำแหน่งซับแล้วพัก</GoToSubtitlePositionAndPause>
       <SetStartTime>กำหนด&amp;เวลาเริ่ม</SetStartTime>
-      <SetEndTimeAndGoToNext>กำหนด&amp;จุดสิ้นสุด &amp;&amp; ไปต่อไป</SetEndTimeAndGoToNext>
+      <SetEndTimeAndGoToNext>กำหนด&amp;จุดสิ้นสุด &amp; ไปต่อไป</SetEndTimeAndGoToNext>
       <AdjustedViaEndTime>ปรับจากจุดสิ้นสุด {0}</AdjustedViaEndTime>
       <SetEndTime>กำหนด&amp;เวลาสิ้นสุด</SetEndTime>
       <SetstartTimeAndOffsetOfRest>กำหนด&amp;เวลาเริ่มและออฟเซ็ตส่วนที่เหลือ</SetstartTimeAndOffsetOfRest>
       <SearchTextOnline>ค้นหาข้อความออนไลน์</SearchTextOnline>
       <GoogleTranslate>กูเกิ้ลแปลภาษา</GoogleTranslate>
       <GoogleIt>หาด้วยกูเกิ้ล</GoogleIt>
-      <SecondsBackShort>&lt;&lt;</SecondsBackShort>
-      <SecondsForwardShort>&gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;</SecondsBackShort>
+      <SecondsForwardShort>&gt;</SecondsForwardShort>
       <VideoPosition>ตำแหน่งวิดีโอ:</VideoPosition>
       <TranslateTip>แนะนำ: ใช้ &lt;alt+arrow up/down&gt; ไปซับไตเติ้ลก่อน/หลัง</TranslateTip>
       <CreateTip>แนะนำ: ใช้ &lt;ctrl+arrow left/right&gt; คีย์</CreateTip>
@@ -979,7 +981,7 @@
     <VisualSyncPerformedOnSelectedLines>ซิงค์ภาพตามบรรทัดที่เลือกแล้ว</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>ซิงค์ภาพเสร็จแล้ว</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>อิมพอร์ตซับไตเติ้ล VobSub นี้หรือไม่</ImportThisVobSubSubtitle>
-    <FileXIsLargerThan10Mb>ไฟล์ใหญ่กว่า 10 MB: {0}</FileXIsLargerThan10Mb>
+    <FileXIsLargerThan10MB>ไฟล์ขนาดใหญ่เกิน 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>ยืนยันทำต่อหรือไม่</ContinueAnyway>
     <BeforeLoadOf>ก่อนโหลด {0}</BeforeLoadOf>
     <LoadedSubtitleX>ซับไตเติ้ลที่โหลด {0}</LoadedSubtitleX>
@@ -990,6 +992,7 @@
     <SavedOriginalSubtitleX>ซับไตเติ้ลต้นฉบับที่บันทึก {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>ไฟล์บนดิสก์ถูกเปลี่ยนไป</FileOnDiskModified>
     <OverwriteModifiedFile>เขียนทับไฟล์ {0} ที่ถูกแก้เมื่อ {1} {2}{3} ด้วยไฟล์ปัจจุบันที่โหลดจากดิสก์เมื่อ {4} {5} หรือไม่</OverwriteModifiedFile>
+    <FileXIsReadOnly>บันทึกไม่ได้ ไฟล์ {0} อ่านได้อย่างเดียว</FileXIsReadOnly>
     <UnableToSaveSubtitleX>ไม่สามารถบันทึกไฟล์ซับไตเติ้ล {0}
  ซับไตเติ้ลอาจว่างเปล่า - ลองบันทึกใหม่ถ้าแน่ใจว่าซับไตเติ้ลถูกต้อง!</UnableToSaveSubtitleX>
     <BeforeNew>ก่อนสร้าง</BeforeNew>
@@ -1060,6 +1063,7 @@
     <NothingToUndo>ไม่มีอะไรให้เลิกทำ</NothingToUndo>
     <InvalidLanguageNameX>ชื่อภาษาไม่ถูกต้อง: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>ไม่สามารถเปลี่ยนภาษาได้!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>ไม่ต้องแสดงซ้ำอีก</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>จำนวนคำที่แก้แล้ว: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>จำนวนคำที่ข้ามแล้ว: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>จำนวนคำที่ถูกต้อง: {0}</NumberOfCorrectWords>
@@ -1408,10 +1412,10 @@
   <SetSyncPoint>
     <Title>กำหนดจุดซิงค์สำหรับบรรทัด {0}</Title>
     <SyncPointTimeCode>ไทม์โค้ดจุดซิงค์</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 วินาที</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ วินาที</HalfASecondBack>
-    <HalfASecondForward>½ วินาที &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 วินาที &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt; 3 วินาที</ThreeSecondsBack>
+    <HalfASecondBack>&lt; ½ วินาที</HalfASecondBack>
+    <HalfASecondForward>½ วินาที &gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 วินาที &gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>ค่ากำหนด</Title>
@@ -1513,9 +1517,9 @@
     <SpectrogramAppearance>ลักษณะสเปกโตแกรม</SpectrogramAppearance>
     <SpectrogramOneColorGradient>ไล่สีสีเดียว</SpectrogramOneColorGradient>
     <SpectrogramClassic>คลาสสิก</SpectrogramClassic>
-    <WaveformUseFFMPEG>ใช้ FFMPEG เพื่อดึงค่าเวฟ</WaveformUseFFMPEG>
-    <WaveformFFMPEGPath>พาธไปยัง FFMPEG</WaveformFFMPEGPath>
-    <WaveformBrowseToFFMPEG>เบราซ์ไปยัง FFMPEG</WaveformBrowseToFFMPEG>
+    <WaveformUseFFmpeg>ใช้ FFmpeg ในการแยกเวฟ</WaveformUseFFmpeg>
+    <WaveformFFmpegPath>พาธของ FFmpeg</WaveformFFmpegPath>
+    <WaveformBrowseToFFmpeg>เบราซ์หา FFmpeg</WaveformBrowseToFFmpeg>
     <WaveformBrowseToVLC>เบราซ์ไปยัง VLC พอร์ตเอเบิ้ล</WaveformBrowseToVLC>
     <SubStationAlphaStyle>รูปแบบ (Advanced) Sub Station Alpha</SubStationAlphaStyle>
     <ChooseFont>เลือกฟอนต์</ChooseFont>
@@ -1563,7 +1567,7 @@
     <Shift>Shift</Shift>
     <Key>ปุ่ม</Key>
     <TextBox>กล่องข้อความ</TextBox>
-    <UpdateShortcut>Update</UpdateShortcut>
+    <UpdateShortcut>อัพเดต</UpdateShortcut>
     <ShortcutIsNotValid>ช็อตคัทไม่ถูกต้อง: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>สลับแผงควบคุมวิดีโอให้ยึด/ไม่ยึด</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>กำหนดตำแหน่งสิ้นสุด สร้าง และไปตำแหน่งที่สร้าง</CreateSetEndAddNewAndGoToNew>
@@ -1622,7 +1626,9 @@
     <SyntaxColorOverlap>ใส่สีไทม์โค้ดที่ซ้อนทับกัน</SyntaxColorOverlap>
     <SyntaxErrorColor>สีข้อผิดพลาด</SyntaxErrorColor>
     <GoToFirstSelectedLine>ไปบรรทัดแรกที่เลือก</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>ไปบรรทัดว่างถัดไป</GoToNextEmptyLine>
     <MergeSelectedLines>รวมบรรทัดที่เลือก</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>รวมบรรทัดที่เลือก เก็บเฉพาะข้อความแรกที่ไม่ว่างเปล่า</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>สลับโหมดแปลภาษา</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>สลับต้นฉบับกับที่แปลแล้ว</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>รวมต้นฉบับกับที่แปลแล้ว</MergeOriginalAndTranslation>
@@ -1644,6 +1650,11 @@
     <Miscellaneous>อื่นๆ</Miscellaneous>
     <UseDoNotBreakAfterList>ใช้รายการ "ไม่แยกหลังคำว่า" (เพื่อแบ่งคำอัตโนมัติ)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>กำหนดออฟเซ็ตวิดีโอ</Title>
+    <Description>กำหนดออฟเซ็ตวิดีโอ (ซับไตเติ้ลไม่ตรงกับเวลาวิดีโอจริง แต่ +10 ชั่วโมง เป็นต้น)</Description>
+    <RelativeToCurrentVideoPosition>สัมพันธ์กับตำแหน่งวิดีโอปัจจุบัน</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>แสดงบรรทัดที่เลือกก่อน/หลัง</Title>
     <TitleAll>แสดงทุกบรรทัดก่อน/หลัง</TitleAll>
@@ -1755,14 +1766,17 @@
     <NumberOfAlignmentTags>จำนวนแท็กการวางแนว: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>ความยาวซับไตเติ้ล - ต่ำสุด: {0}</LineLengthMinimum>
     <LineLengthMaximum>ความยาวซับไตเติ้ล - สูงสุด: {0}</LineLengthMaximum>
-    <LineLengthAvarage>ความยาวซับไตเติ้ล - เฉลี่ย: {0}</LineLengthAvarage>
-    <LinesPerSubtitleAvarage>ซับไตเติ้ล จำนวนบรรทัด - เฉลี่ย: {0:0.0}</LinesPerSubtitleAvarage>
+    <LineLengthAverage>ความยาวซับไตเติ้ล - เฉลี่ย: {0}</LineLengthAverage>
+    <LinesPerSubtitleAverage>จำนวนบรรทัดต่อซับไตเติ้ล - เฉลี่ย: {0:0.0}</LinesPerSubtitleAverage>
     <SingleLineLengthMinimum>ความยาวบรรทัดเดี่ยว - ต่ำสุด: {0}</SingleLineLengthMinimum>
     <SingleLineLengthMaximum>ความยาวบรรทัดเดี่ยว - สูงสุด: {0}</SingleLineLengthMaximum>
-    <SingleLineLengthAvarage>ความยาวบรรทัดเดี่ยว - เฉลี่ย: {0}</SingleLineLengthAvarage>
+    <SingleLineLengthAverage>ความยาวบรรทัดเดี่ยว - เฉลี่ย: {0}</SingleLineLengthAverage>
     <DurationMinimum>ระยะเวลา- ต่ำสุด: {0:0.000} วินาที</DurationMinimum>
     <DurationMaximum>ระยะเวลา- สูงสุด: {0:0.000} วินาที</DurationMaximum>
-    <DurationAvarage>ระยะเวลา- เฉลี่ย: {0:0.000} วินาที</DurationAvarage>
+    <DurationAverage>ระยะเวลา- เฉลี่ย: {0:0.000} วินาที</DurationAverage>
+    <CharactersPerSecondMinimum>อักษร/วินาที - ต่ำสุด: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>อักษร/วินาที - สูงสุด: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>อักษร/วินาที - เฉลี่ย: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>คุณสมบัติ Advanced Sub Station Alpha</Title>
@@ -1920,6 +1934,7 @@
     <OcrAutoCorrectionSpellchecking>แก้ไข/ตรวจคำโอซีอาร์อัตโนมัติ</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>แก้ข้อผิดพลาดโอซีอาร์</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>อิมพอร์ตข้อความด้วยไทม์โค้ดที่ตรงกัน...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>อิมพอร์ตไทม์โค้ดใหม่</ImportNewTimeCodes>
     <SaveSubtitleImageAs>บันทึกภาพซับไตเติ้ลเป็น...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>บันทึกภาพทั้งหมด (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>บันทึกภาพทั้งหมดพร้อมอินเด็กซ์ html...</SaveAllSubtitleImagesWithHtml>
@@ -1999,6 +2014,6 @@
   </WaveFormGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - กำหนดเสียงใหม่</Title>
-    <VoiceName>ชื่อของเสียง</VoiceName>
+    <VoiceName>ตั้งชื่อของเสียง</VoiceName>
   </WebVttNewVoice>
 </Language>

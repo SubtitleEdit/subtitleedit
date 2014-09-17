@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeStart && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try
@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (paragraph != null && expecting == ExpectingLine.TimeEnd && RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 4)
                     {
                         try

@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string[] arr = p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in arr)
                 {
                     string s = Utilities.RemoveHtmlTags(line);

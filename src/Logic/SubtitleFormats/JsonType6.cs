@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 //split words
                 string text = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");
-                var words = text.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var words = text.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 var times = GenerateTimes(words, text, p.StartTime, p.EndTime);
                 for (int j = 0; j < words.Length; j++)
                 {

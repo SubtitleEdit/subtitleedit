@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (radioButtonHHMMSSMS.Checked)
                 {
                     // Parse string (HH:MM:SS.ms)
-                    string[] timeParts = line.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] timeParts = line.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     // If 4 parts were found...
                     if (timeParts.Length == 4)
                     {

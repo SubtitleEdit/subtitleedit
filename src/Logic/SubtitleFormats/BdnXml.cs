@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static double GetMillisecondsFromTimeCode(string time)
         {
-            string[] parts = time.Split(":;".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = time.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
 
             string hour = parts[0];
             string minutes = parts[1];

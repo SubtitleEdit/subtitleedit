@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 subtitle.Paragraphs.Add(lastParagraph);
                                 success = true;
                             }
-                        }                        
+                        }
                     }
                     if (!isTimeCode && line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
                     {

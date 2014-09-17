@@ -92,8 +92,8 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
                         string start = arr[1];
                         string end = arr[2];
 
-                        string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);

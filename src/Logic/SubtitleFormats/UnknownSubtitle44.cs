@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string text = s.Substring(0, match.Index).Trim();
                     string timeCode = s.Substring(match.Index).Trim();
 
-                    string[] startParts = timeCode.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = timeCode.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4)
                     {
                         try

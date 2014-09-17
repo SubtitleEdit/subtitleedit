@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             p.Text = text.ToString().Trim();
                             subtitle.Paragraphs.Add(p);
                         }
-                        string[] arr = s.Split("\t".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] arr = s.Split(new[] { '\t' }, StringSplitOptions.RemoveEmptyEntries);
                         text = new StringBuilder();
                         p = new Paragraph(DecodeTimeCode(arr[0]), DecodeTimeCode(arr[1]), "");
                     }

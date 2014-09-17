@@ -869,7 +869,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string filePath = files[0];
             var listExt = new List<string>();
-            foreach (var s in Utilities.GetOpenDialogFilter().Split("*".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (var s in Utilities.GetOpenDialogFilter().Split(new[] { '*' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (s.EndsWith(';'))
                     listExt.Add(s.Trim(';'));

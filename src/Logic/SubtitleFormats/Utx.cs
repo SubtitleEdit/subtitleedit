@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (line.StartsWith('#'))
                 {
-                    var timeParts = line.Split("#,".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    var timeParts = line.Split(new[] { '#', ',' }, StringSplitOptions.RemoveEmptyEntries);
                     if (timeParts.Length == 2)
                     {
                         try
@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTimeCode(string timePart)
         {
             //0:03:02.15
-            var parts = timePart.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var parts = timePart.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
 
             int hours = int.Parse(parts[0]);
             int minutes = int.Parse(parts[1]);

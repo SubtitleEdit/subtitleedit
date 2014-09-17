@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 _pluginDoc.LoadXml(e.Result);
-                string[] arr = _pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split("., ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] arr = _pluginDoc.DocumentElement.SelectSingleNode("SubtitleEditVersion").InnerText.Split(new[] { '.', ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 double requiredVersion = Convert.ToDouble(arr[0] + "." + arr[1], CultureInfo.InvariantCulture);
 
                 string[] versionInfo = Utilities.AssemblyVersion.Split('.');

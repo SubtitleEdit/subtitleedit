@@ -127,7 +127,7 @@ SW_VER: 2.25";
 
         private static TimeCode GetTimeCode(string timeString)
         {
-            string[] timeParts = timeString.Split(":,.".ToCharArray());
+            string[] timeParts = timeString.Split(new[] { ':', ',', '.' });
             int milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
             var timeCode = new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), milliseconds);
             return timeCode;

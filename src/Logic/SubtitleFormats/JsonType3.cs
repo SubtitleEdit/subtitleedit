@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             string text = sb.ToString().Substring(startIndex);
-            foreach (string line in text.Replace("},{", Environment.NewLine).Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Replace("},{", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim() + "}";
                 string start = Json.ReadTag(s, "startTime");

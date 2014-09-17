@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 // Split lines (split a subtitle into its lines)
-                var lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 int count = 0;
                 var lineSb = new StringBuilder();
                 string tempLine = string.Empty;
@@ -149,8 +149,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string start = temp[0];
                         string end = temp[1];
 
-                        string[] startParts = start.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                        string[] endParts = end.Split(":.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        string[] startParts = start.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] endParts = end.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             try
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 text = text.Replace("]", @"</i>");
 
                                 // Split subtitle lines (one subtitle has one or more lines)
-                                var subtitleLines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                                var subtitleLines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                                 int count = 0;
                                 var lineSb = new StringBuilder();
                                 string tempLine = string.Empty;

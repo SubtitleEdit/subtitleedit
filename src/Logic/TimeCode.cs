@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static double ParseToMilliseconds(string text)
         {
-            string[] parts = text.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = text.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 4)
             {
                 int hours;
@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static double ParseHHMMSSFFToMilliseconds(string text)
         {
-            string[] parts = text.Split(":,.".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] parts = text.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
             if (parts.Length == 4)
             {
                 int hours;

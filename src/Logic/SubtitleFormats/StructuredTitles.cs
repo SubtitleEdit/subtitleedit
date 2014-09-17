@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 sb.AppendLine(string.Format("{0:0000} : {1},{2},10", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
                 sb.AppendLine("80 80 80");
-                foreach (string line in p.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                     sb.AppendLine("C1Y00 " + line.Trim());
                 sb.AppendLine();
                 index++;
@@ -87,8 +87,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = line.Substring(7, 11);
                     string end = line.Substring(19, 11);
 
-                    string[] startParts = start.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
-                    string[] endParts = end.Split(":".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] startParts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (startParts.Length == 4 && endParts.Length == 4)
                     {
                         p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);

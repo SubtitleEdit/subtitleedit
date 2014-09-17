@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (_spellCheckDictionaryName == null)
                     return string.Empty;
 
-                string[] parts = _spellCheckDictionaryName.Split(Path.DirectorySeparatorChar.ToString().ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] parts = _spellCheckDictionaryName.Split(new[] { Path.DirectorySeparatorChar }, StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Length > 0)
                     return parts[parts.Length - 1];
                 return string.Empty;
@@ -1075,7 +1075,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 // e.g. "selectionsu." -> "selections..."
                 if (input.EndsWith("u.", StringComparison.Ordinal) && _hunspell != null)
                 {
-                    string[] words = input.Split(" .".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] words = input.Split(new[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (words.Length > 0)
                     {
                         string lastWord = words[words.Length - 1].Trim();
@@ -1101,7 +1101,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string FixLowercaseIToUppercaseI(string input, string lastLine)
         {
             var sb = new StringBuilder();
-            string[] lines = input.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = input.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < lines.Length; i++)
             {
                 string l = lines[i];
@@ -1413,7 +1413,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // begin line
-            string[] lines = newText.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = newText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();
             foreach (string l in lines)
             {
@@ -1580,7 +1580,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                     if (!correct && word.Contains('/') && !word.Contains("//"))
                     {
-                        var slashedWords = word.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                        var slashedWords = word.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
                         bool allSlashedCorrect = true;
                         foreach (var slashedWord in slashedWords)
                         {

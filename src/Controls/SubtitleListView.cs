@@ -499,7 +499,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
                     string s = Utilities.RemoveHtmlTags(paragraph.Text, true);
-                    foreach (string line in s.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string line in s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                     {
                         if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
@@ -523,7 +523,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                     item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
                 {
-                    int newLines = paragraph.Text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+                    int newLines = paragraph.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries).Length;
                     if (newLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }

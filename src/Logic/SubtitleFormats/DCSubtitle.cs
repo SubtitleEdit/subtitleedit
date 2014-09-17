@@ -178,7 +178,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     // remove styles for display text (except italic)
                     string text = RemoveSubStationAlphaFormatting(p.Text);
 
-                    string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     int vPos = 1 + lines.Length * 7;
                     int vPosFactor = (int)Math.Round(fontSize / 7.4);
                     if (alignVTop)

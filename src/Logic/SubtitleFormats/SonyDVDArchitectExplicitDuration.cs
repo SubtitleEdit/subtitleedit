@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string s = l;
                     bool success = false;
                     bool isTimeCode = false;
-                    
+
                     if (s.Length > 26 && s.IndexOf(':') == 2)
                     {
                         var match = regex.Match(s);

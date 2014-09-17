@@ -61,8 +61,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             PcrFlag = (packetBuffer[5] & 16) > 0; // and with 00010000 to get fourth byte
             OpcrFlag = (packetBuffer[5] & 8) > 0; // and with 00001000 to get fifth byte
             SplicingPointFlag = (packetBuffer[5] & 4) > 0; // and with 00000100 to get sixth byte
-            TransportPrivateDataFlag = (packetBuffer[5] & 2) > 0; // and with 00000100 to get seventh byte
-            AdaptationFieldExtensionFlag = (packetBuffer[5] & 1) > 0; // and with 00000010 to get 8th byte
+            TransportPrivateDataFlag = (packetBuffer[5] & 4) > 0; // and with 00000100 to get seventh byte
+            AdaptationFieldExtensionFlag = (packetBuffer[5] & 2) > 0; // and with 00000010 to get 8th byte
 
             int index = 6;
             if (PcrFlag)
@@ -92,8 +92,12 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 TransportPrivateDataLength = packetBuffer[index];
                 index++;
                 TransportPrivateData = new byte[TransportPrivateDataLength];
-                Buffer.BlockCopy(packetBuffer, index, TransportPrivateData, 0, TransportPrivateDataLength);
-                index += TransportPrivateDataLength;
+
+                if (index + TransportPrivateDataLength <= packetBuffer.Length)
+                {
+                    Buffer.BlockCopy(packetBuffer, index, TransportPrivateData, 0, TransportPrivateDataLength);
+                    index += TransportPrivateDataLength;
+                }
             }
 
             if (AdaptationFieldExtensionFlag)

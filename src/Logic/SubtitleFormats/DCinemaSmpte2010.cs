@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             if (!string.IsNullOrEmpty(ss.CurrentDCinemaEditRate))
             {
-                string[] temp = ss.CurrentDCinemaEditRate.Split(" ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] temp = ss.CurrentDCinemaEditRate.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 double d1, d2;
                 if (temp.Length == 2 && double.TryParse(temp[0], out d1) && double.TryParse(temp[1], out d2))
                     frameRate = d1 / d2;
@@ -217,7 +217,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     // remove styles for display text (except italic)
                     string text = RemoveSubStationAlphaFormatting(p.Text);
 
-                    string[] lines = text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     int vPos = 1 + lines.Length * 7;
                     int vPosFactor = (int)Math.Round(fontSize / 7.4);
                     if (alignVTop)

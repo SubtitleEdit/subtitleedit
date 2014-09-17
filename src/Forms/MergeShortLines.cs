@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 string numbers = item.SubItems[1].Text;
-                foreach (string number in numbers.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (string number in numbers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (number == p.Number.ToString())
                         return item.Checked;
@@ -281,7 +281,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int index = listViewFixes.SelectedIndices[0];
                 ListViewItem item = listViewFixes.Items[index];
-                string[] numbers = item.SubItems[1].Text.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                string[] numbers = item.SubItems[1].Text.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string number in numbers)
                 {
                     foreach (Paragraph p in _subtitle.Paragraphs)
