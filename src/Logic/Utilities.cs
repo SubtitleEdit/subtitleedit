@@ -19,8 +19,12 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public static class Utilities
     {
-        public static readonly char[] NewLineChars = Environment.NewLine.ToCharArray();
         public const string WinXP2KUnicodeFontName = "Times New Roman";
+
+        /// <summary>
+        /// Cached environment new line characters for faster lookup.
+        /// </summary>
+        internal static readonly char[] NewLineChars = Environment.NewLine.ToCharArray();
 
         public static byte[] ReadAllBytes(String path)
         {
