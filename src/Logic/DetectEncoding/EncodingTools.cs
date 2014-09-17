@@ -101,27 +101,6 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
         }
 
         /// <summary>
-        /// Checks if specified string data is acii data.
-        /// </summary>
-        /// <param name="data"></param>
-        /// <returns></returns>
-        public static bool IsAscii(string data)
-        {
-            // assume empty string to be ascii
-            if (string.IsNullOrEmpty(data))
-                return true;
-            foreach (char c in data)
-            {
-                if ((int)c > 127)
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Gets the best Encoding for usage in mime encodings
         /// </summary>
         /// <param name="input">text to detect</param>

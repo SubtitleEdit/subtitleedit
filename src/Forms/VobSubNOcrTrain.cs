@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         }
 
-        internal void Initialize(Logic.Ocr.NOcrDb _nOcrDb)
+        internal void Initialize(NOcrDb _nOcrDb)
         {
             if (_nOcrDb != null)
             {
