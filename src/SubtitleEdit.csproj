@@ -917,7 +917,7 @@
     <Compile Include="Logic\SubtitleFormats\Csv3.cs" />
     <Compile Include="Logic\SubtitleFormats\FilmEditXml.cs" />
     <Compile Include="Logic\SubtitleFormats\SoftNiColonSub.cs" />
-    <Compile Include="Logic\SubtitleFormats\SwiftTextLineNoAndDur .cs" />
+    <Compile Include="Logic\SubtitleFormats\SwiftTextLineNoAndDur.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle71.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle70.cs" />
     <Compile Include="Logic\SubtitleFormats\TimeXml2.cs" />
@@ -931,7 +931,7 @@
     <Compile Include="Logic\SubtitleFormats\ScenaristClosedCaptionsDropFrame.cs" />
     <Compile Include="Logic\SubtitleFormats\FinalCutProXCM.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle67.cs" />
-    <Compile Include="Logic\SubtitleFormats\SwiftTextLineNumber .cs" />
+    <Compile Include="Logic\SubtitleFormats\SwiftTextLineNumber.cs" />
     <Compile Include="Logic\SubtitleFormats\Titra.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle69.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle72.cs" />
@@ -1008,7 +1008,7 @@
     <Compile Include="Logic\SubtitleFormats\StructuredTitles.cs" />
     <Compile Include="Logic\SubtitleFormats\SubtitleEditorProject.cs" />
     <Compile Include="Logic\SubtitleFormats\SwiftInterchange2.cs" />
-    <Compile Include="Logic\SubtitleFormats\SwiftText .cs" />
+    <Compile Include="Logic\SubtitleFormats\SwiftText.cs" />
     <Compile Include="Logic\SubtitleFormats\Tek.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText10.cs" />
     <Compile Include="Logic\SubtitleFormats\TimedText200604.cs" />
