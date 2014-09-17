@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (String.Compare(fileName, oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) != 0 && index < MaxRecentFiles)
+                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
                 index++;
             }
@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Logic
             var newList = new List<RecentFileEntry>();
             foreach (var oldRecentFile in Files)
             {
-                if (String.Compare(fileName, oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) == 0)
+                if (fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase))
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
             }
             if (newList.Count == 0)
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic
             int index = 0;
             foreach (var oldRecentFile in Files)
             {
-                if (String.Compare(fileName, oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) != 0 && index < MaxRecentFiles)
+                if (!fileName.Equals(oldRecentFile.FileName, StringComparison.OrdinalIgnoreCase) && index < MaxRecentFiles)
                     newList.Add(new RecentFileEntry { FileName = oldRecentFile.FileName, FirstVisibleIndex = oldRecentFile.FirstVisibleIndex, FirstSelectedIndex = oldRecentFile.FirstSelectedIndex, VideoFileName = oldRecentFile.VideoFileName, OriginalFileName = oldRecentFile.OriginalFileName });
                 index++;
             }

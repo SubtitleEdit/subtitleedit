@@ -34,7 +34,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            if (fileName != null && fileName.ToLower().EndsWith(".dost"))
+            if (fileName != null && fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
                 return false;
 
             var subtitle = new Subtitle();
@@ -129,11 +129,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (s.StartsWith('$'))
                 {
-                    if (s.Replace(" ", string.Empty).ToLower() == "$italic=true")
+                    if (s.Replace(" ", string.Empty).Equals("$italic=true", StringComparison.OrdinalIgnoreCase))
                     {
                         italic = true;
                     }
-                    else if (s.Replace(" ", string.Empty).ToLower() == "$italic=false")
+                    else if (s.Replace(" ", string.Empty).Equals("$italic=false", StringComparison.OrdinalIgnoreCase))
                     {
                         italic = false;
                     }

@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 200 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.ToLower().EndsWith(".ult") || fileName.ToLower().EndsWith(".uld")) //  drop frame is often named uld, and ult for non-drop
+                    if (fileName.EndsWith(".ult", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".uld", StringComparison.OrdinalIgnoreCase)) //  drop frame is often named uld, and ult for non-drop
                     {
                         byte[] buffer = Utilities.ReadAllBytes(fileName);
                         string id = Encoding.ASCII.GetString(buffer, 0, UltechId.Length);

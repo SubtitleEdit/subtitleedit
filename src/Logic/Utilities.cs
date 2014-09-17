@@ -415,7 +415,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (!string.IsNullOrEmpty(node.InnerText))
                     {
-                        if (node.Attributes["RegEx"] != null && string.Compare(node.Attributes["RegEx"].InnerText, "true", StringComparison.OrdinalIgnoreCase) == 0)
+                        if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
                             Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
                             _lastNoBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
@@ -646,7 +646,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (s[mid + j] == '-' && s[mid + j + 1] == ' ' && s[mid + j - 1] == ' ')
                         {
                             string rest = s.Substring(mid + j + 1).TrimStart();
-                            if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
+                            if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
                                 splitPos = mid + j;
                                 break;
@@ -658,7 +658,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (s[mid - j] == '-' && s[mid - j + 1] == ' ' && s[mid - j - 1] == ' ')
                         {
                             string rest = s.Substring(mid - j + 1).TrimStart();
-                            if (rest.Length > 0 && (rest.Substring(0, 1) == rest.Substring(0, 1).ToUpper()))
+                            if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
                                 if (mid - j > 5 && s[mid - j - 1] == ' ' && "!?.".Contains(s[mid - j - 2].ToString()))
                                 {
@@ -897,7 +897,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("<font>", string.Empty);
             s = s.Replace("<FONT>", string.Empty);
             s = s.Replace("<Font>", string.Empty);
-            while (s.ToLower().Contains("<font"))
+            while (s.Contains("<font", StringComparison.OrdinalIgnoreCase))
             {
                 int startIndex = s.ToLower().IndexOf("<font", StringComparison.Ordinal);
                 int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
@@ -912,7 +912,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</P>", string.Empty);
             s = s.Replace("<p>", string.Empty);
             s = s.Replace("<P>", string.Empty);
-            while (s.ToLower().Contains("<p "))
+            while (s.Contains("<p ", StringComparison.OrdinalIgnoreCase))
             {
                 int startIndex = s.IndexOf("<p ", StringComparison.OrdinalIgnoreCase);
                 int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
@@ -972,7 +972,7 @@ namespace Nikse.SubtitleEdit.Logic
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && fileName.ToLower().EndsWith(".xml", StringComparison.Ordinal) && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
+                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
@@ -1767,7 +1767,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void AddExtension(StringBuilder sb, string extension)
         {
-            if (!sb.ToString().ToLower().Contains("*" + extension.ToLower() + ";"))
+            if (!sb.ToString().Contains("*" + extension + ";", StringComparison.OrdinalIgnoreCase))
             {
                 sb.Append('*');
                 sb.Append(extension.TrimStart('*'));
@@ -1805,7 +1805,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var extraExtensions = Configuration.Settings.General.OpenSubtitleExtraExtensions.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string ext in extraExtensions)
                 {
-                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().ToLower().Contains(ext.ToLower()))
+                    if (ext.StartsWith("*.", StringComparison.Ordinal) && !sb.ToString().Contains(ext, StringComparison.OrdinalIgnoreCase))
                         AddExtension(sb, ext);
                 }
             }
@@ -4052,7 +4052,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains("- ") && text.Length > 5)
             {
                 int idx = text.IndexOf("- ", 2, StringComparison.Ordinal);
-                if (text.ToLower().StartsWith("<i>", StringComparison.Ordinal))
+                if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                     idx = text.IndexOf("- ", 5, StringComparison.Ordinal);
                 while (idx > 0)
                 {
@@ -4072,20 +4072,20 @@ namespace Nikse.SubtitleEdit.Logic
                             after = after + text[k].ToString();
                             k++;
                         }
-                        if (after.Length > 0 && string.Compare(after, before, StringComparison.OrdinalIgnoreCase) == 0)
+                        if (after.Length > 0 && after.Equals(before, StringComparison.OrdinalIgnoreCase))
                             text = text.Remove(idx + 1, 1);
                         else if (before.Length > 0)
                         {
-                            if ((language == "en" && (after.ToLower() == "and" || after.ToLower() == "or")) ||
-                                (language == "es" && (after.ToLower() == "y" || after.ToLower() == "o")) ||
-                                (language == "da" && (after.ToLower() == "og" || after.ToLower() == "eller")) ||
-                                (language == "de" && (after.ToLower() == "und" || after.ToLower() == "oder")) ||
-                                (language == "fi" && (after.ToLower() == "ja" || after.ToLower() == "tai")) ||
-                                (language == "fr" && (after.ToLower() == "et" || after.ToLower() == "ou")) ||
-                                (language == "it" && (after.ToLower() == "e" || after.ToLower() == "o")) ||
-                                (language == "nl" && (after.ToLower() == "en" || after.ToLower() == "of")) ||
-                                (language == "pl" && (after.ToLower() == "i" || after.ToLower() == "czy")) ||
-                                (language == "pt" && (after.ToLower() == "e" || after.ToLower() == "ou")))
+                            if ((language == "en" && (after.Equals("and", StringComparison.OrdinalIgnoreCase) || after.Equals("or", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "es" && (after.Equals("y", StringComparison.OrdinalIgnoreCase) || after.Equals("o", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "da" && (after.Equals("og", StringComparison.OrdinalIgnoreCase) || after.Equals("eller", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "de" && (after.Equals("und", StringComparison.OrdinalIgnoreCase) || after.Equals("oder", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "fi" && (after.Equals("ja", StringComparison.OrdinalIgnoreCase) || after.Equals("tai", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "fr" && (after.Equals("et", StringComparison.OrdinalIgnoreCase) || after.Equals("ou", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "it" && (after.Equals("e", StringComparison.OrdinalIgnoreCase) || after.Equals("o", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "nl" && (after.Equals("en", StringComparison.OrdinalIgnoreCase) || after.Equals("of", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "pl" && (after.Equals("i", StringComparison.OrdinalIgnoreCase) || after.Equals("czy", StringComparison.OrdinalIgnoreCase))) ||
+                                (language == "pt" && (after.Equals("e", StringComparison.OrdinalIgnoreCase) || after.Equals("ou", StringComparison.OrdinalIgnoreCase))))
                             {
                             }
                             else

@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 ";
 
             bool useExtra = false;
-            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.ToLower().StartsWith("<style"))
+            if (!string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.StartsWith("<style", StringComparison.OrdinalIgnoreCase))
             {
                 useExtra = true;
                 header =
@@ -197,7 +197,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static List<string> GetStylesFromHeader(string header)
         {
             var list = new List<string>();
-            if (!string.IsNullOrEmpty(header) && header.ToLower().StartsWith("<style"))
+            if (!string.IsNullOrEmpty(header) && header.StartsWith("<style", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = text.Remove(0, text.IndexOf('>') + 1);
                 text = text.TrimEnd();
 
-                if (text.ToLower().EndsWith("</sync>", StringComparison.Ordinal))
+                if (text.EndsWith("</sync>", StringComparison.OrdinalIgnoreCase))
                     text = text.Substring(0, text.Length - 7).TrimEnd();
 
                 if (text.EndsWith("</p>", StringComparison.Ordinal) || text.EndsWith("</P>", StringComparison.Ordinal))

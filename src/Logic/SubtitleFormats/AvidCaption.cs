@@ -69,11 +69,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string tline = line.Trim();
-                if (string.Compare(tline, "<begin subtitles>", StringComparison.OrdinalIgnoreCase) == 0)
+                if (tline.Equals("<begin subtitles>", StringComparison.OrdinalIgnoreCase))
                 {
                     beginFound = true;
                 }
-                else if (string.Compare(tline, "<end subtitles>", StringComparison.OrdinalIgnoreCase) == 0)
+                else if (tline.Equals("<end subtitles>", StringComparison.OrdinalIgnoreCase))
                 {
                     endFound = true;
                     break;

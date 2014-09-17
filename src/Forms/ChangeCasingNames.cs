@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string textNoTags = Utilities.RemoveHtmlTags(text);
                     if (textNoTags != textNoTags.ToUpper())
                     {
-                        if (item.Checked && text != null && text.ToLower().Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
                         {
                             var st = new StripableText(text);
                             st.FixCasing(new List<string> { name }, true, false, false, string.Empty);

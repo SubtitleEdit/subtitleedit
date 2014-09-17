@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (s.StartsWith("scaledborderandshadow:"))
                     {
-                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().ToLower() == "yes";
+                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes", StringComparison.OrdinalIgnoreCase);
                     }
                 }
             }
@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            if (_subtitle.Header == null || !_subtitle.Header.ToLower().Contains("[script info]"))
+            if (_subtitle.Header == null || !_subtitle.Header.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 _subtitle.Header = GetDefaultHeader();
 
             string title = textBoxTitle.Text;
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool found = false;
             foreach (string line in _subtitle.Header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.ToLower().StartsWith("[script info]"))
+                if (line.StartsWith("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
                     scriptInfoOn = true;
                 }

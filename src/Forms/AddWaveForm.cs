@@ -242,7 +242,7 @@ namespace Nikse.SubtitleEdit.Forms
             int numberOfAudioTracks = 0;
             if (labelVideoFileName.Text.Length > 1 && File.Exists(labelVideoFileName.Text))
             {
-                if (labelVideoFileName.Text.ToLower().EndsWith(".mkv"))
+                if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 { // Choose for number of audio tracks in matroska files
                     try
                     {
@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                     }
                 }
-                else if (labelVideoFileName.Text.ToLower().EndsWith(".mp4") || labelVideoFileName.Text.ToLower().EndsWith(".m4v"))
+                else if (labelVideoFileName.Text.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || labelVideoFileName.Text.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
                 { // Choose for number of audio tracks in mp4 files
                     try
                     {
@@ -316,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for delay in matroska files
-                if (labelVideoFileName.Text.ToLower().EndsWith(".mkv"))
+                if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 {
                     try
                     {

@@ -67,10 +67,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string all = sb.ToString();
-            if (!string.IsNullOrEmpty(fileName) && fileName.ToLower().EndsWith(".ass", StringComparison.Ordinal) && !all.Contains("[V4 Styles]"))
+            if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }
-            else if (!all.ToLower().Contains("dialogue:"))
+            else if (!all.Contains("dialogue:", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -359,7 +359,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
             foreach (string line in headerLines.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (line.ToLower().StartsWith("style:", StringComparison.Ordinal))
+                if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                 {
                     int end = line.IndexOf(',');
                     if (end > 0)
@@ -696,20 +696,20 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip comment lines
                 }
-                else if (line.Trim().ToLower().StartsWith("dialogue:", StringComparison.Ordinal)) // fix faulty font tags...
+                else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
                 }
 
-                if (string.Compare(line.Trim(), "[events]", StringComparison.OrdinalIgnoreCase) == 0)
+                if (line.Trim().Equals("[events]", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = true;
                     fontsStarted = false;
                     graphicsStarted = false;
                 }
-                else if (string.Compare(line.Trim(), "[fonts]", StringComparison.OrdinalIgnoreCase) == 0)
+                else if (line.Trim().Equals("[fonts]", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = false;
                     fontsStarted = true;
@@ -717,7 +717,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     footer.AppendLine();
                     footer.AppendLine("[Fonts]");
                 }
-                else if (string.Compare(line.Trim(), "[graphics]", StringComparison.OrdinalIgnoreCase) == 0)
+                else if (line.Trim().Equals("[graphics]", StringComparison.OrdinalIgnoreCase))
                 {
                     eventsStarted = false;
                     fontsStarted = false;
@@ -743,19 +743,19 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             format = line.ToLower().Substring(8).Split(',');
                             for (int i = 0; i < format.Length; i++)
                             {
-                                if (string.Compare(format[i].Trim(), "start", StringComparison.OrdinalIgnoreCase) == 0)
+                                if (format[i].Trim().Equals("start", StringComparison.OrdinalIgnoreCase))
                                     indexStart = i;
-                                else if (string.Compare(format[i].Trim(), "end", StringComparison.OrdinalIgnoreCase) == 0)
+                                else if (format[i].Trim().Equals("end", StringComparison.OrdinalIgnoreCase))
                                     indexEnd = i;
-                                else if (string.Compare(format[i].Trim(), "text", StringComparison.OrdinalIgnoreCase) == 0)
+                                else if (format[i].Trim().Equals("text", StringComparison.OrdinalIgnoreCase))
                                     indexText = i;
-                                else if (string.Compare(format[i].Trim(), "style", StringComparison.OrdinalIgnoreCase) == 0)
+                                else if (format[i].Trim().Equals("style", StringComparison.OrdinalIgnoreCase))
                                     indexStyle = i;
-                                else if (string.Compare(format[i].Trim(), "actor", StringComparison.OrdinalIgnoreCase) == 0)
+                                else if (format[i].Trim().Equals("actor", StringComparison.OrdinalIgnoreCase))
                                     indexActor = i;
-                                else if (string.Compare(format[i].Trim(), "effect", StringComparison.OrdinalIgnoreCase) == 0)
+                                else if (format[i].Trim().Equals("effect", StringComparison.OrdinalIgnoreCase))
                                     indexEffect = i;
-                                else if (string.Compare(format[i].Trim(), "layer", StringComparison.OrdinalIgnoreCase) == 0)
+                                else if (format[i].Trim().Equals("layer", StringComparison.OrdinalIgnoreCase))
                                     indexLayer = i;
                             }
                         }
@@ -955,13 +955,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             //Black = &H000000&
             string s = f.Trim().Trim('&');
 
-            if (s.ToLower().StartsWith('h') && s.Length < 7)
+            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length < 7)
             {
                 while (s.Length < 7)
                     s = s.Insert(1, "0");
             }
 
-            if (s.ToLower().StartsWith('h') && s.Length == 7)
+            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 7)
             {
                 s = s.Substring(1);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -974,7 +974,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            else if (s.ToLower().StartsWith('h') && s.Length == 9)
+            else if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 9)
             {
                 s = s.Substring(3);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -1265,9 +1265,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
             foreach (string line in header.Replace(Environment.NewLine, "\n").Split('\n'))
             {
-                if (string.Compare(line, "[V4+ Styles]", StringComparison.OrdinalIgnoreCase) == 0 || string.Compare(line, "[V4 Styles]", StringComparison.OrdinalIgnoreCase) == 0)
+                if (line.Equals("[V4+ Styles]", StringComparison.OrdinalIgnoreCase) || line.Equals("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
                     stylesStarted = true;
-                if (line.ToLower().StartsWith("format:", StringComparison.Ordinal))
+                if (line.StartsWith("format:", StringComparison.OrdinalIgnoreCase))
                     styleFormat = line;
                 if (!line.StartsWith("Style: " + style.Name + ",", StringComparison.Ordinal)) // overwrite existing style
                     sb.AppendLine(line);
@@ -1449,7 +1449,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             }
                         }
                     }
-                    if (styleName != null && style.Name != null && string.Compare(styleName, style.Name, StringComparison.OrdinalIgnoreCase) == 0)
+                    if (styleName != null && style.Name != null && styleName.Equals(style.Name, StringComparison.OrdinalIgnoreCase))
                     {
                         style.LoadedFromHeader = true;
                         return style;

@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string name in Utilities.GetDictionaryLanguages())
             {
                 comboBoxDictionaries.Items.Add(name);
-                if (hunspellName != null && name.ToLower() == hunspellName.ToLower())
+                if (hunspellName != null && name.Equals(hunspellName, StringComparison.OrdinalIgnoreCase))
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
         }

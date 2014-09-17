@@ -486,12 +486,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _namesEtcList.Add(ChangeWord);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                        if (_languageName.StartsWith("en_") && !ChangeWord.ToLower().EndsWith('s'))
+                        if (_languageName.StartsWith("en_") && !ChangeWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
                         {
                             _namesEtcList.Add(ChangeWord + "s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
                         }
-                        if (!ChangeWord.ToLower().EndsWith('s'))
+                        if (!ChangeWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
                         {
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
@@ -704,14 +704,14 @@ namespace Nikse.SubtitleEdit.Forms
                             correct = false;
                             if (_currentWord == "'")
                                 correct = true;
-                            else if (_languageName.StartsWith("en_") && (_currentWord.ToLower() == "a" || _currentWord == "I"))
+                            else if (_languageName.StartsWith("en_") && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
                                 correct = true;
-                            else if (_languageName.StartsWith("da_") && _currentWord.ToLower() == "i")
+                            else if (_languageName.StartsWith("da_") && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
                                 correct = true;
                         }
 
                         if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng &&
-                            _languageName.StartsWith("en_") && _currentWord.ToLower().EndsWith("in'"))
+                            _languageName.StartsWith("en_") && _currentWord.EndsWith("in'", StringComparison.OrdinalIgnoreCase))
                         {
                             correct = DoSpell(_currentWord.TrimEnd('\'') + "g");
                         }
@@ -1053,7 +1053,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string namesItem in _namesEtcList)
                 _namesEtcListUppercase.Add(namesItem.ToUpper());
 
-            if (_languageName.ToLower().StartsWith("en_"))
+            if (_languageName.StartsWith("en_", StringComparison.OrdinalIgnoreCase))
             {
                 foreach (string namesItem in _namesEtcList)
                 {
@@ -1269,12 +1269,12 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _namesEtcList.Remove(undo.UndoWord);
                             _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper());
-                            if (_languageName.StartsWith("en_") && !undo.UndoWord.ToLower().EndsWith('s'))
+                            if (_languageName.StartsWith("en_") && !undo.UndoWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
                             {
                                 _namesEtcList.Remove(undo.UndoWord + "s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "S");
                             }
-                            if (!undo.UndoWord.ToLower().EndsWith('s'))
+                            if (!undo.UndoWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
                             {
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "'S");

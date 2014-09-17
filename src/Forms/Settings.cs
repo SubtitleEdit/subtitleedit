@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string folder = Configuration.BaseDirectory;
 
-            if (string.IsNullOrEmpty(fileName) || !fileName.ToUpper().StartsWith(folder.Substring(0, 2)))
+            if (string.IsNullOrEmpty(fileName) || !fileName.StartsWith(folder.Substring(0, 2), StringComparison.OrdinalIgnoreCase))
                 return string.Empty;
 
             Uri pathUri = new Uri(fileName);
@@ -119,9 +119,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
                 numericUpDownMinGapMs.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
 
-            if (string.Compare(gs.VideoPlayer.Trim(), "VLC", true) == 0 && LibVlcDynamic.IsInstalled)
+            if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
-            else if (string.Compare(gs.VideoPlayer.Trim(), "MPlayer", true) == 0 && Utilities.IsMPlayerAvailable)
+            else if (gs.VideoPlayer.Trim().Equals("MPlayer", StringComparison.OrdinalIgnoreCase) && Utilities.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
             else if (Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Checked = true;
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (x.IsStyleAvailable(FontStyle.Regular) && x.IsStyleAvailable(FontStyle.Bold))
                 {
                     comboBoxSubtitleFont.Items.Add(x.Name);
-                    if (string.Compare(x.Name, gs.SubtitleFontName, true) == 0)
+                    if (x.Name.Equals(gs.SubtitleFontName, StringComparison.OrdinalIgnoreCase))
                         comboBoxSubtitleFont.SelectedIndex = comboBoxSubtitleFont.Items.Count - 1;
                 }
             }
@@ -501,7 +501,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             checkBoxCheckForUpdates.Checked = Configuration.Settings.General.CheckForUpdates;
 
-            if (gs.SpellChecker.ToLower().Contains("word"))
+            if (gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
                 comboBoxSpellChecker.SelectedIndex = 1;
             else
                 comboBoxSpellChecker.SelectedIndex = 0;
@@ -2307,7 +2307,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (string s in listBox.Items)
             {
-                if (s.ToLower().StartsWith(_listBoxSearchString.ToLower()))
+                if (s.StartsWith(_listBoxSearchString, StringComparison.OrdinalIgnoreCase))
                 {
                     listBox.SelectedIndex = i;
                     break;
@@ -2514,15 +2514,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] parts = shortcut.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string k in parts)
                 {
-                    if (k.ToUpper() == "CONTROL")
+                    if (k.Equals("CONTROL", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxShortcutsControl.Checked = true;
                     }
-                    else if (k.ToUpper() == "ALT")
+                    else if (k.Equals("ALT", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxShortcutsAlt.Checked = true;
                     }
-                    else if (k.ToUpper() == "SHIFT")
+                    else if (k.Equals("SHIFT", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxShortcutsShift.Checked = true;
                     }
@@ -2531,7 +2531,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int i = 0;
                         foreach (string value in comboBoxShortcutKey.Items)
                         {
-                            if (value.ToUpper() == k.ToUpper())
+                            if (value.Equals(k, StringComparison.OrdinalIgnoreCase))
                             {
                                 comboBoxShortcutKey.SelectedIndex = i;
                                 break;

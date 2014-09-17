@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
             Header = subtitle.Header;
             _format = format;
             _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;
-            if (Header == null || !Header.ToLower().Contains("style:"))
+            if (Header == null || !Header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
 
             _subtitle = subtitle;
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (string.IsNullOrEmpty(p.Extra) && ssaStyle.Name.TrimStart('*') == "Default")
                     count++;
-                else if (p.Extra != null && string.Compare(ssaStyle.Name.TrimStart('*'), p.Extra.TrimStart('*'), StringComparison.OrdinalIgnoreCase) == 0)
+                else if (p.Extra != null && ssaStyle.Name.TrimStart('*').Equals(p.Extra.TrimStart('*'), StringComparison.OrdinalIgnoreCase))
                     count++;
             }
             subItem = new ListViewItem.ListViewSubItem(item, count.ToString());
@@ -368,7 +368,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string f = format[i].Trim();
                             if (i == nameIndex)
-                                correctLine = f.ToLower() == styleName.ToLower();
+                                correctLine = f.Equals(styleName, StringComparison.OrdinalIgnoreCase);
                         }
                         if (correctLine)
                         {
@@ -1260,11 +1260,11 @@ namespace Nikse.SubtitleEdit.Forms
                         string styleFormat = "Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding";
                         foreach (string line in File.ReadAllLines(saveFileDialogStyle.FileName))
                         {
-                            if (line.ToLower().StartsWith("format:"))
+                            if (line.StartsWith("format:", StringComparison.OrdinalIgnoreCase))
                             {
                                 styleFormat = line;
                             }
-                            else if (line.ToLower().StartsWith("style:"))
+                            else if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                             {
                                 stylesOn = true;
                             }
@@ -1282,7 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             sb.AppendLine(line);
-                            if (stylesOn && line.Replace(" ", string.Empty).Trim().ToLower().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim().ToLower() + ","))
+                            if (stylesOn && line.Replace(" ", string.Empty).Trim().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
                             {
                                 MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
                                 return;
@@ -1296,7 +1296,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var sb = new StringBuilder();
                     foreach (string line in Header.Replace(Environment.NewLine, "\n").Split('\n'))
                     {
-                        if (line.ToLower().StartsWith("style:"))
+                        if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                         {
                             if (line.ToLower().Replace(" ", string.Empty).StartsWith("style:" + styleName.ToLower().Trim()))
                                 sb.AppendLine(line);

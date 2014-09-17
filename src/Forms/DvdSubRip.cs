@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // List info
             labelIfoFile.Text = _language.IfoFile + ": " + ifoParser.VideoTitleSetVobs.VideoStream.Resolution;
-            bool isPal = string.Compare(ifoParser.VideoTitleSetVobs.VideoStream.Standard, "PAL", true) == 0;
+            bool isPal = ifoParser.VideoTitleSetVobs.VideoStream.Standard.Equals("PAL", StringComparison.OrdinalIgnoreCase);
             if (isPal)
                 radioButtonPal.Checked = true;
             else

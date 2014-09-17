@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 FileInfo fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (fileName.ToLower().EndsWith(".cap"))
+                    if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
                         byte[] buffer = Utilities.ReadAllBytes(fileName);
                         if (buffer[0] == 0x2b) // "+"
