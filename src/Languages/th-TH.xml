@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.2</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
-    <HelpFile>
-    </HelpFile>
+    <HelpFile />
     <Ok>&amp;ตกลง</Ok>
     <Cancel>&amp;ยกเลิก</Cancel>
     <Apply>ใช้งาน</Apply>

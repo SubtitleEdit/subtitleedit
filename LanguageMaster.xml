@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
-    <ReDoCasing>Re-do casing</ReDoCasing>
+    <ReDoCasing>Redo casing</ReDoCasing>
     <Convert>Convert</Convert>
     <NothingToConvert>Nothing to convert!</NothingToConvert>
     <PleaseChooseOutputFolder>Please choose output folder</PleaseChooseOutputFolder>
@@ -1707,7 +1707,7 @@ can edit in same subtitle file (collaboration)</Information>
     <CheckOneLetterWords>Prompt for unknown one letter words</CheckOneLetterWords>
     <TreatINQuoteAsING>Treat word ending " in' " as " ing " (English only)</TreatINQuoteAsING>
     <ImageText>Image text</ImageText>
-    <SpellCheckCompleted>Spell check completed.</SpellCheckCompleted>
+    <SpellCheckCompleted>Spell check completed</SpellCheckCompleted>
     <SpellCheckAborted>Spell check aborted</SpellCheckAborted>
     <UndoX>Undo: {0}</UndoX>
   </SpellCheck>
