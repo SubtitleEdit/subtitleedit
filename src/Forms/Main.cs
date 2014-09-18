@@ -9885,22 +9885,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromDivX(string fileName)
         {
-            var f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            int count = 0;
-            f.Position = 0;
+            var count = 0;
             var list = new List<XSub>();
-            var searchBuffer = new byte[2048];
-            long pos = 0;
-            long length = f.Length - 50;
-            while (pos < length)
+            using (var f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                f.Position = pos;
-                int readCount = f.Read(searchBuffer, 0, searchBuffer.Length);
-                for (int i = 0; i < readCount; i++)
+                var searchBuffer = new byte[2048];
+                long pos = 0;
+                long length = f.Length - 50;
+                while (pos < length)
                 {
-                    if (searchBuffer[i] == 0x5b &&
-                        (i + 4 >= readCount || (searchBuffer[i + 1] >= 0x30 && searchBuffer[i + 1] <= 0x39 && searchBuffer[i + 3] == 0x3a)))
+                    f.Position = pos;
+                    int readCount = f.Read(searchBuffer, 0, searchBuffer.Length);
+                    for (int i = 0; i < readCount; i++)
                     {
+                        if (searchBuffer[i] != 0x5b || (i + 4 < readCount && (searchBuffer[i + 1] < 0x30 || searchBuffer[i + 1] > 0x39 || searchBuffer[i + 3] != 0x3a)))
+                        {
+                            continue;
+                        }
+
                         f.Position = pos + i + 1;
 
                         byte[] buffer = new byte[26];
@@ -9946,10 +9948,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
+                    pos += searchBuffer.Length;
                 }
-                pos += searchBuffer.Length;
             }
-            f.Close();
 
             if (count > 0)
             {
