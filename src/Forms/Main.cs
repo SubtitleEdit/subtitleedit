@@ -3118,12 +3118,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool IsM2TransportStream(string fileName)
         {
+            FileStream fs = null;
             try
             {
                 var buffer = new byte[192 + 192 + 5];
-                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Read(buffer, 0, buffer.Length);
-                fs.Close();
                 if (buffer[0] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[188] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
                     return false;
                 if (buffer[4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
@@ -3134,6 +3134,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return false;
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                }
             }
         }
 
