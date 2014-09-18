@@ -3092,12 +3092,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool IsTransportStream(string fileName)
         {
+            FileStream fs = null;
             try
             {
                 var buffer = new byte[3761];
-                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Read(buffer, 0, buffer.Length);
-                fs.Close();
                 if (buffer[0] == 0x47 && buffer[188] == 0x47) // 47hex (71 dec or 'G') == TS sync byte
                     return true;
                 return buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
@@ -3106,6 +3106,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return false;
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                }
             }
         }
 
