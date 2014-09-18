@@ -6,10 +6,9 @@
 *.vspx
 bin/
 obj/
-/cov-int
+SubtitleEdit-*-setup.exe
+/cov-int/
 /SE*.zip
-/src/Languages/Language.xml
-/src/Languages/LanguageMaster.xml
 /src/Languages/XmlContentTranslator.exe
 /src/Properties/AssemblyInfo.cs
 /src/TestResults/
@@ -17,4 +16,3 @@ obj/
 /SubtitleEdit.tar
 /SubtitleEdit.tgz
 /tabspace.exe
-SubtitleEdit-*-setup.exe
