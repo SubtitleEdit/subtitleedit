@@ -4266,11 +4266,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (selectedText.Length == 0 && _findHelper != null)
                 selectedText = _findHelper.FindText;
 
-            var findDialog = new FindDialog();
-            findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
-            findDialog.Initialize(selectedText, _findHelper);
-            if (findDialog.ShowDialog(this) == DialogResult.OK)
+            using (var findDialog = new FindDialog())
             {
+                findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
+                findDialog.Initialize(selectedText, _findHelper);
+                if (findDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
                 _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 _findHelper.AddHistory(_findHelper.FindText);
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
@@ -4332,7 +4336,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            findDialog.Dispose();
         }
 
         private void FindNextToolStripMenuItemClick(object sender, EventArgs e)
