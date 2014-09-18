@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         #region Win32 API
 
-        // Win32 API functions for loading dlls dynamic
+        // Win32 API functions for dynamically loading DLLs
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Ansi, BestFitMapping = false)]
         internal static extern IntPtr LoadLibrary(string dllToLoad);
 
