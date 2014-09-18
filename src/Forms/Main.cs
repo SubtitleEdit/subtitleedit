@@ -10437,12 +10437,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static bool IsRarFile(string fileName)
         {
-            var buffer = new byte[4];
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
-            fs.Read(buffer, 0, 4);
-            fs.Close();
-            string s = Encoding.ASCII.GetString(buffer, 0, buffer.Length);
-            return s == "Rar!";
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, 4);
+                return "Rar!" == Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+            }
         }
 
         public static bool IsZipFile(string fileName)
