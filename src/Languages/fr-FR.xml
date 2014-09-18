@@ -306,7 +306,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Interrompu par l'utilisateur</AbortedByUser>
     <ReadingSubtitleData>Lecture données des sous-titres...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper fichier vob {1} sur {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVideo-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
+    <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVIDEO-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Choix de la langue</Title>
@@ -487,7 +487,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveLineBreaks>Supprimer les sauts de lignes dans les paragraphes courts avec une seule phrase</RemoveLineBreaks>
     <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogues)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Corriger le 'i' majuscule à l'intérieur des mots (erreur OCR)</FixUppercaseIInsindeLowercaseWords>
-    <FixDoubleApostrophes>Remplacer les apostrophes doubles (' ') par un guillemet (")</FixDoubleApostrophes>
+    <FixDoubleApostrophes>Remplacer les apostrophes doubles ('') par un guillemet (")</FixDoubleApostrophes>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Commencer par une majuscule après un paragraphe</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Mettre une majuscule après un point dans un paragraphe</StartWithUppercaseLetterAfterPeriodInsideParagraph>
@@ -991,6 +991,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Sous-titre original {0} sauvegardé</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fichier sur disque modifié</FileOnDiskModified>
     <OverwriteModifiedFile>Écraser le fichier {0} modifiée à {1} {2}{3} avec le fichier actuel chargé à {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly />
     <UnableToSaveSubtitleX>Impossible d'enregistrer le fichier sous-titre {0}</UnableToSaveSubtitleX>
     <BeforeNew>Avant nouveau</BeforeNew>
     <New>Nouveau</New>
@@ -1177,7 +1178,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <NetworkUnableToConnectToServer>Impossible de se connecter au serveur: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Utilisateur/action</UserAndAction>
     <NetworkMode>Networking mode</NetworkMode>
-    <XStartedSessionYAtZ>{0}: session a commencé à {1} {2}</XStartedSessionYAtZ>
+    <XStartedSessionYAtZ>{0}: session {1} a commencé à {2}</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>la ligne {1} / {2} - Vérification de l'orthographe en utilisant Word {0}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Impossible de démarrer Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Vérification d'orthographe annulée. {0} lignes modifiées.</SpellCheckAbortedXCorrections>

@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Formázási címkék eltávolítása</RemoveFormatting>
     <RemoveTextForHI>HI szöveg eltávolítása</RemoveTextForHI>
     <OverwriteOriginalFiles>Eredeti fájlok felülírása (új kiterjesztés ha a formátum módosult)</OverwriteOriginalFiles>
-    <ReDoCasing>Re-do casing</ReDoCasing>
+    <ReDoCasing>Redo casing</ReDoCasing>
     <Convert>Konvertálás</Convert>
     <NothingToConvert>Nincs konvertálandó!</NothingToConvert>
     <PleaseChooseOutputFolder>Kérjük, válasszon kimeneti mappát</PleaseChooseOutputFolder>

@@ -1499,12 +1499,9 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <WaveFormShowGridLines>Näytä ruudukko</WaveFormShowGridLines>
     <ReverseMouseWheelScrollDirection>Käänteinen hiirirullan vieritys</ReverseMouseWheelScrollDirection>
     <WaveFormAllowOverlap>Salli päällekkäisyys siirrettäessä tai kokoa muutettaessa</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>
-    </WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>
-    </WaveFormListViewFocusMouseEnter>
-    <WaveformBorderHitMs1>
-    </WaveformBorderHitMs1>
+    <WaveFormFocusMouseEnter />
+    <WaveFormListViewFocusMouseEnter />
+    <WaveformBorderHitMs1 />
     <WaveformBorderHitMs2>millisekuntia</WaveformBorderHitMs2>
     <WaveFormColor>Väri</WaveFormColor>
     <WaveFormSelectedColor>Valinnan väri</WaveFormSelectedColor>
@@ -1517,22 +1514,16 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <SpectrogramAppearance>Spektrogrammin ulkoasu</SpectrogramAppearance>
     <SpectrogramOneColorGradient>Yksivärinen liukuvärjäys</SpectrogramOneColorGradient>
     <SpectrogramClassic>Klassinen</SpectrogramClassic>
-    <WaveformUseFFmpeg>
-    </WaveformUseFFmpeg>
-    <WaveformFFmpegPath>
-    </WaveformFFmpegPath>
-    <WaveformBrowseToFFmpeg>
-    </WaveformBrowseToFFmpeg>
-    <WaveformBrowseToVLC>
-    </WaveformBrowseToVLC>
+    <WaveformUseFFmpeg />
+    <WaveformFFmpegPath />
+    <WaveformBrowseToFFmpeg />
+    <WaveformBrowseToVLC />
     <SubStationAlphaStyle>Sub Station Alpha -tyyli</SubStationAlphaStyle>
     <ChooseFont>Valitse fontti</ChooseFont>
     <ChooseColor>Valitse väri</ChooseColor>
     <SsaOutline>Ääriviiva</SsaOutline>
-    <SsaShadow>
-    </SsaShadow>
-    <SsaOpaqueBox>
-    </SsaOpaqueBox>
+    <SsaShadow />
+    <SsaOpaqueBox />
     <Testing123>Testataan 123...Testataan 123...Testataan 123...</Testing123>
     <Language>Kieli</Language>
     <NamesIgnoreLists>Nimet/ohituslista (sama kirjainkoko)</NamesIgnoreLists>
@@ -1565,8 +1556,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <MusicSymbol>Musiikkisymboli</MusicSymbol>
     <MusicSymbolsToReplace>Korvattavat nuotit (erota välilyönnillä)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Korjaa yleiset tekstintunnistusvirheet, käytä myös kovakoodattuja sääntöjä</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
-    </FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime />
     <Shortcuts>Pikakuvakkeet</Shortcuts>
     <Shortcut>Pikakuvake</Shortcut>
     <Control>Ctrl</Control>
