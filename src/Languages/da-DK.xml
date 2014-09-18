@@ -90,7 +90,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Tilføj til navne mv. listen (små bogstaver)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
-    <Title>Tilføj til OCR erstatt liste</Title>
+    <Title>Tilføj til OCR erstat liste</Title>
     <Description>Tilføj par til OCR erstat liste</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
@@ -170,7 +170,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ChangeCasingTo>Skift til</ChangeCasingTo>
     <NormalCasing>Normal. Sætninger starter med stort bogstav.</NormalCasing>
     <FixNamesCasing>Fix navne (via Ordbøger\\NamesEtc.xml)</FixNamesCasing>
-    <FixOnlyNamesCasing>Ret kun navne (via Ordbøger\\ NamesEtc.xml)</FixOnlyNamesCasing>
+    <FixOnlyNamesCasing>Ret kun navne (via Ordbøger\\NamesEtc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Ændr kun linjer med kun store bogstaver.</OnlyChangeAllUppercaseLines>
     <AllUppercase>KUN STORE BOGSTAVER</AllUppercase>
     <AllLowercase>kun små bogstaver</AllLowercase>
@@ -561,21 +561,21 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Udfør valgte rettelser</ApplyFixes>
     <AutoBreak>Auto &amp;ombr</AutoBreak>
     <Unbreak>&amp;Ombryd</Unbreak>
-    <FixDoubleDash>Fix '-' -&gt;'...'</FixDoubleDash>
+    <FixDoubleDash>Erstat '--' med '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Fjern &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Fjern startende '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Fix manglende [</FixMissingOpenBracket>
     <FixMusicNotation>Erstat âTª med *</FixMusicNotation>
-    <XFixDoubleDash>{0} rettet '-'</XFixDoubleDash>
+    <XFixDoubleDash>{0} rettet '--'</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} fjernet &gt;&gt;</XFixDoubleGreaterThan>
     <XFixEllipsesStart>{0} begyndende '...' fjernet</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} rettet manglende [</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} lave musik notation</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude! " -&gt; 'Robert: Sup dude! "</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... og så har vi '-&gt;' og så har vi '</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>»clanks] Pas på!" -&gt; '[Clanks] Pas på! "</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '* sweet dreams are'</FixMusicNotationExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '* sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} vigtige log beskeder!</NumberOfImportantLogMessages>
     <FixedOkXY>Rettet og OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -991,6 +991,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Gemte originale undertekst {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fil på disken ændret</FileOnDiskModified>
     <OverwriteModifiedFile>Overskriv filen {0} ændret {1} {2} {3} med aktuelle fil indlæst fra disken på {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly />
     <UnableToSaveSubtitleX>Kan ikke gemme undertekst fil {0}</UnableToSaveSubtitleX>
     <BeforeNew>Før ny</BeforeNew>
     <New>Ny</New>
@@ -1490,7 +1491,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -. NET Managed kode fra DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed kode fra DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
