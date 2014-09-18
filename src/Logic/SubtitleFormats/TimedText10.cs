@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (timeCodeFormat.Equals("ticks", StringComparison.Ordinal))
                     return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
                 if (timeCodeFormat.Equals("hh:mm:ss.msec", StringComparison.Ordinal))
-                    return string.Format("{0:00}:{1:00}:{2:00}:{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                    return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
             }
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
