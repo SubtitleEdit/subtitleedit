@@ -313,7 +313,7 @@
     <Title>เลือกภาษา</Title>
     <ChooseLanguageStreamId>เลือกภาษา (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>ภาษาที่ไม่รู้จัก</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>อิมเมจซับไตเติ้ล {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>อิมเมจซับไตเติ้ล {0}/{1} - {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>อิมเมจซับไตเติ้ล</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1483,9 +1483,9 @@
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>เอนจิ้นของวิดีโอ</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
-    <DirectShowDescription>quartz.dll ในโฟลเดอร์ system32 </DirectShowDescription>
+    <DirectShowDescription>quartz.dll ในโฟลเดอร์ system32</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC Media Player</VlcMediaPlayer>
