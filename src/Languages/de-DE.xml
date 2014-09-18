@@ -145,7 +145,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Style>Stil...</Style>
     <ConvertOptions>Umwandlungsoptionen</ConvertOptions>
     <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
-    <RemoveTextForHI>Text für HI entfernen</RemoveTextForHI>
+    <RemoveTextForHI>Text für Hörgeschädigte entfernen</RemoveTextForHI>
     <OverwriteOriginalFiles>Originaldateien überschreiben</OverwriteOriginalFiles>
     <ReDoCasing>Groß-/Kleinschreibung neu setzen</ReDoCasing>
     <Convert>Umwandeln</Convert>
@@ -343,7 +343,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Zeile {0} überschreitet die max. Länge von {1} um {2} Zeichen: {3}</MaxLengthError>
     <TextUnchangedPresentation>Unveränderte Präsentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>linksbündiger Text</TextLeftJustifiedText>
-    <TextCentredText>zentrierter Text </TextCentredText>
+    <TextCentredText>zentrierter Text</TextCentredText>
     <TextRightJustifiedText>rechtsbündiger Text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -598,7 +598,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ChooseLanguageAndClickDownload>Sprache auswählen und auf Herunterladen klicken</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Öffne Wörterbuch Ordner</OpenDictionariesFolder>
     <Download>Herunterladen</Download>
-    <XDownloaded>{0} wurden heruntergeladen und installiert</XDownloaded>
+    <XDownloaded>{0} wurde heruntergeladen und installiert</XDownloaded>
   </GetTesseractDictionaries>
   <GoogleTranslate>
     <Title>Google-Übersetzer</Title>
@@ -990,6 +990,9 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Original Untertitel {0} gespeichert</SavedOriginalSubtitleX>
     <FileOnDiskModified>Datei auf Disk wurde geändert</FileOnDiskModified>
     <OverwriteModifiedFile>Soll die Datei {0} bearbeitet am {1} {2}{3} überschrieben werden mit aktueller Datei, geladen am {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Konnte Datei {0} nicht speichern
+
+Die Datei ist schreibgeschützt!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Konnte Untertiteldatei {0} nicht speichern
 Untertitel scheint leer zu sein - erneutes Speichern versuchen!</UnableToSaveSubtitleX>
     <BeforeNew>Vor Neu</BeforeNew>
