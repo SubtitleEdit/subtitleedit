@@ -691,12 +691,16 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawParagraph(Paragraph paragraph, PaintEventArgs e, int begin, SolidBrush textBrush)
         {
-            if (paragraph != null)
+            if (paragraph == null)
             {
-                int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds) - begin;
-                int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds) - begin;
-                int currentRegionWidth = currentRegionRight - currentRegionLeft;
-                SolidBrush brush = new SolidBrush(Color.FromArgb(32, 255, 255, 255));
+                return;
+            }
+
+            int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds) - begin;
+            int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds) - begin;
+            int currentRegionWidth = currentRegionRight - currentRegionLeft;
+            using (var brush = new SolidBrush(Color.FromArgb(32, 255, 255, 255)))
+            {
                 e.Graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, e.Graphics.VisibleClipBounds.Height);
 
                 Pen pen = new Pen(new SolidBrush(Color.FromArgb(128, 150, 150, 150)));
@@ -732,7 +736,6 @@ namespace Nikse.SubtitleEdit.Controls
                     else if (n > 25)
                         e.Graphics.DrawString("#" + paragraph.Number, Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
                 }
-                brush.Dispose();
                 pen.Dispose();
             }
         }
