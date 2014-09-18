@@ -10487,28 +10487,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAndOcrSpDvdSup(string fileName, bool showInTaskbar)
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
-
-            byte[] buffer = new byte[SpHeader.SpHeaderLength];
-            int bytesRead = fs.Read(buffer, 0, buffer.Length);
-            var header = new SpHeader(buffer);
             var spList = new List<SpHeader>();
 
-            while (header.Identifier == "SP" && bytesRead > 0 && header.NextBlockPosition > 4)
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                buffer = new byte[header.NextBlockPosition];
-                bytesRead = fs.Read(buffer, 0, buffer.Length);
-                if (bytesRead == buffer.Length)
-                {
-                    header.AddPicture(buffer);
-                    spList.Add(header);
-                }
+                byte[] buffer = new byte[SpHeader.SpHeaderLength];
+                int bytesRead = fs.Read(buffer, 0, buffer.Length);
+                var header = new SpHeader(buffer);
 
-                buffer = new byte[SpHeader.SpHeaderLength];
-                bytesRead = fs.Read(buffer, 0, buffer.Length);
-                header = new SpHeader(buffer);
+                while (header.Identifier == "SP" && bytesRead > 0 && header.NextBlockPosition > 4)
+                {
+                    buffer = new byte[header.NextBlockPosition];
+                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == buffer.Length)
+                    {
+                        header.AddPicture(buffer);
+                        spList.Add(header);
+                    }
+
+                    buffer = new byte[SpHeader.SpHeaderLength];
+                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    header = new SpHeader(buffer);
+                }
             }
-            fs.Close();
 
             var vobSubOcr = new VobSubOcr();
             if (showInTaskbar)
