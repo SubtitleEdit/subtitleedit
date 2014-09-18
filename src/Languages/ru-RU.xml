@@ -253,7 +253,7 @@ https://github.com/SubtitleEdit/subtitleedit
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Свойства D-Cinema (interop)</Title>
-    <TitleSmpte>Свойства D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Свойства D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID субтитра</SubtitleId>
     <GenerateId>Создать ID</GenerateId>
     <MovieTitle>Название фильма</MovieTitle>
@@ -539,7 +539,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Номер текста {0}: Начальное время позже, чем конечное время: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Номер текста {0}: Начальное время позже, чем конечное время: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не удается исправить номер текста {0}: Начальное время позже, чем конечное время: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} исправлено на: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Невозможно исправить текст № {0}: {1}</UnableToFixTextXY>
@@ -573,11 +573,11 @@ https://github.com/SubtitleEdit/subtitleedit
     <XFixEllipsesStart>Удалено многоточий "..." из начала строк: {0}</XFixEllipsesStart>
     <XFixMissingOpenBracket>Добавлено недостающих "[": {0}</XFixMissingOpenBracket>
     <XFixMusicNotation>Заменено музыкальных символов: {0}</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>Важных сообщений в отчете: {0}</NumberOfImportantLogMessages>
     <FixedOkXY>Выполнено - "{0}": {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1866,7 +1866,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <TransportStreamSubtitleChooser>
     <Title>Выбранный поток субтитров - {0}</Title>
     <PidLine>Идентификатор потока (PID) = {0}, количество субтитров = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} изображение(я)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} изображение(я)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Неизвестный тип субтитров</Title>

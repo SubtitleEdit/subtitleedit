@@ -237,7 +237,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Lastnosti D-Cinema (interop)</Title>
-    <TitleSmpte>Lastnosti D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Lastnosti D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID podnapisa</SubtitleId>
     <GenerateId>Ustvari ID</GenerateId>
     <MovieTitle>Naslov filma</MovieTitle>
@@ -511,7 +511,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FixMissingSpacesExample>Tam.Gori. -&gt; Tam. Gori.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>ZemIja je ravna. -&gt; Zemlja je ravna. (veliki "I" z mali "l")</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Številka vrstice {0}: Začetni čas je manjši od končnega: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Številka vrstice {0}: Začetni čas je manjši od končnega: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ne gre popraviti št. vrstice {0}: Začetni čas je manjši od končnega: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} popravljenih na: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Ne gre popraviti št. vrstice {0}: {1}</UnableToFixTextXY>
@@ -545,11 +545,11 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} odstranjeni začetni '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} dodani manjkajoči [ v vrstici</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zamenjane glasbene note</XFixMusicNotation>
-    <FixDoubleDashExample>'Resno-- o ja!' --&gt; 'Resno... o ja!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Kako kaj!' --&gt; 'Robert: Kako kaj!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Resno-- o ja!' -&gt; 'Resno... o ja!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Kako kaj!' -&gt; 'Robert: Kako kaj!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... in ko smo' -&gt; 'in ko smo'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'klank] Zaklenjen!' --&gt; '[klank] Zaklenjen!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sladke sanje' --&gt; '♫ sladke sanje'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'klank] Zaklenjen!' -&gt; '[klank] Zaklenjen!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sladke sanje' -&gt; '♫ sladke sanje'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} pomembna sporočila!</NumberOfImportantLogMessages>
     <FixedOkXY>Popravljeno in v redu - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1782,7 +1782,7 @@ popravlja enak podnapis (sodelovanje)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Izbira prenosnega toka podnapisov - {0}</Title>
     <PidLine>Identifikator prenosnega paketa (PID) = {0}, število podnapisov = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} slika(e)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} slika(e)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Neznan tip podnapisa</Title>

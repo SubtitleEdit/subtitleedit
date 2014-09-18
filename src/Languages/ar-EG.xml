@@ -529,7 +529,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.You. -&gt;يا أنت.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt;الأرض مسطحة.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; ماذا يهمني.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>{رقم النص {0}: إبدأ الوقت التالي من وقت النهاية: {4}{1} --&gt; {2} {3</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>{رقم النص {0}: إبدأ الوقت التالي من وقت النهاية: {4}{1} -&gt; {2} {3</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>{غير قادر على إصلاح عدد النص {0}: وقت البدء والنهاية في وقت لاحق نهاية الوقت: {1</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} إصلاح إلى: {1}{2</XFixedToYZ>
     <UnableToFixTextXY>{غير قادر على إصلاح عدد النص {0}: {1</UnableToFixTextXY>
@@ -563,11 +563,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} إزالة بدءا '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} اصلاح [مفقود في السطر</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} تدوين الموسيقى الإصلاح في السطر</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'قف... نعم أم!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'روبرت : سوب المتأنق!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'قف... نعم أم!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'روبرت : سوب المتأنق!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'ومن ثم نحن'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[القعقعة] ابحثوا!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ أحلام حلوة'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[القعقعة] ابحثوا!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ أحلام حلوة'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} رسائل سجل مهم</NumberOfImportantLogMessages>
     <FixedOkXY>{الثابتة وموافق -- '{0}' : {1</FixedOkXY>
   </FixCommonErrors>

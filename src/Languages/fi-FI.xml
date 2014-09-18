@@ -247,7 +247,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-elokuvan ominaisuudet (yhteensopivuus)</Title>
-    <TitleSmpte>D-elokuvan ominaisuudet (smpte)</TitleSmpte>
+    <TitleSmpte>D-elokuvan ominaisuudet (SMPTE)</TitleSmpte>
     <SubtitleId>Tekstityksen ID</SubtitleId>
     <GenerateId>Muodosta ID</GenerateId>
     <MovieTitle>Elokuvan nimi</MovieTitle>
@@ -557,7 +557,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <ApplyFixes>Käytä valittuja korjauksia</ApplyFixes>
     <AutoBreak>Autom. rivinvaihto</AutoBreak>
     <Unbreak>Rivinvaihdon poisto</Unbreak>
-    <FixDoubleDash>Korjaa '--' --&gt; '...'</FixDoubleDash>
+    <FixDoubleDash>Korjaa '--' -&gt; '...'</FixDoubleDash>
     <FixDoubleGreaterThan>Poista &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Poista alusta '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Korjaa riviltä puuttuva [</FixMissingOpenBracket>
@@ -567,11 +567,11 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <XFixEllipsesStart>{0} alkupistetä '...' poistettu</XFixEllipsesStart>
     <XFixMissingOpenBracket>Korjattu {0} riviltä puuttuvaa [ merkkiä</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nuotinnusta korjattu rivillä</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa--um Joo!' --&gt; 'Whoa... um Joo!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Juoppo jätkä!' --&gt; ' Robert: Juoppo jätkä!'</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'... ja sitten me' --&gt; 'ja sitten me'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>kalinaa] Varo!'--&gt; '[kalinaa] Varo!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª makeat unet ovat'--&gt; ♫ makeat unet ovat'</FixMusicNotationExample>
+    <FixDoubleDashExample>'Whoa--um Joo!' -&gt; 'Whoa... um Joo!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Juoppo jätkä!' -&gt; ' Robert: Juoppo jätkä!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... ja sitten me' -&gt; 'ja sitten me'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>kalinaa] Varo!'-&gt; '[kalinaa] Varo!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª makeat unet ovat'-&gt; ♫ makeat unet ovat'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} tärkeää lokiviestiä!</NumberOfImportantLogMessages>
     <FixedOkXY>Korjattu '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1857,7 +1857,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
   <TransportStreamSubtitleChooser>
     <Title>Siirtovirtauksen valinta - {0}</Title>
     <PidLine>Pakettitunnus (PID) = {0}, tekstityksien määrä = {1}</PidLine>
-    <SubLine>{0}: {1} --&gt; {2}, {3} kuvaa</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} kuvaa</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tuntematon tekstitystyyppi</Title>

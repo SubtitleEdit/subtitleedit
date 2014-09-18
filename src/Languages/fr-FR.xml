@@ -537,7 +537,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hé.Toi. -&gt; Hé. Toi.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>La fIn est proche. -&gt; La fin est proche.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Texte n°{0}: Le temps initial est postérieur au temps final: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Texte n°{0}: Le temps initial est postérieur au temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossible de corriger le texte n°{0}: temps initial &gt; temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} Corrigé en: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Impossible de corriger le texte n°{0}: {1}</UnableToFixTextXY>
@@ -571,11 +571,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} '...' en début de ligne enlevé(s)</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ manquant(s) dans une ligne ajouté(s)</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} notation(s) musicale(s) dans une ligne corrigée(s)</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: ça gaze !' --&gt; 'Robert: ça gaze !'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: ça gaze !' -&gt; 'Robert: ça gaze !'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... et ensuite nous' -&gt; 'et ensuite nous'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clic] Attention !' --&gt; '[clic] Attention !'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clic] Attention !' -&gt; '[clic] Attention !'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messages traces importants!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigé et bon - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1866,7 +1866,7 @@ Poursuivre?</SubtitleAppendPrompt>
   <TransportStreamSubtitleChooser>
     <Title>Sélection des sous-titres Transport Stream - {0}</Title>
     <PidLine>Transport Packet Identifier (PID) = {0}, nombre de sous-titres = {1}</PidLine>
-    <SubLine>{0}: {1} --&gt; {2}, {3} Image(s)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} Image(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Type de sous-titre inconnu</Title>

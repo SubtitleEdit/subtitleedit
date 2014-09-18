@@ -431,7 +431,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.Sen. -&gt; Hey. Sen.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Metin numarası {0}: Başlangıç zamanı bitiş zamanından sonra: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Metin numarası {0}: Başlangıç zamanı bitiş zamanından sonra: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} fixed to: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
@@ -465,11 +465,11 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} remove starting '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} fixed missing [ in line</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} fix music notation in line</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} önemli günlük iletisi!</NumberOfImportantLogMessages>
     <FixedOkXY>Düzeltildi ve TAMAM - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>

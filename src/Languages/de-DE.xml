@@ -251,7 +251,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-Cinema Eigenschaften (interop)</Title>
-    <TitleSmpte>D-Cinema Eigenschaften (smpte)</TitleSmpte>
+    <TitleSmpte>D-Cinema Eigenschaften (SMPTE)</TitleSmpte>
     <SubtitleId>Untertitel ID</SubtitleId>
     <GenerateId>ID erzeugen</GenerateId>
     <MovieTitle>Filmtitel</MovieTitle>
@@ -536,7 +536,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.Du. -&gt; Hey. Du.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Die Erde ist fIach. -&gt; Die Erde ist flach.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Textnummer {0}: Startzeit kommt nach Endzeit: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Textnummer {0}: Startzeit kommt nach Endzeit: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Konnte Textnummer {0} nicht korrigieren: Startzeit kommt nach Endzeit: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} korrigiert zu: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Konnte Textnummer nicht korrigieren {0}: {1}</UnableToFixTextXY>
@@ -570,11 +570,11 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} entfernte '...' am Anfang</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} korrigierte [</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} korrigierte Musikzeichen</XFixMusicNotation>
-    <FixDoubleDashExample>'Hey-- das geht!' --&gt; 'Hey... das geht!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sehr gut!' --&gt; 'Robert: Sehr gut!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Hey-- das geht!' -&gt; 'Hey... das geht!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sehr gut!' -&gt; 'Robert: Sehr gut!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... und dann haben wir' -&gt; 'und dann haben wir'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'ruft] Pass auf!' --&gt; '[ruft] Pass auf!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª 99 Luftballons' --&gt; '♫ 99 Luftballons'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'ruft] Pass auf!' -&gt; '[ruft] Pass auf!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª 99 Luftballons' -&gt; '♫ 99 Luftballons'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} wichtige Logmeldungen!</NumberOfImportantLogMessages>
     <FixedOkXY>Korrigiert und OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1865,7 +1865,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Transport Stream Untertitelauswahl - {0}</Title>
     <PidLine>Transport Packet Identifier (PID) = {0}, Anzahl Untertitel = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} Bild(er)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} Bild(er)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Unbekannter Dateityp</Title>

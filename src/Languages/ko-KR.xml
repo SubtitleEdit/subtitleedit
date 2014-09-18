@@ -249,7 +249,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>* D-Cinema의 속성 (interop)</Title>
-    <TitleSmpte>D-Cinema의 속성 (smpte)</TitleSmpte>
+    <TitleSmpte>D-Cinema의 속성 (SMPTE)</TitleSmpte>
     <SubtitleId>자막 ID</SubtitleId>
     <GenerateId>ID 생성</GenerateId>
     <MovieTitle>영화 제목</MovieTitle>
@@ -528,13 +528,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixInvalidItalicTag>잘못된 기울임꼴 태그 수정하기</FixInvalidItalicTag>
     <FixShortDisplayTime>짧은 표시시간 수정하기</FixShortDisplayTime>
     <FixOverlappingDisplayTime>중복된 표시시간 수정하기</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;서울특별시&lt;i&gt; --&gt; &lt;i&gt;서울특별시&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>넌  정말  최고야! --&gt; 넌 정말 최고야!</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>안돼!. --&gt; 안돼!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>여보세요.나는 --&gt; 여보세요. 나는</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. --&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care. --&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>텍스트 번호 {0}: 시작 시간이 종료 시간보다 느림: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;서울특별시&lt;i&gt; -&gt; &lt;i&gt;서울특별시&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>넌  정말  최고야! -&gt; 넌 정말 최고야!</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>안돼!. -&gt; 안돼!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>여보세요.나는 -&gt; 여보세요. 나는</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>텍스트 번호 {0}: 시작 시간이 종료 시간보다 느림: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>텍스트 번호 {0}을 수정할 수 없음: 시작 시간이 종료 시간보다 느림: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} 수정함: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>텍스트 번호 {0}을 수정할 수 없음: {1}</UnableToFixTextXY>
@@ -568,11 +568,11 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <XFixEllipsesStart>{0} 말머리의 '...' 을 제거합니다.</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} 줄 안에 누락된 '[' 가 수정됐습니다.</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} 줄 안에 있는 음표를 수정합니다.</XFixMusicNotation>
-    <FixDoubleDashExample>'음-- 맛있구나!' --&gt; '음... 맛있구나!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; 영희: 뛰어!' --&gt; '영희: 뛰어!'</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'...그리고 우리는 ~' --&gt; '그리고 우리는 ~'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'총소리] 조심해!' --&gt; '[총소리] 조심해!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª 평범한 얼굴이 ~' --&gt; '♫ 평범한 얼굴이 ~'</FixMusicNotationExample>
+    <FixDoubleDashExample>'음-- 맛있구나!' -&gt; '음... 맛있구나!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; 영희: 뛰어!' -&gt; '영희: 뛰어!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'...그리고 우리는 ~' -&gt; '그리고 우리는 ~'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'총소리] 조심해!' -&gt; '[총소리] 조심해!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª 평범한 얼굴이 ~' -&gt; '♫ 평범한 얼굴이 ~'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>중요한 로그 메시지! - {0}</NumberOfImportantLogMessages>
     <FixedOkXY>수정이 완료됐습니다. - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1865,7 +1865,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <TransportStreamSubtitleChooser>
     <Title>전송 스트림 자막 선택기 - {0}</Title>
     <PidLine>전송 패킷 식별자 (PID) = {0}, 자막 수 = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} 이미지</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} 이미지</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>알 수 없는 자막 형식!</Title>

@@ -247,7 +247,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Д-Кино стойности (interop)</Title>
-    <TitleSmpte>Д-Кино стойности (smpte)</TitleSmpte>
+    <TitleSmpte>Д-Кино стойности (SMPTE)</TitleSmpte>
     <SubtitleId>ID на Субтитрите</SubtitleId>
     <GenerateId>Генерирай ID</GenerateId>
     <MovieTitle>Заглавие на филм</MovieTitle>
@@ -532,7 +532,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Хей.Ти. -&gt; Хей. Ти.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Текст номер {0}: Началното време е по-късно от крайното време: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Текст номер {0}: Началното време е по-късно от крайното време: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Не може да се поправи текст номер {0}: Началното време е по-късно от крайното време: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} са поправени към: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Не може да се поправи текст номер {0}: {1}</UnableToFixTextXY>
@@ -566,11 +566,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} изтрити начални '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} поправени липсващи [ в ред</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} поправени музикални символи в ред</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} важни съобщения с отчети!</NumberOfImportantLogMessages>
     <FixedOkXY>Поправено и OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1842,7 +1842,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <TransportStreamSubtitleChooser>
     <Title>Избор на транспортен стрийм - {0}</Title>
     <PidLine>Транспортен пакетен идентификатор (PID) = {0}, брой събтитъри = {1}</PidLine>
-    <SubLine>{0}: {1} --&gt; {2}, {3} избражение(я)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} избражение(я)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Неизвестен тип субтитри</Title>

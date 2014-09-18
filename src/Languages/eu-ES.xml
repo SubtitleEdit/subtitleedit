@@ -246,7 +246,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-Cimema ezaugarriak (interop)</Title>
-    <TitleSmpte>D-Cimema ezaugarriak (smpte)</TitleSmpte>
+    <TitleSmpte>D-Cimema ezaugarriak (SMPTE)</TitleSmpte>
     <SubtitleId>Azpidatzi ID-a</SubtitleId>
     <GenerateId>Sortu ID-a</GenerateId>
     <MovieTitle>Filma izenburua</MovieTitle>
@@ -531,7 +531,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Kaixo.Xabier -&gt; Kaixo. Xabier.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Zerekin joIasten duzu? -&gt; Zerekin jolasten duzu?</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Idatzi zenbakia {0}: Hasiera denbora amaiera denboraren ondoren da: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Idatzi zenbakia {0}: Hasiera denbora amaiera denboraren ondoren da: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Ezgaitu idatzi zenbakia zuzentzea {0}: Hasiera denbora amaiera denbora amaitu ondoren da: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} hona zuzenduta: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Ezgaitu idatzi zenbakia zuzentzea {0}: {1}</UnableToFixTextXY>
@@ -565,11 +565,11 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} kendu hasierako '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} zuzendutako galduak [ lerroan</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zuzendu musika idatziak lerroan</XFixMusicNotation>
-    <FixDoubleDashExample>'Uhau-- um bai!' --&gt; 'Uhau... um bai!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Iñaki: Lagun!' --&gt; 'Iñaki: Lagun!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Uhau-- um bai!' -&gt; 'Uhau... um bai!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Iñaki: Lagun!' -&gt; 'Iñaki: Lagun!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... eta orduan guk' -&gt; 'eta orduan guk'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'kolpeak] Kontuz!' --&gt; '[kolpeak] Kontuz!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª amets goxoak dira' --&gt; '♫ amets goxoak dira'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'kolpeak] Kontuz!' -&gt; '[kolpeak] Kontuz!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª amets goxoak dira' -&gt; '♫ amets goxoak dira'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ohar mezu garrantzitsu!</NumberOfImportantLogMessages>
     <FixedOkXY>Zuzenduta eta Ongi - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1815,7 +1815,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Export>Esportatu</Export>
     <Copy>Kopiatu</Copy>
     <CopyOfY>Kopiatu {0}</CopyOfY>
-    <CopyXOfY>Kopiatu {0} --&gt; {1}</CopyXOfY>
+    <CopyXOfY>Kopiatu {0} -&gt; {1}</CopyXOfY>
     <New>Berria</New>
     <Remove>Kendu</Remove>
     <RemoveAll>Kendu denak</RemoveAll>
@@ -1839,7 +1839,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <TransportStreamSubtitleChooser>
     <Title>Garraio jario azpidatzi hautatzailea - {0}</Title>
     <PidLine>Garraio Pakete Ezagutarazlea (PID) = {0}, azpidatzi zenbatekoa = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} irudi</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} irudi</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Azpidatzi mota ezezaguna</Title>

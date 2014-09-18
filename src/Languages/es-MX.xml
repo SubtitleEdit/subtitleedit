@@ -494,7 +494,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Reparar (añadir guion) pares de líneas con un solo guion (-)</FixHyphensAdd>
     <FixHyphen>Corregir líneas que comienzan con guion (-)</FixHyphen>
     <XHyphensFixed>Guiones solucionados: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"¿Cómo estás? --&gt; "¿Cómo estás?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"¿Cómo estás? -&gt; "¿Cómo estás?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Comillas omitidas añadidas: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Corregir subtítulos con más de dos líneas</Fix3PlusLines>
     <Fix3PlusLine>Corregir subtítulo con más de dos líneas</Fix3PlusLine>
@@ -518,13 +518,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Corregir etiqueta inválida en cursiva</FixInvalidItalicTag>
     <FixShortDisplayTime>Corregir duración demasiado corta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corregir solapamiento duración</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;No tienes por qué preocuparte.&lt;i&gt; --&gt; &lt;i&gt;No tienes por qué preocuparte.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Oye   tú , ¿ qué haces? --&gt; Oye tú, ¿qué haces?</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>¡Oye tú!. --&gt; ¡Oye tú!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Eh.Tú. --&gt; Eh. Tú.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>La tIerra es plana. --&gt; La tierra es plana.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care. --&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Número de texto {0}: Tiempo inicial es posterior a tiempo final: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;No tienes por qué preocuparte.&lt;i&gt; -&gt; &lt;i&gt;No tienes por qué preocuparte.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Oye   tú , ¿ qué haces? -&gt; Oye tú, ¿qué haces?</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>¡Oye tú!. -&gt; ¡Oye tú!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Eh.Tú. -&gt; Eh. Tú.</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>La tIerra es plana. -&gt; La tierra es plana.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>Número de texto {0}: Tiempo inicial es posterior a tiempo final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>No se pudo solucionar número de texto {0}: Tiempo inicial es posterior a tiempo final: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0}convertido a: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>No se pudo corregir número de texto {0}: {1}</UnableToFixTextXY>
@@ -548,7 +548,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Aplicar correcciones seleccionadas</ApplyFixes>
     <AutoBreak>Salto automático</AutoBreak>
     <Unbreak>Combinar</Unbreak>
-    <FixDoubleDash>Corregir «--» --&gt;  «...»</FixDoubleDash>
+    <FixDoubleDash>Corregir «--» -&gt;  «...»</FixDoubleDash>
     <FixDoubleGreaterThan>Eliminar &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Eliminar «...» al inicio</FixEllipsesStart>
     <FixMissingOpenBracket>Corregir «[» omitido en la línea</FixMissingOpenBracket>
@@ -558,11 +558,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} «...» iniciales eliminados</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} «[» omitidos en línea corregidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical en línea corregida</XFixMusicNotation>
-    <FixDoubleDashExample>Pero-- --&gt; Pero...</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>«&gt;&gt; Roberto: ¡Vaya mierda!» --&gt; «Roberto: ¡Vaya mierda!»</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>«...y luego nosotros» --&gt; «y luego nosotros»</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>«toc toc] Abre la puerta, por favor.» --&gt; «[toc toc] Abre la puerta, por favor.»</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>«âTª eres mi vida, eres mi sol» --&gt; «♫ eres mi vida, eres mi sol»</FixMusicNotationExample>
+    <FixDoubleDashExample>Pero-- -&gt; Pero...</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>«&gt;&gt; Roberto: ¡Vaya mierda!» -&gt; «Roberto: ¡Vaya mierda!»</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>«...y luego nosotros» -&gt; «y luego nosotros»</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>«toc toc] Abre la puerta, por favor.» -&gt; «[toc toc] Abre la puerta, por favor.»</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>«âTª eres mi vida, eres mi sol» -&gt; «♫ eres mi vida, eres mi sol»</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ¡Mensajes de registro importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corregidos y aceptados - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1834,7 +1834,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Selector del flujo de transporte de los subtítulos - {0}</Title>
     <PidLine>Identificador del Paquete de Transporte (PID) = {0}, número de subtítulos = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} imagen(es)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} imagen(es)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de subtítulo desconocido</Title>

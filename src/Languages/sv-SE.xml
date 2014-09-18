@@ -247,7 +247,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-Cinema egenskaper (interop)</Title>
-    <TitleSmpte>D-Cinema egenskaper (smpte)</TitleSmpte>
+    <TitleSmpte>D-Cinema egenskaper (SMPTE)</TitleSmpte>
     <SubtitleId>Undertext ID</SubtitleId>
     <GenerateId>Skapa ID</GenerateId>
     <MovieTitle>Filmtitel</MovieTitle>
@@ -566,11 +566,11 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} Ta bort start '... '</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} Fixa saknade [</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} Fixa noter i rad</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>' and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0}Viktiga loggmeddelanden!</NumberOfImportantLogMessages>
     <FixedOkXY>Fixad och OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>

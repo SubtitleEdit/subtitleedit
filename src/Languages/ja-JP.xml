@@ -431,7 +431,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>テキスト番号 {0}: 開始時間が終了時間より遅いです: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>テキスト番号 {0}: 開始時間が終了時間より遅いです: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>テキスト番号 {0} を修正することができません: 開始時間が終了時間より遅いです: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} が修正されました: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>テキスト番号 {0} を修正することができません: {1}</UnableToFixTextXY>
@@ -465,11 +465,11 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <XFixEllipsesStart>{0} 先頭の '...' を削除します</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} 行中の足りない [ を修正しました</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} 行中の音符を修正します</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} 重要なログ メッセージです!</NumberOfImportantLogMessages>
     <FixedOkXY>修正に成功しました - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
