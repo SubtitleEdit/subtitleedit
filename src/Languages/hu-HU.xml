@@ -238,8 +238,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Következő eltérés</NextDifference>
     <SubtitlesNotAlike>A feliratok nem egyeznek</SubtitlesNotAlike>
     <XNumberOfDifference>Eltérések száma: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Eltérések száma: {0}  ({1}% szó módosult)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0}  ({1}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Eltérések száma: {0} ({1}% szó módosult)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Eltérések száma: {0} ({1}% betű módosult)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Csak az eltérések megjelenítése</ShowOnlyDifferences>
     <IgnoreLineBreaks>Sortörések figyelmen kívül hagyása</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Csak az eltérések keresése a szövegben</OnlyLookForDifferencesInText>
@@ -1846,7 +1846,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
   <TransportStreamSubtitleChooser>
     <Title>Átviteli adatfolyam felirat választó - {0}</Title>
     <PidLine>Átviteli csomag azonosító (PID) = {0}, feliratok száma = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} kép</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} kép</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Ismeretlen felirat típus</Title>

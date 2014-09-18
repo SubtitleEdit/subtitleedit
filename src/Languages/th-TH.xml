@@ -242,8 +242,8 @@
     <NextDifference>จุดต่าง&amp;ถัดไป</NextDifference>
     <SubtitlesNotAlike>ซับไตเติ้ลไม่มีส่วนที่คล้ายกัน</SubtitlesNotAlike>
     <XNumberOfDifference>จำนวนจุดต่าง: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>จำนวนจุดต่าง: {0}  ({1}% ของคำที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>จำนวนจุดต่าง: {0}  ({1}% ของตัวอักษรที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>จำนวนจุดต่าง: {0} ({1}% ของคำที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>จำนวนจุดต่าง: {0} ({1}% ของตัวอักษรที่เปลี่ยนไป)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>แสดงเฉพาะส่วนที่ต่างกัน</ShowOnlyDifferences>
     <IgnoreLineBreaks>ไม่สนใจตัวแบ่งบรรทัด</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>ดูเฉพาะจุดต่างในข้อความ</OnlyLookForDifferencesInText>
@@ -507,7 +507,7 @@
     <FixHyphensAdd>แก้บรรทัดคู่ (เพิ่มยัติภังค์) ที่มียัติภังค์เดียว (-)</FixHyphensAdd>
     <FixHyphen>แก้บรรทัดที่ขึ้นต้นด้วยยัติภังค์ (-)</FixHyphen>
     <XHyphensFixed>ยัติภังค์ที่ถูกลบ: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"How are you?  -&gt; "How are you?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>อัญประกาศหายไปที่แก้แล้ว: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>แก้ซับไตเติ้ลที่ยาวเกินสองบรรทัด</Fix3PlusLines>
     <Fix3PlusLine>แก้ซับไตเติ้ลที่ยาวเกินสองบรรทัด</Fix3PlusLine>
@@ -572,7 +572,7 @@
     <XFixMissingOpenBracket>{0} [ ที่หายไปในบรรทัดที่แก้แล้ว</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} สัญลักษณ์ดนตรีในบรรทัดที่แก้แล้ว</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt; Robert: Sup dude!'  -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleGreaterThanExample>'&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
@@ -959,7 +959,7 @@
       <CreateTip>แนะนำ: ใช้ &lt;ctrl+arrow left/right&gt; คีย์</CreateTip>
       <AdjustTip>แนะนำ: ใช้ &lt;alt+arrow up/down&gt; ไปซับไตเติ้ลก่อน/หลัง</AdjustTip>
       <BeforeChangingTimeInWaveFormX>ก่อนเปลี่ยนเวลาในเวฟฟอร์ม: {0}</BeforeChangingTimeInWaveFormX>
-      <NewTextInsertAtX>แทรกข้อความที่  {0}</NewTextInsertAtX>
+      <NewTextInsertAtX>แทรกข้อความที่ {0}</NewTextInsertAtX>
       <Center>วางศูนย์</Center>
       <PlayRate>อัตราเล่น (ความเร็ว)</PlayRate>
       <Slow>ช้า</Slow>
@@ -1858,7 +1858,7 @@
   <TransportStreamSubtitleChooser>
     <Title>ตัวเลือกซับไตเติ้ลสตรีมทรานสปอร์ต - {0}</Title>
     <PidLine>รหัสแพ็คเก็ตทรานสปอร์ต (PID) = {0}, จำนวนซับไตเติ้ล = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} ภาพ</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} ภาพ</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>ชนิดซับไตเติ้ลไม่รู้จัก</Title>

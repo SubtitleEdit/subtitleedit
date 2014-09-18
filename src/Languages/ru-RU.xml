@@ -244,8 +244,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <NextDifference>Следующее отличие</NextDifference>
     <SubtitlesNotAlike>Субтитры не имеют сходства</SubtitlesNotAlike>
     <XNumberOfDifference>Количество отличий: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Количество различий: {0}  ({1}% измененных слов)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Количество различий: {0}  ({1}% измененных символов)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Количество различий: {0} ({1}% измененных слов)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Количество различий: {0} ({1}% измененных символов)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Показывать только временные отличия</ShowOnlyDifferences>
     <IgnoreLineBreaks>Не учитывать переносы строк</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Показывать только текстовые отличия</OnlyLookForDifferencesInText>
@@ -1866,7 +1866,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <TransportStreamSubtitleChooser>
     <Title>Выбранный поток субтитров - {0}</Title>
     <PidLine>Идентификатор потока (PID) = {0}, количество субтитров = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} изображение(я)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} изображение(я)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Неизвестный тип субтитров</Title>

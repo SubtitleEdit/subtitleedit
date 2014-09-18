@@ -238,8 +238,8 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <NextDifference>&amp;Diferența următoare</NextDifference>
     <SubtitlesNotAlike>Subtitrările nu au asemănări</SubtitlesNotAlike>
     <XNumberOfDifference>Numărul diferențelor: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numărul diferențelor: {0}  ({1}% din cuvintele schimbate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0}  ({1}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numărul diferențelor: {0} ({1}% din cuvintele schimbate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numărul diferențelor: {0} ({1}% din literele schimbate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Arată numai diferențele</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoră întreruperile de linie</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Caută numai diferențele din text</OnlyLookForDifferencesInText>
@@ -1137,7 +1137,7 @@ care ar trebui să fie deja sincronizată cu fișierul video.
     <BeforeRemoveLineBreaksInSelectedLines>Înaintea eliminării pauzelor de linie din liniile selectate</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Numărul liniilor cu pauze de linii eliminate: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Înaintea înlocuirilor multiple</BeforeMultipleReplace>
-    <NumberOfLinesReplacedX>Numărul liniilor cu text înlocuit:  {0}</NumberOfLinesReplacedX>
+    <NumberOfLinesReplacedX>Numărul liniilor cu text înlocuit: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Numele '{0}' s-a adăugat listei de nume/etc.</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Numele '{0}' NU s-a adăugat listei de nume/etc.</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Cuvântul '{0}' s-a adăugat la dicționarul utilizatorului</WordXAddedToUserDic>
@@ -1848,7 +1848,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Selector flux de transport subtitrare - {0}</Title>
     <PidLine>Identificator al Pachetului de Transport (PID) = {0}, număr de subtitrări = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} imagin(i)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} imagin(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tip necunoscut de subtitrare</Title>

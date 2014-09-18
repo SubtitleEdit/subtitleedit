@@ -1863,7 +1863,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Escolha da legenda do fluxo de transporte - {0}</Title>
     <PidLine>Idntificador do Pacote de Transporte (PID) = {0}, número de legendas = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} imagem(ns)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} imagem(ns)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de legenda desconhecido</Title>

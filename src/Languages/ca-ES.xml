@@ -563,7 +563,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotation>Substitueix símbols musicals (e.g. âTª) amb símbols preferits</FixMusicNotation>
     <XFixDoubleDash>{0} '--' fixats</XFixDoubleDash>
     <XFixDoubleGreaterThan>{0} &gt;&gt; eliminats</XFixDoubleGreaterThan>
-    <XFixEllipsesStart>{0}  '...' inicials eliminats</XFixEllipsesStart>
+    <XFixEllipsesStart>{0} '...' inicials eliminats</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ omesos en línia fixats</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} notes musicals en línia fixats</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
@@ -1838,7 +1838,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <TransportStreamSubtitleChooser>
     <Title>Selector de subtítols de flux de transport - {0}</Title>
     <PidLine>Identificador de paquet de transport (PID) = {0}, nombre de subtítols = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} imatge(s)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} imatge(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipus subtítol desconegut</Title>

@@ -242,8 +242,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Nächster Unterschied</NextDifference>
     <SubtitlesNotAlike>Untertitel haben keine Übereinstimmungen</SubtitlesNotAlike>
     <XNumberOfDifference>Unterschiede: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0}  ({1}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0}  ({1}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Unterschiede: {0} ({1}% Worte geändert)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Unterschiede: {0} ({1}% Buchstaben geändert)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Nur Unterschiede anzeigen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Umbrüche ignorieren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Nur nach Unterschieden im Text suchen</OnlyLookForDifferencesInText>
@@ -1765,7 +1765,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MostUsedWords>Meistgenutzte Wörter</MostUsedWords>
     <NothingFound>Nichts gefunden</NothingFound>
     <NumberOfLinesX>Untertitel Zeilen: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Zeichen als {0}:   {1:#,###,##0}</LengthInFormatXinCharactersY>
+    <LengthInFormatXinCharactersY>Zeichen als {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Zeichen im Text: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Gesamtanzahl Zeichen/s: {0:0.0}</TotalCharsPerSecond>
     <NumberOfItalicTags>Kursiv-Tags: {0}</NumberOfItalicTags>
@@ -1783,8 +1783,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <DurationMinimum>Dauer - Minimum: {0:0.000} Sekunden</DurationMinimum>
     <DurationMaximum>Dauer - Maximum: {0:0.000} Sekunden</DurationMaximum>
     <DurationAverage>Dauer - Durchschnitt: {0:0.000} Sekunden</DurationAverage>
-    <CharactersPerSecondMinimum>Zeichen/s - Minimum:  {0:0.000}</CharactersPerSecondMinimum>
-    <CharactersPerSecondMaximum>Zeichen/s - Maximum:  {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondMinimum>Zeichen/s - Minimum: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Zeichen/s - Maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Zeichen/s - Durchschnitt: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
@@ -1868,7 +1868,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Transport Stream Untertitelauswahl - {0}</Title>
     <PidLine>Transport Packet Identifier (PID) = {0}, Anzahl Untertitel = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} Bild(er)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} Bild(er)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Unbekannter Dateityp</Title>

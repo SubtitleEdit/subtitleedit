@@ -238,8 +238,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <NextDifference>下一個差異處(&amp;N)</NextDifference>
     <SubtitlesNotAlike>字幕沒有相似之處</SubtitlesNotAlike>
     <XNumberOfDifference>差異數量: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>差異數量: {0}  (已變更單字的 {1}%)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0}  (已變更字母的 {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>差異數量: {0} (已變更單字的 {1}%)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>差異數量: {0} (已變更字母的 {1}%)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>僅顯示差異處</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略換行字元</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>僅尋找文字差異</OnlyLookForDifferencesInText>
@@ -1848,7 +1848,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <TransportStreamSubtitleChooser>
     <Title>傳輸串流字幕選擇器 - {0}</Title>
     <PidLine>傳輸封包識別器 (PID) = {0}，字幕數 = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2}， {3} 張圖像</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}，{3} 張圖像</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>未知字幕類型</Title>

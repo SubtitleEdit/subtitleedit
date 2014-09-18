@@ -955,7 +955,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeChangeFrameRate>قبل تغيير معدل الإطار</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent />
     <FrameRateChangedFromXToY>{الإطار معدل تغير من {0} إلى {1</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>على أية حال؟ VobSub غير موجود!  {0}  استيراد ملف</IdxFileNotFoundWarning>
+    <IdxFileNotFoundWarning>على أية حال؟ VobSub غير موجود! {0} استيراد ملف</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>{0} :العنوان الرأسي ليس ملف صحيح VobSub</InvalidVobSubHeader>
     <OpenVobSubFile>ترجمة VobSub (sub/idx) فتح</OpenVobSubFile>
     <VobSubFiles>VobSub ملفات ترجمة</VobSubFiles>

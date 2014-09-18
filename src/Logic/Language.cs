@@ -391,8 +391,8 @@ namespace Nikse.SubtitleEdit.Logic
                 NextDifference = "&Next difference",
                 SubtitlesNotAlike = "Subtitles have no similarities",
                 XNumberOfDifference = "Number of differences: {0}",
-                XNumberOfDifferenceAndPercentChanged = "Number of differences: {0}  ({1}% of words changed)",
-                XNumberOfDifferenceAndPercentLettersChanged = "Number of differences: {0}  ({1}% of letters changed)",
+                XNumberOfDifferenceAndPercentChanged = "Number of differences: {0} ({1}% of words changed)",
+                XNumberOfDifferenceAndPercentLettersChanged = "Number of differences: {0} ({1}% of letters changed)",
                 ShowOnlyDifferences = "Show only differences",
                 IgnoreLineBreaks = "Ignore line breaks",
                 OnlyLookForDifferencesInText = "Only look for differences in text",
@@ -2169,7 +2169,7 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Transport stream subtitle chooser - {0}",
                 PidLine = "Transport Packet Identifier (PID) = {0}, number of subtitles = {1}",
-                SubLine = "{0}:  {1} -> {2},  {3} image(s)",
+                SubLine = "{0}: {1} -> {2}, {3} image(s)",
             };
 
             UnknownSubtitle = new LanguageStructure.UnknownSubtitle

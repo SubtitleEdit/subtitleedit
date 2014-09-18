@@ -1782,7 +1782,7 @@ popravlja enak podnapis (sodelovanje)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Izbira prenosnega toka podnapisov - {0}</Title>
     <PidLine>Identifikator prenosnega paketa (PID) = {0}, število podnapisov = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} slika(e)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} slika(e)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Neznan tip podnapisa</Title>

@@ -229,8 +229,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Diferencia siguiente</NextDifference>
     <SubtitlesNotAlike>Los subtítulos no son similares</SubtitlesNotAlike>
     <XNumberOfDifference>Número de diferencias: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Número de diferencias: {0}  ({1}% de palabras cambiadas)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferencias: {0}  ({1}% de letras cambiadas)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Número de diferencias: {0} ({1}% de palabras cambiadas)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Número de diferencias: {0} ({1}% de letras cambiadas)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostrar solo diferencias</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorar saltos de línea</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Buscar solo diferencias en el texto</OnlyLookForDifferencesInText>
@@ -1834,7 +1834,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Selector del flujo de transporte de los subtítulos - {0}</Title>
     <PidLine>Identificador del Paquete de Transporte (PID) = {0}, número de subtítulos = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} imagen(es)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} imagen(es)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de subtítulo desconocido</Title>

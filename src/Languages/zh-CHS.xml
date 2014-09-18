@@ -241,7 +241,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <NextDifference>下一个差异(&amp;N)</NextDifference>
     <SubtitlesNotAlike>字幕没有相似之处</SubtitlesNotAlike>
     <XNumberOfDifference>差异数量: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>差异数量：{0}  (更改了 {1}% 的词)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentChanged>差异数量：{0} (更改了 {1}% 的词)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>忽略断行</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>仅显示差异</ShowOnlyDifferences>
     <IgnoreLineBreaks>忽略断行</IgnoreLineBreaks>
@@ -1861,7 +1861,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   <TransportStreamSubtitleChooser>
     <Title>传送流标识符号 (PID) = {}，字幕行数= {1}</Title>
     <PidLine>传送流自动选择器 (PID) = {}，字幕行数= {1}</PidLine>
-    <SubLine>{0}: {1}-&gt;{2},{3}张图片</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} 张图片</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>未知的字幕类型</Title>
