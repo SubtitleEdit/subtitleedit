@@ -30,150 +30,149 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static void Save(string fileName, Subtitle subtitle)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-
-            byte[] buffer = buffer = Encoding.ASCII.GetBytes(UltechId);
-            fs.Write(buffer, 0, buffer.Length);
-
-            buffer = new byte[] { 0, 0, 2, 0x1D, 0 }; // ?
-            fs.Write(buffer, 0, buffer.Length);
-
-            int numberOfLines = subtitle.Paragraphs.Count;
-            fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
-            fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
-
-            buffer = new byte[] { 0, 0, 0, 0, 0x1, 0, 0xF, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xE, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xD, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xC, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // ?
-            fs.Write(buffer, 0, buffer.Length);
-
-            buffer = buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
-            fs.Write(buffer, 0, buffer.Length);
-
-            while (fs.Length < 512)
-                fs.WriteByte(0);
-
-            // paragraphs
-            foreach (Paragraph p in subtitle.Paragraphs)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                // convert line breaks
-                var sb = new StringBuilder();
-                var line = new StringBuilder();
-                int skipCount = 0;
-                int numberOfNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
-                bool italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
-                string text = Utilities.RemoveHtmlTags(p.Text);
-                if (italic)
-                {
-                    sb.Append(Convert.ToChar(0x11).ToString());
-                    sb.Append(Convert.ToChar(0x2E).ToString());
-                }
-                int y = 0x74 - (numberOfNewLines * 0x20);
-                for (int j = 0; j < text.Length; j++)
-                {
-                    if (text.Substring(j).StartsWith(Environment.NewLine))
-                    {
-                        y += 0x20;
-                        if (line.Length > 0)
-                            sb.Append(line);
-                        line = new StringBuilder();
-                        skipCount = Environment.NewLine.Length - 1;
-                        sb.Append(Convert.ToChar(0x14).ToString());
-                        sb.Append(Convert.ToChar((byte)(y)).ToString());
-
-                        //center
-                        sb.Append(Convert.ToChar(0x17).ToString());
-                        sb.Append(Convert.ToChar(0x21).ToString());
-
-                        if (italic)
-                        {
-                            sb.Append(Convert.ToChar(0x11).ToString());
-                            sb.Append(Convert.ToChar(0x2E).ToString());
-                        }
-                    }
-                    else if (skipCount == 0)
-                    {
-                        line.Append(text.Substring(j, 1));
-                    }
-                    else
-                    {
-                        skipCount--;
-                    }
-                }
-                if (line.Length > 0)
-                    sb.Append(line);
-                text = sb.ToString();
-
-                // codes?
-                buffer = new byte[] {
-                    0x14,
-                    0x20,
-                    0x14,
-                    0x2E,
-                    0x14,
-                    (byte)(0x74 - (numberOfNewLines * 0x20)),
-
-                    0x17,  0x21, // 0x1721=center, 0x1722=right ?
-                };
-
-                //if (text.StartsWith("{\\a6}"))
-                //{
-                //    text = p.Text.Remove(0, 5);
-                //    buffer[7] = 1; // align top
-                //}
-                //else if (text.StartsWith("{\\a1}"))
-                //{
-                //    text = p.Text.Remove(0, 5);
-                //    buffer[8] = 0x0A; // align left
-                //}
-                //else if (text.StartsWith("{\\a3}"))
-                //{
-                //    text = p.Text.Remove(0, 5);
-                //    buffer[8] = 0x1E; // align right
-                //}
-                //else if (text.StartsWith("{\\a5}"))
-                //{
-                //    text = p.Text.Remove(0, 5);
-                //    buffer[7] = 1; // align top
-                //    buffer[8] = 05; // align left
-                //}
-                //else if (text.StartsWith("{\\a7}"))
-                //{
-                //    text = p.Text.Remove(0, 5);
-                //    buffer[7] = 1; // align top
-                //    buffer[8] = 0xc; // align right
-                //}
-
-                fs.WriteByte(0xF1); //ID of start record
-
-                // length
-                int length = text.Length + 15;
-                fs.WriteByte((byte)(length));
-                fs.WriteByte(0);
-
-                // start time
-                WriteTime(fs, p.StartTime);
+                byte[] buffer = buffer = Encoding.ASCII.GetBytes(UltechId);
                 fs.Write(buffer, 0, buffer.Length);
 
-                // text
-                buffer = Encoding.ASCII.GetBytes(text);
-                fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
-                fs.WriteByte(0x14);
-                fs.WriteByte(0x2F);
-                fs.WriteByte(0);
+                buffer = new byte[] { 0, 0, 2, 0x1D, 0 }; // ?
+                fs.Write(buffer, 0, buffer.Length);
 
-                // end time
-                fs.WriteByte(0xF1); // id of start record
-                fs.WriteByte(7); // length of end time
-                fs.WriteByte(0);
-                WriteTime(fs, p.EndTime);
-                fs.WriteByte(0x14);
-                fs.WriteByte(0x2c);
-                fs.WriteByte(0);
+                int numberOfLines = subtitle.Paragraphs.Count;
+                fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
+                fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
+
+                buffer = new byte[] { 0, 0, 0, 0, 0x1, 0, 0xF, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xE, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xD, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xC, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // ?
+                fs.Write(buffer, 0, buffer.Length);
+
+                buffer = buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
+                fs.Write(buffer, 0, buffer.Length);
+
+                while (fs.Length < 512)
+                    fs.WriteByte(0);
+
+                // paragraphs
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    // convert line breaks
+                    var sb = new StringBuilder();
+                    var line = new StringBuilder();
+                    int skipCount = 0;
+                    int numberOfNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
+                    bool italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
+                    string text = Utilities.RemoveHtmlTags(p.Text);
+                    if (italic)
+                    {
+                        sb.Append(Convert.ToChar(0x11).ToString());
+                        sb.Append(Convert.ToChar(0x2E).ToString());
+                    }
+                    int y = 0x74 - (numberOfNewLines * 0x20);
+                    for (int j = 0; j < text.Length; j++)
+                    {
+                        if (text.Substring(j).StartsWith(Environment.NewLine))
+                        {
+                            y += 0x20;
+                            if (line.Length > 0)
+                                sb.Append(line);
+                            line = new StringBuilder();
+                            skipCount = Environment.NewLine.Length - 1;
+                            sb.Append(Convert.ToChar(0x14).ToString());
+                            sb.Append(Convert.ToChar((byte)(y)).ToString());
+
+                            //center
+                            sb.Append(Convert.ToChar(0x17).ToString());
+                            sb.Append(Convert.ToChar(0x21).ToString());
+
+                            if (italic)
+                            {
+                                sb.Append(Convert.ToChar(0x11).ToString());
+                                sb.Append(Convert.ToChar(0x2E).ToString());
+                            }
+                        }
+                        else if (skipCount == 0)
+                        {
+                            line.Append(text.Substring(j, 1));
+                        }
+                        else
+                        {
+                            skipCount--;
+                        }
+                    }
+                    if (line.Length > 0)
+                        sb.Append(line);
+                    text = sb.ToString();
+
+                    // codes?
+                    buffer = new byte[] {
+                        0x14,
+                        0x20,
+                        0x14,
+                        0x2E,
+                        0x14,
+                        (byte)(0x74 - (numberOfNewLines * 0x20)),
+
+                        0x17, 0x21, // 0x1721=center, 0x1722=right ?
+                    };
+
+                    //if (text.StartsWith("{\\a6}"))
+                    //{
+                    //    text = p.Text.Remove(0, 5);
+                    //    buffer[7] = 1; // align top
+                    //}
+                    //else if (text.StartsWith("{\\a1}"))
+                    //{
+                    //    text = p.Text.Remove(0, 5);
+                    //    buffer[8] = 0x0A; // align left
+                    //}
+                    //else if (text.StartsWith("{\\a3}"))
+                    //{
+                    //    text = p.Text.Remove(0, 5);
+                    //    buffer[8] = 0x1E; // align right
+                    //}
+                    //else if (text.StartsWith("{\\a5}"))
+                    //{
+                    //    text = p.Text.Remove(0, 5);
+                    //    buffer[7] = 1; // align top
+                    //    buffer[8] = 05; // align left
+                    //}
+                    //else if (text.StartsWith("{\\a7}"))
+                    //{
+                    //    text = p.Text.Remove(0, 5);
+                    //    buffer[7] = 1; // align top
+                    //    buffer[8] = 0xc; // align right
+                    //}
+
+                    fs.WriteByte(0xF1); //ID of start record
+
+                    // length
+                    int length = text.Length + 15;
+                    fs.WriteByte((byte)(length));
+                    fs.WriteByte(0);
+
+                    // start time
+                    WriteTime(fs, p.StartTime);
+                    fs.Write(buffer, 0, buffer.Length);
+
+                    // text
+                    buffer = Encoding.ASCII.GetBytes(text);
+                    fs.Write(buffer, 0, buffer.Length); // Text starter på index 19 (0 baseret)
+                    fs.WriteByte(0x14);
+                    fs.WriteByte(0x2F);
+                    fs.WriteByte(0);
+
+                    // end time
+                    fs.WriteByte(0xF1); // id of start record
+                    fs.WriteByte(7); // length of end time
+                    fs.WriteByte(0);
+                    WriteTime(fs, p.EndTime);
+                    fs.WriteByte(0x14);
+                    fs.WriteByte(0x2c);
+                    fs.WriteByte(0);
+                }
+
+                buffer = new byte[] { 0xF1, 0x0B, 0x00, 0x00, 0x00, 0x1B, 0x18, 0x14, 0x20, 0x14, 0x2E, 0x14, 0x2F, 0x00 }; // footer
+                fs.Write(buffer, 0, buffer.Length);
             }
-
-            buffer = new byte[] { 0xF1, 0x0B, 0x00, 0x00, 0x00, 0x1B, 0x18, 0x14, 0x20, 0x14, 0x2E, 0x14, 0x2F, 0x00 }; // footer
-            fs.Write(buffer, 0, buffer.Length);
-
-            fs.Close();
         }
 
         private static void WriteTime(FileStream fs, TimeCode timeCode)
