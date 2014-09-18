@@ -251,7 +251,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Właściwości D-Cinema (interop)</Title>
-    <TitleSmpte>Właściwości D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Właściwości D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID napisów</SubtitleId>
     <GenerateId>Generuj ID</GenerateId>
     <MovieTitle>Tytuł filmu</MovieTitle>
@@ -507,7 +507,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Popraw (dodając myślnik) pary linii z tylko jednym myślnikiem (-)</FixHyphensAdd>
     <FixHyphen>Popraw linie rozpoczynające się myślnikiem (-)</FixHyphen>
     <XHyphensFixed>Usunięto myślników: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Jak się masz? --&gt; "Jak się masz?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Jak się masz? -&gt; "Jak się masz?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Dodano brakujących cudzysłowów: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Popraw napisy z więcej niż dwiema liniami</Fix3PlusLines>
     <Fix3PlusLine>Popraw napis z więcej niż dwiema liniami</Fix3PlusLine>
@@ -531,13 +531,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Popraw błędny tag kursywy</FixInvalidItalicTag>
     <FixShortDisplayTime>Popraw zbyt krótki czas wyświetlania</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Popraw nakładanie się czasu wyświetlania</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; --&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hej   ty , tam. --&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>Hej, ty!. --&gt; Hej, ty!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Hej.Ty. --&gt; Hej. Ty..</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Tam jest kIatka. --&gt; Tam jest klatka.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>What do i care. --&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Numer linii tekstu {0}: Czas rozpoczęcia nakłada się na czas zakończenia: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Hej   ty , tam. -&gt; Hej ty, tam.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Hej, ty!. -&gt; Hej, ty!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Hej.Ty. -&gt; Hej. Ty..</FixMissingSpacesExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>Tam jest kIatka. -&gt; Tam jest klatka.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>Numer linii tekstu {0}: Czas rozpoczęcia nakłada się na czas zakończenia: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Nie udało się poprawić linii tekstowej o numerze {0}: Czas początkowy nakłada się na czas końcowy: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>Poprawiono {0} na: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Nie udało się poprawić linii tekstowej o numerze {0}: {1}</UnableToFixTextXY>
@@ -571,11 +571,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>Usunięto na początku {0} "..."</XFixEllipsesStart>
     <XFixMissingOpenBracket>Poprawiono {0} "[" brakujących w linii</XFixMissingOpenBracket>
     <XFixMusicNotation>Poprawiono {0} notacji muzycznych w linii</XFixMusicNotation>
-    <FixDoubleDashExample>"Ach-- tak!" --&gt; "Ach... tak!"</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>"&gt;&gt; Robert: jesteś maminsynkiem!" --&gt; "Robert: jesteś maminsynkiem!"</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>"... i pójdziemy dalej" --&gt; "i pójdziemy dalej"</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>"brzęk] Uważaj!" --&gt; "[brzęk] Uważaj!"</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>"âTª słodkie są sny" --&gt; "♫ słodkie są sny"</FixMusicNotationExample>
+    <FixDoubleDashExample>"Ach-- tak!" -&gt; "Ach... tak!"</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>"&gt;&gt; Robert: jesteś maminsynkiem!" -&gt; "Robert: jesteś maminsynkiem!"</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>"... i pójdziemy dalej" -&gt; "i pójdziemy dalej"</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>"brzęk] Uważaj!" -&gt; "[brzęk] Uważaj!"</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>"âTª słodkie są sny" -&gt; "♫ słodkie są sny"</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ważnych wiadomości znajduje się w Dzienniku!</NumberOfImportantLogMessages>
     <FixedOkXY>Poprawiono i OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1867,7 +1867,7 @@ tylko gdy różnią się budową</AutoFixNames>
   <TransportStreamSubtitleChooser>
     <Title>Selektor napisów strumienia transportowego - {0}</Title>
     <PidLine>Identyfikator Pakietu Transportowego (PID) = {0}, ilość dostępnych napisów = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} obrazek(i)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} obrazek(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>

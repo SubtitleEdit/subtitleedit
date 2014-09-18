@@ -247,7 +247,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-Cinema tulajdonságok (interop)</Title>
-    <TitleSmpte>D-Cinema tulajdonságok (smpte)</TitleSmpte>
+    <TitleSmpte>D-Cinema tulajdonságok (SMPTE)</TitleSmpte>
     <SubtitleId>Felirat azonosító</SubtitleId>
     <GenerateId>Azonosító létrehozása</GenerateId>
     <MovieTitle>Filmcím</MovieTitle>
@@ -533,7 +533,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>{0} szövegszám: Az indítási idő később ér véget mint a befejezési idő: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>{0} szövegszám: Az indítási idő később ér véget mint a befejezési idő: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>A(z) {0} szövegszám nem javítható: Az indítási idő későbbi mint a befejezési idő: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} javítva, erre: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>A(z) {0} szövegszám nem javítható: {1}</UnableToFixTextXY>
@@ -567,11 +567,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} indító '...' jel eltávolítása</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} hiányzó [ jel pótolva a sorban</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} zenei jelölés javítása a sorban</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} fontos napló üzenetek!</NumberOfImportantLogMessages>
     <FixedOkXY>Fixálva és OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1846,7 +1846,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
   <TransportStreamSubtitleChooser>
     <Title>Átviteli adatfolyam felirat választó - {0}</Title>
     <PidLine>Átviteli csomag azonosító (PID) = {0}, feliratok száma = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} kép</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} kép</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Ismeretlen felirat típus</Title>

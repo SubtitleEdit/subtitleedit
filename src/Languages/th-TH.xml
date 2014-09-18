@@ -252,7 +252,7 @@
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>คุณสมบัติของ D-Cinema (interop)</Title>
-    <TitleSmpte>คุณสมบัติของ D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>คุณสมบัติของ D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>รหัสซับไตเติ้ล</SubtitleId>
     <GenerateId>รหัสการสร้าง</GenerateId>
     <MovieTitle>ชื่อภาพยนตร์</MovieTitle>
@@ -538,7 +538,7 @@
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>ไม่สามารถแก้ข้อความที่ {0}: เวลาเริ่มต้นอยู่หลังเวลาสิ้นสุด: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} ถูกแก้เป็น: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>ไม่สามารถแก้ข้อความที่ {0}: {1}</UnableToFixTextXY>
@@ -572,11 +572,11 @@
     <XFixEllipsesStart>{0} '...' ขึ้นต้นที่ลบแล้ว</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ ที่หายไปในบรรทัดที่แก้แล้ว</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} สัญลักษณ์ดนตรีในบรรทัดที่แก้แล้ว</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt; Robert: Sup dude!'  --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt; Robert: Sup dude!'  -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} important log messages!</NumberOfImportantLogMessages>
     <FixedOkXY>แก้และตกลง - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1859,7 +1859,7 @@
   <TransportStreamSubtitleChooser>
     <Title>ตัวเลือกซับไตเติ้ลสตรีมทรานสปอร์ต - {0}</Title>
     <PidLine>รหัสแพ็คเก็ตทรานสปอร์ต (PID) = {0}, จำนวนซับไตเติ้ล = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} ภาพ</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} ภาพ</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>ชนิดซับไตเติ้ลไม่รู้จัก</Title>

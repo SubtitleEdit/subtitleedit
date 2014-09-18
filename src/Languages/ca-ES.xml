@@ -247,7 +247,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Propietats D-Cinema(interop)</Title>
-    <TitleSmpte>Propietats D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Propietats D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID subtítol</SubtitleId>
     <GenerateId>Genera ID</GenerateId>
     <MovieTitle>Títol pel·lícula</MovieTitle>
@@ -532,7 +532,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Nombre text {0}: Temps d'inici posterior a temps final: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Nombre text {0}: Temps d'inici posterior a temps final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>No pot fixar-se nombre text {0}: Temps d'inici posterior a temps final: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} fixat a: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>No pot fixar-se nombre text {0}: {1}</UnableToFixTextXY>
@@ -566,11 +566,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0}  '...' inicials eliminats</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ omesos en línia fixats</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} notes musicals en línia fixats</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} missatges registre importants!</NumberOfImportantLogMessages>
     <FixedOkXY>Fixats i OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1838,7 +1838,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <TransportStreamSubtitleChooser>
     <Title>Selector de subtítols de flux de transport - {0}</Title>
     <PidLine>Identificador de paquet de transport (PID) = {0}, nombre de subtítols = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} imatge(s)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} imatge(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipus subtítol desconegut</Title>

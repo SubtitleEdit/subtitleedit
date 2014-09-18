@@ -225,7 +225,7 @@ Rất hân hạnh được chào đón.
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Thuộc tính D-Cinema (interop)</Title>
-    <TitleSmpte>Thuộc tínhD-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Thuộc tínhD-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID phụ đề</SubtitleId>
     <GenerateId>Tạo ID</GenerateId>
     <MovieTitle>Tiêu đề phim</MovieTitle>
@@ -483,11 +483,11 @@ Rất hân hạnh được chào đón.
     <XFixEllipsesStart>{0} gỡ bỏ bắt đầu '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} Gỡ bỏ [trong dòng</XFixMissingOpenBracket>
     <XFixMusicNotation>{0}Sửa lỗi kí hiệu âm nhạc cho phù hợp</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} tin nhắn đăng nhập quan trọng!</NumberOfImportantLogMessages>
     <FixedOkXY>Sữa chữa và Đồng ý - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>

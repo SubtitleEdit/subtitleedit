@@ -251,7 +251,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Proprietà D-Cinema (interop)</Title>
-    <TitleSmpte>Proprietà D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Proprietà D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID sottotitolo</SubtitleId>
     <GenerateId>Genera ID</GenerateId>
     <MovieTitle>Titolo film</MovieTitle>
@@ -537,7 +537,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Ehi.Tu. -&gt; Ehi. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossibile correggere il testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} corretto in: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Impossibile correggere il testo numero {0}: {1}</UnableToFixTextXY>
@@ -571,11 +571,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} '...' eliminati all'inizio</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ eliminate all'inizio della linea</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} correzioni notazione musicale nella linea</XFixMusicNotation>
-    <FixDoubleDashExample>'Wow-- oh sì!' --&gt; 'Wow... oh sì!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Roberto: La zuppa è pronta!' --&gt; 'Roberto: La zuppa è pronta!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Wow-- oh sì!' -&gt; 'Wow... oh sì!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Roberto: La zuppa è pronta!' -&gt; 'Roberto: La zuppa è pronta!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... e allora noi' -&gt; 'e allora noi'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'rumori] Guarda fuori!' --&gt; '[rumori] Guarda fuori!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'rumori] Guarda fuori!' -&gt; '[rumori] Guarda fuori!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messaggi importanti nel rapporto!</NumberOfImportantLogMessages>
     <FixedOkXY>Corretto e OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1867,7 +1867,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Scelta sottotitolo Transport Stream - {0}</Title>
     <PidLine>Transport Packet Identifier (PID) = {0}, numero di sottotitoli = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} immagine(i)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} immagine(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo di sottotitolo sconosciuto</Title>

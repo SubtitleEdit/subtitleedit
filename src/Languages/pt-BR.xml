@@ -251,7 +251,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Propriedades D-Cinema (interop)</Title>
-    <TitleSmpte>Propriedades D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Propriedades D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID Legenda</SubtitleId>
     <GenerateId>Gerar ID</GenerateId>
     <MovieTitle>Título de filme</MovieTitle>
@@ -536,7 +536,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Número do texto {0}: Tempo inicial é posterior ao tempo final: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Número do texto {0}: Tempo inicial é posterior ao tempo final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Não foi possível solucionar número do texto {0}: Tempo inicial é posterior ao tempo final: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} convertido para: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Não foi possível corrigir número do texto {0}: {1}</UnableToFixTextXY>
@@ -570,11 +570,11 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} '...' iniciais eliminadas</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ omitidos na linha corregidos</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} nota musical na linha corrigida</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mensagens de log importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigidos e OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1863,7 +1863,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Escolha da legenda do fluxo de transporte - {0}</Title>
     <PidLine>Idntificador do Pacote de Transporte (PID) = {0}, número de legendas = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} imagem(ns)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} imagem(ns)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de legenda desconhecido</Title>

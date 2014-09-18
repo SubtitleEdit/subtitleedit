@@ -332,13 +332,13 @@ http://soft98.ir
     <FixInvalidItalicTag>تصحیح برچسبهای کج (ایتالیک) نامعتبر</FixInvalidItalicTag>
     <FixShortDisplayTime>تصحیح زمانهای نمایش کوتاه</FixShortDisplayTime>
     <FixOverlappingDisplayTime>رفع تداخل زمان نمایش</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;چه مراقبت من --&gt; چه کار کنم مراقبت.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>هی تو ، وجود دارد. --&gt; هی تو ، وجود دارد.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>هی تو!. --&gt; هی تو!</RemoveUnneededPeriodsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;چه مراقبت من -&gt; چه کار کنم مراقبت.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>هی تو ، وجود دارد. -&gt; هی تو ، وجود دارد.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>هی تو!. -&gt; هی تو!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -- هی&gt;. شما.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>فیات زمین است. --&gt; زمین صاف است.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample>چه مراقبت می کنم. --&gt; چه کار کنم مراقبت.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <FixUppercaseIInsindeLowercaseWordsExample>فیات زمین است. -&gt; زمین صاف است.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixLowercaseIToUppercaseIExample>چه مراقبت می کنم. -&gt; چه کار کنم مراقبت.</FixLowercaseIToUppercaseIExample>
+    <StartTimeLaterThanEndTime>Text number {0}: Start time is later than end time: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Unable to fix text number {0}: Start time is later end end time: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} fixed to: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
@@ -373,10 +373,10 @@ http://soft98.ir
     <XFixMissingOpenBracket>{0} ثابت [گم شده در خط</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} نماد موسیقی در رفع خط</XFixMusicNotation>
     <FixDoubleDashExample>'ایست -- آره ام!' ایست&gt; '... -- آره ام! '</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; رابرت : شخص شام خوردن!' --&gt; ': رابرت شخص شام خوردن!'</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'... و پس از آن ما --&gt; 'و پس از آن چه ما</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] بیرون نگاه کن!' --&gt; '[clanks] بیرون نگاه کن!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'در آرزوی ª شیرین هستند' --&gt; '♫ رویاهای شیرین هستند'</FixMusicNotationExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; رابرت : شخص شام خوردن!' -&gt; ': رابرت شخص شام خوردن!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... و پس از آن ما -&gt; 'و پس از آن چه ما</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clanks] بیرون نگاه کن!' -&gt; '[clanks] بیرون نگاه کن!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'در آرزوی ª شیرین هستند' -&gt; '♫ رویاهای شیرین هستند'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} پیامهای مهم است!</NumberOfImportantLogMessages>
     <FixedOkXY>Fixed and OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>

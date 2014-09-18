@@ -247,7 +247,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Proprietăți D-Cinema (interop)</Title>
-    <TitleSmpte>Proprietăți D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Proprietăți D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID subtitrare</SubtitleId>
     <GenerateId>Generează ID</GenerateId>
     <MovieTitle>Titlu film</MovieTitle>
@@ -533,7 +533,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FixMissingSpacesExample>Hei.Tu. -&gt; Hei. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Pământul este pIat. -&gt; Pământul este plat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Ce îmi pasă. -&gt; Ce îmi pasă.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Număr text {0}: Timpul de start este mai târziu decât timpul de sfârșit: {4} {1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Număr text {0}: Timpul de start este mai târziu decât timpul de sfârșit: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Imposibil de corectat numărul textului {0}: Timpul de start se termină mai târziu decât timpul de sfârșit: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} corectat la: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Imposibil de corectat numărul textului {0}: {1}</UnableToFixTextXY>
@@ -567,11 +567,11 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <XFixEllipsesStart>{0} elimină începutul '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} absența [ din linie corectată</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} corectează notația muzicală din linie</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa ... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa ... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'aTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'aTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mesaje importante în jurnal!</NumberOfImportantLogMessages>
     <FixedOkXY>Corectat și OK - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1848,7 +1848,7 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Selector flux de transport subtitrare - {0}</Title>
     <PidLine>Identificator al Pachetului de Transport (PID) = {0}, număr de subtitrări = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} imagin(i)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} imagin(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tip necunoscut de subtitrare</Title>
@@ -1931,7 +1931,7 @@ Păstrezi schimbările?</KeepChangesMessage>
     <XImagesSavedInY>{0} imagini salvate în {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Încearcă MS MODI OCR ptr. cuvinte necunoscute</TryModiForUnknownWords>
     <DictionaryX>Dicționar: {0}</DictionaryX>
-    <RightToLeft>Dreapta --&gt; stânga</RightToLeft>
+    <RightToLeft>Dreapta -&gt; stânga</RightToLeft>
     <ShowOnlyForcedSubtitles>Arată doar subtitrările silite</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Folosește coduri de timp din fișierul .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Nicio potrivire&gt;</NoMatch>

@@ -402,7 +402,7 @@ namespace Nikse.SubtitleEdit.Logic
             DCinemaProperties = new LanguageStructure.DCinemaProperties
             {
                 Title = "D-Cinema properties (interop)",
-                TitleSmpte = "D-Cinema properties (smpte)",
+                TitleSmpte = "D-Cinema properties (SMPTE)",
                 SubtitleId = "Subtitle ID",
                 GenerateId = "Generate ID",
                 MovieTitle = "Movie title",
@@ -714,7 +714,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixMissingSpacesExample = "Hey.You. -> Hey. You.",
                 FixUppercaseIInsindeLowercaseWordsExample = "The earth is fIat. -> The earth is flat.",
                 FixLowercaseIToUppercaseIExample = "What do i care. -> What do I care.",
-                StartTimeLaterThanEndTime = "Text number {0}: Start time is later than end time: {4}{1} --> {2} {3}",
+                StartTimeLaterThanEndTime = "Text number {0}: Start time is later than end time: {4}{1} -> {2} {3}",
                 UnableToFixStartTimeLaterThanEndTime = "Unable to fix text number {0}: Start time is later end end time: {1}",
                 XFixedToYZ = "{0} fixed to: {1}{2}",
                 UnableToFixTextXY = "Unable to fix text number {0}: {1}",
@@ -741,11 +741,11 @@ namespace Nikse.SubtitleEdit.Logic
                 FixEllipsesStart = "Remove leading '...'",
                 FixMissingOpenBracket = "Fix missing [ in line",
                 FixMusicNotation = "Replace music symbols (e.g. âTª) with preferred symbol",
-                FixDoubleDashExample = "'Whoa-- um yeah!' --> 'Whoa... um yeah!'",
-                FixDoubleGreaterThanExample = "'>> Robert: Sup dude!' --> 'Robert: Sup dude!'",
+                FixDoubleDashExample = "'Whoa-- um yeah!' -> 'Whoa... um yeah!'",
+                FixDoubleGreaterThanExample = "'>> Robert: Sup dude!' -> 'Robert: Sup dude!'",
                 FixEllipsesStartExample = "'... and then we' -> 'and then we'",
-                FixMissingOpenBracketExample = "'clanks] Look out!' --> '[clanks] Look out!'",
-                FixMusicNotationExample = "'âTª sweet dreams are' --> '♫ sweet dreams are'",
+                FixMissingOpenBracketExample = "'clanks] Look out!' -> '[clanks] Look out!'",
+                FixMusicNotationExample = "'âTª sweet dreams are' -> '♫ sweet dreams are'",
                 XFixDoubleDash = "{0} fixed '--'",
                 XFixDoubleGreaterThan = "{0} removed '>>'",
                 XFixEllipsesStart = "{0} remove starting '...'",
@@ -2169,7 +2169,7 @@ can edit in same subtitle file (collaboration)",
             {
                 Title = "Transport stream subtitle chooser - {0}",
                 PidLine = "Transport Packet Identifier (PID) = {0}, number of subtitles = {1}",
-                SubLine = "{0}:  {1} --> {2},  {3} image(s)",
+                SubLine = "{0}:  {1} -> {2},  {3} image(s)",
             };
 
             UnknownSubtitle = new LanguageStructure.UnknownSubtitle

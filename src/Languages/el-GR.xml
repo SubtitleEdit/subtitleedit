@@ -250,7 +250,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Ιδιότητες D-Cinema (interop)</Title>
-    <TitleSmpte>Ιδιότητες D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Ιδιότητες D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID υποτίτλου</SubtitleId>
     <GenerateId>Παραγωγή ID</GenerateId>
     <MovieTitle>Τίτλος ταινίας</MovieTitle>
@@ -536,7 +536,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Εϊ.Εσύ. -&gt; Εϊ. Εσύ.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Η γη είναι επίπεδη. -&gt; Η γη είναι επίπεδη.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Τι με νοιάζει. -&gt; Τι με νοιάζει.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Κείμενο με αριθμό {0}: Ώρα έναρξης αργότερα από ώρα λήξης: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Κείμενο με αριθμό {0}: Ώρα έναρξης αργότερα από ώρα λήξης: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: Ώρα έναρξης αργότερα από ώρα λήξης: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} επιδιορθώθηκε σε: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: {1}</UnableToFixTextXY>
@@ -570,11 +570,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} '...' αφαιρέθηκαν από αρχή γραμμής</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ που λείπουν επιδιορθώθηκαν</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} σύμβολα μουσικής αντικαταστάθηκαν</XFixMusicNotation>
-    <FixDoubleDashExample>'Τι-- αα ναι!' --&gt; 'Τι... αα ναι!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει!' --&gt; 'Ρόμπερτ: Τι τρέχει!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Τι-- αα ναι!' -&gt; 'Τι... αα ναι!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Ρόμπερτ: Τι τρέχει!' -&gt; 'Ρόμπερτ: Τι τρέχει!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... και τότε εμείς' -&gt; 'και τότε εμείς'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'κλανκ] Πρόσεξε!' --&gt; '[κλανκ] Πρόσεξε!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'κλανκ] Πρόσεξε!' -&gt; '[κλανκ] Πρόσεξε!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} σημαντικά μηνύματα του αρχείου καταγραφής!</NumberOfImportantLogMessages>
     <FixedOkXY>Επιδιορθωμένα και Εντάξει - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1849,7 +1849,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <TransportStreamSubtitleChooser>
     <Title>Επιλογέας ροής μεταφοράς υποτίτλου - {0}</Title>
     <PidLine>Μεταφορά Αναγνωριστικου Πακέτου (PID) = {0}, αριθμός υποτίτλων = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} εικόνα(-ες)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} εικόνα(-ες)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Άγνωστος τύπος υπότιτλου</Title>

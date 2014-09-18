@@ -251,7 +251,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Vlastnosti D-Cinema (interop)</Title>
-    <TitleSmpte>Vlastnosti D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Vlastnosti D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID titulků</SubtitleId>
     <GenerateId>Generovat ID</GenerateId>
     <MovieTitle>Název filmu</MovieTitle>
@@ -537,7 +537,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpacesExample>Hej.Chlape. -&gt; Hej. Chlape.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Země je pIacatá. -&gt; Země je placatá.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Text číslo {0}: Čas začátku je později než čas konce: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Text číslo {0}: Čas začátku je později než čas konce: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Nelze opravit text číslo {0}: Čas začátku je později než čas konce: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} opraveno na: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Nelze opravit text číslo {0}: {1}</UnableToFixTextXY>
@@ -571,11 +571,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>Odebráno {0} začátečních '...'</XFixEllipsesStart>
     <XFixMissingOpenBracket>Opraveno {0} chybějících '[' v řádku</XFixMissingOpenBracket>
     <XFixMusicNotation>Opraveno {0} hudebních symbolů v řádku</XFixMusicNotation>
-    <FixDoubleDashExample>'Páni-- jo!' --&gt; 'Páni... jo!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Jez!' --&gt; 'Robert: Jez!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Páni-- jo!' -&gt; 'Páni... jo!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Jez!' -&gt; 'Robert: Jez!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... a pak my' -&gt; 'a pak my'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'zvonění] Pozor!' --&gt; '[zvonění] Pozor!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sladké sny' --&gt; '♫ sladké sny'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'zvonění] Pozor!' -&gt; '[zvonění] Pozor!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sladké sny' -&gt; '♫ sladké sny'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} důležitých protokolů chyb!</NumberOfImportantLogMessages>
     <FixedOkXY>Opraveno a v pořádku - '{0}': {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1865,7 +1865,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Volba datového proudu přenosu titulků - {0}</Title>
     <PidLine>Identifikátor paketu přenosu (PID) = {0}, počet titulků = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2},  {3} obrázků</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2},  {3} obrázků</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Neznámý typ titulků</Title>

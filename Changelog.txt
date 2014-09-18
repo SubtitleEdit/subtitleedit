@@ -648,7 +648,7 @@
    * File -> Statistics: Displays info about current subtitle
    * Click on status bar in footer will now show status history
    * "Fix common errors" item to fix Turkish ANSI letters to Unicode - thx Adem
-   * Support for D-Cinema smpte - thx Lillian
+   * Support for D-Cinema SMPTE - thx Lillian
    * Can now read NCI cap files - thx Ramon
    * Added fullscreen icon to video player (in main window only) - thx Leszek
    * Voikko spell check for Finnish - thx Harri + Ile

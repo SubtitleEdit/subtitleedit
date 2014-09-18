@@ -533,7 +533,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>文字編號 {0}: 起始時間晚於結束時間: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>文字編號 {0}: 起始時間晚於結束時間: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>無法修復文字編號 {0}: 起始時間晚於結束時間: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} 已修復為: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>無法修復文字編號 {0}: {1}</UnableToFixTextXY>
@@ -567,11 +567,11 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <XFixEllipsesStart>{0} 個開頭的 '...' 已移除</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} 個行內遺失的 '[' 已修復</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} 個行內的音符已修復</XFixMusicNotation>
-    <FixDoubleDashExample>'Whoa-- um yeah!' --&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' --&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... and then we' -&gt; 'and then we'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'clanks] Look out!' --&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'clanks] Look out!' -&gt; '[clanks] Look out!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} 條重要的記錄消息！</NumberOfImportantLogMessages>
     <FixedOkXY>修復完成 - {0}: {1}</FixedOkXY>
   </FixCommonErrors>
@@ -1848,7 +1848,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <TransportStreamSubtitleChooser>
     <Title>傳輸串流字幕選擇器 - {0}</Title>
     <PidLine>傳輸封包識別器 (PID) = {0}，字幕數 = {1}</PidLine>
-    <SubLine>{0}:  {1} --&gt; {2}， {3} 張圖像</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2}， {3} 張圖像</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>未知字幕類型</Title>
