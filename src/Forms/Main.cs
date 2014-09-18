@@ -10449,16 +10449,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool IsSpDvdSupFile(string subFileName)
         {
-            byte[] buffer = new byte[SpHeader.SpHeaderLength];
-            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
-            int bytesRead = fs.Read(buffer, 0, buffer.Length);
-            if (bytesRead == buffer.Length)
+            using (var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
+                byte[] buffer = new byte[SpHeader.SpHeaderLength];
+                if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    return false;
+                }
+
                 var header = new SpHeader(buffer);
                 if (header.Identifier == "SP" && header.NextBlockPosition > 4)
                 {
                     buffer = new byte[header.NextBlockPosition];
-                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    int bytesRead = fs.Read(buffer, 0, buffer.Length);
                     if (bytesRead == buffer.Length)
                     {
                         buffer = new byte[SpHeader.SpHeaderLength];
@@ -10472,7 +10475,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            fs.Close();
             return false;
         }
 
