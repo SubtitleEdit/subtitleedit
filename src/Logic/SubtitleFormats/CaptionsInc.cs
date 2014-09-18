@@ -25,76 +25,75 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static void Save(string fileName, Subtitle subtitle)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-
-            string name = Path.GetFileNameWithoutExtension(fileName);
-            byte[] buffer = Encoding.ASCII.GetBytes(name);
-            for (int i = 0; i < buffer.Length && i < 8; i++)
-                fs.WriteByte(buffer[i]);
-            while (fs.Length < 8)
-                fs.WriteByte(0x20);
-
-            WriteTime(fs, subtitle.Paragraphs[0].StartTime, false); // first start time
-            WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime, false); // last end time
-
-            buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown                                                                                                                                                                                    ");
-            fs.Write(buffer, 0, buffer.Length);
-
-            // paragraphs
-            foreach (Paragraph p in subtitle.Paragraphs)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                buffer = new byte[] { 0x0D, 0x0A, 0xFE }; // header
+                string name = Path.GetFileNameWithoutExtension(fileName);
+                byte[] buffer = Encoding.ASCII.GetBytes(name);
+                for (int i = 0; i < buffer.Length && i < 8; i++)
+                    fs.WriteByte(buffer[i]);
+                while (fs.Length < 8)
+                    fs.WriteByte(0x20);
+
+                WriteTime(fs, subtitle.Paragraphs[0].StartTime, false); // first start time
+                WriteTime(fs, subtitle.Paragraphs[subtitle.Paragraphs.Count - 1].EndTime, false); // last end time
+
+                buffer = Encoding.ASCII.GetBytes("Generic Unknown Unknown \"\" Unknown Unknown Unknown                                                                                                                                                                                    ");
                 fs.Write(buffer, 0, buffer.Length);
 
-                // styles
-                List<byte> text = new List<byte>();
-                text.Add(0x14);
-                text.Add(0x20);
-                text.Add(0x14);
-                text.Add(0x2E);
-                text.Add(0x14);
-                text.Add(0x54);
-                text.Add(0x17);
-                int noNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
-                if (noNewLines == 0)
-                    text.Add(0x22); // 1 line?
-                else
-
-                    text.Add(0x21); // 2 lines?
-
-                var lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.None);
-                foreach (string line in lines)
+                // paragraphs
+                foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    foreach (char ch in line)
-                        text.Add(Encoding.GetEncoding(1252).GetBytes(ch.ToString())[0]);
+                    buffer = new byte[] { 0x0D, 0x0A, 0xFE }; // header
+                    fs.Write(buffer, 0, buffer.Length);
 
-                    // new line
-                    //text.Add(0x14); // y? 0x14 was lower!? 0x17 is higher??? 12=little top 11=top, 13=most buttom?, 15=little over middle
-                    //text.Add(0x72);
-
+                    // styles
+                    List<byte> text = new List<byte>();
                     text.Add(0x14);
-                    text.Add(0x74);
-                    //text.Add(0x17);
-                    //text.Add(0x21);
+                    text.Add(0x20);
+                    text.Add(0x14);
+                    text.Add(0x2E);
+                    text.Add(0x14);
+                    text.Add(0x54);
+                    text.Add(0x17);
+                    int noNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
+                    if (noNewLines == 0)
+                        text.Add(0x22); // 1 line?
+                    else
+                        text.Add(0x21); // 2 lines?
 
+                    var lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.None);
+                    foreach (string line in lines)
+                    {
+                        foreach (char ch in line)
+                            text.Add(Encoding.GetEncoding(1252).GetBytes(ch.ToString())[0]);
+
+                        // new line
+                        //text.Add(0x14); // y? 0x14 was lower!? 0x17 is higher??? 12=little top 11=top, 13=most buttom?, 15=little over middle
+                        //text.Add(0x72);
+
+                        text.Add(0x14);
+                        text.Add(0x74);
+                        //text.Add(0x17);
+                        //text.Add(0x21);
+
+                    }
+
+                    // codes+text length
+                    buffer = Encoding.ASCII.GetBytes(string.Format("{0:000}", text.Count));
+                    fs.Write(buffer, 0, buffer.Length);
+
+                    WriteTime(fs, p.StartTime, true);
+
+                    // write codes + text
+                    foreach (byte b in text)
+                        fs.WriteByte(b);
+
+                    buffer = new byte[] { 0x14, 0x2F, 0x0D, 0x0A, 0xFE, 0x30, 0x30, 0x32, 0x30 };
+                    fs.Write(buffer, 0, buffer.Length);
+                    WriteTime(fs, p.EndTime, true);
+                    //buffer = new byte[] { 0x14, 0x2C };
                 }
-
-                // codes+text length
-                buffer = Encoding.ASCII.GetBytes(string.Format("{0:000}", text.Count));
-                fs.Write(buffer, 0, buffer.Length);
-
-                WriteTime(fs, p.StartTime, true);
-
-                // write codes + text
-                foreach (byte b in text)
-                    fs.WriteByte(b);
-
-                buffer = new byte[] { 0x14, 0x2F, 0x0D, 0x0A, 0xFE, 0x30, 0x30, 0x32, 0x30 };
-                fs.Write(buffer, 0, buffer.Length);
-                WriteTime(fs, p.EndTime, true);
-                //                buffer = new byte[] { 0x14, 0x2C };
             }
-            fs.Close();
         }
 
         private static void WriteTime(FileStream fs, TimeCode timeCode, bool addEndBytes)
