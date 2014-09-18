@@ -237,8 +237,8 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Hurrengo ezberdintasuna</NextDifference>
     <SubtitlesNotAlike>Azpidatziek ez dute antzekotasunik</SubtitlesNotAlike>
     <XNumberOfDifference>Ezberdintasun zenbatekoa: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0}  ({1}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0}  ({1}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Ezberdintasun zenbatekoa: {0} ({1}% hitz aldatuta)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ezberdintasun zenbatekoa: {0} ({1}% hizkirri aldatuta)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Erakutsi ezberdintasunak bakarrik</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ezikusi lerro hausteak</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Idatzizko ezberdintasunak bakarrik behatu</OnlyLookForDifferencesInText>
@@ -1839,7 +1839,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
   <TransportStreamSubtitleChooser>
     <Title>Garraio jario azpidatzi hautatzailea - {0}</Title>
     <PidLine>Garraio Pakete Ezagutarazlea (PID) = {0}, azpidatzi zenbatekoa = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} irudi</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} irudi</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Azpidatzi mota ezezaguna</Title>

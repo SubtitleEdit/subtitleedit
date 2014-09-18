@@ -1008,7 +1008,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <NetworkUpdate>Linija je ažurirana: {0} ({1}): popis – {2}, tekst – {3}</NetworkUpdate>
     <NetworkInsert>Linija je ubačena: {0} ({1}): popis – {2}, tekst – {3}</NetworkInsert>
     <NetworkDelete>Linija je obrisana: {0} ({1}): popis – {2}</NetworkDelete>
-    <NetworkNewUser>pristupi sesiji {0}  ({1}).</NetworkNewUser>
+    <NetworkNewUser>pristupi sesiji {0} ({1}).</NetworkNewUser>
     <NetworkByeUser> napusti sesiju {0} ({1}).</NetworkByeUser>
     <NetworkUnableToConnectToServer>Nije moguće povezivanje sa serverom: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Korisnik/Radnja</UserAndAction>

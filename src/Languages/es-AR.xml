@@ -1782,8 +1782,7 @@ pueden editar el mismo archivo de subtítulo (colaboración)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Selector de flujo de transporte de subtítulos - {0}</Title>
     <PidLine>Transporte Packet Identifier (PID) = {0}, número de subtítulos = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} image(s)
-{0}:  {1} -&gt; {2},  {3} imagen(es)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} imagen(es)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de subtítulo desconocido</Title>

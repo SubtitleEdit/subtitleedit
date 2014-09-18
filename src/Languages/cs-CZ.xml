@@ -242,8 +242,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Další rozdíl</NextDifference>
     <SubtitlesNotAlike>itulky nemajpodobnost</SubtitlesNotAlike>
     <XNumberOfDifference>Počet rozdílů: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Počet rozdílů: {0}  ({1} % slov změněno)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Počet rozdílů: {0}  ({1} % písmen změněno)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Počet rozdílů: {0} ({1} % slov změněno)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Počet rozdílů: {0} ({1} % písmen změněno)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Zobrazit pouze rozdíly</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorovat zalomení řádků</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Hledat rozdíly pouze v textu</OnlyLookForDifferencesInText>
@@ -1865,7 +1865,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Volba datového proudu přenosu titulků - {0}</Title>
     <PidLine>Identifikátor paketu přenosu (PID) = {0}, počet titulků = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} obrázků</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} obrázků</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Neznámý typ titulků</Title>

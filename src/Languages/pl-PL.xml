@@ -242,8 +242,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Następna różnica</NextDifference>
     <SubtitlesNotAlike>Napisy nie posiadają żadnych podobieństw</SubtitlesNotAlike>
     <XNumberOfDifference>Ilość różnic: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Ilość różnic: {0}  ({1}% zmienionych wyrazów)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Ilość różnic: {0}  ({1}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Ilość różnic: {0} ({1}% zmienionych wyrazów)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Ilość różnic: {0} ({1}% zmienionych liter)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Pokaż tylko różnice</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignoruj łamanie linii</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Szukaj różnic tylko w tekście</OnlyLookForDifferencesInText>
@@ -1867,7 +1867,7 @@ tylko gdy różnią się budową</AutoFixNames>
   <TransportStreamSubtitleChooser>
     <Title>Selektor napisów strumienia transportowego - {0}</Title>
     <PidLine>Identyfikator Pakietu Transportowego (PID) = {0}, ilość dostępnych napisów = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} obrazek(i)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} obrazek(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>

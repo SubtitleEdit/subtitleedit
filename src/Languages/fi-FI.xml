@@ -336,7 +336,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <JustificationCode>Rivintasauskoodi</JustificationCode>
     <Errors>Virheet</Errors>
     <ErrorsX>Virheitä: {0}</ErrorsX>
-    <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1})   {2}: {3}</MaxLengthError>
+    <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1}) {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Muuttumaton esitys</TextUnchangedPresentation>
     <TextLeftJustifiedText>Vasemmalle tasattu teksti</TextLeftJustifiedText>
     <TextCentredText>Keskitetty teksti</TextCentredText>
@@ -984,7 +984,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <SavedSubtitleX>Tallennettu tekstitys {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Tallennettu alkuperäinen tekstitys {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>tiedostoa on muokattu</FileOnDiskModified>
-    <OverwriteModifiedFile>Korvaa tiedosto {0} kohteessa {1} muokattu {2}{3} nykyisen levyltä ladatun tiedoston kanssa {4}   {5}?</OverwriteModifiedFile>
+    <OverwriteModifiedFile>Korvaa tiedosto {0} kohteessa {1} muokattu {2}{3} nykyisen levyltä ladatun tiedoston kanssa {4} {5}?</OverwriteModifiedFile>
     <UnableToSaveSubtitleX>Tekstitystä {0} ei voi tallentaa</UnableToSaveSubtitleX>
     <BeforeNew>Ennen uutta</BeforeNew>
     <New>Uusi</New>
@@ -1176,7 +1176,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <UserAndAction>Käyttäjä/toiminta</UserAndAction>
     <NetworkMode>Verkkotila</NetworkMode>
     <XStartedSessionYAtZ>{0}: Käynnistettyä istuntoa {1} / {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Oikoluku käyttämällä Wordia {0} - rivi {1} /  {2}</SpellChekingViaWordXLineYOfX>
+    <SpellChekingViaWordXLineYOfX>Oikoluku käyttämällä Wordia {0} - rivi {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Microsoft Wordin käynnistäminen ei onnistu</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Oikoluku keskeytetty. {0} riviä muokattu.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Oikeinkirjoituksen tarkistaminen on valmis. {0} riviä muokattu.</SpellCheckCompletedXCorrections>

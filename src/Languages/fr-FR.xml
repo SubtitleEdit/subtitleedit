@@ -1560,7 +1560,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <StartSceneIndex>Scène initiale: début du paragraphe</StartSceneIndex>
     <EndSceneIndex>Scène finale: fin du paragraphe</EndSceneIndex>
     <FirstPlusX>+ {0} ligne(s)</FirstPlusX>
-    <LastMinusX> ̶  {0} ligne(s)</LastMinusX>
+    <LastMinusX>̶ {0} ligne(s)</LastMinusX>
     <FixCommonerrors>Corriger les erreurs</FixCommonerrors>
     <MergeLinesShorterThan>Fusionner lignes inférieures à</MergeLinesShorterThan>
     <MusicSymbol>Symbole musical</MusicSymbol>

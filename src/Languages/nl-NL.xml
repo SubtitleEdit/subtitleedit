@@ -242,8 +242,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>Volge&amp;nde verschil</NextDifference>
     <SubtitlesNotAlike>Ondertitels hebben geen overeenkomsten</SubtitlesNotAlike>
     <XNumberOfDifference>Aantal verschillen: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0}  ({1}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0}  ({1}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Regeleinden negeren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Alleen naar tekstverschillen zoeken</OnlyLookForDifferencesInText>

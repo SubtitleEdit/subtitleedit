@@ -242,8 +242,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Next difference</NextDifference>
     <SubtitlesNotAlike>Subtitles have no similarities</SubtitlesNotAlike>
     <XNumberOfDifference>Number of differences: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Number of differences: {0}  ({1}% of words changed)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Number of differences: {0}  ({1}% of letters changed)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Number of differences: {0} ({1}% of words changed)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Number of differences: {0} ({1}% of letters changed)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Show only differences</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignore line breaks</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Only look for differences in text</OnlyLookForDifferencesInText>
@@ -1868,7 +1868,7 @@ can edit in same subtitle file (collaboration)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Transport stream subtitle chooser - {0}</Title>
     <PidLine>Transport Packet Identifier (PID) = {0}, number of subtitles = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} image(s)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} image(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Unknown subtitle type</Title>

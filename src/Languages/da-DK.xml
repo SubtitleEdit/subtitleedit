@@ -1866,7 +1866,7 @@ Fortsæt?</SubtitleAppendPrompt>
   <TransportStreamSubtitleChooser>
     <Title>Transport Stream undertikst vælger - {0}</Title>
     <PidLine>Transport Packet Identifier (PID) = {0}, antal undertekster = {1}</PidLine>
-    <SubLine>{0}: {1} -&gt; {2} {3} billede(r)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} billede(r)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Ukendt undertekst type</Title>

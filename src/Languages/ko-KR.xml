@@ -1184,8 +1184,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <XStartedSessionYAtZ>-＞[{0}]가 [{2}]에 {1} 세션을 시작함.</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Word {0}을 사용해 맞춤법을 검사하고 있습니다. - 줄 {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Microsoft Word를 시작할 수 없습니다.</UnableToStartWord>
-    <SpellCheckAbortedXCorrections>맞춤법 검사 중지!  {0} 줄이 변경됨.</SpellCheckAbortedXCorrections>
-    <SpellCheckCompletedXCorrections>맞춤법 검사 완료!  {0} 줄이 변경됨.</SpellCheckCompletedXCorrections>
+    <SpellCheckAbortedXCorrections>맞춤법 검사 중지! {0} 줄이 변경됨.</SpellCheckAbortedXCorrections>
+    <SpellCheckCompletedXCorrections>맞춤법 검사 완료! {0} 줄이 변경됨.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>다른 자막 열기</OpenOtherSubtitle>
     <BeforeToggleDialogueDashes>대화 대시(-) 전환 전</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>일반 텍스트 파일로 내보내기</ExportPlainTextAs>
@@ -1865,7 +1865,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   <TransportStreamSubtitleChooser>
     <Title>전송 스트림 자막 선택기 - {0}</Title>
     <PidLine>전송 패킷 식별자 (PID) = {0}, 자막 수 = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2},  {3} 이미지</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} 이미지</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>알 수 없는 자막 형식!</Title>
