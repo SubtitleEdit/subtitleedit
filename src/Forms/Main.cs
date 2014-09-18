@@ -10428,11 +10428,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static bool IsBluRaySupFile(string subFileName)
         {
-            var buffer = new byte[4];
-            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
-            fs.Read(buffer, 0, 4);
-            fs.Close();
-            return (buffer[0] == 0x50 && buffer[1] == 0x47); // 80 + 71 - P G
+            using (var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return fs.ReadByte() == 0x50
+                    && fs.ReadByte() == 0x47; // 80 + 71 - P G
+            }
         }
 
         public static bool IsRarFile(string fileName)
