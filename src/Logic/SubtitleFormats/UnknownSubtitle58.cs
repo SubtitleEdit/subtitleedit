@@ -121,10 +121,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                 {
                 }
-                else if (line.Trim().Length > 0)
+                else
                 {
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 500)

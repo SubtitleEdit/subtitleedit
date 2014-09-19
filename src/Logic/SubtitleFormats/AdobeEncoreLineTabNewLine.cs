@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (p.Text.Length < 200)
                         p.Text = (p.Text + Environment.NewLine + line.Trim()).Trim();
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     _errorCount++;
                 }

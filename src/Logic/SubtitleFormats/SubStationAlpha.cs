@@ -355,7 +355,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip comment lines
                 }
-                else if (eventsStarted && line.Trim().Length > 0)
+                else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
                     string s = line.Trim().ToLower();
                     if (s.StartsWith("format:", StringComparison.Ordinal))

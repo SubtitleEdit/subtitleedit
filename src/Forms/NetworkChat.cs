@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSendChat_Click(object sender, EventArgs e)
         {
-            if (textBoxChat.Text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(textBoxChat.Text))
             {
                 _networkSession.SendChatMessage(textBoxChat.Text.Trim());
                 AddChatMessage(_networkSession.CurrentUser, textBoxChat.Text.Trim());

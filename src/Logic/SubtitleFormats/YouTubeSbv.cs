@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 ReadLine(subtitle, line, next);
             }
-            if (_paragraph.Text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(_paragraph.Text))
                 subtitle.Paragraphs.Add(_paragraph);
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -105,14 +105,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _paragraph.Text = string.Empty;
                         _expecting = ExpectingLine.Text;
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (!string.IsNullOrWhiteSpace(line))
                     {
                         _errorCount++;
                         _expecting = ExpectingLine.TimeCodes; // lets go to next paragraph
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (line.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
                         if (_paragraph.Text.Length > 0)
                             _paragraph.Text += Environment.NewLine;
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            if (text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(text))
                 return false;
 
             if (Utilities.IsInteger(text))

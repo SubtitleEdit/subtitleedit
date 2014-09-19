@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         System.Diagnostics.Debug.WriteLine(exception.Message);
                     }
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     _errorCount++;
                 }

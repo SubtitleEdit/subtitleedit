@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ContextMenuStrip1Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (richTextBoxParagraph.SelectedText.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 string word = richTextBoxParagraph.SelectedText.Trim();
                 addXToNamesnoiseListToolStripMenuItem.Text = string.Format(Configuration.Settings.Language.SpellCheck.AddXToNamesEtc, word);
@@ -421,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddXToNamesnoiseListToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (richTextBoxParagraph.SelectedText.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(richTextBoxParagraph.SelectedText))
             {
                 ChangeWord = richTextBoxParagraph.SelectedText.Trim();
                 DoAction(SpellCheckAction.AddToNamesEtc);
@@ -1201,33 +1201,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PushUndo(string text, SpellCheckAction action)
         {
-            if (text.Trim().Length > 0)
+            if (string.IsNullOrWhiteSpace(text))
             {
-                if (action == SpellCheckAction.ChangeAll && _changeAllDictionary.ContainsKey(_currentWord))
-                    return;
-
-                string format = Configuration.Settings.Language.SpellCheck.UndoX;
-                if (string.IsNullOrEmpty(format))
-                    format = "Undo: {0}";
-                string undoText = string.Format(format, text);
-
-                _undoList.Add(new UndoObject()
-                {
-                    CurrentIndex = _currentIndex,
-                    UndoText = undoText,
-                    UndoWord = textBoxWord.Text.Trim(),
-                    Action = action,
-                    CurrentWord = _currentWord,
-                    Subtitle = new Subtitle(_subtitle),
-                    NoOfSkippedWords = _noOfSkippedWords,
-                    NoOfChangedWords = _noOfChangedWords,
-                    NoOfCorrectWords = _noOfCorrectWords,
-                    NoOfNamesEtc = _noOfNamesEtc,
-                    NoOfAddedWords = _noOfAddedWords,
-                });
-                buttonUndo.Text = undoText;
-                buttonUndo.Visible = true;
+                return;
             }
+
+            if (action == SpellCheckAction.ChangeAll && _changeAllDictionary.ContainsKey(_currentWord))
+                return;
+
+            string format = Configuration.Settings.Language.SpellCheck.UndoX;
+            if (string.IsNullOrEmpty(format))
+                format = "Undo: {0}";
+            string undoText = string.Format(format, text);
+
+            _undoList.Add(new UndoObject()
+            {
+                CurrentIndex = _currentIndex,
+                UndoText = undoText,
+                UndoWord = textBoxWord.Text.Trim(),
+                Action = action,
+                CurrentWord = _currentWord,
+                Subtitle = new Subtitle(_subtitle),
+                NoOfSkippedWords = _noOfSkippedWords,
+                NoOfChangedWords = _noOfChangedWords,
+                NoOfCorrectWords = _noOfCorrectWords,
+                NoOfNamesEtc = _noOfNamesEtc,
+                NoOfAddedWords = _noOfAddedWords,
+            });
+            buttonUndo.Text = undoText;
+            buttonUndo.Visible = true;
         }
 
         private void buttonUndo_Click(object sender, EventArgs e)

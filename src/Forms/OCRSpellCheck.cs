@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
             string text = textBoxWord.Text;
-            if (text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(text))
                 System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 

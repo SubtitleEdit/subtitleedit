@@ -111,15 +111,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line) || regexTimeCodes1.IsMatch("   " + s))
                 {
                     // skip empty lines
                 }
-                else if (regexTimeCodes1.IsMatch("   " + s))
-                {
-                    // skip empty lines
-                }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     _errorCount++;
                 }

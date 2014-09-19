@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length > 0 && expectActor)
+                else if (!string.IsNullOrWhiteSpace(line) && expectActor)
                 {
                     if (line == line.ToUpper())
                         p.Actor = line;
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount++;
                     expectActor = false;
                 }
-                else if (line.Trim().Length > 0 && !expectActor && !expectStartTime)
+                else if (!string.IsNullOrWhiteSpace(line) && !expectActor && !expectStartTime)
                 {
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 5000)

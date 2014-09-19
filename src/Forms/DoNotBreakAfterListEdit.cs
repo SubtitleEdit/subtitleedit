@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit
 
         private void buttonAddNamesEtc_Click(object sender, EventArgs e)
         {
-            if (textBoxNoBreakAfter.Text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(textBoxNoBreakAfter.Text))
                 return;
 
             NoBreakAfterItem item;

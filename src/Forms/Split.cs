@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxOutputFolder.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
-            if (fileNameNoExt.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(fileNameNoExt))
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
             listViewParts.Items.Clear();
             int startNumber = 0;
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool overwrite = false;
             var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
             string fileNameNoExt = Path.GetFileNameWithoutExtension(textBoxFileName.Text);
-            if (fileNameNoExt.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(fileNameNoExt))
                 fileNameNoExt = Configuration.Settings.Language.SplitSubtitle.Untitled;
 
             int number = 1;

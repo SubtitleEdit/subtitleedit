@@ -53,46 +53,48 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph lastParagraph = null;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
-                    bool success = false;
-                    var match = regex.Match(line);
-                    if (line.Length > 26 && match.Success)
+                    continue;
+                }
+
+                bool success = false;
+                var match = regex.Match(line);
+                if (line.Length > 26 && match.Success)
+                {
+                    string s = line.Substring(0, match.Length);
+                    s = s.Replace(" - ", ":");
+                    s = s.Replace(" ", string.Empty);
+                    string[] parts = s.Split(':');
+                    if (parts.Length == 8)
                     {
-                        string s = line.Substring(0, match.Length);
-                        s = s.Replace(" - ", ":");
-                        s = s.Replace(" ", string.Empty);
-                        string[] parts = s.Split(':');
-                        if (parts.Length == 8)
-                        {
-                            int hours = int.Parse(parts[0]);
-                            int minutes = int.Parse(parts[1]);
-                            int seconds = int.Parse(parts[2]);
-                            int milliseconds = int.Parse(parts[3]) * 10;
-                            var start = new TimeCode(hours, minutes, seconds, milliseconds);
+                        int hours = int.Parse(parts[0]);
+                        int minutes = int.Parse(parts[1]);
+                        int seconds = int.Parse(parts[2]);
+                        int milliseconds = int.Parse(parts[3]) * 10;
+                        var start = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                            hours = int.Parse(parts[4]);
-                            minutes = int.Parse(parts[5]);
-                            seconds = int.Parse(parts[6]);
-                            milliseconds = int.Parse(parts[7]) * 10;
-                            var end = new TimeCode(hours, minutes, seconds, milliseconds);
+                        hours = int.Parse(parts[4]);
+                        minutes = int.Parse(parts[5]);
+                        seconds = int.Parse(parts[6]);
+                        milliseconds = int.Parse(parts[7]) * 10;
+                        var end = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                            string text = line.Substring(match.Length).TrimStart();
-                            text = text.Replace("|", Environment.NewLine);
+                        string text = line.Substring(match.Length).TrimStart();
+                        text = text.Replace("|", Environment.NewLine);
 
-                            lastParagraph = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(lastParagraph);
-                            success = true;
-                        }
-                    }
-                    else if (line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
-                    {
-                        lastParagraph.Text += Environment.NewLine + line.Trim();
+                        lastParagraph = new Paragraph(start, end, text);
+                        subtitle.Paragraphs.Add(lastParagraph);
                         success = true;
                     }
-                    if (!success)
-                        _errorCount++;
                 }
+                else if (lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                {
+                    lastParagraph.Text += Environment.NewLine + line.Trim();
+                    success = true;
+                }
+                if (!success)
+                    _errorCount++;
             }
             subtitle.Renumber(1);
         }

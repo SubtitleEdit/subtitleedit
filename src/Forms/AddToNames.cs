@@ -81,59 +81,61 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (textBoxAddName.Text.Trim().Length > 0)
+            if (string.IsNullOrWhiteSpace(textBoxAddName.Text))
             {
-                NewName = textBoxAddName.Text.Trim();
-                string languageName = null;
-                _language = Configuration.Settings.Language.Main;
+                return;
+            }
 
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.SpellCheckLanguage))
-                {
-                    languageName = Configuration.Settings.General.SpellCheckLanguage;
-                }
-                else
-                {
-                    List<string> list = Utilities.GetDictionaryLanguages();
-                    if (list.Count > 0)
-                    {
-                        string name = list[0];
-                        int start = name.LastIndexOf('[');
-                        int end = name.LastIndexOf(']');
-                        if (start > 0 && end > start)
-                        {
-                            start++;
-                            name = name.Substring(start, end - start);
-                            languageName = name;
-                        }
-                        else
-                        {
-                            MessageBox.Show(string.Format(_language.InvalidLanguageNameX, name));
-                            return;
-                        }
-                    }
-                }
+            NewName = textBoxAddName.Text.Trim();
+            string languageName = null;
+            _language = Configuration.Settings.Language.Main;
 
-                languageName = Utilities.AutoDetectLanguageName(languageName, _subtitle);
-                if (comboBoxDictionaries.Items.Count > 0)
+            if (!string.IsNullOrEmpty(Configuration.Settings.General.SpellCheckLanguage))
+            {
+                languageName = Configuration.Settings.General.SpellCheckLanguage;
+            }
+            else
+            {
+                List<string> list = Utilities.GetDictionaryLanguages();
+                if (list.Count > 0)
                 {
-                    string name = comboBoxDictionaries.SelectedItem.ToString();
+                    string name = list[0];
                     int start = name.LastIndexOf('[');
                     int end = name.LastIndexOf(']');
-                    if (start >= 0 && end > start)
+                    if (start > 0 && end > start)
                     {
                         start++;
                         name = name.Substring(start, end - start);
                         languageName = name;
                     }
+                    else
+                    {
+                        MessageBox.Show(string.Format(_language.InvalidLanguageNameX, name));
+                        return;
+                    }
                 }
-
-                if (string.IsNullOrEmpty(languageName))
-                    languageName = "en_US";
-                if (Utilities.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
-                    DialogResult = DialogResult.OK;
-                else
-                    DialogResult = DialogResult.Cancel;
             }
+
+            languageName = Utilities.AutoDetectLanguageName(languageName, _subtitle);
+            if (comboBoxDictionaries.Items.Count > 0)
+            {
+                string name = comboBoxDictionaries.SelectedItem.ToString();
+                int start = name.LastIndexOf('[');
+                int end = name.LastIndexOf(']');
+                if (start >= 0 && end > start)
+                {
+                    start++;
+                    name = name.Substring(start, end - start);
+                    languageName = name;
+                }
+            }
+
+            if (string.IsNullOrEmpty(languageName))
+                languageName = "en_US";
+            if (Utilities.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
+                DialogResult = DialogResult.OK;
+            else
+                DialogResult = DialogResult.Cancel;
         }
 
     }

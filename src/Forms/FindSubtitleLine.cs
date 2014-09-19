@@ -60,24 +60,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FindText()
         {
-            if (textBoxFindText.Text.Trim().Length > 0)
+            if (string.IsNullOrWhiteSpace(textBoxFindText.Text))
             {
-                int index = 0;
-                foreach (Paragraph p in _paragraphs)
+                return;
+            }
+
+            for (var index = 0; index < _paragraphs.Count; index++)
+            {
+                if (index > _startFindIndex
+                    && _paragraphs[index].Text.Contains(textBoxFindText.Text, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (index > _startFindIndex)
-                    {
-                        if (p.Text.Contains(textBoxFindText.Text, StringComparison.OrdinalIgnoreCase))
-                        {
-                            subtitleListView1.Items[index].Selected = true;
-                            subtitleListView1.HideSelection = false;
-                            subtitleListView1.Items[index].EnsureVisible();
-                            subtitleListView1.Items[index].Focused = true;
-                            _startFindIndex = index;
-                            return;
-                        }
-                    }
-                    index++;
+                    subtitleListView1.Items[index].Selected = true;
+                    subtitleListView1.HideSelection = false;
+                    subtitleListView1.Items[index].EnsureVisible();
+                    subtitleListView1.Items[index].Focused = true;
+                    _startFindIndex = index;
+                    return;
                 }
             }
         }

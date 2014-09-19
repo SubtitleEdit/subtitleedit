@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsPartOfNumber(string s, int position)
         {
-            if (s == null || s.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(s))
                 return false;
 
             if (position + 2 > s.Length)
@@ -2731,9 +2731,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static bool StartsAndEndsWithTag(string text, string startTag, string endTag)
         {
-            if (text == null)
-                return false;
-            if (text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(text))
                 return false;
             if (!text.Contains(startTag) || !text.Contains(endTag))
                 return false;

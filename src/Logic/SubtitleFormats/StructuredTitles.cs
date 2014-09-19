@@ -104,11 +104,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (line.Length < 10 && regexSomeCodes.IsMatch(line))
                 {
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                 {
                     // skip these lines
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (p != null)
                 {
                     if (p.Text != null && Utilities.CountTagInText(p.Text, Environment.NewLine) > 2)
                     {

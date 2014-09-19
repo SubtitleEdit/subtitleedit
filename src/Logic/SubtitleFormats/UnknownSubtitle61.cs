@@ -101,7 +101,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length > 0 && !expectStartTime)
+                else if (string.IsNullOrWhiteSpace(line))
+                {
+                    expectStartTime = true;
+                }
+                else if (!expectStartTime)
                 {
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 5000)
@@ -109,10 +113,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount += 10;
                         return;
                     }
-                }
-                else if (line.Trim().Length == 0)
-                {
-                    expectStartTime = true;
                 }
                 else
                 {

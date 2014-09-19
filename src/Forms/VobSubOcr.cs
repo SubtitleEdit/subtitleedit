@@ -3894,7 +3894,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -3922,7 +3922,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
@@ -4091,7 +4091,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4119,7 +4119,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
@@ -4396,7 +4396,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4424,7 +4424,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
@@ -5748,7 +5748,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
                 {
-                    if (textWithOutFixes.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(textWithOutFixes))
                     {
                         textWithOutFixes = psm;
                     }
@@ -5837,7 +5837,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if ((!newText.Contains('9') || textWithOutFixes.Contains('9')) &&
                              (!newText.Replace("</i>", string.Empty).Contains('/') || textWithOutFixes.Replace("</i>", string.Empty).Contains('/')) &&
-                             newUnfixedText.Trim().Length > 0 &&
+                             !string.IsNullOrWhiteSpace(newUnfixedText) &&
                              newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith('!') && textWithOutFixes.EndsWith('l')))
                     {
                         wordsNotFound = newWordsNotFound;
@@ -6349,7 +6349,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (wordsNotFound == 1 || line.Length == 1 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
@@ -6365,7 +6365,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line.Replace("<i>", string.Empty).Replace("</i>", string.Empty)))
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
@@ -6427,7 +6427,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
             string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId, null);
-            if (result.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(result))
                 result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId, "-psm 7");
             return result.TrimEnd();
         }

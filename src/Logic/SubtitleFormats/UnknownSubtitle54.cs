@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                 {
                     if (p.StartTime.TotalMilliseconds == 0 && p.EndTime.TotalMilliseconds == 0)
                         _errorCount++;
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     p = new Paragraph();
                 }
-                else if (line.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(line))
                 {
                     expectStartTime = true;
                     p.Text = (p.Text + Environment.NewLine + line).Trim();

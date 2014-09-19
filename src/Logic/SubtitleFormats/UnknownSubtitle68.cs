@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(line))
                 {
                     text.AppendLine(line.Trim().Replace("|", "♪"));
                     if (text.Length > 5000)
