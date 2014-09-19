@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (smpte)
             {
-                CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid().ToString();
+                CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
                 CurrentDCinemaLanguage = "en";
                 CurrentDCinemaFontUri = DCinemaLoadFontResource;
                 CurrentDCinemaFontId = "theFontId";

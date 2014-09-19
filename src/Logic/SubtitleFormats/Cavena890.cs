@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Text;
 
@@ -360,14 +361,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             for (int i = 0; i < text.Length; i++)
             {
-                string current = text.Substring(i, 1);
+                var current = text[i];
                 if (skipCount > 0)
                 {
                     skipCount--;
                 }
                 else if (languageId == LanguageIdHebrew)
                 {
-                    int letterIndex = _hebrewLetters.IndexOf(current);
+                    int letterIndex = _hebrewLetters.IndexOf(current.ToString(CultureInfo.InvariantCulture));
                     if (letterIndex >= 0)
                     {
                         buffer[index] = (byte)_hebrewCodes[letterIndex];
@@ -384,7 +385,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        buffer[index] = encoding.GetBytes(current)[0];
+                        buffer[index] = encoding.GetBytes(new[] { current })[0];
                     }
                     index++;
                 }
@@ -405,12 +406,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            byte[] b = encoding.GetBytes(current);
-                            for (int f = 0; f < b.Length; f++)
-                            {
-                                buffer[index] = b[f];
-                                index++;
-                            }
+                            buffer[index] = encoding.GetBytes(new[] { current })[0];
+                            index++;
                         }
                     }
                 }
@@ -418,49 +415,49 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (index < 50)
                     {
-                        if (current == "æ")
+                        if (current == 'æ')
                             buffer[index] = 0x1B;
-                        else if (current == "ø")
+                        else if (current == 'ø')
                             buffer[index] = 0x1C;
-                        else if (current == "å")
+                        else if (current == 'å')
                             buffer[index] = 0x1D;
-                        else if (current == "Æ")
+                        else if (current == 'Æ')
                             buffer[index] = 0x5B;
-                        else if (current == "Ø")
+                        else if (current == 'Ø')
                             buffer[index] = 0x5C;
-                        else if (current == "Å")
+                        else if (current == 'Å')
                             buffer[index] = 0x5D;
-                        else if (current == "Ä")
+                        else if (current == 'Ä')
                         {
                             buffer[index] = 0x86;
                             index++;
                             buffer[index] = 0x41;
                         }
-                        else if (current == "ä")
+                        else if (current == 'ä')
                         {
                             buffer[index] = 0x86;
                             index++;
                             buffer[index] = 0x61;
                         }
-                        else if (current == "Ö")
+                        else if (current == 'Ö')
                         {
                             buffer[index] = 0x86;
                             index++;
                             buffer[index] = 0x4F;
                         }
-                        else if (current == "ö")
+                        else if (current == 'ö')
                         {
                             buffer[index] = 0x86;
                             index++;
                             buffer[index] = 0x6F;
                         }
-                        else if (current == "å")
+                        else if (current == 'å')
                         {
                             buffer[index] = 0x8C;
                             index++;
                             buffer[index] = 0x61;
                         }
-                        else if (current == "Å")
+                        else if (current == 'Å')
                         {
                             buffer[index] = 0x8C;
                             index++;
@@ -468,85 +465,85 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
 
                         // ăĂ îÎ şŞ ţŢ âÂ (romanian)
-                        else if (current == "ă")
+                        else if (current == 'ă')
                         {
                             buffer[index] = 0x89;
                             index++;
                             buffer[index] = 0x61;
                         }
-                        else if (current == "Ă")
+                        else if (current == 'Ă')
                         {
                             buffer[index] = 0x89;
                             index++;
                             buffer[index] = 0x41;
                         }
-                        else if (current == "î")
+                        else if (current == 'î')
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x69;
                         }
-                        else if (current == "Î")
+                        else if (current == 'Î')
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x49;
                         }
-                        else if (current == "ş")
+                        else if (current == 'ş')
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x73;
                         }
-                        else if (current == "Ş")
+                        else if (current == 'Ş')
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x53;
                         }
-                        else if (current == "ţ")
+                        else if (current == 'ţ')
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x74;
                         }
-                        else if (current == "Ţ")
+                        else if (current == 'Ţ')
                         {
                             buffer[index] = 0x87;
                             index++;
                             buffer[index] = 0x74;
                         }
-                        else if (current == "â")
+                        else if (current == 'â')
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x61;
                         }
-                        else if (current == "Â")
+                        else if (current == 'Â')
                         {
                             buffer[index] = 0x83;
                             index++;
                             buffer[index] = 0x41;
                         }
-                        else if (current == "è")
+                        else if (current == 'è')
                         {
                             buffer[index] = 0x81;
                             index++;
                             buffer[index] = 0x65;
                         }
-                        else if (current == "é")
+                        else if (current == 'é')
                         {
                             buffer[index] = 0x82;
                             index++;
                             buffer[index] = 0x65;
                         }
-                        else if (current == "É")
+                        else if (current == 'É')
                         {
                             buffer[index] = 0x82;
                             index++;
                             buffer[index] = 0x45;
                         }
-                        else if (current == "È")
+                        else if (current == 'È')
                         {
                             buffer[index] = 0x81;
                             index++;
@@ -564,7 +561,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            buffer[index] = encoding.GetBytes(current)[0];
+                            buffer[index] = encoding.GetBytes(new[] { current })[0];
                         }
                         index++;
                     }

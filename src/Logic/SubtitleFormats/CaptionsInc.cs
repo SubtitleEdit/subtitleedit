@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     foreach (string line in lines)
                     {
                         foreach (char ch in line)
-                            text.Add(Encoding.GetEncoding(1252).GetBytes(ch.ToString())[0]);
+                        text.Add(Encoding.GetEncoding(1252).GetBytes(new[] { ch })[0]);
 
                         // new line
                         //text.Add(0x14); // y? 0x14 was lower!? 0x17 is higher??? 12=little top 11=top, 13=most buttom?, 15=little over middle

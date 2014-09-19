@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in arr)
             {
                 string s = line.Trim();
-                if (s.StartsWith('[') && s.EndsWith('>') && s.Length > 13 && s.Substring(12, 1) == "]")
+                if (s.StartsWith('[') && s.EndsWith('>') && s.Length > 13 && s[12] == ']')
                     s = s.Substring(0, 13);
 
                 var match = regexTimeCodes.Match(s);

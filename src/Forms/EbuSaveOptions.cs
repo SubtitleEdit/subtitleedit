@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 _header.DisplayStandardCode = " ";
 
-            _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex.ToString();
+            _header.CharacterCodeTableNumber = "0" + comboBoxCharacterCodeTable.SelectedIndex;
             _header.LanguageCode = textBoxLanguageCode.Text;
             if (_header.LanguageCode.Length != 2)
                 _header.LanguageCode = "0A";
@@ -198,9 +198,9 @@ namespace Nikse.SubtitleEdit.Forms
             _header.CountryOfOrigin = textBoxCountryOfOrigin.Text;
             if (_header.CountryOfOrigin.Length != 3)
                 _header.CountryOfOrigin = "USA";
-            _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString().PadLeft(2, '0');
-            _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString().PadLeft(2, '0');
-            _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString().PadLeft(2, '0');
+            _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString("D2");
+            _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString("D2");
+            _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString("D2");
             _header.DiskSequenceNumber = numericUpDownDiskSequenceNumber.Value.ToString();
             _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString();
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;

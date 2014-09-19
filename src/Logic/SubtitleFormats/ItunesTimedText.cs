@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            currentStyle.InnerText = currentStyle.InnerText + line.Substring(i, 1);
+                            currentStyle.InnerText = currentStyle.InnerText + line[i];
                         }
                     }
                     first = false;

@@ -330,7 +330,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                             fSize = 20;
 
                         string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
-                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize.ToString(), GetSsaColorString(c)));
+                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, GetSsaColorString(c)));
                     }
                 }
 

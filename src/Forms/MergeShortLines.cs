@@ -158,12 +158,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (lastMerged)
                         {
-                            lineNumbers.Append(next.Number.ToString() + ",");
+                            lineNumbers.Append(next.Number);
+                            lineNumbers.Append(',');
                         }
                         else
                         {
-                            lineNumbers.Append(p.Number.ToString() + ",");
-                            lineNumbers.Append(next.Number.ToString() + ",");
+                            lineNumbers.Append(p.Number);
+                            lineNumbers.Append(',');
+                            lineNumbers.Append(next.Number);
+                            lineNumbers.Append(',');
                         }
 
                         lastMerged = true;

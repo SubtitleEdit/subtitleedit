@@ -198,8 +198,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!mergedIndexes.Contains(i - 1))
                             mergedIndexes.Add(i - 1);
 
-                        lineNumbers.Append(p.Number.ToString() + ", ");
-                        lineNumbers.Append(next.Number.ToString());
+                        lineNumbers.Append(p.Number);
+                        lineNumbers.Append(',');
+                        lineNumbers.Append(next.Number);
                     }
                     else
                     {

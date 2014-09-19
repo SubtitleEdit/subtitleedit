@@ -98,7 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 0xde; i++)
                 fs.WriteByte(0);
-            string numberOfLines = subtitle.Paragraphs.Count.ToString().PadLeft(5, '0');
+            string numberOfLines = subtitle.Paragraphs.Count.ToString("D5");
 
             buffer = Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
             fs.Write(buffer, 0, buffer.Length);

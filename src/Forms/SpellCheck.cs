@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (textBoxWord.Text.Length < 2)
                 return;
 
-            string s = textBoxWord.Text.Substring(0, 1).ToUpper() + textBoxWord.Text.Substring(1);
+            string s = char.ToUpper(textBoxWord.Text[0]) + textBoxWord.Text.Substring(1);
             if (checkBoxAutoChangeNames.Checked && _suggestions != null && _suggestions.Contains(s))
             {
                 ChangeWord = s;
@@ -736,7 +736,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
                                 if (_languageName.StartsWith("fr_") && (_currentWord.StartsWith("I'") || _currentWord.StartsWith("I’")))
                                 {
-                                    if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2].ToString()))
+                                    if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2]))
                                     {
                                         if (_currentSpellCheckWord.Index > 3)
                                         {
@@ -746,7 +746,7 @@ namespace Nikse.SubtitleEdit.Forms
                                                 for (int i = 0; i < suggestions.Count; i++)
                                                 {
                                                     if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
-                                                        suggestions[i] = suggestions[i].Remove(0, 1).Insert(0, "l");
+                                                        suggestions[i] = @"l" + suggestions[i].Substring(1);
                                                 }
                                             }
                                         }
@@ -764,9 +764,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
 
-                            if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
+                            if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
                             {
-                                ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
+                                ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1);
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
@@ -776,9 +776,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
-                            else if (AutoFixNames && _currentWord.Length > 1 && _namesEtcList.Contains(_currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1)))
+                            else if (AutoFixNames && _currentWord.Length > 1 && _namesEtcList.Contains(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
                             {
-                                ChangeWord = _currentWord.Substring(0, 1).ToUpper() + _currentWord.Substring(1);
+                                ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1);
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
@@ -825,7 +825,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
             {
-                if (SplitChars.Contains(s.Substring(i, 1)))
+                if (SplitChars.Contains(s[i]))
                 {
                     if (sb.Length > 0)
                         list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = i - sb.Length });
@@ -833,7 +833,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sb.Append(s.Substring(i, 1));
+                    sb.Append(s[i]);
                 }
             }
             if (sb.Length > 0)
@@ -859,11 +859,11 @@ namespace Nikse.SubtitleEdit.Forms
                 int start = s.IndexOf(name);
                 while (start >= 0)
                 {
-                    bool startOk = start == 0 || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s.Substring(start - 1, 1));
+                    bool startOk = start == 0 || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s[start - 1]);
                     if (startOk)
                     {
                         int end = start + name.Length;
-                        bool endOk = end >= s.Length || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s.Substring(end, 1));
+                        bool endOk = end >= s.Length || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s[end]);
                         if (endOk)
                             s = s.Remove(start, name.Length).Insert(start, string.Empty.PadLeft(name.Length));
                     }
@@ -928,9 +928,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             found = true;
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
-                            bool startOk = indexStart == 0 || (" (['\"" + Environment.NewLine).Contains(text.Substring(indexStart - 1, 1));
+                            bool startOk = indexStart == 0 || (@" (['""" + Environment.NewLine).Contains(text[indexStart - 1]);
                             bool endOk = endIndexPlus == text.Length;
-                            if (!endOk && endIndexPlus < text.Length && (",!?:;. ])<'\"").Contains(text.Substring(endIndexPlus, 1)))
+                            if (!endOk && endIndexPlus < text.Length && @",!?:;. ])<'""".Contains(text[endIndexPlus]))
                                 endOk = true;
                             if (startOk && endOk)
                             {

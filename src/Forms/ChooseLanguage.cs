@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             public override string ToString()
             {
-                return _cultureInfo.NativeName[0].ToString().ToUpper() + _cultureInfo.NativeName.Substring(1);
+                return char.ToUpper(_cultureInfo.NativeName[0]) + _cultureInfo.NativeName.Substring(1);
             }
 
             public string Name

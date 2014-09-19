@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else
                             {
-                                txt.Append(line.Substring(i, 1));
+                                txt.Append(line[i]);
                             }
                             i++;
                         }

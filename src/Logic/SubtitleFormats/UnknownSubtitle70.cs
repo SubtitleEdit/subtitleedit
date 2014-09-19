@@ -83,9 +83,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('[');
-                sb.Append(p.StartFrame.ToString());
+                sb.Append(p.StartFrame);
                 sb.Append("][");
-                sb.Append(p.EndFrame.ToString());
+                sb.Append(p.EndFrame);
                 sb.Append(']');
 
                 //{y:b} is italics for single line

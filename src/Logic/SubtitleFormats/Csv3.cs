@@ -138,12 +138,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool isBreak = false;
             for (int i = 0; i < csv.Length; i++)
             {
-                string s = csv.Substring(i, 1);
-                if (s == "\"" && csv.Substring(i).StartsWith("\"\""))
+                var s = csv[i];
+                if (s == '"' && csv.Substring(i).StartsWith("\"\""))
                 {
                     sb.Append('"');
                 }
-                else if (s == "\"")
+                else if (s == '"')
                 {
                     if (isBreak)
                     {
@@ -160,10 +160,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    if (isBreak && s == " ")
+                    if (isBreak && s == ' ')
                     {
                     }
-                    else if (isBreak && s == ",")
+                    else if (isBreak && s == ',')
                     {
                         sb.Append(Environment.NewLine);
                     }

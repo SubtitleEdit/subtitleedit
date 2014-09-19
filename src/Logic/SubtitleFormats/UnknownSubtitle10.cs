@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             start = start.Trim().Trim(':').Trim('"').Trim();
 
             int i = 0;
-            while (i < start.Length && "0123456789".Contains(start[i].ToString()))
+            while (i < start.Length && char.IsDigit(start[i]))
                 i++;
 
             return int.Parse(start.Substring(0, i));

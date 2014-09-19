@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 for (int i = 33; i < 255; i++)
                 {
-                    string tag = "&#" + i.ToString() + ";";
+                    string tag = @"&#" + i + @";";
                     if (s.Contains(tag))
                         s = s.Replace(tag, Convert.ToChar(i).ToString());
                 }
@@ -60,9 +60,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var sb = new StringBuilder();
 
                     int pos = line.IndexOf("[0] = ");
-                    for (int i = pos + 6; i < line.Length && Utilities.IsInteger(line[i].ToString()); i++)
+                    for (int i = pos + 6; i < line.Length && char.IsDigit(line[i]); i++)
                     {
-                        sb.Append(line.Substring(i, 1));
+                        sb.Append(line[i]);
                     }
                     p.StartTime.TotalMilliseconds = int.Parse(sb.ToString());
 
@@ -70,14 +70,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb = new StringBuilder();
                     for (int i = pos + 7; i < line.Length && line[i] != '\''; i++)
                     {
-                        sb.Append(line.Substring(i, 1));
+                        sb.Append(line[i]);
                     }
                     if (sb.Length > 0)
                         sb.AppendLine();
                     pos = line.IndexOf("[2] = '");
                     for (int i = pos + 7; i < line.Length && line[i] != '\''; i++)
                     {
-                        sb.Append(line.Substring(i, 1));
+                        sb.Append(line[i]);
                     }
                     p.Text = sb.ToString().Trim();
                     p.Text = WebUtility.HtmlDecode(p.Text);

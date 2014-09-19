@@ -411,13 +411,13 @@ namespace Nikse.SubtitleEdit.Controls
                         isFontColor = false;
                         i += 6;
                     }
-                    else if (text.Substring(i, 1) == "\n") // RichTextBox only count NewLine as one character!
+                    else if (text[i] == '\n') // RichTextBox only count NewLine as one character!
                     {
-                        sb.Append(text.Substring(i, 1));
+                        sb.Append(text[i]);
                     }
                     else
                     {
-                        sb.Append(text.Substring(i, 1));
+                        sb.Append(text[i]);
                         letterCount++;
                     }
                     i++;

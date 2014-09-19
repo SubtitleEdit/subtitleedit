@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
   @"    <uuid>5B3B0C07-9A9D-42AA-872C-C953923F97D8</uuid>
     <updatebehavior>add</updatebehavior>
     <name>X</name>
-    <duration>" + duration.ToString() + @"</duration>
+    <duration>" + duration + @"</duration>
     <rate>
       <ntsc>" + GetNtsc() + @"</ntsc>
       <timebase>" + GetFrameRateAsString() + @"</timebase>
@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
       <displayformat>NDF</displayformat>
     </timecode>
     <in>0</in>
-    <out>" + duration.ToString() + @"</out>
+    <out>" + duration + @"</out>
     <media>
       <video>
         <format>

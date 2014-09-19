@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int indexOfAttributesEnd = s.IndexOf('>');
                     if (indexOfBegin >= 0 && indexOfAttributesEnd > indexOfBegin)
                     {
-                        string text = s.Substring(indexOfAttributesEnd).Remove(0, 1).Trim();
+                        string text = s.Substring(indexOfAttributesEnd + 1).Trim();
                         text = text.Replace("<br>", Environment.NewLine);
                         text = text.Replace("<br/>", Environment.NewLine);
                         text = text.Replace("<br />", Environment.NewLine);
@@ -131,9 +131,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var tcBegin = new StringBuilder();
                         for (int i = 0; i <= 10; i++)
                         {
-                            if (begin.Length > i && "0123456789:.".Contains(begin[i].ToString()))
+                            if (begin.Length > i && @"0123456789:.".Contains(begin[i]))
                             {
-                                tcBegin.Append(begin[i].ToString());
+                                tcBegin.Append(begin[i]);
                             }
                         }
 
@@ -144,9 +144,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             string end = s.Substring(indexOfEnd + " data-end=".Length);
                             for (int i = 0; i <= 10; i++)
                             {
-                                if (end.Length > i && "0123456789:.".Contains(end[i].ToString()))
+                                if (end.Length > i && @"0123456789:.".Contains(end[i]))
                                 {
-                                    tcEnd.Append(end[i].ToString());
+                                    tcEnd.Append(end[i]);
                                 }
                             }
                         }

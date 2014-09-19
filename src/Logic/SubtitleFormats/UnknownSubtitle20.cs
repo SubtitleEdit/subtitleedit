@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append(p.StartTime.ToHHMMSSFF());
                 sb.Append(string.Empty.PadLeft(5, ' '));
-                sb.Append(number.ToString().PadLeft(4, '0'));
+                sb.Append(number.ToString("D4"));
                 sb.Append(string.Empty.PadLeft(12, ' '));
                 sb.AppendLine(line1);
 
@@ -67,9 +67,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append(p.EndTime.ToHHMMSSFF());
                 sb.Append(string.Empty.PadLeft(5, ' '));
-                sb.Append((number2 / 7 + 1).ToString().PadLeft(3, '0'));
+                sb.Append((number2 / 7 + 1).ToString("D3"));
                 sb.Append('-');
-                sb.Append((number2 % 7 + 1).ToString().PadLeft(2, '0'));
+                sb.Append((number2 % 7 + 1).ToString("D2"));
                 sb.Append(string.Empty.PadLeft(10, ' '));
                 sb.AppendLine(line2);
                 sb.AppendLine();

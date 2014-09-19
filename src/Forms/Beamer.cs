@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sb.Append(text.Substring(i, 1));
+                    sb.Append(text[i]);
                 }
                 i++;
             }

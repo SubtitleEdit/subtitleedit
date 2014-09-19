@@ -278,7 +278,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                         string styleFormat = "Style: {0},{1},{2},{3},65535,65535,-2147483640,-1,0,1,3,0,2,10,10,10,0,1";
 
-                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize.ToString(), c.ToArgb()));
+                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, c.ToArgb()));
                     }
                 }
 

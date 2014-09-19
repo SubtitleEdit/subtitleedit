@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 else if (s[i] == '}')
                     tagOn = false;
                 else if (!tagOn)
-                    sb.Append(s[i].ToString());
+                    sb.Append(s[i]);
             }
             return sb.ToString().Trim();
         }
