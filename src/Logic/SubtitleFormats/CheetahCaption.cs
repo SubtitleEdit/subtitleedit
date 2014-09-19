@@ -172,10 +172,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     long end = fs.Position + length;
                     fs.WriteByte((byte)(length));
 
-                    fs.WriteByte(0x62); // ?
-
-                    WriteTime(fs, p.StartTime);
-                    WriteTime(fs, p.EndTime);
+                    if (Configuration.Settings.SubtitleSettings.CheetahCaptionLessThan5SecondsNoEndTime && p.Duration.TotalMilliseconds < 5000)
+                    {
+                        fs.WriteByte(0x42); // ?
+                        WriteTime(fs, p.StartTime);
+                        fs.WriteByte(2);
+                        fs.WriteByte(1);
+                        fs.WriteByte(0);
+                        fs.WriteByte(0);
+                    }
+                    else
+                    {
+                        fs.WriteByte(0x62); // ?
+                        WriteTime(fs, p.StartTime);
+                        WriteTime(fs, p.EndTime);
+                    }
 
                     fs.Write(buffer, 0, buffer.Length); // styles
 
