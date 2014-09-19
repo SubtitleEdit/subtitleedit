@@ -991,6 +991,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Uloženy původní titulky {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>soubor na disku změněn</FileOnDiskModified>
     <OverwriteModifiedFile>Přepsat soubor {0} změněný v {1} {2}{3} aktuálním souborem načteným z disku v {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Nelze uložit {0}
+
+Soubor je pouze pro čtení!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Nelze uložit soubor titulků {0}
 Titulky se zdají být prázdné - zkuste je znovu uložit, pokud pracujete na platných titulcích!</UnableToSaveSubtitleX>
     <BeforeNew>Před novým</BeforeNew>
@@ -1704,7 +1707,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <CheckOneLetterWords>Ptát se na neznámá jednopísmenná slova</CheckOneLetterWords>
     <TreatINQuoteAsING>Zacházet se slovy končícími na „ in' “ jako s „ ing “ (pouze angličtina)</TreatINQuoteAsING>
     <ImageText>Snímek textu</ImageText>
-    <SpellCheckCompleted>Kontrola pravopisu dokončena.</SpellCheckCompleted>
+    <SpellCheckCompleted>Kontrola pravopisu dokončena</SpellCheckCompleted>
     <SpellCheckAborted>Kontrola pravopisu přerušena</SpellCheckAborted>
     <UndoX>Zpět: {0}</UndoX>
   </SpellCheck>
