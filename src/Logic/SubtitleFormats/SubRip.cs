@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (line.Trim().Length > 0)
                     {
-                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number + 1).ToString(CultureInfo.InvariantCulture).Equals(nextNext, StringComparison.Ordinal))
+                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number + 1).ToString(CultureInfo.InvariantCulture) == nextNext)
                         {
                             _lastParagraph.Text = (_lastParagraph.Text + Environment.NewLine + line.Trim()).Trim();
                         }

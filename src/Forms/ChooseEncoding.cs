@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Forms
                         return 0;
                     return -1;
                 }
-                return string.Compare(lvi2.SubItems[ColumnNumber].Text, lvi1.SubItems[ColumnNumber].Text);
+                return string.Compare(lvi2.SubItems[ColumnNumber].Text, lvi1.SubItems[ColumnNumber].Text, StringComparison.Ordinal);
             }
             public int ColumnNumber { get; set; }
             public bool IsNumber { get; set; }
