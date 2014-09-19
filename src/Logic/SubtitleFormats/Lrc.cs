@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);
                 }
-                else if (line.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (subtitle.Paragraphs.Count < 1)
                         header.AppendLine(line);

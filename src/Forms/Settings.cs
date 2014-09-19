@@ -1066,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.StartInSourceView = checkBoxStartInSourceView.Checked;
             gs.RemoveBlankLinesWhenOpening = checkBoxRemoveBlankLinesWhenOpening.Checked;
             gs.ListViewLineSeparatorString = textBoxShowLineBreaksAs.Text;
-            if (gs.ListViewLineSeparatorString.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(gs.ListViewLineSeparatorString))
                 gs.ListViewLineSeparatorString = "<br />";
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
 
@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Forms
             ProxySettings proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
             proxy.UserName = textBoxProxyUserName.Text;
-            if (textBoxProxyPassword.Text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(textBoxProxyPassword.Text))
                 proxy.Password = null;
             else
                 proxy.EncodePassword(textBoxProxyPassword.Text);

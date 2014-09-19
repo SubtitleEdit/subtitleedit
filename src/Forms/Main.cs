@@ -3599,7 +3599,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (allText.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(allText))
                     {
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
@@ -4831,7 +4831,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_sourceViewChange)
             {
                 SaveSubtitleListviewIndexes();
-                if (textBoxSource.Text.Trim().Length > 0)
+                if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
                     var temp = new Subtitle(_subtitle);
                     SubtitleFormat format = GetCurrentSubtitleFormat();
@@ -7739,7 +7739,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 double startFactor = 0;
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
-                if (Utilities.RemoveHtmlTags(oldText).Trim().Length > 0)
+                if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
                 {
                     startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
                     if (startFactor < 0.25)
@@ -8214,10 +8214,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                                     original.Text = Utilities.AutoBreakLine(original.Text, Utilities.AutoDetectGoogleLanguage(_subtitleAlternate));
 
-                                if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                                if (string.IsNullOrWhiteSpace(old1))
                                     original.Text = original.Text.TrimStart();
 
-                                if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                                if (string.IsNullOrWhiteSpace(old2))
                                     original.Text = original.Text.TrimEnd();
                             }
                             original.EndTime = originalNext.EndTime;
@@ -8259,10 +8259,10 @@ namespace Nikse.SubtitleEdit.Forms
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, Utilities.AutoDetectGoogleLanguage(_subtitle));
 
-                    if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(old1))
                         currentParagraph.Text = currentParagraph.Text.TrimStart();
 
-                    if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(old2))
                         currentParagraph.Text = currentParagraph.Text.TrimEnd();
                 }
 
@@ -12004,7 +12004,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _makeHistoryPaused = true;
                         foreach (string line in list)
                         {
-                            if (line.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(line))
                             {
                                 InsertAfter();
                                 textBoxListViewText.Text = Utilities.AutoBreakLine(line);
@@ -15185,7 +15185,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
                 if (_textAutoSave == null)
                     _textAutoSave = _changeSubtitleToString;
-                if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && currentText.Trim().Length > 0)
+                if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && !string.IsNullOrWhiteSpace(currentText))
                 {
                     if (!Directory.Exists(Configuration.AutoBackupFolder))
                     {
@@ -15214,7 +15214,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_textAutoSaveOriginal == null)
                         _textAutoSaveOriginal = _changeSubtitleToString;
-                    if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && currentTextAlternate.Trim().Length > 0)
+                    if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
                     {
                         if (!Directory.Exists(Configuration.AutoBackupFolder))
                         {

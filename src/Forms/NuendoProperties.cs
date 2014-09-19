@@ -67,20 +67,14 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         string text = Utilities.FixQuotes(parts[0]);
-                        if (text.Trim().Length > 0)
+                        if (!string.IsNullOrWhiteSpace(text) && characters.IndexOf(text) == -1)
                         {
-                            if (characters.IndexOf(text) == -1)
-                            {
-                                if (parts.Length > 1)
-                                    text = text + " [" + Utilities.FixQuotes(parts[1]) + "]";
+                            if (parts.Length > 1)
+                                text += " [" + Utilities.FixQuotes(parts[1]) + "]";
 
-                                if (lineNumber == 0 && (text.StartsWith("character [", StringComparison.OrdinalIgnoreCase) || text.Equals("character", StringComparison.OrdinalIgnoreCase)))
-                                {
-                                }
-                                else
-                                {
-                                    characters.Add(text);
-                                }
+                            if (lineNumber != 0 || (!text.StartsWith("character [", StringComparison.OrdinalIgnoreCase) && !text.Equals("character", StringComparison.OrdinalIgnoreCase)))
+                            {
+                                characters.Add(text);
                             }
                         }
                     }

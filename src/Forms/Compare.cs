@@ -526,11 +526,8 @@ namespace Nikse.SubtitleEdit.Forms
             richTextBox1.Text = text1;
             richTextBox2.Text = text2;
 
-            //showdiff
-            if (text1 == text2)
-                return;
-
-            if (text1.Trim().Length == 0 || text2.Trim().Length == 0)
+            // show diff
+            if (string.IsNullOrWhiteSpace(text1) || string.IsNullOrWhiteSpace(text2) || text1 == text2)
                 return;
 
             ShowTextDifference();
@@ -560,13 +557,13 @@ namespace Nikse.SubtitleEdit.Forms
                         richTextBox1.SelectionStart = i;
                         richTextBox1.SelectionLength = 1;
                         richTextBox1.SelectionColor = Color.Red;
-                        if (richTextBox1.SelectedText.Trim().Length == 0)
+                        if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
                             richTextBox1.SelectionBackColor = Color.Red;
 
                         richTextBox2.SelectionStart = i;
                         richTextBox2.SelectionLength = 1;
                         richTextBox2.SelectionColor = Color.Red;
-                        if (richTextBox2.SelectedText.Trim().Length == 0)
+                        if (string.IsNullOrWhiteSpace(richTextBox2.SelectedText))
                             richTextBox2.SelectionBackColor = Color.Red;
                     }
                     else
@@ -584,7 +581,7 @@ namespace Nikse.SubtitleEdit.Forms
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
                     richTextBox1.SelectionBackColor = Color.Red;
-                    if (richTextBox1.SelectedText.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
                         richTextBox1.SelectionBackColor = Color.Red;
                 }
                 if (i < richTextBox2.Text.Length)
@@ -592,7 +589,7 @@ namespace Nikse.SubtitleEdit.Forms
                     richTextBox2.SelectionStart = i;
                     richTextBox2.SelectionLength = 1;
                     richTextBox2.SelectionColor = Color.Red;
-                    if (richTextBox2.SelectedText.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(richTextBox2.SelectedText))
                         richTextBox2.SelectionBackColor = Color.Red;
                 }
             }

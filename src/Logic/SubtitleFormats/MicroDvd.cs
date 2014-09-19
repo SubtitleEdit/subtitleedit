@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int errors = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0)
+                if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (line.Contains('{'))
                     {

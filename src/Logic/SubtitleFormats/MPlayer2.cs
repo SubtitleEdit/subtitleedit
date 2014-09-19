@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 int indexOfStartBracket = line.IndexOf('[');
-                if (line.Trim().Length > 0 && line.Length < 250 && indexOfStartBracket >= 0 && indexOfStartBracket < 10)
+                if (!string.IsNullOrWhiteSpace(line) && line.Length < 250 && indexOfStartBracket >= 0 && indexOfStartBracket < 10)
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                     if (_regexMPlayer2Line.IsMatch(s))

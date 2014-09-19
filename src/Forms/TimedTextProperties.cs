@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
             if (node != null)
             {
-                if (textBoxTitle.Text.Trim().Length == 0 && textBoxDescription.Text.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(textBoxTitle.Text) && string.IsNullOrWhiteSpace(textBoxDescription.Text))
                 {
                     _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr).RemoveChild(_xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _nsmgr));
                 }
@@ -130,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     node.InnerText = textBoxTitle.Text;
                 }
             }
-            else if (textBoxTitle.Text.Trim().Length > 0)
+            else if (!string.IsNullOrWhiteSpace(textBoxTitle.Text))
             {
                 var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
                 if (head == null)
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 node.InnerText = textBoxDescription.Text;
             }
-            else if (textBoxDescription.Text.Trim().Length > 0)
+            else if (!string.IsNullOrWhiteSpace(textBoxDescription.Text))
             {
                 var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
                 if (head == null)

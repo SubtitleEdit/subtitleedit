@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var newParagraph = new Paragraph(sb.ToString(), startMilliseconds, prev.EndTime.TotalMilliseconds);
                     sub.Paragraphs.Add(newParagraph);
                     sb = new StringBuilder();
-                    if (p.Text.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(p.Text))
                     {
                         sb.Append(p.Text);
                         startMilliseconds = p.StartTime.TotalMilliseconds;
@@ -133,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 2000) // long time to next sub
                 {
-                    if (p.Text.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(p.Text))
                     {
                         sb.Append(' ');
                         sb.Append(p.Text);
@@ -143,9 +143,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb = new StringBuilder();
                     startMilliseconds = next.StartTime.TotalMilliseconds;
                 }
-                else if (p.Text.Trim().Length == 0) // empty text line
+                else if (string.IsNullOrWhiteSpace(p.Text)) // empty text line
                 {
-                    if (next.Text.Trim().Length == 0 && sb.Length > 0)
+                    if (string.IsNullOrWhiteSpace(next.Text) && sb.Length > 0)
                     {
                         var newParagraph = new Paragraph(sb.ToString(), startMilliseconds, next.StartTime.TotalMilliseconds);
                         sub.Paragraphs.Add(newParagraph);
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (sb.Length == 0)
                         startMilliseconds = p.StartTime.TotalMilliseconds;
-                    if (p.Text.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(p.Text))
                     {
                         sb.Append(' ');
                         sb.Append(p.Text);

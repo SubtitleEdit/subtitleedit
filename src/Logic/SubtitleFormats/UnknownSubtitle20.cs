@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (p != null)
                         {
                             p.EndTime = DecodeTimeCode(s.Substring(5, 11));
-                            if (p.Text.Trim().Length == 0)
+                            if (string.IsNullOrWhiteSpace(p.Text))
                                 p.Text = s.Remove(0, 37).Trim();
                             else
                                 p.Text = p.Text + Environment.NewLine + s.Remove(0, 37).Trim();
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (s.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(s))
                 {
                     _errorCount++;
                 }

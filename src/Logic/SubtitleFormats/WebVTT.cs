@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     subtitle.Header = "WEBVTT";
                 }
-                else if (p != null && line.Trim().Length > 0)
+                else if (p != null && !string.IsNullOrWhiteSpace(line))
                 {
                     string text = line.Trim();
                     if (!textDone)

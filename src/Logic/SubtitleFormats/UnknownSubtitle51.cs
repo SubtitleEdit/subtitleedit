@@ -56,35 +56,37 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph p = null;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0 && line.Trim('-').Trim().Length > 0)
+                if (string.IsNullOrWhiteSpace(line) || string.IsNullOrWhiteSpace(line.Trim('-')))
                 {
-                    if (RegexTimeCodes.Match(line).Success)
+                    continue;
+                }
+
+                if (RegexTimeCodes.Match(line).Success)
+                {
+                    string[] threePart = line.Split(new[] { ',' }, StringSplitOptions.None);
+                    p = new Paragraph();
+                    if (threePart.Length > 2 &&
+                        line.Length > 32 &&
+                        GetTimeCode(p.StartTime, threePart[0].Trim()) &&
+                        GetTimeCode(p.EndTime, threePart[1].Trim()))
                     {
-                        string[] threePart = line.Split(new[] { ',' }, StringSplitOptions.None);
-                        p = new Paragraph();
-                        if (threePart.Length > 2 &&
-                            line.Length > 32 &&
-                            GetTimeCode(p.StartTime, threePart[0].Trim()) &&
-                            GetTimeCode(p.EndTime, threePart[1].Trim()))
-                        {
-                            number++;
-                            p.Number = number;
-                            p.Text = line.Remove(0, 31).Trim().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
-                            subtitle.Paragraphs.Add(p);
-                        }
+                        number++;
+                        p.Number = number;
+                        p.Text = line.Remove(0, 31).Trim().Replace(" | ", Environment.NewLine).Replace("|", Environment.NewLine);
+                        subtitle.Paragraphs.Add(p);
                     }
-                    else if (line.StartsWith("//"))
-                    {
-                        // comment
-                    }
-                    else if (p != null && p.Text.Length < 200)
-                    {
-                        p.Text = (p.Text + Environment.NewLine + line.Trim()).Trim();
-                    }
-                    else
-                    {
-                        _errorCount++;
-                    }
+                }
+                else if (line.StartsWith("//"))
+                {
+                    // comment
+                }
+                else if (p != null && p.Text.Length < 200)
+                {
+                    p.Text = (p.Text + Environment.NewLine + line.Trim()).Trim();
+                }
+                else
+                {
+                    _errorCount++;
                 }
             }
         }

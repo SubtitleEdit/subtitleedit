@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length > 0)
+                else
                 {
                     text.AppendLine(line);
                     if (text.Length > 5000)

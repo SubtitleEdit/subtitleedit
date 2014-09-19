@@ -85,11 +85,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.Trim().Length == 0 || line.TrimStart().StartsWith('@'))
+                else if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith('@'))
                 {
                     // skip these lines
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (p != null)
                 {
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line;

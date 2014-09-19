@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line = line.Replace(textBoxLineBreak.Text, Environment.NewLine);
                 }
 
-                if (line.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
                     if (!checkBoxRemoveEmptyLines.Checked)
                         _subtitle.Paragraphs.Add(new Paragraph());
@@ -315,7 +315,7 @@ namespace Nikse.SubtitleEdit.Forms
                     line = _line.Replace(textBoxLineBreak.Text, Environment.NewLine);
                 }
 
-                if (line.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
                     if (!checkBoxRemoveEmptyLines.Checked)
                         _subtitle.Paragraphs.Add(new Paragraph());
@@ -341,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (string line in lines)
             {
 
-                if (line.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
                     if (sb.Length > 0)
                     {
@@ -496,7 +496,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             foreach (string line in textLines)
             {
-                if (line.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
                     if (!checkBoxRemoveEmptyLines.Checked)
                         sb.AppendLine();
@@ -557,14 +557,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool ContainsLetters(string line)
         {
-            if (line.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).Replace("6", string.Empty)
+            if (string.IsNullOrWhiteSpace(line.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).Replace("6", string.Empty)
                 .Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(":", string.Empty).Replace(".", string.Empty).Replace(",", string.Empty).
-                Replace("-", string.Empty).Replace(">", string.Empty).Trim().Length == 0)
+                Replace("-", string.Empty).Replace(">", string.Empty)))
                 return false;
 
             foreach (char ch in line)
             {
-                if (!("\r\n\t .?" + Convert.ToChar(0)).Contains(ch.ToString(CultureInfo.InvariantCulture)))
+                if (!("\r\n\t .?\0").Contains(ch))
                     return true;
             }
             return false;

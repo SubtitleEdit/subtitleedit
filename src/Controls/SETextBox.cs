@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
                 newText = (string)e.Data.GetData(DataFormats.Text);
 
-            if (Text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(Text))
             {
                 Text = newText;
             }

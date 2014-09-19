@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var sb = new StringBuilder();
                     foreach (string line in s.Split(';'))
                     {
-                        if (line.Trim().Length > 0)
+                        if (!string.IsNullOrWhiteSpace(line))
                             sb.AppendLine(line.Trim());
                     }
                     textBoxText.Text = sb.ToString();

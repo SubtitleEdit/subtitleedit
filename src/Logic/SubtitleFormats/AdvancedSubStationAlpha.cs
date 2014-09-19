@@ -688,13 +688,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 if (!eventsStarted && !fontsStarted && !graphicsStarted)
                     header.AppendLine(line);
 
-                if (line.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith(';'))
                 {
-                    // skip empty lines
-                }
-                else if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
-                {
-                    // skip comment lines
+                    // skip empty and comment lines
                 }
                 else if (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
                 {
@@ -1040,11 +1036,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     if (line.Length > 10)
                     {
-                        var format = line.ToLower().Substring(8).Split(',');
+                        var format = line.Substring(8).ToLower().Split(',');
                         styleCount = format.Length;
                         for (int i = 0; i < format.Length; i++)
                         {
-                            string f = format[i].Trim().ToLower();
+                            string f = format[i].Trim();
                             if (f == "name")
                                 nameIndex = i;
                             else if (f == "fontname")
@@ -1102,7 +1098,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 string f = format[i].Trim().ToLower();
                                 if (i == nameIndex)
                                 {
-                                    if (format[i].Trim().Length == 0)
+                                    if (f.Length == 0)
                                     {
                                         sb.AppendLine("'Name' is empty: " + rawLine);
                                         sb.AppendLine();
@@ -1110,7 +1106,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == fontNameIndex)
                                 {
-                                    if (format[i].Trim().Length == 0)
+                                    if (f.Length == 0)
                                     {
                                         sb.AppendLine("'Fontname' is empty: " + rawLine);
                                         sb.AppendLine();
@@ -1236,7 +1232,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                                 }
                                 else if (i == borderStyleIndex)
                                 {
-                                    if (!string.IsNullOrEmpty(f) && !("123").Contains(f))
+                                    if (f.Length != 0 && !"123".Contains(f))
                                     {
                                         sb.AppendLine("'BorderStyle' incorrect: " + rawLine);
                                         sb.AppendLine();

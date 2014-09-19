@@ -74,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length > 0)
+                else if (line.Length > 0)
                 {
                     text.AppendLine(line.Trim());
                     if (text.Length > 5000)

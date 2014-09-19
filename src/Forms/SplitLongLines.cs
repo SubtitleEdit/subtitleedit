@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                     double startFactor = 0;
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
-                                    if (Utilities.RemoveHtmlTags(oldText).Trim().Length > 0)
+                                    if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
                                     {
                                         startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
                                         if (startFactor < 0.25)

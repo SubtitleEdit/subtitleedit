@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                     }
-                    else if (line.Trim().Length > 0 && line != "#PE2 Format file")
+                    else if (!string.IsNullOrWhiteSpace(line) && line != "#PE2 Format file")
                     {
                         _errorCount++;
                     }

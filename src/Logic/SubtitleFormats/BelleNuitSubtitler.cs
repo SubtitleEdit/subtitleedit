@@ -225,7 +225,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            if (paragraph != null && sb.ToString().Trim().Length > 0)
+                            if (paragraph != null && !string.IsNullOrWhiteSpace(sb.ToString()))
                             {
                                 paragraph.Text = DecodeText(sb);
                             }
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     _errorCount++;
                 }
             }
-            if (paragraph != null && sb.ToString().Trim().Length > 0)
+            if (paragraph != null && !string.IsNullOrWhiteSpace(sb.ToString()))
             {
                 paragraph.Text = DecodeText(sb);
             }
