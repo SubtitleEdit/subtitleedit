@@ -184,8 +184,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 // Check for a valid RIFF header
                 string riff = FromFourCC(FourCC);
-                if ((0 == String.Compare(riff, RIFF4CC))
-                    || (0 == String.Compare(riff, RIFX4CC)))
+                if (riff == RIFF4CC || riff == RIFX4CC)
                 {
                     // Good header. Check size
                     //Console.WriteLine(ShortName + " has a valid type \"" + riff + "\"");
@@ -270,7 +269,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             // Examine the element, is it a list or a chunk
             string type = FromFourCC(FourCC);
-            if (0 == String.Compare(type, LIST4CC))
+            if (type == LIST4CC)
             {
                 // We have a list
                 ReadOneInt(out FourCC);

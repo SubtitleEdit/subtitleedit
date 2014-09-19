@@ -70,19 +70,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         internal static string ConvertToTimeString(TimeCode time)
         {
-            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower();
-            if (!string.IsNullOrEmpty(timeCodeFormat))
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
+            switch (timeCodeFormat)
             {
-                if (timeCodeFormat.Equals("seconds", StringComparison.Ordinal))
+                case "seconds":
                     return string.Format(CultureInfo.InvariantCulture, "{0:0.0#}s", time.TotalSeconds);
-                if (timeCodeFormat.Equals("milliseconds", StringComparison.Ordinal))
+                case "milliseconds":
                     return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
-                if (timeCodeFormat.Equals("ticks", StringComparison.Ordinal))
+                case "ticks":
                     return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
-                if (timeCodeFormat.Equals("hh:mm:ss.msec", StringComparison.Ordinal))
-                    return string.Format("{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                case "hh:mm:ss.msec":
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
+                default:
+                    return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
             }
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         public static void AddStyleToXml(XmlDocument xml, XmlNode head, XmlNamespaceManager nsmgr, string name, string fontFamily, string fontWeight, string fontStyle, string color, string fontSize)
