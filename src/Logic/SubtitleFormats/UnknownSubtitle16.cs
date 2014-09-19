@@ -37,25 +37,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            var text = new StringBuilder();
 
             if (lines.Count == 0 || !lines[0].Trim().StartsWith("{\\rtf1"))
                 return;
 
             // load as text via RichTextBox
+            var text = new StringBuilder();
             foreach (string s in lines)
                 text.AppendLine(s);
-            var rtBox = new System.Windows.Forms.RichTextBox();
-            rtBox.Rtf = text.ToString();
-            var lines2 = new List<string>();
-            foreach (string line in rtBox.Lines)
-                lines2.Add(line);
-            rtBox.Dispose();
-            text = new StringBuilder();
-            var u52 = new UnknownSubtitle52();
-            u52.LoadSubtitle(subtitle, lines2, fileName);
-            _errorCount = u52.ErrorCount;
+            using (var rtBox = new System.Windows.Forms.RichTextBox())
+            {
+                rtBox.Rtf = text.ToString();
+                var lines2 = new List<string>();
+                foreach (string line in rtBox.Lines)
+                    lines2.Add(line);
+                var u52 = new UnknownSubtitle52();
+                u52.LoadSubtitle(subtitle, lines2, fileName);
+                _errorCount = u52.ErrorCount;
+            }
         }
-
     }
 }

@@ -3092,12 +3092,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool IsTransportStream(string fileName)
         {
+            FileStream fs = null;
             try
             {
                 var buffer = new byte[3761];
-                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Read(buffer, 0, buffer.Length);
-                fs.Close();
                 if (buffer[0] == 0x47 && buffer[188] == 0x47) // 47hex (71 dec or 'G') == TS sync byte
                     return true;
                 return buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
@@ -3107,16 +3107,23 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return false;
             }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                }
+            }
         }
 
         private static bool IsM2TransportStream(string fileName)
         {
+            FileStream fs = null;
             try
             {
                 var buffer = new byte[192 + 192 + 5];
-                var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
+                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Read(buffer, 0, buffer.Length);
-                fs.Close();
                 if (buffer[0] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[188] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
                     return false;
                 if (buffer[4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
@@ -3127,6 +3134,13 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 System.Diagnostics.Debug.WriteLine(ex.Message);
                 return false;
+            }
+            finally
+            {
+                if (fs != null)
+                {
+                    fs.Close();
+                }
             }
         }
 
@@ -4252,11 +4266,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (selectedText.Length == 0 && _findHelper != null)
                 selectedText = _findHelper.FindText;
 
-            var findDialog = new FindDialog();
-            findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
-            findDialog.Initialize(selectedText, _findHelper);
-            if (findDialog.ShowDialog(this) == DialogResult.OK)
+            using (var findDialog = new FindDialog())
             {
+                findDialog.SetIcon(toolStripButtonFind.Image as Bitmap);
+                findDialog.Initialize(selectedText, _findHelper);
+                if (findDialog.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
                 _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
                 _findHelper.AddHistory(_findHelper.FindText);
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
@@ -4318,7 +4336,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            findDialog.Dispose();
         }
 
         private void FindNextToolStripMenuItemClick(object sender, EventArgs e)
@@ -9885,22 +9902,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromDivX(string fileName)
         {
-            var f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            int count = 0;
-            f.Position = 0;
+            var count = 0;
             var list = new List<XSub>();
-            var searchBuffer = new byte[2048];
-            long pos = 0;
-            long length = f.Length - 50;
-            while (pos < length)
+            using (var f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                f.Position = pos;
-                int readCount = f.Read(searchBuffer, 0, searchBuffer.Length);
-                for (int i = 0; i < readCount; i++)
+                var searchBuffer = new byte[2048];
+                long pos = 0;
+                long length = f.Length - 50;
+                while (pos < length)
                 {
-                    if (searchBuffer[i] == 0x5b &&
-                        (i + 4 >= readCount || (searchBuffer[i + 1] >= 0x30 && searchBuffer[i + 1] <= 0x39 && searchBuffer[i + 3] == 0x3a)))
+                    f.Position = pos;
+                    int readCount = f.Read(searchBuffer, 0, searchBuffer.Length);
+                    for (int i = 0; i < readCount; i++)
                     {
+                        if (searchBuffer[i] != 0x5b || (i + 4 < readCount && (searchBuffer[i + 1] < 0x30 || searchBuffer[i + 1] > 0x39 || searchBuffer[i + 3] != 0x3a)))
+                        {
+                            continue;
+                        }
+
                         f.Position = pos + i + 1;
 
                         byte[] buffer = new byte[26];
@@ -9946,10 +9965,9 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
+                    pos += searchBuffer.Length;
                 }
-                pos += searchBuffer.Length;
             }
-            f.Close();
 
             if (count > 0)
             {
@@ -10413,21 +10431,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static bool IsBluRaySupFile(string subFileName)
         {
-            var buffer = new byte[4];
-            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
-            fs.Read(buffer, 0, 4);
-            fs.Close();
-            return (buffer[0] == 0x50 && buffer[1] == 0x47); // 80 + 71 - P G
+            using (var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                return fs.ReadByte() == 0x50
+                    && fs.ReadByte() == 0x47; // 80 + 71 - P G
+            }
         }
 
         public static bool IsRarFile(string fileName)
         {
-            var buffer = new byte[4];
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
-            fs.Read(buffer, 0, 4);
-            fs.Close();
-            string s = Encoding.ASCII.GetString(buffer, 0, buffer.Length);
-            return s == "Rar!";
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, 4);
+                return "Rar!" == Encoding.ASCII.GetString(buffer, 0, buffer.Length);
+            }
         }
 
         public static bool IsZipFile(string fileName)
@@ -10441,16 +10459,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static bool IsSpDvdSupFile(string subFileName)
         {
-            byte[] buffer = new byte[SpHeader.SpHeaderLength];
-            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
-            int bytesRead = fs.Read(buffer, 0, buffer.Length);
-            if (bytesRead == buffer.Length)
+            using (var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
+                byte[] buffer = new byte[SpHeader.SpHeaderLength];
+                if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
+                {
+                    return false;
+                }
+
                 var header = new SpHeader(buffer);
                 if (header.Identifier == "SP" && header.NextBlockPosition > 4)
                 {
                     buffer = new byte[header.NextBlockPosition];
-                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    int bytesRead = fs.Read(buffer, 0, buffer.Length);
                     if (bytesRead == buffer.Length)
                     {
                         buffer = new byte[SpHeader.SpHeaderLength];
@@ -10464,34 +10485,34 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            fs.Close();
             return false;
         }
 
         private void ImportAndOcrSpDvdSup(string fileName, bool showInTaskbar)
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
-
-            byte[] buffer = new byte[SpHeader.SpHeaderLength];
-            int bytesRead = fs.Read(buffer, 0, buffer.Length);
-            var header = new SpHeader(buffer);
             var spList = new List<SpHeader>();
 
-            while (header.Identifier == "SP" && bytesRead > 0 && header.NextBlockPosition > 4)
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read))
             {
-                buffer = new byte[header.NextBlockPosition];
-                bytesRead = fs.Read(buffer, 0, buffer.Length);
-                if (bytesRead == buffer.Length)
-                {
-                    header.AddPicture(buffer);
-                    spList.Add(header);
-                }
+                byte[] buffer = new byte[SpHeader.SpHeaderLength];
+                int bytesRead = fs.Read(buffer, 0, buffer.Length);
+                var header = new SpHeader(buffer);
 
-                buffer = new byte[SpHeader.SpHeaderLength];
-                bytesRead = fs.Read(buffer, 0, buffer.Length);
-                header = new SpHeader(buffer);
+                while (header.Identifier == "SP" && bytesRead > 0 && header.NextBlockPosition > 4)
+                {
+                    buffer = new byte[header.NextBlockPosition];
+                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == buffer.Length)
+                    {
+                        header.AddPicture(buffer);
+                        spList.Add(header);
+                    }
+
+                    buffer = new byte[SpHeader.SpHeaderLength];
+                    bytesRead = fs.Read(buffer, 0, buffer.Length);
+                    header = new SpHeader(buffer);
+                }
             }
-            fs.Close();
 
             var vobSubOcr = new VobSubOcr();
             if (showInTaskbar)
