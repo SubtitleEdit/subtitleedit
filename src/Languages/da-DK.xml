@@ -487,7 +487,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveLineBreaks>Fjern linjeskift i korte afsnit med kun én sætning</RemoveLineBreaks>
     <RemoveLineBreaksAll>Fjern linjeskift i korte tekster (undtagen dialog)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Ret store bogstaver 'i' inde i små ord (OCR-fejl)</FixUppercaseIInsindeLowercaseWords>
-    <FixDoubleApostrophes>Ret dobbelt apostrof tegn ('') til en enkelt qoute ( ")</FixDoubleApostrophes>
+    <FixDoubleApostrophes>Ret dobbelt apostrof tegn ('') til en enkelt qoute (")</FixDoubleApostrophes>
     <AddPeriods>Tilføj punktum efter de linjer, hvor næste linje starter med stort bogstav</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Start nye linier med stort bogstav efter punktum</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Start med stort bogstav efter punktum inde i linjer</StartWithUppercaseLetterAfterPeriodInsideParagraph>
@@ -807,7 +807,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <Synchronization>
         <Title>Synkronisering</Title>
         <AdjustAllTimes>Juster alle tider (vis tidligere/senere)...</AdjustAllTimes>
-        <VisualSync>&amp;Visual synkroniser</VisualSync>
+        <VisualSync>&amp;Visual synkroniser...</VisualSync>
         <PointSync>Punkt synkroniser...</PointSync>
         <PointSyncViaOtherSubtitle>Punkt synkroniser via anden undertekst...</PointSyncViaOtherSubtitle>
       </Synchronization>
@@ -991,7 +991,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Gemte originale undertekst {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fil på disken ændret</FileOnDiskModified>
     <OverwriteModifiedFile>Overskriv filen {0} ændret {1} {2} {3} med aktuelle fil indlæst fra disken på {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly />
+    <FileXIsReadOnly>Kan ikke gemme fil {0}
+
+Denne fil er skrivebeskyttet!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Kan ikke gemme undertekst fil {0}</UnableToSaveSubtitleX>
     <BeforeNew>Før ny</BeforeNew>
     <New>Ny</New>

@@ -77,16 +77,16 @@
     <AboutText1>Subtitle Edit est un logiciel gratuit distribué sous licence publique GNU.
 Vous pouvez le distribuer, le modifier et l'utiliser librement.
 
-Le code source C# est disponible sur le site web ou envoyé par email sur demande.
+Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
 
 Visitez www.nikse.dk pour obtenir la dernière version.
 
 Les suggestions sont plus que bienvenues.
 
-Email: mailto:nikse.dk@gmail.com</AboutText1>
+Courriel : mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
-    <Title>Ajouter à liste de noms/etc.</Title>
+    <Title>Ajouter à la liste de noms/etc.</Title>
     <Description>Nom / bruit (respecter la casse) :</Description>
   </AddToNames>
   <AddToOcrReplaceList>
@@ -104,7 +104,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseWait>Ceci peut prendre quelques minutes - Veuillez patienter...</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player introuvable</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC media player?</GoToVlcMediaPlayerHomePage>
+    <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC media player ?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Génération du fichier des pics...</GeneratingPeakFile>
     <GeneratingSpectrogram>Création du spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
@@ -149,7 +149,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteOriginalFiles>Remplacer les fichiers originaux (nouvelle extension si le format est différent)</OverwriteOriginalFiles>
     <ReDoCasing>Définir majuscules/minuscules</ReDoCasing>
     <Convert>Convertir</Convert>
-    <NothingToConvert>Rien à convertir!</NothingToConvert>
+    <NothingToConvert>Rien à convertir !</NothingToConvert>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
     <Converted>Convertir</Converted>
     <ConvertedX>Convertir ({0})</ConvertedX>
@@ -201,7 +201,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Recherche de mise à jour</Title>
     <CheckingForUpdates>Recherche de mise à jour...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Recherche de mise à jour a échoué : {0}</CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable>Vous utilisez la dernière version de Subtitle Edit :</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNoneAvailable>Vous utilisez la dernière version de Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
     <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
     <InstallUpdate>Aller à la page de téléchargement</InstallUpdate>
     <NoUpdates>Ne pas mettre à jour</NoUpdates>
@@ -232,7 +232,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteShiftCellsDown>Options de collage</OverwriteShiftCellsDown>
     <Overwrite>Remplacer</Overwrite>
     <ShiftCellsDown>Décaler cellules vers le bas</ShiftCellsDown>
-    <TimeCodesOnly>Time code</TimeCodesOnly>
+    <TimeCodesOnly>Timecode</TimeCodesOnly>
     <TextOnly>Texte</TextOnly>
     <OriginalTextOnly>Texte original</OriginalTextOnly>
   </ColumnPaste>
@@ -247,7 +247,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyDifferences>Cacher les lignes identiques</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignorer les divisions de ligne</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Ne considérer que les différences dans le texte</OnlyLookForDifferencesInText>
-    <CannotCompareWithImageBasedSubtitles>Ne comparer pas les sous titres avec l'image de base</CannotCompareWithImageBasedSubtitles>
+    <CannotCompareWithImageBasedSubtitles>Ne comparer pas les sous-titres avec l'image de base</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Propriétés D-Cinema (interopérabilité)</Title>
@@ -259,7 +259,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Language>Langue</Language>
     <IssueDate>Date de publication</IssueDate>
     <EditRate>Débit de traitement</EditRate>
-    <TimeCodeRate>Débit time code</TimeCodeRate>
+    <TimeCodeRate>Débit timecode</TimeCodeRate>
     <StartTime>Heure de début</StartTime>
     <Font>Fonte</Font>
     <FontId>ID</FontId>
@@ -287,7 +287,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Textes partages le temps de l'espace</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Ripper les sous-titres de ifo/vobs (dvd)</Title>
+    <Title>Ripper les sous-titres de IFO/VOBs (DVD)</Title>
     <DvdGroupTitle>Info./ Fichiers DVD</DvdGroupTitle>
     <IfoFile>Fichier IFO</IfoFile>
     <IfoFiles>Fichiers IFO</IfoFiles>
@@ -305,7 +305,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Abort>Interrompre</Abort>
     <AbortedByUser>Interrompu par l'utilisateur</AbortedByUser>
     <ReadingSubtitleData>Lecture données des sous-titres...</ReadingSubtitleData>
-    <RippingVobFileXofYZ>Ripper fichier vob {1} sur {2}: {0}</RippingVobFileXofYZ>
+    <RippingVobFileXofYZ>Ripper fichier VOB {1} sur {2}: {0}</RippingVobFileXofYZ>
     <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVIDEO-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
@@ -372,7 +372,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Template>Modèle</Template>
     <Header>En-tête</Header>
     <TextLine>Ligne de texte (paragraphe)</TextLine>
-    <TimeCode>Time code</TimeCode>
+    <TimeCode>Timecode</TimeCode>
     <NewLine>New line</NewLine>
     <Footer>Pied de page</Footer>
     <DoNotModify>[Ne pas modifier]</DoNotModify>
@@ -407,7 +407,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Droit</Right>
     <Center>Centre</Center>
     <BottomMargin>Marge inférieure</BottomMargin>
-    <SaveBluRraySupAs>Enregistrer en tant que Blu-ray Sup</SaveBluRraySupAs>
+    <SaveBluRraySupAs>Enregistrer en tant que Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Enregistrer en tant que VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Enregistrer en tant FabImage Script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Enregistrer en tant Dvd Studio Pro Stl</SaveDvdStudioProStlAs>
@@ -432,10 +432,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AddNewLineAfterTimeCode>Ajouter saut de ligne</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Ajouter saut de ligne après le texte</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Ajouter saut de ligne entre les sous-titres</AddNewLineBetweenSubtitles>
-    <TimeCodeFormat>Format du Timecode</TimeCodeFormat>
+    <TimeCodeFormat>Format du timecode</TimeCodeFormat>
     <Srt>.srt</Srt>
     <Milliseconds>Millisecondes</Milliseconds>
-    <HHMMSSFF>HH: MM: SS: FF</HHMMSSFF>
+    <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
     <TimeCodeSeperator>Séparateur :</TimeCodeSeperator>
   </ExportText>
   <ExtractDateTimeInfo>
@@ -634,7 +634,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenTextFile>Ouvrir fichier texte...</OpenTextFile>
     <ImportOptions>Options d'importation</ImportOptions>
     <TextFiles>Fichiers texte</TextFiles>
-    <TimeCodes>Time codes</TimeCodes>
+    <TimeCodes>Timecodes</TimeCodes>
     <Frames>Frames</Frames>
     <Seconds>Secondes</Seconds>
     <Milliseconds>Millisecondes</Milliseconds>
@@ -660,7 +660,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Refresh>&amp;Actualiser</Refresh>
     <TextFiles>Fichiers texte</TextFiles>
     <PreviewLinesModifiedX>Aperçu - sous-titres modifiés: {0}</PreviewLinesModifiedX>
-    <TimeCodes>Time codes</TimeCodes>
+    <TimeCodes>Timecodes</TimeCodes>
   </ImportText>
   <Interjections>
     <Title>Interjections</Title>
@@ -705,7 +705,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSubtitleWithManualChosenEncoding>Importer sous-titres en choisissant l'encodage...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer texte...</ImportText>
         <ImportImages>Importer images...</ImportImages>
-        <ImportTimecodes>Importer Time codes...</ImportTimecodes>
+        <ImportTimecodes>Importer timecodes...</ImportTimecodes>
         <Export>Exporter</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
@@ -741,7 +741,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ReverseRightToLeftStartEnd>Inverser droite à gauche (lignes sélec.)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Visualiser textes originales sur l'audio / vidéo</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Modifier la sélection...</ModifySelection>
-        <InverseSelection>Inverser la sélection...</InverseSelection>
+        <InverseSelection>Inverser la sélection</InverseSelection>
       </Edit>
       <Tools>
         <Title>Ou&amp;tils</Title>
@@ -756,7 +756,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Modifier vitesse (en %)...</ChangeSpeedInPercent>
         <MergeShortLines>&amp;Fusionner les lignes courtes...</MergeShortLines>
         <MergeDuplicateText>Fusionner les doublons...</MergeDuplicateText>
-        <MergeSameTimeCodes>Fusionner les lignes au time codes identique...</MergeSameTimeCodes>
+        <MergeSameTimeCodes>Fusionner les lignes au timecodes identique...</MergeSameTimeCodes>
         <SplitLongLines>Diviser les lignes trop longues...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Temps d'affichage minimum entre paragraphes...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>T&amp;rier par</SortBy>
@@ -802,7 +802,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <FindDoubleWords>Rechercher mots en doubles</FindDoubleWords>
         <FindDoubleLines>Rechercher lignes en doubles</FindDoubleLines>
         <GetDictionaries>Télécharger dictionnaires...</GetDictionaries>
-        <AddToNamesEtcList>Ajouter à la liste de noms/etc...</AddToNamesEtcList>
+        <AddToNamesEtcList>Ajouter à la liste de noms/etc.</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>Synchronisation</Title>
@@ -854,10 +854,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <ContextMenu>
         <AdvancedSubStationAlphaSetStyle>Advanced SubStation Alpha - Configurer style</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SubStation Alpha - Configurer style</SubStationAlphaSetStyle>
-        <SubStationAlphaStyles>SubStation Alpha - style...</SubStationAlphaStyles>
+        <SubStationAlphaStyles>SubStation Alpha - styles...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Advanced SubStation Alpha - styles...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Timed Text - Configurer style</TimedTextSetStyle>
-        <TimedTextStyles>Timed Text - style</TimedTextStyles>
+        <TimedTextStyles>Timed Text - styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - Configurer langue</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Configurer style</SamiSetStyle>
         <Cut>Couper</Cut>
@@ -985,13 +985,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeLoadOf>Avant chargement de {0}</BeforeLoadOf>
     <LoadedSubtitleX>Sous-titres chargés {0}</LoadedSubtitleX>
     <LoadedEmptyOrShort>Sous-titre vide ou très court chargé {0}</LoadedEmptyOrShort>
-    <FileIsEmptyOrShort>Le fichier est vide ou très courte!</FileIsEmptyOrShort>
+    <FileIsEmptyOrShort>Le fichier est vide ou très courte !</FileIsEmptyOrShort>
     <FileNotFound>Fichier introuvable: {0}</FileNotFound>
     <SavedSubtitleX>Sous-titres enregistrés {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Sous-titre original {0} sauvegardé</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fichier sur disque modifié</FileOnDiskModified>
     <OverwriteModifiedFile>Écraser le fichier {0} modifiée à {1} {2}{3} avec le fichier actuel chargé à {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly />
+    <FileXIsReadOnly>Impossible d'enregistrer le fichier {0}
+
+Le fichier est en lecture seule !</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Impossible d'enregistrer le fichier sous-titre {0}</UnableToSaveSubtitleX>
     <BeforeNew>Avant nouveau</BeforeNew>
     <New>Nouveau</New>
@@ -1003,7 +1005,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenVideoFile>Ouvrir fichier vidéo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nouvelle cadence de frame ({0}) a été utilisée pour calculer l'heure de début/fin</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nouvelle cadence de frame ({0}) a été utilisé pour le calcul des numéros de frame de début/fin</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>L'élément de recherche n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche?</FindContinue>
+    <FindContinue>L'élément de recherche n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</FindContinue>
     <FindContinueTitle>Poursuivre recherche ?</FindContinueTitle>
     <ReplaceContinueNotFound>L'élément à remplacer n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</ReplaceContinueNotFound>
     <ReplaceXContinue>L'article cherché a été remplacé {0} fois. Voulez-vous aller vers le haut du document et poursuivre la recherche ?</ReplaceXContinue>
@@ -1078,7 +1080,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <XLinesSavedAsY>{0} lignes enregistrée comme {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lignes supprimées</XLinesDeleted>
     <BeforeDeletingXLines>Avant de supprimer {0} lignes</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Supprimer {0} lignes?</DeleteXLinesPrompt>
+    <DeleteXLinesPrompt>Supprimer {0} lignes ?</DeleteXLinesPrompt>
     <OneLineDeleted>Ligne supprimée</OneLineDeleted>
     <BeforeDeletingOneLine>Avant de supprimer une ligne</BeforeDeletingOneLine>
     <DeleteOneLinePrompt>Supprimer une ligne?</DeleteOneLinePrompt>
@@ -1141,16 +1143,16 @@ Poursuivre?</SubtitleAppendPrompt>
     <NumberOfWithRemovedLineBreakX>Nombre de lignes avec des coupures de lignes enlevés: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Avant le remplacement multiple</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Nombre de lignes avec du texte remplacé: {0}</NumberOfLinesReplacedX>
-    <NameXAddedToNamesEtcList>Le nom "{0} 'a été ajouté à la liste noms/etc.</NameXAddedToNamesEtcList>
-    <NameXNotAddedToNamesEtcList>Le nom '{0} n'a pas été ajouté à la liste de noms/etc</NameXNotAddedToNamesEtcList>
+    <NameXAddedToNamesEtcList>Le nom '{0}' a été ajouté à la liste de noms/etc.</NameXAddedToNamesEtcList>
+    <NameXNotAddedToNamesEtcList>Le nom '{0}' n'a pas été ajouté à la liste de noms/etc.</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Le mot '{0}' a été ajouté au dictionnaire utilisateur</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Le mot '{0}' n'a pas été ajouté au dictionnaire utilisateur</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' a été ajouté à la liste corrective OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>'{0} -&gt; {1}' n'a pas été ajouté à la liste corrective OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lignes sélectionnées</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Sous-titre contenant des notes de musique unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Sous-titre contenant des caractères Unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde?</UnicodeCharactersAnsiWarning>
-    <NegativeTimeWarning>Sous-titre contenant des codes de temps négatifs. Continuer la sauvegarde?</NegativeTimeWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Sous-titre contenant des notes de musique unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde ?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Sous-titre contenant des caractères Unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde ?</UnicodeCharactersAnsiWarning>
+    <NegativeTimeWarning>Sous-titre contenant des codes de temps négatifs. Continuer la sauvegarde ?</NegativeTimeWarning>
     <BeforeMergeShortLines>Avant de fusionner les lignes courtes</BeforeMergeShortLines>
     <BeforeSplitLongLines>Avant de couper les lignes longues</BeforeSplitLongLines>
     <MergedShortLinesX>Nombre de lignes fusionnées: {0}</MergedShortLinesX>
@@ -1160,7 +1162,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <TextImported>Fichier texte importé</TextImported>
     <BeforePointSynchronization>Avant synchronisation par points</BeforePointSynchronization>
     <PointSynchronizationDone>Synchronisation par points effectuée</PointSynchronizationDone>
-    <BeforeTimeCodeImport>Avant d'importer les Time codes</BeforeTimeCodeImport>
+    <BeforeTimeCodeImport>Avant d'importer les timecodes</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>Timecode importés de {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>Avant insertion du sous-titre à la position vidéo</BeforeInsertSubtitleAtVideoPosition>
     <BeforeSetStartTimeAndOffsetTheRest>Avant définir l'heure de début et décaler la suite</BeforeSetStartTimeAndOffsetTheRest>
@@ -1197,8 +1199,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <BeforeColumnDelete>Avant d'effacer toute la colonne</BeforeColumnDelete>
     <BeforeColumnImportText>Avant l'importation de la colonne de texte</BeforeColumnImportText>
     <BeforeColumnShiftCellsDown>Avant de coller et de déplacer les colonnes vers le bas</BeforeColumnShiftCellsDown>
-    <ErrorLoadingPluginXErrorY>Erreur lors du chargement du plug-in: {0}: {1}</ErrorLoadingPluginXErrorY>
-    <BeforeRunningPluginXVersionY>Avant d'exécuter le plug-in: {0}: {1}</BeforeRunningPluginXVersionY>
+    <ErrorLoadingPluginXErrorY>Erreur lors du chargement du plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
+    <BeforeRunningPluginXVersionY>Avant d'exécuter le plugin: {0}: {1}</BeforeRunningPluginXVersionY>
     <UnableToReadPluginResult>Impossible de lire le plugin du sous-titre!</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Impossible de créer un dossier de sauvegarde {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Avant la fusion des sous-titres</BeforeDisplaySubtitleJoin>
@@ -1208,7 +1210,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <PluginXExecuted>Plugin '{0}' exécuté</PluginXExecuted>
     <NotAValidXSubFile>Ce n'est pas un fichier XSUB valide!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Avant de fusionner les lignes avec le même texte</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Le Time code du sous-titre importé a un nombre différent de lignes ({0}) par rapport à l'actuel ({1}).
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Le timecode du sous-titre importé a un nombre différent de lignes ({0}) par rapport à l'actuel ({1}).
 
  Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
@@ -1220,7 +1222,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Title>Choisir les sous-titres du fichier Matroska
 </Title>
     <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
-    <TrackXLanguageYTypeZ>Piste {0} - {1} - Langue: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Piste {0} - {1} - langue: {2} - type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertisseur de mesure</Title>
@@ -1252,7 +1254,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <OnlyMergeContinuationLines>Fusionner uniquement les lignes continues</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
-    <Title>Fusionner les lignes au time codes identique</Title>
+    <Title>Fusionner les lignes au timecodes identique</Title>
     <MaxDifferenceMilliseconds>Maximum d'écart en millisecondes</MaxDifferenceMilliseconds>
     <ReBreakLines>Recouper les lignes</ReBreakLines>
     <NumberOfMergesX>Nombre de fusions : {0}</NumberOfMergesX>
@@ -1942,7 +1944,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <OcrAutoCorrectionSpellchecking>Correction auto. OCR/Vérification d'orthographe</OcrAutoCorrectionSpellchecking>
     <FixOcrErrors>Correction des erreurs</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer du texte avec les timecodes correspondants...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes>Importer nouveaux time codes</ImportNewTimeCodes>
+    <ImportNewTimeCodes>Importer nouveaux timecodes</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Sauver images de sous-titre sous...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Enregistrer toutes les images (PNG/BDN xml )...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Enregistrer toutes les images avec index html...</SaveAllSubtitleImagesWithHtml>
@@ -1951,7 +1953,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <DictionaryX>Dictionnaire: {0}</DictionaryX>
     <RightToLeft>De droite à gauche</RightToLeft>
     <ShowOnlyForcedSubtitles>Afficher uniquement les sous-titres forcés</ShowOnlyForcedSubtitles>
-    <UseTimeCodesFromIdx>Utiliser Time code du fichier .idx</UseTimeCodesFromIdx>
+    <UseTimeCodesFromIdx>Utiliser timecodes du fichier .idx</UseTimeCodesFromIdx>
     <NoMatch>&lt;Aucune correspondance&gt;</NoMatch>
     <AutoTransparentBackground>Fond transparent auto.</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Comparer avec l'image actuelle...</InspectCompareMatchesForCurrentImage>

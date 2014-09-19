@@ -989,7 +989,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileNotFound>File not found: {0}</FileNotFound>
     <SavedSubtitleX>Saved subtitle {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
-    <FileOnDiskModified>file on disk modified</FileOnDiskModified>
+    <FileOnDiskModified>File on disk modified</FileOnDiskModified>
     <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Cannot save {0}
 
