@@ -357,7 +357,7 @@ https://github.com/SubtitleEdit/subtitleedit
   <EffectTypewriter>
     <Title>Эффект Машинописи</Title>
     <TotalMilliseconds>Всего мс:</TotalMilliseconds>
-    <EndDelayInMillisecs>Конечная задержка в мс:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Конечная задержка в мс:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Экспорт текста в пользовательский формат</Title>

@@ -49,7 +49,7 @@
             this.radioButtonShowLater = new System.Windows.Forms.RadioButton();
             this.radioButtonShowEarlier = new System.Windows.Forms.RadioButton();
             this.timeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
-            this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
+            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.checkBoxFixCasing = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveTextForHI = new System.Windows.Forms.CheckBox();
             this.checkBoxRemoveFormatting = new System.Windows.Forms.CheckBox();
@@ -166,7 +166,7 @@
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. millisecs between subtitles";
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. milliseconds between subtitles";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
             // 
             // checkBoxAutoBalance
@@ -273,7 +273,7 @@
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowLater);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.radioButtonShowEarlier);
             this.groupBoxOffsetTimeCodes.Controls.Add(this.timeUpDownAdjust);
-            this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHoursMinSecsMilliSecs);
+            this.groupBoxOffsetTimeCodes.Controls.Add(this.labelHourMinSecMilliSecond);
             this.groupBoxOffsetTimeCodes.Location = new System.Drawing.Point(280, 89);
             this.groupBoxOffsetTimeCodes.Name = "groupBoxOffsetTimeCodes";
             this.groupBoxOffsetTimeCodes.Size = new System.Drawing.Size(239, 115);
@@ -313,14 +313,14 @@
             this.timeUpDownAdjust.Size = new System.Drawing.Size(96, 24);
             this.timeUpDownAdjust.TabIndex = 1;
             // 
-            // labelHoursMinSecsMilliSecs
+            // labelHourMinSecMilliSecond
             // 
-            this.labelHoursMinSecsMilliSecs.AutoSize = true;
-            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(6, 20);
-            this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(107, 13);
-            this.labelHoursMinSecsMilliSecs.TabIndex = 0;
-            this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
+            this.labelHourMinSecMilliSecond.AutoSize = true;
+            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(6, 20);
+            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
+            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(107, 13);
+            this.labelHourMinSecMilliSecond.TabIndex = 0;
+            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.msec";
             // 
             // checkBoxFixCasing
             // 
@@ -415,7 +415,7 @@
             this.checkBoxOverwrite.Name = "checkBoxOverwrite";
             this.checkBoxOverwrite.Size = new System.Drawing.Size(130, 17);
             this.checkBoxOverwrite.TabIndex = 5;
-            this.checkBoxOverwrite.Text = "Overwrite exsiting files";
+            this.checkBoxOverwrite.Text = "Overwrite exiting files";
             this.checkBoxOverwrite.UseVisualStyleBackColor = true;
             // 
             // comboBoxSubtitleFormats
@@ -698,7 +698,7 @@
         private System.Windows.Forms.GroupBox groupBoxOffsetTimeCodes;
         private System.Windows.Forms.GroupBox groupBoxChangeFrameRate;
         private Controls.TimeUpDown timeUpDownAdjust;
-        private System.Windows.Forms.Label labelHoursMinSecsMilliSecs;
+        private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.ComboBox comboBoxFrameRateTo;
         private System.Windows.Forms.Label labelToFrameRate;
         private System.Windows.Forms.ComboBox comboBoxFrameRateFrom;

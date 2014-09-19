@@ -311,7 +311,7 @@ Rất hân hạnh được chào đón.
   <EffectTypewriter>
     <Title>Hiệu ứng chữ viết</Title>
     <TotalMilliseconds>Tổng ms:.</TotalMilliseconds>
-    <EndDelayInMillisecs>Kết thúc sự chậm trễ trong ms:.</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Kết thúc sự chậm trễ trong ms:.</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>Xuất ra BDN XML/PNG</Title>

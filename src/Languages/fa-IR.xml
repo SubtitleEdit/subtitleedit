@@ -228,7 +228,7 @@ http://soft98.ir
   <EffectTypewriter>
     <Title>اثر ماشین تحریر</Title>
     <TotalMilliseconds>تعداد میلی ثانیه:</TotalMilliseconds>
-    <EndDelayInMillisecs>پایان تأخیر در میلی ثانیه:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>پایان تأخیر در میلی ثانیه:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>BDN XML/PNG خروجی گرفتن به</Title>

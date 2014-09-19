@@ -298,7 +298,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>تأثير آلة كاتبة</Title>
     <TotalMilliseconds>:.مجموع ملي ثانية</TotalMilliseconds>
-    <EndDelayInMillisecs>:.تأخير في نهاية ملي ثانية</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>:.تأخير في نهاية ملي ثانية</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>BDN XML/PNG تصدير</Title>

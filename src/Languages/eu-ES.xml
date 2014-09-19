@@ -350,7 +350,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Idazmakina eragina</Title>
     <TotalMilliseconds>Guztira segmil.:</TotalMilliseconds>
-    <EndDelayInMillisecs>Amai atzerap. sm:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Amai atzerap. sm:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Esportatu norbere idazki heuskarria</Title>

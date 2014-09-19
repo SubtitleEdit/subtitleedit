@@ -354,8 +354,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Skrivemaskine effekt</Title>
-    <TotalMilliseconds>Total millisecs.:</TotalMilliseconds>
-    <EndDelayInMillisecs>Slut forsinkelse i millisek.:</EndDelayInMillisecs>
+    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Slut forsinkelse i millisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eksporter bruger-defineret tekstformat</Title>
