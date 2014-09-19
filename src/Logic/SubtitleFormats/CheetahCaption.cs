@@ -73,119 +73,119 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static void Save(string fileName, Subtitle subtitle)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-
-            byte[] buffer = { 0xEA, 0x22, 1, 0 }; // header
-            fs.Write(buffer, 0, buffer.Length);
-
-            int numberOfLines = subtitle.Paragraphs.Count;
-            fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
-            fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
-
-            buffer = new byte[] { 9, 0xA8, 0xAF, 0x4F }; // ?
-            fs.Write(buffer, 0, buffer.Length);
-
-            for (int i = 0; i < 118; i++)
-                fs.WriteByte(0);
-
-            // paragraphs
-            foreach (Paragraph p in subtitle.Paragraphs)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                string text = p.Text;
+                byte[] buffer = { 0xEA, 0x22, 1, 0 }; // header
+                fs.Write(buffer, 0, buffer.Length);
 
-                //styles + ?
-                buffer = new byte[] {
-                    0x12,
-                    1,
-                    0,
-                    0,
-                    0,
-                    0,
-                    3, // justification, 1=left, 2=right, 3=center
-                    0xF, //horizontal position, 1=top, F=bottom
-                    0x10, //horizontal position, 3=left, 0x10=center, 0x19=right
-                };
+                int numberOfLines = subtitle.Paragraphs.Count;
+                fs.WriteByte((byte)(numberOfLines % 256)); // paragraphs - low byte
+                fs.WriteByte((byte)(numberOfLines / 256)); // paragraphs - high byte
 
-                //Normal        : 12 01 00 00 00 00 03 0F 10
-                //Right-top     : 12 01 00 00 00 00 03 01 1C
-                //Top           : 12 01 00 00 00 00 03 01 10
-                //Left-top      : 12 01 00 00 00 00 03 01 05
-                //Left          : 12 01 00 00 00 00 03 0F 0A
-                //Right         : 12 01 00 00 00 00 03 0F 1E
-                //Left          : 12 03 00 00 00 00 03 0F 07
+                buffer = new byte[] { 9, 0xA8, 0xAF, 0x4F }; // ?
+                fs.Write(buffer, 0, buffer.Length);
 
-                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
-                {
-                    buffer[7] = 1; // align top (vertial)
-                }
-                else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
-                {
-                    buffer[7] = 8; // center (vertical)
-                }
-
-                if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an1}"))
-                {
-                    buffer[8] = 2; // align left (horizontal)
-                }
-                else if (text.StartsWith("{\\an9}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an3}"))
-                {
-                    buffer[8] = 0x1e; // align right (vertical)
-                }
-
-                int startTag = text.IndexOf('}');
-                if (text.StartsWith("{\\") && startTag > 0 && startTag < 10)
-                {
-                    text = text.Remove(0, startTag + 1);
-                }
-
-                var textBytes = new List<byte>();
-                var italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
-                text = Utilities.RemoveHtmlTags(text);
-                int j = 0;
-                if (italic)
-                    textBytes.Add(0xd0);
-                while (j < text.Length)
-                {
-                    if (text.Substring(j).StartsWith(Environment.NewLine))
-                    {
-                        j += Environment.NewLine.Length;
-                        textBytes.Add(0);
-                        textBytes.Add(0);
-                        textBytes.Add(0);
-                        textBytes.Add(0);
-                        if (italic)
-                            textBytes.Add(0xd0);
-                    }
-                    else
-                    {
-                        int idx = LatinLetters.IndexOf(text.Substring(j, 1));
-                        if (idx >= 0)
-                            textBytes.Add((byte)LatinCodes[idx]);
-                        else
-                            textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
-
-                        j++;
-                    }
-                }
-
-                int length = textBytes.Count + 20;
-                long end = fs.Position + length;
-                fs.WriteByte((byte)(length));
-
-                fs.WriteByte(0x62); // ?
-
-                WriteTime(fs, p.StartTime);
-                WriteTime(fs, p.EndTime);
-
-                fs.Write(buffer, 0, buffer.Length); // styles
-
-                foreach (byte b in textBytes) // text
-                    fs.WriteByte(b);
-
-                while (end > fs.Position)
+                for (int i = 0; i < 118; i++)
                     fs.WriteByte(0);
+
+                // paragraphs
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    string text = p.Text;
+
+                    //styles + ?
+                    buffer = new byte[] {
+                        0x12,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        3, // justification, 1=left, 2=right, 3=center
+                        0xF, //horizontal position, 1=top, F=bottom
+                        0x10, //horizontal position, 3=left, 0x10=center, 0x19=right
+                    };
+
+                    //Normal        : 12 01 00 00 00 00 03 0F 10
+                    //Right-top     : 12 01 00 00 00 00 03 01 1C
+                    //Top           : 12 01 00 00 00 00 03 01 10
+                    //Left-top      : 12 01 00 00 00 00 03 01 05
+                    //Left          : 12 01 00 00 00 00 03 0F 0A
+                    //Right         : 12 01 00 00 00 00 03 0F 1E
+                    //Left          : 12 03 00 00 00 00 03 0F 07
+
+                    if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
+                    {
+                        buffer[7] = 1; // align top (vertial)
+                    }
+                    else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
+                    {
+                        buffer[7] = 8; // center (vertical)
+                    }
+
+                    if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an1}"))
+                    {
+                        buffer[8] = 2; // align left (horizontal)
+                    }
+                    else if (text.StartsWith("{\\an9}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an3}"))
+                    {
+                        buffer[8] = 0x1e; // align right (vertical)
+                    }
+
+                    int startTag = text.IndexOf('}');
+                    if (text.StartsWith("{\\") && startTag > 0 && startTag < 10)
+                    {
+                        text = text.Remove(0, startTag + 1);
+                    }
+
+                    var textBytes = new List<byte>();
+                    var italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
+                    text = Utilities.RemoveHtmlTags(text);
+                    int j = 0;
+                    if (italic)
+                        textBytes.Add(0xd0);
+                    while (j < text.Length)
+                    {
+                        if (text.Substring(j).StartsWith(Environment.NewLine))
+                        {
+                            j += Environment.NewLine.Length;
+                            textBytes.Add(0);
+                            textBytes.Add(0);
+                            textBytes.Add(0);
+                            textBytes.Add(0);
+                            if (italic)
+                                textBytes.Add(0xd0);
+                        }
+                        else
+                        {
+                            int idx = LatinLetters.IndexOf(text.Substring(j, 1));
+                            if (idx >= 0)
+                                textBytes.Add((byte)LatinCodes[idx]);
+                            else
+                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
+
+                            j++;
+                        }
+                    }
+
+                    int length = textBytes.Count + 20;
+                    long end = fs.Position + length;
+                    fs.WriteByte((byte)(length));
+
+                    fs.WriteByte(0x62); // ?
+
+                    WriteTime(fs, p.StartTime);
+                    WriteTime(fs, p.EndTime);
+
+                    fs.Write(buffer, 0, buffer.Length); // styles
+
+                    foreach (byte b in textBytes) // text
+                        fs.WriteByte(b);
+
+                    while (end > fs.Position)
+                        fs.WriteByte(0);
+                }
             }
-            fs.Close();
         }
 
         private static void WriteTime(FileStream fs, TimeCode timeCode)
