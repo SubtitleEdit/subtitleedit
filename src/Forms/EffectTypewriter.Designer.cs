@@ -37,7 +37,7 @@
             this.labelEndDelay = new System.Windows.Forms.Label();
             this.numericUpDownDelay = new System.Windows.Forms.NumericUpDown();
             this.labelTM = new System.Windows.Forms.Label();
-            this.labelTotalMillisecs = new System.Windows.Forms.Label();
+            this.labelTotalMilliseconds = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDelay)).BeginInit();
             this.SuspendLayout();
             // 
@@ -95,7 +95,7 @@
             this.labelEndDelay.Name = "labelEndDelay";
             this.labelEndDelay.Size = new System.Drawing.Size(140, 13);
             this.labelEndDelay.TabIndex = 32;
-            this.labelEndDelay.Text = "End delay in millisecs.:";
+            this.labelEndDelay.Text = "End delay in milliseconds:";
             this.labelEndDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // numericUpDownDelay
@@ -127,24 +127,24 @@
             this.labelTM.Name = "labelTM";
             this.labelTM.Size = new System.Drawing.Size(140, 13);
             this.labelTM.TabIndex = 36;
-            this.labelTM.Text = "Total millisecs.:";
+            this.labelTM.Text = "Total milliseconds:";
             this.labelTM.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // labelTotalMillisecs
+            // labelTotalMilliseconds
             // 
-            this.labelTotalMillisecs.AutoSize = true;
-            this.labelTotalMillisecs.Location = new System.Drawing.Point(159, 23);
-            this.labelTotalMillisecs.Name = "labelTotalMillisecs";
-            this.labelTotalMillisecs.Size = new System.Drawing.Size(90, 13);
-            this.labelTotalMillisecs.TabIndex = 37;
-            this.labelTotalMillisecs.Text = "labelTotalMillisecs";
+            this.labelTotalMilliseconds.AutoSize = true;
+            this.labelTotalMilliseconds.Location = new System.Drawing.Point(159, 23);
+            this.labelTotalMilliseconds.Name = "labelTotalMilliseconds";
+            this.labelTotalMilliseconds.Size = new System.Drawing.Size(90, 13);
+            this.labelTotalMilliseconds.TabIndex = 37;
+            this.labelTotalMilliseconds.Text = "labelTotalMilliseconds";
             // 
             // EffectTypewriter
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(433, 179);
-            this.Controls.Add(this.labelTotalMillisecs);
+            this.Controls.Add(this.labelTotalMilliseconds);
             this.Controls.Add(this.labelTM);
             this.Controls.Add(this.numericUpDownDelay);
             this.Controls.Add(this.labelEndDelay);
@@ -178,6 +178,6 @@
         private System.Windows.Forms.Label labelEndDelay;
         private System.Windows.Forms.NumericUpDown numericUpDownDelay;
         private System.Windows.Forms.Label labelTM;
-        private System.Windows.Forms.Label labelTotalMillisecs;
+        private System.Windows.Forms.Label labelTotalMilliseconds;
     }
 }

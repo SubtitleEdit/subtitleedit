@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Forms
             _paragraph = paragraph;
 
             labelPreview.Text = paragraph.Text;
-            labelTotalMillisecs.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / 1000);
+            labelTotalMilliseconds.Text = string.Format("{0:#,##0.000}", paragraph.Duration.TotalMilliseconds / 1000);
             numericUpDownDelay.Maximum = (decimal)((paragraph.Duration.TotalMilliseconds - 500) / 1000);
             numericUpDownDelay.Minimum = 0;
 

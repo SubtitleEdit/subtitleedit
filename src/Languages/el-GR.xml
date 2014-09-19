@@ -354,7 +354,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Εφέ γραφομηχανής</Title>
     <TotalMilliseconds>Συνολικά χιλ. δευτερολέπτου:</TotalMilliseconds>
-    <EndDelayInMillisecs>Καθυστέρηση λήξης σε χιλ. δευτερολέπτου:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Καθυστέρηση λήξης σε χιλ. δευτερολέπτου:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Εξαγωγή προσαρμοσμένης μορφής κειμένου</Title>

@@ -351,7 +351,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
   <EffectTypewriter>
     <Title>打字機效果</Title>
     <TotalMilliseconds>總毫秒數:</TotalMilliseconds>
-    <EndDelayInMillisecs>結尾延遲 (毫秒):</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>結尾延遲 (毫秒):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>匯出自訂文字格式</Title>

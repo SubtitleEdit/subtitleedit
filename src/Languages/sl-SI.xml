@@ -336,7 +336,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Učinek pisalnega stroja</Title>
     <TotalMilliseconds>Skupaj milisek.:</TotalMilliseconds>
-    <EndDelayInMillisecs>Končaj zakasnitev v milisek.:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Končaj zakasnitev v milisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Izvozi navaden format besedila</Title>

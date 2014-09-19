@@ -1581,7 +1581,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        public double FindDataBelowThresshold(int thresshold, double durationInSeconds)
+        public double FindDataBelowThreshold(int threshold, double durationInSeconds)
         {
             int begin = SecondsToXPosition(_currentVideoPositionSeconds + 1);
             int length = SecondsToXPosition(durationInSeconds);
@@ -1589,7 +1589,7 @@ namespace Nikse.SubtitleEdit.Controls
             int hitCount = 0;
             for (int i = begin; i < _wavePeaks.AllSamples.Count; i++)
             {
-                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= thresshold)
+                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= threshold)
                     hitCount++;
                 else
                     hitCount = 0;
@@ -1611,7 +1611,7 @@ namespace Nikse.SubtitleEdit.Controls
             return -1;
         }
 
-        public double FindDataBelowThressholdBack(int thresshold, double durationInSeconds)
+        public double FindDataBelowThresholdBack(int threshold, double durationInSeconds)
         {
             int begin = SecondsToXPosition(_currentVideoPositionSeconds - 1);
             int length = SecondsToXPosition(durationInSeconds);
@@ -1619,7 +1619,7 @@ namespace Nikse.SubtitleEdit.Controls
             int hitCount = 0;
             for (int i = begin; i > 0; i--)
             {
-                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= thresshold)
+                if (i > 0 && i < _wavePeaks.AllSamples.Count && Math.Abs(_wavePeaks.AllSamples[i]) <= threshold)
                     hitCount++;
                 else
                     hitCount = 0;
@@ -1808,8 +1808,8 @@ namespace Nikse.SubtitleEdit.Controls
                 average += Math.Abs(_wavePeaks.AllSamples[k]);
             average = average / (_wavePeaks.AllSamples.Count - begin);
 
-            int maxThresshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
-            int silenceThresshold = (int)(average * (mininumVolumePercent / 100.0));
+            int maxThreshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
+            int silenceThreshold = (int)(average * (mininumVolumePercent / 100.0));
 
             int length50Ms = SecondsToXPosition(0.050);
             double secondsPerParagraph = defaultMilliseconds / 1000.0;
@@ -1823,7 +1823,7 @@ namespace Nikse.SubtitleEdit.Controls
                     var currentLengthInSeconds = XPositionToSeconds(i - begin) - StartPositionSeconds;
                     if (currentLengthInSeconds > 1.0)
                     {
-                        subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, true, i);
+                        subtitleOn = EndParagraphDueToLowVolume(silenceThreshold, begin, true, i);
                         if (!subtitleOn)
                         {
                             begin = i + minBetween;
@@ -1834,7 +1834,7 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         for (int j = 0; j < 20; j++)
                         {
-                            subtitleOn = EndParagraphDueToLowVolume(silenceThresshold, begin, true, i + (j * length50Ms));
+                            subtitleOn = EndParagraphDueToLowVolume(silenceThreshold, begin, true, i + (j * length50Ms));
                             if (!subtitleOn)
                             {
                                 i += (j * length50Ms);
@@ -1856,27 +1856,23 @@ namespace Nikse.SubtitleEdit.Controls
                 else
                 {
                     double avgVol = GetAverageVolumeForNextMilliseconds(i, 100);
-                    if (avgVol > silenceThresshold)
+                    if (avgVol > silenceThreshold)
                     {
-                        if (avgVol < maxThresshold)
+                        if (avgVol < maxThreshold)
                         {
                             subtitleOn = true;
                             begin = i;
                         }
-                        //                        else
-                        //                        {
-                        //                            MessageBox.Show("Too much");
-                        //                        }
                     }
                 }
                 i++;
             }
         }
 
-        private bool EndParagraphDueToLowVolume(double silenceThresshold, int begin, bool subtitleOn, int i)
+        private bool EndParagraphDueToLowVolume(double silenceThreshold, int begin, bool subtitleOn, int i)
         {
             double avgVol = GetAverageVolumeForNextMilliseconds(i, 100);
-            if (avgVol < silenceThresshold)
+            if (avgVol < silenceThreshold)
             {
                 var p = new Paragraph(string.Empty, (XPositionToSeconds(begin) - StartPositionSeconds) * 1000.0, (XPositionToSeconds(i) - StartPositionSeconds) * 1000.0);
                 _subtitle.Paragraphs.Add(p);

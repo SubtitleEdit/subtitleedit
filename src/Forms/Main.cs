@@ -10772,12 +10772,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceForward)
             {
-                audioVisualizer.FindDataBelowThresshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceBack)
             {
-                audioVisualizer.FindDataBelowThressholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
+                audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;
             }
             else if (_mainInsertBefore == e.KeyData && inListView)
@@ -19007,11 +19007,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (form.SeekForward)
                 {
-                    audioVisualizer.FindDataBelowThresshold(form.VolumeBelow, form.SecondsDuration);
+                    audioVisualizer.FindDataBelowThreshold(form.VolumeBelow, form.SecondsDuration);
                 }
                 else
                 {
-                    audioVisualizer.FindDataBelowThressholdBack(form.VolumeBelow, form.SecondsDuration);
+                    audioVisualizer.FindDataBelowThresholdBack(form.VolumeBelow, form.SecondsDuration);
                 }
             }
         }

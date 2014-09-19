@@ -288,12 +288,12 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Karaoke efekti</Title>
     <ChooseColor>Renk seç:</ChooseColor>
     <TotalMilliseconds>Toplam milisaniye:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in millisecs.:</EndDelayInMilliseconds>
+    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Daktilo efekti</Title>
     <TotalMilliseconds>Toplam milisaniye.:</TotalMilliseconds>
-    <EndDelayInMillisecs>End delay in millisecs.:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>BDN XML/PNG dışa aktar</Title>

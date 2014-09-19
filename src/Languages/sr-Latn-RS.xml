@@ -293,7 +293,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Efekat pisaće mašine</Title>
     <TotalMilliseconds>Ukupno vreme:</TotalMilliseconds>
-    <EndDelayInMillisecs>Završno kašnjenje:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Završno kašnjenje:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>Izvoz BDN XML/PNG</Title>
