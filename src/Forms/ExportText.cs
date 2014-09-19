@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (showLineNumbers)
                 {
-                    sb.Append(p.Number.ToString());
+                    sb.Append(p.Number);
                     if (addNewlineAfterLineNumber)
                         sb.AppendLine();
                     else
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else if (timeCodeHHMMSSFF)
                         sb.Append(p.StartTime.ToHHMMSSFF() + timeCodeSeperator + p.EndTime.ToHHMMSSFF());
                     else
-                        sb.Append(p.StartTime.TotalMilliseconds.ToString() + timeCodeSeperator + p.EndTime.TotalMilliseconds.ToString());
+                        sb.Append(p.StartTime.TotalMilliseconds + timeCodeSeperator + p.EndTime.TotalMilliseconds);
 
                     if (addNewlineAfterTimeCodes)
                         sb.AppendLine();

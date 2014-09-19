@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (next == null || next.StartTime.TotalMilliseconds - 200 < p.EndTime.TotalMilliseconds)
                 {
                     sb.Append("[\"");
-                    sb.Append(Convert.ToInt64(p.EndTime.TotalMilliseconds).ToString());
+                    sb.Append(Convert.ToInt64(p.EndTime.TotalMilliseconds));
                     sb.Append("\",\"");
                     sb.Append("\"]");
                     sb.Append(',');

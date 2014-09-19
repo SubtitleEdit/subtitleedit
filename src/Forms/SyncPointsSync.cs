@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _subtitle.Paragraphs[i].Duration.TotalMilliseconds;
                     SubtitleListview1.SetStartTime(i, p);
 
-                    var item = new ListBoxSyncPoint() { Index = i, Text = _subtitle.Paragraphs[i].Number.ToString() + " - " + p.StartTime };
+                    var item = new ListBoxSyncPoint { Index = i, Text = _subtitle.Paragraphs[i].Number + " - " + p.StartTime };
                     listBoxSyncPoints.Items.Add(item);
                     SubtitleListview1.SetBackgroundColor(i, Color.Green);
                     SubtitleListview1.SetNumber(i, "* * * *");

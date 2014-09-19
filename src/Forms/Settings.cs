@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Empty;
 
             Uri pathUri = new Uri(fileName);
-            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!folder.EndsWith(Path.DirectorySeparatorChar))
                 folder += Path.DirectorySeparatorChar;
             Uri folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));

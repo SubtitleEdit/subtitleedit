@@ -70,19 +70,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string startTime = "0";
                     int index = indexOfStart + 10;
-                    while (index < line.Length && "0123456789\"'.,".Contains(line[index].ToString()))
+                    while (index < line.Length && @"0123456789""'.,".Contains(line[index]))
                     {
-                        if ("0123456789,.".Contains(line[index].ToString()))
-                            startTime += line[index].ToString();
+                        if (@"0123456789,.".Contains(line[index]))
+                            startTime += line[index];
                         index++;
                     }
 
                     string duration = "0";
                     index = indexOfDuration + 9;
-                    while (index < line.Length && "0123456789\"'.,".Contains(line[index].ToString()))
+                    while (index < line.Length && @"0123456789""'.,".Contains(line[index]))
                     {
-                        if ("0123456789,.".Contains(line[index].ToString()))
-                            duration += line[index].ToString();
+                        if (@"0123456789,.".Contains(line[index]))
+                            duration += line[index];
                         index++;
                     }
 

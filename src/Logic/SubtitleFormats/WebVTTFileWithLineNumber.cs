@@ -61,7 +61,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string style = string.Empty;
                 if (!string.IsNullOrEmpty(p.Extra) && subtitle.Header == "WEBVTT FILE")
                     style = p.Extra;
-                sb.AppendLine(count.ToString());
+                sb.Append(count);
+                sb.AppendLine();
                 sb.AppendLine(string.Format(paragraphWriteFormat, start, end, FormatText(p), style, Environment.NewLine));
                 count++;
             }

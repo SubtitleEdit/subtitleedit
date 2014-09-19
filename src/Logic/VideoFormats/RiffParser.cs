@@ -265,7 +265,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SkipData(bytesleft);
                 bytesleft = 0;
                 throw new RiffParserException("Element size mismatch for element " + FromFourCC(FourCC)
-                + " need " + size.ToString() + " but have only " + bytesleft.ToString());
+                + " need " + size + " but have only " + bytesleft);
             }
 
             // Examine the element, is it a list or a chunk

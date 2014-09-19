@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             public ComboBoxItem(string text, string value)
             {
                 if (text.Length > 1)
-                    text = text.Substring(0, 1).ToUpper() + text.Substring(1).ToLower();
+                    text = char.ToUpper(text[0]) + text.Substring(1).ToLower();
                 Text = text;
 
                 Value = value;
@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (indexOfP >= 0 && indexOfP < 4)
                         cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString.Trim(), StringComparison.Ordinal));
                     cleanText = cleanText.Replace(_splitterString.Trim(), string.Empty).Trim();
-                    if (cleanText.Contains("\n") && !cleanText.Contains("\r"))
+                    if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
                     cleanText = cleanText.Replace(_newlineString.Trim(), Environment.NewLine);

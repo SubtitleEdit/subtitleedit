@@ -351,12 +351,11 @@ namespace Nikse.SubtitleEdit.Logic
             if (position + 2 > s.Length)
                 return false;
 
-            const string numbers = "1234567890";
-            if (",.".Contains(s[position].ToString()))
+            if (@",.".Contains(s[position]))
             {
                 if (position > 0 && position < s.Length - 1)
                 {
-                    return numbers.Contains(s[position - 1].ToString()) && numbers.Contains(s[position + 1].ToString());
+                    return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
                 }
             }
             return false;
@@ -377,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic
             char nextChar = ' ';
             if (index < s.Length)
                 nextChar = s[index];
-            if (!"\r\n\t ".Contains(nextChar.ToString()))
+            if (!"\r\n\t ".Contains(nextChar))
                 return false;
 
             // Some words we don't like breaking after
@@ -462,8 +461,8 @@ namespace Nikse.SubtitleEdit.Logic
             int six = 0;
             while (six < s.Length)
             {
-                string letter = s[six].ToString();
-                bool tagFound = letter == "<" && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
+                var letter = s[six];
+                bool tagFound = letter == '<' && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
                                                 s.Substring(six).StartsWith("</font") || s.Substring(six).StartsWith("</FONT") ||
                                                 s.Substring(six).StartsWith("</Font") || s.Substring(six).StartsWith("</Font") ||
                                                 s.Substring(six).StartsWith("<u") || s.Substring(six).StartsWith("</u") ||
@@ -606,8 +605,8 @@ namespace Nikse.SubtitleEdit.Logic
             int six = 0;
             while (six < s.Length)
             {
-                string letter = s[six].ToString();
-                bool tagFound = letter == "<" && (s.Substring(six).StartsWith("<font ", StringComparison.Ordinal) || s.Substring(six).StartsWith("</font ", StringComparison.Ordinal) ||
+                var letter = s[six];
+                bool tagFound = letter == '<' && (s.Substring(six).StartsWith("<font ", StringComparison.Ordinal) || s.Substring(six).StartsWith("</font ", StringComparison.Ordinal) ||
                                                 s.Substring(six).StartsWith("</font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</FONT", StringComparison.Ordinal) ||
                                                 s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) ||
                                                 s.Substring(six).StartsWith("<u", StringComparison.Ordinal) || s.Substring(six).StartsWith("</u", StringComparison.Ordinal) ||
@@ -664,7 +663,7 @@ namespace Nikse.SubtitleEdit.Logic
                             string rest = s.Substring(mid - j + 1).TrimStart();
                             if (rest.Length > 0 && char.IsUpper(rest[0]))
                             {
-                                if (mid - j > 5 && s[mid - j - 1] == ' ' && "!?.".Contains(s[mid - j - 2].ToString()))
+                                if (mid - j > 5 && s[mid - j - 1] == ' ' && @"!?.".Contains(s[mid - j - 2]))
                                 {
                                     splitPos = mid - j;
                                     break;
@@ -681,18 +680,18 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (".!?".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
+                        if (@".!?".Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && CanBreak(s, mid + j + 1, language))
                         {
                             splitPos = mid + j + 1;
-                            if (".!?0123456789".Contains(s[splitPos].ToString()))
+                            if (@".!?0123456789".Contains(s[splitPos]))
                             { // do not break double/tripple end lines like "!!!" or "..."
                                 splitPos++;
-                                if (".!?0123456789".Contains(s[mid + j + 1].ToString()))
+                                if (@".!?0123456789".Contains(s[mid + j + 1]))
                                     splitPos++;
                             }
                             break;
                         }
-                        if (".!?".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
+                        if (@".!?".Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && CanBreak(s, mid - j, language))
                         {
                             splitPos = mid - j;
                             splitPos++;
@@ -713,25 +712,25 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (mid + j + 1 < s.Length && mid + j > 0)
                     {
-                        if (".!?, ".Contains(s[mid + j].ToString()) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j, language))
+                        if (@".!?, ".Contains(s[mid + j]) && !IsPartOfNumber(s, mid + j) && s.Length > mid + j + 2 && CanBreak(s, mid + j, language))
                         {
                             splitPos = mid + j;
-                            if (" .!?".Contains(s[mid + j + 1].ToString()))
+                            if (@" .!?".Contains(s[mid + j + 1]))
                             {
                                 splitPos++;
-                                if (" .!?".Contains(s[mid + j + 2].ToString()))
+                                if (@" .!?".Contains(s[mid + j + 2]))
                                     splitPos++;
                             }
                             break;
                         }
-                        if (".!?, ".Contains(s[mid - j].ToString()) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j, language))
+                        if (@".!?, ".Contains(s[mid - j]) && !IsPartOfNumber(s, mid - j) && s.Length > mid + j + 2 && CanBreak(s, mid - j, language))
                         {
                             splitPos = mid - j;
-                            if (".!?".Contains(s[splitPos].ToString()))
+                            if (@".!?".Contains(s[splitPos]))
                                 splitPos--;
-                            if (".!?".Contains(s[splitPos].ToString()))
+                            if (@".!?".Contains(s[splitPos]))
                                 splitPos--;
-                            if (".!?".Contains(s[splitPos].ToString()))
+                            if (@".!?".Contains(s[splitPos]))
                                 splitPos--;
                             break;
                         }
@@ -763,9 +762,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var sb = new StringBuilder();
                 int six = 0;
-                for (int i = 0; i < s.Length; i++)
+                foreach (var letter in s)
                 {
-                    string letter = s[i].ToString();
                     if (Environment.NewLine.Contains(letter))
                     {
                         sb.Append(letter);
@@ -1961,7 +1959,7 @@ namespace Nikse.SubtitleEdit.Logic
                     return;
                 }
 
-                sb.Append(line.Length.ToString());
+                sb.Append(line.Length);
                 if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     label.ForeColor = Color.Red;
                 else if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength - 5)
@@ -3482,9 +3480,9 @@ namespace Nikse.SubtitleEdit.Logic
                 string s = line.Trim();
                 for (int i = 0; i < s.Length; i++)
                 {
-                    if (s.Substring(i, 1) == ")")
+                    if (s[i] == ')')
                         s = s.Remove(i, 1).Insert(i, "(");
-                    else if (s.Substring(i, 1) == "(")
+                    else if (s[i] == '(')
                         s = s.Remove(i, 1).Insert(i, ")");
                 }
 
@@ -3492,9 +3490,9 @@ namespace Nikse.SubtitleEdit.Logic
                 string numbers = string.Empty;
                 for (int i = 0; i < s.Length; i++)
                 {
-                    if (numbersOn && reverseChars.Contains(s.Substring(i, 1)))
+                    if (numbersOn && reverseChars.Contains(s[i]))
                     {
-                        numbers = s.Substring(i, 1) + numbers;
+                        numbers = s[i] + numbers;
                     }
                     else if (numbersOn)
                     {
@@ -3502,9 +3500,9 @@ namespace Nikse.SubtitleEdit.Logic
                         s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers);
                         numbers = string.Empty;
                     }
-                    else if (reverseChars.Contains(s.Substring(i, 1)))
+                    else if (reverseChars.Contains(s[i]))
                     {
-                        numbers = s.Substring(i, 1) + numbers;
+                        numbers = s[i] + numbers;
                         numbersOn = true;
                     }
                 }
@@ -3808,29 +3806,29 @@ namespace Nikse.SubtitleEdit.Logic
                         list.Add(Environment.NewLine);
                         i += Environment.NewLine.Length;
                     }
-                    else if (s.Substring(i, 1) == " ")
+                    else if (s[i] == ' ')
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
                         word = new StringBuilder();
                         i++;
                     }
-                    else if (endChars.Contains(s.Substring(i, 1)) && (word.Length == 0 || endChars.Contains(word.ToString().Substring(0, 1))))
+                    else if (endChars.Contains(s[i]) && (word.Length == 0 || endChars.Contains(word[0])))
                     {
-                        word.Append(s.Substring(i, 1));
+                        word.Append(s[i]);
                         i++;
                     }
-                    else if (endChars.Contains(s.Substring(i, 1)))
+                    else if (endChars.Contains(s[i]))
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
                         word = new StringBuilder();
-                        word.Append(s.Substring(i, 1));
+                        word.Append(s[i]);
                         i++;
                     }
                     else
                     {
-                        word.Append(s.Substring(i, 1));
+                        word.Append(s[i]);
                         i++;
                     }
                 }
@@ -3910,10 +3908,10 @@ namespace Nikse.SubtitleEdit.Logic
                 return p;
 
             var sb = new StringBuilder();
-            for (int i = 0; i < p.Length; i++)
+            foreach (var c in p)
             {
-                if ("0123456789".Contains(p.Substring(i, 1)))
-                    sb.Append(p.Substring(i, 1));
+                if (char.IsDigit(c))
+                    sb.Append(c);
             }
             return sb.ToString();
         }
@@ -4064,16 +4062,16 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         string before = string.Empty;
                         int k = idx - 1;
-                        while (k >= 0 && Utilities.AllLettersAndNumbers.Contains(text[k].ToString()))
+                        while (k >= 0 && Utilities.AllLettersAndNumbers.Contains(text[k]))
                         {
-                            before = text[k].ToString() + before;
+                            before = text[k] + before;
                             k--;
                         }
                         string after = string.Empty;
                         k = idx + 2;
-                        while (k < text.Length && Utilities.AllLetters.Contains(text[k].ToString()))
+                        while (k < text.Length && Utilities.AllLetters.Contains(text[k]))
                         {
-                            after = after + text[k].ToString();
+                            after = after + text[k];
                             k++;
                         }
                         if (after.Length > 0 && after.Equals(before, StringComparison.OrdinalIgnoreCase))

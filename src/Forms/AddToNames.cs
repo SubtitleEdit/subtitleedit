@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
                 if (textBoxAddName.Text.Length > 1)
-                    textBoxAddName.Text = textBoxAddName.Text.Substring(0, 1).ToUpper() + textBoxAddName.Text.Substring(1);
+                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
             }
 
             comboBoxDictionaries.Items.Clear();
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
                 if (textBoxAddName.Text.Length > 1)
-                    textBoxAddName.Text = textBoxAddName.Text.Substring(0, 1).ToUpper() + textBoxAddName.Text.Substring(1);
+                    textBoxAddName.Text = char.ToUpper(textBoxAddName.Text[0]) + textBoxAddName.Text.Substring(1);
             }
 
             comboBoxDictionaries.Items.Clear();

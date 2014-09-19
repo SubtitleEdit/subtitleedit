@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -9,8 +10,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Watermark : Form
     {
-        private const string zeroWhiteSpace = "\u200B";
-        private const string zeroWidthNoBreakSpace = "\uFEFF";
+        private const char zeroWhiteSpace = '\u200B';
+        private const char zeroWidthNoBreakSpace = '\uFEFF';
 
         private int _firstSelectedIndex;
 
@@ -68,15 +69,15 @@ namespace Nikse.SubtitleEdit.Forms
             int letter = 0;
             while (i < input.Length)
             {
-                string s = input.Substring(i, 1);
-                if (s == zeroWhiteSpace)
+                var c = input[i];
+                if (c == zeroWhiteSpace)
                 {
                     if (letter > 0)
                         sb.Append(Encoding.ASCII.GetString(new byte[] { (byte)letter }));
                     letterOn = true;
                     letter = 0;
                 }
-                else if (s == zeroWidthNoBreakSpace && letterOn)
+                else if (c == zeroWidthNoBreakSpace && letterOn)
                 {
                     letter++;
                 }
@@ -166,8 +167,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void RemoveWaterMark(Subtitle subtitle)
         {
+            var zws = zeroWhiteSpace.ToString(CultureInfo.InvariantCulture);
+            var zwnbs = zeroWidthNoBreakSpace.ToString(CultureInfo.InvariantCulture);
             foreach (Paragraph p in subtitle.Paragraphs)
-                p.Text = p.Text.Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+                p.Text = p.Text.Replace(zws, string.Empty).Replace(zwnbs, string.Empty);
         }
 
         private void buttonGenerate_Click(object sender, EventArgs e)

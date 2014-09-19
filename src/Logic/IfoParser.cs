@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
                 audioStream.CodingMode = ArrayOfAudioMode[(BinToInt(MidStr(data, 0, 3)))];
                 audioStream.Channels = BinToInt(MidStr(data, 13, 3)) + 1;
                 _fs.Read(buffer, 0, 2);
-                audioStream.LangageCode = Convert.ToChar(buffer[0]).ToString() + Convert.ToChar(buffer[1]).ToString();
+                audioStream.LangageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 if (ArrayOfLanguageCode.Contains(audioStream.LangageCode))
                     audioStream.Langage = ArrayOfLanguage[ArrayOfLanguageCode.IndexOf(audioStream.LangageCode)];
                 _fs.Seek(1, SeekOrigin.Current);
@@ -172,7 +172,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < _vtsVobs.NumberOfSubtitles; i++)
             {
                 _fs.Read(buffer, 0, 2);
-                string languageTwoLetter = Convert.ToChar(buffer[0]).ToString() + Convert.ToChar(buffer[1]).ToString();
+                var languageTwoLetter = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 _vtsVobs.Subtitles.Add(InterpretLangageCode(languageTwoLetter));
 
                 string subtitleFormat = string.Empty;

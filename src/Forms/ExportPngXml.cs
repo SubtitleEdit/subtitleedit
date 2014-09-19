@@ -1642,7 +1642,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    sb.Append(text.Substring(i, 1));
+                    sb.Append(text[i]);
                 }
                 i++;
             }
@@ -2201,7 +2201,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     else
                     {
-                        sb.Append(text.Substring(i, 1));
+                        sb.Append(text[i]);
                     }
                     i++;
                 }

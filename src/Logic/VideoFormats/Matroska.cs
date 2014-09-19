@@ -930,12 +930,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                     if (ebmlId == 0x5031)// ContentEncodingOrder
                     {
                         int contentEncodingOrder = _f.ReadByte() * 256 + _f.ReadByte();
-                        System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder.ToString());
+                        System.Diagnostics.Debug.WriteLine("ContentEncodingOrder: " + contentEncodingOrder);
                     }
                     else if (ebmlId == 0x5032)// ContentEncodingScope
                     {
                         int contentEncodingScope = _f.ReadByte() * 256 + _f.ReadByte();
-                        System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope.ToString());
+                        System.Diagnostics.Debug.WriteLine("ContentEncodingScope: " + contentEncodingScope);
                     }
                     else if (ebmlId == 0x5033)// ContentEncodingType
                     {
@@ -957,7 +957,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                             else if (contentCompressionId == 0x4255)
                             {
                                 int contentCompSettings = _f.ReadByte() * 256 + _f.ReadByte();
-                                System.Diagnostics.Debug.WriteLine("contentCompSettings: " + contentCompSettings.ToString());
+                                System.Diagnostics.Debug.WriteLine("contentCompSettings: " + contentCompSettings);
                             }
 
                         }

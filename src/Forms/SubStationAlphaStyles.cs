@@ -695,7 +695,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (indexOfEvents > 0)
                 {
                     int i = indexOfEvents - 1;
-                    while (i > 0 && Environment.NewLine.Contains(Header[i].ToString()))
+                    while (i > 0 && Environment.NewLine.Contains(Header[i]))
                         i--;
                     Header = Header.Insert(i + 1, Environment.NewLine + newLine);
                 }
@@ -726,7 +726,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count.ToString());
+                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count);
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
@@ -1165,14 +1165,14 @@ namespace Nikse.SubtitleEdit.Forms
                             if (GetSsaStyle(style.Name).LoadedFromHeader)
                             {
                                 int count = 2;
-                                bool doRepeat = GetSsaStyle(style.Name + count.ToString()).LoadedFromHeader;
+                                bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
                                 while (doRepeat)
                                 {
-                                    doRepeat = GetSsaStyle(style.Name + count.ToString()).LoadedFromHeader;
+                                    doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
                                     count++;
                                 }
-                                style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count.ToString() + ",");
-                                style.Name = style.Name + count.ToString();
+                                style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
+                                style.Name = style.Name + count;
                             }
 
                             _doUpdate = false;

@@ -78,9 +78,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('[');
-                sb.Append(((int)(p.StartTime.TotalMilliseconds / 100)).ToString());
+                sb.Append((int)(p.StartTime.TotalMilliseconds / 100));
                 sb.Append("][");
-                sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)).ToString());
+                sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)));
                 sb.Append(']');
 
                 string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);

@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Fill(subtitle);
             _guess = subtitle.Paragraphs[index].StartTime.TimeSpan;
             subtitleListView1.Items[index].Selected = true;
-            Text = string.Format(Configuration.Settings.Language.SetSyncPoint.Title, subtitle.Paragraphs[index].Number.ToString() + ": " + subtitle.Paragraphs[index]);
+            Text = string.Format(Configuration.Settings.Language.SetSyncPoint.Title, subtitle.Paragraphs[index].Number + ": " + subtitle.Paragraphs[index]);
             labelSubtitle.Text = string.Empty;
             labelVideoFileName.Text = Configuration.Settings.Language.General.NoVideoLoaded;
 

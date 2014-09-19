@@ -1228,7 +1228,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string latinLetters = sb + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!latinLetters.Contains(ch.ToString()))
+                            if (!latinLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1240,7 +1240,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         allOK = true;
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch.ToString()))
+                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1256,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string arabicLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!arabicLetters.Contains(ch.ToString()))
+                            if (!arabicLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1272,7 +1272,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string hebrewLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!hebrewLetters.Contains(ch.ToString()))
+                            if (!hebrewLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1288,7 +1288,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string cyrillicLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!cyrillicLetters.Contains(ch.ToString()))
+                            if (!cyrillicLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)

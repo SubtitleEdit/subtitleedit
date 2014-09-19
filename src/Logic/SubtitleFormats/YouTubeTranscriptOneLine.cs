@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim('–', '.', ';', ':').Trim();
-                    if (text.Length > 0 && "0123456789".Contains(text[0].ToString()))
+                    if (text.Length > 0 && char.IsDigit(text[0]))
                         _errorCount++;
                 }
                 else

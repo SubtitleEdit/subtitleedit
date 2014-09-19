@@ -4443,28 +4443,28 @@ namespace Nikse.SubtitleEdit.Forms
         private string FixNocrHardcodedStuff(string line)
         {
             // fix I/l
-            int start = line.IndexOf("I", StringComparison.Ordinal);
+            int start = line.IndexOf('I');
             while (start > 0)
             {
-                if (start > 0 && line[start - 1].ToString() != line[start - 1].ToString().ToUpper())
+                if (start > 0 && char.IsLower(line[start - 1]))
                     line = line.Remove(start, 1).Insert(start, "l");
-                else if (start < line.Length - 1 && line[start + 1].ToString() != line[start + 1].ToString().ToUpper())
+                else if (start < line.Length - 1 && char.IsLower(line[start + 1]))
                     line = line.Remove(start, 1).Insert(start, "l");
                 start++;
-                start = line.IndexOf("I", start);
+                start = line.IndexOf('I', start);
             }
-            start = line.IndexOf("l");
+            start = line.IndexOf('l');
             while (start > 0)
             {
-                if (start < line.Length - 1 && line[start + 1].ToString() != line[start + 1].ToString().ToLower())
+                if (start < line.Length - 1 && char.IsUpper(line[start + 1]))
                     line = line.Remove(start, 1).Insert(start, "I");
                 start++;
-                start = line.IndexOf("l", start, StringComparison.Ordinal);
+                start = line.IndexOf('l', start);
             }
             if (line.Contains('l'))
             {
                 if (line.StartsWith('l'))
-                    line = line.Remove(0, 1).Insert(0, "I");
+                    line = @"I" + line.Substring(1);
                 if (line.StartsWith("<i>l"))
                     line = line.Remove(3, 1).Insert(3, "I");
                 if (line.StartsWith("- l"))
@@ -5598,10 +5598,10 @@ namespace Nikse.SubtitleEdit.Forms
             var nbmp = new NikseBitmap(bmp);
             nbmp.ReplaceYellowWithWhite(); // optimized replace
 
-            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
+            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
             var b = nbmp.GetBitmap();
             b.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
-            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
+            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
             b.Dispose();
 
             var process = new Process();
@@ -5713,7 +5713,7 @@ namespace Nikse.SubtitleEdit.Forms
                            Split(new[] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
-                if (s.Length == 1 && !"♪♫-:'”1234567890&aAI\"".Contains(s))
+                if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
                     count++;
             }
             if (count > 0)
@@ -5996,7 +5996,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(1, 1) == " ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty)[1] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6004,7 +6004,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(2, 1) == " ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty)[2] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6128,7 +6128,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             string w = unItalicText.Substring(0, unItalicText.Length - 4);
                                             int wIdx = w.Length - 1;
-                                            while (wIdx >= 0 && !(" .,!?<>:;'-$@£()[]<>/\"".Contains(w[wIdx].ToString())))
+                                            while (wIdx >= 0 && !@" .,!?<>:;'-$@£()[]<>/""".Contains(w[wIdx]))
                                             {
                                                 wIdx--;
                                             }
@@ -6144,7 +6144,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             string w = unItalicText;
                                             int wIdx = w.Length - 1;
-                                            while (wIdx >= 0 && !(" .,!?<>:;'-$@£()[]<>/\"".Contains(w[wIdx].ToString())))
+                                            while (wIdx >= 0 && !@" .,!?<>:;'-$@£()[]<>/""".Contains(w[wIdx]))
                                             {
                                                 wIdx--;
                                             }
@@ -6307,7 +6307,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //if (!tmp.TrimEnd().EndsWith("..."))
                 //{
                 //    tmp = tmp.TrimEnd('.').TrimEnd();
-                //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp.Substring(tmp.Length - 1, 1)))
+                //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp[tmp.Length - 1]))
                 //    {
                 //        if (_nocrChars == null)
                 //            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
