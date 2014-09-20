@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
@@ -8,11 +7,8 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public const int HeaderSize = 512;
 
-        public string FileName { get; set; }
-        public long FileSizeInBytes { get; set; }
-        public long FilePosition { get; set; }
-
-        private Stream _stream;
+        private readonly Stream _stream;
+        private readonly long _fileSizeInBytes;
 
         public TarHeader(Stream stream)
         {
@@ -22,19 +18,31 @@ namespace Nikse.SubtitleEdit.Logic
             FilePosition = stream.Position;
 
             FileName = Encoding.ASCII.GetString(buffer, 0, 100).Replace("\0", string.Empty);
+            if (!string.IsNullOrEmpty(FileName))
+            {
+                var sizeInBytes = Encoding.ASCII.GetString(buffer, 124, 11);
+                long.TryParse(sizeInBytes, out _fileSizeInBytes);
+            }
+        }
 
-            string sizeInBytes = Encoding.ASCII.GetString(buffer, 124, 11);
-            if (!string.IsNullOrEmpty(FileName) && Utilities.IsInteger(sizeInBytes))
-                FileSizeInBytes = Convert.ToInt64(sizeInBytes, 8);
+        public string FileName { get; set; }
+
+        public long FilePosition { get; set; }
+
+        public long FileSizeInBytes
+        {
+            get
+            {
+                return _fileSizeInBytes;
+            }
         }
 
         public void WriteData(string fileName)
         {
-            byte[] buffer = new byte[FileSizeInBytes];
+            var buffer = new byte[_fileSizeInBytes];
             _stream.Position = FilePosition;
             _stream.Read(buffer, 0, buffer.Length);
             File.WriteAllBytes(fileName, buffer);
         }
-
     }
 }
