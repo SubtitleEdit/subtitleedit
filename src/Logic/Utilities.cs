@@ -2310,7 +2310,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (string s in namesEtcMultiWordList)
             {
-                if (s.IndexOf(word, StringComparison.Ordinal) >= 0 && text.IndexOf(s, StringComparison.Ordinal) >= 0)
+                if (s.Contains(word) && text.Contains(s))
                 {
                     if (s.StartsWith(word + " ", StringComparison.Ordinal) || s.EndsWith(" " + word, StringComparison.Ordinal) || s.Contains(" " + word + " "))
                         return true;
@@ -2574,7 +2574,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     int firstIndex = text.IndexOf(beginTag, StringComparison.Ordinal);
                     int lastIndex = text.LastIndexOf(beginTag, StringComparison.Ordinal);
-                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag) + Environment.NewLine.Length;
+                    int lastIndexWithNewLine = text.LastIndexOf(Environment.NewLine + beginTag, StringComparison.Ordinal) + Environment.NewLine.Length;
                     if (noOfLines == 2 && lastIndex == lastIndexWithNewLine && firstIndex < 2)
                         text = text.Replace(Environment.NewLine, "</i>" + Environment.NewLine) + "</i>";
                     else if (text.Length > lastIndex + endTag.Length)
@@ -3738,7 +3738,7 @@ namespace Nikse.SubtitleEdit.Logic
             int start = s.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
             if (start >= 0 && s.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
             {
-                int end = s.IndexOf(">", start, StringComparison.Ordinal);
+                int end = s.IndexOf('>', start);
                 if (end > 0)
                 {
                     string f = s.Substring(start, end - start);

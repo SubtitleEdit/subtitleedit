@@ -691,7 +691,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string newLine = oldStyle.RawLine;
                 newLine = newLine.Replace(oldStyle.Name + ",", newStyle.Name + ",");
 
-                int indexOfEvents = Header.IndexOf("[Events]");
+                int indexOfEvents = Header.IndexOf("[Events]", StringComparison.Ordinal);
                 if (indexOfEvents > 0)
                 {
                     int i = indexOfEvents - 1;
@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string line in lineArray)
                     lines.Add(line);
                 ssa.LoadSubtitle(sub, lines, string.Empty);
-                Header = Header.Remove(Header.IndexOf("[V4 Styles]")) + sub.Header.Substring(sub.Header.IndexOf("[V4 Styles]"));
+                Header = Header.Remove(Header.IndexOf("[V4 Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4 Styles]", StringComparison.Ordinal));
             }
             else
             {
@@ -813,7 +813,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string line in lineArray)
                     lines.Add(line);
                 ass.LoadSubtitle(sub, lines, string.Empty);
-                Header = Header.Remove(Header.IndexOf("[V4+ Styles]")) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]"));
+                Header = Header.Remove(Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal));
             }
             InitializeListView();
         }

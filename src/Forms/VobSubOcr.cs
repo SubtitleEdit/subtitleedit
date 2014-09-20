@@ -667,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _importLanguageString = languageString;
             if (_importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
-                _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
+                _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
         internal void InitializeBatch(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
@@ -5662,14 +5662,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
 
-            int first = s.IndexOf("<", StringComparison.Ordinal);
+            int first = s.IndexOf('<');
             while (first >= 0)
             {
-                int last = s.IndexOf(">", first, StringComparison.Ordinal);
+                int last = s.IndexOf('>');
                 if (last > 0)
                 {
                     s = s.Remove(first, last - first + 1);
-                    first = s.IndexOf("<", StringComparison.Ordinal);
+                    first = s.IndexOf('<');
                 }
                 else
                 {
@@ -6979,7 +6979,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = lb.Items[lb.SelectedIndex].ToString();
                 if (text.Contains(':'))
                 {
-                    string number = text.Substring(1, text.IndexOf(":", StringComparison.Ordinal) - 1);
+                    string number = text.Substring(1, text.IndexOf(':') - 1);
                     subtitleListView1.SelectIndexAndEnsureVisible(int.Parse(number) - 1);
                 }
             }
@@ -7917,7 +7917,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_ocrFixEngine == null)
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
 
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     var form = new AddToNamesList();
                     form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7940,7 +7940,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
                     var form = new AddToUserDic();
                     form.Initialize(comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7963,7 +7963,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
                     var form = new AddToOcrReplaceList();
                     form.Initialize(_languageId, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7986,7 +7986,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
                 }
             }

@@ -370,7 +370,7 @@ namespace Nikse.SubtitleEdit.Forms
             int startPosition = test.IndexOf(key, StringComparison.Ordinal);
             while (startPosition >= 0)
             {
-                int endPosition = test.IndexOf(">", startPosition + key.Length, StringComparison.Ordinal);
+                int endPosition = test.IndexOf('>', startPosition + key.Length);
                 if (endPosition > 0)
                     return test.Remove(startPosition + 2, endPosition - startPosition - 2);
             }
@@ -386,7 +386,7 @@ namespace Nikse.SubtitleEdit.Forms
                 webClient.Proxy = Utilities.GetProxy();
                 string result = webClient.DownloadString(url).ToLower();
                 webClient.Dispose();
-                int idx = result.IndexOf("charset");
+                int idx = result.IndexOf("charset", StringComparison.Ordinal);
                 int end = result.IndexOf('"', idx + 8);
                 string charset = result.Substring(idx, end - idx).Replace("charset=", string.Empty);
                 return Encoding.GetEncoding(charset); // "koi8-r");
@@ -417,22 +417,22 @@ namespace Nikse.SubtitleEdit.Forms
             webClient.Encoding = encoding;
             string result = webClient.DownloadString(url);
             webClient.Dispose();
-            int startIndex = result.IndexOf("<span id=result_box");
+            int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
             var sb = new StringBuilder();
             if (startIndex > 0)
             {
-                startIndex = result.IndexOf("<span title=", startIndex);
+                startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
                 while (startIndex > 0)
                 {
-                    startIndex = result.IndexOf(">", startIndex);
+                    startIndex = result.IndexOf('>', startIndex);
                     if (startIndex > 0)
                     {
                         startIndex++;
-                        int endIndex = result.IndexOf("</span>", startIndex);
+                        int endIndex = result.IndexOf("</span>", startIndex, StringComparison.Ordinal);
                         string translatedText = result.Substring(startIndex, endIndex - startIndex);
                         string test = WebUtility.HtmlDecode(translatedText);
                         sb.Append(test);
-                        startIndex = result.IndexOf("<span title=", startIndex);
+                        startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
                     }
                 }
             }

@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         string text = Utilities.FixQuotes(parts[0]);
-                        if (!string.IsNullOrWhiteSpace(text) && characters.IndexOf(text) == -1)
+                        if (!string.IsNullOrWhiteSpace(text) && !characters.Contains(text))
                         {
                             if (parts.Length > 1)
                                 text += " [" + Utilities.FixQuotes(parts[1]) + "]";

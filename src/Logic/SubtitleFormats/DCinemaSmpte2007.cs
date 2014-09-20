@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains('>'))
                             {
-                                int endOfFont = line.IndexOf(">", i);
+                                int endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
                                 {
                                     nodeTemp.InnerText = txt.ToString();

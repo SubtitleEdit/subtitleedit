@@ -1024,7 +1024,7 @@ namespace Nikse.SubtitleEdit.Logic
                 case "EffectTypewriter/TotalMilliseconds":
                     language.EffectTypewriter.TotalMilliseconds = reader.Value;
                     break;
-                case "EffectTypewriter/EndDelayInMilliseconds":
+                case "EffectTypewriter/EndDelayInMillisecs":
                     language.EffectTypewriter.EndDelayInMilliseconds = reader.Value;
                     break;
                 case "ExportCustomText/Title":

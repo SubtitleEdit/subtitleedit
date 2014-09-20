@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string s = line;
                 if (regexTimeCodes.IsMatch(s))
                 {
-                    s = s.Remove(0, s.IndexOf(":") + 1).Trim();
+                    s = s.Remove(0, s.IndexOf(':') + 1).Trim();
                     var temp = s.Split(' ');
                     if (temp.Length > 1)
                     {

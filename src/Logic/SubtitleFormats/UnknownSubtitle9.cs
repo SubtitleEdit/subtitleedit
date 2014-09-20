@@ -64,8 +64,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string line = lines[i].Trim();
 
-                int indexOfStart = line.IndexOf("starttime=");
-                int indexOfDuration = line.IndexOf("duration=");
+                var indexOfStart = line.IndexOf("starttime=", StringComparison.Ordinal);
+                var indexOfDuration = line.IndexOf("duration=", StringComparison.Ordinal);
                 if (line.Contains("class=\"caption\"") && indexOfStart > 0 && indexOfDuration > 0)
                 {
                     string startTime = "0";
@@ -87,11 +87,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
                     string text = string.Empty;
-                    index = line.IndexOf(">", indexOfDuration);
+                    index = line.IndexOf('>', indexOfDuration);
                     if (index > 0 && index + 1 < line.Length)
                     {
                         text = line.Substring(index + 1).Trim();
-                        index = text.IndexOf("</");
+                        index = text.IndexOf("</", StringComparison.Ordinal);
                         if (index > 0)
                             text = text.Substring(0, index);
                         text = text.Replace("<br />", Environment.NewLine);

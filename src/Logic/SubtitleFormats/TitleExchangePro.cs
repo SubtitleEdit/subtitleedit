@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     bool italicOn = false;
                                     while (text.Contains("@Italic@"))
                                     {
-                                        int index = text.IndexOf("@Italic@");
+                                        var index = text.IndexOf("@Italic@", StringComparison.Ordinal);
                                         string italicTag = "<i>";
                                         if (italicOn)
                                             italicTag = "</i>";

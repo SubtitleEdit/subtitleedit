@@ -86,7 +86,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(s);
 
             string allText = sb.ToString();
-            if (allText.IndexOf("\"words\"", StringComparison.Ordinal) == -1 && allText.IndexOf("'words'", StringComparison.Ordinal) == -1)
+            if (!allText.Contains("\"words\"") && !allText.Contains("'words'"))
                 return;
             var words = Json.ReadArray(allText, "words");
 

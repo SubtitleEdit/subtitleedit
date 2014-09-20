@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!Settings.RemoveTextBeforeColon)
                 return text;
 
-            if (text.IndexOf(":", StringComparison.Ordinal) < 0)
+            if (!text.Contains(':'))
                 return text;
 
             // House 7x01 line 52: and she would like you to do three things:
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             bool removedInSecondLine = false;
             foreach (string s in parts)
             {
-                int indexOfColon = s.IndexOf(":", StringComparison.Ordinal);
+                int indexOfColon = s.IndexOf(':');
                 if (indexOfColon > 0)
                 {
                     string pre = s.Substring(0, indexOfColon);
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             {
                                 if (s2.Contains(':'))
                                 {
-                                    int colonIndex = s2.IndexOf(":", StringComparison.Ordinal);
+                                    int colonIndex = s2.IndexOf(':');
                                     string start = s2.Substring(0, colonIndex);
 
                                     if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpper())

@@ -158,21 +158,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     string s = p.Text;
-                    int startIndex = s.IndexOf("<v ");
+                    var startIndex = s.IndexOf("<v ", StringComparison.Ordinal);
                     while (startIndex >= 0)
                     {
-                        int endIndex = s.IndexOf(">", startIndex);
+                        int endIndex = s.IndexOf('>', startIndex);
                         if (endIndex > startIndex)
                         {
                             string voice = s.Substring(startIndex + 2, endIndex - startIndex - 2).Trim();
-                            if (list.IndexOf(voice) == -1)
+                            if (!list.Contains(voice))
                                 list.Add(voice);
                         }
 
                         if (startIndex == s.Length - 1)
                             startIndex = -1;
                         else
-                            startIndex = s.IndexOf("<v ", startIndex + 1);
+                            startIndex = s.IndexOf("<v ", startIndex + 1, StringComparison.Ordinal);
                     }
                 }
 
@@ -182,10 +182,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static string RemoveTag(string tag, string text)
         {
-            int indexOfTag = text.IndexOf("<" + tag + " ");
+            int indexOfTag = text.IndexOf("<" + tag + " ", StringComparison.Ordinal);
             if (indexOfTag >= 0)
             {
-                int indexOfEnd = text.IndexOf(">", indexOfTag);
+                int indexOfEnd = text.IndexOf('>', indexOfTag);
                 if (indexOfEnd > 0)
                 {
                     text = text.Remove(indexOfTag, indexOfEnd - indexOfTag + 1);

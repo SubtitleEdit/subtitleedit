@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(s);
 
             string allText = sb.ToString();
-            if (allText.IndexOf("text_tees", StringComparison.Ordinal) == -1)
+            if (!allText.Contains("text_tees"))
                 return;
 
             var times = Json.ReadArray(allText, "text_tees");

@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ReadWaterMark(string input)
         {
-            if (input.IndexOf(zeroWhiteSpace) == -1)
+            if (!input.Contains(zeroWhiteSpace))
                 return string.Empty;
             int i = 0;
             StringBuilder sb = new StringBuilder();
