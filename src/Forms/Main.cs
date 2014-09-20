@@ -17279,9 +17279,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitleAlternate = new Subtitle();
                 _subtitleAlternateFileName = null;
 
-                Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
-                Configuration.Settings.Save();
-                UpdateRecentFilesUI();
+                if (_fileName != null)
+                {
+                    Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
+                    Configuration.Settings.Save();
+                    UpdateRecentFilesUI();
+                }
             }
 
             buttonUnBreak.Visible = true;
