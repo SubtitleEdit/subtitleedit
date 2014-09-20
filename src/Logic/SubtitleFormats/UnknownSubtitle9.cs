@@ -64,34 +64,34 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string line = lines[i].Trim();
 
-                int indexOfStart = line.IndexOf("starttime=");
-                int indexOfDuration = line.IndexOf("duration=");
+                var indexOfStart = line.IndexOf("starttime=", StringComparison.Ordinal);
+                var indexOfDuration = line.IndexOf("duration=", StringComparison.Ordinal);
                 if (line.Contains("class=\"caption\"") && indexOfStart > 0 && indexOfDuration > 0)
                 {
                     string startTime = "0";
                     int index = indexOfStart + 10;
-                    while (index < line.Length && "0123456789\"'.,".Contains(line[index].ToString()))
+                    while (index < line.Length && @"0123456789""'.,".Contains(line[index]))
                     {
-                        if ("0123456789,.".Contains(line[index].ToString()))
-                            startTime += line[index].ToString();
+                        if (@"0123456789,.".Contains(line[index]))
+                            startTime += line[index];
                         index++;
                     }
 
                     string duration = "0";
                     index = indexOfDuration + 9;
-                    while (index < line.Length && "0123456789\"'.,".Contains(line[index].ToString()))
+                    while (index < line.Length && @"0123456789""'.,".Contains(line[index]))
                     {
-                        if ("0123456789,.".Contains(line[index].ToString()))
-                            duration += line[index].ToString();
+                        if (@"0123456789,.".Contains(line[index]))
+                            duration += line[index];
                         index++;
                     }
 
                     string text = string.Empty;
-                    index = line.IndexOf(">", indexOfDuration);
+                    index = line.IndexOf('>', indexOfDuration);
                     if (index > 0 && index + 1 < line.Length)
                     {
                         text = line.Substring(index + 1).Trim();
-                        index = text.IndexOf("</");
+                        index = text.IndexOf("</", StringComparison.Ordinal);
                         if (index > 0)
                             text = text.Substring(0, index);
                         text = text.Replace("<br />", Environment.NewLine);

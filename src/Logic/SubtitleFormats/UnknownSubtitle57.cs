@@ -80,10 +80,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         subtitle.Paragraphs.Add(p);
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                 {
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (p != null)
                 {
                     if (p.Text.Length < 200)
                         p.Text = (p.Text + Environment.NewLine + line).Trim();

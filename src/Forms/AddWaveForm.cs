@@ -52,14 +52,14 @@ namespace Nikse.SubtitleEdit.Forms
             _cancel = false;
             bool runningOnWindows = false;
             SourceVideoFileName = labelVideoFileName.Text;
-            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".wav");
-            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
-            //            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
+            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
+            //string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
             string exeFilePath;
             if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
             {
                 exeFilePath = "cvlc";
-                parameters = "-vvv --no-sout-video --audio-track=" + _audioTrackNumber.ToString() + " --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
+                parameters = "-vvv --no-sout-video --audio-track=" + _audioTrackNumber + " --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
             }
             else // windows
             {
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (ti.CodecId != null && ti.Language != null)
                                         audioTrackNames.Add("#" + ti.TrackNumber + ": " + ti.CodecId.Replace("\0", string.Empty) + " - " + ti.Language.Replace("\0", string.Empty));
                                     else
-                                        audioTrackNames.Add("#" + ti.TrackNumber.ToString());
+                                        audioTrackNames.Add("#" + ti.TrackNumber);
                                     mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, ti.TrackNumber);
                                 }
                             }

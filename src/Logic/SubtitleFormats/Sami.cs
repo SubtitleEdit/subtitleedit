@@ -148,11 +148,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (!tagOn)
                         {
-                            partial.Append(text.Substring(i, 1));
+                            partial.Append(text[i]);
                         }
                         else
                         {
-                            total.Append(text.Substring(i, 1));
+                            total.Append(text[i]);
                         }
                     }
 
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(l.Replace("<SYNC Start= \"", "<SYNC Start=\"").Replace("<SYNC Start = \"", "<SYNC Start=\"").Replace("<SYNC Start =\"", "<SYNC Start=\"").Replace("<SYNC  Start=\"", "<SYNC Start=\""));
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
-            if (allInputLower.IndexOf("<sync ", StringComparison.Ordinal) == -1)
+            if (!allInputLower.Contains("<sync "))
                 return;
 
             int styleStart = allInputLower.IndexOf("<style", StringComparison.Ordinal);
@@ -253,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (syncStartPos >= 0)
             {
                 string millisecAsString = string.Empty;
-                while (index < allInput.Length && "\"'0123456789".Contains(allInput[index].ToString()))
+                while (index < allInput.Length && @"""'0123456789".Contains(allInput[index]))
                 {
                     if (allInput[index] != '"' && allInput[index] != '\'')
                         millisecAsString += allInput[index];
@@ -282,9 +282,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var className = new StringBuilder();
                     int startClass = textToLower.IndexOf(" class=", StringComparison.Ordinal);
                     int indexClass = startClass + 7;
-                    while (indexClass < textToLower.Length && (Utilities.LowercaseLettersWithNumbers + "'\"").Contains(textToLower[indexClass].ToString()))
+                    while (indexClass < textToLower.Length && (Utilities.LowercaseLettersWithNumbers + @"'""").Contains(textToLower[indexClass]))
                     {
-                        className.Append(text[indexClass].ToString());
+                        className.Append(text[indexClass]);
                         indexClass++;
                     }
                     p.Extra = className.ToString().Trim(' ', '\'', '"');
@@ -367,11 +367,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else if (!tagOn)
                         {
-                            partial.Append(text.Substring(i, 1));
+                            partial.Append(text[i]);
                         }
                         else if (tagOn)
                         {
-                            total.Append(text.Substring(i, 1));
+                            total.Append(text[i]);
                         }
                     }
                     total.Append(WebUtility.HtmlDecode(partial.ToString()));
@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            if (p != null && !string.IsNullOrEmpty(p.Text) && subtitle.Paragraphs.IndexOf(p) == -1)
+            if (!string.IsNullOrEmpty(p.Text) && !subtitle.Paragraphs.Contains(p))
             {
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);

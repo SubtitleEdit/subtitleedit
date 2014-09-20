@@ -283,16 +283,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         string firstColor = null;
                         string s = line;
-                        int start = s.IndexOf("<font ");
+                        var start = s.IndexOf("<font ", StringComparison.Ordinal);
                         if (start >= 0)
                         {
-                            int end = s.IndexOf(">", start);
+                            int end = s.IndexOf('>', start);
                             if (end > 0)
                             {
                                 string f = s.Substring(start, end - start);
                                 if (f.Contains(" color="))
                                 {
-                                    int colorStart = f.IndexOf(" color=");
+                                    var colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
                                     if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
                                     {
                                         int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
@@ -348,7 +348,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 List<int> indexOfEmdash = new List<int>();
                 for (int j = 0; j < TextField.Length; j++)
                 {
-                    if (TextField.Substring(j, 1) == "–")
+                    if (TextField[j] == '–')
                         indexOfEmdash.Add(j);
                 }
 
@@ -476,10 +476,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            header.TotalNumberOfSubtitles = (subtitle.Paragraphs.Count.ToString()).PadLeft(5, '0'); // seems to be 1 higher than actual number of subtitles
+            header.TotalNumberOfSubtitles = subtitle.Paragraphs.Count.ToString("D5"); // seems to be 1 higher than actual number of subtitles
             header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
-            string today = string.Format("{0}{1:00}{2:00}", DateTime.Now.Year.ToString().Remove(0, 2), DateTime.Now.Month, DateTime.Now.Day);
+            var today = string.Format("{0:yyMMdd}", DateTime.Now);
             if (today.Length == 6)
             {
                 header.CreationDate = today;
@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 switch (buffer[index])
                 {
                     case 0xc1: // Grave
-                        skipNext = "AEIOUaeiou".Contains(next);
+                        skipNext = @"AEIOUaeiou".Contains(next);
                         switch (next)
                         {
                             case "A": return "À";
@@ -706,7 +706,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc2: // Acute
-                        skipNext = "ACEILNORSUYZacegilnorsuyz".Contains(next);
+                        skipNext = @"ACEILNORSUYZacegilnorsuyz".Contains(next);
                         switch (next)
                         {
                             case "A": return "Á";
@@ -737,7 +737,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc3: // Circumflex
-                        skipNext = "ACEGHIJOSUWYaceghijosuwy".Contains(next);
+                        skipNext = @"ACEGHIJOSUWYaceghijosuwy".Contains(next);
                         switch (next)
                         {
                             case "A": return "Â";
@@ -767,7 +767,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc4: // Tilde
-                        skipNext = "AINOUainou".Contains(next);
+                        skipNext = @"AINOUainou".Contains(next);
                         switch (next)
                         {
                             case "A": return "Ã";
@@ -783,7 +783,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc5: // Macron
-                        skipNext = "AEIOUaeiou".Contains(next);
+                        skipNext = @"AEIOUaeiou".Contains(next);
                         switch (next)
                         {
                             case "A": return "Ā";
@@ -799,7 +799,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc6: // Breve
-                        skipNext = "AGUagu".Contains(next);
+                        skipNext = @"AGUagu".Contains(next);
                         switch (next)
                         {
                             case "A": return "Ă";
@@ -811,7 +811,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc7: // Dot
-                        skipNext = "CEGIZcegiz".Contains(next);
+                        skipNext = @"CEGIZcegiz".Contains(next);
                         switch (next)
                         {
                             case "C": return "Ċ";
@@ -827,7 +827,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xc8: // Umlaut or diæresis
-                        skipNext = "AEIOUYaeiouy".Contains(next);
+                        skipNext = @"AEIOUYaeiouy".Contains(next);
                         switch (next)
                         {
                             case "A": return "Ä";
@@ -845,7 +845,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xca: // Ring
-                        skipNext = "AUau".Contains(next);
+                        skipNext = @"AUau".Contains(next);
                         switch (next)
                         {
                             case "A": return "Å";
@@ -855,7 +855,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xcb: // Cedilla
-                        skipNext = "CGKLNRSTcklnrst".Contains(next);
+                        skipNext = @"CGKLNRSTcklnrst".Contains(next);
                         switch (next)
                         {
                             case "C": return "Ç";
@@ -876,7 +876,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xcd: // DoubleAcute
-                        skipNext = "OUou".Contains(next);
+                        skipNext = @"OUou".Contains(next);
                         switch (next)
                         {
                             case "O": return "Ő";
@@ -886,7 +886,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xce: // Ogonek
-                        skipNext = "AEIUaeiu".Contains(next);
+                        skipNext = @"AEIUaeiu".Contains(next);
                         switch (next)
                         {
                             case "A": return "Ą";
@@ -900,7 +900,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         return string.Empty;
                     case 0xcf: // Caron
-                        skipNext = "CDELNRSTZcdelnrstz".Contains(next);
+                        skipNext = @"CDELNRSTZcdelnrstz".Contains(next);
                         switch (next)
                         {
                             case "C": return "Č";

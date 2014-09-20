@@ -55,84 +55,86 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph lastParagraph = null;
             foreach (string line in lines)
             {
-                string s = line;
-                if (s.Length > 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
-                    bool success = false;
-                    if (line.IndexOf(':') > 0)
+                    continue;
+                }
+
+                bool success = false;
+                if (line.IndexOf(':') > 0)
+                {
+                    string s = line;
+                    var match = regexTimeCode.Match(s);
+                    var match1DigitMilliseconds = regex1DigitMilliseconds.Match(s);
+                    if (s.Length > 31 && match.Success)
                     {
-                        var match = regexTimeCode.Match(s);
-                        var match1DigitMilliseconds = regex1DigitMilliseconds.Match(s);
-                        if (s.Length > 31 && match.Success)
+                        s = s.Substring(5, match.Length - 5).TrimStart();
+                        s = s.Replace("  ", ":");
+                        s = s.Replace(" ", string.Empty);
+                        string[] parts = s.Split(':');
+                        if (parts.Length == 8)
                         {
-                            s = s.Substring(5, match.Length - 5).TrimStart();
-                            s = s.Replace("  ", ":");
-                            s = s.Replace(" ", string.Empty);
-                            string[] parts = s.Split(':');
-                            if (parts.Length == 8)
-                            {
-                                int hours = int.Parse(parts[0]);
-                                int minutes = int.Parse(parts[1]);
-                                int seconds = int.Parse(parts[2]);
-                                int milliseconds = int.Parse(parts[3]) * 10;
-                                var start = new TimeCode(hours, minutes, seconds, milliseconds);
+                            int hours = int.Parse(parts[0]);
+                            int minutes = int.Parse(parts[1]);
+                            int seconds = int.Parse(parts[2]);
+                            int milliseconds = int.Parse(parts[3]) * 10;
+                            var start = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                                hours = int.Parse(parts[4]);
-                                minutes = int.Parse(parts[5]);
-                                seconds = int.Parse(parts[6]);
-                                milliseconds = int.Parse(parts[7]) * 10;
-                                var end = new TimeCode(hours, minutes, seconds, milliseconds);
+                            hours = int.Parse(parts[4]);
+                            minutes = int.Parse(parts[5]);
+                            seconds = int.Parse(parts[6]);
+                            milliseconds = int.Parse(parts[7]) * 10;
+                            var end = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                                string text = line.Replace("\0", string.Empty).Substring(match.Length).TrimStart();
-                                text = text.Replace("|", Environment.NewLine);
+                            string text = line.Replace("\0", string.Empty).Substring(match.Length).TrimStart();
+                            text = text.Replace("|", Environment.NewLine);
 
-                                lastParagraph = new Paragraph(start, end, text);
-                                subtitle.Paragraphs.Add(lastParagraph);
-                                success = true;
-                            }
-                        }
-                        else if (s.Length > 29 && match1DigitMilliseconds.Success)
-                        {
-                            s = s.Substring(5, match1DigitMilliseconds.Length - 5).TrimStart();
-                            s = s.Replace("  ", ":");
-                            s = s.Replace(" ", string.Empty);
-                            string[] parts = s.Split(':');
-                            if (parts.Length == 8)
-                            {
-                                int hours = int.Parse(parts[0]);
-                                int minutes = int.Parse(parts[1]);
-                                int seconds = int.Parse(parts[2]);
-                                int milliseconds = int.Parse(parts[3]) * 10;
-                                var start = new TimeCode(hours, minutes, seconds, milliseconds);
-
-                                hours = int.Parse(parts[4]);
-                                minutes = int.Parse(parts[5]);
-                                seconds = int.Parse(parts[6]);
-                                milliseconds = int.Parse(parts[7]) * 10;
-                                var end = new TimeCode(hours, minutes, seconds, milliseconds);
-
-                                string text = line.Replace("\0", string.Empty).Substring(match1DigitMilliseconds.Length).TrimStart();
-                                text = text.Replace("|", Environment.NewLine);
-
-                                lastParagraph = new Paragraph(start, end, text);
-                                subtitle.Paragraphs.Add(lastParagraph);
-                                success = true;
-                            }
-                        }
-                        else if (line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
-                        {
-                            lastParagraph.Text += Environment.NewLine + line.Trim();
+                            lastParagraph = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(lastParagraph);
                             success = true;
                         }
                     }
-                    else if (line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                    else if (s.Length > 29 && match1DigitMilliseconds.Success)
+                    {
+                        s = s.Substring(5, match1DigitMilliseconds.Length - 5).TrimStart();
+                        s = s.Replace("  ", ":");
+                        s = s.Replace(" ", string.Empty);
+                        string[] parts = s.Split(':');
+                        if (parts.Length == 8)
+                        {
+                            int hours = int.Parse(parts[0]);
+                            int minutes = int.Parse(parts[1]);
+                            int seconds = int.Parse(parts[2]);
+                            int milliseconds = int.Parse(parts[3]) * 10;
+                            var start = new TimeCode(hours, minutes, seconds, milliseconds);
+
+                            hours = int.Parse(parts[4]);
+                            minutes = int.Parse(parts[5]);
+                            seconds = int.Parse(parts[6]);
+                            milliseconds = int.Parse(parts[7]) * 10;
+                            var end = new TimeCode(hours, minutes, seconds, milliseconds);
+
+                            string text = line.Replace("\0", string.Empty).Substring(match1DigitMilliseconds.Length).TrimStart();
+                            text = text.Replace("|", Environment.NewLine);
+
+                            lastParagraph = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(lastParagraph);
+                            success = true;
+                        }
+                    }
+                    else if (lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
                     {
                         lastParagraph.Text += Environment.NewLine + line.Trim();
                         success = true;
                     }
-                    if (!success)
-                        _errorCount++;
                 }
+                else if (lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                {
+                    lastParagraph.Text += Environment.NewLine + line.Trim();
+                    success = true;
+                }
+                if (!success)
+                    _errorCount++;
             }
             subtitle.Renumber(1);
         }

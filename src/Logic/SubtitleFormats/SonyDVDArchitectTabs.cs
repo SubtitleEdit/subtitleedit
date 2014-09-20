@@ -55,52 +55,54 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Paragraph lastParagraph = null;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
-                    bool success = false;
-                    bool isTimeCode = false;
-                    if (line.Length > 26 && line.IndexOf(':') == 2)
+                    continue;
+                }
+
+                bool success = false;
+                bool isTimeCode = false;
+                if (line.Length > 26 && line.IndexOf(':') == 2)
+                {
+                    var match = regex.Match(line);
+                    if (match.Success)
                     {
-                        var match = regex.Match(line);
-                        if (match.Success)
+                        isTimeCode = true;
+                        string s = line.Substring(0, match.Length);
+                        s = s.Replace("\t", ":");
+                        s = s.Replace(" ", string.Empty);
+                        s = s.Trim().TrimEnd(':').TrimEnd();
+                        string[] parts = s.Split(':');
+                        if (parts.Length == 8)
                         {
-                            isTimeCode = true;
-                            string s = line.Substring(0, match.Length);
-                            s = s.Replace("\t", ":");
-                            s = s.Replace(" ", string.Empty);
-                            s = s.Trim().TrimEnd(':').TrimEnd();
-                            string[] parts = s.Split(':');
-                            if (parts.Length == 8)
-                            {
-                                int hours = int.Parse(parts[0]);
-                                int minutes = int.Parse(parts[1]);
-                                int seconds = int.Parse(parts[2]);
-                                int milliseconds = int.Parse(parts[3]) * 10;
-                                var start = new TimeCode(hours, minutes, seconds, milliseconds);
+                            int hours = int.Parse(parts[0]);
+                            int minutes = int.Parse(parts[1]);
+                            int seconds = int.Parse(parts[2]);
+                            int milliseconds = int.Parse(parts[3]) * 10;
+                            var start = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                                hours = int.Parse(parts[4]);
-                                minutes = int.Parse(parts[5]);
-                                seconds = int.Parse(parts[6]);
-                                milliseconds = int.Parse(parts[7]) * 10;
-                                var end = new TimeCode(hours, minutes, seconds, milliseconds);
+                            hours = int.Parse(parts[4]);
+                            minutes = int.Parse(parts[5]);
+                            seconds = int.Parse(parts[6]);
+                            milliseconds = int.Parse(parts[7]) * 10;
+                            var end = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                                string text = line.Substring(match.Length).TrimStart();
-                                text = text.Replace("|", Environment.NewLine);
+                            string text = line.Substring(match.Length).TrimStart();
+                            text = text.Replace("|", Environment.NewLine);
 
-                                lastParagraph = new Paragraph(start, end, text);
-                                subtitle.Paragraphs.Add(lastParagraph);
-                                success = true;
-                            }
+                            lastParagraph = new Paragraph(start, end, text);
+                            subtitle.Paragraphs.Add(lastParagraph);
+                            success = true;
                         }
                     }
-                    if (!isTimeCode && line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
-                    {
-                        lastParagraph.Text += Environment.NewLine + line.Trim();
-                        success = true;
-                    }
-                    if (!success)
-                        _errorCount++;
                 }
+                if (!isTimeCode && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                {
+                    lastParagraph.Text += Environment.NewLine + line.Trim();
+                    success = true;
+                }
+                if (!success)
+                    _errorCount++;
             }
             subtitle.Renumber(1);
         }

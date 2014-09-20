@@ -111,8 +111,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             string text = s.Remove(0, arr[0].Length + arr[1].Length + arr[2].Length + 2).Trim();
 
-                            if (text.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).
-                                Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(".", string.Empty).Replace(":", string.Empty).Replace(",", string.Empty).Trim().Length == 0)
+                            if (string.IsNullOrWhiteSpace(text.Replace("0", string.Empty).Replace("1", string.Empty).Replace("2", string.Empty).Replace("3", string.Empty).Replace("4", string.Empty).Replace("5", string.Empty).
+                                Replace("6", string.Empty).Replace("7", string.Empty).Replace("8", string.Empty).Replace("9", string.Empty).Replace(".", string.Empty).Replace(":", string.Empty).Replace(",", string.Empty)))
                                 _errorCount++;
                             if (italic)
                                 text = "<i>" + text + "</i>";
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         italic = false;
                     }
                 }
-                else if (s.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(s))
                 {
                     sb.AppendLine(s);
                 }

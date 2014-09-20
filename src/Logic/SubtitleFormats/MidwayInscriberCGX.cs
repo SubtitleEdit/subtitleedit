@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb = new StringBuilder();
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0)
+                if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (regexTimeCodes.IsMatch(line))
                     {

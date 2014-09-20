@@ -31,20 +31,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public static string EncodeJsonText(string text)
         {
             var sb = new StringBuilder();
-            for (int i = 0; i < text.Length; i++)
+            foreach (var c in text)
             {
-                string s = text.Substring(i, 1);
-                if (s == "\"")
+                if (c == '"')
                 {
                     sb.Append("\\\"");
                 }
-                else if (s == "\\")
+                else if (c == '\\')
                 {
                     sb.Append("\\\\");
                 }
                 else
                 {
-                    sb.Append(s);
+                    sb.Append(c);
                 }
             }
             return sb.ToString().Replace(Environment.NewLine, "<br />");
@@ -58,16 +57,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace("<br/>", Environment.NewLine);
             text = text.Replace("\\n", Environment.NewLine);
             bool keepNext = false;
-            for (int i = 0; i < text.Length; i++)
+            foreach (var c in text)
             {
-                string s = text.Substring(i, 1);
-                if (s == "\\" && !keepNext)
+                if (c == '\\' && !keepNext)
                 {
                     keepNext = true;
                 }
                 else
                 {
-                    sb.Append(s);
+                    sb.Append(c);
                     keepNext = false;
                 }
             }
@@ -102,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (string s in lines)
                 sb.Append(s);
-            if (!sb.ToString().Trim().StartsWith("[{\"start"))
+            if (!sb.ToString().TrimStart().StartsWith("[{\"start"))
                 return;
 
             foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
@@ -201,11 +199,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int oldStart = 0;
             while (tagLevel >= 1 && nextTag >= 0 && nextTag + 1 < res.Length)
             {
-                if (res.Substring(oldStart, 1) == "\"")
+                if (res[oldStart] == '"')
                 {
                     nextTag = res.IndexOf('"', oldStart + 1);
 
-                    while (nextTag > 0 && nextTag + 1 < res.Length && res.Substring(nextTag - 1, 1) == "\\")
+                    while (nextTag > 0 && nextTag + 1 < res.Length && res[nextTag - 1] == '\\')
                         nextTag = res.IndexOf('"', nextTag + 1);
 
                     if (nextTag > 0)
@@ -215,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         oldStart = nextTag + 2;
                     }
                 }
-                else if (res.Substring(oldStart, 1) != "[" && res.Substring(oldStart, 1) != "]")
+                else if (res[oldStart] != '[' && res[oldStart] != ']')
                 {
                     nextTag = res.IndexOf(',', oldStart + 1);
                     if (nextTag > 0)
@@ -247,7 +245,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             string newValue = res.Substring(oldStart, nextTag - oldStart);
                             list.Add(newValue);
-                            if (res.Substring(nextTag, 1) == "]")
+                            if (res[nextTag] == ']')
                                 tagLevel--;
                             oldStart = nextTag + 1;
                         }
@@ -275,22 +273,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 bool keepNext = false;
                 var sb = new StringBuilder();
-                for (int i = 0; i < text.Length; i++)
+                foreach (var c in text)
                 {
-                    string s = text.Substring(i, 1);
-                    if (s == "\\" && !keepNext)
+                    if (c == '\\' && !keepNext)
                     {
                         keepNext = true;
                     }
-                    else if (!keepNext && s == ",")
+                    else if (!keepNext && c == ',')
                     {
                         list.Add(sb.ToString());
-                        sb = new StringBuilder();
-                        keepNext = false;
+                        sb.Clear();
                     }
                     else
                     {
-                        sb.Append(s);
+                        sb.Append(c);
                         keepNext = false;
                     }
                 }

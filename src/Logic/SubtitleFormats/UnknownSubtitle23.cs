@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     sb.AppendLine(s.Trim());
                 }
-                else if (s.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(s))
                 {
                     _errorCount++;
                 }

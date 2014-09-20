@@ -103,11 +103,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
             const string syncTag = "<p ";
-            int syncStartPos = allInputLower.IndexOf(syncTag);
+            var syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
             int index = syncStartPos + syncTag.Length;
             while (syncStartPos >= 0)
             {
-                int syncEndPos = allInputLower.IndexOf("</p>", index);
+                var syncEndPos = allInputLower.IndexOf("</p>", index, StringComparison.Ordinal);
                 if (syncEndPos > 0)
                 {
                     string s = allInput.Substring(syncStartPos + 2, syncEndPos - syncStartPos - 2);
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     int indexOfAttributesEnd = s.IndexOf('>');
                     if (indexOfBegin >= 0 && indexOfAttributesEnd > indexOfBegin)
                     {
-                        string text = s.Substring(indexOfAttributesEnd).Remove(0, 1).Trim();
+                        string text = s.Substring(indexOfAttributesEnd + 1).Trim();
                         text = text.Replace("<br>", Environment.NewLine);
                         text = text.Replace("<br/>", Environment.NewLine);
                         text = text.Replace("<br />", Environment.NewLine);
@@ -131,22 +131,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var tcBegin = new StringBuilder();
                         for (int i = 0; i <= 10; i++)
                         {
-                            if (begin.Length > i && "0123456789:.".Contains(begin[i].ToString()))
+                            if (begin.Length > i && @"0123456789:.".Contains(begin[i]))
                             {
-                                tcBegin.Append(begin[i].ToString());
+                                tcBegin.Append(begin[i]);
                             }
                         }
 
                         var tcEnd = new StringBuilder();
-                        int indexOfEnd = s.IndexOf(" data-end=");
+                        var indexOfEnd = s.IndexOf(" data-end=", StringComparison.Ordinal);
                         if (indexOfEnd >= 0)
                         {
                             string end = s.Substring(indexOfEnd + " data-end=".Length);
                             for (int i = 0; i <= 10; i++)
                             {
-                                if (end.Length > i && "0123456789:.".Contains(end[i].ToString()))
+                                if (end.Length > i && @"0123456789:.".Contains(end[i]))
                                 {
-                                    tcEnd.Append(end[i].ToString());
+                                    tcEnd.Append(end[i]);
                                 }
                             }
                         }
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos);
+                    syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos, StringComparison.Ordinal);
                     index = syncStartPos + syncTag.Length;
                 }
             }

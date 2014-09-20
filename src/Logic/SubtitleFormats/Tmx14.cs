@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("tu");
 
                 XmlAttribute tuid = xml.CreateAttribute("tuid");
-                tuid.InnerText = count.ToString().PadLeft(4, '0');
+                tuid.InnerText = count.ToString("D4");
                 paragraph.Attributes.Append(tuid);
 
                 XmlAttribute datatype = xml.CreateAttribute("datatype");

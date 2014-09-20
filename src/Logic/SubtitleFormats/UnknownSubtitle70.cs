@@ -33,20 +33,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int errors = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0)
+                if (string.IsNullOrWhiteSpace(line))
                 {
-                    if (line.Contains('['))
-                    {
-                        string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
-                        if (_regexMicroDvdLine.IsMatch(s))
-                            trimmedLines.Add(s);
-                        else
-                            errors++;
-                    }
+                    continue;
+                }
+
+                if (line.Contains('['))
+                {
+                    string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
+                    if (_regexMicroDvdLine.IsMatch(s))
+                        trimmedLines.Add(s);
                     else
-                    {
                         errors++;
-                    }
+                }
+                else
+                {
+                    errors++;
                 }
             }
             Errors = null;
@@ -61,9 +63,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index = line.IndexOf(']', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
                 {
-                    if (line.IndexOf("[]") >= 0 && line.IndexOf("[]") < index)
+                    var indexOfBrackets = line.IndexOf("[]", StringComparison.Ordinal);
+                    if (indexOfBrackets >= 0 && indexOfBrackets < index)
                     {
-                        line = line.Insert(line.IndexOf("[]") + 1, "0"); // set empty time codes to zero
+                        line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
                     }
 
@@ -83,9 +86,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('[');
-                sb.Append(p.StartFrame.ToString());
+                sb.Append(p.StartFrame);
                 sb.Append("][");
-                sb.Append(p.EndFrame.ToString());
+                sb.Append(p.EndFrame);
                 sb.Append(']');
 
                 //{y:b} is italics for single line
@@ -162,14 +165,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                         if (s.StartsWith("<font "))
                         {
-                            int start = s.IndexOf("<font ");
-                            int end = s.IndexOf(">", start);
-                            if (end > start)
+                            int end = s.IndexOf('>');
+                            if (end > 0)
                             {
-                                string tag = s.Substring(start, end - start);
+                                string tag = s.Substring(0, end);
                                 if (tag.Contains(" color="))
                                 {
-                                    int colorStart = tag.IndexOf(" color=");
+                                    int colorStart = tag.IndexOf(" color=", StringComparison.Ordinal);
                                     int colorEnd = tag.IndexOf('"', colorStart + " color=".Length + 1);
                                     if (colorEnd > 0)
                                     {
@@ -189,11 +191,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 }
                                 if (tag.Contains(" face="))
                                 {
-                                    int colorStart = tag.IndexOf(" face=");
-                                    int colorEnd = tag.IndexOf('"', colorStart + " face=".Length + 1);
-                                    if (colorEnd > 0)
+                                    var faceStart = tag.IndexOf(" face=", StringComparison.Ordinal);
+                                    var faceEnd = tag.IndexOf('"', faceStart + " face=".Length + 1);
+                                    if (faceEnd > 0)
                                     {
-                                        string fontName = tag.Substring(colorStart, colorEnd - colorStart);
+                                        string fontName = tag.Substring(faceStart, faceEnd - faceStart);
                                         fontName = fontName.Remove(0, " face=".Length).Trim();
                                         fontName = fontName.Trim('"');
                                         fontName = fontName.Trim('\'');
@@ -208,11 +210,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 }
                                 if (tag.Contains(" size="))
                                 {
-                                    int colorStart = tag.IndexOf(" size=");
-                                    int colorEnd = tag.IndexOf('"', colorStart + " size=".Length + 1);
-                                    if (colorEnd > 0)
+                                    var sizeStart = tag.IndexOf(" size=", StringComparison.Ordinal);
+                                    var sizeEnd = tag.IndexOf('"', sizeStart + " size=".Length + 1);
+                                    if (sizeEnd > 0)
                                     {
-                                        string fontSize = tag.Substring(colorStart, colorEnd - colorStart);
+                                        string fontSize = tag.Substring(sizeStart, sizeEnd - sizeStart);
                                         fontSize = fontSize.Remove(0, " size=".Length).Trim();
                                         fontSize = fontSize.Trim('"');
                                         fontSize = fontSize.Trim('\'');
@@ -408,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     }
                                     else if (s.Contains("{c:$"))
                                     {
-                                        int start = s.IndexOf("{c:$");
+                                        int start = s.IndexOf("{c:$", StringComparison.Ordinal);
                                         int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
@@ -424,7 +426,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     }
                                     else if (s.Contains("{C:$")) // uppercase=all lines
                                     {
-                                        int start = s.IndexOf("{C:$");
+                                        int start = s.IndexOf("{C:$", StringComparison.Ordinal);
                                         int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
@@ -440,7 +442,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     }
                                     else if (s.Contains("{f:"))
                                     {
-                                        int start = s.IndexOf("{f:");
+                                        int start = s.IndexOf("{f:", StringComparison.Ordinal);
                                         int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
@@ -456,7 +458,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     }
                                     else if (s.Contains("{F:")) // uppercase=all lines
                                     {
-                                        int start = s.IndexOf("{F:");
+                                        int start = s.IndexOf("{F:", StringComparison.Ordinal);
                                         int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
@@ -472,7 +474,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     }
                                     else if (s.Contains("{s:"))
                                     {
-                                        int start = s.IndexOf("{s:");
+                                        int start = s.IndexOf("{s:", StringComparison.Ordinal);
                                         int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {
@@ -488,7 +490,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     }
                                     else if (s.Contains("{S:")) // uppercase=all lines
                                     {
-                                        int start = s.IndexOf("{S:");
+                                        int start = s.IndexOf("{S:", StringComparison.Ordinal);
                                         int end = s.IndexOf('}', start);
                                         if (end > start)
                                         {

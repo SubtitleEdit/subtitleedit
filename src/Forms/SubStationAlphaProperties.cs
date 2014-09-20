@@ -178,16 +178,16 @@ namespace Nikse.SubtitleEdit.Forms
                 _subtitle.Header = GetDefaultHeader();
 
             string title = textBoxTitle.Text;
-            if (title.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(title))
                 title = "untitled";
-            UpdateTag("Title", title, title.Trim().Length == 0);
-            UpdateTag("Original Script", textBoxOriginalScript.Text, textBoxOriginalScript.Text.Trim().Length == 0);
-            UpdateTag("Original Translation", textBoxTranslation.Text, textBoxTranslation.Text.Trim().Length == 0);
-            UpdateTag("Original Editing", textBoxEditing.Text, textBoxEditing.Text.Trim().Length == 0);
-            UpdateTag("Original Timing", textBoxTiming.Text, textBoxTiming.Text.Trim().Length == 0);
-            UpdateTag("Synch Point", textBoxSyncPoint.Text, textBoxSyncPoint.Text.Trim().Length == 0);
-            UpdateTag("Script Updated By", textBoxUpdatedBy.Text, textBoxUpdatedBy.Text.Trim().Length == 0);
-            UpdateTag("Update Details", textBoxUpdateDetails.Text, textBoxUpdateDetails.Text.Trim().Length == 0);
+            UpdateTag("Title", title, false);
+            UpdateTag("Original Script", textBoxOriginalScript.Text, string.IsNullOrWhiteSpace(textBoxOriginalScript.Text));
+            UpdateTag("Original Translation", textBoxTranslation.Text, string.IsNullOrWhiteSpace(textBoxTranslation.Text));
+            UpdateTag("Original Editing", textBoxEditing.Text, string.IsNullOrWhiteSpace(textBoxEditing.Text));
+            UpdateTag("Original Timing", textBoxTiming.Text, string.IsNullOrWhiteSpace(textBoxTiming.Text));
+            UpdateTag("Synch Point", textBoxSyncPoint.Text, string.IsNullOrWhiteSpace(textBoxSyncPoint.Text));
+            UpdateTag("Script Updated By", textBoxUpdatedBy.Text, string.IsNullOrWhiteSpace(textBoxUpdatedBy.Text));
+            UpdateTag("Update Details", textBoxUpdateDetails.Text, string.IsNullOrWhiteSpace(textBoxUpdateDetails.Text));
             UpdateTag("PlayResX", numericUpDownVideoWidth.Value.ToString(), numericUpDownVideoWidth.Value == 0);
             UpdateTag("PlayResY", numericUpDownVideoHeight.Value.ToString(), numericUpDownVideoHeight.Value == 0);
             if (comboBoxCollision.SelectedIndex == 0)

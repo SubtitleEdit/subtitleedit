@@ -43,7 +43,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var sb = new StringBuilder();
 
-            sb.AppendLine(" " + subtitle.Paragraphs.Count.ToString() + "           4             1234 ");
+            sb.Append(' ');
+            sb.Append(subtitle.Paragraphs.Count);
+            sb.AppendLine("           4             1234 ");
             sb.AppendLine(@"NORMAL
 00:00:00.00
 

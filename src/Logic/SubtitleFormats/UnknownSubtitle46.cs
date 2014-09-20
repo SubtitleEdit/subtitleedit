@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int frames = int.Parse(arr[3]);
                             p = new Paragraph();
                             p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
-                            p.Text = s.Substring(0, s.IndexOf(timeCode)).Trim();
+                            p.Text = s.Substring(0, s.IndexOf(timeCode, StringComparison.Ordinal)).Trim();
                             subtitle.Paragraphs.Add(p);
                         }
                     }

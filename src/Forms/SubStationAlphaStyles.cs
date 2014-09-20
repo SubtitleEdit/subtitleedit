@@ -691,11 +691,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string newLine = oldStyle.RawLine;
                 newLine = newLine.Replace(oldStyle.Name + ",", newStyle.Name + ",");
 
-                int indexOfEvents = Header.IndexOf("[Events]");
+                int indexOfEvents = Header.IndexOf("[Events]", StringComparison.Ordinal);
                 if (indexOfEvents > 0)
                 {
                     int i = indexOfEvents - 1;
-                    while (i > 0 && Environment.NewLine.Contains(Header[i].ToString()))
+                    while (i > 0 && Environment.NewLine.Contains(Header[i]))
                         i--;
                     Header = Header.Insert(i + 1, Environment.NewLine + newLine);
                 }
@@ -726,7 +726,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool doRepeat = true;
                 while (doRepeat)
                 {
-                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count.ToString());
+                    style = GetSsaStyle(Configuration.Settings.Language.SubStationAlphaStyles.New + count);
                     doRepeat = GetSsaStyle(style.Name).LoadedFromHeader;
                     count++;
                 }
@@ -802,7 +802,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string line in lineArray)
                     lines.Add(line);
                 ssa.LoadSubtitle(sub, lines, string.Empty);
-                Header = Header.Remove(Header.IndexOf("[V4 Styles]")) + sub.Header.Substring(sub.Header.IndexOf("[V4 Styles]"));
+                Header = Header.Remove(Header.IndexOf("[V4 Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4 Styles]", StringComparison.Ordinal));
             }
             else
             {
@@ -813,7 +813,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string line in lineArray)
                     lines.Add(line);
                 ass.LoadSubtitle(sub, lines, string.Empty);
-                Header = Header.Remove(Header.IndexOf("[V4+ Styles]")) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]"));
+                Header = Header.Remove(Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal)) + sub.Header.Substring(sub.Header.IndexOf("[V4+ Styles]", StringComparison.Ordinal));
             }
             InitializeListView();
         }
@@ -1165,14 +1165,14 @@ namespace Nikse.SubtitleEdit.Forms
                             if (GetSsaStyle(style.Name).LoadedFromHeader)
                             {
                                 int count = 2;
-                                bool doRepeat = GetSsaStyle(style.Name + count.ToString()).LoadedFromHeader;
+                                bool doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
                                 while (doRepeat)
                                 {
-                                    doRepeat = GetSsaStyle(style.Name + count.ToString()).LoadedFromHeader;
+                                    doRepeat = GetSsaStyle(style.Name + count).LoadedFromHeader;
                                     count++;
                                 }
-                                style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count.ToString() + ",");
-                                style.Name = style.Name + count.ToString();
+                                style.RawLine = style.RawLine.Replace(" " + style.Name + ",", " " + style.Name + count + ",");
+                                style.Name = style.Name + count;
                             }
 
                             _doUpdate = false;
@@ -1282,7 +1282,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                             sb.AppendLine(line);
-                            if (stylesOn && line.Replace(" ", string.Empty).Trim().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
+                            if (stylesOn && line.Replace(" ", string.Empty).TrimStart().StartsWith("style:" + styleName.Replace(" ", string.Empty).Trim() + ",", StringComparison.OrdinalIgnoreCase))
                             {
                                 MessageBox.Show(string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleAlreadyExits, styleName));
                                 return;
@@ -1307,7 +1307,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     string content = sb.ToString();
-                    if (content.Trim().EndsWith("[Events]"))
+                    if (content.TrimEnd().EndsWith("[Events]"))
                     {
                         content = content.Trim() + Environment.NewLine +
                             "Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine +

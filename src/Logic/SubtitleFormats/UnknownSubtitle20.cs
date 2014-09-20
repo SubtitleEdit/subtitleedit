@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append(p.StartTime.ToHHMMSSFF());
                 sb.Append(string.Empty.PadLeft(5, ' '));
-                sb.Append(number.ToString().PadLeft(4, '0'));
+                sb.Append(number.ToString("D4"));
                 sb.Append(string.Empty.PadLeft(12, ' '));
                 sb.AppendLine(line1);
 
@@ -67,9 +67,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(string.Empty.PadLeft(5, ' '));
                 sb.Append(p.EndTime.ToHHMMSSFF());
                 sb.Append(string.Empty.PadLeft(5, ' '));
-                sb.Append((number2 / 7 + 1).ToString().PadLeft(3, '0'));
+                sb.Append((number2 / 7 + 1).ToString("D3"));
                 sb.Append('-');
-                sb.Append((number2 % 7 + 1).ToString().PadLeft(2, '0'));
+                sb.Append((number2 % 7 + 1).ToString("D2"));
                 sb.Append(string.Empty.PadLeft(10, ' '));
                 sb.AppendLine(line2);
                 sb.AppendLine();
@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (p != null)
                         {
                             p.EndTime = DecodeTimeCode(s.Substring(5, 11));
-                            if (p.Text.Trim().Length == 0)
+                            if (string.IsNullOrWhiteSpace(p.Text))
                                 p.Text = s.Remove(0, 37).Trim();
                             else
                                 p.Text = p.Text + Environment.NewLine + s.Remove(0, 37).Trim();
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = null;
                     }
                 }
-                else if (s.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(s))
                 {
                     _errorCount++;
                 }

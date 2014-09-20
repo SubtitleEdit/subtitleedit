@@ -126,9 +126,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _paragraph.Number = int.Parse(line);
                         _expecting = ExpectingLine.TimeCodes;
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (!string.IsNullOrWhiteSpace(line))
                     {
-                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number + 1).ToString(CultureInfo.InvariantCulture).Equals(nextNext, StringComparison.Ordinal))
+                        if (_lastParagraph != null && nextNext != null && (_lastParagraph.Number + 1).ToString(CultureInfo.InvariantCulture) == nextNext)
                         {
                             _lastParagraph.Text = (_lastParagraph.Text + Environment.NewLine + line.Trim()).Trim();
                         }
@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _paragraph.Text = string.Empty;
                         _expecting = ExpectingLine.Text;
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (!string.IsNullOrWhiteSpace(line))
                     {
                         if (_errors.Length < 2000)
                             _errors.AppendLine(string.Format(Configuration.Settings.Language.Main.LineNumberXErrorReadingTimeCodeFromSourceLineY, _lineNumber, line));
@@ -155,7 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (line.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
                         if (_paragraph.Text.Length > 0)
                             _paragraph.Text += Environment.NewLine;
@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            if (text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(text))
                 return false;
 
             if (Utilities.IsInteger(text))

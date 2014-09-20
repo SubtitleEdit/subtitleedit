@@ -76,8 +76,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (line.Contains("<Time ") && line.Contains(" begin=") && line.Contains("end="))
                     {
-                        int indexOfBegin = line.IndexOf(" begin=");
-                        int indexOfEnd = line.IndexOf(" end=");
+                        int indexOfBegin = line.IndexOf(" begin=", StringComparison.Ordinal);
+                        int indexOfEnd = line.IndexOf(" end=", StringComparison.Ordinal);
                         string begin = line.Substring(indexOfBegin + 7, 11);
                         string end = line.Substring(indexOfEnd + 5, 11);
 

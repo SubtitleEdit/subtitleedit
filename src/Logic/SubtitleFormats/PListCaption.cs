@@ -105,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     keyNode = xml.CreateElement("key");
                     keyNode.InnerText = "text";
                     if (textNo > 1)
-                        keyNode.InnerText = keyNode.InnerText + textNo.ToString();
+                        keyNode.InnerText = keyNode.InnerText + textNo;
                     paragraph.AppendChild(keyNode);
 
                     valueNode = xml.CreateElement("string");

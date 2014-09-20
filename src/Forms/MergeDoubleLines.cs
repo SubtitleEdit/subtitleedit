@@ -148,12 +148,15 @@ namespace Nikse.SubtitleEdit.Forms
                         p.EndTime = next.EndTime;
                         if (lastMerged)
                         {
-                            lineNumbers.Append(next.Number.ToString() + ",");
+                            lineNumbers.Append(next.Number);
+                            lineNumbers.Append(',');
                         }
                         else
                         {
-                            lineNumbers.Append(p.Number.ToString() + ",");
-                            lineNumbers.Append(next.Number.ToString() + ",");
+                            lineNumbers.Append(p.Number);
+                            lineNumbers.Append(',');
+                            lineNumbers.Append(next.Number);
+                            lineNumbers.Append(',');
                         }
 
                         lastMerged = true;
@@ -170,12 +173,15 @@ namespace Nikse.SubtitleEdit.Forms
                         numberOfMerges++;
                         if (lastMerged)
                         {
-                            lineNumbers.Append(afterNext.Number.ToString() + ",");
+                            lineNumbers.Append(afterNext.Number);
+                            lineNumbers.Append(',');
                         }
                         else
                         {
-                            lineNumbers.Append(p.Number.ToString() + ",");
-                            lineNumbers.Append(afterNext.Number.ToString() + ",");
+                            lineNumbers.Append(p.Number);
+                            lineNumbers.Append(',');
+                            lineNumbers.Append(afterNext.Number);
+                            lineNumbers.Append(',');
                         }
                         lastMerged = true;
                         if (!mergedIndexes.Contains(i))

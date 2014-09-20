@@ -103,7 +103,7 @@ NOTE=
                 {
                     sb.AppendLine(s.Trim());
                 }
-                else if (s.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(s))
                 {
                     if (subtitle.Paragraphs.Count == 0 && (s.StartsWith("TITLE=") || s.StartsWith("TITLE=") || s.StartsWith("FILE=") || s.StartsWith("AUTHOR=") ||
                                                             s.StartsWith("TYPE=VIDEO") || s.StartsWith("FORMAT=") || s.StartsWith("NOTE=")))

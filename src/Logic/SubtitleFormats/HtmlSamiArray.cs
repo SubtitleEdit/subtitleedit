@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 for (int i = 33; i < 255; i++)
                 {
-                    string tag = "&#" + i.ToString() + ";";
+                    string tag = @"&#" + i + @";";
                     if (s.Contains(tag))
                         s = s.Replace(tag, Convert.ToChar(i).ToString());
                 }
@@ -54,30 +54,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (line.Contains("[0] = ") && line.Contains("[1] = '") && line.Contains("[2] = '"))
+                var pos0 = line.IndexOf("[0] = ", StringComparison.Ordinal);
+                var pos1 = line.IndexOf("[1] = ", StringComparison.Ordinal);
+                var pos2 = line.IndexOf("[2] = ", StringComparison.Ordinal);
+                if (pos0 >= 0 && pos1 >= 0 && pos2 >= 0)
                 {
                     var p = new Paragraph();
                     var sb = new StringBuilder();
 
-                    int pos = line.IndexOf("[0] = ");
-                    for (int i = pos + 6; i < line.Length && Utilities.IsInteger(line[i].ToString()); i++)
+                    for (int i = pos0 + 6; i < line.Length && char.IsDigit(line[i]); i++)
                     {
-                        sb.Append(line.Substring(i, 1));
+                        sb.Append(line[i]);
                     }
                     p.StartTime.TotalMilliseconds = int.Parse(sb.ToString());
 
-                    pos = line.IndexOf("[1] = '");
                     sb = new StringBuilder();
-                    for (int i = pos + 7; i < line.Length && line[i] != '\''; i++)
+                    for (int i = pos1 + 7; i < line.Length && line[i] != '\''; i++)
                     {
-                        sb.Append(line.Substring(i, 1));
+                        sb.Append(line[i]);
                     }
                     if (sb.Length > 0)
                         sb.AppendLine();
-                    pos = line.IndexOf("[2] = '");
-                    for (int i = pos + 7; i < line.Length && line[i] != '\''; i++)
+                    for (int i = pos2 + 7; i < line.Length && line[i] != '\''; i++)
                     {
-                        sb.Append(line.Substring(i, 1));
+                        sb.Append(line[i]);
                     }
                     p.Text = sb.ToString().Trim();
                     p.Text = WebUtility.HtmlDecode(p.Text);

@@ -215,7 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                     double startFactor = 0;
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
-                                    if (Utilities.RemoveHtmlTags(oldText).Trim().Length > 0)
+                                    if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
                                     {
                                         startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
                                         if (startFactor < 0.25)
@@ -277,8 +277,9 @@ namespace Nikse.SubtitleEdit.Forms
                                             newParagraph2.Text = pre + comboBoxLineContinuationBegin.Text + newParagraph2.Text;
                                     }
 
-                                    if (newParagraph1.Text.IndexOf("<i>") >= 0 && newParagraph1.Text.IndexOf("<i>") < 10 & newParagraph1.Text.IndexOf("</i>") < 0 &&
-                                        newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>") < 0)
+                                    var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
+                                    if (italicStart1 >= 0 && italicStart1 < 10 & newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
+                                        newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
                                     {
                                         newParagraph1.Text += "</i>";
                                         newParagraph2.Text = "<i>" + newParagraph2.Text;

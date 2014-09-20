@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 int indexOfStartBracket = line.IndexOf('[');
-                if (line.Trim().Length > 0 && line.Length < 250 && indexOfStartBracket >= 0 && indexOfStartBracket < 10)
+                if (!string.IsNullOrWhiteSpace(line) && line.Length < 250 && indexOfStartBracket >= 0 && indexOfStartBracket < 10)
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                     if (_regexMPlayer2Line.IsMatch(s))
@@ -56,9 +56,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index = line.IndexOf(']', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
                 {
-                    if (line.IndexOf("[]") >= 0 && line.IndexOf("[]") < index)
+                    var indexOfBrackets = line.IndexOf("[]", StringComparison.Ordinal);
+                    if (indexOfBrackets >= 0 && indexOfBrackets < index)
                     {
-                        line = line.Insert(line.IndexOf("[]") + 1, "0"); // set empty time codes to zero
+                        line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
                     }
 
@@ -78,9 +79,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('[');
-                sb.Append(((int)(p.StartTime.TotalMilliseconds / 100)).ToString());
+                sb.Append((int)(p.StartTime.TotalMilliseconds / 100));
                 sb.Append("][");
-                sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)).ToString());
+                sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)));
                 sb.Append(']');
 
                 string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);

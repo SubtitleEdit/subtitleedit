@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         expecting = ExpectingLine.TimeEndOrText;
                     }
-                    else if (expecting == ExpectingLine.TimeStart && line.Trim().Length > 0)
+                    else if (expecting == ExpectingLine.TimeStart && !string.IsNullOrWhiteSpace(line))
                     {
                         int ms = (int)paragraph.EndTime.TotalMilliseconds;
                         int frames = paragraph.EndFrame;

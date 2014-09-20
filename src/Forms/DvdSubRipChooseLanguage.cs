@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static int GetLanguageIdFromString(string currentLanguage)
         {
-            currentLanguage = currentLanguage.Substring(currentLanguage.IndexOf("0x") + 2).TrimEnd(')');
+            currentLanguage = currentLanguage.Substring(currentLanguage.IndexOf("0x", StringComparison.Ordinal) + 2).TrimEnd(')');
             return Convert.ToInt32(currentLanguage, 16);
         }
 

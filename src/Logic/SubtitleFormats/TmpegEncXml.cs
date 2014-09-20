@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "]]></Text>";
 
                 XmlAttribute layoutIndex = xml.CreateAttribute("layoutindex");
-                if (p.Text.Trim().StartsWith("<i>") && p.Text.Trim().EndsWith("</i>"))
+                if (p.Text.TrimStart().StartsWith("<i>") && p.Text.TrimEnd().EndsWith("</i>"))
                     layoutIndex.InnerText = "4";
                 else
                     layoutIndex.InnerText = "0";
@@ -264,8 +264,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             string s = ToUtf8XmlString(xml);
-            int startPos = s.IndexOf("<Subtitle>") + 10;
-            s = s.Substring(startPos, s.IndexOf("</Subtitle>") - startPos).Trim();
+            var startPos = s.IndexOf("<Subtitle>", StringComparison.Ordinal) + 10;
+            s = s.Substring(startPos, s.IndexOf("</Subtitle>", StringComparison.Ordinal) - startPos).Trim();
             return Layout.Replace("@", s);
         }
 

@@ -42,13 +42,13 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (s[deleteFrom] == ' ')
                             deleteFrom--;
-                        while (deleteFrom > 0 && !(breakChars).Contains(s.Substring(deleteFrom, 1)))
+                        while (deleteFrom > 0 && !breakChars.Contains(s[deleteFrom]))
                         {
                             deleteFrom--;
                         }
                         if (deleteFrom == index - 1)
                         {
-                            while (deleteFrom > 0 && (breakChars.Replace(" ", string.Empty)).Contains(s.Substring(deleteFrom - 1, 1)))
+                            while (deleteFrom > 0 && breakChars.Replace(" ", string.Empty).Contains(s[deleteFrom - 1]))
                             {
                                 deleteFrom--;
                             }
@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Controls
             else
                 newText = (string)e.Data.GetData(DataFormats.Text);
 
-            if (Text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(Text))
             {
                 Text = newText;
             }
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Controls
                             if (_dragStartFrom < index)
                                 index--;
                         }
-                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && ";:]<.!?".Contains(Text[_dragStartFrom + 1].ToString()))
+                        else if (_dragStartFrom > 0 && Text.Length > _dragStartFrom + 1 && Text[_dragStartFrom] == ' ' && @";:]<.!?".Contains(Text[_dragStartFrom + 1]))
                         {
                             Text = Text.Remove(_dragStartFrom, 1);
                             if (_dragStartFrom < index)
@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Controls
                 // fix end spaces
                 if (endIndex < Text.Length && !newText.EndsWith(' ') && Text[endIndex] != ' ')
                 {
-                    bool lastWord = ";:]<.!?".Contains(Text[endIndex].ToString());
+                    bool lastWord = @";:]<.!?".Contains(Text[endIndex]);
                     if (!lastWord)
                         Text = Text.Insert(endIndex, " ");
                 }
@@ -248,12 +248,12 @@ namespace Nikse.SubtitleEdit.Controls
         {
             int selectionLength = 0;
             int i = tb.SelectionStart;
-            while (i > 0 && breakChars.Contains(tb.Text.Substring(i - 1, 1)) == false)
+            while (i > 0 && !breakChars.Contains(tb.Text[i - 1]))
                 i--;
             tb.SelectionStart = i;
             for (; i < tb.Text.Length; i++)
             {
-                if (breakChars.Contains(tb.Text.Substring(i, 1)))
+                if (breakChars.Contains(tb.Text[i]))
                     break;
                 selectionLength++;
             }

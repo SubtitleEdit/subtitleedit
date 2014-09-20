@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string s = line.Remove(0, m.Length);
                     continuation = s.StartsWith('"');
                 }
-                else if (line.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (continuation)
                         continuation = false;
@@ -98,13 +98,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             _errorCount++;
                         }
                 }
-                else if (line.Trim().Length > 0)
+                else if (!string.IsNullOrWhiteSpace(line))
                 {
                     if (continuation)
                     {
                         if (p != null && p.Text.Length < 300)
                             p.Text = (p.Text + Environment.NewLine + line.TrimEnd('"')).Trim();
-                        continuation = !line.Trim().EndsWith('"');
+                        continuation = !line.TrimEnd().EndsWith('"');
                     }
                     else
                     {

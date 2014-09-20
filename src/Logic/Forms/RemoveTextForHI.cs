@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!Settings.RemoveTextBeforeColon)
                 return text;
 
-            if (text.IndexOf(":", StringComparison.Ordinal) < 0)
+            if (!text.Contains(':'))
                 return text;
 
             // House 7x01 line 52: and she would like you to do three things:
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             bool removedInSecondLine = false;
             foreach (string s in parts)
             {
-                int indexOfColon = s.IndexOf(":", StringComparison.Ordinal);
+                int indexOfColon = s.IndexOf(':');
                 if (indexOfColon > 0)
                 {
                     string pre = s.Substring(0, indexOfColon);
@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             bool remove = true;
                             if (indexOfColon > 0 && indexOfColon < s.Length - 1)
                             {
-                                if ("1234567890".Contains(s.Substring(indexOfColon - 1, 1)) && "1234567890".Contains(s.Substring(indexOfColon + 1, 1)))
+                                if (char.IsDigit(s[indexOfColon - 1]) && char.IsDigit(s[indexOfColon + 1]))
                                     remove = false;
                             }
                             if (s.StartsWith("Previously on") || s.StartsWith("<i>Previously on"))
@@ -198,7 +198,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             {
                                 if (s2.Contains(':'))
                                 {
-                                    int colonIndex = s2.IndexOf(":", StringComparison.Ordinal);
+                                    int colonIndex = s2.IndexOf(':');
                                     string start = s2.Substring(0, colonIndex);
 
                                     if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpper())
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                             endIndex = exclaIndex;
                                         if (colonIndex > 0 && colonIndex < s2.Length - 1)
                                         {
-                                            if ("1234567890".Contains(s2.Substring(colonIndex - 1, 1)) && "1234567890".Contains(s2.Substring(colonIndex + 1, 1)))
+                                            if (char.IsDigit(s2[colonIndex - 1]) && char.IsDigit(s2[colonIndex + 1]))
                                                 endIndex = -10;
                                         }
                                         if (endIndex == -1)
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                     //line continuation?
                     if (arr0.Length > 0 && arr1.Length > 1 && (Utilities.LowercaseLetters + ",").Contains(arr0.Substring(arr0.Length - 1)) &&
-                        Utilities.LowercaseLetters.Contains(arr1.Substring(0, 1)))
+                        Utilities.LowercaseLetters.Contains(arr1[0]))
                     {
                         if (new StripableText(arr[1]).Pre.Contains("...") == false)
                             insertDash = false;
@@ -433,7 +433,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();
                 if (!part0.EndsWith(',') && (!part0.EndsWith('-') || noOfNamesRemovedNotInLineOne > 0))
                 {
-                    if (part0.Length > 0 && ".!?".Contains(part0.Substring(part0.Length - 1)))
+                    if (part0.Length > 0 && @".!?".Contains(part0[part0.Length - 1]))
                     {
                         if (noOfNamesRemovedNotInLineOne > 0)
                         {
@@ -449,7 +449,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!string.IsNullOrEmpty(text))
                 text = st.Pre + text + st.Post;
 
-            if (oldText.Trim().StartsWith("- ") &&
+            if (oldText.TrimStart().StartsWith("- ") &&
                 (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ")) && !text.Contains(Environment.NewLine))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
@@ -572,7 +572,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         if (!_interjectionList.Contains(upper))
                             _interjectionList.Add(upper);
 
-                        string pascalCasing = s.Substring(0, 1).ToUpper() + s.Remove(0, 1);
+                        string pascalCasing = char.ToUpper(s[0]) + s.Substring(1);
                         if (!_interjectionList.Contains(pascalCasing))
                             _interjectionList.Add(pascalCasing);
                     }
@@ -684,7 +684,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 }
                                 if (temp.Length > 0 && s[0].ToString(CultureInfo.InvariantCulture) != s[0].ToString(CultureInfo.InvariantCulture).ToLower())
                                 {
-                                    temp = temp.Remove(0, 1).Insert(0, temp[0].ToString(CultureInfo.InvariantCulture).ToUpper());
+                                    temp = char.ToUpper(temp[0]) + temp.Substring(1);
                                     doRepeat = true;
                                 }
 

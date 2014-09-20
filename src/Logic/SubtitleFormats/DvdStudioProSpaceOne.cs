@@ -74,7 +74,7 @@ $HorzAlign          =   Center
             int number = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0 && line[0] != '$' && !line.StartsWith("//"))
+                if (!string.IsNullOrWhiteSpace(line) && line[0] != '$' && !line.StartsWith("//"))
                 {
                     if (RegexTimeCodes.Match(line).Success)
                     {

@@ -126,7 +126,7 @@ $ColorIndex4    = 3
                         _errorCount++;
                     }
                 }
-                else if (line.Trim().Length > 0 && !line.StartsWith("//") && !line.StartsWith('$'))
+                else if (!string.IsNullOrWhiteSpace(line) && !line.StartsWith("//") && !line.StartsWith('$'))
                 {
                     _errorCount++;
                 }

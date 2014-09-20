@@ -212,15 +212,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line) || line.StartsWith('*'))
                 {
                     // skip empty lines
                 }
-                else if (line.StartsWith('*'))
-                {
-                    // skip start
-                }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (p != null)
                 {
                     sb.AppendLine(line);
                 }

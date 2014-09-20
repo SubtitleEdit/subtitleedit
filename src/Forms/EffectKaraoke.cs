@@ -111,13 +111,13 @@ namespace Nikse.SubtitleEdit.Forms
                             if (tag.Contains(colorTag))
                             {
                                 string tempColor = string.Empty;
-                                int start = tag.IndexOf(colorTag);
+                                var start = tag.IndexOf(colorTag, StringComparison.Ordinal);
                                 int j = start + colorTag.Length;
-                                if ("\"'".Contains(tag[j].ToString()))
+                                if (@"""'".Contains(tag[j]))
                                     j++;
-                                while (j < tag.Length && ("#" + Utilities.LowercaseLettersWithNumbers).Contains(tag[j].ToString()))
+                                while (j < tag.Length && (@"#" + Utilities.LowercaseLettersWithNumbers).Contains(tag[j]))
                                 {
-                                    tempColor += tag[j].ToString();
+                                    tempColor += tag[j];
                                     j++;
                                 }
                                 if (!string.IsNullOrEmpty(currentColor))

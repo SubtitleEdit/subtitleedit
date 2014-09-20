@@ -103,12 +103,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool startOk = i == 0;
                         if (!startOk)
-                            startOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i - 1, 1));
+                            startOk = (@" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text[i - 1]);
                         if (startOk)
                         {
                             bool endOk = (i + word.Length == richTextBoxParagraph.Text.Length);
                             if (!endOk)
-                                endOk = (" <>-\"”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text.Substring(i + word.Length, 1));
+                                endOk = (@" <>-""”“[]'‘`´¶()♪¿¡.…—!?,:;/" + Environment.NewLine).Contains(richTextBoxParagraph.Text[i + word.Length]);
                             if (endOk)
                             {
                                 richTextBoxParagraph.SelectionStart = i + 1;
@@ -276,7 +276,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonGoogleIt_Click(object sender, EventArgs e)
         {
             string text = textBoxWord.Text;
-            if (text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(text))
                 System.Diagnostics.Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
         }
 

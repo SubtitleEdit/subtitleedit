@@ -98,9 +98,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         foreach (char ch in p.Text)
                         {
-                            string s = ch.ToString();
-                            if (s.Trim().Length > 0)
+                            if (char.IsWhiteSpace(ch))
                             {
+                                var s = ch.ToString();
                                 if (!charactersLearned.Contains(s))
                                 {
                                     TrainLetter(ref numberOfCharactersLeaned, ref numberOfCharactersSkipped, nOcrD, charactersLearned, s, false);
@@ -239,7 +239,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sb.Append(text.Substring(i, 1));
+                    sb.Append(text[i]);
                 }
                 i++;
             }

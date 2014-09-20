@@ -98,10 +98,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             try
             {
                 string xmlText = sb.ToString();
-                int startDocType = xmlText.IndexOf("<!DOCTYPE");
+                var startDocType = xmlText.IndexOf("<!DOCTYPE", StringComparison.Ordinal);
                 if (startDocType > 0)
                 {
-                    int endDocType = xmlText.IndexOf(">", startDocType);
+                    int endDocType = xmlText.IndexOf('>', startDocType);
                     xmlText = xmlText.Remove(startDocType, endDocType - startDocType + 1);
                 }
                 xml.LoadXml(xmlText);

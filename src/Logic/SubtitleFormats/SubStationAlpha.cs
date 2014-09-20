@@ -278,7 +278,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                         string styleFormat = "Style: {0},{1},{2},{3},65535,65535,-2147483640,-1,0,1,3,0,2,10,10,10,0,1";
 
-                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize.ToString(), c.ToArgb()));
+                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, c.ToArgb()));
                     }
                 }
 
@@ -351,11 +351,11 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 {
                     eventsStarted = true;
                 }
-                else if (!string.IsNullOrEmpty(line) && line.Trim().StartsWith(';'))
+                else if (!string.IsNullOrEmpty(line) && line.TrimStart().StartsWith(';'))
                 {
                     // skip comment lines
                 }
-                else if (eventsStarted && line.Trim().Length > 0)
+                else if (eventsStarted && !string.IsNullOrWhiteSpace(line))
                 {
                     string s = line.Trim().ToLower();
                     if (s.StartsWith("format:", StringComparison.Ordinal))
