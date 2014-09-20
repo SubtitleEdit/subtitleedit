@@ -232,7 +232,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(Utilities.ReadAllBytes(pluginFileName));
+                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(File.ReadAllBytes(pluginFileName));
                             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                             if (assembly != null)
                             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -31,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (fileName.EndsWith(".chk", StringComparison.OrdinalIgnoreCase))
             {
-                var buffer = Utilities.ReadAllBytes(fileName);
+                var buffer = File.ReadAllBytes(fileName);
                 return buffer.Length > 0 && buffer[0] == 0x1d;
             }
             return false;
@@ -44,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            var buffer = Utilities.ReadAllBytes(fileName);
+            var buffer = File.ReadAllBytes(fileName);
             int index = 256;
             _errorCount = 0;
             subtitle.Paragraphs.Clear();

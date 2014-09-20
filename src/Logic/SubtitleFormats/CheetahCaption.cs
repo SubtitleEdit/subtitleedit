@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = Utilities.ReadAllBytes(fileName);
+                        byte[] buffer = File.ReadAllBytes(fileName);
                         for (int i = 0; i < buffer.Length - 20; i++)
                         {
                             if (buffer[i + 0] == 0xEA &&
@@ -244,7 +244,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = File.ReadAllBytes(fileName);
 
             int i = 128;
             Paragraph last = null;

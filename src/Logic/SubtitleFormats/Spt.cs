@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     FileInfo fi = new FileInfo(fileName);
                     if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
                     {
-                        byte[] buffer = Utilities.ReadAllBytes(fileName);
+                        byte[] buffer = File.ReadAllBytes(fileName);
 
                         if (buffer[00] > 10 &&
                             buffer[01] == 0 &&
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             subtitle.Paragraphs.Clear();
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = File.ReadAllBytes(fileName);
 
             int index = buffer[0]; // go to first subtitle paragraph
             while (index < buffer.Length)

@@ -609,7 +609,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = File.ReadAllBytes(fileName);
 
             _languageIdLine1 = buffer[146];
             if (_languageIdLine1 == 0)

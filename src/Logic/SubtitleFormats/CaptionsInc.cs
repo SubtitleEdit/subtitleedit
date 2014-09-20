@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = File.ReadAllBytes(fileName);
 
             int i = 256;
             Paragraph last = null;
