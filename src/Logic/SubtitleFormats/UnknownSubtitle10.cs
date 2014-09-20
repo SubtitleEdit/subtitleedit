@@ -66,8 +66,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string line = arr[i].Trim();
 
-                int indexStartTime = line.IndexOf("\"start_time\":");
-                int indexEndTime = line.IndexOf("\"end_time\":");
+                int indexStartTime = line.IndexOf("\"start_time\":", StringComparison.Ordinal);
+                int indexEndTime = line.IndexOf("\"end_time\":", StringComparison.Ordinal);
                 if (indexStartTime > 0 && indexEndTime > 0)
                 {
                     int indexEndText = indexStartTime;

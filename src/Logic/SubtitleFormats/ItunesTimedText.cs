@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 string fontContent = line.Substring(i, skipCount);
                                 if (fontContent.Contains(" color="))
                                 {
-                                    string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                    var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                                     if (arr.Length > 0)
                                     {
                                         string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');

@@ -103,11 +103,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
             const string syncTag = "<p ";
-            int syncStartPos = allInputLower.IndexOf(syncTag);
+            var syncStartPos = allInputLower.IndexOf(syncTag, StringComparison.Ordinal);
             int index = syncStartPos + syncTag.Length;
             while (syncStartPos >= 0)
             {
-                int syncEndPos = allInputLower.IndexOf("</p>", index);
+                var syncEndPos = allInputLower.IndexOf("</p>", index, StringComparison.Ordinal);
                 if (syncEndPos > 0)
                 {
                     string s = allInput.Substring(syncStartPos + 2, syncEndPos - syncStartPos - 2);
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
 
                         var tcEnd = new StringBuilder();
-                        int indexOfEnd = s.IndexOf(" data-end=");
+                        var indexOfEnd = s.IndexOf(" data-end=", StringComparison.Ordinal);
                         if (indexOfEnd >= 0)
                         {
                             string end = s.Substring(indexOfEnd + " data-end=".Length);
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos);
+                    syncStartPos = allInputLower.IndexOf(syncTag, syncEndPos, StringComparison.Ordinal);
                     index = syncStartPos + syncTag.Length;
                 }
             }

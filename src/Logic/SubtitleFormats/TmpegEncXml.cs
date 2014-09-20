@@ -264,8 +264,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             string s = ToUtf8XmlString(xml);
-            int startPos = s.IndexOf("<Subtitle>") + 10;
-            s = s.Substring(startPos, s.IndexOf("</Subtitle>") - startPos).Trim();
+            var startPos = s.IndexOf("<Subtitle>", StringComparison.Ordinal) + 10;
+            s = s.Substring(startPos, s.IndexOf("</Subtitle>", StringComparison.Ordinal) - startPos).Trim();
             return Layout.Replace("@", s);
         }
 

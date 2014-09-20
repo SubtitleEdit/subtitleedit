@@ -1728,7 +1728,7 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
                             p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
                         }
-                        else if (line.Length > 5 && line.EndsWith('"') && line.IndexOf("- ", StringComparison.Ordinal) >= 0 && line.IndexOf("- ", StringComparison.Ordinal) < 4)
+                        else if (line.Length > 5 && line.EndsWith('"') && line.Contains("- ") && line.IndexOf("- ", StringComparison.Ordinal) < 4)
                         {
                             p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                         }
@@ -1742,7 +1742,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (line[index + 1] == ' ')
                             {
-                                if (line.Length > 5 && line.IndexOf("- ", StringComparison.Ordinal) >= 0 && line.IndexOf("- ", StringComparison.Ordinal) < 4)
+                                if (line.Length > 5 && line.Contains("- ") && line.IndexOf("- ", StringComparison.Ordinal) < 4)
                                     p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                             }
                         }
@@ -1753,7 +1753,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 p.Text = p.Text.Trim() + "\"";
                             }
-                            else if (line.Length > 5 && line.EndsWith('"') && p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) >= 0)
+                            else if (line.Length > 5 && line.EndsWith('"') && p.Text.Contains(Environment.NewLine + "- "))
                             {
                                 p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                             }
@@ -1766,7 +1766,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 else if (line[index + 1] == ' ')
                                 {
-                                    if (line.Length > 5 && p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) >= 0)
+                                    if (line.Length > 5 && p.Text.Contains(Environment.NewLine + "- "))
                                         p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                                 }
                             }
@@ -3031,7 +3031,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 else
                                 {
-                                    int idxNL = text.IndexOf(Environment.NewLine);
+                                    int idxNL = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                                     if (idxNL > 0)
                                     {
                                         idx = text.IndexOf('-', idxNL);
@@ -3039,7 +3039,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
 
-                                            idx = text.IndexOf("-", idxNL, StringComparison.Ordinal);
+                                            idx = text.IndexOf('-', idxNL);
                                             if (idx >= 0 && idxNL + 5 > idxNL)
                                             {
                                                 text = text.Remove(idx, 1).TrimStart();
@@ -4224,9 +4224,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     int startIndex = 0;
                     int markIndex = p.Text.IndexOf(mark);
-                    if (!wasLastLineClosed && ((p.Text.IndexOf("!", StringComparison.Ordinal) > 0 && p.Text.IndexOf("!", StringComparison.Ordinal) < markIndex) ||
-                                               (p.Text.IndexOf("?", StringComparison.Ordinal) > 0 && p.Text.IndexOf("?", StringComparison.Ordinal) < markIndex) ||
-                                               (p.Text.IndexOf(".", StringComparison.Ordinal) > 0 && p.Text.IndexOf(".", StringComparison.Ordinal) < markIndex)))
+                    if (!wasLastLineClosed && ((p.Text.IndexOf('!') > 0 && p.Text.IndexOf('!') < markIndex) ||
+                                               (p.Text.IndexOf('?') > 0 && p.Text.IndexOf('?') < markIndex) ||
+                                               (p.Text.IndexOf('.') > 0 && p.Text.IndexOf('.') < markIndex)))
                         wasLastLineClosed = true;
                     while (markIndex > 0 && startIndex < p.Text.Length)
                     {
@@ -4266,7 +4266,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     string part = p.Text.Substring(j, markIndex - j + 1);
 
                                     string speaker = string.Empty;
-                                    int speakerEnd = part.IndexOf(")", StringComparison.Ordinal);
+                                    int speakerEnd = part.IndexOf(')');
                                     if (part.StartsWith('(') && speakerEnd > 0 && speakerEnd < part.IndexOf(mark))
                                     {
                                         while (Environment.NewLine.Contains(part[speakerEnd + 1]))

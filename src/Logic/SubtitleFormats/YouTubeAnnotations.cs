@@ -190,7 +190,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-                        if (node.Attributes["style"] != null && styles.IndexOf(node.Attributes["style"].Value) >= 0)
+                        if (node.Attributes["style"] != null && styles.Contains(node.Attributes["style"].Value))
                         {
                             XmlNode textNode = node.SelectSingleNode("TEXT");
                             XmlNodeList regions = node.SelectNodes("segment/movingRegion/anchoredRegion");

@@ -628,27 +628,18 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                     }
-                    if (_namesEtcList.IndexOf(_currentWord) >= 0)
+                    if (_namesEtcList.Contains(_currentWord)
+                        || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _namesEtcList.Contains(_currentWord.Trim('\'')))
                     {
                         _noOfNamesEtc++;
                     }
-                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _namesEtcList.IndexOf(_currentWord.Trim('\'')) >= 0)
-                    {
-                        _noOfNamesEtc++;
-                    }
-                    else if (_skipAllList.IndexOf(_currentWord.ToUpper()) >= 0)
+                    else if (_skipAllList.Contains(_currentWord.ToUpper())
+                        || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _skipAllList.Contains(_currentWord.Trim('\'').ToUpper()))
                     {
                         _noOfSkippedWords++;
                     }
-                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _skipAllList.IndexOf(_currentWord.ToUpper().Trim('\'')) >= 0)
-                    {
-                        _noOfSkippedWords++;
-                    }
-                    else if (_userWordList.IndexOf(_currentWord.ToLower()) >= 0)
-                    {
-                        _noOfCorrectWords++;
-                    }
-                    else if ((_currentWord.EndsWith('\'') || _currentWord.StartsWith('\'')) && _userWordList.IndexOf(_currentWord.Trim('\'').ToLower()) >= 0)
+                    else if (_userWordList.Contains(_currentWord.ToLower())
+                        || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _userWordList.Contains(_currentWord.Trim('\'').ToLower()))
                     {
                         _noOfCorrectWords++;
                     }
@@ -662,15 +653,9 @@ namespace Nikse.SubtitleEdit.Forms
                         _noOfChangedWords++;
                         _mainWindow.CorrectWord(_changeAllDictionary[_currentWord], _currentParagraph, _currentWord.Trim('\''), ref _firstChange);
                     }
-                    else if (_namesEtcListUppercase.IndexOf(_currentWord) >= 0)
-                    {
-                        _noOfNamesEtc++;
-                    }
-                    else if (_namesEtcListWithApostrophe.IndexOf(_currentWord) >= 0)
-                    {
-                        _noOfNamesEtc++;
-                    }
-                    else if (Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, _currentParagraph.Text, _currentWord)) //TODO: verify this!
+                    else if (_namesEtcListUppercase.Contains(_currentWord)
+                        || _namesEtcListWithApostrophe.Contains(_currentWord)
+                        || Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, _currentParagraph.Text, _currentWord)) //TODO: verify this!
                     {
                         _noOfNamesEtc++;
                     }
@@ -856,7 +841,7 @@ namespace Nikse.SubtitleEdit.Forms
             GetTextWithoutUserWordsAndNames(replaceIds, replaceNames, s);
             foreach (string name in replaceNames)
             {
-                int start = s.IndexOf(name);
+                int start = s.IndexOf(name, StringComparison.Ordinal);
                 while (start >= 0)
                 {
                     bool startOk = start == 0 || " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“".Contains(s[start - 1]);
@@ -869,7 +854,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     if (start + 1 < s.Length)
-                        start = s.IndexOf(name, start + 1);
+                        start = s.IndexOf(name, start + 1, StringComparison.Ordinal);
                     else
                         start = -1;
                 }
@@ -922,7 +907,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int startSearchIndex = 0;
                     while (found)
                     {
-                        int indexStart = text.IndexOf(wordWithDashesOrPeriods, startSearchIndex);
+                        int indexStart = text.IndexOf(wordWithDashesOrPeriods, startSearchIndex, StringComparison.Ordinal);
 
                         if (indexStart >= 0)
                         {

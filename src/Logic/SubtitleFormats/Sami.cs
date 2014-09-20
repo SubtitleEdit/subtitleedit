@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(l.Replace("<SYNC Start= \"", "<SYNC Start=\"").Replace("<SYNC Start = \"", "<SYNC Start=\"").Replace("<SYNC Start =\"", "<SYNC Start=\"").Replace("<SYNC  Start=\"", "<SYNC Start=\""));
             string allInput = sb.ToString();
             string allInputLower = allInput.ToLower();
-            if (allInputLower.IndexOf("<sync ", StringComparison.Ordinal) == -1)
+            if (!allInputLower.Contains("<sync "))
                 return;
 
             int styleStart = allInputLower.IndexOf("<style", StringComparison.Ordinal);
@@ -420,7 +420,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                 }
             }
-            if (p != null && !string.IsNullOrEmpty(p.Text) && subtitle.Paragraphs.IndexOf(p) == -1)
+            if (!string.IsNullOrEmpty(p.Text) && !subtitle.Paragraphs.Contains(p))
             {
                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(p.Text);
                 subtitle.Paragraphs.Add(p);

@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string GetTagValue(string tag, string line)
         {
-            int start = line.IndexOf(tag + "=\"");
+            var start = line.IndexOf(tag + "=\"", StringComparison.Ordinal);
             if (start > 0 && line.Length > start + 4)
             {
                 int end = line.IndexOf('"', start + 3);

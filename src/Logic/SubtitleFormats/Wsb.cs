@@ -64,14 +64,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Header = null;
             foreach (string line in lines)
             {
-                int indexOfTen = line.IndexOf("     10     ");
-                if (line.Contains("7\0") && indexOfTen > 0)
+                if (string.IsNullOrWhiteSpace(line))
+                {
+                    continue;
+                }
+
+                var indexOf7001 = line.IndexOf("7\x01\x01\0", StringComparison.Ordinal);
+                var indexOfTen = line.IndexOf("     10     ", StringComparison.Ordinal);
+                if (indexOf7001 >= 0 && indexOfTen > 0)
                 {
                     try
                     {
 
                         string text = line.Substring(0, indexOfTen).Trim();
-                        int indexOf7001 = line.IndexOf("7\0");
                         string time = line.Substring(indexOf7001 - 16, 16);
                         p = new Paragraph(DecodeTimeCode(time.Substring(0, 8)), DecodeTimeCode(time.Substring(8)), text);
                         subtitle.Paragraphs.Add(p);
@@ -81,10 +86,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         System.Diagnostics.Debug.WriteLine(exception.Message);
                         _errorCount++;
                     }
-                }
-                else if (string.IsNullOrWhiteSpace(line))
-                {
-                    // skip these lines
                 }
                 else if (p != null)
                 {

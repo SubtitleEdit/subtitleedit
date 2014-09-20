@@ -1146,7 +1146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// </summary>
         private static string FixItalics(string text)
         {
-            int index = text.IndexOf("<", StringComparison.Ordinal);
+            int index = text.IndexOf('<');
             if (index < 0)
                 return text;
 
@@ -1154,7 +1154,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 text = text.Insert(index + 1, "i>");
                 int indexOfNewLine = text.IndexOf(Environment.NewLine, index, StringComparison.Ordinal);
-                int indexOfEnd = text.IndexOf(">", index + 3, StringComparison.Ordinal);
+                int indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
                 {
                     index = -1;
@@ -1165,12 +1165,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
                     {
                         text = text.Insert(indexOfEnd, "</i");
-                        index = text.IndexOf("<", indexOfEnd + 3, StringComparison.Ordinal);
+                        index = text.IndexOf('<', indexOfEnd + 3);
                     }
                     else
                     {
                         text = text.Insert(indexOfNewLine, "</i>");
-                        index = text.IndexOf("<", indexOfNewLine + 4, StringComparison.Ordinal);
+                        index = text.IndexOf('<', indexOfNewLine + 4);
                     }
                 }
             }

@@ -405,13 +405,13 @@ namespace Nikse.SubtitleEdit.Forms
                             string ending = second.ToString().Substring(second.Length - 9);
                             int splitPos = -1;
                             if (ending.Contains(". "))
-                                splitPos = ending.IndexOf(". ") + second.Length - 9;
+                                splitPos = ending.IndexOf(". ", StringComparison.Ordinal) + second.Length - 9;
                             else if (ending.Contains("! "))
-                                splitPos = ending.IndexOf("! ") + second.Length - 9;
+                                splitPos = ending.IndexOf("! ", StringComparison.Ordinal) + second.Length - 9;
                             else if (ending.Contains(", "))
-                                splitPos = ending.IndexOf(", ") + second.Length - 9;
+                                splitPos = ending.IndexOf(", ", StringComparison.Ordinal) + second.Length - 9;
                             else if (ending.Contains("? "))
-                                splitPos = ending.IndexOf("? ") + second.Length - 9;
+                                splitPos = ending.IndexOf("? ", StringComparison.Ordinal) + second.Length - 9;
                             if (splitPos > 0)
                             {
                                 text = Utilities.AutoBreakLine(first.ToString().Trim() + second.ToString().Substring(0, splitPos + 1)).Trim() + Environment.NewLine + (second.ToString().Substring(splitPos + 1) + third).Trim();

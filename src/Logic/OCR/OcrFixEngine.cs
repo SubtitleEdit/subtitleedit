@@ -1210,7 +1210,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 if (input.StartsWith(". . <i>."))
                     input = "<i>..." + input.Remove(0, 8);
 
-                if (input.StartsWith("...<i>") && (input.IndexOf("</i>", StringComparison.Ordinal) > input.IndexOf(" ", StringComparison.Ordinal)))
+                if (input.StartsWith("...<i>") && (input.IndexOf("</i>", StringComparison.Ordinal) > input.IndexOf(' ')))
                     input = "<i>..." + input.Remove(0, 6);
 
                 if (input.EndsWith(". .."))

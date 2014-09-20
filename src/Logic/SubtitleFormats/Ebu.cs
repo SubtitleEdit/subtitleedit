@@ -283,16 +283,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         string firstColor = null;
                         string s = line;
-                        int start = s.IndexOf("<font ");
+                        var start = s.IndexOf("<font ", StringComparison.Ordinal);
                         if (start >= 0)
                         {
-                            int end = s.IndexOf(">", start);
+                            int end = s.IndexOf('>', start);
                             if (end > 0)
                             {
                                 string f = s.Substring(start, end - start);
                                 if (f.Contains(" color="))
                                 {
-                                    int colorStart = f.IndexOf(" color=");
+                                    var colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
                                     if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
                                     {
                                         int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
