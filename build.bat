@@ -90,7 +90,6 @@ IF NOT EXIST "temp_zip\Tesseract\tessdata\configs" MD "temp_zip\Tesseract\tessda
 
 COPY /Y /V "..\..\..\gpl.txt"                            "temp_zip\"
 COPY /Y /V "..\..\..\Changelog.txt"                      "temp_zip\"
-COPY /Y /V "Interop.QuartzTypeLib.dll"                   "temp_zip\"
 COPY /Y /V "Hunspellx86.dll"                             "temp_zip\"
 COPY /Y /V "Hunspellx64.dll"                             "temp_zip\"
 COPY /Y /V "SubtitleEdit.exe"                            "temp_zip\"
