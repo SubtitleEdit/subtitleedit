@@ -17,6 +17,9 @@
     <RootNamespace>Nikse.SubtitleEdit</RootNamespace>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <NuGetPackageImportStamp>de8d0e94</NuGetPackageImportStamp>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -48,6 +51,11 @@
       <SpecificVersion>False</SpecificVersion>
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="NHunspell, Version=1.2.5359.26126, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
@@ -779,16 +787,6 @@
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
-    <Compile Include="Logic\NHunspell\Hunspell.cs" />
-    <Compile Include="Logic\NHunspell\Hyphen.cs" />
-    <Compile Include="Logic\NHunspell\HyphenResult.cs" />
-    <Compile Include="Logic\NHunspell\LanguageConfig.cs" />
-    <Compile Include="Logic\NHunspell\Marshalling.cs" />
-    <Compile Include="Logic\NHunspell\MyThes.cs" />
-    <Compile Include="Logic\NHunspell\SpellEngine.cs" />
-    <Compile Include="Logic\NHunspell\SpellFactory.cs" />
-    <Compile Include="Logic\NHunspell\ThesMeaning.cs" />
-    <Compile Include="Logic\NHunspell\ThesResult.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
@@ -1557,6 +1555,7 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1737,8 +1736,6 @@
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <Content Include="..\Changelog.txt" />
     <Content Include="..\gpl.txt" />
-    <None Include="Dlls\Hunspellx64.dll" />
-    <None Include="Dlls\Hunspellx86.dll" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1824,7 +1821,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Logic\NHunspell\Licence.txt" />
     <None Include="Resources\pictureBoxFastForward.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseDown.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseOver.Image.png" />
@@ -1911,11 +1907,17 @@
 </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)Dlls\Hunspellx86.dll" "$(TargetDir)"
-COPY /Y /V "$(ProjectDir)Dlls\Hunspellx64.dll" "$(TargetDir)"
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
 COPY /Y /V "$(ProjectDir)Dlls\Interop.QuartzTypeLib.dll" "$(TargetDir)"
 "$(ProjectDir)..\build_helpers.bat" lang</PostBuildEvent>
   </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them. For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

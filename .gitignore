@@ -17,3 +17,8 @@ SubtitleEdit-*-setup.exe
 /SubtitleEdit.tgz
 /tabspace.exe
 /src/Languages/LanguageMaster.xml
+
+# NuGet
+/src/.nuget/NuGet.exe
+/src/.nuget/NuGet.Config
+/src/packages
