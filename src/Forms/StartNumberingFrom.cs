@@ -7,6 +7,8 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class StartNumberingFrom : Form
     {
+        private int _startFromNumber;
+
         public StartNumberingFrom()
         {
             InitializeComponent();
@@ -82,8 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            string s = textBox1.Text;
-            if (Utilities.IsInteger(s))
+            if (int.TryParse(textBox1.Text, out _startFromNumber))
             {
                 DialogResult = DialogResult.OK;
             }
@@ -99,12 +100,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                int number;
-                if (int.TryParse(textBox1.Text, out number))
-                    return number;
-                return 1;
+                return _startFromNumber;
             }
         }
-
     }
 }

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
@@ -747,8 +748,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 return;
 
             xAndY = xAndY.ToLower();
-            string[] parts = xAndY.Split('x');
-            if (parts.Length == 2 && Utilities.IsInteger(parts[0]) && Utilities.IsInteger(parts[1]))
+            if (Regex.IsMatch(xAndY, @"\d+x\d+", RegexOptions.IgnoreCase))
             {
                 for (int i = 0; i < comboBoxResolution.Items.Count; i++)
                 {
