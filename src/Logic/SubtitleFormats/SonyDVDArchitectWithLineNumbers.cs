@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class SonyDVDArchitectWithLineNumbers : SubtitleFormat
     {
         private static Regex regexTimeCode = new Regex(@"^\d\d\d\d  \d\d:\d\d:\d\d:\d\d  \d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
-        private static Regex regex1DigitMillisecs = new Regex(@"^\d\d\d\d  \d\d\d:\d\d:\d\d:\d  \d\d\d:\d\d:\d\d:\d", RegexOptions.Compiled);
+        private static Regex regex1DigitMilliseconds = new Regex(@"^\d\d\d\d  \d\d\d:\d\d:\d\d:\d  \d\d\d:\d\d:\d\d:\d", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (line.IndexOf(':') > 0)
                     {
                         var match = regexTimeCode.Match(s);
-                        var match1DigitMillisecs = regex1DigitMillisecs.Match(s);
+                        var match1DigitMilliseconds = regex1DigitMilliseconds.Match(s);
                         if (s.Length > 31 && match.Success)
                         {
                             s = s.Substring(5, match.Length - 5).TrimStart();
@@ -91,9 +91,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 success = true;
                             }
                         }
-                        else if (s.Length > 29 && match1DigitMillisecs.Success)
+                        else if (s.Length > 29 && match1DigitMilliseconds.Success)
                         {
-                            s = s.Substring(5, match1DigitMillisecs.Length - 5).TrimStart();
+                            s = s.Substring(5, match1DigitMilliseconds.Length - 5).TrimStart();
                             s = s.Replace("  ", ":");
                             s = s.Replace(" ", string.Empty);
                             string[] parts = s.Split(':');
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 milliseconds = int.Parse(parts[7]) * 10;
                                 var end = new TimeCode(hours, minutes, seconds, milliseconds);
 
-                                string text = line.Replace("\0", string.Empty).Substring(match1DigitMillisecs.Length).TrimStart();
+                                string text = line.Replace("\0", string.Empty).Substring(match1DigitMilliseconds.Length).TrimStart();
                                 text = text.Replace("|", Environment.NewLine);
 
                                 lastParagraph = new Paragraph(start, end, text);

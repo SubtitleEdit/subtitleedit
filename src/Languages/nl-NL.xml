@@ -355,7 +355,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Typemachine-effect</Title>
     <TotalMilliseconds>Totaal millisec.:</TotalMilliseconds>
-    <EndDelayInMillisecs>Eindvertraging in millisec.:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Eindvertraging in millisec.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Eigen tekstformaat exporteren</Title>

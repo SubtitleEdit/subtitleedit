@@ -159,7 +159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanFolder>Scan folder...</ScanFolder>
     <ScanningFolder>Scanning {0} and subfolders for subtitle files...</ScanningFolder>
     <Recursive>Include sub folders</Recursive>
-    <SetMinMsBetweenSubtitles>Set min. millisecs between subtitles</SetMinMsBetweenSubtitles>
+    <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
     <PlainText>Plain text</PlainText>
   </BatchConvert>
   <Beamer>
@@ -349,13 +349,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Karaoke effect</Title>
     <ChooseColor>Choose color:</ChooseColor>
-    <TotalMilliseconds>Total millisecs.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>End delay in millisecs.:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
+    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Typewriter effect</Title>
-    <TotalMilliseconds>Total millisecs.:</TotalMilliseconds>
-    <EndDelayInMillisecs>End delay in millisecs.:</EndDelayInMillisecs>
+    <TotalMilliseconds>Total milliseconds:</TotalMilliseconds>
+    <EndDelayInMilliseconds>End delay in milliseconds:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Export custom text format</Title>

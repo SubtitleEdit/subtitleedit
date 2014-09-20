@@ -406,7 +406,7 @@
         {
             public string Title { get; set; }
             public string TotalMilliseconds { get; set; }
-            public string EndDelayInMillisecs { get; set; }
+            public string EndDelayInMilliseconds { get; set; }
         }
 
         public class ExportCustomText

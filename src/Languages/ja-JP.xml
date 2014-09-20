@@ -293,7 +293,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
   <EffectTypewriter>
     <Title>タイプライター効果</Title>
     <TotalMilliseconds>総ミリ秒:</TotalMilliseconds>
-    <EndDelayInMillisecs>末尾の遅延 (ミリ秒).:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>末尾の遅延 (ミリ秒).:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>BDN XML/PNG のエクスポート</Title>

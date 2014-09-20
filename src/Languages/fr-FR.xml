@@ -349,13 +349,13 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Effet Karaoké</Title>
     <ChooseColor>Choisir couleur:</ChooseColor>
-    <TotalMilliseconds>Millisecs. total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en millisecs.:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Milliseconds total:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Délai de fin en milliseconds:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effet machine à écrire</Title>
-    <TotalMilliseconds>Millisecs. total:</TotalMilliseconds>
-    <EndDelayInMillisecs>Délai de fin en millisecs.:</EndDelayInMillisecs>
+    <TotalMilliseconds>Milliseconds total:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Délai de fin en milliseconds:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exporter format de texte personnalisé</Title>

@@ -354,7 +354,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   <EffectTypewriter>
     <Title>打字机效果</Title>
     <TotalMilliseconds>总毫秒数:</TotalMilliseconds>
-    <EndDelayInMillisecs>末尾延时(毫秒):</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>末尾延时(毫秒):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>导出自定义文本格式</Title>

@@ -1091,7 +1091,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                                    ref double frameRate,
                                    ref int pixelWidth,
                                    ref int pixelHeight,
-                                   ref double millisecsDuration,
+                                   ref double millisecondDuration,
                                    ref string videoCodec)
         {
             byte b;
@@ -1173,7 +1173,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             pixelHeight = _pixelHeight;
             frameRate = _frameRate;
             hasConstantFrameRate = _frameRate > 0;
-            millisecsDuration = _durationInMilliseconds;
+            millisecondDuration = _durationInMilliseconds;
             videoCodec = _videoCodecId;
         }
 

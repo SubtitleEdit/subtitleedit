@@ -351,7 +351,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Ефект на пишеща машина</Title>
     <TotalMilliseconds>Общо милисекунди:</TotalMilliseconds>
-    <EndDelayInMillisecs>Задържане в края в милисек.:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Задържане в края в милисек.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Експорт на личен текст формат</Title>

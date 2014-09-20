@@ -284,7 +284,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ScanFolder = "Scan folder...",
                 ScanningFolder = "Scanning {0} and subfolders for subtitle files...",
                 Recursive = "Include sub folders",
-                SetMinMsBetweenSubtitles = "Set min. millisecs between subtitles",
+                SetMinMsBetweenSubtitles = "Set min. milliseconds between subtitles",
                 PlainText = "Plain text",
             };
 
@@ -510,15 +510,15 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Karaoke effect",
                 ChooseColor = "Choose color:",
-                TotalMilliseconds = "Total millisecs.:",
-                EndDelayInMilliseconds = "End delay in millisecs.:"
+                TotalMilliseconds = "Total milliseconds:",
+                EndDelayInMilliseconds = "End delay in milliseconds:"
             };
 
             EffectTypewriter = new LanguageStructure.EffectTypewriter
             {
                 Title = "Typewriter effect",
-                TotalMilliseconds = "Total millisecs.:",
-                EndDelayInMillisecs = "End delay in millisecs.:"
+                TotalMilliseconds = "Total milliseconds:",
+                EndDelayInMilliseconds = "End delay in milliseconds:"
             };
 
             ExportCustomText = new LanguageStructure.ExportCustomText

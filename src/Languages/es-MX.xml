@@ -342,7 +342,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Efecto máquina de escribir</Title>
     <TotalMilliseconds>Total de ms :</TotalMilliseconds>
-    <EndDelayInMillisecs>Retraso del fin en ms :</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Retraso del fin en ms :</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportar formato de texto personalizado</Title>

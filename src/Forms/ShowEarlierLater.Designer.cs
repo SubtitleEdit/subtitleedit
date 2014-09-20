@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
+            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.buttonShowLater = new System.Windows.Forms.Button();
             this.buttonShowEarlier = new System.Windows.Forms.Button();
             this.labelTotalAdjustment = new System.Windows.Forms.Label();
@@ -42,14 +42,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.radioButtonSelectedLineAndForward = new System.Windows.Forms.RadioButton();
             this.SuspendLayout();
             // 
-            // labelHoursMinSecsMilliSecs
+            // labelHourMinSecMilliSecond
             // 
-            this.labelHoursMinSecsMilliSecs.AutoSize = true;
-            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(11, 6);
-            this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
-            this.labelHoursMinSecsMilliSecs.TabIndex = 18;
-            this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
+            this.labelHourMinSecMilliSecond.AutoSize = true;
+            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(11, 6);
+            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
+            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(108, 13);
+            this.labelHourMinSecMilliSecond.TabIndex = 18;
+            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.msecs";
             // 
             // buttonShowLater
             // 
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.Controls.Add(this.buttonShowEarlier);
             this.Controls.Add(this.labelTotalAdjustment);
             this.Controls.Add(this.timeUpDownAdjust);
-            this.Controls.Add(this.labelHoursMinSecsMilliSecs);
+            this.Controls.Add(this.labelHourMinSecMilliSecond);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.KeyPreview = true;
@@ -160,7 +160,7 @@ namespace Nikse.SubtitleEdit.Forms
         #endregion
 
         private Nikse.SubtitleEdit.Controls.TimeUpDown timeUpDownAdjust;
-        private System.Windows.Forms.Label labelHoursMinSecsMilliSecs;
+        private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.Button buttonShowLater;
         private System.Windows.Forms.Button buttonShowEarlier;
         private System.Windows.Forms.Label labelTotalAdjustment;
