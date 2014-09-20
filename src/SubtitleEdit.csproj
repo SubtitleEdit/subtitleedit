@@ -17,7 +17,7 @@
     <RootNamespace>Nikse.SubtitleEdit</RootNamespace>
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <NuGetPackageImportStamp>de8d0e94</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>275fbe13</NuGetPackageImportStamp>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -1903,12 +1903,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev
-</PreBuildEvent>
+    <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
-COPY /Y /V "$(ProjectDir)Dlls\Interop.QuartzTypeLib.dll" "$(TargetDir)"
+COPY /Y /V "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" "$(TargetDir)"
+"$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(TargetDir)NHunspell.dll" "$(TargetDir)Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
 "$(ProjectDir)..\build_helpers.bat" lang</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
