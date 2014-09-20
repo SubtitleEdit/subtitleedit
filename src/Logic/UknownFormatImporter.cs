@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
-                    if (!"0123456789".Contains(c.ToString()))
+                    if (!char.IsDigit(c))
                         allNumbers = false;
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 2)
@@ -246,7 +246,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
-                    if (!"0123456789".Contains(c.ToString()))
+                    if (!char.IsDigit(c))
                         allNumbers = false;
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
@@ -332,7 +332,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (isFirstLineNumber)
                 {
-                    while (line.Length > 0 && "0123456789".Contains(line.Substring(0, 1)))
+                    while (line.Length > 0 && char.IsDigit(line[0]))
                     {
                         line = line.Remove(0, 1);
                     }
@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
-                    if (!"0123456789".Contains(c.ToString()))
+                    if (!char.IsDigit(c))
                         allNumbers = false;
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
@@ -577,7 +577,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bool allNumbers = lineWithPerhapsOnlyNumbers.Length > 0;
                 foreach (char c in lineWithPerhapsOnlyNumbers)
                 {
-                    if (!"0123456789".Contains(c.ToString()))
+                    if (!char.IsDigit(c))
                         allNumbers = false;
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)

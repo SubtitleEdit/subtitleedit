@@ -118,11 +118,11 @@ ST 0 EB 3.10
                         }
                     }
                 }
-                else if (line.Trim().Length == 0 || line.Trim() == "@")
+                else if (string.IsNullOrWhiteSpace(line) || line.Trim() == "@")
                 {
                     // skip these lines
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (!string.IsNullOrWhiteSpace(line) && p != null)
                 {
                     if (p.Text.Length > 2000)
                         return; // wrong format

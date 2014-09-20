@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return string.Empty;
 
             Uri pathUri = new Uri(fileName);
-            if (!folder.EndsWith(Path.DirectorySeparatorChar.ToString()))
+            if (!folder.EndsWith(Path.DirectorySeparatorChar))
                 folder += Path.DirectorySeparatorChar;
             Uri folderUri = new Uri(folder);
             return Uri.UnescapeDataString(folderUri.MakeRelativeUri(pathUri).ToString().Replace('/', Path.DirectorySeparatorChar));
@@ -1066,7 +1066,7 @@ namespace Nikse.SubtitleEdit.Forms
             gs.StartInSourceView = checkBoxStartInSourceView.Checked;
             gs.RemoveBlankLinesWhenOpening = checkBoxRemoveBlankLinesWhenOpening.Checked;
             gs.ListViewLineSeparatorString = textBoxShowLineBreaksAs.Text;
-            if (gs.ListViewLineSeparatorString.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(gs.ListViewLineSeparatorString))
                 gs.ListViewLineSeparatorString = "<br />";
             gs.ListViewDoubleClickAction = comboBoxListViewDoubleClickEvent.SelectedIndex;
 
@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Forms
             ProxySettings proxy = Configuration.Settings.Proxy;
             proxy.ProxyAddress = textBoxProxyAddress.Text;
             proxy.UserName = textBoxProxyUserName.Text;
-            if (textBoxProxyPassword.Text.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(textBoxProxyPassword.Text))
                 proxy.Password = null;
             else
                 proxy.EncodePassword(textBoxProxyPassword.Text);
@@ -1214,9 +1214,10 @@ namespace Nikse.SubtitleEdit.Forms
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
             {
-                if (node.Text.Contains('['))
+                var indexOfBracket = node.Text.IndexOf('[');
+                if (indexOfBracket >= 0)
                 {
-                    string text = node.Text.Substring(0, node.Text.IndexOf("[")).Trim();
+                    string text = node.Text.Substring(0, indexOfBracket).Trim();
                     if (text == Configuration.Settings.Language.Settings.GoToFirstSelectedLine.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine = GetShortcut(node.Text);
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToNextEmptyLine) && text == (Configuration.Settings.Language.Settings.GoToNextEmptyLine).Replace("&", string.Empty))
@@ -2193,7 +2194,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int index = listBoxOcrFixList.SelectedIndex;
             string text = listBoxOcrFixList.Items[index].ToString();
-            string key = text.Substring(0, text.IndexOf(" --> ")).Trim();
+            string key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal)).Trim();
             if (_ocrFixWords.ContainsKey(key))
             {
                 DialogResult result;
@@ -2209,7 +2210,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         index = listBoxOcrFixList.SelectedIndices[idx];
                         text = listBoxOcrFixList.Items[index].ToString();
-                        key = text.Substring(0, text.IndexOf(" --> ")).Trim();
+                        key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal)).Trim();
 
                         if (_ocrFixWords.ContainsKey(key))
                         {

@@ -66,8 +66,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string line = arr[i].Trim();
 
-                int indexStartTime = line.IndexOf("\"start_time\":");
-                int indexEndTime = line.IndexOf("\"end_time\":");
+                int indexStartTime = line.IndexOf("\"start_time\":", StringComparison.Ordinal);
+                int indexEndTime = line.IndexOf("\"end_time\":", StringComparison.Ordinal);
                 if (indexStartTime > 0 && indexEndTime > 0)
                 {
                     int indexEndText = indexStartTime;
@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             start = start.Trim().Trim(':').Trim('"').Trim();
 
             int i = 0;
-            while (i < start.Length && "0123456789".Contains(start[i].ToString()))
+            while (i < start.Length && char.IsDigit(start[i]))
                 i++;
 
             return int.Parse(start.Substring(0, i));

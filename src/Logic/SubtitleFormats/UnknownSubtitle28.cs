@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 for (int i = 0; i < arr.Length; i++)
                 {
-                    XmlNode text = xml.CreateElement("text" + (i + 1).ToString());
+                    XmlNode text = xml.CreateElement("text" + (i + 1));
                     text.InnerText = arr[i];
                     paragraph.AppendChild(text);
                 }

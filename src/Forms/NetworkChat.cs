@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSendChat_Click(object sender, EventArgs e)
         {
-            if (textBoxChat.Text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(textBoxChat.Text))
             {
                 _networkSession.SendChatMessage(textBoxChat.Text.Trim());
                 AddChatMessage(_networkSession.CurrentUser, textBoxChat.Text.Trim());
@@ -93,13 +93,13 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (s[deleteFrom] == ' ')
                                 deleteFrom--;
-                            while (deleteFrom > 0 && !(breakChars).Contains(s.Substring(deleteFrom, 1)))
+                            while (deleteFrom > 0 && !breakChars.Contains(s[deleteFrom]))
                             {
                                 deleteFrom--;
                             }
                             if (deleteFrom == index - 1)
                             {
-                                while (deleteFrom > 0 && (breakChars.Replace(" ", string.Empty)).Contains(s.Substring(deleteFrom - 1, 1)))
+                                while (deleteFrom > 0 && breakChars.Replace(" ", string.Empty).Contains(s[deleteFrom - 1]))
                                 {
                                     deleteFrom--;
                                 }

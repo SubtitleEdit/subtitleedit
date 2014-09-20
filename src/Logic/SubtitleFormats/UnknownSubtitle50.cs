@@ -147,7 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
             }
-            if (p.Text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(p.Text))
                 subtitle.Paragraphs.Add(p);
 
             subtitle.Renumber(1);

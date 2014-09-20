@@ -1146,7 +1146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         /// </summary>
         private static string FixItalics(string text)
         {
-            int index = text.IndexOf("<", StringComparison.Ordinal);
+            int index = text.IndexOf('<');
             if (index < 0)
                 return text;
 
@@ -1154,7 +1154,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 text = text.Insert(index + 1, "i>");
                 int indexOfNewLine = text.IndexOf(Environment.NewLine, index, StringComparison.Ordinal);
-                int indexOfEnd = text.IndexOf(">", index + 3, StringComparison.Ordinal);
+                int indexOfEnd = text.IndexOf('>', index + 3);
                 if (indexOfNewLine < 0 && indexOfEnd < 0)
                 {
                     index = -1;
@@ -1165,12 +1165,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (indexOfNewLine < 0 || (indexOfEnd > 0 && indexOfEnd < indexOfNewLine))
                     {
                         text = text.Insert(indexOfEnd, "</i");
-                        index = text.IndexOf("<", indexOfEnd + 3, StringComparison.Ordinal);
+                        index = text.IndexOf('<', indexOfEnd + 3);
                     }
                     else
                     {
                         text = text.Insert(indexOfNewLine, "</i>");
-                        index = text.IndexOf("<", indexOfNewLine + 4, StringComparison.Ordinal);
+                        index = text.IndexOf('<', indexOfNewLine + 4);
                     }
                 }
             }
@@ -1228,7 +1228,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string latinLetters = sb + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!latinLetters.Contains(ch.ToString()))
+                            if (!latinLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1240,7 +1240,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         allOK = true;
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch.ToString()))
+                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1256,7 +1256,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string arabicLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!arabicLetters.Contains(ch.ToString()))
+                            if (!arabicLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1272,7 +1272,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string hebrewLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!hebrewLetters.Contains(ch.ToString()))
+                            if (!hebrewLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)
@@ -1288,7 +1288,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string cyrillicLetters = sb + "(1234567890, .!?-\r\n'\")";
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!cyrillicLetters.Contains(ch.ToString()))
+                            if (!cyrillicLetters.Contains(ch))
                                 allOK = false;
                         }
                         if (allOK)

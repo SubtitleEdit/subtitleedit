@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             xml.DocumentElement.SelectSingleNode("dcst:ContentTitleText", nsmgr).InnerText = ss.CurrentDCinemaMovieTitle;
             if (string.IsNullOrEmpty(ss.CurrentDCinemaSubtitleId) || !ss.CurrentDCinemaSubtitleId.StartsWith("urn:uuid:"))
-                ss.CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid().ToString();
+                ss.CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
             xml.DocumentElement.SelectSingleNode("dcst:Id", nsmgr).InnerText = ss.CurrentDCinemaSubtitleId;
             xml.DocumentElement.SelectSingleNode("dcst:ReelNumber", nsmgr).InnerText = ss.CurrentDCinemaReelNumber;
             xml.DocumentElement.SelectSingleNode("dcst:IssueDate", nsmgr).InnerText = ss.CurrentDCinemaIssueDate;
@@ -311,7 +311,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains('>'))
                             {
-                                int endOfFont = line.IndexOf(">", i);
+                                int endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
                                 {
                                     nodeTemp.InnerText = txt.ToString();
@@ -354,7 +354,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else
                             {
-                                txt.Append(line.Substring(i, 1));
+                                txt.Append(line[i]);
                             }
                             i++;
                         }

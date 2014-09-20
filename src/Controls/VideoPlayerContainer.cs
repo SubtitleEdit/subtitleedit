@@ -351,50 +351,46 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         string s = text.Substring(i);
                         bool fontFound = false;
-                        int start = s.IndexOf("<font ", StringComparison.Ordinal);
-                        if (start >= 0)
+                        int end = s.IndexOf('>');
+                        if (end > 0)
                         {
-                            int end = s.IndexOf(">", start);
-                            if (end > 0)
+                            string f = s.Substring(0, end);
+                            int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                            if (colorStart > 0)
                             {
-                                string f = s.Substring(start, end - start);
-                                int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
-                                if (colorStart > 0)
+                                int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
+                                if (colorEnd > 0)
                                 {
-                                    int colorEnd = f.IndexOf('"', colorStart + " color=".Length + 1);
-                                    if (colorEnd > 0)
+                                    s = f.Substring(colorStart, colorEnd - colorStart);
+                                    s = s.Remove(0, " color=".Length);
+                                    s = s.Trim('"');
+                                    s = s.Trim('\'');
+                                    try
                                     {
-                                        s = f.Substring(colorStart, colorEnd - colorStart);
-                                        s = s.Remove(0, " color=".Length);
-                                        s = s.Trim('"');
-                                        s = s.Trim('\'');
-                                        try
+                                        fontColor = System.Drawing.ColorTranslator.FromHtml(s);
+                                        fontFound = true;
+                                    }
+                                    catch
+                                    {
+                                        fontFound = false;
+                                        if (s.Length > 0)
                                         {
-                                            fontColor = System.Drawing.ColorTranslator.FromHtml(s);
-                                            fontFound = true;
-                                        }
-                                        catch
-                                        {
-                                            fontFound = false;
-                                            if (s.Length > 0)
+                                            try
                                             {
-                                                try
-                                                {
-                                                    fontColor = System.Drawing.ColorTranslator.FromHtml("#" + s);
-                                                    fontFound = true;
-                                                }
-                                                catch
-                                                {
-                                                    fontFound = false;
-                                                }
+                                                fontColor = System.Drawing.ColorTranslator.FromHtml("#" + s);
+                                                fontFound = true;
+                                            }
+                                            catch
+                                            {
+                                                fontFound = false;
                                             }
                                         }
                                     }
                                 }
                             }
-                            i += end;
-                            //fontIndices.Push(_subtitleTextBox.Text.Length);
                         }
+                        i += end;
+                        //fontIndices.Push(_subtitleTextBox.Text.Length);
                         if (fontFound)
                         {
                             _subtitleTextBox.AppendText(sb.ToString());
@@ -411,13 +407,13 @@ namespace Nikse.SubtitleEdit.Controls
                         isFontColor = false;
                         i += 6;
                     }
-                    else if (text.Substring(i, 1) == "\n") // RichTextBox only count NewLine as one character!
+                    else if (text[i] == '\n') // RichTextBox only count NewLine as one character!
                     {
-                        sb.Append(text.Substring(i, 1));
+                        sb.Append(text[i]);
                     }
                     else
                     {
-                        sb.Append(text.Substring(i, 1));
+                        sb.Append(text[i]);
                         letterCount++;
                     }
                     i++;

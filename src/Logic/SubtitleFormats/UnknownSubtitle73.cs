@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string s = line;
                 if (regexTimeCodes.IsMatch(s))
                 {
-                    s = s.Remove(0, s.IndexOf(":") + 1).Trim();
+                    s = s.Remove(0, s.IndexOf(':') + 1).Trim();
                     var temp = s.Split(' ');
                     if (temp.Length > 1)
                     {
@@ -97,15 +97,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                 {
                     // skip empty lines
                 }
-                else if (line.Trim().Length > 0 && p == null)
+                else if (p == null)
                 {
                     _errorCount++;
                 }
-                else if (line.Trim().Length > 0)
+                else
                 {
                     p.Text = (p.Text + Environment.NewLine + line).Trim();
                     if (p.Text.Length > 1000)

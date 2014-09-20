@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (idx >= 0)
                                 textBytes.Add((byte)LatinCodes[idx]);
                             else
-                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(text.Substring(j, 1))[0]);
+                            textBytes.Add(Encoding.GetEncoding(1252).GetBytes(new[] { text[j] })[0]);
 
                             j++;
                         }

@@ -667,7 +667,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _importLanguageString = languageString;
             if (_importLanguageString.Contains('(') && !_importLanguageString.StartsWith('('))
-                _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf("(") - 1).Trim();
+                _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
         internal void InitializeBatch(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
@@ -3894,7 +3894,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -3922,7 +3922,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
@@ -4091,7 +4091,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4119,7 +4119,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
@@ -4396,7 +4396,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int correctWords;
                 int wordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(line, out correctWords);
 
-                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && textWithOutFixes.Replace("~", string.Empty).Trim().Length == 0)
+                if (wordsNotFound > 0 || correctWords == 0 || textWithOutFixes != null && string.IsNullOrWhiteSpace(textWithOutFixes.Replace("~", string.Empty)))
                 {
                     _ocrFixEngine.AutoGuessesUsed.Clear();
                     _ocrFixEngine.UnknownWordsFound.Clear();
@@ -4424,7 +4424,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else if (wordsNotFound == 1)
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(listViewIndex, Color.LightGreen);
@@ -4443,28 +4443,28 @@ namespace Nikse.SubtitleEdit.Forms
         private string FixNocrHardcodedStuff(string line)
         {
             // fix I/l
-            int start = line.IndexOf("I", StringComparison.Ordinal);
+            int start = line.IndexOf('I');
             while (start > 0)
             {
-                if (start > 0 && line[start - 1].ToString() != line[start - 1].ToString().ToUpper())
+                if (start > 0 && char.IsLower(line[start - 1]))
                     line = line.Remove(start, 1).Insert(start, "l");
-                else if (start < line.Length - 1 && line[start + 1].ToString() != line[start + 1].ToString().ToUpper())
+                else if (start < line.Length - 1 && char.IsLower(line[start + 1]))
                     line = line.Remove(start, 1).Insert(start, "l");
                 start++;
-                start = line.IndexOf("I", start);
+                start = line.IndexOf('I', start);
             }
-            start = line.IndexOf("l");
+            start = line.IndexOf('l');
             while (start > 0)
             {
-                if (start < line.Length - 1 && line[start + 1].ToString() != line[start + 1].ToString().ToLower())
+                if (start < line.Length - 1 && char.IsUpper(line[start + 1]))
                     line = line.Remove(start, 1).Insert(start, "I");
                 start++;
-                start = line.IndexOf("l", start, StringComparison.Ordinal);
+                start = line.IndexOf('l', start);
             }
             if (line.Contains('l'))
             {
                 if (line.StartsWith('l'))
-                    line = line.Remove(0, 1).Insert(0, "I");
+                    line = @"I" + line.Substring(1);
                 if (line.StartsWith("<i>l"))
                     line = line.Remove(3, 1).Insert(3, "I");
                 if (line.StartsWith("- l"))
@@ -4737,7 +4737,7 @@ namespace Nikse.SubtitleEdit.Forms
                 paragraph.Append("<i>" + temp + "</i>");
                 paragraph.Append(appendString);
             }
-            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().Trim().StartsWith('-'))
+            else if (wordItalics > 0 && wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().TrimStart().StartsWith('-'))
             {
                 string temp = line.ToString().Replace("<i>", "").Replace("</i>", "");
                 paragraph.Append("<i>" + temp + "</i>");
@@ -5598,10 +5598,10 @@ namespace Nikse.SubtitleEdit.Forms
             var nbmp = new NikseBitmap(bmp);
             nbmp.ReplaceYellowWithWhite(); // optimized replace
 
-            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
+            string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
             var b = nbmp.GetBitmap();
             b.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
-            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid().ToString();
+            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
             b.Dispose();
 
             var process = new Process();
@@ -5662,14 +5662,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string s = html.Replace("<em>", "@001_____").Replace("</em>", "@002_____");
 
-            int first = s.IndexOf("<", StringComparison.Ordinal);
+            int first = s.IndexOf('<');
             while (first >= 0)
             {
-                int last = s.IndexOf(">", first, StringComparison.Ordinal);
+                int last = s.IndexOf('>');
                 if (last > 0)
                 {
                     s = s.Remove(first, last - first + 1);
-                    first = s.IndexOf("<", StringComparison.Ordinal);
+                    first = s.IndexOf('<');
                 }
                 else
                 {
@@ -5713,7 +5713,7 @@ namespace Nikse.SubtitleEdit.Forms
                            Split(new[] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
-                if (s.Length == 1 && !"♪♫-:'”1234567890&aAI\"".Contains(s))
+                if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
                     count++;
             }
             if (count > 0)
@@ -5748,7 +5748,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
                 if (textWithOutFixes != psm)
                 {
-                    if (textWithOutFixes.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(textWithOutFixes))
                     {
                         textWithOutFixes = psm;
                     }
@@ -5837,7 +5837,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if ((!newText.Contains('9') || textWithOutFixes.Contains('9')) &&
                              (!newText.Replace("</i>", string.Empty).Contains('/') || textWithOutFixes.Replace("</i>", string.Empty).Contains('/')) &&
-                             newUnfixedText.Trim().Length > 0 &&
+                             !string.IsNullOrWhiteSpace(newUnfixedText) &&
                              newWordsNotFound < wordsNotFound || (newWordsNotFound == wordsNotFound && newText.EndsWith('!') && textWithOutFixes.EndsWith('l')))
                     {
                         wordsNotFound = newWordsNotFound;
@@ -5996,7 +5996,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(1, 1) == " ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty)[1] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6004,7 +6004,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Substring(2, 1) == " ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && unItalicText.Replace("<i>", string.Empty).Replace("</i>", string.Empty)[2] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6128,7 +6128,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             string w = unItalicText.Substring(0, unItalicText.Length - 4);
                                             int wIdx = w.Length - 1;
-                                            while (wIdx >= 0 && !(" .,!?<>:;'-$@£()[]<>/\"".Contains(w[wIdx].ToString())))
+                                            while (wIdx >= 0 && !@" .,!?<>:;'-$@£()[]<>/""".Contains(w[wIdx]))
                                             {
                                                 wIdx--;
                                             }
@@ -6144,7 +6144,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         {
                                             string w = unItalicText;
                                             int wIdx = w.Length - 1;
-                                            while (wIdx >= 0 && !(" .,!?<>:;'-$@£()[]<>/\"".Contains(w[wIdx].ToString())))
+                                            while (wIdx >= 0 && !@" .,!?<>:;'-$@£()[]<>/""".Contains(w[wIdx]))
                                             {
                                                 wIdx--;
                                             }
@@ -6304,10 +6304,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 //check tesseract... find some otherway to do this...
                 //string tmp = Utilities.RemoveHtmlTags(line).Trim();
-                //if (!tmp.Trim().EndsWith("..."))
+                //if (!tmp.TrimEnd().EndsWith("..."))
                 //{
                 //    tmp = tmp.TrimEnd('.').TrimEnd();
-                //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp.Substring(tmp.Length - 1, 1)))
+                //    if (tmp.Length > 2 && Utilities.LowercaseLetters.Contains(tmp[tmp.Length - 1]))
                 //    {
                 //        if (_nocrChars == null)
                 //            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
@@ -6349,7 +6349,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (wordsNotFound == 1 || line.Length == 1 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
@@ -6365,7 +6365,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (line.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line.Replace("<i>", string.Empty).Replace("</i>", string.Empty)))
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
@@ -6427,7 +6427,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string TesseractResizeAndRetry(Bitmap bitmap)
         {
             string result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 3, bitmap.Height * 2), _languageId, null);
-            if (result.Trim().Length == 0)
+            if (string.IsNullOrWhiteSpace(result))
                 result = Tesseract3DoOcrViaExe(ResizeBitmap(bitmap, bitmap.Width * 4, bitmap.Height * 2), _languageId, "-psm 7");
             return result.TrimEnd();
         }
@@ -6979,7 +6979,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = lb.Items[lb.SelectedIndex].ToString();
                 if (text.Contains(':'))
                 {
-                    string number = text.Substring(1, text.IndexOf(":", StringComparison.Ordinal) - 1);
+                    string number = text.Substring(1, text.IndexOf(':') - 1);
                     subtitleListView1.SelectIndexAndEnsureVisible(int.Parse(number) - 1);
                 }
             }
@@ -7917,7 +7917,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_ocrFixEngine == null)
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
 
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     var form = new AddToNamesList();
                     form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7940,7 +7940,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
                     var form = new AddToUserDic();
                     form.Initialize(comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7963,7 +7963,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim().ToLower();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
                     var form = new AddToOcrReplaceList();
                     form.Initialize(_languageId, comboBoxDictionaries.Text, text);
                     if (form.ShowDialog(this) == DialogResult.OK)
@@ -7986,7 +7986,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string text = listBoxUnknownWords.SelectedItems[0].ToString();
                 if (text.Contains(':'))
                 {
-                    text = text.Substring(text.IndexOf(":", StringComparison.Ordinal) + 1).Trim();
+                    text = text.Substring(text.IndexOf(':') + 1).Trim();
                     Process.Start("http://www.google.com/search?q=" + Utilities.UrlEncode(text));
                 }
             }

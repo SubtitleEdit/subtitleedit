@@ -102,14 +102,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _text = new StringBuilder();
                         _expecting = ExpectingLine.Text;
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (!string.IsNullOrWhiteSpace(line))
                     {
                         _errorCount++;
                         _expecting = ExpectingLine.Text; // lets go to next paragraph
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (line.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
                         _text.AppendLine(line.TrimEnd());
                     }

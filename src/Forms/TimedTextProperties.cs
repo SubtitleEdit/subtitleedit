@@ -90,21 +90,25 @@ namespace Nikse.SubtitleEdit.Forms
                     comboBoxDefaultRegion.SelectedIndex = comboBoxDefaultRegion.Items.Count - 1;
             }
 
-            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLower(CultureInfo.InvariantCulture);
-            if (string.IsNullOrEmpty(timeCodeFormat))
-                comboBoxTimeCodeFormat.SelectedIndex = 0;
-            else if (timeCodeFormat.Equals("seconds", StringComparison.Ordinal))
-                comboBoxTimeCodeFormat.SelectedIndex = 2;
-            else if (timeCodeFormat.Equals("milliseconds", StringComparison.Ordinal))
-                comboBoxTimeCodeFormat.SelectedIndex = 3;
-            else if (timeCodeFormat.Equals("ticks", StringComparison.Ordinal))
-                comboBoxTimeCodeFormat.SelectedIndex = 4;
-            else if (timeCodeFormat.Equals("hh:mm:ss.msec", StringComparison.Ordinal))
-                comboBoxTimeCodeFormat.SelectedIndex = 1;
-            else if (timeCodeFormat.Equals("hh:mm:ss:ff", StringComparison.Ordinal))
-                comboBoxTimeCodeFormat.SelectedIndex = 0;
-            else
-                comboBoxTimeCodeFormat.SelectedIndex = 0;
+            var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
+            switch (timeCodeFormat)
+            {
+                case "seconds":
+                    comboBoxTimeCodeFormat.SelectedIndex = 2;
+                    break;
+                case "milliseconds":
+                    comboBoxTimeCodeFormat.SelectedIndex = 3;
+                    break;
+                case "ticks":
+                    comboBoxTimeCodeFormat.SelectedIndex = 4;
+                    break;
+                case "hh:mm:ss.msec":
+                    comboBoxTimeCodeFormat.SelectedIndex = 1;
+                    break;
+                default: // hh:mm:ss:ff
+                    comboBoxTimeCodeFormat.SelectedIndex = 0;
+                    break;
+            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -117,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             XmlNode node = _xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata/ttml:title", _nsmgr);
             if (node != null)
             {
-                if (textBoxTitle.Text.Trim().Length == 0 && textBoxDescription.Text.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(textBoxTitle.Text) && string.IsNullOrWhiteSpace(textBoxDescription.Text))
                 {
                     _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr).RemoveChild(_xml.DocumentElement.SelectSingleNode("ttml:head/ttml:metadata", _nsmgr));
                 }
@@ -126,7 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     node.InnerText = textBoxTitle.Text;
                 }
             }
-            else if (textBoxTitle.Text.Trim().Length > 0)
+            else if (!string.IsNullOrWhiteSpace(textBoxTitle.Text))
             {
                 var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
                 if (head == null)
@@ -152,7 +156,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 node.InnerText = textBoxDescription.Text;
             }
-            else if (textBoxDescription.Text.Trim().Length > 0)
+            else if (!string.IsNullOrWhiteSpace(textBoxDescription.Text))
             {
                 var head = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
                 if (head == null)

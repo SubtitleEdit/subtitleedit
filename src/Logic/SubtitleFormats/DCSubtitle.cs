@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string languageShortName = Utilities.AutoDetectGoogleLanguage(subtitle);
                 var ci = CultureInfo.CreateSpecificCulture(languageShortName);
                 languageEnglishName = ci.EnglishName;
-                int indexOfStartP = languageEnglishName.IndexOf("(");
+                int indexOfStartP = languageEnglishName.IndexOf('(');
                 if (indexOfStartP > 1)
                     languageEnglishName = languageEnglishName.Remove(indexOfStartP).Trim();
             }
@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else if (line.Substring(i).StartsWith("<font color=") && line.Substring(i + 3).Contains('>'))
                             {
-                                int endOfFont = line.IndexOf(">", i);
+                                int endOfFont = line.IndexOf('>', i);
                                 if (txt.Length > 0)
                                 {
                                     nodeTemp.InnerText = txt.ToString();
@@ -336,7 +336,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                             else
                             {
-                                txt.Append(line.Substring(i, 1));
+                                txt.Append(line[i]);
                             }
                             i++;
                         }

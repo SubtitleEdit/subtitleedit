@@ -297,7 +297,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string fontContent = text.Substring(i, endIndex);
                         if (fontContent.Contains(" color="))
                         {
-                            string[] arr = fontContent.Substring(fontContent.IndexOf(" color=") + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                            var arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length > 0)
                             {
                                 string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
@@ -408,7 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    sb.Append(text.Substring(i, 1));
+                    sb.Append(text[i]);
                 }
                 i++;
             }

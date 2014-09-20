@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute id = xml.CreateAttribute("id");
-                id.InnerText = "p" + no.ToString();
+                id.InnerText = "p" + no;
                 paragraph.Attributes.Append(id);
 
                 XmlAttribute end = xml.CreateAttribute("end");

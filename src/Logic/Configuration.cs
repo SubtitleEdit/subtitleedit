@@ -228,7 +228,7 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                         Instance._baseDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
 
-                    if (!Instance._baseDir.EndsWith(Path.DirectorySeparatorChar.ToString()))
+                    if (!Instance._baseDir.EndsWith(Path.DirectorySeparatorChar))
                         Instance._baseDir += Path.DirectorySeparatorChar;
                 }
                 return Instance._baseDir;

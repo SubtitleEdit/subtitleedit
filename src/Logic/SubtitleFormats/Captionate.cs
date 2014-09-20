@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             start.InnerText = EncodeTime(p.StartTime);
             paragraph.Attributes.Append(start);
 
-            if (p.Text.Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(p.Text))
             {
                 XmlNode tracks = xml.CreateElement("tracks");
                 paragraph.AppendChild(tracks);
@@ -145,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             text = Utilities.RemoveHtmlTags(text);
                             text = text.Replace("<br>", Environment.NewLine).Replace("<br />", Environment.NewLine).Replace("<BR>", Environment.NewLine);
                             p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
-                            if (text.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(text))
                                 subtitle.Paragraphs.Add(p);
                         }
                     }

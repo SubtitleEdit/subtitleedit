@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder(@" ");
             for (int i = 0; i < text.Length; i++)
             {
-                sb.Append(text.Substring(i, 1));
+                sb.Append(text[i]);
                 sb.Append(' ');
             }
             return sb.ToString();
@@ -63,14 +63,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Trim();
             for (int i = 0; i < text.Length; i++)
             {
-                if (i % 2 == 1 && text.Substring(i, 1) != " ")
+                if (i % 2 == 1 && text[i] != ' ')
                     return text;
             }
             var sb = new StringBuilder();
             for (int i = 0; i < text.Length; i++)
             {
                 if (i % 2 == 0)
-                    sb.Append(text.Substring(i, 1));
+                    sb.Append(text[i]);
             }
             return sb.ToString();
         }

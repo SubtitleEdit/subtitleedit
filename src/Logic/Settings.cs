@@ -306,7 +306,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (smpte)
             {
-                CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid().ToString();
+                CurrentDCinemaSubtitleId = "urn:uuid:" + Guid.NewGuid();
                 CurrentDCinemaLanguage = "en";
                 CurrentDCinemaFontUri = DCinemaLoadFontResource;
                 CurrentDCinemaFontId = "theFontId";
@@ -1090,7 +1090,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (!string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString))
                     settings.General.ListViewLineSeparatorString = settings.General.ListViewLineSeparatorString.Replace("\n", string.Empty).Replace("\r", string.Empty);
 
-                if (string.IsNullOrEmpty(settings.General.ListViewLineSeparatorString) || settings.General.ListViewLineSeparatorString.Trim().Length == 0)
+                if (string.IsNullOrWhiteSpace(settings.General.ListViewLineSeparatorString))
                     settings.General.ListViewLineSeparatorString = "<br />";
 
                 if (settings.Shortcuts.GeneralToggleTranslationMode == "Control+U" && settings.Shortcuts.MainTextBoxSelectionToLower == "Control+U")

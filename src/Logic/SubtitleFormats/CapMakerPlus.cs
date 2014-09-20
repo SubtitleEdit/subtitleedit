@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (textLength > 0)
                         {
                             p.Text = Encoding.GetEncoding(1252).GetString(buffer, textStart, textLength);
-                            int rtIndex = p.Text.IndexOf("{\\rtf1");
+                            int rtIndex = p.Text.IndexOf("{\\rtf1", StringComparison.Ordinal);
                             if (rtIndex >= 0 && rtIndex < 10)
                             {
                                 var rtBox = new System.Windows.Forms.RichTextBox();

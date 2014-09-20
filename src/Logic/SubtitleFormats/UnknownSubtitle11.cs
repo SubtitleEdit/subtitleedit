@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int errors = 0;
             foreach (string line in lines)
             {
-                if (line.Trim().Length > 0 && line.Contains('{'))
+                if (line.Contains('{'))
                 {
                     string s = RemoveIllegalSpacesAndFixEmptyCodes(line);
                     if (_regexMicroDvdLine.IsMatch(s))
@@ -58,9 +58,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 index = line.IndexOf('}', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
                 {
-                    if (line.IndexOf("{}") >= 0 && line.IndexOf("{}") < index)
+                    var indexOfBrackets = line.IndexOf("{}", StringComparison.Ordinal);
+                    if (indexOfBrackets >= 0 && indexOfBrackets < index)
                     {
-                        line = line.Insert(line.IndexOf("{}") + 1, "0"); // set empty time codes to zero
+                        line = line.Insert(indexOfBrackets + 1, "0"); // set empty time codes to zero
                         index++;
                     }
 

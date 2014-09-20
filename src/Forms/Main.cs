@@ -475,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (double zoomCounter = AudioVisualizer.ZoomMininum; zoomCounter <= AudioVisualizer.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
                     int percent = (int)Math.Round((zoomCounter * 100));
-                    ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent.ToString() + "%", ZoomFactor = zoomCounter };
+                    ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent + "%", ZoomFactor = zoomCounter };
                     toolStripComboBoxWaveForm.Items.Add(item);
                     if (percent == 100)
                         toolStripComboBoxWaveForm.SelectedIndex = toolStripComboBoxWaveForm.Items.Count - 1;
@@ -1137,7 +1137,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(outputFolder))
                 outputFileName = Path.Combine(outputFolder, Path.GetFileName(outputFileName));
             if (File.Exists(outputFileName) && !overwrite)
-                outputFileName = Path.ChangeExtension(outputFileName, Guid.NewGuid().ToString() + extension);
+                outputFileName = Path.ChangeExtension(outputFileName, Guid.NewGuid() + extension);
             return outputFileName;
         }
 
@@ -2823,7 +2823,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = File.ReadAllText(fileName, enc);
 
                         // check for RTF file
-                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.Trim().StartsWith("{\\rtf", StringComparison.Ordinal))
+                        if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !s.TrimStart().StartsWith("{\\rtf", StringComparison.Ordinal))
                         {
                             var rtBox = new RichTextBox();
                             rtBox.Rtf = s;
@@ -3599,7 +3599,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (allText.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(allText))
                     {
                         MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName), String.Empty, MessageBoxButtons.OK, MessageBoxIcon.Stop);
                         return DialogResult.Cancel;
@@ -3888,17 +3888,17 @@ namespace Nikse.SubtitleEdit.Forms
                                           Configuration.Settings.General.SubtitleFontBold +
                                           Configuration.Settings.General.CenterSubtitleInTextBox +
                                           Configuration.Settings.General.SubtitleFontSize +
-                                          Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
-                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString();
+                                          Configuration.Settings.General.SubtitleFontColor.ToArgb() +
+                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb();
             bool oldUseTimeFormatHHMMSSFF = Configuration.Settings.General.UseTimeFormatHHMMSSFF;
 
             string oldSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxColorLongLines.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxColorOverlap.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString() +
-                                       Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString();
+                                       Configuration.Settings.Tools.ListViewSyntaxColorDurationBig +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorLongLines +
+                                       Configuration.Settings.Tools.ListViewSyntaxColorOverlap +
+                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines +
+                                       Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX +
+                                       Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
             var settings = new Settings();
@@ -3938,19 +3938,19 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
 
             string newSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxColorDurationBig.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxColorLongLines.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxColorOverlap.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX.ToString() +
-                           Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb().ToString();
+                           Configuration.Settings.Tools.ListViewSyntaxColorDurationBig +
+                           Configuration.Settings.Tools.ListViewSyntaxColorLongLines +
+                           Configuration.Settings.Tools.ListViewSyntaxColorOverlap +
+                           Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines +
+                           Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX +
+                           Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             if (oldSubtitleFontSettings != Configuration.Settings.General.SubtitleFontName +
                                           Configuration.Settings.General.SubtitleFontBold +
                                           Configuration.Settings.General.CenterSubtitleInTextBox +
                                           Configuration.Settings.General.SubtitleFontSize +
-                                          Configuration.Settings.General.SubtitleFontColor.ToArgb().ToString() +
-                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb().ToString() ||
+                                          Configuration.Settings.General.SubtitleFontColor.ToArgb() +
+                                          Configuration.Settings.General.SubtitleBackgroundColor.ToArgb() ||
                                           oldSyntaxColoring != newSyntaxColoring)
             {
                 try
@@ -4831,7 +4831,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_sourceViewChange)
             {
                 SaveSubtitleListviewIndexes();
-                if (textBoxSource.Text.Trim().Length > 0)
+                if (!string.IsNullOrWhiteSpace(textBoxSource.Text))
                 {
                     var temp = new Subtitle(_subtitle);
                     SubtitleFormat format = GetCurrentSubtitleFormat();
@@ -5820,7 +5820,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _subtitle.Paragraphs[index];
                 int errorsBefore;
                 int errorsAfter;
-                ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index + 1, _subtitle.Paragraphs.Count.ToString()));
+                ShowStatus(string.Format(_language.SpellChekingViaWordXLineYOfX, version, index + 1, _subtitle.Paragraphs.Count));
                 SubtitleListview1.SelectIndexAndEnsureVisible(index);
                 string newText = wordSpellChecker.CheckSpelling(p.Text, out errorsBefore, out errorsAfter);
                 if (errorsAfter > 0)
@@ -5949,25 +5949,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    int startIndex = p.Text.IndexOf(oldWord);
+                    int startIndex = p.Text.IndexOf(oldWord, StringComparison.Ordinal);
                     while (startIndex >= 0 && startIndex < p.Text.Length && p.Text.Substring(startIndex).Contains(oldWord))
                     {
                         bool startOk = startIndex == 0 || p.Text[startIndex - 1] == ' ' || startIndex == p.Text.Length - oldWord.Length ||
-                                       Environment.NewLine.EndsWith(p.Text[startIndex - 1].ToString());
+                                       Environment.NewLine.EndsWith(p.Text[startIndex - 1]);
 
                         if (startOk)
                         {
                             int end = startIndex + oldWord.Length;
                             if (end <= p.Text.Length)
                             {
-                                if ((end == p.Text.Length) || ((" ,.!?:;')" + Environment.NewLine).Contains(p.Text[end].ToString())))
+                                if (end == p.Text.Length || (@" ,.!?:;')" + Environment.NewLine).Contains(p.Text[end]))
                                     p.Text = p.Text.Remove(startIndex, oldWord.Length).Insert(startIndex, changeWord);
                             }
                         }
                         if (startIndex + 2 >= p.Text.Length)
                             startIndex = -1;
                         else
-                            startIndex = p.Text.IndexOf(oldWord, startIndex + 2);
+                            startIndex = p.Text.IndexOf(oldWord, startIndex + 2, StringComparison.Ordinal);
                     }
 
                 }
@@ -7270,8 +7270,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (firstWord.Contains(Environment.NewLine))
                         {
                             // Redefine firstWord and idx.
-                            firstWord = firstWord.Remove(firstWord.IndexOf(Environment.NewLine));
-                            idx = s.IndexOf(Environment.NewLine);
+                            firstWord = firstWord.Remove(firstWord.IndexOf(Environment.NewLine, StringComparison.Ordinal));
+                            idx = s.IndexOf(Environment.NewLine, StringComparison.Ordinal);
                         }
 
                         // Remove first word from the next subtitle.
@@ -7349,7 +7349,7 @@ namespace Nikse.SubtitleEdit.Forms
                         p.Text = (idx == 0 ? startTag : "") + p.Text.Trim() + " " + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
 
                         // Now, idx will hold the position of the last line break, if any.
-                        idx = p.Text.LastIndexOf(Environment.NewLine);
+                        idx = p.Text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
 
                         // Check if the last line of the subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
                         if (Utilities.RemoveHtmlTags(p.Text.Substring((idx > 0 ? idx + Environment.NewLine.Length : 0))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
@@ -7388,8 +7388,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (lastWord.Contains(Environment.NewLine))
                         {
                             // Redefine lastWord and idx.
-                            lastWord = lastWord.Substring(lastWord.LastIndexOf(Environment.NewLine));
-                            idx = s.LastIndexOf(Environment.NewLine);
+                            lastWord = lastWord.Substring(lastWord.LastIndexOf(Environment.NewLine, StringComparison.Ordinal));
+                            idx = s.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
                         }
 
                         // Remove last word from the first subtitle.
@@ -7459,7 +7459,7 @@ namespace Nikse.SubtitleEdit.Forms
                         next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogueMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + lastWord.Trim() + " " + next.Text.Trim();
 
                         // Now, idx will hold the position of the first line break, if any.
-                        idx = next.Text.IndexOf(Environment.NewLine);
+                        idx = next.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
 
                         // Check if the first line of the next subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
                         if (Utilities.RemoveHtmlTags(next.Text.Substring(0, (idx > 0 ? idx : next.Text.Length))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
@@ -7739,7 +7739,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 double startFactor = 0;
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
-                if (Utilities.RemoveHtmlTags(oldText).Trim().Length > 0)
+                if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
                 {
                     startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
                     if (startFactor < 0.25)
@@ -8131,7 +8131,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool allLinesStartAndEndsWithItalic = text.Contains("<i>");
             foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (!line.Trim().StartsWith("<i>") || !line.Trim().EndsWith("</i>"))
+                if (!line.TrimStart().StartsWith("<i>") || !line.TrimEnd().EndsWith("</i>"))
                     allLinesStartAndEndsWithItalic = false;
             }
             if (allLinesStartAndEndsWithItalic)
@@ -8214,10 +8214,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                                     original.Text = Utilities.AutoBreakLine(original.Text, Utilities.AutoDetectGoogleLanguage(_subtitleAlternate));
 
-                                if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                                if (string.IsNullOrWhiteSpace(old1))
                                     original.Text = original.Text.TrimStart();
 
-                                if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                                if (string.IsNullOrWhiteSpace(old2))
                                     original.Text = original.Text.TrimEnd();
                             }
                             original.EndTime = originalNext.EndTime;
@@ -8259,10 +8259,10 @@ namespace Nikse.SubtitleEdit.Forms
                         old1.Length > Configuration.Settings.General.SubtitleLineMaximumLength || old2.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         currentParagraph.Text = Utilities.AutoBreakLine(currentParagraph.Text, Utilities.AutoDetectGoogleLanguage(_subtitle));
 
-                    if (string.IsNullOrEmpty(old1) || old1.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(old1))
                         currentParagraph.Text = currentParagraph.Text.TrimStart();
 
-                    if (string.IsNullOrEmpty(old2) || old2.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(old2))
                         currentParagraph.Text = currentParagraph.Text.TrimEnd();
                 }
 
@@ -8623,11 +8623,11 @@ namespace Nikse.SubtitleEdit.Forms
         private void SaveUndockedPositions()
         {
             if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left.ToString() + ";" + _videoPlayerUnDocked.Top.ToString() + ";" + _videoPlayerUnDocked.Width + ";" + _videoPlayerUnDocked.Height;
+                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left + @";" + _videoPlayerUnDocked.Top + @";" + _videoPlayerUnDocked.Width + @";" + _videoPlayerUnDocked.Height;
             if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left.ToString() + ";" + _waveFormUnDocked.Top.ToString() + ";" + _waveFormUnDocked.Width + ";" + _waveFormUnDocked.Height;
+                Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left + @";" + _waveFormUnDocked.Top + @";" + _waveFormUnDocked.Width + @";" + _waveFormUnDocked.Height;
             if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left.ToString() + ";" + _videoControlsUnDocked.Top.ToString() + ";" + _videoControlsUnDocked.Width + ";" + _videoControlsUnDocked.Height;
+                Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left + @";" + _videoControlsUnDocked.Top + @";" + _videoControlsUnDocked.Width + @";" + _videoControlsUnDocked.Height;
         }
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
@@ -8671,7 +8671,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p != null)
                         {
                             string tc = p.StartTime + " --> " + p.EndTime;
-                            int start = textBoxSource.Text.IndexOf(tc);
+                            int start = textBoxSource.Text.IndexOf(tc, StringComparison.Ordinal);
                             if (start > 0)
                             {
                                 textBoxSource.SelectionStart = start + tc.Length + Environment.NewLine.Length;
@@ -8689,12 +8689,12 @@ namespace Nikse.SubtitleEdit.Forms
                             string startTC = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
                             string endTC = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
                             string tc = startTC + "," + endTC;
-                            int start = textBoxSource.Text.IndexOf(tc);
+                            int start = textBoxSource.Text.IndexOf(tc, StringComparison.Ordinal);
                             if (start > 0)
                             {
                                 int start2 = textBoxSource.Text.LastIndexOf("Dialogue:", start, StringComparison.Ordinal);
                                 if (start2 > 0)
-                                    start2 = (textBoxSource.Text + Environment.NewLine).IndexOf(Environment.NewLine, start2);
+                                    start2 = (textBoxSource.Text + Environment.NewLine).IndexOf(Environment.NewLine, start2, StringComparison.Ordinal);
                                 if (start2 > 0)
                                     start = start2;
                                 textBoxSource.SelectionStart = start;
@@ -8752,12 +8752,12 @@ namespace Nikse.SubtitleEdit.Forms
                         while (pos > 0 && pos + 3 < s.Length && !s.Substring(pos, 3).StartsWith(Environment.NewLine))
                             pos--;
                         s = s.Substring(pos).Trim();
-                        int lastTimeCode = s.IndexOf("Dialogue:");
+                        int lastTimeCode = s.IndexOf("Dialogue:", StringComparison.Ordinal);
 
                         if (lastTimeCode >= 0)
                         {
                             string tc = s.Substring(lastTimeCode).Trim();
-                            while (tc.Length > 0 && !Utilities.IsInteger(tc.Substring(0, 1)))
+                            while (tc.Length > 0 && !char.IsDigit(tc[0]))
                                 tc = tc.Remove(0, 1);
                             if (tc.Length > 12)
                             {
@@ -8833,40 +8833,35 @@ namespace Nikse.SubtitleEdit.Forms
             if (p == null)
                 return;
 
-            bool done = false;
-
             string s = p.Text;
             if (s.StartsWith("<font "))
             {
-                int start = s.IndexOf("<font ");
-                if (start >= 0)
+                int end = s.IndexOf('>');
+                if (end > 0)
                 {
-                    int end = s.IndexOf(">", start);
-                    if (end > 0)
+                    string f = s.Substring(0, end);
+                    
+                    if (f.Contains(" face=") && !f.Contains(" color="))
                     {
-                        string f = s.Substring(start, end - start);
-                        if (f.Contains(" face=") && !f.Contains(" color="))
-                        {
-                            start = s.IndexOf(" face=", start);
-                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                            p.Text = s;
-                            done = true;
-                        }
-                        else if (f.Contains(" color="))
-                        {
-                            int colorStart = f.IndexOf(" color=");
-                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                            p.Text = s;
-                            done = true;
-                        }
+                        var start = s.IndexOf(" face=", StringComparison.Ordinal);
+                        s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                        p.Text = s;
+                        return;
+                    }
+
+                    var colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                    if (colorStart >= 0)
+                    {
+                        if (s.IndexOf('"', colorStart + 8) > 0)
+                            end = s.IndexOf('"', colorStart + 8);
+                        s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                        p.Text = s;
+                        return;
                     }
                 }
             }
 
-            if (!done)
-                p.Text = string.Format("<font color=\"{0}\">{1}</font>", color, p.Text);
+            p.Text = string.Format("<font color=\"{0}\">{1}</font>", color, p.Text);
         }
 
         private void toolStripMenuItemFont_Click(object sender, EventArgs e)
@@ -8905,40 +8900,33 @@ namespace Nikse.SubtitleEdit.Forms
             if (p == null)
                 return;
 
-            bool done = false;
-
             string s = p.Text;
             if (s.StartsWith("<font "))
             {
-                int start = s.IndexOf("<font ");
-                if (start >= 0)
+                var end = s.IndexOf('>');
+                if (end > 0)
                 {
-                    int end = s.IndexOf(">", start);
-                    if (end > 0)
+                    var f = s.Substring(0, end);
+
+                    if (f.Contains(" color=") && !f.Contains(" face="))
                     {
-                        string f = s.Substring(start, end - start);
-                        if (f.Contains(" color=") && !f.Contains(" face="))
-                        {
-                            start = s.IndexOf(" color=", start);
-                            s = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
-                            p.Text = s;
-                            done = true;
-                        }
-                        else if (f.Contains(" face="))
-                        {
-                            int faceStart = f.IndexOf(" face=");
-                            if (s.IndexOf('"', faceStart + " face=".Length + 1) > 0)
-                                end = s.IndexOf('"', faceStart + " face=".Length + 1);
-                            s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
-                            p.Text = s;
-                            done = true;
-                        }
+                        var start = s.IndexOf(" color=", StringComparison.Ordinal);
+                        p.Text = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
+                        return;
+                    }
+
+                    var faceStart = f.IndexOf(" face=", StringComparison.Ordinal);
+                    if (f.Contains(" face="))
+                    {
+                        if (s.IndexOf('"', faceStart + 7) > 0)
+                            end = s.IndexOf('"', faceStart + 7);
+                        p.Text = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
+                        return;
                     }
                 }
             }
 
-            if (!done)
-                p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
+            p.Text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
         }
 
         private void TypeEffectToolStripMenuItemClick(object sender, EventArgs e)
@@ -9220,7 +9208,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.Trim().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
+                            else if (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
@@ -9345,7 +9333,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                subtitle.Header = subtitle.Header.Remove(subtitle.Header.IndexOf("[Events]"));
+                subtitle.Header = subtitle.Header.Remove(subtitle.Header.IndexOf("[Events]", StringComparison.Ordinal));
                 subtitle.Header = subtitle.Header.Trim() + Environment.NewLine +
                                    Environment.NewLine +
                                    "[Events]" + Environment.NewLine +
@@ -11596,7 +11584,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle.Paragraphs[index].StartTime.TotalMilliseconds + 100 > tc.TotalMilliseconds || offset > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     return;
 
-                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc);
+                MakeHistoryForUndo(_language.BeforeSetEndTimeAndOffsetTheRest + @"  " + _subtitle.Paragraphs[index].Number + @" - " + tc);
 
                 numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
                 _subtitle.Paragraphs[index].EndTime.TotalSeconds = videoPosition;
@@ -11787,15 +11775,15 @@ namespace Nikse.SubtitleEdit.Forms
                 var post = new StringBuilder();
 
                 int i = 0;
-                while (i < s2.Length && "- !?.\"،,():;[]".Contains(s2[i].ToString()))
+                while (i < s2.Length && @"- !?.""،,():;[]".Contains(s2[i]))
                 {
-                    pre.Append(s2[i].ToString());
+                    pre.Append(s2[i]);
                     i++;
                 }
                 int j = s2.Length - 1;
-                while (j > i && "- !?.\"،,():;[]".Contains(s2[j].ToString()))
+                while (j > i && @"- !?.""،,():;[]".Contains(s2[j]))
                 {
-                    post.Append(s2[j].ToString());
+                    post.Append(s2[j]);
                     j--;
                 }
                 if (startsWithItalic)
@@ -11827,7 +11815,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith('-') || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         hasStartDash = true;
                 }
                 MakeHistoryForUndo(_language.BeforeToggleDialogueDashes);
@@ -11847,9 +11835,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith('-') || line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         sb.AppendLine(line);
-                    else if (line.Trim().StartsWith("<i>") && line.Trim().Length > 3)
+                    else if (line.TrimStart().StartsWith("<i>") && line.Trim().Length > 3)
                         sb.AppendLine("<i>-" + line.Substring(3));
                     else
                         sb.AppendLine("- " + line);
@@ -11871,9 +11859,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var sb = new StringBuilder();
                 foreach (string line in lines)
                 {
-                    if (line.Trim().StartsWith('-'))
+                    if (line.TrimStart().StartsWith('-'))
                         sb.AppendLine(line.TrimStart().TrimStart('-').TrimStart());
-                    else if (line.Trim().StartsWith("<i>-") || line.Trim().StartsWith("<i> -"))
+                    else if (line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         sb.AppendLine("<i>" + line.TrimStart().Substring(3).TrimStart().TrimStart('-').TrimStart());
                     else
                         sb.AppendLine(line);
@@ -12006,7 +11994,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _makeHistoryPaused = true;
                         foreach (string line in list)
                         {
-                            if (line.Trim().Length > 0)
+                            if (!string.IsNullOrWhiteSpace(line))
                             {
                                 InsertAfter();
                                 textBoxListViewText.Text = Utilities.AutoBreakLine(line);
@@ -14485,7 +14473,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var tc = TimeCode.FromSeconds(videoPosition);
                 timeUpDownStartTime.TimeCode = tc;
 
-                MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + "  " + _subtitle.Paragraphs[index].Number.ToString() + " - " + tc);
+                MakeHistoryForUndo(_language.BeforeSetStartTimeAndOffsetTheRest + @"  " + _subtitle.Paragraphs[index].Number + @" - " + tc);
 
                 double offset = _subtitle.Paragraphs[index].StartTime.TotalMilliseconds - tc.TotalMilliseconds;
 
@@ -15022,7 +15010,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(actionType) && mi != null)
                     {
                         var item = new ToolStripMenuItem();
-                        item.Name = "Plugin" + toolsPluginCount.ToString();
+                        item.Name = "Plugin" + toolsPluginCount;
                         item.Text = text;
                         item.Tag = pluginFileName;
 
@@ -15187,7 +15175,7 @@ namespace Nikse.SubtitleEdit.Forms
                 currentText = _subtitle.ToText(GetCurrentSubtitleFormat());
                 if (_textAutoSave == null)
                     _textAutoSave = _changeSubtitleToString;
-                if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && currentText.Trim().Length > 0)
+                if (!string.IsNullOrEmpty(_textAutoSave) && currentText.Trim() != _textAutoSave.Trim() && !string.IsNullOrWhiteSpace(currentText))
                 {
                     if (!Directory.Exists(Configuration.AutoBackupFolder))
                     {
@@ -15216,7 +15204,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (_textAutoSaveOriginal == null)
                         _textAutoSaveOriginal = _changeSubtitleToString;
-                    if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && currentTextAlternate.Trim().Length > 0)
+                    if (!string.IsNullOrEmpty(_textAutoSaveOriginal) && currentTextAlternate.Trim() != _textAutoSaveOriginal.Trim() && !string.IsNullOrWhiteSpace(currentTextAlternate))
                     {
                         if (!Directory.Exists(Configuration.AutoBackupFolder))
                         {
@@ -15336,7 +15324,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dir);
 
             FileInfo fi = new FileInfo(videoFileName);
-            string wavePeakName = Sha256Hash(Path.GetFileName(videoFileName) + fi.Length.ToString() + fi.CreationTimeUtc.ToShortDateString()) + ".wav";
+            string wavePeakName = Sha256Hash(Path.GetFileName(videoFileName) + fi.Length + fi.CreationTimeUtc.ToShortDateString()) + ".wav";
             wavePeakName = wavePeakName.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
             wavePeakName = Path.Combine(dir, wavePeakName);
             return wavePeakName;
@@ -15349,7 +15337,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dir);
 
             FileInfo fi = new FileInfo(videoFileName);
-            string name = Sha256Hash(Path.GetFileName(videoFileName) + fi.Length.ToString() + fi.CreationTimeUtc.ToShortDateString());
+            string name = Sha256Hash(Path.GetFileName(videoFileName) + fi.Length + fi.CreationTimeUtc.ToShortDateString());
             name = name.Replace("=", string.Empty).Replace("/", string.Empty).Replace(",", string.Empty).Replace("?", string.Empty).Replace("*", string.Empty).Replace("+", string.Empty).Replace("\\", string.Empty);
             name = Path.Combine(dir, name);
             return name;
@@ -16058,29 +16046,25 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = text;
                 if (s.StartsWith("<font "))
                 {
-                    int start = s.IndexOf("<font ");
-                    if (start >= 0)
+                    int end = s.IndexOf('>');
+                    if (end > 0)
                     {
-                        int end = s.IndexOf(">", start);
-                        if (end > 0)
+                        string f = s.Substring(0, end);
+                        if (f.Contains(" face=") && !f.Contains(" color="))
                         {
-                            string f = s.Substring(start, end - start);
-                            if (f.Contains(" face=") && !f.Contains(" color="))
-                            {
-                                start = s.IndexOf(" face=", start);
-                                s = s.Insert(start, string.Format(" color=\"{0}\"", color));
-                                text = s;
-                                done = true;
-                            }
-                            else if (f.Contains(" color="))
-                            {
-                                int colorStart = f.IndexOf(" color=");
-                                if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
-                                    end = s.IndexOf('"', colorStart + " color=".Length + 1);
-                                s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
-                                text = s;
-                                done = true;
-                            }
+                            var start = s.IndexOf(" face=", StringComparison.Ordinal);
+                            s = s.Insert(start, string.Format(" color=\"{0}\"", color));
+                            text = s;
+                            done = true;
+                        }
+                        else if (f.Contains(" color="))
+                        {
+                            int colorStart = f.IndexOf(" color=", StringComparison.Ordinal);
+                            if (s.IndexOf('"', colorStart + " color=".Length + 1) > 0)
+                                end = s.IndexOf('"', colorStart + " color=".Length + 1);
+                            s = s.Substring(0, colorStart) + string.Format(" color=\"{0}", color) + s.Substring(end);
+                            text = s;
+                            done = true;
                         }
                     }
                 }
@@ -16110,37 +16094,30 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool done = false;
 
-                string s = text;
-                if (s.StartsWith("<font "))
+                if (text.StartsWith("<font "))
                 {
-                    int start = s.IndexOf("<font ");
-                    if (start >= 0)
+                    int end = text.IndexOf('>');
+                    if (end > 0)
                     {
-                        int end = s.IndexOf(">", start);
-                        if (end > 0)
+                        string f = text.Substring(0, end);
+                        if (f.Contains(" color=") && !f.Contains(" face="))
                         {
-                            string f = s.Substring(start, end - start);
-                            if (f.Contains(" color=") && !f.Contains(" face="))
-                            {
-                                start = s.IndexOf(" color=", start);
-                                s = s.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
-                                text = s;
-                                done = true;
-                            }
-                            else if (f.Contains(" face="))
-                            {
-                                int faceStart = f.IndexOf(" face=");
-                                if (s.IndexOf('"', faceStart + " face=".Length + 1) > 0)
-                                    end = s.IndexOf('"', faceStart + " face=".Length + 1);
-                                s = s.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + s.Substring(end);
-                                text = s;
-                                done = true;
-                            }
+                            var start = text.IndexOf(" color=", StringComparison.Ordinal);
+                            text = text.Insert(start, string.Format(" face=\"{0}\"", fontDialog1.Font.Name));
+                            done = true;
+                        }
+                        else if (f.Contains(" face="))
+                        {
+                            int faceStart = f.IndexOf(" face=", StringComparison.Ordinal);
+                            if (text.IndexOf('"', faceStart + " face=".Length + 1) > 0)
+                                end = text.IndexOf('"', faceStart + " face=".Length + 1);
+                            text = text.Substring(0, faceStart) + string.Format(" face=\"{0}", fontDialog1.Font.Name) + text.Substring(end);
+                            done = true;
                         }
                     }
                 }
                 if (!done)
-                    text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, s);
+                    text = string.Format("<font face=\"{0}\">{1}</font>", fontDialog1.Font.Name, text);
 
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;
@@ -16389,7 +16366,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.RemoveAt(update.Index);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.RemoveAt(update.Index);
-                            _networkSession.AppendToLog(string.Format(_language.NetworkDelete, update.User.UserName, update.User.Ip, update.Index.ToString()));
+                            _networkSession.AppendToLog(string.Format(_language.NetworkDelete, update.User.UserName, update.User.Ip, update.Index));
                             _networkSession.AdjustUpdateLogToDelete(update.Index);
 
                             if (deleteIndices.Count > 0)
@@ -16416,7 +16393,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _subtitle.Paragraphs.Insert(update.Index, p);
                             if (_networkSession.LastSubtitle != null)
                                 _networkSession.LastSubtitle.Paragraphs.Insert(update.Index, new Paragraph(p));
-                            _networkSession.AppendToLog(string.Format(_language.NetworkInsert, update.User.UserName, update.User.Ip, update.Index.ToString(), update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
+                            _networkSession.AppendToLog(string.Format(_language.NetworkInsert, update.User.UserName, update.User.Ip, update.Index, update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
                             _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, false);
                             updateListViewStatus = true;
                             _networkSession.AdjustUpdateLogToInsert(update.Index);
@@ -16445,7 +16422,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 p.EndTime.TotalMilliseconds = update.EndMilliseconds;
                                 p.Text = update.Text;
                                 SubtitleListview1.SetTimeAndText(update.Index, p);
-                                _networkSession.AppendToLog(string.Format(_language.NetworkUpdate, update.User.UserName, update.User.Ip, update.Index.ToString(), update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
+                                _networkSession.AppendToLog(string.Format(_language.NetworkUpdate, update.User.UserName, update.User.Ip, update.Index, update.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString)));
                                 _networkSession.AddToWsUserLog(update.User, update.Index, update.Action, true);
                                 updateListViewStatus = true;
                             }
@@ -16712,7 +16689,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (firstUndock)
             {
-                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left.ToString() + ";" + _videoPlayerUnDocked.Top.ToString() + ";" + _videoPlayerUnDocked.Width + ";" + _videoPlayerUnDocked.Height;
+                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left + @";" + _videoPlayerUnDocked.Top + @";" + _videoPlayerUnDocked.Width + @";" + _videoPlayerUnDocked.Height;
             }
 
             Control control = null;
@@ -18085,7 +18062,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             int extraNewLineLength = Environment.NewLine.Length - 1;
-            int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine);
+            int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             int pos = textBox.SelectionStart;
             var s = Utilities.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             int totalLength = s.Length;
@@ -18096,21 +18073,21 @@ namespace Nikse.SubtitleEdit.Forms
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
-            int secondLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, lineBreakPos + 1);
+            int secondLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, lineBreakPos + 1, StringComparison.Ordinal);
             if (secondLineBreakPos == -1 || pos <= secondLineBreakPos + extraNewLineLength)
             {
                 lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
-            int thirdLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, secondLineBreakPos + 1);
+            int thirdLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, secondLineBreakPos + 1, StringComparison.Ordinal);
             if (thirdLineBreakPos == -1 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
             {
                 lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
-            int forthLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1);
+            int forthLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1, StringComparison.Ordinal);
             if (forthLineBreakPos == -1 || pos < forthLineBreakPos + (extraNewLineLength * 3))
             {
                 lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;

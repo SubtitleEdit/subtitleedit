@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     bool italicOn = false;
                                     while (text.Contains("@Italic@"))
                                     {
-                                        int index = text.IndexOf("@Italic@");
+                                        var index = text.IndexOf("@Italic@", StringComparison.Ordinal);
                                         string italicTag = "<i>";
                                         if (italicOn)
                                             italicTag = "</i>";
@@ -114,11 +114,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                 }
-                else if (line.Trim().Length == 0)
+                else if (string.IsNullOrWhiteSpace(line))
                 {
                     // skip empty lines
                 }
-                else if (line.Trim().Length > 0 && p != null)
+                else if (p != null)
                 {
                     _errorCount++;
                 }

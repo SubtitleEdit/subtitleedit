@@ -31,13 +31,13 @@ namespace Nikse.SubtitleEdit.Logic
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0].ToString()))
+            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    while (text.Length > 0 && _stripStartCharacters.Contains(text.Substring(0, 1)))
+                    while (text.Length > 0 && _stripStartCharacters.Contains(text[0]))
                     {
-                        Pre += text.Substring(0, 1);
+                        Pre += text[0];
                         text = text.Substring(1);
                     }
 
@@ -65,13 +65,13 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             Post = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1].ToString()))
+            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
             {
                 for (int i = 0; i < 5; i++)
                 {
-                    while (text.Length > 0 && _stripEndCharacters.Contains(text.Substring(text.Length - 1, 1)))
+                    while (text.Length > 0 && _stripEndCharacters.Contains(text[text.Length - 1]))
                     {
-                        Post = text.Substring(text.Length - 1, 1) + Post;
+                        Post = text[text.Length - 1] + Post;
                         text = text.Substring(0, text.Length - 1);
                     }
 
@@ -132,14 +132,14 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
                                    (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
-                                   (Environment.NewLine.EndsWith(lower[start - 1].ToString(), StringComparison.Ordinal));
+                                   Environment.NewLine.EndsWith(lower[start - 1]);
 
                     if (startOk)
                     {
                         int end = start + name.Length;
                         bool endOk = end <= lower.Length;
                         if (endOk)
-                            endOk = (end == lower.Length) || ((" ,.!?:;')- <\"" + Environment.NewLine).Contains(lower[end].ToString()));
+                            endOk = end == lower.Length || (@" ,.!?:;')- <""" + Environment.NewLine).Contains(lower[end]);
 
                         if (endOk && StrippedText.Length >= start + name.Length)
                         {
@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
                 {
-                    StrippedText = StrippedText.Remove(0, 1).Insert(0, StrippedText[0].ToString().ToUpper());
+                    StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
                 }
             }
 
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
                 {
-                    string s = StrippedText[i].ToString();
+                    var s = StrippedText[i];
                     if (lastWasBreak)
                     {
                         if (("\"`´'()<>!?.- " + Environment.NewLine).Contains(s))
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Logic
                         { // tags
                             sb.Append(s);
                         }
-                        else if (sb.EndsWith('<') && s == "/" && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
+                        else if (sb.EndsWith('<') && s == '/' && i + 2 < StrippedText.Length && StrippedText[i + 2] == '>')
                         { // tags
                             sb.Append(s);
                         }
@@ -246,26 +246,26 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            if (".!?:;)]}([{".Contains(s))
+                            if (@".!?:;)]}([{".Contains(s))
                             {
                                 sb.Append(s);
                             }
                             else
                             {
                                 lastWasBreak = false;
-                                sb.Append(s.ToUpper());
+                                sb.Append(char.ToUpper(s));
                             }
                         }
                     }
                     else
                     {
                         sb.Append(s);
-                        if (".!?:;)]}([{".Contains(s))
+                        if (@".!?:;)]}([{".Contains(s))
                         {
-                            if (s == "]" && sb.ToString().IndexOf('[') > 1)
+                            if (s == ']' && sb.ToString().IndexOf('[') > 1)
                             { // I [Motor roaring] love you!
                                 string temp = sb.ToString().Substring(0, sb.ToString().IndexOf('[') - 1).Trim();
-                                if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1].ToString()))
+                                if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1]))
                                     lastWasBreak = true;
                             }
                             else

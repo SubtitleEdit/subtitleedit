@@ -64,10 +64,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (TryReadTimeCodesLine(line, paragraph))
                     {
                         paragraph.Text = next;
-                        if (paragraph.Text.Trim().Length > 0)
+                        if (!string.IsNullOrWhiteSpace(paragraph.Text))
                             subtitle.Paragraphs.Add(paragraph);
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (!string.IsNullOrWhiteSpace(line))
                     {
                         _errorCount++;
                     }

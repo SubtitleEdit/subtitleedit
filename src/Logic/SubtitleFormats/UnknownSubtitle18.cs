@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 ReadLine(subtitle, line);
             }
-            if (_text.ToString().Trim().Length > 0)
+            if (!string.IsNullOrWhiteSpace(_text.ToString()))
             {
                 _paragraph.Text = _text.ToString().Trim();
                 subtitle.Paragraphs.Add(_paragraph);
@@ -98,13 +98,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _text = new StringBuilder();
                         _expecting = ExpectingLine.BlankBeforeText;
                     }
-                    else if (line.Trim().Length > 0)
+                    else if (!string.IsNullOrWhiteSpace(line))
                     {
                         _errorCount++;
                     }
                     break;
                 case ExpectingLine.BlankBeforeText:
-                    if (line.Trim().Length == 0)
+                    if (string.IsNullOrWhiteSpace(line))
                     {
                         _text = new StringBuilder();
                         _expecting = ExpectingLine.Text;
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     break;
                 case ExpectingLine.Text:
-                    if (line.Trim().Length > 0)
+                    if (!string.IsNullOrWhiteSpace(line))
                     {
                         _text.AppendLine(line.TrimEnd());
                     }

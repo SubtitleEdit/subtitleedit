@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             _xmlHead = _xml.DocumentElement.SelectSingleNode("ttml:head", _nsmgr);
 
             foreach (FontFamily ff in FontFamily.Families)
-                comboBoxFontName.Items.Add(ff.Name.Substring(0, 1).ToLower() + ff.Name.Substring(1));
+                comboBoxFontName.Items.Add(char.ToLower(ff.Name[0]) + ff.Name.Substring(1));
 
             InitializeListView();
 

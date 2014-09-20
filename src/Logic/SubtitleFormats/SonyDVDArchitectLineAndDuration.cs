@@ -68,28 +68,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 0;
             foreach (string line in lines)
             {
-                string s = line;
                 bool isTimeCode = false;
-                if (s.Length > 0)
+                if (line.Length > 0)
                 {
                     bool success = false;
-                    if (s.Length > 31 && s.IndexOf(':') > 1)
+                    if (line.Length > 31 && line.IndexOf(':') > 1)
                     {
-                        var match = regex.Match(s);
+                        var match = regex.Match(line);
                         if (match.Success)
                         {
                             isTimeCode = true;
                             if (lastParagraph != null)
                                 subtitle.Paragraphs.Add(lastParagraph);
 
-                            var arr = s.Split('\t');
+                            var arr = line.Split('\t');
                             TimeCode start = DecodeTimeCode(arr[1]);
                             TimeCode end = DecodeTimeCode(arr[2]);
                             lastParagraph = new Paragraph(start, end, string.Empty);
                             success = true;
                         }
                     }
-                    if (!isTimeCode && line.Trim().Length > 0 && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                    if (!isTimeCode && !string.IsNullOrWhiteSpace(line) && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
                     {
                         lastParagraph.Text = (lastParagraph.Text + Environment.NewLine + line).Trim();
                         success = true;

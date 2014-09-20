@@ -43,8 +43,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ButtonOkClick(object sender, EventArgs e)
         {
             string folderName = textBoxFolder.Text.Trim();
-
-            if (folderName.Trim().Length == 0)
+            if (folderName.Length == 0)
             {
                 return;
             }

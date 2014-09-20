@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int end = startIndex + name.Length;
                             bool endOk = end <= text.Length;
                             if (endOk)
-                                endOk = (end == text.Length) || ((" ,.!?:;')-<\"" + Environment.NewLine).Contains(text[end].ToString(CultureInfo.InvariantCulture)));
+                                endOk = end == text.Length || (@" ,.!?:;')-<""" + Environment.NewLine).Contains(text[end]);
 
                             if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
                             {
@@ -207,14 +207,14 @@ namespace Nikse.SubtitleEdit.Forms
                     if (start >= 0)
                     {
                         bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') || (lower[start - 1] == '"') ||
-                                       (lower[start - 1] == '\'') || (lower[start - 1] == '>') || (Environment.NewLine.EndsWith(lower[start - 1].ToString(CultureInfo.InvariantCulture)));
+                                       lower[start - 1] == '\'' || lower[start - 1] == '>' || Environment.NewLine.EndsWith(lower[start - 1]);
 
                         if (startOk)
                         {
                             int end = start + name.Length;
                             bool endOk = end <= lower.Length;
                             if (endOk)
-                                endOk = end == lower.Length || (" ,.!?:;')<-\"" + Environment.NewLine).Contains(lower[end].ToString(CultureInfo.InvariantCulture));
+                                endOk = end == lower.Length || (@" ,.!?:;')<-""" + Environment.NewLine).Contains(lower[end]);
 
                             item.Selected = endOk;
                         }

@@ -1599,7 +1599,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
                     string text = GetSccText(s.Substring(match.Index), ref _errorCount);
 
-                    if (text.Equals("942c 942c", StringComparison.Ordinal) || text.Equals("942c", StringComparison.Ordinal))
+                    if (text == "942c 942c" || text == "942c")
                     {
                         p.EndTime = new TimeCode(startTime.TotalMilliseconds);
                     }
@@ -1639,13 +1639,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string part = parts[k];
                 if (part.Length == 4)
                 {
-                    if (part.Equals("94ae", StringComparison.Ordinal) || part.Equals("9420", StringComparison.Ordinal) || part.Equals("94ad", StringComparison.OrdinalIgnoreCase) || part == "9426")
+                    if (part != "94ae" && part != "9420" && part != "94ad" && part != "9426")
                     {
-                    }
-                    else
-                    {
-                        string nextPart = string.Empty;
-                        if (part.StartsWith('9') || part.StartsWith('8'))
+                        if (part[0] == '9' || part[0] == '8')
                         {
                             if (k + 1 < parts.Length && parts[k + 1] == part)
                                 k++;
@@ -1654,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var cp = GetColorAndPosition(part);
                         if (cp != null)
                         {
-                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine) && sb.ToString().Trim().Length > 0)
+                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine) && string.IsNullOrWhiteSpace(sb.ToString()))
                                 sb.AppendLine();
                             if (cp.Y > 0)
                                 y = cp.Y;
@@ -1671,29 +1667,47 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
-                            string result = GetLetter(part);
-                            if (part == "94e0" || part == "9440")
+                            switch (part)
                             {
-                                if (!sb.ToString().EndsWith(Environment.NewLine))
-                                    sb.AppendLine();
-                            }
-                            else if (part == "2c61" || part == "2c62" || part == "2c63" || part == "2c64" || part == "2c65" || part == "2c66" || part == "2c67" || part == "2c68" ||
-                                     part == "2c69" || part == "2c6a" || part == "2c6b" || part == "2c6c" || part == "2c6d" || part == "2c6e" || part == "2c6f" ||
-                                     part == "2cf2" || part == "2c75")
-                            {
-                                sb.Append(GetLetter(part.Substring(2, 2)));
-                            }
-                            else if (part == "2c94" || part == "2c52") // || part == "2c61")
-                            {
-                            }
-                            else if (result == null)
-                            {
-                                sb.Append(GetLetter(part.Substring(0, 2)));
-                                sb.Append(GetLetter(part.Substring(2, 2)));
-                            }
-                            else
-                            {
-                                sb.Append(result);
+                                case "9440":
+                                case "94e0":
+                                    if (!sb.ToString().EndsWith(Environment.NewLine))
+                                        sb.AppendLine();
+                                    break;
+                                case "2c75":
+                                case "2cf2":
+                                case "2c6f":
+                                case "2c6e":
+                                case "2c6d":
+                                case "2c6c":
+                                case "2c6b":
+                                case "2c6a":
+                                case "2c69":
+                                case "2c68":
+                                case "2c67":
+                                case "2c66":
+                                case "2c65":
+                                case "2c64":
+                                case "2c63":
+                                case "2c62":
+                                case "2c61":
+                                    sb.Append(GetLetter(part.Substring(2, 2)));
+                                    break;
+                                case "2c52":
+                                case "2c94":
+                                    break;
+                                default:
+                                    var result = GetLetter(part);
+                                    if (result == null)
+                                    {
+                                        sb.Append(GetLetter(part.Substring(0, 2)));
+                                        sb.Append(GetLetter(part.Substring(2, 2)));
+                                    }
+                                    else
+                                    {
+                                        sb.Append(result);
+                                    }
+                                    break;
                             }
                         }
                     }
@@ -1707,7 +1721,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 k++;
             }
             string res = sb.ToString().Replace("<i></i>", string.Empty).Replace("</i><i>", string.Empty);
-            //            res = res.Replace("♪♪", "♪");
+            //res = res.Replace("♪♪", "♪");
             res = res.Replace("  ", " ").Replace("  ", " ").Replace(Environment.NewLine + " ", Environment.NewLine).Trim();
             if (res.Contains("<i>") && !res.Contains("</i>"))
                 res += "</i>";
