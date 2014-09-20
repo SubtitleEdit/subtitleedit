@@ -756,6 +756,9 @@ namespace Nikse.SubtitleEdit.Logic
                 FixCommonOcrErrors = "Fix common OCR errors (using OCR replace list)",
                 NumberOfImportantLogMessages = "{0} important log messages!",
                 FixedOkXY = "Fixed and OK - '{0}': {1}",
+                FixOcrErrorExample = "D0n't -> Don't",
+                FixSpaceBetweenNumbersExample = "1 100 -> 1100",
+                FixDialoguesOneLineExample = "Hi John! - Hi Ida! -> Hi John!",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries

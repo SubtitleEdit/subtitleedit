@@ -644,6 +644,9 @@
             public string FixMusicNotationExample { get; set; }
             public string NumberOfImportantLogMessages { get; set; }
             public string FixedOkXY { get; set; }
+            public string FixOcrErrorExample { get; set; }
+            public string FixSpaceBetweenNumbersExample { get; set; }
+            public string FixDialoguesOneLineExample { get; set; }
         }
 
         public class GetDictionaries
