@@ -1642,6 +1642,15 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixedOkXY":
                     language.FixCommonErrors.FixedOkXY = reader.Value;
                     break;
+                case "FixCommonErrors/FixOcrErrorExample":
+                    language.FixCommonErrors.FixOcrErrorExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixSpaceBetweenNumbersExample":
+                    language.FixCommonErrors.FixSpaceBetweenNumbersExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixDialoguesOneLineExample":
+                    language.FixCommonErrors.FixDialoguesOneLineExample = reader.Value;
+                    break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
                     break;
