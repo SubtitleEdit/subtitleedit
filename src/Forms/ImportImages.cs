@@ -80,11 +80,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var arr = name.Replace("-to-", "_").Split('_');
                 if (arr.Length == 3)
                 {
-                    if (Utilities.IsInteger(arr[1]) && Utilities.IsInteger(arr[2]))
+                    int startTime, endTime;
+                    if (int.TryParse(arr[1], out startTime) && int.TryParse(arr[2], out endTime))
                     {
-                        p.StartTime.TotalMilliseconds = Convert.ToInt32(arr[1]);
-                        p.EndTime.TotalMilliseconds = Convert.ToInt32(arr[2]);
-
+                        p.StartTime.TotalMilliseconds = startTime;
+                        p.EndTime.TotalMilliseconds = endTime;
                     }
                 }
             }

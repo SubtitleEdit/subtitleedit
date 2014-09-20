@@ -95,18 +95,18 @@ namespace Nikse.SubtitleEdit.Forms
                 Font font;
                 try
                 {
-                    double fontSize = 20;
-                    if (Utilities.IsInteger(textBoxFontSize.Text.Replace("px", string.Empty)))
+                    var fontSize = 20.0f;
+                    int fontSizeInt;
+                    if (int.TryParse(textBoxFontSize.Text.Replace("px", string.Empty), out fontSizeInt))
                     {
-                        fontSize = Convert.ToInt32(textBoxFontSize.Text.Replace("px", string.Empty));
+                        fontSize = fontSizeInt;
                     }
                     else if (textBoxFontSize.Text.EndsWith('%'))
                     {
-                        int num;
-                        if (int.TryParse(textBoxFontSize.Text.TrimEnd('%'), out num))
-                            fontSize = fontSize * num / 100.0;
+                        if (int.TryParse(textBoxFontSize.Text.TrimEnd('%'), out fontSizeInt))
+                            fontSize *= fontSizeInt / 100.0f;
                     }
-                    font = new Font(comboBoxFontName.Text, (float)fontSize);
+                    font = new Font(comboBoxFontName.Text, fontSize);
                 }
                 catch
                 {
