@@ -3,10 +3,10 @@
 
 3.4.3 (xth October 2014)
 * NEW:
-   Added Thai language file - thx Bonfelder Straße
-   Choosing of output time code format in "Timed Text 1.0" properties 
+   Added Thai translation - thx Bonfelder Straße
+   Choosing of output time code format in Timed Text 1.0 properties
 * IMPROVED:
-   * Updated French language file - thx JM GBT
+   * Updated French translation - thx JM GBT
    * Improved "Fix invalid italic tags"
    * Allows for "hh:mm:ss.msec" input in Timed Text 1.0
    * Better error messages when saving a file fails - thx Andrew
@@ -17,7 +17,7 @@
    * Fixed font end tag in SSA/ASS - thx Milad
    * Fixed bug in "Add missing dashes" + "remove unneeded spaces" - thx Andrew
    * Fixed bug in "Fix missing spaces"
-   * Version number in Romanian language file so now it's possible to use it
+   * Version number in Romanian translation so now it's possible to use it
    * Removed batch-convert prompt asking for PAC encoding
    * Fixed possible crash when opening a video file
 
@@ -30,13 +30,13 @@
    * Added "Bold" checkbox to subtitle preview settings in video player
    * Added new shortcuts
 * IMPROVED:
-   * Updated Dutch language file - thx Quetsbeek
-   * Updated Romanian language file - thx Mircea
-   * Updated Portuguese language file - thx moob
-   * Updated Brazilian language file - thx Igor
-   * Updated German language file - thx Siegwarth
-   * Updated Korean language file - thx domddol
-   * Updated Polish language file - thx admas
+   * Updated Dutch translation - thx Quetsbeek
+   * Updated Romanian translation - thx Mircea
+   * Updated Portuguese translation - thx moob
+   * Updated Brazilian translation - thx Igor
+   * Updated German translation - thx Siegwarth
+   * Updated Korean translation - thx domddol
+   * Updated Polish translation - thx admas
    * Multiple replace - moving rules up/down now has effect instantly
    * Allow "Merge selected lines" for more lines
    * Save does not create a new hard link - thx xylographe/XhmikosR
@@ -68,7 +68,7 @@
 * IMPROVED:
    * Improved "Fix short display times" - thx Krystian
    * Split line improvement regarding italic/dialogue - thx moob
-   * Updated Chinese Traditional language file - thx BR
+   * Updated Chinese Traditional translation - thx BR
    * Added .avs to list of known video formats - thx Peter
    * Avid STL format detection improved
    * Allow adding words to user dictionary with a length of 1 - thx Betsy25
@@ -101,26 +101,26 @@
    * Spell check undo
    * Check for updates
 * IMPROVED:
-   * Updated Spanish (Mexico) language file - thx pakitonaranjo
-   * Updated French language file - thx JM GBT
-   * Updated Portuguese language file - thx moob
-   * Updated Korean language file - thx domddol
-   * Updated German language file - thx Siegwarth
-   * Updated Polish language file - thx Admas
-   * Updated Russian language file - thx Leserg
-   * Updated Czech language file - thx Trottel
-   * Updated French language file - thx JM GBT
-   * Updated Bulgarian language file updated - thx Iavor
-   * Updated Dutch language file - thx Quetsbeek + minouhse
-   * Updated Hungarian language file - thx Zityi
-   * Updated Italian language file - thx SilverDrake
-   * Updated Finnish language file - thx Teijo
-   * Updated Romanian language file - thx Mircea
-   * Updated Swedish language file - thx Ted
-   * Updated Chinese language file - thx Leon
-   * Updated Greek language file thx ΑΚΗΣ
-   * Updated Brazilian Portuguese language file - thx Igor Rückert
-   * Updated Basque language file - thx Xabier
+   * Updated Spanish (Mexico) translation - thx pakitonaranjo
+   * Updated French translation - thx JM GBT
+   * Updated Portuguese translation - thx moob
+   * Updated Korean translation - thx domddol
+   * Updated German translation - thx Siegwarth
+   * Updated Polish translation - thx Admas
+   * Updated Russian translation - thx Leserg
+   * Updated Czech translation - thx Trottel
+   * Updated French translation - thx JM GBT
+   * Updated Bulgarian translation updated - thx Iavor
+   * Updated Dutch translation - thx Quetsbeek + minouhse
+   * Updated Hungarian translation - thx Zityi
+   * Updated Italian translation - thx SilverDrake
+   * Updated Finnish translation - thx Teijo
+   * Updated Romanian translation - thx Mircea
+   * Updated Swedish translation - thx Ted
+   * Updated Chinese translation - thx Leon
+   * Updated Greek translation thx ΑΚΗΣ
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Updated Basque translation - thx Xabier
    * Export to image based format now remembers most settings
    * Always close SAMI tags (except when end time=next start time)
    * Merge selected lines in original - better handling of empty line
@@ -162,14 +162,14 @@
    * Added UI setting for path to VLC portable
    * Added export to DCinema interop/png - thx Joseph
 * IMPROVED:
-   * Updated French language file - thx JM GBT
-   * Updated Dutch language file - thx Quetsbeek
-   * Updated Portuguese language file - thx moob
-   * Updated Korean language file - thx domddol
-   * Updated Brazilian Portuguese language file - thx Igor
-   * Updated Polish language file - thx Admas
-   * Updated Argentinian Spanish language file - thx walterh78
-   * Updated Spanish (Mexico) language file - thx pakitonaranjo
+   * Updated French translation - thx JM GBT
+   * Updated Dutch translation - thx Quetsbeek
+   * Updated Portuguese translation - thx moob
+   * Updated Korean translation - thx domddol
+   * Updated Brazilian Portuguese translation - thx Igor
+   * Updated Polish translation - thx Admas
+   * Updated Argentinian Spanish translation - thx walterh78
+   * Updated Spanish (Mexico) translation - thx pakitonaranjo
    * HTML encoding of SAMI files is now again false by default
    * Better reading of time codes of Blu-ray sup in mkv - thx Rach78
 * FIXED:
@@ -188,10 +188,10 @@
 * NEW:
    * Added Slovenian translation - thx Hawk
 * IMPROVED:
-   * Updated Korean language file - thx domddol
-   * Updated Dutch language file - thx Quetsbeek
-   * Updated Bulgarian language file - thx Iavor
-   * Updated German language file - thx Siegwarth
+   * Updated Korean translation - thx domddol
+   * Updated Dutch translation - thx Quetsbeek
+   * Updated Bulgarian translation - thx Iavor
+   * Updated German translation - thx Siegwarth
    * Added Serbo-Croatian letter "đ" to file format PAC - thx nenad
    * Export to custom text format - Added "Delete" button - thx Leon
 * FIXED:
@@ -214,16 +214,16 @@
    * French rules regarding L and apostrophe in spell check + OCR fix - thx René
    * "Fix common errors" toolbar button - thx Betsy25
 * IMPROVED:
-   * Updated Korean language file - thx domddol
-   * Updated Chinese language file - thx Leon
-   * Updated German language file - thx Siegwarth
-   * Updated Dutch language file - thx Quetsbeek
-   * Updated Brazilian Portuguese language file - thx Igor Rücker
-   * Updated Portuguese language file - thx moob
-   * Updated Polish language file - thx Admas
-   * Updated Czech language file - thx Trottel
-   * Updated Basque language file - thx Xabier
-   * Updated Italian language file - thx SilverDrake
+   * Updated Korean translation - thx domddol
+   * Updated Chinese translation - thx Leon
+   * Updated German translation - thx Siegwarth
+   * Updated Dutch translation - thx Quetsbeek
+   * Updated Brazilian Portuguese translation - thx Igor Rücker
+   * Updated Portuguese translation - thx moob
+   * Updated Polish translation - thx Admas
+   * Updated Czech translation - thx Trottel
+   * Updated Basque translation - thx Xabier
+   * Updated Italian translation - thx SilverDrake
    * Many settings now remembered from "Export to image based format"
    * Dropping a video file on empty waveform will now start extraction of waveform - thx Leon
    * Better reading of SCC files
@@ -237,7 +237,7 @@
   * Waveform/spectrogram: Move border left/right now also always works even 
     when it's near next/prev border
   * Fixed transparent background in "OCR window" regarding transport streams
-  * Now Vietnamese language actually shows in the "Choose language" dialog
+  * Now Vietnamese translation is actually shown in the "Choose language" dialog
   * Timed Text - List view context menu "Set language" had wrong text
   * Subtitle preview can now show both font and italic for same text - thx Drago
   * Fixed bug decoding DVB sub - thx aMvEL
@@ -266,12 +266,12 @@
    * Added some support for fxpxml 1.3
    * Added link to Sinhala spell check dictionary
 * IMPROVED:
-   * Updated Portuguese language file - thx moob
-   * Updated Vietnamese language file - thx everytime
-   * Updated Basque language file - thx Xabier
-   * Updated Korean language file - thx domddol
-   * Updated Brazilian Portuguese language file - thx Igor Rückert
-   * Updated Croatian language file - thx Jozo Marić
+   * Updated Portuguese translation - thx moob
+   * Updated Vietnamese translation - thx everytime
+   * Updated Basque translation - thx Xabier
+   * Updated Korean translation - thx domddol
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Updated Croatian translation - thx Jozo Marić
    * Now remembers RTL mode - thx FTABoy
    * Export images from DVD now only shows relevant options
    * Fix short durations will now see if line can start earlier - thx Daniel
@@ -296,13 +296,13 @@
 3.3.11 (6th December 2013)
 * NEW:
    * Added "line height" to image export
-   * Added Vietnamese language file - thx everytime
+   * Added Vietnamese translation - thx everytime
    * Added custom shortcut for vertical zoom out of waveform
 * IMPROVED:
-   * Updated Italian language file - thx SilverDrake
-   * Updated German language file - thx Christoph
-   * Updated Bulgarian language file - thx Iavor
-   * Updated Brazilian Portuguese language file - thx Igor Rückert
+   * Updated Italian translation - thx SilverDrake
+   * Updated German translation - thx Christoph
+   * Updated Bulgarian translation - thx Iavor
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
    * Added .m4a file type to audio file types
    * Added Chinese Traditional to Tesseract OCR dictionary list
    * Added Polish spelling dictionary to download list
@@ -329,10 +329,10 @@
    * Ctrl+Backspace in text box now deletes word to the left - thx Ivandrofly
    * Can now import FCP+image
 * IMPROVED:
-   * Updated Catalan language file - thx Juansa
-   * Updated Dutch language file - thx Herman
-   * Updated German language file - thx Siegwarth
-   * Updated Portuguese language file - thx moob
+   * Updated Catalan translation - thx Juansa
+   * Updated Dutch translation - thx Herman
+   * Updated German translation - thx Siegwarth
+   * Updated Portuguese translation - thx moob
    * OCR max. error% is now saved for Blu-ray - thx Zoltán
    * More default values for SSA/ASS in options
    * Added split long lines to "Batch convert" - thx menes
@@ -372,11 +372,11 @@
    * Shortcuts keys Ctrl+up/down now move contents in 
      "Multi-Replace" list view - thx Ivandrofly
 * IMPROVED:
-   * Updated Czech language file - thx Trottel
-   * Updated Russian language file - thx Sergey
-   * Updated Brazilian Portuguese langauge file - thx Igor
-   * Updated German language file - thx Siegwarth
-   * Updated Bulgarian language file - thx Iavor
+   * Updated Czech translation - thx Trottel
+   * Updated Russian translation - thx Sergey
+   * Updated Brazilian Portuguese translation - thx Igor
+   * Updated German translation - thx Siegwarth
+   * Updated Bulgarian translation - thx Iavor
    * Updated word lists - thx Siegwarth
    * Minor improvements for EBU open subtitling
    * Added "Allow overlap in waveform" as setting
@@ -406,18 +406,18 @@
 
 3.3.8 (1st September 2013)
 * NEW:
-   * Added Hungarian language file - thx Zityi
+   * Added Hungarian translation - thx Zityi
    * Added a few new subtitle formats
    * Added "Tools -> Sort by -> Style" - thx Mike
    * When moving start/end in waveform and holding down the ALT key will now
      move border if the closest subtitle is less than 500 ms away - thx Leon
 * IMPROVED:
-   * Updated Spanish language file - thx pakitonaranjo
-   * Updated Polish language file - thx Admas
-   * Updated Brazilian Portuguese language file - thx Igor Rückert
-   * Updated Italian language file - thx Marco
-   * Updated Simplified Chinese language file - thx Leon
-   * Updated German language file - thx Siegwarth
+   * Updated Spanish translation - thx pakitonaranjo
+   * Updated Polish translation - thx Admas
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Updated Italian translation - thx Marco
+   * Updated Simplified Chinese translation - thx Leon
+   * Updated German translation - thx Siegwarth
    * Added support for the Māori language in PAC - thx Mark
    * Allow EBU STL with 23/29 fps - thx Raul/Antonio
    * Minor improvements to WebVTT + added WebVTT with line# - thx Benoît
@@ -446,13 +446,13 @@
 
 3.3.7 (3rd August 2013)
 * NEW:
-   * Added Spanish (Mexico) language file - thx paconaranjo
+   * Added Spanish (Mexico) translation - thx paconaranjo
    * Added a few new subtitle formats
 * IMPROVED:
-   * Updated Portuguese language file - thx moob
-   * Updated Basque language file - thx Xabier Aramendi
-   * Updated Dutch language file - thx Herman
-   * Updated Czech language file - thx Trottel
+   * Updated Portuguese translation - thx moob
+   * Updated Basque translation - thx Xabier Aramendi
+   * Updated Dutch translation - thx Herman
+   * Updated Czech translation - thx Trottel
    * Updated Brazilian Portuguese translation - thx Igor Rückert
    * Updated German translation - thx Siegwarth
    * Moving subtitles in waveform will not allow overlap (unless 
@@ -495,8 +495,8 @@
    * Added Chinese Traditional - thx BAWAN
    * Added some new subtitle formats
 * IMPROVED:
-   * Updated Basque language file - thx Xabier Aramendi
-   * Updated Dutch language file - thx Quetsbeek
+   * Updated Basque translation - thx Xabier Aramendi
+   * Updated Dutch translation - thx Quetsbeek
    * Support for color, size and font name in MicroDVD - thx SimlyTheBOSS
    * Start OCR if SRT file contains only image file names
    * Added Turkish letters to PAC import/export - thx aydngur
@@ -512,7 +512,7 @@
    * Installer version can now list installed plugins
    * Fixed bug in format DCinema interop regarding LoadFont URI - thx Radoslav
    * Can now save " " (space) in multiple replace settings - thx dandomina
-   * Italian language now active again (broken in 3.3.4)
+   * Italian translation now active again (broken in 3.3.4)
    * Clear suggestions in OCR now actually works
    * OCR via image compare: Fixed correct index for guesses - thx Erik
    * Fixed a bug in SSA format - thx Dave
@@ -522,10 +522,10 @@
 3.3.4 (9th April 2013)
 * NEW:
    * Added a few new subtitle formats
-   * Serbian language file (Latin) - thx Misa Forger
+   * Serbian translation (Latin) - thx Misa Forger
 * IMPROVED:
-   * Updated Polish language file - thx admas
-   * Updated Portuguese language file - thx moob
+   * Updated Polish translation - thx admas
+   * Updated Portuguese translation - thx moob
    * Updated Brazilian Portuguese translation - thx Igor Rückert
    * Updated Italian translation - thx Johnny B. Goode
    * DVD ripping slightly faster now
@@ -547,8 +547,8 @@
    * Added Export to 3D Half-top/bottom - thx r0lZ
 * IMPROVED:
    * Fix overlapping display times now smarter
-   * Updated Basque language file - thx Xabier Aramendi
-   * Updated French language file - thx JM GBT
+   * Updated Basque translation - thx Xabier Aramendi
+   * Updated French translation - thx JM GBT
    * Fix missing spaces now works better with italics - thx DrJackson
    * Added EBU alignment tags ({\an1}..{\an9})
    * Added "auto balance lines" to "Batch convert" - thx hacker
@@ -572,8 +572,8 @@
 3.3.2 (23 February 2013)
 * NEW:
    * Added a few new subtitle formats
-   * Italian language - thx Johnny B. Goode
-   * Turkish language - thx Çağdaş
+   * Italian translation - thx Johnny B. Goode
+   * Turkish translation - thx Çağdaş
    * Can now export to Blu-ray sup/VobSub from OCR window
    * Can save to VobSub from DVDRip "Choose language" window
 * IMPROVED:
@@ -582,9 +582,9 @@
    * Waveform now performs better when many lines are selected
    * Waveform now has focused rectangle
    * Network mode more stable (auto-restart)
-   * Updated Czech language file - thx Trottel
-   * Updated German language file - thx Christoph Kitsche
-   * Updated Portuguese language file - thx moob
+   * Updated Czech translation - thx Trottel
+   * Updated German translation - thx Christoph Kitsche
+   * Updated Portuguese translation - thx moob
    * Remembers size of controls in main window better - thx George/Leszek
    * SAMI format: HTML-decodes text + reads class attributes better
    * Batch convert can now also "Fix common errors" and more - thx Adem
@@ -604,9 +604,9 @@
 3.3.1 (3rd February 2013)
 * NEW:
    * Added a few new subtitle formats (now 150 formats!)
-   * French language - thx JM GBT
-   * German language - thx Christoph Kitsche
-   * Greek language - thx Menes
+   * French translation - thx JM GBT
+   * German translation - thx Christoph Kitsche
+   * Greek translation - thx Menes
 * IMPROVED:
    * Improved reading of bad SRT files - thx Ile
    * Slow Timed Text 1.0 loading sped up
@@ -620,7 +620,7 @@
    * Some fixes for networking mode regarding insert/split - thx Dan
    * Fixed possible crash in list view regarding syntax coloring
    * Point sync no longer throws away SSA/ASS styling - thx Mike
-   * Fixed bug in Dutch language file - thx jan bruyndonckx
+   * Fixed bug in Dutch translation - thx jan bruyndonckx
    * Fixed bug in converting ASS to SSA
    * Some fixes for xsubtitle - thx Ed
    * File -> SSA/ASS properties - only update/add changed properties
@@ -707,10 +707,10 @@
    * Added several new subtitle formats
    * Added "Delete line(s)" context menu to OCR - thx Mario
  * IMPROVED:
-   * Updated Chinese language file - thx FeiXJ
-   * Updated Brazilian Portuguese - thx Igor Rückert
-   * Updated Polish language file - thx Adam Malich
-   * Updated Romanian language file - thx DrJackson
+   * Updated Chinese translation - thx FeiXJ
+   * Updated Brazilian Portuguese translation - thx Igor Rückert
+   * Updated Polish translation - thx Adam Malich
+   * Updated Romanian translation - thx DrJackson
    * Better reading of Cavena 890 format - thx Victor
    * Version number now includes the revision from SVN - thx XhmikosR
    * Unfocused selection in list view now has more visible color - thx Adem
@@ -736,7 +736,7 @@
 
 3.2.7 (14th April 2012)
  * NEW:
-   * Added Finnish language - thx Veikko
+   * Added Finnish translation - thx Veikko
    * Can now import binary Cheetah Caption subtitle format
  * IMPROVED:
    * VLC audio extraction now generates smaller wave file - thx utocne
@@ -745,7 +745,7 @@
    * Unbreak/auto-break buttons now also work on selected lines - thx XhmikosR
    * EBU STL now also accepts STL 2.4 (besides STL25/STL30) - Thx Axel
    * Added shortcut for split line at cursor position - Thx Daniela
-   * Basque language file updated - thx Xabier Aramendi
+   * Updated Basque - thx Xabier Aramendi
  * FIXED:
    * Crash in "Fix common errors" - thx Dragan B
    * New-line character in Final Cut Pro Xml format - thx Axel Schmidt
@@ -794,13 +794,13 @@
 
 3.2.4 (11th March 2012)
  * NEW:
-   * Arabic language file - thx Zakaria Farah Abu Wael
+   * Arabic translation - thx Zakaria Farah Abu Wael
    * Export to VobSub format
    * Added new subtitle formats (now ~90!)
    * Added export to FAB image script
    * Added import of XSub from DivX files (use File -> Open)
  * IMPROVED:
-   * Updated Basque language file - thx Xabier Aramendi
+   * Updated Basque translation - thx Xabier Aramendi
    * Export images alignment - thx Marcin
    * Export images can now use bold font
    * Many improvements to fix common errors - thx Majid
@@ -833,11 +833,11 @@
 
 3.2.3 (13th January 2012)
  * NEW:
-   * Added Brazilian Portuguese - thx XXXXXXXXXX
-   * Added Italian language file - thx Maff
-   * Added Portuguese (Portugal) language file - thx Ricardo Perdigão
-   * Added Japanese language file - thx Nardog
-   * Added Spanish language file - thx m2s
+   * Added Brazilian Portuguese translation - thx XXXXXXXXXX
+   * Added Italian translation - thx Maff
+   * Added Portuguese (Portugal) translation - thx Ricardo Perdigão
+   * Added Japanese translation - thx Nardog
+   * Added Spanish translation - thx m2s
    * Support for subtitle AvidCaption format - thx Laszlo
    * Support for F4 subtitle formats - thx Fred
    * Export to Blu-ray sup format
@@ -874,12 +874,12 @@
 
 3.2.2 (19th October 2011)
  * NEW:
-   * Added German language file - thx JW 301
-   * Added Greek language file - thx The Rabbit
+   * Added German translation - thx JW 301
+   * Added Greek translation - thx The Rabbit
    * Some basic support for WebVTT subtitle format
    * Some basic support for SCC subtitle format
  * IMPROVED:
-   * Updated Basque language file - thx xabier aramendi
+   * Updated Basque translation - thx xabier aramendi
    * Improved drag-and-drop support in textbox - thx vmb
  * FIXED:
    * Possible crash when saving ebu files
