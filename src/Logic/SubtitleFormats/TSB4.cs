@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
@@ -43,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             byte[] array;
             try
             {
-                array = Utilities.ReadAllBytes(fileName);
+                array = File.ReadAllBytes(fileName);
             }
             catch
             {
