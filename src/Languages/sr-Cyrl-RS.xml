@@ -226,7 +226,7 @@
   <EffectTypewriter>
     <Title>Ефекат писаће машине</Title>
     <TotalMilliseconds>Укупно време:</TotalMilliseconds>
-    <EndDelayInMillisecs>Завршно кашњење:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Завршно кашњење:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportPngXml>
     <Title>Извоз BDN XML/PNG</Title>

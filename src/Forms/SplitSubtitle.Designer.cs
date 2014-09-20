@@ -35,7 +35,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.labelHoursMinSecsMilliSecs = new System.Windows.Forms.Label();
+            this.labelHourMinSecMilliSecond = new System.Windows.Forms.Label();
             this.splitTimeUpDownAdjust = new Nikse.SubtitleEdit.Controls.TimeUpDown();
             this.buttonAdvanced = new System.Windows.Forms.Button();
             this.SuspendLayout();
@@ -94,14 +94,14 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // labelHoursMinSecsMilliSecs
+            // labelHourMinSecMilliSecond
             // 
-            this.labelHoursMinSecsMilliSecs.AutoSize = true;
-            this.labelHoursMinSecsMilliSecs.Location = new System.Drawing.Point(26, 52);
-            this.labelHoursMinSecsMilliSecs.Name = "labelHoursMinSecsMilliSecs";
-            this.labelHoursMinSecsMilliSecs.Size = new System.Drawing.Size(108, 13);
-            this.labelHoursMinSecsMilliSecs.TabIndex = 22;
-            this.labelHoursMinSecsMilliSecs.Text = "Hours:min:sec.msecs";
+            this.labelHourMinSecMilliSecond.AutoSize = true;
+            this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(26, 52);
+            this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
+            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(108, 13);
+            this.labelHourMinSecMilliSecond.TabIndex = 22;
+            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.msecs";
             // 
             // splitTimeUpDownAdjust
             // 
@@ -132,7 +132,7 @@
             this.Controls.Add(this.buttonAdvanced);
             this.Controls.Add(this.buttonGetFrameRate);
             this.Controls.Add(this.splitTimeUpDownAdjust);
-            this.Controls.Add(this.labelHoursMinSecsMilliSecs);
+            this.Controls.Add(this.labelHourMinSecMilliSecond);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.buttonDone);
@@ -162,7 +162,7 @@
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private Nikse.SubtitleEdit.Controls.TimeUpDown splitTimeUpDownAdjust;
-        private System.Windows.Forms.Label labelHoursMinSecsMilliSecs;
+        private System.Windows.Forms.Label labelHourMinSecMilliSecond;
         private System.Windows.Forms.Button buttonAdvanced;
     }
 }

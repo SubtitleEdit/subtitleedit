@@ -355,7 +355,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Efekt Psací stroj</Title>
     <TotalMilliseconds>Celkem milisekund:</TotalMilliseconds>
-    <EndDelayInMillisecs>Zpoždění konce v milisekundách:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Zpoždění konce v milisekundách:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportovat vlastní textový formát</Title>

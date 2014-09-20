@@ -351,7 +351,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Efect mașină de scris</Title>
     <TotalMilliseconds>Total milisecunde:</TotalMilliseconds>
-    <EndDelayInMillisecs>Temporizare întârziată în milisecunde:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Temporizare întârziată în milisecunde:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportare format text particularizat</Title>

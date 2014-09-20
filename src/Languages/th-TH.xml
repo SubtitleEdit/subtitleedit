@@ -355,7 +355,7 @@
   <EffectTypewriter>
     <Title>เอฟเฟ็กต์แบบพิมพ์ดีด</Title>
     <TotalMilliseconds>มิลลิวินาทีรวม.:</TotalMilliseconds>
-    <EndDelayInMillisecs>หน่วงเวลาเป็นมิลลิวินาที:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>หน่วงเวลาเป็นมิลลิวินาที:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>เอ็กซ์พอร์ตเป็นไฟล์ข้อความแบบกำหนดเอง</Title>

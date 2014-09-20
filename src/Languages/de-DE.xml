@@ -355,7 +355,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Schreibmaschinen-Effekt</Title>
     <TotalMilliseconds>Gesamtdauer (ms):</TotalMilliseconds>
-    <EndDelayInMillisecs>Endverzögerung (ms):</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Endverzögerung (ms):</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Benutzerdefiniertes Textformat exportieren</Title>

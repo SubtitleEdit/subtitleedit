@@ -380,13 +380,13 @@ alpha: 100%
 # Smoothing for very blocky images (use OLD for no filtering)
 smooth: OFF
 
-# In millisecs
+# In milliseconds
 fadein/out: 50, 50
 
 # Force subtitle placement relative to (org.x, org.y)
 align: OFF at LEFT TOP
 
-# For correcting non-progressive desync. (in millisecs or hh:mm:ss:ms)
+# For correcting non-progressive desync. (in milliseconds or hh:mm:ss:ms)
 # Note: Not effective in DirectVobSub, use 'delay: ... ' instead.
 time offset: 0
 

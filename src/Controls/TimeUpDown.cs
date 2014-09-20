@@ -51,34 +51,34 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void NumericUpDownValueChanged(object sender, EventArgs e)
         {
-            double? millisecs = GetTotalMilliseconds();
-            if (millisecs.HasValue)
+            double? milliseconds = GetTotalMilliseconds();
+            if (milliseconds.HasValue)
             {
-                if (millisecs.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
-                    millisecs = 0;
+                if (milliseconds.Value >= TimeCode.MaxTime.TotalMilliseconds - 0.1)
+                    milliseconds = 0;
 
                 if (Mode == TimeMode.HHMMSSMS)
                 {
                     if (numericUpDown1.Value > NumericUpDownValue)
                     {
-                        SetTotalMilliseconds(millisecs.Value + 100);
+                        SetTotalMilliseconds(milliseconds.Value + 100);
                     }
                     else if (numericUpDown1.Value < NumericUpDownValue)
                     {
-                        SetTotalMilliseconds(millisecs.Value - 100);
+                        SetTotalMilliseconds(milliseconds.Value - 100);
                     }
                 }
                 else
                 {
                     if (numericUpDown1.Value > NumericUpDownValue)
                     {
-                        SetTotalMilliseconds(millisecs.Value + Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
+                        SetTotalMilliseconds(milliseconds.Value + Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
                     }
                     else if (numericUpDown1.Value < NumericUpDownValue)
                     {
-                        if (millisecs.Value - 100 > 0)
-                            SetTotalMilliseconds(millisecs.Value - Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
-                        else if (millisecs.Value > 0)
+                        if (milliseconds.Value - 100 > 0)
+                            SetTotalMilliseconds(milliseconds.Value - Logic.SubtitleFormats.SubtitleFormat.FramesToMilliseconds(1));
+                        else if (milliseconds.Value > 0)
                             SetTotalMilliseconds(0);
                     }
                 }

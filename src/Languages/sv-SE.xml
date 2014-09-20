@@ -351,7 +351,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectTypewriter>
     <Title>Skrivmaskins effekt</Title>
     <TotalMilliseconds>Totalt millisek.:</TotalMilliseconds>
-    <EndDelayInMillisecs>Slutlig fördröjning i millisek.:</EndDelayInMillisecs>
+    <EndDelayInMilliseconds>Slutlig fördröjning i millisek.:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportera anpassade textformat</Title>
