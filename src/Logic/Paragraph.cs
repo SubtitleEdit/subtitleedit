@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string Effect { get; set; }
 
-        public string Layer { get; set; }
+        public int Layer { get; set; }
 
         public string ID { get; set; }
 
