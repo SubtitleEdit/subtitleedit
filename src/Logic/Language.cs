@@ -758,7 +758,7 @@ namespace Nikse.SubtitleEdit.Logic
                 FixedOkXY = "Fixed and OK - '{0}': {1}",
                 FixOcrErrorExample = "D0n't -> Don't",
                 FixSpaceBetweenNumbersExample = "1 100 -> 1100",
-                FixDialoguesOneLineExample = "Hi John! - Hi Ida! -> Hi John!",
+                FixDialoguesOneLineExample = "Hi John! - Hi Ida! -> Hi John!<br />- Hi Ida!",
             };
 
             GetDictionaries = new LanguageStructure.GetDictionaries
