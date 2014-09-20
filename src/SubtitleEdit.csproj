@@ -49,6 +49,9 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
     </Reference>
+    <Reference Include="NHunspell">
+      <HintPath>packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Services" />
@@ -779,16 +782,6 @@
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
-    <Compile Include="Logic\NHunspell\Hunspell.cs" />
-    <Compile Include="Logic\NHunspell\Hyphen.cs" />
-    <Compile Include="Logic\NHunspell\HyphenResult.cs" />
-    <Compile Include="Logic\NHunspell\LanguageConfig.cs" />
-    <Compile Include="Logic\NHunspell\Marshalling.cs" />
-    <Compile Include="Logic\NHunspell\MyThes.cs" />
-    <Compile Include="Logic\NHunspell\SpellEngine.cs" />
-    <Compile Include="Logic\NHunspell\SpellFactory.cs" />
-    <Compile Include="Logic\NHunspell\ThesMeaning.cs" />
-    <Compile Include="Logic\NHunspell\ThesResult.cs" />
     <Compile Include="Logic\NikseBitmapImageSplitter.cs" />
     <Compile Include="Logic\DetectEncoding\EncodingTools.cs" />
     <Compile Include="Logic\DetectEncoding\Multilang\CMLangConvertCharset.cs" />
@@ -1557,6 +1550,7 @@
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1737,8 +1731,6 @@
     <None Include="DLLs\Interop.QuartzTypeLib.dll" />
     <Content Include="..\Changelog.txt" />
     <Content Include="..\gpl.txt" />
-    <None Include="Dlls\Hunspellx64.dll" />
-    <None Include="Dlls\Hunspellx86.dll" />
     <EmbeddedResource Include="Controls\VideoPlayerContainer.resx">
       <DependentUpon>VideoPlayerContainer.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1824,7 +1816,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Logic\NHunspell\Licence.txt" />
     <None Include="Resources\pictureBoxFastForward.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseDown.Image.png" />
     <None Include="Resources\pictureBoxFastForwardMouseOver.Image.png" />
@@ -1911,8 +1902,7 @@
 </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)Dlls\Hunspellx86.dll" "$(TargetDir)"
-COPY /Y /V "$(ProjectDir)Dlls\Hunspellx64.dll" "$(TargetDir)"
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
 COPY /Y /V "$(ProjectDir)Dlls\Interop.QuartzTypeLib.dll" "$(TargetDir)"
 "$(ProjectDir)..\build_helpers.bat" lang</PostBuildEvent>
   </PropertyGroup>

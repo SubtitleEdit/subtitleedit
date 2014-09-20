@@ -25,128 +25,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         #endregion Hunspell
 
-        #region structures
-
-        /// <summary>
-        ///   The processo r_ architecture.
-        /// </summary>
-        internal enum PROCESSOR_ARCHITECTURE : ushort
-        {
-            /// <summary>
-            ///   The intel.
-            /// </summary>
-            Intel = 0,
-
-            /// <summary>
-            ///   The mips.
-            /// </summary>
-            MIPS = 1,
-
-            /// <summary>
-            ///   The alpha.
-            /// </summary>
-            Alpha = 2,
-
-            /// <summary>
-            ///   The ppc.
-            /// </summary>
-            PPC = 3,
-
-            /// <summary>
-            ///   The shx.
-            /// </summary>
-            SHX = 4,
-
-            /// <summary>
-            ///   The arm.
-            /// </summary>
-            ARM = 5,
-
-            /// <summary>
-            ///   The i a 64.
-            /// </summary>
-            IA64 = 6,
-
-            /// <summary>
-            ///   The alpha 64.
-            /// </summary>
-            Alpha64 = 7,
-
-            /// <summary>
-            ///   The amd 64.
-            /// </summary>
-            Amd64 = 9,
-
-            /// <summary>
-            ///   The unknown.
-            /// </summary>
-            Unknown = 0xFFFF
-        }
-
-        /// <summary>
-        ///   The syste m_ info.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        internal struct SYSTEM_INFO
-        {
-            /// <summary>
-            ///   The w processor architecture.
-            /// </summary>
-            internal PROCESSOR_ARCHITECTURE wProcessorArchitecture;
-
-            /// <summary>
-            ///   The w reserved.
-            /// </summary>
-            internal ushort wReserved;
-
-            /// <summary>
-            ///   The dw page size.
-            /// </summary>
-            internal uint dwPageSize;
-
-            /// <summary>
-            ///   The lp minimum application address.
-            /// </summary>
-            internal IntPtr lpMinimumApplicationAddress;
-
-            /// <summary>
-            ///   The lp maximum application address.
-            /// </summary>
-            internal IntPtr lpMaximumApplicationAddress;
-
-            /// <summary>
-            ///   The dw active processor mask.
-            /// </summary>
-            internal IntPtr dwActiveProcessorMask;
-
-            /// <summary>
-            ///   The dw number of processors.
-            /// </summary>
-            internal uint dwNumberOfProcessors;
-
-            /// <summary>
-            ///   The dw processor type.
-            /// </summary>
-            internal uint dwProcessorType;
-
-            /// <summary>
-            ///   The dw allocation granularity.
-            /// </summary>
-            internal uint dwAllocationGranularity;
-
-            /// <summary>
-            ///   The dw processor level.
-            /// </summary>
-            internal ushort dwProcessorLevel;
-
-            /// <summary>
-            ///   The dw processor revision.
-            /// </summary>
-            internal ushort dwProcessorRevision;
-        }
-
-        #endregion structures
-
         #region Win32 API
 
         // Win32 API functions for dynamically loading DLLs
@@ -162,9 +40,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         [DllImport("user32.dll")]
         internal static extern short GetKeyState(int vKey);
-
-        [DllImport("kernel32.dll")]
-        internal static extern void GetSystemInfo([MarshalAs(UnmanagedType.Struct)] ref SYSTEM_INFO lpSystemInfo);
 
         [DllImport("kernel32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
