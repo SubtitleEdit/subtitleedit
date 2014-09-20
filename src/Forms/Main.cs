@@ -9428,7 +9428,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool error = false;
                         MemoryStream outStream = new MemoryStream();
-                        ComponentAce.Compression.Libs.zlib.ZOutputStream outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
+                        var outZStream = new zlib.ZOutputStream(outStream);
                         MemoryStream inStream = new MemoryStream(p.BinaryData);
                         byte[] buffer = null;
                         try
@@ -9527,7 +9527,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (matroskaSubtitleInfo.ContentEncodingType == 0) // compressed with zlib
                     {
                         MemoryStream outStream = new MemoryStream();
-                        ComponentAce.Compression.Libs.zlib.ZOutputStream outZStream = new ComponentAce.Compression.Libs.zlib.ZOutputStream(outStream);
+                        var outZStream = new zlib.ZOutputStream(outStream);
                         MemoryStream inStream = new MemoryStream(p.BinaryData);
                         try
                         {

@@ -62,6 +62,10 @@
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="zlib.net">
+      <HintPath>packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\SETextBox.cs">
@@ -1157,20 +1161,6 @@
     <Compile Include="Logic\VobSub\VobSubWriter.cs" />
     <Compile Include="Logic\WordSpellChecker.cs" />
     <Compile Include="Logic\XSub.cs" />
-    <Compile Include="Logic\zlib\Adler32.cs" />
-    <Compile Include="Logic\zlib\Deflate.cs" />
-    <Compile Include="Logic\zlib\InfBlocks.cs" />
-    <Compile Include="Logic\zlib\InfCodes.cs" />
-    <Compile Include="Logic\zlib\Inflate.cs" />
-    <Compile Include="Logic\zlib\InfTree.cs" />
-    <Compile Include="Logic\zlib\StaticTree.cs" />
-    <Compile Include="Logic\zlib\SupportClass.cs" />
-    <Compile Include="Logic\zlib\Tree.cs" />
-    <Compile Include="Logic\zlib\ZInputStream.cs" />
-    <Compile Include="Logic\zlib\Zlib.cs" />
-    <Compile Include="Logic\zlib\ZOutputStream.cs" />
-    <Compile Include="Logic\zlib\ZStream.cs" />
-    <Compile Include="Logic\zlib\ZStreamException.cs" />
     <Compile Include="Logic\Wave.cs" />
     <Compile Include="Logic\WaveToVisualizer.cs" />
     <Compile Include="Logic\ZipExtractor.cs" />
@@ -1906,9 +1896,8 @@
     <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
-COPY /Y /V "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" "$(TargetDir)"
-"$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(TargetDir)NHunspell.dll" "$(TargetDir)Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll"
+"$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
 "$(ProjectDir)..\build_helpers.bat" lang</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
