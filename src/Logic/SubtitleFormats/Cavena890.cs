@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int i = 0; i < 22; i++)
                 fs.WriteByte(0);
 
-            byte[] buffer = ASCIIEncoding.ASCII.GetBytes("Subtitle Edit");
+            var buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 18 - buffer.Length; i++)
                 fs.WriteByte(0);
@@ -239,12 +239,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string title = Path.GetFileNameWithoutExtension(fileName);
             if (title.Length > 25)
                 title = title.Substring(0, 25);
-            buffer = ASCIIEncoding.ASCII.GetBytes(title);
+            buffer = Encoding.ASCII.GetBytes(title);
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 28 - title.Length; i++)
                 fs.WriteByte(0);
 
-            buffer = ASCIIEncoding.ASCII.GetBytes("NV");
+            buffer = Encoding.ASCII.GetBytes("NV");
             fs.Write(buffer, 0, buffer.Length);
             for (int i = 0; i < 66 - buffer.Length; i++)
                 fs.WriteByte(0);

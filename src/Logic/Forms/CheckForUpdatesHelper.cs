@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             try
             {
-                HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
+                var request = (HttpWebRequest)WebRequest.Create(url);
                 request.UserAgent = "SubtitleEdit";
                 request.ContentType = contentType;
                 request.Timeout = Timeout.Infinite;
