@@ -34,11 +34,8 @@ namespace Nikse.SubtitleEdit.Forms
             germanToolStripMenuItem.Text = language.German;
             checkBoxAutoSubmitOfFirstChar.Text = language.AutoSubmitOnFirstChar;
 
-            string[] row0 = { "♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű" };
-            string[] row1 = { "♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű" };
-
-            dataGridView1.Rows.Add(row0);
-            dataGridView1.Rows.Add(row1);
+            dataGridView1.Rows.Add("♪", "á", "é", "í", "ó", "ö", "ő", "ú", "ü", "ű");
+            dataGridView1.Rows.Add("♫", "Á", "É", "Í", "Ó", "Ö", "Ő", "Ú", "Ü", "Ű");
 
             FixLargeFonts();
         }
