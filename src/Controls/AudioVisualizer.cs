@@ -1698,16 +1698,17 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            int count = 0;
-            string fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
-            while (File.Exists(Path.Combine(_spectrogramDirectory, count + ".gif")))
+            try
             {
-                using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
+                for (var count = 0; ; count++)
                 {
-                    _spectrogramBitmaps.Add((Bitmap)Bitmap.FromStream(ms));
+                    var fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
+                    _spectrogramBitmaps.Add((Bitmap)Image.FromFile(fileName));
                 }
-                count++;
-                fileName = Path.Combine(_spectrogramDirectory, count + ".gif");
+            }
+            catch (FileNotFoundException)
+            {
+                // no more files
             }
         }
 
