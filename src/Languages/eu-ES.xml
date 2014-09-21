@@ -96,10 +96,10 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Gehitu erabiltzaile hiztegira</Title>
     <Description>Gehitu hitza erabiltzaile hiztegira (hizki larri-xeheak)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Sortu uhinerako datuak</Title>
     <SourceVideoFile>Bideo agiri iturburua:</SourceVideoFile>
-    <GenerateWaveFormData>Sortu uhinerako datuak</GenerateWaveFormData>
+    <GenerateWaveformData>Sortu uhinerako datuak</GenerateWaveformData>
     <PleaseWait>Honek minutu batzuk hartu ditzake - mesedez itxaron</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC Irakurgailua ez da aurkitu</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Editek VLC irakurgailua 1.1.x edo berriagoa behar du audio datuak ateratzeko.</VlcMediaPlayerNotFound>
@@ -108,7 +108,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Argilitzaera sortzen...</GeneratingSpectrogram>
     <ExtractingSeconds>Audioa ateratzen: {0:0.0} segundu</ExtractingSeconds>
     <ExtractingMinutes>Audioa ateratzen: {0}.{1:00} minutu</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Zehaztu iraupenak</Title>
     <AdjustVia>Zehaztu bidea</AdjustVia>
@@ -782,7 +782,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>I&amp;nportatu agerraldi aldaketak...</ImportSceneChanges>
         <RemoveSceneChanges>Kendu agerraldi aldaketak</RemoveSceneChanges>
         <ShowHideVideo>E&amp;rakutsi/ezkutatu bideoa</ShowHideVideo>
-        <ShowHideWaveForm>&amp;Erakutsi/ezkutatu uhinera</ShowHideWaveForm>
+        <ShowHideWaveform>&amp;Erakutsi/ezkutatu uhinera</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>&amp;Erakutsi/ezkutatu uhinera eta argilitzaera</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>&amp;Uztargabetu bideo aginteak</UnDockVideoControls>
         <ReDockVideoControls>Bir-u&amp;ztartu bideo aginteak</ReDockVideoControls>
@@ -840,7 +840,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Idaz-egiaztapena</SpellCheck>
         <Settings>Ezarpenak</Settings>
         <Help>Laguntza</Help>
-        <ShowHideWaveForm>Erakutsi/ezkutatu uhinera</ShowHideWaveForm>
+        <ShowHideWaveform>Erakutsi/ezkutatu uhinera</ShowHideWaveform>
         <ShowHideVideo>Erakutsi/ezkutatu bideoa</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -950,7 +950,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Aholkua: Erabili &lt;alt+gora/behera geziak&gt; joateko aurreko/hurrengo azpidatzira</TranslateTip>
       <CreateTip>Aholkua: Erabili &lt;ktrl+ezk/esk geziak&gt;</CreateTip>
       <AdjustTip>Aholkua: Erabili &lt;alt+gora/behera geziak&gt; joateko aurreko/hurrengo azpidatzira</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Uhineran denbora aldatu baino lehen: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Uhineran denbora aldatu baino lehen: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Idatzi berria gehituta: {0}</NewTextInsertAtX>
       <Center>Erdiratu</Center>
       <PlayRate>Irakurketa neurria (abiadura)</PlayRate>
@@ -1487,19 +1487,19 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <PreviewFontSize>Azpidatzi aurreikuspen hizki neurria:</PreviewFontSize>
     <MainWindowVideoControls>Leiho nagusiko bideo aginteak</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Norbere idatzi eta url bilaketa:</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Uhinera itxurapena</WaveFormAppearance>
-    <WaveFormGridColor>Saretxo margoa</WaveFormGridColor>
-    <WaveFormShowGridLines>Erakutsi saretxo lerroak</WaveFormShowGridLines>
+    <WaveformAppearance>Uhinera itxurapena</WaveformAppearance>
+    <WaveformGridColor>Saretxo margoa</WaveformGridColor>
+    <WaveformShowGridLines>Erakutsi saretxo lerroak</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Alderantzizkatu sagu-gurpilaren irriskari norabidea</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Ahalbidetu gainjarpena (mugitzean/birneurriratzean)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Ezarri fokua sagua sartzean</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Ezarri ere zerrenda ikuspegia fokua sagua sartzean zerrenda ikuspegian</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Ahalbidetu gainjarpena (mugitzean/birneurriratzean)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Ezarri fokua sagua sartzean</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Ezarri ere zerrenda ikuspegia fokua sagua sartzean zerrenda ikuspegian</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Hertz markatzailea izan behar da</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>segundumilaen</WaveformBorderHitMs2>
-    <WaveFormColor>Margoa</WaveFormColor>
-    <WaveFormSelectedColor>Hautaturikoa</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Atzeko margoa</WaveFormBackgroundColor>
-    <WaveFormTextColor>Idatzi margoa</WaveFormTextColor>
+    <WaveformColor>Margoa</WaveformColor>
+    <WaveformSelectedColor>Hautaturikoa</WaveformSelectedColor>
+    <WaveformBackgroundColor>Atzeko margoa</WaveformBackgroundColor>
+    <WaveformTextColor>Idatzi margoa</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Hustu 'Argilitzaerak' eta 'Uhinerak' agiritegiak</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Uhinerak' eta 'Argilitzaerak' agiritegiek {0} agiri dituzte ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Argilitzaera</Spectrogram>
@@ -1954,8 +1954,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <Title>Agiritegi berria</Title>
     <Message>Hizkikode berriaren datubase agiritegi izena</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klikatu uhinera gehitzeko</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klikatu uhinera gehitzeko</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klikatu uhinera/argilitzaera gehitzeko</ClickToAddWaveformAndSpectrogram>
     <Seconds>segundu</Seconds>
     <ZoomIn>Hurbildu</ZoomIn>
@@ -1974,8 +1974,8 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <ShowSpectrogramOnly>Erakutsi argilitzaera bakarrik</ShowSpectrogramOnly>
     <GuessTimeCodes>Ustezko denbora kodeak...</GuessTimeCodes>
     <SeekSilence>Bilatu isiltasuna...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Ustezko denbora kodeak</Title>
     <StartFrom>Hasi hemendik</StartFrom>
     <CurrentVideoPosition>Oraingo bideo kokapena</CurrentVideoPosition>
@@ -1991,7 +1991,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SplitLongLinesAt1>Banandu azpidatzi luzeak:</SplitLongLinesAt1>
     <SplitLongLinesAt2>segundumilaen</SplitLongLinesAt2>
     <Other>Bestelakoa</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - ezarri ahots berria</Title>
     <VoiceName>Ahotsaren izena</VoiceName>

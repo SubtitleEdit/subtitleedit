@@ -97,10 +97,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Add to user dictionary</Title>
     <Description>Add word to user dictionary (not case sensitive)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
-    <Title>Generate wave form data</Title>
+  <AddWaveform>
+    <Title>Generate waveform data</Title>
     <SourceVideoFile>Source video file:</SourceVideoFile>
-    <GenerateWaveFormData>Generate wave form data</GenerateWaveFormData>
+    <GenerateWaveformData>Generate waveform data</GenerateWaveformData>
     <PleaseWait>This may take a few minutes - please wait</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player not found</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit needs VLC media player 1.1.x or newer for extracting audio data.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
     <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Adjust durations</Title>
     <AdjustVia>Adjust via</AdjustVia>
@@ -793,7 +793,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
-        <ShowHideWaveForm>Show/hide waveform</ShowHideWaveForm>
+        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Un-dock video controls</UnDockVideoControls>
         <ReDockVideoControls>Re-dock video controls</ReDockVideoControls>
@@ -851,7 +851,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Spell check</SpellCheck>
         <Settings>Settings</Settings>
         <Help>Help</Help>
-        <ShowHideWaveForm>Show/hide wave form</ShowHideWaveForm>
+        <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -961,7 +961,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</TranslateTip>
       <CreateTip>Tip: Use &lt;ctrl+arrow left/right&gt; keys</CreateTip>
       <AdjustTip>Tip: Use &lt;alt+arrow up/down&gt; to go to previous/next subtitle</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Before changing time in wave form: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Play rate (speed)</PlayRate>
@@ -1509,19 +1509,19 @@ can edit in same subtitle file (collaboration)</Information>
     <PreviewFontSize>Subtitle preview font size</PreviewFontSize>
     <MainWindowVideoControls>Main window video controls</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Custom search text and url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Wave form appearance</WaveFormAppearance>
-    <WaveFormGridColor>Grid color</WaveFormGridColor>
-    <WaveFormShowGridLines>Show grid lines</WaveFormShowGridLines>
+    <WaveformAppearance>Waveform appearance</WaveformAppearance>
+    <WaveformGridColor>Grid color</WaveformGridColor>
+    <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Reverse mouse wheel scroll direction</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Allow overlap (when moving/resizing)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Set focus on mouse enter</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Allow overlap (when moving/resizing)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Set focus on mouse enter</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Also set list view focus on mouse enter in list view</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Border marker hit must be within</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconds</WaveformBorderHitMs2>
-    <WaveFormColor>Color</WaveFormColor>
-    <WaveFormSelectedColor>Selected color</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Back color</WaveFormBackgroundColor>
-    <WaveFormTextColor>Text color</WaveFormTextColor>
+    <WaveformColor>Color</WaveformColor>
+    <WaveformSelectedColor>Selected color</WaveformSelectedColor>
+    <WaveformBackgroundColor>Back color</WaveformBackgroundColor>
+    <WaveformTextColor>Text color</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Empty 'Spectrograms' and 'Waveforms' folders</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' and 'Spectrograms' folders contain {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogram</Spectrogram>
@@ -1988,8 +1988,8 @@ Keep changes?</KeepChangesMessage>
     <Title>New folder</Title>
     <Message>Name of new character database folder</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Click to add waveform</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>seconds</Seconds>
     <ZoomIn>Zoom in</ZoomIn>
@@ -2008,8 +2008,8 @@ Keep changes?</KeepChangesMessage>
     <ShowSpectrogramOnly>Show spectrogram only</ShowSpectrogramOnly>
     <GuessTimeCodes>Guess time codes...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Guess time codes</Title>
     <StartFrom>Start from</StartFrom>
     <CurrentVideoPosition>Current video position</CurrentVideoPosition>
@@ -2025,7 +2025,7 @@ Keep changes?</KeepChangesMessage>
     <SplitLongLinesAt1>Split long subtitles at</SplitLongLinesAt1>
     <SplitLongLinesAt2>milliseconds</SplitLongLinesAt2>
     <Other>Other</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - set new voice</Title>
     <VoiceName>Name of voice</VoiceName>

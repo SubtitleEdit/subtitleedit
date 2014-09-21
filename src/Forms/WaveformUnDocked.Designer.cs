@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class WaveFormUnDocked
+    partial class WaveformUnDocked
     {
         /// <summary>
         /// Required designer variable.
@@ -40,7 +40,7 @@
             this.panelContainer.Size = new System.Drawing.Size(843, 250);
             this.panelContainer.TabIndex = 1;
             //
-            // WaveFormUnDocked
+            // WaveformUnDocked
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -49,10 +49,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.KeyPreview = true;
             this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "WaveFormUnDocked";
-            this.Text = "WaveFormUnDocked";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WaveFormUnDocked_FormClosing);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WaveFormUnDocked_KeyDown);
+            this.Name = "WaveformUnDocked";
+            this.Text = "WaveformUnDocked";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.WaveformUnDocked_FormClosing);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.WaveformUnDocked_KeyDown);
             this.ResumeLayout(false);
 
         }

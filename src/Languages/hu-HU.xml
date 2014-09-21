@@ -97,10 +97,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Hozzáadás a felhasználói szótárhoz</Title>
     <Description>Szó hozzáadása a felhasználói szótárhoz (nincs kis- és nagybetű megkülönböztetés)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Hullámforma adat generálás</Title>
     <SourceVideoFile>Forrás videófájl:</SourceVideoFile>
-    <GenerateWaveFormData>Hullámforma adat generálás</GenerateWaveFormData>
+    <GenerateWaveformData>Hullámforma adat generálás</GenerateWaveformData>
     <PleaseWait>Ez eltarthat pár percig - kis türelmet</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>A VLC Médialejátszó nem található</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>A Subtitle Edit programnak szüksége van a VLC médialejátszó 1.1.x vagy újabb verziójára az audió adatok kiemeléséhez.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Spektrogram létrehozása...</GeneratingSpectrogram>
     <ExtractingSeconds>Audió kiemelés: {0:0.0} másodperc</ExtractingSeconds>
     <ExtractingMinutes>Audió kiemelés: {0}.{1:00} perc</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Időtartam beállítások</Title>
     <AdjustVia>Igazítás</AdjustVia>
@@ -784,7 +784,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Jelenet változások importálása...</ImportSceneChanges>
         <RemoveSceneChanges>Jelenet váltások eltávolítása</RemoveSceneChanges>
         <ShowHideVideo>Videó megjelenítése/elrejtése</ShowHideVideo>
-        <ShowHideWaveForm>Hullámforma megjelenítése/elrejtése</ShowHideWaveForm>
+        <ShowHideWaveform>Hullámforma megjelenítése/elrejtése</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>A hullámforma és spektrogram megjelenítése/rejtése</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Videó vezérlők leválasztása</UnDockVideoControls>
         <ReDockVideoControls>Videó vezérlők újracsatolása</ReDockVideoControls>
@@ -842,7 +842,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Helyesírás-ellenőrzés</SpellCheck>
         <Settings>Beállítások</Settings>
         <Help>Súgó</Help>
-        <ShowHideWaveForm>Hullámforma megjelenítése/elrejtése</ShowHideWaveForm>
+        <ShowHideWaveform>Hullámforma megjelenítése/elrejtése</ShowHideWaveform>
         <ShowHideVideo>Videó megjelenítése/elrejtése</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -952,7 +952,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tipp: használja a &lt;alt+fel/le nyíl&gt; gombokat az előző/következő feliratra ugráshoz</TranslateTip>
       <CreateTip>Tipp: &lt;ctrl+bal/jobb nyíll&gt; használata</CreateTip>
       <AdjustTip>Tipp: használja a &lt;alt+fel/le nyíl&gt; gombokat az előző/következő feliratra ugráshoz</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>A hullámformában végrehajtott idő módosítás előtti állapotra: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>A hullámformában végrehajtott idő módosítás előtti állapotra: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Új szöveg beszúrva: {0}</NewTextInsertAtX>
       <Center>Középre</Center>
       <PlayRate>Lejátszási arány (sebesség)</PlayRate>
@@ -1494,19 +1494,19 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <PreviewFontSize>Felirat előnézeti betűméret</PreviewFontSize>
     <MainWindowVideoControls>Főablak videóvezérlők</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Egyéni szöveg és url keresés</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Hullámforma megjelenítés</WaveFormAppearance>
-    <WaveFormGridColor>Rácsvonalak színe</WaveFormGridColor>
-    <WaveFormShowGridLines>Rácsvonalak megjelenítése</WaveFormShowGridLines>
+    <WaveformAppearance>Hullámforma megjelenítés</WaveformAppearance>
+    <WaveformGridColor>Rácsvonalak színe</WaveformGridColor>
+    <WaveformShowGridLines>Rácsvonalak megjelenítése</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Egér görgetési irány megfordítása</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Átfedés engedélyezése (áthelyezéskor/átméretezéskor)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Fókusz beállítása az egér belépésekor</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>A lista nézeti fókusz beállítása az egér lista nézetbe való belépésekor</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Átfedés engedélyezése (áthelyezéskor/átméretezéskor)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Fókusz beállítása az egér belépésekor</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>A lista nézeti fókusz beállítása az egér lista nézetbe való belépésekor</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>A határjelölő</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>ezredmásodpercen belül legyen</WaveformBorderHitMs2>
-    <WaveFormColor>Szín</WaveFormColor>
-    <WaveFormSelectedColor>Kiválasztott szín</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Hátszín</WaveFormBackgroundColor>
-    <WaveFormTextColor>Szöveg színe</WaveFormTextColor>
+    <WaveformColor>Szín</WaveformColor>
+    <WaveformSelectedColor>Kiválasztott szín</WaveformSelectedColor>
+    <WaveformBackgroundColor>Hátszín</WaveformBackgroundColor>
+    <WaveformTextColor>Szöveg színe</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Üres "Spektrogram" és "Hullámforma" mappa</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>A 'Hullámforma' és 'Spektrogram' mappa {0} fájlt tartalmaz ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektogram</Spectrogram>
@@ -1962,8 +1962,8 @@ Megtartja a változásokat?</KeepChangesMessage>
     <Title>Új mappa</Title>
     <Message>Az új karakter adatbázis mappa neve</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Kattintson ide a hullámforma hozzáadásához</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Kattintson ide a hullámforma hozzáadásához</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Kattintson ide a hullámforma/spektogram hozzáadásához</ClickToAddWaveformAndSpectrogram>
     <Seconds>másodperc</Seconds>
     <ZoomIn>Nagyítás</ZoomIn>
@@ -1982,8 +1982,8 @@ Megtartja a változásokat?</KeepChangesMessage>
     <ShowSpectrogramOnly>Spektogram megjelenítése</ShowSpectrogramOnly>
     <GuessTimeCodes>Időkódok becslése...</GuessTimeCodes>
     <SeekSilence>Csend pozicionálás...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Időkódok becslése</Title>
     <StartFrom>Kezdés ettől:</StartFrom>
     <CurrentVideoPosition>Jelenlegi videó pozíció</CurrentVideoPosition>
@@ -1999,7 +1999,7 @@ Megtartja a változásokat?</KeepChangesMessage>
     <SplitLongLinesAt1>Hosszú feliratok vágása</SplitLongLinesAt1>
     <SplitLongLinesAt2>milliszekundum</SplitLongLinesAt2>
     <Other>Egyéb</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - új hang beállítása</Title>
     <VoiceName>Hang neve</VoiceName>

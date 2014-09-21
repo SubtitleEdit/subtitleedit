@@ -97,10 +97,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Føj til brugerordbogen</Title>
     <Description>Tilføj ord til brugerordbogen</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Generer lyd kurve data</Title>
     <SourceVideoFile>Kilde video-fil:</SourceVideoFile>
-    <GenerateWaveFormData>Generer lyd kurve data</GenerateWaveFormData>
+    <GenerateWaveformData>Generer lyd kurve data</GenerateWaveformData>
     <PleaseWait>Dette kan tage et par minutter - vent venligst</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player ikke fundet</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit behøver VLC media player 1.1.x eller nyere for kunne udpakke lyd data.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generer spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>
     <ExtractingMinutes>Udpakker lyd:. {0} (1:00) minutter</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Juster visnings tid</Title>
     <AdjustVia>Juster via</AdjustVia>
@@ -790,7 +790,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importer sceneskift...</ImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
-        <ShowHideWaveForm>Vis/skjul lyd kurve</ShowHideWaveForm>
+        <ShowHideWaveform>Vis/skjul lyd kurve</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Pop video vinduer ud</UnDockVideoControls>
         <ReDockVideoControls>Saml video vinduer</ReDockVideoControls>
@@ -848,7 +848,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Stavekontrol</SpellCheck>
         <Settings>Indstillinger</Settings>
         <Help>Hjælp</Help>
-        <ShowHideWaveForm>Vis/skjul kurveform</ShowHideWaveForm>
+        <ShowHideWaveform>Vis/skjul kurveform</ShowHideWaveform>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -958,7 +958,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: Brug &lt;alt+pil op/ned&gt; for at gå til forrige/næste tekst</TranslateTip>
       <CreateTip>Tip: Brug &lt;ctrl+pil venstre/højre&gt; genveje</CreateTip>
       <AdjustTip>Tip: Brug &lt;alt+pil op/ned&gt; for at gå til forrige/næste tekst</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Før ændring af tid i lyd kurve: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Før ændring af tid i lyd kurve: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Ny tekst indsat ved {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Afspilnings hastighed</PlayRate>
@@ -1505,19 +1505,19 @@ Fortsæt?</SubtitleAppendPrompt>
     <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
     <MainWindowVideoControls>Hovedvinduet video-kontrol</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Egen defineret søge titel og url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Lyd kurve udseende</WaveFormAppearance>
-    <WaveFormGridColor>Gitter farve</WaveFormGridColor>
-    <WaveFormShowGridLines>Vis gitterlinjer</WaveFormShowGridLines>
+    <WaveformAppearance>Lyd kurve udseende</WaveformAppearance>
+    <WaveformGridColor>Gitter farve</WaveformGridColor>
+    <WaveformShowGridLines>Vis gitterlinjer</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Skift musehjul rulle retning</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Tillad overlapning (når du flytter/resizing)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Sæt fokus ved mus over</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Tillad overlapning (når du flytter/resizing)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Sæt fokus ved mus over</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Set focus i listevisning ved mus over listevisning</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Grænse-markør ved flyt er aktiv inden for</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
-    <WaveFormColor>Farve</WaveFormColor>
-    <WaveFormSelectedColor>Valgte farve</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Baggrundsfarve</WaveFormBackgroundColor>
-    <WaveFormTextColor>Tekstfarve</WaveFormTextColor>
+    <WaveformColor>Farve</WaveformColor>
+    <WaveformSelectedColor>Valgte farve</WaveformSelectedColor>
+    <WaveformBackgroundColor>Baggrundsfarve</WaveformBackgroundColor>
+    <WaveformTextColor>Tekstfarve</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Tøm 'Spectrograms' og 'Waveforms' mapper</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveform' og 'Spectrograms' mapper indeholder {0} filer ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1983,8 +1983,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <Title>Ny mappe</Title>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klik for at tilføje audio kurve</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klik for at tilføje audio kurve</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik for at tilføje bølgeform/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekunder</Seconds>
     <ZoomIn>Zoom ind</ZoomIn>
@@ -2003,8 +2003,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowSpectrogramOnly>Vis kun spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Gæt tidskoder...</GuessTimeCodes>
     <SeekSilence>Søg tavshed...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Gæt tidskoder</Title>
     <StartFrom>Start fra</StartFrom>
     <CurrentVideoPosition>Aktuel video position</CurrentVideoPosition>
@@ -2020,7 +2020,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SplitLongLinesAt1>Split lange undertekster ved</SplitLongLinesAt1>
     <SplitLongLinesAt2>millisekunder</SplitLongLinesAt2>
     <Other>Øvrigt</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - angiv ny stemme</Title>
     <VoiceName>Stemme-navn</VoiceName>

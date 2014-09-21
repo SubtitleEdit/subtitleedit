@@ -97,10 +97,10 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ajouter au dictionnaire utilisateur</Title>
     <Description>Un mot :</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Générer forme à partir des données</Title>
     <SourceVideoFile>Fichier vidéo source:</SourceVideoFile>
-    <GenerateWaveFormData>Générer forme à partir des données</GenerateWaveFormData>
+    <GenerateWaveformData>Générer forme à partir des données</GenerateWaveformData>
     <PleaseWait>Ceci peut prendre quelques minutes - Veuillez patienter...</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player introuvable</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Création du spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
     <ExtractingMinutes>Extraction audio: {0}:{1:00} secondes</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Ajuster les durées</Title>
     <AdjustVia>Ajuster selon</AdjustVia>
@@ -790,7 +790,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importer changements de scène...</ImportSceneChanges>
         <RemoveSceneChanges>Supprimer changements de scène...</RemoveSceneChanges>
         <ShowHideVideo>Afficher/Masquer vidéo</ShowHideVideo>
-        <ShowHideWaveForm>Afficher/Masquer diagramme sonore</ShowHideWaveForm>
+        <ShowHideWaveform>Afficher/Masquer diagramme sonore</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Afficher/Masquer les formes d'onde et spectrogramme</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Détacher la fenêtre vidéo</UnDockVideoControls>
         <ReDockVideoControls>Attacher la fenêtre vidéo</ReDockVideoControls>
@@ -848,7 +848,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Correcteur d'orthographe</SpellCheck>
         <Settings>Configuration</Settings>
         <Help>Aide</Help>
-        <ShowHideWaveForm>Montrer/cacher forme sonore</ShowHideWaveForm>
+        <ShowHideWaveform>Montrer/cacher forme sonore</ShowHideWaveform>
         <ShowHideVideo>Montrer/cacher vidéo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -958,7 +958,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>&lt;alt+flèche haut/bas&gt; pour avancer/reculer d'un sous-titre</TranslateTip>
       <CreateTip>&lt;ctrl+flèche gauche/droite&gt;</CreateTip>
       <AdjustTip>&lt;alt+flèche haut/bas&gt; pour avancer/reculer d'un sous-titre</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Temps modifié précédent dans le signal: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Temps modifié précédent dans le signal: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nouveau texte inséré à {0}</NewTextInsertAtX>
       <Center>Centrer</Center>
       <PlayRate>Vitesse de lecture</PlayRate>
@@ -1506,19 +1506,19 @@ Poursuivre?</SubtitleAppendPrompt>
     <PreviewFontSize>Taille de police pour aperçu :</PreviewFontSize>
     <MainWindowVideoControls>Contrôles principaux de la fenêtre vidéo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Recherche texte et url personnalisée</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Apparence du spectrogramme</WaveFormAppearance>
-    <WaveFormGridColor>Couleur de la grille</WaveFormGridColor>
-    <WaveFormShowGridLines>Afficher le quadrillage</WaveFormShowGridLines>
+    <WaveformAppearance>Apparence du spectrogramme</WaveformAppearance>
+    <WaveformGridColor>Couleur de la grille</WaveformGridColor>
+    <WaveformShowGridLines>Afficher le quadrillage</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverser sens roulette de la souris</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Autoriser chevauchement (lors du déplacer/redimensionner)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Focus actif au passage de la souris</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Focus actif dans le mode liste</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Autoriser chevauchement (lors du déplacer/redimensionner)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Focus actif au passage de la souris</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Focus actif dans le mode liste</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Repère de bordure compris entre</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisecondes</WaveformBorderHitMs2>
-    <WaveFormColor>Couleur onde</WaveFormColor>
-    <WaveFormSelectedColor>Couleur onde sélec.</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Couleur de fond</WaveFormBackgroundColor>
-    <WaveFormTextColor>Couleur du texte</WaveFormTextColor>
+    <WaveformColor>Couleur onde</WaveformColor>
+    <WaveformSelectedColor>Couleur onde sélec.</WaveformSelectedColor>
+    <WaveformBackgroundColor>Couleur de fond</WaveformBackgroundColor>
+    <WaveformTextColor>Couleur du texte</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Effacer contenu</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Dossiers 'Waveforms' et 'Spectrograms' contiennent {0} fichiers ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogramme</Spectrogram>
@@ -1984,8 +1984,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <Title>Nouvelle Base de données</Title>
     <Message>Nom de la DB d'images :</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Cliquer pour ajouter une forme sonore</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Cliquer pour ajouter une forme sonore</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>secondes</Seconds>
     <ZoomIn>Zoom avant</ZoomIn>
@@ -2004,8 +2004,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <ShowSpectrogramOnly>Montrer spectrogramme</ShowSpectrogramOnly>
     <GuessTimeCodes>Supposer timecode...</GuessTimeCodes>
     <SeekSilence>Recherche silence ...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Deviner timecodes</Title>
     <StartFrom>À partir de</StartFrom>
     <CurrentVideoPosition>Vidéo position actuelle</CurrentVideoPosition>
@@ -2021,7 +2021,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <SplitLongLinesAt1>Séparer les longs sous-titres par</SplitLongLinesAt1>
     <SplitLongLinesAt2>millisecondes</SplitLongLinesAt2>
     <Other>Autre</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>Web VTT – Définir l’interprète</Title>
     <VoiceName>Interprète du dialogue</VoiceName>

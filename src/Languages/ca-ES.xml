@@ -97,10 +97,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Afegeix al diccionari d'usuari</Title>
     <Description>Afegeix mot al diccionari d'usuari</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Genera dades d'ona wave</Title>
     <SourceVideoFile>Fitxer origen vídeo:</SourceVideoFile>
-    <GenerateWaveFormData>Genera dades d'ona wave</GenerateWaveFormData>
+    <GenerateWaveformData>Genera dades d'ona wave</GenerateWaveformData>
     <PleaseWait>Açò pot trigar uns minuts - espereu si us plau</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>No s'ha trobat VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit li cal VLC media player 1.1.x o superior per extreure dades d'audio.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generant espectrògrama...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraient audio: {0:0.0} segons</ExtractingSeconds>
     <ExtractingMinutes>Extraient audio: {0}.{1:00} minuts</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Ajustament durada</Title>
     <AdjustVia>Ajustament per</AdjustVia>
@@ -783,7 +783,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importa canvis d'escena</ImportSceneChanges>
         <RemoveSceneChanges>Suprimeix canvis d'escena</RemoveSceneChanges>
         <ShowHideVideo>Mostra/amaga vídeo</ShowHideVideo>
-        <ShowHideWaveForm>Mostra/amaga Ona wave</ShowHideWaveForm>
+        <ShowHideWaveform>Mostra/amaga Ona wave</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostra/amaga Ona wave i espectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Desacobla controls vídeo</UnDockVideoControls>
         <ReDockVideoControls>Acobla controls vídeo</ReDockVideoControls>
@@ -841,7 +841,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Corrector ortogràfic</SpellCheck>
         <Settings>Configuració</Settings>
         <Help>Ajuda</Help>
-        <ShowHideWaveForm>Mostra/amaga ona wave</ShowHideWaveForm>
+        <ShowHideWaveform>Mostra/amaga ona wave</ShowHideWaveform>
         <ShowHideVideo>Mostra/amaga vídeo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -951,7 +951,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Consell: &lt;alt+fletxa amunt/avall&gt; va a subtítol anterior/següent</TranslateTip>
       <CreateTip>Consell: empra &lt;alt+fletxa esquerre/dreta&gt;</CreateTip>
       <AdjustTip>Consell: &lt;alt+fletxa amunt/avall&gt; va a subtítol anterior/següent</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Abans canvia temps a forma d'ona wave: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Abans canvia temps a forma d'ona wave: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nou text inserit en {0}</NewTextInsertAtX>
       <Center>Centrar</Center>
       <PlayRate>Velocitat reproducció</PlayRate>
@@ -1486,19 +1486,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PreviewFontSize>Mida font vista prèvia subtítol</PreviewFontSize>
     <MainWindowVideoControls>Controls vídeo en finestra principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>URL i Recerca de text personalitzat</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Aparença forma d'ona</WaveFormAppearance>
-    <WaveFormGridColor>Color graella</WaveFormGridColor>
-    <WaveFormShowGridLines>Mostra línies graella</WaveFormShowGridLines>
+    <WaveformAppearance>Aparença forma d'ona</WaveformAppearance>
+    <WaveformGridColor>Color graella</WaveformGridColor>
+    <WaveformShowGridLines>Mostra línies graella</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverteix direcció roda ratolí</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Permet superposició (al moure/cavia mida)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Estableix focus a l'entrada del ratolí</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>També estableix focus a vista llista a l'entrada del ratolí en vista llista</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Permet superposició (al moure/cavia mida)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Estableix focus a l'entrada del ratolí</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>També estableix focus a vista llista a l'entrada del ratolí en vista llista</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Marca de vora deu pegar-se dins</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisegons</WaveformBorderHitMs2>
-    <WaveFormColor>Color</WaveFormColor>
-    <WaveFormSelectedColor>Color seleccionat</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Color fons</WaveFormBackgroundColor>
-    <WaveFormTextColor>Color text</WaveFormTextColor>
+    <WaveformColor>Color</WaveformColor>
+    <WaveformSelectedColor>Color seleccionat</WaveformSelectedColor>
+    <WaveformBackgroundColor>Color fons</WaveformBackgroundColor>
+    <WaveformTextColor>Color text</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Buida carpetes 'Espectrogrames' i 'FormesOna'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Carpetes 'FormesOna' i 'Espectrogrames' contenen {0} fitxers ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Espectrograma</Spectrogram>
@@ -1952,8 +1952,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Nova carpeta</Title>
     <Message>Nom de nova carpeta de base de dades de caràcters</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Clic afegeix ona wave</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Clic afegeix ona wave</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clic afegeix ona/espectrograma</ClickToAddWaveformAndSpectrogram>
     <Seconds>segons</Seconds>
     <ZoomIn>Amplia</ZoomIn>
@@ -1972,8 +1972,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowSpectrogramOnly>Mostra només l'espectrograma</ShowSpectrogramOnly>
     <GuessTimeCodes>Endevina codis de temps</GuessTimeCodes>
     <SeekSilence>Cerca silenci...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Endevina codis de temps</Title>
     <StartFrom>Inicia des de</StartFrom>
     <CurrentVideoPosition>Possició vídeo actual</CurrentVideoPosition>
@@ -1989,7 +1989,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLinesAt1>Divideix llargària subtítols en</SplitLongLinesAt1>
     <SplitLongLinesAt2>milisegons</SplitLongLinesAt2>
     <Other>Altres</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - estableix veu nova</Title>
     <VoiceName>Nom de veu</VoiceName>

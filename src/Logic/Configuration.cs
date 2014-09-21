@@ -110,11 +110,11 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static string WaveFormsFolder
+        public static string WaveformsFolder
         {
             get
             {
-                return DataDirectory + "WaveForms" + Path.DirectorySeparatorChar;
+                return DataDirectory + "Waveforms" + Path.DirectorySeparatorChar;
             }
         }
 

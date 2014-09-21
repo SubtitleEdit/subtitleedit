@@ -116,11 +116,11 @@
     <Compile Include="Forms\AddToUserDic.Designer.cs">
       <DependentUpon>AddToUserDic.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AddWaveForm.cs">
+    <Compile Include="Forms\AddWaveform.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AddWaveForm.Designer.cs">
-      <DependentUpon>AddWaveForm.cs</DependentUpon>
+    <Compile Include="Forms\AddWaveform.Designer.cs">
+      <DependentUpon>AddWaveform.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\AlignmentPicker.cs">
       <SubType>Form</SubType>
@@ -728,17 +728,17 @@
     <Compile Include="Forms\Watermark.Designer.cs">
       <DependentUpon>Watermark.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WaveFormGenerateTimeCodes.cs">
+    <Compile Include="Forms\WaveformGenerateTimeCodes.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WaveFormGenerateTimeCodes.Designer.cs">
-      <DependentUpon>WaveFormGenerateTimeCodes.cs</DependentUpon>
+    <Compile Include="Forms\WaveformGenerateTimeCodes.Designer.cs">
+      <DependentUpon>WaveformGenerateTimeCodes.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\WaveFormUnDocked.cs">
+    <Compile Include="Forms\WaveformUnDocked.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\WaveFormUnDocked.Designer.cs">
-      <DependentUpon>WaveFormUnDocked.cs</DependentUpon>
+    <Compile Include="Forms\WaveformUnDocked.Designer.cs">
+      <DependentUpon>WaveformUnDocked.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\GoogleOrMicrosoftTranslate.cs">
       <SubType>Form</SubType>
@@ -1223,8 +1223,8 @@
     <EmbeddedResource Include="Forms\AddToUserDic.resx">
       <DependentUpon>AddToUserDic.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AddWaveForm.resx">
-      <DependentUpon>AddWaveForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\AddWaveform.resx">
+      <DependentUpon>AddWaveform.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AlignmentPicker.resx">
       <DependentUpon>AlignmentPicker.cs</DependentUpon>
@@ -1524,11 +1524,11 @@
     <EmbeddedResource Include="Forms\Watermark.resx">
       <DependentUpon>Watermark.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WaveFormGenerateTimeCodes.resx">
-      <DependentUpon>WaveFormGenerateTimeCodes.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\WaveformGenerateTimeCodes.resx">
+      <DependentUpon>WaveformGenerateTimeCodes.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\WaveFormUnDocked.resx">
-      <DependentUpon>WaveFormUnDocked.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\WaveformUnDocked.resx">
+      <DependentUpon>WaveformUnDocked.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\GoogleOrMicrosoftTranslate.resx">
       <DependentUpon>GoogleOrMicrosoftTranslate.cs</DependentUpon>
@@ -1814,7 +1814,7 @@
     <Content Include="Icons\VisualSync.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\WaveFormToogle.png">
+    <Content Include="Icons\WaveformToogle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\pictureBoxFS.Image.png" />

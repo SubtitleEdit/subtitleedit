@@ -99,10 +99,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Adicionar ao dicionário de utilizador</Title>
     <Description>Adicionar palvra ao dicionário de utilizador (não respeita maiús/minús)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Gerar dados em forma de onda</Title>
     <SourceVideoFile>Ficheiro fonte de vídeo:</SourceVideoFile>
-    <GenerateWaveFormData>Gerar dados em forma de onda</GenerateWaveFormData>
+    <GenerateWaveformData>Gerar dados em forma de onda</GenerateWaveformData>
     <PleaseWait>Isto pode levar alguns minutos - por favor, aguarde</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player não encontrado</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>O Subtitle Edit necessita do VLC media player 1.1.x ou superior para extrair áudio.</VlcMediaPlayerNotFound>
@@ -111,7 +111,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>A extrair o áudio: {0}.{1:00} minutos</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Ajustar duração</Title>
     <AdjustVia>Ajustar por</AdjustVia>
@@ -791,7 +791,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importar mudanças de cena...</ImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
-        <ShowHideWaveForm>Mostrar/ocultar forma de onda</ShowHideWaveForm>
+        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Separar controlos de vídeo</UnDockVideoControls>
         <ReDockVideoControls>Unir controlos de vídeo</ReDockVideoControls>
@@ -849,7 +849,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Verificação ortográfica</SpellCheck>
         <Settings>Configurações</Settings>
         <Help>Ajuda</Help>
-        <ShowHideWaveForm>Mostrar/ocultar forma de onda</ShowHideWaveForm>
+        <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -959,7 +959,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Dica: Use &lt;ALT+seta acima/abaixo&gt; para ir à legenda ant/seg</TranslateTip>
       <CreateTip>Dica: Use as teclas &lt;CTRL+seta esquerda/direita&gt;</CreateTip>
       <AdjustTip>Dica: Use &lt;ALT+seta acima/abaixo&gt; para ir à legenda ant/seg</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Antes de alterar o tempo na forma de onda: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Antes de alterar o tempo na forma de onda: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Novo texto inserido em {0}</NewTextInsertAtX>
       <Center>Centralizar</Center>
       <PlayRate>Velocidade de reprodução</PlayRate>
@@ -1505,19 +1505,19 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <PreviewFontSize>Tamanho da letra da legenda na pré-visualização</PreviewFontSize>
     <MainWindowVideoControls>Controlos de vídeo na janela principal</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Procura de texto e URL personalizada</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Aparência da forma de onda</WaveFormAppearance>
-    <WaveFormGridColor>Cor da grelha</WaveFormGridColor>
-    <WaveFormShowGridLines>Mostrar linha na grelha</WaveFormShowGridLines>
+    <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
+    <WaveformGridColor>Cor da grelha</WaveformGridColor>
+    <WaveformShowGridLines>Mostrar linha na grelha</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Evidenciar na entrada do cursor do rato</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Também evidenciar a lista de visualização na entrada do cursor do rato</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Evidenciar na entrada do cursor do rato</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Também evidenciar a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca da borda deve estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
-    <WaveFormColor>Cor</WaveFormColor>
-    <WaveFormSelectedColor>Cor seleccionada</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Cor de fundo</WaveFormBackgroundColor>
-    <WaveFormTextColor>Cor do texto</WaveFormTextColor>
+    <WaveformColor>Cor</WaveformColor>
+    <WaveformSelectedColor>Cor seleccionada</WaveformSelectedColor>
+    <WaveformBackgroundColor>Cor de fundo</WaveformBackgroundColor>
+    <WaveformTextColor>Cor do texto</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Esvaziar pastas "Espectrogramas" e "Formas de onda"</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>As pastas "Espectrogramas" e "Formas de onda" contém {0} ficheiros ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Espectrograma</Spectrogram>
@@ -1984,8 +1984,8 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Nova pasta</Title>
     <Message>Nome da nova pasta de base de dados de caracteres</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Clique para adicionar forma de onda</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
     <Seconds>segundos</Seconds>
     <ZoomIn>Aumentar</ZoomIn>
@@ -2004,8 +2004,8 @@ Manter as alterações?</KeepChangesMessage>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
     <GuessTimeCodes>Supor códigos de tempo...</GuessTimeCodes>
     <SeekSilence>Localizar silêncio no áudio...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Supor códigos de tempo</Title>
     <StartFrom>Iniciar apartir da...</StartFrom>
     <CurrentVideoPosition>Posição de vídeo actual</CurrentVideoPosition>
@@ -2021,7 +2021,7 @@ Manter as alterações?</KeepChangesMessage>
     <SplitLongLinesAt1>Dividir linhas longas em</SplitLongLinesAt1>
     <SplitLongLinesAt2>milissegundos</SplitLongLinesAt2>
     <Other>Outro</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - definir nova voz</Title>
     <VoiceName>Nome da voz</VoiceName>

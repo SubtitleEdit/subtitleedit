@@ -101,10 +101,10 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Добавить в словарь пользователя</Title>
     <Description>Добавить слово в словарь пользователя (без учета регистра)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Создание формы сигнала</Title>
     <SourceVideoFile>Исходный файл видео:</SourceVideoFile>
-    <GenerateWaveFormData>Создать форму сигнала</GenerateWaveFormData>
+    <GenerateWaveformData>Создать форму сигнала</GenerateWaveformData>
     <PleaseWait>Эта операция займет некоторое время - подождите...</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player не найден</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Для извлечения аудио данных редактору субтитров требуется VLC media player 1.1.x или новее.</VlcMediaPlayerNotFound>
@@ -113,7 +113,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GeneratingSpectrogram>Создание спектрограммы...</GeneratingSpectrogram>
     <ExtractingSeconds>Извлечение аудио: {0:0.0} с</ExtractingSeconds>
     <ExtractingMinutes>Извлечение аудио: {0}.{1:00} мин</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Настройка продолжительности</Title>
     <AdjustVia>Настройка с помощью</AdjustVia>
@@ -792,7 +792,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ImportSceneChanges>Импорт изменений сцены...</ImportSceneChanges>
         <RemoveSceneChanges>Удалить изменения сцены</RemoveSceneChanges>
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
-        <ShowHideWaveForm>Показать/Скрыть форму сигнала</ShowHideWaveForm>
+        <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Показать/Скрыть форму сигнала и спектрограмму</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Отстыковать панели</UnDockVideoControls>
         <ReDockVideoControls>Пристыковать панели</ReDockVideoControls>
@@ -850,7 +850,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <SpellCheck>Проверка орфографии</SpellCheck>
         <Settings>Настройки</Settings>
         <Help>Справка</Help>
-        <ShowHideWaveForm>Показать/Скрыть форму сигнала</ShowHideWaveForm>
+        <ShowHideWaveform>Показать/Скрыть форму сигнала</ShowHideWaveform>
         <ShowHideVideo>Показать/Скрыть видео</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -962,7 +962,7 @@ https://github.com/SubtitleEdit/subtitleedit
       <CreateTip>Команда [Ctrl+стрелки Влево/Вправо]</CreateTip>
       <AdjustTip>Используйте клавиши [Alt+стрелки Вверх/Вниз] для
 перехода к предудыщему/следующему субтитру.</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Перед изменением времени в панели сигнала: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Перед изменением времени в панели сигнала: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>В позицию {0} вставлен новый субтитр</NewTextInsertAtX>
       <Center>По центру</Center>
       <PlayRate>Скорость воспроизведения</PlayRate>
@@ -1512,19 +1512,19 @@ https://github.com/SubtitleEdit/subtitleedit
     <PreviewFontSize>Размер шрифта для предосмотра:</PreviewFontSize>
     <MainWindowVideoControls>Главное окно панели видео</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Пользовательский поиск текста и адрес:</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Внешний вид формы сигнала</WaveFormAppearance>
-    <WaveFormGridColor>Цвет разметки</WaveFormGridColor>
-    <WaveFormShowGridLines>Показывать разметку</WaveFormShowGridLines>
+    <WaveformAppearance>Внешний вид формы сигнала</WaveformAppearance>
+    <WaveformGridColor>Цвет разметки</WaveformGridColor>
+    <WaveformShowGridLines>Показывать разметку</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Обратить направление прокрутки колесиком мышки</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Разрешить перекрытие (при перемещении/изменении размеров)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Установить фокус по курсору мышки</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Установить фокус на списке по курсору мышки</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Разрешить перекрытие (при перемещении/изменении размеров)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Установить фокус по курсору мышки</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Установить фокус на списке по курсору мышки</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Только в границах маркера</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>миллисекунд</WaveformBorderHitMs2>
-    <WaveFormColor>Цвет</WaveFormColor>
-    <WaveFormSelectedColor>Цвет выделения</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Цвет фона</WaveFormBackgroundColor>
-    <WaveFormTextColor>Цвет текста</WaveFormTextColor>
+    <WaveformColor>Цвет</WaveformColor>
+    <WaveformSelectedColor>Цвет выделения</WaveformSelectedColor>
+    <WaveformBackgroundColor>Цвет фона</WaveformBackgroundColor>
+    <WaveformTextColor>Цвет текста</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Очистить папки "Spectrograms" и "Waveforms"</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Папки 'Waveforms' и 'Spectrograms' содержат {0} файлов ({1:0.00} Mб)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Спектрограмма</Spectrogram>
@@ -1984,8 +1984,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Новая папка</Title>
     <Message>Название папки для базы символов</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Кликните здесь для создания формы сигнала</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Кликните здесь для создания формы сигнала</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Кликните здесь для создания формы сигнала/спектрограммы</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунд</Seconds>
     <ZoomIn>Увеличить</ZoomIn>
@@ -2004,8 +2004,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <ShowSpectrogramOnly>Показать только спектрограмму</ShowSpectrogramOnly>
     <GuessTimeCodes>Распознать таймкоды...</GuessTimeCodes>
     <SeekSilence>Поиск пауз...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Распознавание таймкодов</Title>
     <StartFrom>Начальная позиция</StartFrom>
     <CurrentVideoPosition>Текущая позиция курсора</CurrentVideoPosition>
@@ -2021,7 +2021,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SplitLongLinesAt1>Разделить длинные субтитры по</SplitLongLinesAt1>
     <SplitLongLinesAt2>мс</SplitLongLinesAt2>
     <Other>Другое</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - установить новый голос</Title>
     <VoiceName>Имя голоса</VoiceName>

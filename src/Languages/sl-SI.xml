@@ -103,10 +103,10 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Title>Dodaj v slovar uporabnika</Title>
     <Description>Dodaj besedo v slovar uporabnika (ni poseben primer)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Izdelaj valovno obliko datoteke</Title>
     <SourceVideoFile>Izvor video datoteke:</SourceVideoFile>
-    <GenerateWaveFormData>Izdelaj valovno obliko datoteke</GenerateWaveFormData>
+    <GenerateWaveformData>Izdelaj valovno obliko datoteke</GenerateWaveformData>
     <PleaseWait>Tole lahko traja nekaj minut - prosim počakajte</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Ne najdem VLC medijskega predvajalnika</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit potrebuje VLC medijski predvajalnik 1.1.x ali novejšega za izlužitev audio datoteke.</VlcMediaPlayerNotFound>
@@ -115,7 +115,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <GeneratingSpectrogram>Izdelujem spektrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Izlužujem audio audio: {0:0.0} sekund</ExtractingSeconds>
     <ExtractingMinutes>Izlužujem: {0}.{1:00} minut</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Prilagodi trajanje</Title>
     <AdjustVia>Prilagodi z</AdjustVia>
@@ -761,7 +761,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <ImportSceneChanges>Uvozi scenske spremembe...</ImportSceneChanges>
         <RemoveSceneChanges>Odstrani scenske spremembe</RemoveSceneChanges>
         <ShowHideVideo>Pokaži/Skrij video</ShowHideVideo>
-        <ShowHideWaveForm>Pokaži/Skrij krivuljo</ShowHideWaveForm>
+        <ShowHideWaveform>Pokaži/Skrij krivuljo</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Pokaži/Skrij krivuljo in spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Zasidraj video nadzor</UnDockVideoControls>
         <ReDockVideoControls>Odstrani video nadzor</ReDockVideoControls>
@@ -817,7 +817,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <SpellCheck>Črkovalnik</SpellCheck>
         <Settings>Nastavitve</Settings>
         <Help>Pomoč</Help>
-        <ShowHideWaveForm>Prikaži/Skrij krivuljo</ShowHideWaveForm>
+        <ShowHideWaveform>Prikaži/Skrij krivuljo</ShowHideWaveform>
         <ShowHideVideo>Prikaži/Skrij video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -927,7 +927,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
       <TranslateTip>Nasvet: Uporabi &lt;alt+puščica gor/dol&gt; v prejšnji/naslednji podnapis</TranslateTip>
       <CreateTip>Nasvet: Uporabi &lt;ctrl+arrow levo/desno&gt; tipke</CreateTip>
       <AdjustTip>Nasvet: Uporabi &lt;alt+puščica gor/dol&gt; v prejšnji/naslednji podnapis</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Pred spreminjanjem časa v krivulji: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Pred spreminjanjem časa v krivulji: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Novo besedilo vnešeno v {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Hitrost predvajanja</PlayRate>
@@ -1439,19 +1439,19 @@ popravlja enak podnapis (sodelovanje)</Information>
     <PreviewFontSize>Velikost pisave predogleda podnapisa</PreviewFontSize>
     <MainWindowVideoControls>Video nadzoe glavnega okna</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Navadno iskanje besedila in url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Oblika krivulje</WaveFormAppearance>
-    <WaveFormGridColor>Barva mreže</WaveFormGridColor>
-    <WaveFormShowGridLines>Prikaži vrstice mreže</WaveFormShowGridLines>
+    <WaveformAppearance>Oblika krivulje</WaveformAppearance>
+    <WaveformGridColor>Barva mreže</WaveformGridColor>
+    <WaveformShowGridLines>Prikaži vrstice mreže</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Obrni smer koleščka na miški</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Dovoli prekoračitev (pri premikanju/spreminjanju velikosti)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Nastavi fokus na vnos miške</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Nastavi tudi fokus za ogled seznama na vnosu miške v ogledu seznama</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Dovoli prekoračitev (pri premikanju/spreminjanju velikosti)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Nastavi fokus na vnos miške</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Nastavi tudi fokus za ogled seznama na vnosu miške v ogledu seznama</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Oznaka obrobe mora biti znotraj</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>Milisekunde</WaveformBorderHitMs2>
-    <WaveFormColor>Barva</WaveFormColor>
-    <WaveFormSelectedColor>Izbrana barva</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Barva ozadja</WaveFormBackgroundColor>
-    <WaveFormTextColor>Barva besedila</WaveFormTextColor>
+    <WaveformColor>Barva</WaveformColor>
+    <WaveformSelectedColor>Izbrana barva</WaveformSelectedColor>
+    <WaveformBackgroundColor>Barva ozadja</WaveformBackgroundColor>
+    <WaveformTextColor>Barva besedila</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Izprazni mapo 'Spektrogram' in 'Krivulje'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Mapa 'Krivulja' in 'Spektrogram' vsebuje {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1898,8 +1898,8 @@ Ohranim spremembe?</KeepChangesMessage>
     <Title>Nova mapa</Title>
     <Message>Ime nove mape znakov</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klikni za dodajanje krivulje</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klikni za dodajanje krivulje</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klikni za dodajanje krivulje/spektrograma</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekunde</Seconds>
     <ZoomIn>Povečaj</ZoomIn>
@@ -1918,8 +1918,8 @@ Ohranim spremembe?</KeepChangesMessage>
     <ShowSpectrogramOnly>Prikaži spektrogram samo</ShowSpectrogramOnly>
     <GuessTimeCodes>Ugani časovni zapis...</GuessTimeCodes>
     <SeekSilence>Poišči tišino...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Ugani časovni zapis</Title>
     <StartFrom>Prični iz</StartFrom>
     <CurrentVideoPosition>Trenutna video pozicija</CurrentVideoPosition>
@@ -1935,7 +1935,7 @@ Ohranim spremembe?</KeepChangesMessage>
     <SplitLongLinesAt1>Razdeli dolge podnapise ob</SplitLongLinesAt1>
     <SplitLongLinesAt2>milisekunde</SplitLongLinesAt2>
     <Other>Ostalo</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - nastavi nov glagolski način</Title>
     <VoiceName>Ime glagolskega načina</VoiceName>

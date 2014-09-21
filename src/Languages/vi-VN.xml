@@ -102,10 +102,10 @@ Rất hân hạnh được chào đón.
     <Title>Thêm vào từ điển người dùng</Title>
     <Description>Thêm từ ngữ vào từ điển người dùng(Không p.biệt HOA/thường)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Tạo ra dữ liệu dạng sóng</Title>
     <SourceVideoFile>Tập tin video nguồn:</SourceVideoFile>
-    <GenerateWaveFormData>Tạo ra dữ liệu dạng sóng:</GenerateWaveFormData>
+    <GenerateWaveformData>Tạo ra dữ liệu dạng sóng:</GenerateWaveformData>
     <PleaseWait>Điều này có thể mất một vài phút - vui lòng chờ</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Không tìm thấy VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Chỉnh sửa phụ đề cần VLC media player 1.1.x hoặc phiên bản mới hơn cho việc giải nén dữ liệu âm thanh.</VlcMediaPlayerNotFound>
@@ -114,7 +114,7 @@ Rất hân hạnh được chào đón.
     <GeneratingSpectrogram>Tạo ra ảnh quang phổ.</GeneratingSpectrogram>
     <ExtractingSeconds>Giải nén audio: {0:0.0}s</ExtractingSeconds>
     <ExtractingMinutes>Giải nén audio: {0}.{1:00}s</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Chỉnh sửa khoảng thời gian</Title>
     <AdjustVia>Chỉnh sửa thông qua</AdjustVia>
@@ -654,7 +654,7 @@ Rất hân hạnh được chào đón.
         <ChooseAudioTrack>Chọn đường dẫn âm thanh</ChooseAudioTrack>
         <CloseVideo>Đóng tập tin video</CloseVideo>
         <ShowHideVideo>Hiển/Ẩn video</ShowHideVideo>
-        <ShowHideWaveForm>Hiển/Ẩn dạng sóng</ShowHideWaveForm>
+        <ShowHideWaveform>Hiển/Ẩn dạng sóng</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Hiển thị/Ẩn dạng sóng và ảnh phổ</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Hủy bỏ điều khiển video</UnDockVideoControls>
         <ReDockVideoControls>Quay lại điều khiển video</ReDockVideoControls>
@@ -709,7 +709,7 @@ Rất hân hạnh được chào đón.
         <SpellCheck>Kiểm tra chính tả</SpellCheck>
         <Settings>Cài đặt</Settings>
         <Help>Trợ giúp</Help>
-        <ShowHideWaveForm>Hiện/Ẩn dạng sóng</ShowHideWaveForm>
+        <ShowHideWaveform>Hiện/Ẩn dạng sóng</ShowHideWaveform>
         <ShowHideVideo>Hiện/Ẩn video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -816,7 +816,7 @@ Rất hân hạnh được chào đón.
       <TranslateTip>Mẹo: Sử dụng &lt;Alt+phím mũi tên lên/xuống &gt;để tới trước/sau phụ đề</TranslateTip>
       <CreateTip>Mẹo: Sử dụng &lt;Ctrl+phím mũi tên trái/phải &gt;tổ hợp phím nóng</CreateTip>
       <AdjustTip>Mẹo: Sử dụng &lt;Alt+phím mũi tên &gt;tới trước/sau phụ đề</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Trước khi thay đổi thời gian dưới dạng sóng: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Trước khi thay đổi thời gian dưới dạng sóng: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Chèn văn bản mới vào {0}</NewTextInsertAtX>
       <Center>Giữa</Center>
       <PlayRate>Cách phát (tốc độ)</PlayRate>
@@ -1271,14 +1271,14 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <PreviewFontSize>Xem trước kích thước phông chữ</PreviewFontSize>
     <MainWindowVideoControls> Cửa sổ chính điều khiển video</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Tự chọn để tìm văn bản và url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Xuất hiện dạng sóng</WaveFormAppearance>
-    <WaveFormGridColor>Dạng lưới màu</WaveFormGridColor>
-    <WaveFormShowGridLines>Hiển thị dòng theo dạng lưới</WaveFormShowGridLines>
+    <WaveformAppearance>Xuất hiện dạng sóng</WaveformAppearance>
+    <WaveformGridColor>Dạng lưới màu</WaveformGridColor>
+    <WaveformShowGridLines>Hiển thị dòng theo dạng lưới</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Lăn chuột di chuyển theo hướng</ReverseMouseWheelScrollDirection>
-    <WaveFormColor>Màu sắc</WaveFormColor>
-    <WaveFormSelectedColor>Chọn màu sắc</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Trở lại màu sắc trước đó</WaveFormBackgroundColor>
-    <WaveFormTextColor>Màu sắc văn bản</WaveFormTextColor>
+    <WaveformColor>Màu sắc</WaveformColor>
+    <WaveformSelectedColor>Chọn màu sắc</WaveformSelectedColor>
+    <WaveformBackgroundColor>Trở lại màu sắc trước đó</WaveformBackgroundColor>
+    <WaveformTextColor>Màu sắc văn bản</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>'Ảnh phổ "và" Dạng sóng' trong trong thư mục</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Dạng sóng' và 'Ảnh phổ' gồm có các {0} tập tin ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Ảnh phổ</Spectrogram>
@@ -1682,8 +1682,8 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Title>Thư mục mới</Title>
     <Message>Thay đôỉ tên thu mục chứa dữ liệu</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Nhấn vào đây để thêm dạng sóng</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Nhấn vào đây để thêm dạng sóng</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Nhấn vào đây để thêm dạng sóng/quang phổ</ClickToAddWaveformAndSpectrogram>
     <Seconds>Giây</Seconds>
     <ZoomIn>Phóng to</ZoomIn>
@@ -1701,8 +1701,8 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <ShowSpectrogramOnly>Chỉ hiển thị ảnh phổ</ShowSpectrogramOnly>
     <GuessTimeCodes>Mã hóa thời gian dự đoán...</GuessTimeCodes>
     <SeekSilence>Tìm kiếm sự im lặng...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Mã hóa thời gian dự đoán</Title>
     <StartFrom>Bắt đầu từ</StartFrom>
     <CurrentVideoPosition>Vị trí video hiện tại</CurrentVideoPosition>
@@ -1718,5 +1718,5 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <SplitLongLinesAt1>Chia phụ đề quá dài tại</SplitLongLinesAt1>
     <SplitLongLinesAt2>ms</SplitLongLinesAt2>
     <Other>Khác</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
 </Language>

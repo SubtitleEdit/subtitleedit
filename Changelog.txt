@@ -313,7 +313,7 @@
    * Fixed audio waveform so it works better with VLC
    * Fixed spectrogram sync
    * Fixed spectrogram so it works with FFmpeg
-   * Dragging line in wave form in frames mode keeps duration - thx Adrian
+   * Dragging line in waveform in frames mode keeps duration - thx Adrian
    * Fixed Slovak spell check dictionary link
    * Status text after re-calculating display times fixed - thx Dennis
    * Do not leave empty files in temp folder after extracting audio
@@ -948,11 +948,11 @@
  * NEW:
    * Collaboration via the internet ("Networking", also has chat)
    * Auto-backup (never, every minute, every 5th minute or every 15th minute - thx swedelandster)
-   * Video player/controls/wave form can now be un-docked (e.g. for people with multiple monitors)
+   * Video player/controls/waveform can now be un-docked (e.g. for people with multiple monitors)
    * Spell check via Word (Options -> Settings:General -> Spell checker)
    * Edit original subtitle
      (Options -> Settings:General:Allow edit of original subtitle - thx Luis for testing)
-   * Wave form control can adjust play rate (slow, normal, fast and very fast - VLC player only)
+   * Waveform control can adjust play rate (slow, normal, fast and very fast - VLC player only)
    * Ability to remember the last selected line when re-opening subtitles (thx Frederic)
    * Now remembers video file and original subtitle (thx Luis)
    * Support for the subtitle "QuickTime text" format (two variations) + Scenarist + Adobe Encore
@@ -960,7 +960,7 @@
    * Options to choose font color and background color (for list view/text-boxes)
    * Can now import VobSub subtitles embedded in Matroska (.mkv) files
      (thx mosu for mkv info + thx hawk for testing)
-   * Wave form position can be locked at center via new "Center" button (thx Krystian)
+   * Waveform position can be locked at center via new "Center" button (thx Krystian)
    * Can insert (a whole) subtitle after a line in the list view via context menu
    * Auto-suggest line splitting with button while typing (thx DrJackson)
    * Auto-wrap text while typing (option, thx swedelandster)
@@ -983,8 +983,8 @@
    * "Point sync" can now also sync using only one sync point (thx tttoan)
    * VLC media player - mouse click now toggles play/pause
  * FIXED:
-   * Wave form: Fixed imprecise (out of sync) wave form data for some sample rates
-   * Fixed crash with wave form track bar (thx Christian)
+   * Waveform: Fixed imprecise (out of sync) waveform data for some sample rates
+   * Fixed crash with waveform track bar (thx Christian)
    * A minor bug in initialization of waveform (thx Frederic)
    * Fixed several bugs regarding "large fonts" / higher dpi (thx Radbert)
    * Fixed memory leak in VobSub SubPicture class (thx Almogzt)
@@ -999,7 +999,7 @@
 
 3.0 (18th November 2010)
  * NEW:
-   * Wave form control with many sync/replay/creation commands
+   * Waveform control with many sync/replay/creation commands
      (thx Kerensky for the feedback)
    * Translator mode (Edit -> Show original subtitle, thx DrJackson)
    * Added Microsoft translate

@@ -101,10 +101,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title />
     <Description />
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>توليد بيانات الفيديو</Title>
     <SourceVideoFile>:مصدر ملف الفيديو</SourceVideoFile>
-    <GenerateWaveFormData>توليد بيانات الفيديو</GenerateWaveFormData>
+    <GenerateWaveformData>توليد بيانات الفيديو</GenerateWaveformData>
     <PleaseWait>هذا قد يستغرق بضع دقائق -- يرجى الانتظار</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC لم يتم العثور على ميديا بلاير</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>ميديا بلير أو أحدث لاستخراج البيانات الصوتية VLC 1.1.x يحتاج لبرنامج</VlcMediaPlayerNotFound>
@@ -113,7 +113,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>...توليد صورة طيفية</GeneratingSpectrogram>
     <ExtractingSeconds>استخراج الصوت : {0:0.0} ثانية</ExtractingSeconds>
     <ExtractingMinutes>{استخراج الصوت : {0} {1:00 دقيقة</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>ضبط فترات</Title>
     <AdjustVia>ضبط عن طريق</AdjustVia>
@@ -639,7 +639,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ChooseAudioTrack>اختيار المسار الصوتي</ChooseAudioTrack>
         <CloseVideo>إغلاق ملف الفيديو</CloseVideo>
         <ShowHideVideo>إظهار / إخفاء الفيديو</ShowHideVideo>
-        <ShowHideWaveForm>إظهار / إخفاء شكل الموجة</ShowHideWaveForm>
+        <ShowHideWaveform>إظهار / إخفاء شكل الموجة</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>إظهار / إخفاء الموجة والفيديو</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>إرساء ضوابط الفيديو</UnDockVideoControls>
         <ReDockVideoControls>اعادة ضوابط الفيديو</ReDockVideoControls>
@@ -694,7 +694,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>التدقيق الإملائي</SpellCheck>
         <Settings>إعدادات</Settings>
         <Help>مساعدة</Help>
-        <ShowHideWaveForm>إظهار / إخفاء شكل الموجة</ShowHideWaveForm>
+        <ShowHideWaveform>إظهار / إخفاء شكل الموجة</ShowHideWaveform>
         <ShowHideVideo>إظهار / إخفاء الفيديو</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -800,7 +800,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>&lt;السهم أعلى/أسفل+ alt &gt; للذهاب الى الترجمة  السابق / التالي أستخدم</TranslateTip>
       <CreateTip>&lt;  السهم لليسار / يمين + CTRL &gt; نصيحة: استخدم مفاتيح</CreateTip>
       <AdjustTip>&lt;السهم أعلى/أسفل+ alt &gt; للذهاب الى الترجمة  السابق / التالي أستخدم</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>{قبل تغيير الوقت في شكل الموجة: {0</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>{قبل تغيير الوقت في شكل الموجة: {0</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>{النص الجديد أدخل في {0</NewTextInsertAtX>
       <Center>توسيط</Center>
       <PlayRate>(معدل التشغيل (السرعة</PlayRate>
@@ -1253,14 +1253,14 @@ Continue?</SubtitleAppendPrompt>
     <PreviewFontSize>معاينة حجم خط الترجمة</PreviewFontSize>
     <MainWindowVideoControls>نافذة ضوابط الفيديو الرئيسية</MainWindowVideoControls>
     <CustomSearchTextAndUrl>مخصص للتسجيل والبحث عن النص</CustomSearchTextAndUrl>
-    <WaveFormAppearance>ظهور شكل الموجة</WaveFormAppearance>
-    <WaveFormGridColor>شبكة الألوان</WaveFormGridColor>
-    <WaveFormShowGridLines>عرض خطوط الشبكة</WaveFormShowGridLines>
+    <WaveformAppearance>ظهور شكل الموجة</WaveformAppearance>
+    <WaveformGridColor>شبكة الألوان</WaveformGridColor>
+    <WaveformShowGridLines>عرض خطوط الشبكة</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection />
-    <WaveFormColor>اللون</WaveFormColor>
-    <WaveFormSelectedColor>اختيار اللون</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>اللون الخلفي</WaveFormBackgroundColor>
-    <WaveFormTextColor>لون النص</WaveFormTextColor>
+    <WaveformColor>اللون</WaveformColor>
+    <WaveformSelectedColor>اختيار اللون</WaveformSelectedColor>
+    <WaveformBackgroundColor>اللون الخلفي</WaveformBackgroundColor>
+    <WaveformTextColor>لون النص</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>فارغة 'فيديو' والمجلدات 'الفيديو'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>('الطول الموجي" والمجلدات "فيديو' يحتوي على {0} ملفات ({} 1:0.00 ميجابايت</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>الفيديو</Spectrogram>
@@ -1665,8 +1665,8 @@ Keep changes?</KeepChangesMessage>
     <Title>مجلد جديد</Title>
     <Message>اسم مجلد قاعدة بيانات علامة جديدة</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>إضغط لإضافة الفيديو</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>إضغط لإضافة الفيديو</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>إضغط لإضافة شكل الموجة / الفيديو</ClickToAddWaveformAndSpectrogram>
     <Seconds>ثوانى</Seconds>
     <ZoomIn>تكبير</ZoomIn>
@@ -1684,8 +1684,8 @@ Keep changes?</KeepChangesMessage>
     <ShowSpectrogramOnly>عرض الفيديو فقط</ShowSpectrogramOnly>
     <GuessTimeCodes />
     <SeekSilence />
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title />
     <StartFrom />
     <CurrentVideoPosition />
@@ -1701,5 +1701,5 @@ Keep changes?</KeepChangesMessage>
     <SplitLongLinesAt1 />
     <SplitLongLinesAt2 />
     <Other />
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
 </Language>
