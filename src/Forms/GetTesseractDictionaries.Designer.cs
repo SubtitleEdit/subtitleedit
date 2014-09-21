@@ -62,7 +62,7 @@
             this.labelChooseLanguageAndClickDownload.Name = "labelChooseLanguageAndClickDownload";
             this.labelChooseLanguageAndClickDownload.Size = new System.Drawing.Size(202, 13);
             this.labelChooseLanguageAndClickDownload.TabIndex = 23;
-            this.labelChooseLanguageAndClickDownload.Text = "Choose your languge and click download";
+            this.labelChooseLanguageAndClickDownload.Text = "Choose your language and click download";
             // 
             // buttonDownload
             // 
