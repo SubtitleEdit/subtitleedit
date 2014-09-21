@@ -1062,8 +1062,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (pac.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || toFormat.Equals("pac", StringComparison.OrdinalIgnoreCase) || toFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase))
                 {
                     pac.BatchMode = true;
-                    if (!string.IsNullOrEmpty(pacCodePage) && Utilities.IsInteger(pacCodePage))
-                        pac.CodePage = Convert.ToInt32(pacCodePage);
+                    int codePage;
+                    if (!string.IsNullOrEmpty(pacCodePage) && int.TryParse(pacCodePage, out codePage))
+                        pac.CodePage = codePage;
                     targetFormatFound = true;
                     outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
                     Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);

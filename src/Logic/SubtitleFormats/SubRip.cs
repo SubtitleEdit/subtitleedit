@@ -121,9 +121,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             switch (_expecting)
             {
                 case ExpectingLine.Number:
-                    if (Utilities.IsInteger(line))
+                    int number;
+                    if (int.TryParse(line, out number))
                     {
-                        _paragraph.Number = int.Parse(line);
+                        _paragraph.Number = number;
                         _expecting = ExpectingLine.TimeCodes;
                     }
                     else if (!string.IsNullOrWhiteSpace(line))
