@@ -97,10 +97,10 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <Title>Dodaj u korisnički rječnik</Title>
     <Description>Dodaj riječ korisnički rječnik (neosjetljivost na velika i mala slova)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Generiranje valnih podataka</Title>
     <SourceVideoFile>Izvorna video datoteka:</SourceVideoFile>
-    <GenerateWaveFormData>&amp;Generiraj valni podatak</GenerateWaveFormData>
+    <GenerateWaveformData>&amp;Generiraj valni podatak</GenerateWaveformData>
     <PleaseWait>Ovo može potrajati nekoliko minuta. Pričekajte.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player nije pronađen</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Program zahtijeva VLC media player 1.1.x ili noviji za vađenje podataka o zvuku.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generiranje spektrograma</GeneratingSpectrogram>
     <ExtractingSeconds>Izvlačenje zvučnog zapisa: {0:0.0} sekundi</ExtractingSeconds>
     <ExtractingMinutes>Izvlačenje zvučnog zapisa: {0}.{1:00} minuta</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Prilagođavanje trajanja</Title>
     <AdjustVia>Prilagodi preko:</AdjustVia>
@@ -731,7 +731,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Uvezi promijenjene scene</ImportSceneChanges>
         <RemoveSceneChanges>Ukloni promijenjene scene</RemoveSceneChanges>
         <ShowHideVideo>Prikaži/sakrij &amp;video datoteku</ShowHideVideo>
-        <ShowHideWaveForm>Prikaži/sakrij &amp;valni oblik</ShowHideWaveForm>
+        <ShowHideWaveform>Prikaži/sakrij &amp;valni oblik</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Prikaži/sakrij valni oblik i &amp;spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>O&amp;tkači video kontrole</UnDockVideoControls>
         <ReDockVideoControls>P&amp;rikači video kontrole</ReDockVideoControls>
@@ -787,7 +787,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Provjera pravopisa</SpellCheck>
         <Settings>Postavke</Settings>
         <Help>Pomoć</Help>
-        <ShowHideWaveForm>Prikaži/sakrij valni oblik</ShowHideWaveForm>
+        <ShowHideWaveform>Prikaži/sakrij valni oblik</ShowHideWaveform>
         <ShowHideVideo>Prikaži/sakrij video snimak</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -896,7 +896,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili slijedeći podnaslov.</TranslateTip>
       <CreateTip>Koristite ktrl i levu ili desnu strelicu.</CreateTip>
       <AdjustTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili slijedeći podnaslov.</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Promijenjeno vrijeme u valnom obliku: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Promijenjeno vrijeme u valnom obliku: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Stvorena je nova linija podnaslova ({0}).</NewTextInsertAtX>
       <Center>Centriraj</Center>
       <PlayRate>Brzina</PlayRate>
@@ -1398,15 +1398,15 @@ koji bi trebao biti usklađen s video datotekom.
     <PreviewFontSize>Veličina fonta:</PreviewFontSize>
     <MainWindowVideoControls>Glavni prozor za upravljanje video datotekom</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Adresa za pretragu riječi:</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Izgled valnog oblika</WaveFormAppearance>
-    <WaveFormGridColor>Boja &amp;mreže</WaveFormGridColor>
-    <WaveFormShowGridLines>&amp;Linije mreže</WaveFormShowGridLines>
+    <WaveformAppearance>Izgled valnog oblika</WaveformAppearance>
+    <WaveformGridColor>Boja &amp;mreže</WaveformGridColor>
+    <WaveformShowGridLines>&amp;Linije mreže</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Obrnuti smjer kotačića na mišu</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Dozvoli preklapanje (kod pomicanja/promjene veličine)</WaveFormAllowOverlap>
-    <WaveFormColor>Boja</WaveFormColor>
-    <WaveFormSelectedColor>&amp;Izabrana boja</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Boja &amp;pozadine</WaveFormBackgroundColor>
-    <WaveFormTextColor>Boja &amp;teksta</WaveFormTextColor>
+    <WaveformAllowOverlap>Dozvoli preklapanje (kod pomicanja/promjene veličine)</WaveformAllowOverlap>
+    <WaveformColor>Boja</WaveformColor>
+    <WaveformSelectedColor>&amp;Izabrana boja</WaveformSelectedColor>
+    <WaveformBackgroundColor>Boja &amp;pozadine</WaveformBackgroundColor>
+    <WaveformTextColor>Boja &amp;teksta</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Isprazni mape s oblicima i spektrogramima</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Mape s oblicima i spektrogramima sadrže {0} datoteke/a ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1821,8 +1821,8 @@ koji bi trebao biti usklađen s video datotekom.
     <Title>Nova mapa</Title>
     <Message>Naziv nove mape za bazu znakova:</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Novi valni oblik.</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Novi valni oblik.</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Novi valni oblik ili spektrogram.</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekundi</Seconds>
     <ZoomIn>Uvećaj</ZoomIn>
@@ -1841,8 +1841,8 @@ koji bi trebao biti usklađen s video datotekom.
     <ShowSpectrogramOnly>Prikaži samo spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Tražiti tišinu...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>
     <StartFrom>Počnite od</StartFrom>
     <CurrentVideoPosition>Trenutna pozicija videozapisa</CurrentVideoPosition>
@@ -1858,7 +1858,7 @@ koji bi trebao biti usklađen s video datotekom.
     <SplitLongLinesAt1>Razdijeli duge podnaslove na</SplitLongLinesAt1>
     <SplitLongLinesAt2>Milisekundi</SplitLongLinesAt2>
     <Other>Ostalo</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - postavi novi glas</Title>
     <VoiceName>Naziv glasa</VoiceName>

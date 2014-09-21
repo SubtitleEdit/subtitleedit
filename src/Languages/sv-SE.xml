@@ -97,10 +97,10 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Lägg till egen ordlista</Title>
     <Description>Lägg till egna ord i ordlista</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Generera ljudformat</Title>
     <SourceVideoFile>Ursprungskälla</SourceVideoFile>
-    <GenerateWaveFormData>Generera ljudformat</GenerateWaveFormData>
+    <GenerateWaveformData>Generera ljudformat</GenerateWaveformData>
     <PleaseWait>Kan ta några minuter - vänta</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC mediaspelare hittas ej</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit behöver VLC mediaspelare 1.1.x eller nyare för att extrahera ljuddata</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generera spektrogram</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahera ljud: {0:0.0} sekunder</ExtractingSeconds>
     <ExtractingMinutes>Extrahera ljud: {0} {1:00} minuter</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Justera tidsaspekt</Title>
     <AdjustVia>Justera via</AdjustVia>
@@ -783,7 +783,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importera scenförändringar</ImportSceneChanges>
         <RemoveSceneChanges>Ta bort scenförändringar</RemoveSceneChanges>
         <ShowHideVideo>Visa/dölj video</ShowHideVideo>
-        <ShowHideWaveForm>Visa/dölj ljudformat</ShowHideWaveForm>
+        <ShowHideWaveform>Visa/dölj ljudformat</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Visa/dölj ljudformat och spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Av-docka videokontroll</UnDockVideoControls>
         <ReDockVideoControls>Docka videokontroll</ReDockVideoControls>
@@ -841,7 +841,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Stavningskontroll</SpellCheck>
         <Settings>Inställningar</Settings>
         <Help>Hjälp</Help>
-        <ShowHideWaveForm>Visa/dölj ljudformat</ShowHideWaveForm>
+        <ShowHideWaveform>Visa/dölj ljudformat</ShowHideWaveform>
         <ShowHideVideo>Visa/dölj video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -951,7 +951,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tips: Använd &lt;alt+pil up/ner&gt; för att gå till föregående/nästa text</TranslateTip>
       <CreateTip>Tips: Använd &lt;ctrl+piltangent vänster/höger&gt; genvägar</CreateTip>
       <AdjustTip>Tips: Använd &lt;alt+pil up/ner&gt; för att gå till föregående/nästa text</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Innan du ändrar tiden i ljudformat: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Innan du ändrar tiden i ljudformat: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Ny text infogas vid {0}</NewTextInsertAtX>
       <Center>Center</Center>
       <PlayRate>Spel hastighet</PlayRate>
@@ -1492,19 +1492,19 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <PreviewFontSize>Förhandsgranska textstorlek</PreviewFontSize>
     <MainWindowVideoControls>Huvudfönster video kontroller</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Anpassad sökning text och url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Ljudformat inställning</WaveFormAppearance>
-    <WaveFormGridColor>Galler färg</WaveFormGridColor>
-    <WaveFormShowGridLines>Visa linjerna</WaveFormShowGridLines>
+    <WaveformAppearance>Ljudformat inställning</WaveformAppearance>
+    <WaveformGridColor>Galler färg</WaveformGridColor>
+    <WaveformShowGridLines>Visa linjerna</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Omvänd mushjulet bläddringsriktning</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Tillåt överlappning (vid förflyttning/storleksändring)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Sätt fokus på musen</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Också inställ listvy fokus, på musen i listvy</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Tillåt överlappning (vid förflyttning/storleksändring)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Sätt fokus på musen</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Också inställ listvy fokus, på musen i listvy</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Gränsmarkör träff måste vara inom</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisekunder</WaveformBorderHitMs2>
-    <WaveFormColor>Färg</WaveFormColor>
-    <WaveFormSelectedColor>Välj färg</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Bakgrundsfärg</WaveFormBackgroundColor>
-    <WaveFormTextColor>Text färg</WaveFormTextColor>
+    <WaveformColor>Färg</WaveformColor>
+    <WaveformSelectedColor>Välj färg</WaveformSelectedColor>
+    <WaveformBackgroundColor>Bakgrundsfärg</WaveformBackgroundColor>
+    <WaveformTextColor>Text färg</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Töm 'spektrogram' och 'ljudformat' mappar</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Ljudformat' och 'spektrogram' mapp innehåller {0} filer ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1959,8 +1959,8 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Title>Ny mapp</Title>
     <Message>Namn på ny karaktär databasmapp</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klicka för att lägga till ljudformat</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klicka för att lägga till ljudformat</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klicka för att lägga till ljudformat/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekunder</Seconds>
     <ZoomIn>Zooma in</ZoomIn>
@@ -1979,8 +1979,8 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <ShowSpectrogramOnly>Visa bara spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Gissa tidskoder</GuessTimeCodes>
     <SeekSilence>Sök tyst</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Gissa tidskoder</Title>
     <StartFrom>Starta från</StartFrom>
     <CurrentVideoPosition>Aktuell video läge</CurrentVideoPosition>
@@ -1996,7 +1996,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <SplitLongLinesAt1>Splitta långa texter på</SplitLongLinesAt1>
     <SplitLongLinesAt2>Millisekunder</SplitLongLinesAt2>
     <Other>Övriga</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - set ny röst</Title>
     <VoiceName>Namn av röst</VoiceName>

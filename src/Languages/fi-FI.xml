@@ -94,10 +94,10 @@ Sähköposti: mailto:nikse.dk@gmail.com
     <Title>Lisää käyttäjän sanakirjaan</Title>
     <Description>Lisää sana käyttäjän sanakirjaan (kirjainkoolla ei merkitystä)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Muodosta aaltomuototiedot</Title>
     <SourceVideoFile>Lähdevideotiedosto:</SourceVideoFile>
-    <GenerateWaveFormData>Muodosta aaltomuoto tiedoista</GenerateWaveFormData>
+    <GenerateWaveformData>Muodosta aaltomuoto tiedoista</GenerateWaveformData>
     <PleaseWait>Tämä voi kestää muutamia minuutteja - odota</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media playeria ei löydy</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee äänidatan purkamiseksi VLC media playerin (1.1.x tai uudemman).
@@ -109,7 +109,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <GeneratingSpectrogram>Muodostetaan spectrogrammi...</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan audio: {0:0.0} sekuntia</ExtractingSeconds>
     <ExtractingMinutes>Puretaan audio: {0}.{1: 00} minuuttia</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Säädä kestot</Title>
     <AdjustVia>Säädä</AdjustVia>
@@ -784,7 +784,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
         <ImportSceneChanges>Tuo kohtausmuutokset...</ImportSceneChanges>
         <RemoveSceneChanges>Poista kohtausmuutokset</RemoveSceneChanges>
         <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
-        <ShowHideWaveForm>Näytä/piilota aaltomuoto</ShowHideWaveForm>
+        <ShowHideWaveform>Näytä/piilota aaltomuoto</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Näytä/piilota aaltomuoto ja spektrogrammi</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Poista telakointi video-ohjauksista</UnDockVideoControls>
         <ReDockVideoControls>Telakoi video-ohjaukset uudelleen</ReDockVideoControls>
@@ -842,7 +842,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
         <SpellCheck>Oikoluku</SpellCheck>
         <Settings>Asetukset</Settings>
         <Help>Ohje</Help>
-        <ShowHideWaveForm>Näytä/piilota aaltomuoto</ShowHideWaveForm>
+        <ShowHideWaveform>Näytä/piilota aaltomuoto</ShowHideWaveform>
         <ShowHideVideo>Näytä/piilota video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -952,7 +952,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
       <TranslateTip>Vihje: Käytä &lt;alt+nuoli ylös/alas&gt; mennäksesi edelliseen/seuraavaan tekstitykseen</TranslateTip>
       <CreateTip>Vihje: Käytä &lt;ctrl+nuoli ylös/alas&gt;</CreateTip>
       <AdjustTip>Vihje: Käytä &lt;alt+nuoli ylös/alas&gt; mennäksesi edelliseen/seuraavaan tekstitykseen</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Ennen ajan muuttamista aaltomuodossa: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Ennen ajan muuttamista aaltomuodossa: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Uusi teksti lisätty kohtaan {0}</NewTextInsertAtX>
       <Center>Keskitys</Center>
       <PlayRate>Toistosuhde (nopeus)</PlayRate>
@@ -1494,19 +1494,19 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <PreviewFontSize>Tekstityksen esikatselufontti</PreviewFontSize>
     <MainWindowVideoControls>Pääikkunan videon ohjaukset</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Mukautettu teksti- ja URL-haku</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Aaltomuodon ulkonäkö</WaveFormAppearance>
-    <WaveFormGridColor>Ruudukon väri</WaveFormGridColor>
-    <WaveFormShowGridLines>Näytä ruudukko</WaveFormShowGridLines>
+    <WaveformAppearance>Aaltomuodon ulkonäkö</WaveformAppearance>
+    <WaveformGridColor>Ruudukon väri</WaveformGridColor>
+    <WaveformShowGridLines>Näytä ruudukko</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Käänteinen hiirirullan vieritys</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Salli päällekkäisyys siirrettäessä tai kokoa muutettaessa</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter />
-    <WaveFormListViewFocusMouseEnter />
+    <WaveformAllowOverlap>Salli päällekkäisyys siirrettäessä tai kokoa muutettaessa</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter />
+    <WaveformListViewFocusMouseEnter />
     <WaveformBorderHitMs1 />
     <WaveformBorderHitMs2>millisekuntia</WaveformBorderHitMs2>
-    <WaveFormColor>Väri</WaveFormColor>
-    <WaveFormSelectedColor>Valinnan väri</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Taustaväri</WaveFormBackgroundColor>
-    <WaveFormTextColor>Tekstiväri</WaveFormTextColor>
+    <WaveformColor>Väri</WaveformColor>
+    <WaveformSelectedColor>Valinnan väri</WaveformSelectedColor>
+    <WaveformBackgroundColor>Taustaväri</WaveformBackgroundColor>
+    <WaveformTextColor>Tekstiväri</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Tyhjennä kansiot 'Spectrograms' ja 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Kansiot 'Waveforms' ja 'Spectrograms' sisältävät {0} tiedostoa ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogrammi</Spectrogram>
@@ -1961,8 +1961,8 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <Title>Uusi kansio</Title>
     <Message>Anna merkkitietokantakansiolle uusi nimi</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Lisää aaltomuoto napsauttamalla</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Lisää aaltomuoto napsauttamalla</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Lisää aaltomuoto/spektrogrammi napsauttamalla</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekuntia</Seconds>
     <ZoomIn>Lähennä</ZoomIn>
@@ -1981,8 +1981,8 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <ShowSpectrogramOnly>Näytä vain spektrogrammi</ShowSpectrogramOnly>
     <GuessTimeCodes>Arvaa aikaleimat</GuessTimeCodes>
     <SeekSilence>Etsi hiljaisuutta...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Arvaa aikaleimat</Title>
     <StartFrom>Aloita kohdasta</StartFrom>
     <CurrentVideoPosition>Nykyinen videopaikka</CurrentVideoPosition>
@@ -1998,7 +1998,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <SplitLongLinesAt1>Jaa pitkät tekstitykset</SplitLongLinesAt1>
     <SplitLongLinesAt2>millisekuntia</SplitLongLinesAt2>
     <Other>Muut</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>NettiVTT - aseta uusi ääni</Title>
     <VoiceName>Äänen nimi</VoiceName>

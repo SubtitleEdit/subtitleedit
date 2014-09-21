@@ -96,10 +96,10 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Kullanıcı sözlüğüne ekle</Title>
     <Description>Kullanıcı sözlüğüne kelime ekle (küçük harfe duyarlı değil)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Dalga formu verisi oluştur</Title>
     <SourceVideoFile>Kaynak video dosyası:</SourceVideoFile>
-    <GenerateWaveFormData>Dalga formu verisi oluştur</GenerateWaveFormData>
+    <GenerateWaveformData>Dalga formu verisi oluştur</GenerateWaveformData>
     <PleaseWait>Bu işlem birkaç dakika sürebilir - lütfen bekleyin</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player bulunamadı</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit, ses verisini ayıklamak için VLC media player 1.1.x veya daha üstü bir versiyona gerek duyuyor.</VlcMediaPlayerNotFound>
@@ -108,7 +108,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Spectrogram oluşturuluyor...</GeneratingSpectrogram>
     <ExtractingSeconds>Ses çıkartılıyor: {0:0.0} saniye</ExtractingSeconds>
     <ExtractingMinutes>Ses çıkartılıyor: {0}.{1:00} dakika</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Süre ayarı</Title>
     <AdjustVia>Şunla ayarla</AdjustVia>
@@ -634,7 +634,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <ChooseAudioTrack>Ses seçin</ChooseAudioTrack>
         <CloseVideo>Video dosyasını kapat</CloseVideo>
         <ShowHideVideo>Videoyu göster/gizle</ShowHideVideo>
-        <ShowHideWaveForm>Dalga formu göster/gizle</ShowHideWaveForm>
+        <ShowHideWaveform>Dalga formu göster/gizle</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Dalga formu ve spectrogram göster/gizle</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Serbest pencereler</UnDockVideoControls>
         <ReDockVideoControls>Sabit pencereler</ReDockVideoControls>
@@ -689,7 +689,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Yazımı doğrula</SpellCheck>
         <Settings>Seçenekler</Settings>
         <Help>Yardım</Help>
-        <ShowHideWaveForm>Dalga formu göster/gizle</ShowHideWaveForm>
+        <ShowHideWaveform>Dalga formu göster/gizle</ShowHideWaveform>
         <ShowHideVideo>Videoyu göster/gizle</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -795,7 +795,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>İpucu: Önceki/sonraki altyazıya gitmek için &lt;alt+yukarı/aşağı ok&gt; kullanın</TranslateTip>
       <CreateTip>İpucu: &lt;ctrl+sol/sağ ok&gt; anahtarlarını kullanın</CreateTip>
       <AdjustTip>İpucu: Önceki/sonraki altyazıya gitmek için &lt;alt+yukarı/aşağı ok&gt; kullanın</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Dalga formunda zamanı değiştirmeden önce: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Dalga formunda zamanı değiştirmeden önce: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>{0} yeni metin yerleştirildi</NewTextInsertAtX>
       <Center>Orta</Center>
       <PlayRate>Oynatma hızı</PlayRate>
@@ -1250,14 +1250,14 @@ Yeni oturum başlatın.</Information>
     <PreviewFontSize>Altyazı ön izlemesi yazı boyutu</PreviewFontSize>
     <MainWindowVideoControls>Ana pencere video kontrolleri</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Metin ve link için özel arama</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Dalga formu görünümü</WaveFormAppearance>
-    <WaveFormGridColor>Grid color</WaveFormGridColor>
-    <WaveFormShowGridLines>Show grid lines</WaveFormShowGridLines>
+    <WaveformAppearance>Dalga formu görünümü</WaveformAppearance>
+    <WaveformGridColor>Grid color</WaveformGridColor>
+    <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Reverse mouse wheel scroll direction</ReverseMouseWheelScrollDirection>
-    <WaveFormColor>Renk</WaveFormColor>
-    <WaveFormSelectedColor>Seçilen renk</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Arka plan rengi</WaveFormBackgroundColor>
-    <WaveFormTextColor>Metin rengi</WaveFormTextColor>
+    <WaveformColor>Renk</WaveformColor>
+    <WaveformSelectedColor>Seçilen renk</WaveformSelectedColor>
+    <WaveformBackgroundColor>Arka plan rengi</WaveformBackgroundColor>
+    <WaveformTextColor>Metin rengi</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Boş 'Spectrogram' ve 'Dalga formu' klasörü</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' and 'Spectrograms' folders contain {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogram</Spectrogram>
@@ -1664,8 +1664,8 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <Title>Yeni klasör</Title>
     <Message>Yeni karakter veri tabanının ismi</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Dalga formu eklemek için tıklayın</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Dalga formu eklemek için tıklayın</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Dalga formu/spectrogram eklemek için tıklayın</ClickToAddWaveformAndSpectrogram>
     <Seconds>saniye</Seconds>
     <ZoomIn>Yakınlaştır</ZoomIn>
@@ -1683,8 +1683,8 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <ShowSpectrogramOnly>Sadece spectrogram göster</ShowSpectrogramOnly>
     <GuessTimeCodes>Zaman kodları...</GuessTimeCodes>
     <SeekSilence>Seek silence...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Zaman kodları...</Title>
     <StartFrom>Başlayın</StartFrom>
     <CurrentVideoPosition>Geçerli video pozisyonu</CurrentVideoPosition>
@@ -1700,5 +1700,5 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <SplitLongLinesAt1>Uzun altyazıları böl</SplitLongLinesAt1>
     <SplitLongLinesAt2>milisaniye</SplitLongLinesAt2>
     <Other>Diğer</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
 </Language>

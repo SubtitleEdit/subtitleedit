@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class WaveFormUnDocked : Form
+    public partial class WaveformUnDocked : Form
     {
         private Main _mainForm = null;
         private PositionsAndSizes _positionsAndSizes = null;
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public WaveFormUnDocked(Main mainForm, PositionsAndSizes positionsAndSizes)
+        public WaveformUnDocked(Main mainForm, PositionsAndSizes positionsAndSizes)
         {
             InitializeComponent();
             _mainForm = mainForm;
@@ -27,25 +27,25 @@ namespace Nikse.SubtitleEdit.Forms
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
-        public WaveFormUnDocked()
+        public WaveformUnDocked()
         {
         }
 
-        private void WaveFormUnDocked_FormClosing(object sender, FormClosingEventArgs e)
+        private void WaveformUnDocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
-                var controlWaveForm = panelContainer.Controls[0];
+                var controlWaveform = panelContainer.Controls[0];
                 var controlButtons = panelContainer.Controls[1];
                 var controlTrackBar = panelContainer.Controls[2];
                 panelContainer.Controls.Clear();
-                _mainForm.ReDockWaveForm(controlWaveForm, controlButtons, controlTrackBar);
-                _mainForm.SetWaveFormToggleOff();
+                _mainForm.ReDockWaveform(controlWaveform, controlButtons, controlTrackBar);
+                _mainForm.SetWaveformToggleOff();
             }
             _positionsAndSizes.SavePositionAndSize(this);
         }
 
-        private void WaveFormUnDocked_KeyDown(object sender, KeyEventArgs e)
+        private void WaveformUnDocked_KeyDown(object sender, KeyEventArgs e)
         {
             if (_redockKeys == e.KeyData)
                 _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);

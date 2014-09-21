@@ -491,7 +491,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string UndockedVideoPosition { get; set; }
         public string UndockedWaveformPosition { get; set; }
         public string UndockedVideoControlsPosition { get; set; }
-        public bool WaveFormCenter { get; set; }
+        public bool WaveformCenter { get; set; }
         public int SmallDelayMilliseconds { get; set; }
         public int LargeDelayMilliseconds { get; set; }
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
@@ -623,22 +623,22 @@ namespace Nikse.SubtitleEdit.Logic
         public string CustomSearchUrl5 { get; set; }
         public string CustomSearchUrl6 { get; set; }
         public string LastActiveTab { get; set; }
-        public bool WaveFormDrawGrid { get; set; }
-        public bool WaveFormAllowOverlap { get; set; }
-        public bool WaveFormFocusOnMouseEnter { get; set; }
-        public bool WaveFormListViewFocusOnMouseEnter { get; set; }
+        public bool WaveformDrawGrid { get; set; }
+        public bool WaveformAllowOverlap { get; set; }
+        public bool WaveformFocusOnMouseEnter { get; set; }
+        public bool WaveformListViewFocusOnMouseEnter { get; set; }
         public int WaveformBorderHitMs { get; set; }
-        public Color WaveFormGridColor { get; set; }
-        public Color WaveFormColor { get; set; }
-        public Color WaveFormSelectedColor { get; set; }
-        public Color WaveFormBackgroundColor { get; set; }
-        public Color WaveFormTextColor { get; set; }
-        public string WaveFormDoubleClickOnNonParagraphAction { get; set; }
-        public string WaveFormRightClickOnNonParagraphAction { get; set; }
-        public bool WaveFormMouseWheelScrollUpIsForward { get; set; }
+        public Color WaveformGridColor { get; set; }
+        public Color WaveformColor { get; set; }
+        public Color WaveformSelectedColor { get; set; }
+        public Color WaveformBackgroundColor { get; set; }
+        public Color WaveformTextColor { get; set; }
+        public string WaveformDoubleClickOnNonParagraphAction { get; set; }
+        public string WaveformRightClickOnNonParagraphAction { get; set; }
+        public bool WaveformMouseWheelScrollUpIsForward { get; set; }
         public bool GenerateSpectrogram { get; set; }
         public string SpectrogramAppearance { get; set; }
-        public int WaveFormMininumSampleRate { get; set; }
+        public int WaveformMininumSampleRate { get; set; }
         public double WaveformSeeksSilenceDurationSeconds { get; set; }
         public int WaveformSeeksSilenceMaxVolume { get; set; }
 
@@ -650,19 +650,19 @@ namespace Nikse.SubtitleEdit.Logic
             CustomSearchUrl2 = "http://en.m.wikipedia.org/wiki?search={0}";
 
             LastActiveTab = "Translate";
-            WaveFormDrawGrid = true;
-            WaveFormAllowOverlap = false;
+            WaveformDrawGrid = true;
+            WaveformAllowOverlap = false;
             WaveformBorderHitMs = 15;
-            WaveFormGridColor = Color.FromArgb(255, 20, 20, 18);
-            WaveFormColor = Color.GreenYellow;
-            WaveFormSelectedColor = Color.Red;
-            WaveFormBackgroundColor = Color.Black;
-            WaveFormTextColor = Color.Gray;
-            WaveFormDoubleClickOnNonParagraphAction = "PlayPause";
-            WaveFormDoubleClickOnNonParagraphAction = string.Empty;
-            WaveFormMouseWheelScrollUpIsForward = true;
+            WaveformGridColor = Color.FromArgb(255, 20, 20, 18);
+            WaveformColor = Color.GreenYellow;
+            WaveformSelectedColor = Color.Red;
+            WaveformBackgroundColor = Color.Black;
+            WaveformTextColor = Color.Gray;
+            WaveformDoubleClickOnNonParagraphAction = "PlayPause";
+            WaveformDoubleClickOnNonParagraphAction = string.Empty;
+            WaveformMouseWheelScrollUpIsForward = true;
             SpectrogramAppearance = "OneColorGradient";
-            WaveFormMininumSampleRate = 126;
+            WaveformMininumSampleRate = 126;
             WaveformSeeksSilenceDurationSeconds = 0.3;
             WaveformSeeksSilenceMaxVolume = 10;
         }
@@ -1392,9 +1392,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("UndockedVideoControlsPosition");
             if (subNode != null)
                 settings.General.UndockedVideoControlsPosition = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveFormCenter");
+            subNode = node.SelectSingleNode("WaveformCenter");
             if (subNode != null)
-                settings.General.WaveFormCenter = Convert.ToBoolean(subNode.InnerText);
+                settings.General.WaveformCenter = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SmallDelayMilliseconds");
             if (subNode != null)
                 settings.General.SmallDelayMilliseconds = Convert.ToInt32((subNode.InnerText));
@@ -1974,54 +1974,54 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("LastActiveTab");
             if (subNode != null)
                 settings.VideoControls.LastActiveTab = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveFormDrawGrid");
+            subNode = node.SelectSingleNode("WaveformDrawGrid");
             if (subNode != null)
-                settings.VideoControls.WaveFormDrawGrid = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("WaveFormAllowOverlap");
+                settings.VideoControls.WaveformDrawGrid = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformAllowOverlap");
             if (subNode != null)
-                settings.VideoControls.WaveFormAllowOverlap = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("WaveFormFocusOnMouseEnter");
+                settings.VideoControls.WaveformAllowOverlap = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformFocusOnMouseEnter");
             if (subNode != null)
-                settings.VideoControls.WaveFormFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
-            subNode = node.SelectSingleNode("WaveFormListViewFocusOnMouseEnter");
+                settings.VideoControls.WaveformFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
+            subNode = node.SelectSingleNode("WaveformListViewFocusOnMouseEnter");
             if (subNode != null)
-                settings.VideoControls.WaveFormListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
+                settings.VideoControls.WaveformListViewFocusOnMouseEnter = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformBorderHitMs");
             if (subNode != null)
                 settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(subNode.InnerText);
-            subNode = node.SelectSingleNode("WaveFormGridColor");
+            subNode = node.SelectSingleNode("WaveformGridColor");
             if (subNode != null)
-                settings.VideoControls.WaveFormGridColor = Color.FromArgb(int.Parse(subNode.InnerText));
-            subNode = node.SelectSingleNode("WaveFormColor");
+                settings.VideoControls.WaveformGridColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("WaveformColor");
             if (subNode != null)
-                settings.VideoControls.WaveFormColor = Color.FromArgb(int.Parse(subNode.InnerText));
-            subNode = node.SelectSingleNode("WaveFormSelectedColor");
+                settings.VideoControls.WaveformColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("WaveformSelectedColor");
             if (subNode != null)
-                settings.VideoControls.WaveFormSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText));
-            subNode = node.SelectSingleNode("WaveFormBackgroundColor");
+                settings.VideoControls.WaveformSelectedColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("WaveformBackgroundColor");
             if (subNode != null)
-                settings.VideoControls.WaveFormBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText));
-            subNode = node.SelectSingleNode("WaveFormTextColor");
+                settings.VideoControls.WaveformBackgroundColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("WaveformTextColor");
             if (subNode != null)
-                settings.VideoControls.WaveFormTextColor = Color.FromArgb(int.Parse(subNode.InnerText));
-            subNode = node.SelectSingleNode("WaveFormDoubleClickOnNonParagraphAction");
+                settings.VideoControls.WaveformTextColor = Color.FromArgb(int.Parse(subNode.InnerText));
+            subNode = node.SelectSingleNode("WaveformDoubleClickOnNonParagraphAction");
             if (subNode != null)
-                settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveFormRightClickOnNonParagraphAction");
+                settings.VideoControls.WaveformDoubleClickOnNonParagraphAction = subNode.InnerText;
+            subNode = node.SelectSingleNode("WaveformRightClickOnNonParagraphAction");
             if (subNode != null)
-                settings.VideoControls.WaveFormRightClickOnNonParagraphAction = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveFormMouseWheelScrollUpIsForward");
+                settings.VideoControls.WaveformRightClickOnNonParagraphAction = subNode.InnerText;
+            subNode = node.SelectSingleNode("WaveformMouseWheelScrollUpIsForward");
             if (subNode != null)
-                settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);
+                settings.VideoControls.WaveformMouseWheelScrollUpIsForward = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("GenerateSpectrogram");
             if (subNode != null)
                 settings.VideoControls.GenerateSpectrogram = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("SpectrogramAppearance");
             if (subNode != null)
                 settings.VideoControls.SpectrogramAppearance = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveFormMininumSampleRate");
+            subNode = node.SelectSingleNode("WaveformMininumSampleRate");
             if (subNode != null)
-                settings.VideoControls.WaveFormMininumSampleRate = Convert.ToInt32(subNode.InnerText);
+                settings.VideoControls.WaveformMininumSampleRate = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceDurationSeconds");
             if (subNode != null)
                 settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
@@ -2682,7 +2682,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("UndockedVideoPosition", settings.General.UndockedVideoPosition);
                 textWriter.WriteElementString("UndockedWaveformPosition", settings.General.UndockedWaveformPosition);
                 textWriter.WriteElementString("UndockedVideoControlsPosition", settings.General.UndockedVideoControlsPosition);
-                textWriter.WriteElementString("WaveFormCenter", settings.General.WaveFormCenter.ToString());
+                textWriter.WriteElementString("WaveformCenter", settings.General.WaveformCenter.ToString());
                 textWriter.WriteElementString("SmallDelayMilliseconds", settings.General.SmallDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LargeDelayMilliseconds", settings.General.LargeDelayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
@@ -2888,22 +2888,22 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("CustomSearchUrl5", settings.VideoControls.CustomSearchUrl5);
                 textWriter.WriteElementString("CustomSearchUrl6", settings.VideoControls.CustomSearchUrl6);
                 textWriter.WriteElementString("LastActiveTab", settings.VideoControls.LastActiveTab);
-                textWriter.WriteElementString("WaveFormDrawGrid", settings.VideoControls.WaveFormDrawGrid.ToString());
-                textWriter.WriteElementString("WaveFormAllowOverlap", settings.VideoControls.WaveFormAllowOverlap.ToString());
-                textWriter.WriteElementString("WaveFormFocusOnMouseEnter", settings.VideoControls.WaveFormFocusOnMouseEnter.ToString());
-                textWriter.WriteElementString("WaveFormListViewFocusOnMouseEnter", settings.VideoControls.WaveFormListViewFocusOnMouseEnter.ToString());
+                textWriter.WriteElementString("WaveformDrawGrid", settings.VideoControls.WaveformDrawGrid.ToString());
+                textWriter.WriteElementString("WaveformAllowOverlap", settings.VideoControls.WaveformAllowOverlap.ToString());
+                textWriter.WriteElementString("WaveformFocusOnMouseEnter", settings.VideoControls.WaveformFocusOnMouseEnter.ToString());
+                textWriter.WriteElementString("WaveformListViewFocusOnMouseEnter", settings.VideoControls.WaveformListViewFocusOnMouseEnter.ToString());
                 textWriter.WriteElementString("WaveformBorderHitMs", settings.VideoControls.WaveformBorderHitMs.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveFormGridColor", settings.VideoControls.WaveFormGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveFormColor", settings.VideoControls.WaveFormColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveFormSelectedColor", settings.VideoControls.WaveFormSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveFormBackgroundColor", settings.VideoControls.WaveFormBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveFormTextColor", settings.VideoControls.WaveFormTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("WaveFormDoubleClickOnNonParagraphAction", settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction);
-                textWriter.WriteElementString("WaveFormRightClickOnNonParagraphAction", settings.VideoControls.WaveFormRightClickOnNonParagraphAction);
-                textWriter.WriteElementString("WaveFormMouseWheelScrollUpIsForward", settings.VideoControls.WaveFormMouseWheelScrollUpIsForward.ToString());
+                textWriter.WriteElementString("WaveformGridColor", settings.VideoControls.WaveformGridColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformColor", settings.VideoControls.WaveformColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformSelectedColor", settings.VideoControls.WaveformSelectedColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformBackgroundColor", settings.VideoControls.WaveformBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformTextColor", settings.VideoControls.WaveformTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);
+                textWriter.WriteElementString("WaveformRightClickOnNonParagraphAction", settings.VideoControls.WaveformRightClickOnNonParagraphAction);
+                textWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString());
                 textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
                 textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
-                textWriter.WriteElementString("WaveFormMininumSampleRate", settings.VideoControls.WaveFormMininumSampleRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformMininumSampleRate", settings.VideoControls.WaveformMininumSampleRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();

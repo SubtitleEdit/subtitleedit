@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class WaveFormGenerateTimeCodes
+    partial class WaveformGenerateTimeCodes
     {
         /// <summary>
         /// Required designer variable.
@@ -339,7 +339,7 @@
             0,
             0});
             // 
-            // WaveFormGenerateTimeCodes
+            // WaveformGenerateTimeCodes
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -351,7 +351,7 @@
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.KeyPreview = true;
-            this.Name = "WaveFormGenerateTimeCodes";
+            this.Name = "WaveformGenerateTimeCodes";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

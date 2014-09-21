@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _autoContinueDelayCount = -1;
         private long _lastTextKeyDownTicks = 0;
         private long _lastHistoryTicks = 0;
-        private double? _audioWaveFormRightClickSeconds = null;
+        private double? _audioWaveformRightClickSeconds = null;
         private Timer _timerDoSyntaxColoring = new Timer();
         private Timer _timerAutoSave = new Timer();
         private Timer _timerClearStatus = new Timer();
@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _isVideoControlsUnDocked = false;
         private VideoPlayerUnDocked _videoPlayerUnDocked = null;
-        private WaveFormUnDocked _waveFormUnDocked = null;
+        private WaveformUnDocked _waveFormUnDocked = null;
         private VideoControlsUndocked _videoControlsUnDocked = null;
 
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate = null;
@@ -330,9 +330,9 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.Visible = Configuration.Settings.General.ShowAudioVisualizer;
                 audioVisualizer.ShowWaveform = Configuration.Settings.General.ShowWaveform;
                 audioVisualizer.ShowSpectrogram = Configuration.Settings.General.ShowSpectrogram;
-                panelWaveFormControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                trackBarWaveFormPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
-                toolStripButtonToggleWaveForm.Checked = Configuration.Settings.General.ShowAudioVisualizer;
+                panelWaveformControls.Visible = Configuration.Settings.General.ShowAudioVisualizer;
+                trackBarWaveformPosition.Visible = Configuration.Settings.General.ShowAudioVisualizer;
+                toolStripButtonToggleWaveform.Checked = Configuration.Settings.General.ShowAudioVisualizer;
                 toolStripButtonToggleVideo.Checked = Configuration.Settings.General.ShowVideoPlayer;
 
                 if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
@@ -450,37 +450,37 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
                 buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
-                // Initialize events etc. for audio wave form
-                audioVisualizer.OnDoubleClickNonParagraph += AudioWaveForm_OnDoubleClickNonParagraph;
-                audioVisualizer.OnPositionSelected += AudioWaveForm_OnPositionSelected;
-                audioVisualizer.OnTimeChanged += AudioWaveForm_OnTimeChanged; // start and/or end position of paragraph changed
-                audioVisualizer.OnNewSelectionRightClicked += AudioWaveForm_OnNewSelectionRightClicked;
-                audioVisualizer.OnParagraphRightClicked += AudioWaveForm_OnParagraphRightClicked;
-                audioVisualizer.OnNonParagraphRightClicked += AudioWaveForm_OnNonParagraphRightClicked;
-                audioVisualizer.OnSingleClick += AudioWaveForm_OnSingleClick;
-                audioVisualizer.OnPause += AudioWaveForm_OnPause;
-                audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveForm_OnTimeChangedAndOffsetRest;
-                audioVisualizer.OnZoomedChanged += AudioWaveForm_OnZoomedChanged;
+                // Initialize events etc. for audio waveform
+                audioVisualizer.OnDoubleClickNonParagraph += AudioWaveform_OnDoubleClickNonParagraph;
+                audioVisualizer.OnPositionSelected += AudioWaveform_OnPositionSelected;
+                audioVisualizer.OnTimeChanged += AudioWaveform_OnTimeChanged; // start and/or end position of paragraph changed
+                audioVisualizer.OnNewSelectionRightClicked += AudioWaveform_OnNewSelectionRightClicked;
+                audioVisualizer.OnParagraphRightClicked += AudioWaveform_OnParagraphRightClicked;
+                audioVisualizer.OnNonParagraphRightClicked += AudioWaveform_OnNonParagraphRightClicked;
+                audioVisualizer.OnSingleClick += AudioWaveform_OnSingleClick;
+                audioVisualizer.OnPause += AudioWaveform_OnPause;
+                audioVisualizer.OnTimeChangedAndOffsetRest += AudioWaveform_OnTimeChangedAndOffsetRest;
+                audioVisualizer.OnZoomedChanged += AudioWaveform_OnZoomedChanged;
                 audioVisualizer.InsertAtVideoPosition += audioVisualizer_InsertAtVideoPosition;
-                audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
-                audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
-                audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
-                audioVisualizer.Color = Configuration.Settings.VideoControls.WaveFormColor;
-                audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
-                audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
-                audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
-                audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
+                audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
+                audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
+                audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
+                audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
+                audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
+                audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveformTextColor;
+                audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
+                audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
                 audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
 
                 for (double zoomCounter = AudioVisualizer.ZoomMininum; zoomCounter <= AudioVisualizer.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
                     int percent = (int)Math.Round((zoomCounter * 100));
                     ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent + "%", ZoomFactor = zoomCounter };
-                    toolStripComboBoxWaveForm.Items.Add(item);
+                    toolStripComboBoxWaveform.Items.Add(item);
                     if (percent == 100)
-                        toolStripComboBoxWaveForm.SelectedIndex = toolStripComboBoxWaveForm.Items.Count - 1;
+                        toolStripComboBoxWaveform.SelectedIndex = toolStripComboBoxWaveform.Items.Count - 1;
                 }
-                toolStripComboBoxWaveForm.SelectedIndexChanged += toolStripComboBoxWaveForm_SelectedIndexChanged;
+                toolStripComboBoxWaveform.SelectedIndexChanged += toolStripComboBoxWaveform_SelectedIndexChanged;
 
                 FixLargeFonts();
 
@@ -1142,29 +1142,29 @@ namespace Nikse.SubtitleEdit.Forms
             return outputFileName;
         }
 
-        private void AudioWaveForm_OnNonParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnNonParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             addParagraphHereToolStripMenuItem.Visible = false;
             addParagraphAndPasteToolStripMenuItem.Visible = false;
             deleteParagraphToolStripMenuItem.Visible = false;
-            toolStripMenuItemFocusTextbox.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.WaveForm.FocusTextBox); //TODO: Remove in 3.4
+            toolStripMenuItemFocusTextbox.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.Waveform.FocusTextBox); //TODO: Remove in 3.4
             splitToolStripMenuItem1.Visible = false;
             mergeWithPreviousToolStripMenuItem.Visible = false;
             mergeWithNextToolStripMenuItem.Visible = false;
             toolStripSeparator11.Visible = false;
-            toolStripMenuItemWaveFormPlaySelection.Visible = false;
+            toolStripMenuItemWaveformPlaySelection.Visible = false;
             toolStripSeparator24.Visible = false;
-            contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
+            contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }
 
-        private void AudioWaveForm_OnDoubleClickNonParagraph(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnDoubleClickNonParagraph(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             if (mediaPlayer.VideoPlayer != null)
             {
                 _endSeconds = -1;
                 if (e.Paragraph == null)
                 {
-                    if (Configuration.Settings.VideoControls.WaveFormDoubleClickOnNonParagraphAction == "PlayPause")
+                    if (Configuration.Settings.VideoControls.WaveformDoubleClickOnNonParagraphAction == "PlayPause")
                         mediaPlayer.TogglePlayPause();
                 }
                 else
@@ -1174,12 +1174,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AudioWaveForm_OnZoomedChanged(object sender, EventArgs e)
+        private void AudioWaveform_OnZoomedChanged(object sender, EventArgs e)
         {
             SelectZoomTextInComboBox();
         }
 
-        private void AudioWaveForm_OnTimeChangedAndOffsetRest(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnTimeChangedAndOffsetRest(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             if (mediaPlayer.VideoPlayer == null)
                 return;
@@ -1213,16 +1213,16 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.Invalidate();
         }
 
-        private void AudioWaveForm_OnPause(object sender, EventArgs e)
+        private void AudioWaveform_OnPause(object sender, EventArgs e)
         {
             _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
         }
 
-        private void AudioWaveForm_OnSingleClick(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnSingleClick(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
-            timerWaveForm.Stop();
+            timerWaveform.Stop();
             _endSeconds = -1;
             if (mediaPlayer.VideoPlayer != null)
                 mediaPlayer.Pause();
@@ -1232,11 +1232,11 @@ namespace Nikse.SubtitleEdit.Forms
             int index = -1;
             if (SubtitleListview1.SelectedItems.Count > 0)
                 index = SubtitleListview1.SelectedItems[0].Index;
-            SetWaveFormPosition(audioVisualizer.StartPositionSeconds, e.Seconds, index);
-            timerWaveForm.Start();
+            SetWaveformPosition(audioVisualizer.StartPositionSeconds, e.Seconds, index);
+            timerWaveform.Start();
         }
 
-        private void AudioWaveForm_OnParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnParagraphRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
 
@@ -1248,14 +1248,14 @@ namespace Nikse.SubtitleEdit.Forms
             mergeWithPreviousToolStripMenuItem.Visible = true;
             mergeWithNextToolStripMenuItem.Visible = true;
             toolStripSeparator11.Visible = true;
-            toolStripMenuItemWaveFormPlaySelection.Visible = true;
+            toolStripMenuItemWaveformPlaySelection.Visible = true;
             toolStripSeparator24.Visible = true;
 
-            _audioWaveFormRightClickSeconds = e.Seconds;
-            contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
+            _audioWaveformRightClickSeconds = e.Seconds;
+            contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }
 
-        private void AudioWaveForm_OnNewSelectionRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnNewSelectionRightClicked(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             SubtitleListview1.SelectIndexAndEnsureVisible(_subtitle.GetIndex(e.Paragraph));
 
@@ -1268,10 +1268,10 @@ namespace Nikse.SubtitleEdit.Forms
             mergeWithPreviousToolStripMenuItem.Visible = false;
             mergeWithNextToolStripMenuItem.Visible = false;
 
-            contextMenuStripWaveForm.Show(MousePosition.X, MousePosition.Y);
+            contextMenuStripWaveform.Show(MousePosition.X, MousePosition.Y);
         }
 
-        private void AudioWaveForm_OnTimeChanged(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnTimeChanged(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             var paragraph = e.Paragraph;
             var beforeParagraph = e.BeforeParagraph;
@@ -1288,7 +1288,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // Make history item for rollback (change paragraph back for history + change again)
                 _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                 _subtitle.Paragraphs[index] = paragraph;
                 _makeHistoryPaused = true;
 
@@ -1337,7 +1337,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // Make history item for rollback (change paragraph back for history + change again)
                         _subtitleAlternate.Paragraphs[index] = new Paragraph(beforeParagraph);
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                         _subtitleAlternate.Paragraphs[index] = paragraph;
                         _makeHistoryPaused = true;
 
@@ -1368,7 +1368,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // Make history item for rollback (change paragraph back for history + change again)
                         _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                         _subtitle.Paragraphs[index] = paragraph;
                         _makeHistoryPaused = true;
 
@@ -1387,7 +1387,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         // Make history item for rollback (change paragraph back for history + change again)
                         _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + paragraph.Number + " " + paragraph.Text));
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
                         _subtitle.Paragraphs[index] = paragraph;
                         _makeHistoryPaused = true;
 
@@ -1429,7 +1429,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void AudioWaveForm_OnPositionSelected(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
+        private void AudioWaveform_OnPositionSelected(object sender, Nikse.SubtitleEdit.Controls.AudioVisualizer.ParagraphEventArgs e)
         {
             mediaPlayer.CurrentPosition = e.Seconds;
             if (e.Paragraph != null)
@@ -1683,9 +1683,9 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.ImportSceneChanges;
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
-                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
+                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
             else
-                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
+                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveform;
 
             showhideVideoToolStripMenuItem.Text = _language.Menu.Video.ShowHideVideo;
             undockVideoControlsToolStripMenuItem.Text = _language.Menu.Video.UnDockVideoControls;
@@ -1747,7 +1747,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
             toolStripButtonHelp.ToolTipText = _language.Menu.ToolBar.Help;
-            toolStripButtonToggleWaveForm.ToolTipText = _language.Menu.ToolBar.ShowHideWaveForm;
+            toolStripButtonToggleWaveform.ToolTipText = _language.Menu.ToolBar.ShowHideWaveform;
             toolStripButtonToggleVideo.ToolTipText = _language.Menu.ToolBar.ShowHideVideo;
 
             toolStripMenuItemAssStyles.Text = _language.Menu.ContextMenu.SubStationAlphaStyles;
@@ -1883,28 +1883,28 @@ namespace Nikse.SubtitleEdit.Forms
             labelAdjustTip.Text = _language.VideoControls.CreateTip;
 
             //waveform
-            addParagraphHereToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHere;
-            addParagraphAndPasteToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.AddParagraphHereAndPasteText;
-            deleteParagraphToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.DeleteParagraph;
-            toolStripMenuItemFocusTextbox.Text = Configuration.Settings.Language.WaveForm.FocusTextBox;
+            addParagraphHereToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.AddParagraphHere;
+            addParagraphAndPasteToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.AddParagraphHereAndPasteText;
+            deleteParagraphToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.DeleteParagraph;
+            toolStripMenuItemFocusTextbox.Text = Configuration.Settings.Language.Waveform.FocusTextBox;
 
-            splitToolStripMenuItem1.Text = Configuration.Settings.Language.WaveForm.Split;
-            mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithPrevious;
-            mergeWithNextToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.MergeWithNext;
-            toolStripMenuItemWaveFormPlaySelection.Text = Configuration.Settings.Language.WaveForm.PlaySelection;
-            showWaveformAndSpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowWaveformAndSpectrogram;
-            showOnlyWaveformToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowWaveformOnly;
-            showOnlySpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.ShowSpectrogramOnly;
-            seekSilenceToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.SeekSilence;
-            guessTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.WaveForm.GuessTimeCodes;
+            splitToolStripMenuItem1.Text = Configuration.Settings.Language.Waveform.Split;
+            mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.MergeWithPrevious;
+            mergeWithNextToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.MergeWithNext;
+            toolStripMenuItemWaveformPlaySelection.Text = Configuration.Settings.Language.Waveform.PlaySelection;
+            showWaveformAndSpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.ShowWaveformAndSpectrogram;
+            showOnlyWaveformToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.ShowWaveformOnly;
+            showOnlySpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.ShowSpectrogramOnly;
+            seekSilenceToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.SeekSilence;
+            guessTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.GuessTimeCodes;
 
-            toolStripButtonWaveFormZoomOut.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomOut;
-            toolStripButtonWaveFormZoomIn.ToolTipText = Configuration.Settings.Language.WaveForm.ZoomIn;
+            toolStripButtonWaveformZoomOut.ToolTipText = Configuration.Settings.Language.Waveform.ZoomOut;
+            toolStripButtonWaveformZoomIn.ToolTipText = Configuration.Settings.Language.Waveform.ZoomIn;
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
-                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveformAndSpectrogram;
+                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram;
             else
-                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveForm;
+                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveform;
         }
 
         private void SetFormatToSubRip()
@@ -2928,7 +2928,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 OpenVideo(videoFileName);
                             }
-                            else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked))
+                            else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
                             {
                                 TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
                             }
@@ -3928,14 +3928,14 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCustomUrl2.Text = Configuration.Settings.VideoControls.CustomSearchText2;
             buttonCustomUrl2.Visible = Configuration.Settings.VideoControls.CustomSearchUrl2.Length > 1;
 
-            audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveFormDrawGrid;
-            audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveFormGridColor;
-            audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
-            audioVisualizer.Color = Configuration.Settings.VideoControls.WaveFormColor;
-            audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
-            audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveFormTextColor;
-            audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
-            audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
+            audioVisualizer.DrawGridLines = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            audioVisualizer.GridColor = Configuration.Settings.VideoControls.WaveformGridColor;
+            audioVisualizer.SelectedColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
+            audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
+            audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
+            audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveformTextColor;
+            audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
+            audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
             audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
 
             string newSyntaxColoring = Configuration.Settings.Tools.ListViewSyntaxColorDurationSmall.ToString() +
@@ -4034,13 +4034,13 @@ namespace Nikse.SubtitleEdit.Forms
             SetTitle();
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
-                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveformAndSpectrogram;
-                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
+                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram;
+                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
             }
             else
             {
-                audioVisualizer.WaveFormNotLoadedText = Configuration.Settings.Language.WaveForm.ClickToAddWaveForm;
-                showhideWaveFormToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveForm;
+                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveform;
+                showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveform;
             }
             audioVisualizer.Invalidate();
 
@@ -4093,7 +4093,7 @@ namespace Nikse.SubtitleEdit.Forms
             TryLoadIcon(toolStripButtonHelp, "Help");
 
             TryLoadIcon(toolStripButtonToggleVideo, "VideoToggle");
-            TryLoadIcon(toolStripButtonToggleWaveForm, "WaveFormToggle");
+            TryLoadIcon(toolStripButtonToggleWaveform, "WaveformToggle");
 
             toolStripButtonFileNew.Visible = gs.ShowToolbarNew;
             toolStripButtonFileOpen.Visible = gs.ShowToolbarOpen;
@@ -10636,8 +10636,8 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                bool waveFormEnabled = timerWaveForm.Enabled;
-                timerWaveForm.Stop();
+                bool waveFormEnabled = timerWaveform.Enabled;
+                timerWaveform.Stop();
                 timer1.Stop();
 
                 _showEarlierOrLater = new ShowEarlierLater();
@@ -10650,7 +10650,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater);
                 _showEarlierOrLater.Show(this);
 
-                timerWaveForm.Enabled = waveFormEnabled;
+                timerWaveform.Enabled = waveFormEnabled;
                 timer1.Start();
 
                 RefreshSelectedParagraph();
@@ -10754,7 +10754,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformPlaySelection)
             {
-                toolStripMenuItemWaveFormPlaySelection_Click(null, null);
+                toolStripMenuItemWaveformPlaySelection_Click(null, null);
                 e.SuppressKeyPress = true;
             }
             else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceForward)
@@ -11382,7 +11382,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!mediaPlayer.IsPaused)
                             videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
                         int index = SubtitleListview1.SelectedItems[0].Index;
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                         _subtitle.Paragraphs[index].EndTime = TimeCode.FromSeconds(videoPosition);
                         SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index]);
@@ -13196,11 +13196,11 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.WavePeaks = new WavePeakGenerator(peakWaveFileName);
                     audioVisualizer.ResetSpectrogram();
                     audioVisualizer.InitializeSpectrogram(spectrogramFolder);
-                    toolStripComboBoxWaveForm_SelectedIndexChanged(null, null);
+                    toolStripComboBoxWaveform_SelectedIndexChanged(null, null);
                     audioVisualizer.WavePeaks.GenerateAllSamples();
                     audioVisualizer.WavePeaks.Close();
-                    SetWaveFormPosition(0, 0, 0);
-                    timerWaveForm.Start();
+                    SetWaveformPosition(0, 0, 0);
+                    timerWaveform.Start();
                 }
                 Cursor = Cursors.Default;
 
@@ -13221,7 +13221,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void SetWaveFormPosition(double startPositionSeconds, double currentVideoPositionSeconds, int subtitleIndex)
+        private void SetWaveformPosition(double startPositionSeconds, double currentVideoPositionSeconds, int subtitleIndex)
         {
             if (SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
             {
@@ -13245,7 +13245,7 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.Volume = Configuration.Settings.General.VideoPlayerDefaultVolume;
             timer1.Start();
 
-            trackBarWaveFormPosition.Maximum = (int)mediaPlayer.Duration;
+            trackBarWaveformPosition.Maximum = (int)mediaPlayer.Duration;
 
             if (_videoLoadedGoToSubPosAndPause)
             {
@@ -13392,7 +13392,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (toolStripButtonToggleVideo.Checked && toolStripButtonToggleWaveForm.Checked)
+                if (toolStripButtonToggleVideo.Checked && toolStripButtonToggleWaveform.Checked)
                 {
                     splitContainer1.Panel2Collapsed = false;
                     MoveVideoUp();
@@ -13422,9 +13422,9 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
 
                 checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                panelWaveFormControls.Left = audioVisualizer.Left;
-                trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
-                trackBarWaveFormPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveFormPosition.Left + 5;
+                panelWaveformControls.Left = audioVisualizer.Left;
+                trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
+                trackBarWaveformPosition.Width = audioVisualizer.Left + audioVisualizer.Width - trackBarWaveformPosition.Left + 5;
             }
 
             if (mediaPlayer.VideoPlayer == null && !string.IsNullOrEmpty(_fileName))
@@ -13445,16 +13445,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (_waveFormUnDocked == null || _waveFormUnDocked.IsDisposed)
-                UnDockWaveForm();
+                UnDockWaveform();
             _waveFormUnDocked.Visible = false;
-            if (toolStripButtonToggleWaveForm.Checked)
+            if (toolStripButtonToggleWaveform.Checked)
             {
                 _waveFormUnDocked.Show(this);
                 if (_waveFormUnDocked.WindowState == FormWindowState.Minimized)
                     _waveFormUnDocked.WindowState = FormWindowState.Normal;
             }
 
-            if (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveForm.Checked)
+            if (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked)
             {
                 if (_videoControlsUnDocked == null || _videoControlsUnDocked.IsDisposed)
                     UnDockVideoButtons();
@@ -13704,7 +13704,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!mediaPlayer.IsPaused)
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
 
                 timeUpDownStartTime.TimeCode = TimeCode.FromSeconds(videoPosition);
 
@@ -13742,7 +13742,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!mediaPlayer.IsPaused)
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                 _subtitle.Paragraphs[index].EndTime = TimeCode.FromSeconds(videoPosition);
                 SubtitleListview1.SetStartTimeAndDuration(index, _subtitle.Paragraphs[index]);
@@ -13777,7 +13777,7 @@ namespace Nikse.SubtitleEdit.Forms
                     videoPosition -= Configuration.Settings.General.SetStartEndHumanDelay / 1000.0;
 
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
+                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + _subtitle.Paragraphs[index].Number + " " + _subtitle.Paragraphs[index].Text));
 
                 if (_subtitle.Paragraphs[index].StartTime.IsMaxTime)
                 {
@@ -13929,7 +13929,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (startPos < 0)
                     startPos = 0;
 
-                SetWaveFormPosition(startPos, mediaPlayer.CurrentPosition, index);
+                SetWaveformPosition(startPos, mediaPlayer.CurrentPosition, index);
             }
         }
 
@@ -13971,7 +13971,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonToggleVideo.Checked = !toolStripButtonToggleVideo.Checked;
             panelVideoPlayer.Visible = toolStripButtonToggleVideo.Checked;
             mediaPlayer.BringToFront();
-            if (!toolStripButtonToggleVideo.Checked && !toolStripButtonToggleWaveForm.Checked)
+            if (!toolStripButtonToggleVideo.Checked && !toolStripButtonToggleWaveform.Checked)
             {
                 if (_isVideoControlsUnDocked)
                     ShowHideUnDockedVideoControls();
@@ -13987,13 +13987,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Refresh();
         }
 
-        private void toolStripButtonToggleWaveForm_Click(object sender, EventArgs e)
+        private void toolStripButtonToggleWaveform_Click(object sender, EventArgs e)
         {
-            toolStripButtonToggleWaveForm.Checked = !toolStripButtonToggleWaveForm.Checked;
-            audioVisualizer.Visible = toolStripButtonToggleWaveForm.Checked;
-            trackBarWaveFormPosition.Visible = toolStripButtonToggleWaveForm.Checked;
-            panelWaveFormControls.Visible = toolStripButtonToggleWaveForm.Checked;
-            if (!toolStripButtonToggleWaveForm.Checked && !toolStripButtonToggleVideo.Checked)
+            toolStripButtonToggleWaveform.Checked = !toolStripButtonToggleWaveform.Checked;
+            audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
+            trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
+            panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
+            if (!toolStripButtonToggleWaveform.Checked && !toolStripButtonToggleVideo.Checked)
             {
                 if (_isVideoControlsUnDocked)
                     ShowHideUnDockedVideoControls();
@@ -14004,7 +14004,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowVideoPlayer();
             }
-            Configuration.Settings.General.ShowAudioVisualizer = toolStripButtonToggleWaveForm.Checked;
+            Configuration.Settings.General.ShowAudioVisualizer = toolStripButtonToggleWaveform.Checked;
             Refresh();
         }
 
@@ -14193,14 +14193,14 @@ namespace Nikse.SubtitleEdit.Forms
 
                 mediaPlayer.RefreshProgressBar();
 
-                trackBarWaveFormPosition.ValueChanged -= trackBarWaveFormPosition_ValueChanged;
+                trackBarWaveformPosition.ValueChanged -= trackBarWaveformPosition_ValueChanged;
                 int value = (int)mediaPlayer.CurrentPosition;
-                if (value > trackBarWaveFormPosition.Maximum)
-                    value = trackBarWaveFormPosition.Maximum;
-                if (value < trackBarWaveFormPosition.Minimum)
-                    value = trackBarWaveFormPosition.Minimum;
-                trackBarWaveFormPosition.Value = value;
-                trackBarWaveFormPosition.ValueChanged += trackBarWaveFormPosition_ValueChanged;
+                if (value > trackBarWaveformPosition.Maximum)
+                    value = trackBarWaveformPosition.Maximum;
+                if (value < trackBarWaveformPosition.Minimum)
+                    value = trackBarWaveformPosition.Minimum;
+                trackBarWaveformPosition.Value = value;
+                trackBarWaveformPosition.ValueChanged += trackBarWaveformPosition_ValueChanged;
             }
         }
 
@@ -14421,18 +14421,18 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (!_isVideoControlsUnDocked)
             {
-                if (toolStripButtonToggleWaveForm.Checked)
+                if (toolStripButtonToggleWaveform.Checked)
                     audioVisualizer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
-                if (!toolStripButtonToggleWaveForm.Checked && toolStripButtonToggleVideo.Checked)
+                if (!toolStripButtonToggleWaveform.Checked && toolStripButtonToggleVideo.Checked)
                 {
                     panelVideoPlayer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
                     panelVideoPlayer.Width = groupBoxVideo.Width - (panelVideoPlayer.Left + 10);
                 }
 
                 audioVisualizer.Width = groupBoxVideo.Width - (audioVisualizer.Left + 10);
-                panelWaveFormControls.Left = audioVisualizer.Left;
-                trackBarWaveFormPosition.Left = panelWaveFormControls.Left + panelWaveFormControls.Width + 5;
-                trackBarWaveFormPosition.Width = groupBoxVideo.Width - (trackBarWaveFormPosition.Left + 10);
+                panelWaveformControls.Left = audioVisualizer.Left;
+                trackBarWaveformPosition.Left = panelWaveformControls.Left + panelWaveformControls.Width + 5;
+                trackBarWaveformPosition.Width = groupBoxVideo.Width - (trackBarWaveformPosition.Left + 10);
                 Main_Resize(null, null);
                 checkBoxSyncListViewWithVideoWhilePlaying.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
                 if (!_loading)
@@ -14603,7 +14603,7 @@ namespace Nikse.SubtitleEdit.Forms
             ToolStripMenuItemPlayRateNormalClick(null, null);
 
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
-            SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveFormUnDocked");
+            SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveformUnDocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
             if (Configuration.Settings.General.Undocked && Configuration.Settings.General.StartRememberPositionAndSize)
             {
@@ -14612,7 +14612,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             Main_Resize(null, null);
 
-            toolStripButtonLockCenter.Checked = Configuration.Settings.General.WaveFormCenter;
+            toolStripButtonLockCenter.Checked = Configuration.Settings.General.WaveformCenter;
             audioVisualizer.Locked = toolStripButtonLockCenter.Checked;
 
             numericUpDownSec1.Value = (decimal)(Configuration.Settings.General.SmallDelayMilliseconds / 1000.0);
@@ -15316,7 +15316,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string GetPeakWaveFileName(string videoFileName)
         {
-            string dir = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string dir = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
@@ -15340,7 +15340,7 @@ namespace Nikse.SubtitleEdit.Forms
             return name;
         }
 
-        private void AudioWaveForm_Click(object sender, EventArgs e)
+        private void AudioWaveform_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks == null)
             {
@@ -15352,25 +15352,25 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 mediaPlayer.Pause();
-                var addWaveForm = new AddWaveForm();
+                var addWaveform = new AddWaveform();
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
                 string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                addWaveForm.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
-                if (addWaveForm.ShowDialog() == DialogResult.OK)
+                addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
+                if (addWaveform.ShowDialog() == DialogResult.OK)
                 {
-                    addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
+                    addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
                     var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
                     audioPeakWave.GenerateAllSamples();
                     audioPeakWave.Close();
                     audioVisualizer.WavePeaks = audioPeakWave;
-                    if (addWaveForm.SpectrogramBitmaps != null)
-                        audioVisualizer.InitializeSpectrogram(addWaveForm.SpectrogramBitmaps, spectrogramFolder);
-                    timerWaveForm.Start();
+                    if (addWaveform.SpectrogramBitmaps != null)
+                        audioVisualizer.InitializeSpectrogram(addWaveform.SpectrogramBitmaps, spectrogramFolder);
+                    timerWaveform.Start();
                 }
             }
         }
 
-        private void timerWaveForm_Tick(object sender, EventArgs e)
+        private void timerWaveform_Tick(object sender, EventArgs e)
         {
             if (audioVisualizer.Visible && mediaPlayer.VideoPlayer != null && audioVisualizer.WavePeaks != null)
             {
@@ -15383,7 +15383,7 @@ namespace Nikse.SubtitleEdit.Forms
                     double startPos = mediaPlayer.CurrentPosition - ((audioVisualizer.EndPositionSeconds - audioVisualizer.StartPositionSeconds) / 2.0);
                     if (startPos < 0)
                         startPos = 0;
-                    SetWaveFormPosition(startPos, mediaPlayer.CurrentPosition, index);
+                    SetWaveformPosition(startPos, mediaPlayer.CurrentPosition, index);
                 }
                 else if (mediaPlayer.CurrentPosition > audioVisualizer.EndPositionSeconds || mediaPlayer.CurrentPosition < audioVisualizer.StartPositionSeconds)
                 {
@@ -15391,21 +15391,21 @@ namespace Nikse.SubtitleEdit.Forms
                     if (startPos < 0)
                         startPos = 0;
                     audioVisualizer.ClearSelection();
-                    SetWaveFormPosition(startPos, mediaPlayer.CurrentPosition, index);
+                    SetWaveformPosition(startPos, mediaPlayer.CurrentPosition, index);
                 }
                 else
                 {
-                    SetWaveFormPosition(audioVisualizer.StartPositionSeconds, mediaPlayer.CurrentPosition, index);
+                    SetWaveformPosition(audioVisualizer.StartPositionSeconds, mediaPlayer.CurrentPosition, index);
                 }
 
                 bool paused = mediaPlayer.IsPaused;
-                toolStripButtonWaveFormPause.Visible = !paused;
-                toolStripButtonWaveFormPlay.Visible = paused;
+                toolStripButtonWaveformPause.Visible = !paused;
+                toolStripButtonWaveformPlay.Visible = paused;
             }
             else
             {
-                toolStripButtonWaveFormPlay.Visible = true;
-                toolStripButtonWaveFormPause.Visible = false;
+                toolStripButtonWaveformPlay.Visible = true;
+                toolStripButtonWaveformPause.Visible = false;
             }
         }
 
@@ -15512,7 +15512,7 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.RightClickedParagraph.EndTime.TotalMilliseconds == _subtitle.Paragraphs[i].EndTime.TotalMilliseconds)
                 {
                     SubtitleListview1.SelectIndexAndEnsureVisible(i);
-                    SplitSelectedParagraph(_audioWaveFormRightClickSeconds, null);
+                    SplitSelectedParagraph(_audioWaveformRightClickSeconds, null);
                     break;
                 }
             }
@@ -15530,7 +15530,7 @@ namespace Nikse.SubtitleEdit.Forms
             audioVisualizer.Invalidate();
         }
 
-        private void buttonWaveFormZoomIn_Click(object sender, EventArgs e)
+        private void buttonWaveformZoomIn_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks != null && audioVisualizer.Visible)
             {
@@ -15538,7 +15538,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonWaveFormZoomOut_Click(object sender, EventArgs e)
+        private void buttonWaveformZoomOut_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks != null && audioVisualizer.Visible)
             {
@@ -15546,7 +15546,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonWaveFormZoomReset_Click(object sender, EventArgs e)
+        private void buttonWaveformZoomReset_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks != null && audioVisualizer.Visible)
             {
@@ -15554,7 +15554,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItemWaveFormPlaySelection_Click(object sender, EventArgs e)
+        private void toolStripMenuItemWaveformPlaySelection_Click(object sender, EventArgs e)
         {
             if (mediaPlayer.VideoPlayer != null)
             {
@@ -15572,7 +15572,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripButtonWaveFormZoomIn_Click(object sender, EventArgs e)
+        private void toolStripButtonWaveformZoomIn_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks != null && audioVisualizer.Visible)
             {
@@ -15581,7 +15581,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripButtonWaveFormZoomOut_Click(object sender, EventArgs e)
+        private void toolStripButtonWaveformZoomOut_Click(object sender, EventArgs e)
         {
             if (audioVisualizer.WavePeaks != null && audioVisualizer.Visible)
             {
@@ -15590,11 +15590,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripComboBoxWaveForm_SelectedIndexChanged(object sender, EventArgs e)
+        private void toolStripComboBoxWaveform_SelectedIndexChanged(object sender, EventArgs e)
         {
             try
             {
-                ComboBoxZoomItem item = toolStripComboBoxWaveForm.SelectedItem as ComboBoxZoomItem;
+                ComboBoxZoomItem item = toolStripComboBoxWaveform.SelectedItem as ComboBoxZoomItem;
                 if (item != null)
                     audioVisualizer.ZoomFactor = item.ZoomFactor;
             }
@@ -15606,24 +15606,24 @@ namespace Nikse.SubtitleEdit.Forms
         private void SelectZoomTextInComboBox()
         {
             int i = 0;
-            foreach (object obj in toolStripComboBoxWaveForm.Items)
+            foreach (object obj in toolStripComboBoxWaveform.Items)
             {
                 ComboBoxZoomItem item = obj as ComboBoxZoomItem;
                 if (Math.Abs(audioVisualizer.ZoomFactor - item.ZoomFactor) < 0.001)
                 {
-                    toolStripComboBoxWaveForm.SelectedIndex = i;
+                    toolStripComboBoxWaveform.SelectedIndex = i;
                     return;
                 }
                 i++;
             }
         }
 
-        private void toolStripButtonWaveFormPause_Click(object sender, EventArgs e)
+        private void toolStripButtonWaveformPause_Click(object sender, EventArgs e)
         {
             mediaPlayer.Pause();
         }
 
-        private void toolStripButtonWaveFormPlay_Click(object sender, EventArgs e)
+        private void toolStripButtonWaveformPlay_Click(object sender, EventArgs e)
         {
             mediaPlayer.Play();
         }
@@ -15632,12 +15632,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             toolStripButtonLockCenter.Checked = !toolStripButtonLockCenter.Checked;
             audioVisualizer.Locked = toolStripButtonLockCenter.Checked;
-            Configuration.Settings.General.WaveFormCenter = audioVisualizer.Locked;
+            Configuration.Settings.General.WaveformCenter = audioVisualizer.Locked;
         }
 
-        private void trackBarWaveFormPosition_ValueChanged(object sender, EventArgs e)
+        private void trackBarWaveformPosition_ValueChanged(object sender, EventArgs e)
         {
-            mediaPlayer.CurrentPosition = trackBarWaveFormPosition.Value;
+            mediaPlayer.CurrentPosition = trackBarWaveformPosition.Value;
         }
 
         private void buttonCustomUrl_Click(object sender, EventArgs e)
@@ -15650,19 +15650,19 @@ namespace Nikse.SubtitleEdit.Forms
             RunCustomSearch(Configuration.Settings.VideoControls.CustomSearchUrl2);
         }
 
-        private void ShowhideWaveFormToolStripMenuItemClick(object sender, EventArgs e)
+        private void ShowhideWaveformToolStripMenuItemClick(object sender, EventArgs e)
         {
-            toolStripButtonToggleWaveForm_Click(null, null);
+            toolStripButtonToggleWaveform_Click(null, null);
         }
 
-        private void AudioWaveFormDragEnter(object sender, DragEventArgs e)
+        private void AudioWaveformDragEnter(object sender, DragEventArgs e)
         {
             // make sure they're actually dropping files (not text or anything else)
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
                 e.Effect = DragDropEffects.All;
         }
 
-        private void AudioWaveFormDragDrop(object sender, DragEventArgs e)
+        private void AudioWaveformDragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
             string fileName = files[0];
@@ -15678,7 +15678,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (audioVisualizer.WavePeaks == null && (Utilities.GetMovieFileExtensions().Contains(ext) || ext == ".mp3"))
                 {
                     _videoFileName = fileName;
-                    AudioWaveForm_Click(null, null);
+                    AudioWaveform_Click(null, null);
                     OpenVideo(_videoFileName);
                     return;
                 }
@@ -15716,17 +15716,17 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var addWaveForm = new AddWaveForm();
+            var addWaveform = new AddWaveform();
             string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-            addWaveForm.InitializeViaWaveFile(fileName, spectrogramFolder);
-            if (addWaveForm.ShowDialog() == DialogResult.OK)
+            addWaveform.InitializeViaWaveFile(fileName, spectrogramFolder);
+            if (addWaveform.ShowDialog() == DialogResult.OK)
             {
                 string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                addWaveForm.WavePeak.WritePeakSamples(peakWaveFileName);
+                addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
                 var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
                 audioPeakWave.GenerateAllSamples();
                 audioVisualizer.WavePeaks = audioPeakWave;
-                timerWaveForm.Start();
+                timerWaveform.Start();
             }
         }
 
@@ -16718,9 +16718,9 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.SubtitleText = string.Empty;
         }
 
-        private void UnDockWaveForm()
+        private void UnDockWaveform()
         {
-            _waveFormUnDocked = new WaveFormUnDocked(this, _formPositionsAndSizes);
+            _waveFormUnDocked = new WaveformUnDocked(this, _formPositionsAndSizes);
             _formPositionsAndSizes.SetPositionAndSize(_waveFormUnDocked);
 
             var control = audioVisualizer;
@@ -16728,16 +16728,16 @@ namespace Nikse.SubtitleEdit.Forms
             control.Top = 0;
             control.Left = 0;
             control.Width = _waveFormUnDocked.PanelContainer.Width;
-            control.Height = _waveFormUnDocked.PanelContainer.Height - panelWaveFormControls.Height;
+            control.Height = _waveFormUnDocked.PanelContainer.Height - panelWaveformControls.Height;
             _waveFormUnDocked.PanelContainer.Controls.Add(control);
 
-            var control2 = (Control)panelWaveFormControls;
+            var control2 = (Control)panelWaveformControls;
             groupBoxVideo.Controls.Remove(control2);
             control2.Top = control.Height;
             control2.Left = 0;
             _waveFormUnDocked.PanelContainer.Controls.Add(control2);
 
-            var control3 = (Control)trackBarWaveFormPosition;
+            var control3 = (Control)trackBarWaveformPosition;
             groupBoxVideo.Controls.Remove(control3);
             control3.Top = control.Height;
             control3.Left = control2.Width + 2;
@@ -16745,7 +16745,7 @@ namespace Nikse.SubtitleEdit.Forms
             _waveFormUnDocked.PanelContainer.Controls.Add(control3);
         }
 
-        public void ReDockWaveForm(Control waveForm, Control buttons, Control trackBar)
+        public void ReDockWaveform(Control waveForm, Control buttons, Control trackBar)
         {
             groupBoxVideo.Controls.Add(waveForm);
             waveForm.Top = 30;
@@ -16810,8 +16810,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            UnDockWaveForm();
-            if (toolStripButtonToggleWaveForm.Checked)
+            UnDockWaveform();
+            if (toolStripButtonToggleWaveform.Checked)
             {
                 _waveFormUnDocked.Show(this);
                 if (_waveFormUnDocked.Top < -999 || _waveFormUnDocked.Left < -999)
@@ -16867,11 +16867,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
             {
-                var controlWaveForm = _waveFormUnDocked.PanelContainer.Controls[0];
+                var controlWaveform = _waveFormUnDocked.PanelContainer.Controls[0];
                 var controlButtons = _waveFormUnDocked.PanelContainer.Controls[1];
                 var controlTrackBar = _waveFormUnDocked.PanelContainer.Controls[2];
                 _waveFormUnDocked.PanelContainer.Controls.Clear();
-                ReDockWaveForm(controlWaveForm, controlButtons, controlTrackBar);
+                ReDockWaveform(controlWaveform, controlButtons, controlTrackBar);
                 _waveFormUnDocked.Close();
                 _waveFormUnDocked = null;
             }
@@ -16892,9 +16892,9 @@ namespace Nikse.SubtitleEdit.Forms
             _videoControlsUnDocked = null;
             ShowVideoPlayer();
 
-            audioVisualizer.Visible = toolStripButtonToggleWaveForm.Checked;
-            trackBarWaveFormPosition.Visible = toolStripButtonToggleWaveForm.Checked;
-            panelWaveFormControls.Visible = toolStripButtonToggleWaveForm.Checked;
+            audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
+            trackBarWaveformPosition.Visible = toolStripButtonToggleWaveform.Checked;
+            panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
             if (!toolStripButtonToggleVideo.Checked)
                 HideVideoPlayer();
 
@@ -16905,9 +16905,9 @@ namespace Nikse.SubtitleEdit.Forms
             redockVideoControlsToolStripMenuItem.Visible = false;
         }
 
-        internal void SetWaveFormToggleOff()
+        internal void SetWaveformToggleOff()
         {
-            toolStripButtonToggleWaveForm.Checked = false;
+            toolStripButtonToggleWaveform.Checked = false;
         }
 
         internal void SetVideoPlayerToggleOff()
@@ -17421,7 +17421,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
+            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
 
             timeUpDownStartTime.MaskedTextBox.TextChanged -= MaskedTextBoxTextChanged;
             var oldParagraph = new Paragraph(_subtitle.Paragraphs[index]);
@@ -17464,7 +17464,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveFormX, "#" + p.Number + " " + p.Text));
+            MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + p.Number + " " + p.Text));
 
             double videoPosition = mediaPlayer.CurrentPosition;
             if (!mediaPlayer.IsPaused)
@@ -17742,7 +17742,7 @@ namespace Nikse.SubtitleEdit.Forms
             styleToolStripMenuItem.Visible = GetCurrentSubtitleFormat().HasStyleSupport;
         }
 
-        private void ContextMenuStripWaveFormOpening(object sender, System.ComponentModel.CancelEventArgs e)
+        private void ContextMenuStripWaveformOpening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (audioVisualizer.IsSpectrogramAvailable)
             {
@@ -18922,7 +18922,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GuessTimeCodesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var form = new WaveFormGenerateTimeCodes();
+            var form = new WaveformGenerateTimeCodes();
             if (form.ShowDialog(this) == DialogResult.OK)
             {
                 MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
@@ -19765,15 +19765,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void audioVisualizer_MouseEnter(object sender, EventArgs e)
         {
-            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter && audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
+            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter && audioVisualizer.WavePeaks != null && !audioVisualizer.Focused && audioVisualizer.CanFocus)
                 audioVisualizer.Focus();
         }
 
         private void SubtitleListview1_MouseEnter(object sender, EventArgs e)
         {
 
-            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter &&
-                Configuration.Settings.VideoControls.WaveFormListViewFocusOnMouseEnter && !SubtitleListview1.Focused && SubtitleListview1.CanFocus)
+            if (!textBoxListViewText.Focused && !textBoxListViewTextAlternate.Focused && Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter &&
+                Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter && !SubtitleListview1.Focused && SubtitleListview1.CanFocus)
                 SubtitleListview1.Focus();
         }
 

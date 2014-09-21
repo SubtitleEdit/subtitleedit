@@ -100,10 +100,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Προσθήκη στο λεξικό του χρήστη</Title>
     <Description>Προσθήκη λέξης στο λεξικό του χρήστη (όχι ευαίσθητο στα πεζά)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Δημιουργία δεδομένων κυματομορφής</Title>
     <SourceVideoFile>Πηγαίο αρχείο βίντεο:</SourceVideoFile>
-    <GenerateWaveFormData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveFormData>
+    <GenerateWaveformData>Δημιουργία δεδομένων κυματομορφής</GenerateWaveformData>
     <PleaseWait>Αυτό μπορεί να πάρει μερικά λεπτά - παρακαλώ περιμένετε</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Δεν βρέθηκε το πρόγραμμα VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Το Subtitle Edit χρειάζεται το πρόγραμμα VLC media player 1.1.χ ή νεότερη έκδοση για την εξαγωγή δεδομένων ήχου.</VlcMediaPlayerNotFound>
@@ -112,7 +112,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Δημιουργία φασματογραφήματος...</GeneratingSpectrogram>
     <ExtractingSeconds>Εξαγωγή ήχου: {0:0.0} δευτερόλεπτα</ExtractingSeconds>
     <ExtractingMinutes>Εξαγωγή ήχου: {0}.{1:00} λεπτά</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Προσαρμογή διαρκειών</Title>
     <AdjustVia>Προσαρμογή μέσω</AdjustVia>
@@ -787,7 +787,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Εισαγωγή σκηνών αλλαγής...</ImportSceneChanges>
         <RemoveSceneChanges>Αφαίρεση σκηνών αλλαγής</RemoveSceneChanges>
         <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
-        <ShowHideWaveForm>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveForm>
+        <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Εμφάνιση/απόκρυψη κυματομορφής και φασματογράμματος</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Απαγκύρωση στοιχείων ελέγχου βίντεο</UnDockVideoControls>
         <ReDockVideoControls>Επαναγκύρωση στοιχείων ελέγχου βίντεο</ReDockVideoControls>
@@ -845,7 +845,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Ορθογραφικός έλεγχος</SpellCheck>
         <Settings>Ρυθμίσεις</Settings>
         <Help>Βοήθεια</Help>
-        <ShowHideWaveForm>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveForm>
+        <ShowHideWaveform>Εμφάνιση/απόκρυψη κυματομορφής</ShowHideWaveform>
         <ShowHideVideo>Εμφάνιση/απόκρυψη βίντεο</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -955,7 +955,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Συμβουλή: Χρησιμοποιήστε &lt;alt+βέλη πάνω/κάτω&gt; για μετάβαση σε προηγούμενο/επόμενο υπότιτλο</TranslateTip>
       <CreateTip>Συμβουλή: Χρησιμοποιήστε &lt;ctrl+βέλη αριστερά/δεξιά&gt;</CreateTip>
       <AdjustTip>Συμβουλή: Χρησιμοποιήστε &lt;alt+βέλη πάνω/κάτω&gt; για μετάβαση σε προηγούμενο/επόμενο υπότιτλο</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Πριν την αλλαγή του χρόνου με τη μορφή κυμάτων: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Πριν την αλλαγή του χρόνου με τη μορφή κυμάτων: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Νέο κείμενο εισήχθει στο {0}</NewTextInsertAtX>
       <Center>Κέντρο</Center>
       <PlayRate>Ρυθμός αναπαραγωγής (ταχύτητα)</PlayRate>
@@ -1497,19 +1497,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PreviewFontSize>Μέγεθος γραμματοσειράς προεπισκόπησης υπότιτλου</PreviewFontSize>
     <MainWindowVideoControls>Στοιχεία ελέγχου βίντεο κύριου παραθύρου</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Προσαρμοσμένη αναζήτηση κειμένου και διεύθυνσης URL</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Όψη κυματομορφής</WaveFormAppearance>
-    <WaveFormGridColor>Χρώμα πλέγματος</WaveFormGridColor>
-    <WaveFormShowGridLines>Εμφάνιση γραμμών πλέγματος</WaveFormShowGridLines>
+    <WaveformAppearance>Όψη κυματομορφής</WaveformAppearance>
+    <WaveformGridColor>Χρώμα πλέγματος</WaveformGridColor>
+    <WaveformShowGridLines>Εμφάνιση γραμμών πλέγματος</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Εναλλαγή κατεύθυνσης κύλισης με τη ρόδα του mouse</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Να επιτρέπεται η επικάλυψη (κατά τη μετακίνηση/αλλαγή μεγέθους)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Καθορισμός εστίασης όταν το ποντίκι εισέρχεται</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Επίσης καθορίστε την εστίαση στην προβολή λίστας, όταν το ποντίκι εισέρχεται στην προβολή λίστας</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Να επιτρέπεται η επικάλυψη (κατά τη μετακίνηση/αλλαγή μεγέθους)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Καθορισμός εστίασης όταν το ποντίκι εισέρχεται</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Επίσης καθορίστε την εστίαση στην προβολή λίστας, όταν το ποντίκι εισέρχεται στην προβολή λίστας</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Το χτύπημα του περιγράμματος σήμανσης πρέπει να βρίσκεται μεταξύ</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>χιλιοστά δευτερολέπτου</WaveformBorderHitMs2>
-    <WaveFormColor>Χρώμα</WaveFormColor>
-    <WaveFormSelectedColor>Επιλεγμένο χρώμα</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Χρώμα φόντου</WaveFormBackgroundColor>
-    <WaveFormTextColor>Χρώμα κειμένου</WaveFormTextColor>
+    <WaveformColor>Χρώμα</WaveformColor>
+    <WaveformSelectedColor>Επιλεγμένο χρώμα</WaveformSelectedColor>
+    <WaveformBackgroundColor>Χρώμα φόντου</WaveformBackgroundColor>
+    <WaveformTextColor>Χρώμα κειμένου</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Άδειασμα φακέλων 'Spectrograms' (Φασματογραφήματα) και 'Waveforms' (Κυματομορφές)</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Οι φάκελοι 'Waveforms' (Φασματογραφήματα) και 'Spectrograms' (Κυματομορφές) περιέχουν {0} αρχεία ({1:0.00} MiB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Φασματογράφημα</Spectrogram>
@@ -1965,8 +1965,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Νέος φάκελος</Title>
     <Message>Όνομα νέου φακέλου βάσης δεδομένων χαρακτήρων</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Κάντε κλικ για προσθήκη κυματομορφής</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Κάντε κλικ για προσθήκη κυματομορφής</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Κάντε κλικ για προσθήκη κυματομορφής/φασματογράμματος</ClickToAddWaveformAndSpectrogram>
     <Seconds>δευτ.</Seconds>
     <ZoomIn>Μεγέθυνση</ZoomIn>
@@ -1985,8 +1985,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowSpectrogramOnly>Εμφάνιση μόνο φασματογράμματος</ShowSpectrogramOnly>
     <GuessTimeCodes>Μάντεψε τους κώδικες χρόνου...</GuessTimeCodes>
     <SeekSilence>Αναζήτηση σιωπής...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Μάντεψε τους κώδικες χρόνου</Title>
     <StartFrom>Έναρξη από</StartFrom>
     <CurrentVideoPosition>Τρέχουσα θέση βίντεο</CurrentVideoPosition>
@@ -2002,7 +2002,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLinesAt1>Διαχωρισμός μεγάλων υποτίτλων σε</SplitLongLinesAt1>
     <SplitLongLinesAt2>χιλιοστά δευτερολέπτου</SplitLongLinesAt2>
     <Other>Άλλο</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - καθορισμός νέας φωνής</Title>
     <VoiceName>Όνομα φωνής</VoiceName>
