@@ -275,6 +275,9 @@ Type: files;      Name: {#quick_launch}\Subtitle Edit.lnk; Check: not IsTaskSele
 
 Type: files;      Name: {userappdata}\Subtitle Edit\Settings.xml; Tasks: reset_settings
 
+; Remove files merged from now on with ILRepack
+Type: files;      Name: {app}\Interop.QuartzTypeLib.dll;              Check: IsUpgrade()
+
 ; Remove old files from the {app} dir
 Type: files;      Name: {app}\Dictionaries\da_DK_names_etc.xml;       Check: IsUpgrade()
 Type: files;      Name: {app}\Dictionaries\da_DK_user.xml;            Check: IsUpgrade()
