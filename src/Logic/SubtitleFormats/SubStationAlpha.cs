@@ -112,18 +112,12 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                 string effect = "!Effect";
                 if (!string.IsNullOrEmpty(p.Effect))
                     effect = p.Effect;
-                string layer = "0";
-                if (!string.IsNullOrEmpty(p.Layer))
-                {
-                    if (Utilities.IsInteger(p.Layer))
-                        layer = p.Layer;
-                }
                 if (!string.IsNullOrEmpty(p.Extra) && isValidAssHeader && styles.Contains(p.Extra))
                     style = p.Extra;
                 if (p.IsComment)
-                    sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, layer, actor, effect));
+                    sb.AppendLine(string.Format(commentWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, effect));
                 else
-                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, layer, actor, effect));
+                    sb.AppendLine(string.Format(paragraphWriteFormat, start, end, AdvancedSubStationAlpha.FormatText(p), style, p.Layer, actor, effect));
             }
             return sb.ToString().Trim();
         }
@@ -386,7 +380,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string start = string.Empty;
                         string end = string.Empty;
                         string style = string.Empty;
-                        string layer = string.Empty;
+                        var layer = 0;
                         string effect = string.Empty;
                         string name = string.Empty;
 
@@ -404,7 +398,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                             else if (i == indexEnd)
                                 end = splittedLine[i].Trim();
                             else if (i == indexLayer)
-                                layer = splittedLine[i];
+                                int.TryParse(splittedLine[i], out layer);
                             else if (i == indexEffect)
                                 effect = splittedLine[i];
                             else if (i == indexText)
@@ -428,8 +422,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                                 p.Extra = style;
                             if (!string.IsNullOrEmpty(effect))
                                 p.Effect = effect;
-                            if (!string.IsNullOrEmpty(layer))
-                                p.Layer = layer;
+                            p.Layer = layer;
                             if (!string.IsNullOrEmpty(name))
                                 p.Actor = name;
                             p.IsComment = s.StartsWith("comment:", StringComparison.Ordinal);
