@@ -682,7 +682,7 @@ namespace Nikse.SubtitleEdit.Logic
                     parts.Add(new ImageSplitterItem(startX + lineSplitterItem.X, addY + lineSplitterItem.Y, b1)); //y is what?
 
                     // remove pixels before next letter;
-                    int begin = 0;
+                    const int begin = 0;
                     foreach (Point p in points)
                     {
                         bmp.MakeVerticalLinePartTransparent(begin, p.X, p.Y);

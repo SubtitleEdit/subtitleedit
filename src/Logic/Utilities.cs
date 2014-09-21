@@ -273,7 +273,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static int ShowSubtitle(List<Paragraph> paragraphs, Subtitle original, VideoPlayerContainer videoPlayerContainer)
         {
-            int index = 0;
             if (videoPlayerContainer.VideoPlayer != null)
             {
                 double positionInMilliseconds = (videoPlayerContainer.VideoPlayer.CurrentPosition * 1000.0) + 15;
@@ -283,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
-                        var op = Utilities.GetOriginalParagraph(index, p, original.Paragraphs);
+                        var op = Utilities.GetOriginalParagraph(0, p, original.Paragraphs);
 
                         string text = p.Text.Replace("|", Environment.NewLine);
                         if (op != null)

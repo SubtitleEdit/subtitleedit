@@ -555,7 +555,7 @@ namespace Nikse.SubtitleEdit.Logic
             double b;
 
             double r4 = range / 4.0;
-            double u = 255;
+            const double u = 255;
 
             if (x < r4)
             {

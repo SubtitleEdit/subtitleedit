@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Forms
             _matchList = new List<VobSubOcr.CompareMatch>();
             _vobSubOcr = vobSubOcr;
 
-            int minLineHeight = 6;
+            const int minLineHeight = 6;
             _imageList = NikseBitmapImageSplitter.SplitBitmapToLettersNew(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom, minLineHeight);
             // _imageList = NikseBitmapImageSplitter.SplitBitmapToLetters(nbmp, pixelsIsSpace, rightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
 

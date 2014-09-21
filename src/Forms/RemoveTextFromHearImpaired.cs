@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
-                string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
+                const string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
                 float fontSize = comboBoxCustomStart.Font.Size;
                 comboBoxCustomStart.Font = new Font(unicodeFontName, fontSize);
                 comboBoxCustomEnd.Font = new Font(unicodeFontName, fontSize);

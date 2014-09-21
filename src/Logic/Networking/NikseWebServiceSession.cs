@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         {
             string message = string.Empty;
             int retries = 0;
-            int maxRetries = 10;
+            const int maxRetries = 10;
             while (retries < maxRetries)
             {
                 try
@@ -339,7 +339,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
         {
             string message = string.Empty;
             int retries = 0;
-            int maxRetries = 10;
+            const int maxRetries = 10;
             while (retries < maxRetries)
             {
                 try

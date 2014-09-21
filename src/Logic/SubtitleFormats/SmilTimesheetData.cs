@@ -56,8 +56,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 "\t\t\tYour browser does not support the HTML5 &lt;video&gt; tag" + Environment.NewLine +
 "\t\t</video>" + Environment.NewLine;
 
-            string paragraphWriteFormatOpen = "\t\t<p data-begin=\"{0}\">\r\n{1}\r\n</p>";
-            string paragraphWriteFormat = "\t\t<p data-begin=\"{0}\" data-end=\"{1}\">\r\n{2}\r\n</p>";
+            const string paragraphWriteFormatOpen = "\t\t<p data-begin=\"{0}\">\r\n{1}\r\n</p>";
+            const string paragraphWriteFormat = "\t\t<p data-begin=\"{0}\" data-end=\"{1}\">\r\n{2}\r\n</p>";
             int count = 1;
             var sb = new StringBuilder();
             sb.AppendLine(header.Replace("_TITLE_", title));

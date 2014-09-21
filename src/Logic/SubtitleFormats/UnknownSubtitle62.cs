@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string format = "{0}:  {1}  {2}   [{3}]";
+            const string format = "{0}:  {1}  {2}   [{3}]";
             var sb = new StringBuilder();
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)

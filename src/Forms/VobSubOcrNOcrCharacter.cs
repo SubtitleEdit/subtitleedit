@@ -572,7 +572,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static void GenerateLineSegments(int numberOfLines, bool veryPrecise, NOcrChar nOcrChar, NikseBitmap nbmp)
         {
-            int giveUpCount = 10000;
+            const int giveUpCount = 10000;
             var r = new Random();
             int count = 0;
             int hits = 0;

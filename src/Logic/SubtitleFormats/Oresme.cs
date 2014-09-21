@@ -43,11 +43,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            string format = "{0}{1}{2}";
+            const string format = "{0}{1}{2}";
             sb.AppendLine("00:00:00:00{BC}{W2710}");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string tags = "{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}";
+                const string tags = "{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}";
                 string text = Utilities.RemoveHtmlTags(p.Text, true);
                 text = text.Replace(Environment.NewLine, "{N}");
                 sb.AppendLine(string.Format(format, EncodeTimeCode(p.StartTime), tags, text));

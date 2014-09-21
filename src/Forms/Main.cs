@@ -7174,15 +7174,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.SelectionLength == 0)
                 {
-                    string tag = "i";
-                    if (textBoxListViewText.Text.Contains("<" + tag + ">"))
+                    if (textBoxListViewText.Text.Contains("<i>"))
                     {
-                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("<" + tag + ">", string.Empty);
-                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("</" + tag + ">", string.Empty);
+                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("<i>", string.Empty);
+                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("</i>", string.Empty);
                     }
                     else
                     {
-                        textBoxListViewText.Text = string.Format("<{0}>{1}</{0}>", tag, textBoxListViewText.Text);
+                        textBoxListViewText.Text = string.Format("<{i}>{0}</i>", textBoxListViewText.Text);
                     }
                 }
                 else
@@ -9746,7 +9745,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string text = string.Empty;
             bool ascii = false;
-            int color = 0;
+            const int color = 0;
             bool toggle = false;
             for (int c = offset, i = 0; c < _buffer.Length; c++, i++)
             {
@@ -11737,7 +11736,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ReverseParethesis(string s)
         {
-            string k = "@__<<>___@";
+            const string k = "@__<<>___@";
 
             s = s.Replace("(", k);
             s = s.Replace(")", "(");
@@ -13510,7 +13509,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // List view
                 SubtitleListview1.InitializeTimeStampColumWidths(this);
-                int adjustUp = 8;
+                const int adjustUp = 8;
                 SubtitleListview1.Height = SubtitleListview1.Height - adjustUp;
                 groupBoxEdit.Top = groupBoxEdit.Top - adjustUp;
                 groupBoxEdit.Height = groupBoxEdit.Height + adjustUp;
@@ -17138,15 +17137,14 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewTextAlternate.SelectionLength == 0)
                 {
-                    string tag = "i";
-                    if (textBoxListViewTextAlternate.Text.Contains("<" + tag + ">"))
+                    if (textBoxListViewTextAlternate.Text.Contains("<i>"))
                     {
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("<" + tag + ">", string.Empty);
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("</" + tag + ">", string.Empty);
+                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("<i>", string.Empty);
+                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("</i>", string.Empty);
                     }
                     else
                     {
-                        textBoxListViewTextAlternate.Text = string.Format("<{0}>{1}</{0}>", tag, textBoxListViewTextAlternate.Text);
+                        textBoxListViewTextAlternate.Text = string.Format("<i>{0}</i>", textBoxListViewTextAlternate.Text);
                     }
                 }
                 else

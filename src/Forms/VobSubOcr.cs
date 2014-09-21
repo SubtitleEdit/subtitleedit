@@ -2999,7 +2999,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             int numberOfForegroundColors = bob.NumberOfColoredPixels;
-            int minForeColorMatch = 90;
+            const int minForeColorMatch = 90;
 
             index = 0;
             foreach (var compareItem in binOcrDb.CompareImages)
@@ -3294,7 +3294,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static void FindBestMatch(ref int index, ref int smallestDifference, ref int smallestIndex, NikseBitmap target, List<CompareItem> compareBitmaps)
         {
             int numberOfForegroundColors = CalculateNumberOfForegroundColors(target);
-            int minForeColorMatch = 90;
+            const int minForeColorMatch = 90;
 
             index = 0;
             foreach (CompareItem compareItem in compareBitmaps)
@@ -5726,7 +5726,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_ocrFixEngine == null)
                 comboBoxDictionaries_SelectedIndexChanged(null, null);
 
-            int badWords = 0;
+            const int badWords = 0;
             string textWithOutFixes;
             if (_tesseractAsyncStrings != null && !string.IsNullOrEmpty(_tesseractAsyncStrings[index]))
             {
@@ -7364,7 +7364,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VobSubOcr_Resize(object sender, EventArgs e)
         {
-            int originalTopHeight = 105;
+            const int originalTopHeight = 105;
 
             int adjustPercent = (int)(Height * 0.15);
             groupBoxSubtitleImage.Height = originalTopHeight + adjustPercent;
@@ -7643,15 +7643,14 @@ namespace Nikse.SubtitleEdit.Forms
                 TextBox tb = textBoxCurrentText;
                 string text = tb.SelectedText;
                 int selectionStart = tb.SelectionStart;
-                string tag = "i";
-                if (text.Contains("<" + tag + ">"))
+                if (text.Contains("<o>"))
                 {
-                    text = text.Replace("<" + tag + ">", string.Empty);
-                    text = text.Replace("</" + tag + ">", string.Empty);
+                    text = text.Replace("<i>", string.Empty);
+                    text = text.Replace("</i>", string.Empty);
                 }
                 else
                 {
-                    text = string.Format("<{0}>{1}</{0}>", tag, text);
+                    text = string.Format("<i>{0}</{1}>", text);
                 }
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;

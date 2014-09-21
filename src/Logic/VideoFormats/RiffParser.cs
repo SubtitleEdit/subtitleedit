@@ -39,9 +39,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public const int DWORDSIZE = 4;
         public const int TWODWORDSSIZE = 8;
-        public static readonly string RIFF4CC = "RIFF";
-        public static readonly string RIFX4CC = "RIFX";
-        public static readonly string LIST4CC = "LIST";
+        public const string RIFF4CC = "RIFF";
+        public const string RIFX4CC = "RIFX";
+        public const string LIST4CC = "LIST";
 
         // Known file types
         public static readonly int ckidAVI = ToFourCC("AVI ");

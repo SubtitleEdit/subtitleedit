@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelInfo.Text = "VLC";
             if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
             {
-                string FFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
+                const string FFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.

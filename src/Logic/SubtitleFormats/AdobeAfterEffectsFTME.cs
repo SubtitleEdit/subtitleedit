@@ -32,14 +32,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = @"<xml>  <general>    <version>1</version>  </general>  <layers>    <layer name='myLayer' index='1'>
+            string xmlStructure = @"
+<xml>
+  <general>
+    <version>1</version>
+  </general>
+  <layers>
+    <layer name='myLayer' index='1'>
     </layer>
   </layers>
 </xml>".Replace("'", "\"");
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
-            string innerXml = "<comment value=\"\"/><time value=\"{0}\"/><duration value=\"{1}\"/>";
+            const string innerXml = "<comment value=\"\"/><time value=\"{0}\"/><duration value=\"{1}\"/>";
             XmlNode root = xml.DocumentElement.SelectSingleNode("layers/layer");
             foreach (Paragraph p in subtitle.Paragraphs)
             {

@@ -518,10 +518,8 @@ namespace Nikse.SubtitleEdit.Controls
                 // scene changes
                 if (_sceneChanges != null)
                 {
-                    int startIndex = 0;
-                    for (int i = startIndex; i < _sceneChanges.Count; i++)
+                    foreach (var d in _sceneChanges)
                     {
-                        var d = _sceneChanges[i];
                         if (d > StartPositionSeconds && d < StartPositionSeconds + 20)
                         {
                             int pos = SecondsToXPosition(d) - begin;

@@ -542,7 +542,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Utilities.IsRunningOnMono() && Environment.OSVersion.Version.Major < 6) // 6 == Vista/Win2008Server/Win7
             {
                 float fontSize = comboBoxToolsMusicSymbol.Font.Size;
-                string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
+                const string unicodeFontName = Utilities.WinXP2KUnicodeFontName;
                 listBoxNamesEtc.Font = new Font(unicodeFontName, fontSize);
                 listBoxUserWordLists.Font = new Font(unicodeFontName, fontSize);
                 listBoxOcrFixList.Font = new Font(unicodeFontName, fontSize);
@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Forms
                 float top = 2;
                 top = bmp.Height - measuredHeight - ((int)10);
 
-                int leftMargin = 0;
+                const int leftMargin = 0;
                 int pathPointsStart = -1;
 
                 if (checkBoxSsaOpaqueBox.Checked)

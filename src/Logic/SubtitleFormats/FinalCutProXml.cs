@@ -398,7 +398,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("sequence/media/video/track");
 
-            string newLine = "_____@___";
+            const string newLine = "_____@___";
             int number = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {

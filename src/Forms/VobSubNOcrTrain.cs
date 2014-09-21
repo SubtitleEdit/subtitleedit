@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _subtitleFontName = "Verdana";
         private float _subtitleFontSize = 25.0f;
         private Color _borderColor = Color.Black;
-        private float _borderWidth = 2.0f;
+        private const float _borderWidth = 2.0f;
 
         public VobSubNOcrTrain()
         {
@@ -153,8 +153,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap GenerateImageFromTextWithStyle(string text, bool bold)
         {
             bool subtitleFontBold = bold;
-            bool subtitleAlignLeft = true;
-            bool subtitleAlignRight = false;
+            const bool subtitleAlignLeft = true;
+            const bool subtitleAlignRight = false;
 
             text = Utilities.RemoveHtmlTags(text);
 

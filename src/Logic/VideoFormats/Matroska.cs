@@ -1180,7 +1180,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         {
             bool done = false;
             long clusterTimeCode = 0;
-            long duration = 0;
+            const long duration = 0;
 
             while (_f.Position < _f.Length && done == false)
             {
