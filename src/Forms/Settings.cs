@@ -2092,14 +2092,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string key = textBoxOcrFixKey.Text.Trim();
             string value = textBoxOcrFixValue.Text.Trim();
-            if (key.Length == 0 || value.Length == 0 || key == value)
+            if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
                 return;
-            try
-            {
-                int.Parse(key);
-                return;
-            }
-            catch { }
+
             Dictionary<string, string> dictionary = _ocrFixWords;
             string elementName = "Word";
             string parentName = "WholeWords";
