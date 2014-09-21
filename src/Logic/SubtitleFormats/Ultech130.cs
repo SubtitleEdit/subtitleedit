@@ -63,8 +63,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string text = Utilities.RemoveHtmlTags(p.Text);
                     if (italic)
                     {
-                    sb.Append(Convert.ToChar(0x11));
-                    sb.Append(Convert.ToChar(0x2E));
+                        sb.Append(Convert.ToChar(0x11));
+                        sb.Append(Convert.ToChar(0x2E));
                     }
                     int y = 0x74 - (numberOfNewLines * 0x20);
                     for (int j = 0; j < text.Length; j++)
@@ -76,22 +76,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 sb.Append(line);
                             line = new StringBuilder();
                             skipCount = Environment.NewLine.Length - 1;
-                        sb.Append(Convert.ToChar(0x14));
-                        sb.Append(Convert.ToChar((byte)(y)));
+                            sb.Append(Convert.ToChar(0x14));
+                            sb.Append(Convert.ToChar((byte)(y)));
 
                             //center
-                        sb.Append(Convert.ToChar(0x17));
-                        sb.Append(Convert.ToChar(0x21));
+                            sb.Append(Convert.ToChar(0x17));
+                            sb.Append(Convert.ToChar(0x21));
 
                             if (italic)
                             {
-                            sb.Append(Convert.ToChar(0x11));
-                            sb.Append(Convert.ToChar(0x2E));
+                                sb.Append(Convert.ToChar(0x11));
+                                sb.Append(Convert.ToChar(0x2E));
                             }
                         }
                         else if (skipCount == 0)
                         {
-                        line.Append(text[j]);
+                            line.Append(text[j]);
                         }
                         else
                         {

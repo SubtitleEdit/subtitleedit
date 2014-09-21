@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode video = xml.CreateElement("video");
-                video.InnerXml = xmlClipStructure.Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture)).Replace("[TITLEID]", Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine," ").Replace("  ", " "), true));
+                video.InnerXml = xmlClipStructure.Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture)).Replace("[TITLEID]", Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "), true));
 
                 XmlNode generatorNode = video.SelectSingleNode("title");
                 generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
-                xml.LoadXml(x.Trim());               
+                xml.LoadXml(x.Trim());
 
                 if (subtitle.Paragraphs.Count == 0)
                 {

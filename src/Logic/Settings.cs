@@ -1789,7 +1789,7 @@ namespace Nikse.SubtitleEdit.Logic
                     settings.SubtitleSettings.FcpFontName = subNode.InnerText;
                 subNode = node.SelectSingleNode("CheetahCaptionLessThan5SecondsNoEndTime");
                 if (subNode != null)
-                    settings.SubtitleSettings.CheetahCaptionLessThan5SecondsNoEndTime = Convert.ToBoolean(subNode.InnerText);                
+                    settings.SubtitleSettings.CheetahCaptionLessThan5SecondsNoEndTime = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("NuendoCharacterListFile");
                 if (subNode != null)
                     settings.SubtitleSettings.NuendoCharacterListFile = subNode.InnerText;
