@@ -56,7 +56,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            Paragraph p = null;
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
@@ -64,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int splitter = line.IndexOf(':') + 3;
                     string text = line.Remove(0, splitter);
-                    p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
+                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim('–', '.', ';', ':').Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))

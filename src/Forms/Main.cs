@@ -730,7 +730,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (File.Exists(fileName))
                     {
-                        Encoding encoding;
                         var sub = new Subtitle();
                         SubtitleFormat format = null;
                         bool done = false;
@@ -799,6 +798,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var fi = new FileInfo(fileName);
                         if (fi.Length < 10 * 1024 * 1024 && !done) // max 10 mb
                         {
+                            Encoding encoding;
                             format = sub.LoadSubtitle(fileName, out encoding, null, true);
 
                             if (format == null || format.GetType() == typeof(Ebu))
@@ -5275,7 +5275,6 @@ namespace Nikse.SubtitleEdit.Forms
                         if (File.Exists(fileName))
                         {
                             var subtitleToAppend = new Subtitle();
-                            Encoding encoding;
                             SubtitleFormat format = null;
 
                             // do not allow blu-ray/vobsub
@@ -5290,6 +5289,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
+                                Encoding encoding;
                                 format = subtitleToAppend.LoadSubtitle(fileName, out encoding, null);
                                 if (GetCurrentSubtitleFormat().IsFrameBased)
                                     subtitleToAppend.CalculateTimeCodesFromFrameNumbers(CurrentFrameRate);
@@ -7737,11 +7737,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (newParagraph.Text.StartsWith("<i> "))
                     newParagraph.Text = newParagraph.Text.Remove(3, 1);
 
-                double startFactor = 0;
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
                 if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
                 {
-                    startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                    var startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
                     if (startFactor < 0.25)
                         startFactor = 0.25;
                     if (startFactor > 0.75)
@@ -9084,7 +9083,6 @@ namespace Nikse.SubtitleEdit.Forms
             bool isValid;
             bool isSsa = false;
             var matroska = new Matroska();
-            SubtitleFormat format;
 
             if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
@@ -9098,6 +9096,7 @@ namespace Nikse.SubtitleEdit.Forms
             List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
             if (isValid)
             {
+                SubtitleFormat format;
                 if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
                     if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
@@ -9135,7 +9134,6 @@ namespace Nikse.SubtitleEdit.Forms
             bool isValid;
             bool isSsa = false;
             var matroska = new Matroska();
-            SubtitleFormat format;
 
             if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
@@ -9165,6 +9163,7 @@ namespace Nikse.SubtitleEdit.Forms
                     ResetSubtitle();
                 _subtitle.Paragraphs.Clear();
 
+                SubtitleFormat format;
                 if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
                     if (matroskaSubtitleInfo.CodecPrivate.Contains("[V4 Styles]", StringComparison.OrdinalIgnoreCase))
@@ -12705,7 +12704,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (openFileDialog1.ShowDialog() == DialogResult.OK && File.Exists(openFileDialog1.FileName))
             {
                 Subtitle sub = new Subtitle();
-                Encoding enc;
                 string fileName = openFileDialog1.FileName;
 
                 //TODO: Check for mkv etc
@@ -12821,6 +12819,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sub.Renumber(1);
                 if (sub.Paragraphs.Count == 0)
                 {
+                    Encoding enc;
                     SubtitleFormat f = sub.LoadSubtitle(fileName, out enc, null);
                     if (f == null)
                     {

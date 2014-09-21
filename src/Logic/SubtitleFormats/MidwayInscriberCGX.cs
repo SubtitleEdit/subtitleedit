@@ -63,7 +63,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //Var vi bedre end japanerne
             //eller bare mere heldige? <12:03:29:03> <12:03:35:06>
 
-            Paragraph p = null;
             subtitle.Paragraphs.Clear();
             sb = new StringBuilder();
             foreach (string line in lines)
@@ -83,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string[] endParts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), sb.ToString().Trim());
+                            var p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), sb.ToString().Trim());
                             subtitle.Paragraphs.Add(p);
                         }
                         sb = new StringBuilder();

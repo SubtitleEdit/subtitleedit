@@ -92,13 +92,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
 
                         // seek to text
-                        int length = 0;
                         var sb = new StringBuilder();
                         while (i < buffer.Length - 10 && !(buffer[i] == 0xc4 && buffer[i + 1] == 9 && buffer[i + 2] == 0 && buffer[i + 3] == 0x10))
                         {
                             if (buffer[i] == 9 && buffer[i + 1] == 0 && buffer[i + 2] == 0x44)
                             {
-                                length = buffer[i - 1];
+                                var length = buffer[i - 1];
                                 i += 12;
                                 for (int j = i; j < i + (length * 4); j += 4)
                                 {

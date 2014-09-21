@@ -113,17 +113,16 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         private static byte[] EncodeImage(NikseBitmap bm, Dictionary<Color, int> palette)
         {
             var bytes = new List<Byte>();
-            byte color = 0;
-            int ofs = 0;
-            int len = 0;
             for (int y = 0; y < bm.Height; y++)
             {
-                ofs = y * bm.Width;
+                var ofs = y * bm.Width;
                 //eol = false;
                 int x;
+                int len;
                 for (x = 0; x < bm.Width; x += len, ofs += len)
                 {
                     Color c = bm.GetPixel(x, y);
+                    byte color;
                     if (palette.ContainsKey(c))
                         color = (byte)palette[c];
                     else

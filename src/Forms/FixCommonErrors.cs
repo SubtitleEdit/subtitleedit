@@ -864,11 +864,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixShortDisplayTime;
             int noOfShortDisplayTimes = 0;
-            bool skip = false;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
-                skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
+                var skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
@@ -3462,18 +3461,17 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixMissingOpenBracket()
         {
             string fixAction = _language.FixMissingOpenBracket;
-            int fixCount = 0, openIdx, closeIdx;
-            bool hit = false;
+            int fixCount = 0;
             for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
 
                 if (AllowFix(p, fixAction))
                 {
-                    hit = false;
+                    var hit = false;
                     string oldText = p.Text;
-                    openIdx = p.Text.IndexOf('(');
-                    closeIdx = p.Text.IndexOf(')');
+                    var openIdx = p.Text.IndexOf('(');
+                    var closeIdx = p.Text.IndexOf(')');
                     if ((closeIdx > -1 && closeIdx < openIdx) || (closeIdx > -1 && openIdx == -1))
                     {
                         p.Text = FixMissingOpenBracket(p.Text, "(");
@@ -4829,13 +4827,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var p = (Paragraph)listViewFixes.SelectedItems[0].Tag;
 
-                int index = -1;
                 foreach (ListViewItem lvi in subtitleListView1.Items)
                 {
                     Paragraph p2 = lvi.Tag as Paragraph;
                     if (p.ID == p2.ID)
                     {
-                        index = lvi.Index;
+                        var index = lvi.Index;
                         if (index - 1 > 0)
                             subtitleListView1.EnsureVisible(index - 1);
                         if (index + 1 < subtitleListView1.Items.Count)

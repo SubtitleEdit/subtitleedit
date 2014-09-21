@@ -93,7 +93,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            Paragraph p;
             foreach (string line in lines)
             {
                 Match m = CsvLine.Match(line);
@@ -106,7 +105,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             var start = DecodeTimeCode(parts[0]);
                             var end = DecodeTimeCode(parts[1]);
                             string text = ReadText(line.Remove(0, m.Length));
-                            p = new Paragraph(start, end, text);
+                            var p = new Paragraph(start, end, text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch

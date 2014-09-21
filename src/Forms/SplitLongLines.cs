@@ -162,11 +162,10 @@ namespace Nikse.SubtitleEdit.Forms
             numberOfSplits = 0;
             string language = Utilities.AutoDetectGoogleLanguage(subtitle);
             Subtitle splittedSubtitle = new Subtitle();
-            Paragraph p = null;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;
-                p = subtitle.GetParagraphOrDefault(i);
+                var p = subtitle.GetParagraphOrDefault(i);
                 if (p != null && p.Text != null)
                 {
                     string oldText = Utilities.RemoveHtmlTags(p.Text);
@@ -213,11 +212,10 @@ namespace Nikse.SubtitleEdit.Forms
                                     Paragraph newParagraph2 = new Paragraph(p);
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
-                                    double startFactor = 0;
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
                                     if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
                                     {
-                                        startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                                        var startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
                                         if (startFactor < 0.25)
                                             startFactor = 0.25;
                                         if (startFactor > 0.75)

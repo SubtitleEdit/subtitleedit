@@ -440,10 +440,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         public static string GetFormattedText(string text)
         {
             text = text.Replace("\\N", Environment.NewLine).Replace("\\n", Environment.NewLine);
-            bool italic = false;
 
             for (int i = 0; i < 10; i++) // just look ten times...
             {
+                bool italic;
                 if (text.Contains(@"{\fn"))
                 {
                     int start = text.IndexOf(@"{\fn", StringComparison.Ordinal);
@@ -923,12 +923,10 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
         private static string RemoveTag(string s, string tag)
         {
             int indexOfTag = s.IndexOf(@"\" + tag, StringComparison.Ordinal);
-            int endIndex1 = int.MaxValue;
-            int endIndex2 = int.MaxValue;
             if (indexOfTag > 0)
             {
-                endIndex1 = s.IndexOf('\\', indexOfTag + 1);
-                endIndex2 = s.IndexOf('}', indexOfTag + 1);
+                var endIndex1 = s.IndexOf('\\', indexOfTag + 1);
+                var endIndex2 = s.IndexOf('}', indexOfTag + 1);
                 endIndex1 = Math.Min(endIndex1, endIndex2);
                 if (endIndex1 > 0)
                     s = s.Remove(indexOfTag, endIndex1 - indexOfTag);

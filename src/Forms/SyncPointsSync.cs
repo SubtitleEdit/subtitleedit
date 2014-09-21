@@ -309,10 +309,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            int startIndex = -1;
             int endIndex = -1;
             int minIndex = 0;
-            int maxIndex;
             List<int> syncIndices = new List<int>();
             foreach (KeyValuePair<int, TimeSpan> kvp in _syncronizationPoints)
                 syncIndices.Add(kvp.Key);
@@ -324,9 +322,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    startIndex = endIndex;
+                    var startIndex = endIndex;
                     endIndex = syncIndices[i];
 
+                    int maxIndex;
                     if (i == syncIndices.Count - 1)
                         maxIndex = _subtitle.Paragraphs.Count;
                     else

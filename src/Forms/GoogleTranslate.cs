@@ -633,11 +633,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private string PreTranslate(string s)
         {
-            Regex reg;
-
             if ((comboBoxFrom.SelectedItem as ComboBoxItem).Value == "en")
             {
-                reg = new Regex("\\bI'm ");
+                var reg = new Regex("\\bI'm ");
                 s = reg.Replace(s, "I am ");
 
                 reg = new Regex("\\bI've ");

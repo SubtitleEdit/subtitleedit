@@ -49,7 +49,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
-            Paragraph p = null;
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -64,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             int minutes = int.Parse(arr[1]);
                             int seconds = int.Parse(arr[2]);
                             int frames = int.Parse(arr[3]);
-                            p = new Paragraph();
+                            var p = new Paragraph();
                             p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
                             p.Text = s.Remove(0, 10).Trim();
                             subtitle.Paragraphs.Add(p);

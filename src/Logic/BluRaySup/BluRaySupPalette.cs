@@ -195,14 +195,13 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             cb = new byte[size];
             cr = new byte[size];
 
-            int[] yCbCr;
             for (int i = 0; i < size; i++)
             {
                 a[i] = alpha[i];
                 r[i] = red[i];
                 g[i] = green[i];
                 b[i] = blue[i];
-                yCbCr = Rgb2YCbCr(r[i] & 0xff, g[i] & 0xff, b[i] & 0xff, useBT601);
+                var yCbCr = Rgb2YCbCr(r[i] & 0xff, g[i] & 0xff, b[i] & 0xff, useBT601);
                 y[i] = (byte)yCbCr[0];
                 cb[i] = (byte)yCbCr[1];
                 cr[i] = (byte)yCbCr[2];

@@ -553,11 +553,11 @@ namespace Nikse.SubtitleEdit.Forms
                 try
                 {
                     SubtitleFormat format = null;
-                    Encoding encoding;
                     var sub = new Subtitle();
                     var fi = new FileInfo(fileName);
                     if (fi.Length < 1024 * 1024) // max 1 mb
                     {
+                        Encoding encoding;
                         format = sub.LoadSubtitle(fileName, out encoding, null);
 
                         if (format == null)
