@@ -1923,7 +1923,7 @@
             this.labelSpectrogramAppearance.Name = "labelSpectrogramAppearance";
             this.labelSpectrogramAppearance.Size = new System.Drawing.Size(164, 13);
             this.labelSpectrogramAppearance.TabIndex = 1;
-            this.labelSpectrogramAppearance.Text = "Appearence (at generation time)";
+            this.labelSpectrogramAppearance.Text = "Appearance (at generation time)";
             // 
             // comboBoxSpectrogramAppearance
             // 
@@ -2001,7 +2001,7 @@
             this.groupBoxWaveFormAppearence.Size = new System.Drawing.Size(813, 203);
             this.groupBoxWaveFormAppearence.TabIndex = 0;
             this.groupBoxWaveFormAppearence.TabStop = false;
-            this.groupBoxWaveFormAppearence.Text = "Wave form appearence";
+            this.groupBoxWaveFormAppearence.Text = "Wave form appearance";
             // 
             // checkBoxListViewMouseEnterFocus
             // 

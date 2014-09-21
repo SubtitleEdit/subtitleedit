@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "Youtube sbv"; }
+            get { return "YouTube sbv"; }
         }
 
         public override bool IsTimeBased
