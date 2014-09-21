@@ -4360,9 +4360,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = p.Text.Insert(idx, mark.ToString());
                     if (p.Text.Contains("¡¿") && p.Text.Contains("!?"))
-                        p.Text.Replace("!?", "?!");
+                        p.Text = p.Text.Replace("!?", "?!");
                     if (p.Text.Contains("¿¡") && p.Text.Contains("?!"))
-                        p.Text.Replace("?!", "!?");
+                        p.Text = p.Text.Replace("?!", "!?");
                 }
             }
         }
