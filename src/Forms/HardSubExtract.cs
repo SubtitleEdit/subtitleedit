@@ -237,27 +237,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
+            var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".bmp");
             try
             {
-                var fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".bmp");
                 _libVlc.TakeSnapshot(fileName, (uint)_videoInfo.Width, (uint)_videoInfo.Height);
                 System.Threading.Thread.Sleep(100);
-                if (File.Exists(fileName))
-                {
-                    Bitmap bmp = null;
-                    using (var ms = new MemoryStream(File.ReadAllBytes(fileName)))
-                    {
-                        ms.Position = 0;
-                        bmp = ((Bitmap)Bitmap.FromStream(ms)); // avoid locking file
-                    }
-                    pictureBox2.Image = bmp;
-                    System.Threading.Thread.Sleep(50);
-                    File.Delete(fileName);
-                }
-
+                pictureBox2.Image = Image.FromFile(fileName);
+                System.Threading.Thread.Sleep(50);
+            }
+            catch (FileNotFoundException)
+            {
+                // the screenshot was not taken
             }
             catch
             {
+                // TODO: Avoid catching all exceptions.
+            }
+            finally
+            {
+                // whatever happens delete the screenshot if it exists
+                File.Delete(fileName);
             }
         }
 
