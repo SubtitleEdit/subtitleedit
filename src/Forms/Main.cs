@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _isVideoControlsUnDocked = false;
         private VideoPlayerUnDocked _videoPlayerUnDocked = null;
-        private WaveformUnDocked _waveFormUnDocked = null;
+        private WaveformUnDocked _waveformUnDocked = null;
         private VideoControlsUndocked _videoControlsUnDocked = null;
 
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate = null;
@@ -3157,8 +3157,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
                 _videoPlayerUnDocked.Text = string.Format(Configuration.Settings.Language.General.VideoWindowTitle, title);
 
-            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
-                _waveFormUnDocked.Text = string.Format(Configuration.Settings.Language.General.AudioWindowTitle, title);
+            if (_waveformUnDocked != null && !_waveformUnDocked.IsDisposed)
+                _waveformUnDocked.Text = string.Format(Configuration.Settings.Language.General.AudioWindowTitle, title);
         }
 
         private void ImportAndOcrBdnXml(string fileName, BdnXml bdnXml, List<string> list)
@@ -8623,8 +8623,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
                 Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left + @";" + _videoPlayerUnDocked.Top + @";" + _videoPlayerUnDocked.Width + @";" + _videoPlayerUnDocked.Height;
-            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedWaveformPosition = _waveFormUnDocked.Left + @";" + _waveFormUnDocked.Top + @";" + _waveFormUnDocked.Width + @";" + _waveFormUnDocked.Height;
+            if (_waveformUnDocked != null && !_waveformUnDocked.IsDisposed)
+                Configuration.Settings.General.UndockedWaveformPosition = _waveformUnDocked.Left + @";" + _waveformUnDocked.Top + @";" + _waveformUnDocked.Width + @";" + _waveformUnDocked.Height;
             if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
                 Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left + @";" + _videoControlsUnDocked.Top + @";" + _videoControlsUnDocked.Width + @";" + _videoControlsUnDocked.Height;
         }
@@ -10636,7 +10636,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                bool waveFormEnabled = timerWaveform.Enabled;
+                bool waveformEnabled = timerWaveform.Enabled;
                 timerWaveform.Stop();
                 timer1.Stop();
 
@@ -10650,7 +10650,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeShowSelectedLinesEarlierLater);
                 _showEarlierOrLater.Show(this);
 
-                timerWaveform.Enabled = waveFormEnabled;
+                timerWaveform.Enabled = waveformEnabled;
                 timer1.Start();
 
                 RefreshSelectedParagraph();
@@ -13444,14 +13444,14 @@ namespace Nikse.SubtitleEdit.Forms
                     _videoPlayerUnDocked.WindowState = FormWindowState.Normal;
             }
 
-            if (_waveFormUnDocked == null || _waveFormUnDocked.IsDisposed)
+            if (_waveformUnDocked == null || _waveformUnDocked.IsDisposed)
                 UnDockWaveform();
-            _waveFormUnDocked.Visible = false;
+            _waveformUnDocked.Visible = false;
             if (toolStripButtonToggleWaveform.Checked)
             {
-                _waveFormUnDocked.Show(this);
-                if (_waveFormUnDocked.WindowState == FormWindowState.Minimized)
-                    _waveFormUnDocked.WindowState = FormWindowState.Normal;
+                _waveformUnDocked.Show(this);
+                if (_waveformUnDocked.WindowState == FormWindowState.Minimized)
+                    _waveformUnDocked.WindowState = FormWindowState.Normal;
             }
 
             if (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked)
@@ -16720,39 +16720,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockWaveform()
         {
-            _waveFormUnDocked = new WaveformUnDocked(this, _formPositionsAndSizes);
-            _formPositionsAndSizes.SetPositionAndSize(_waveFormUnDocked);
+            _waveformUnDocked = new WaveformUnDocked(this, _formPositionsAndSizes);
+            _formPositionsAndSizes.SetPositionAndSize(_waveformUnDocked);
 
             var control = audioVisualizer;
             groupBoxVideo.Controls.Remove(control);
             control.Top = 0;
             control.Left = 0;
-            control.Width = _waveFormUnDocked.PanelContainer.Width;
-            control.Height = _waveFormUnDocked.PanelContainer.Height - panelWaveformControls.Height;
-            _waveFormUnDocked.PanelContainer.Controls.Add(control);
+            control.Width = _waveformUnDocked.PanelContainer.Width;
+            control.Height = _waveformUnDocked.PanelContainer.Height - panelWaveformControls.Height;
+            _waveformUnDocked.PanelContainer.Controls.Add(control);
 
             var control2 = (Control)panelWaveformControls;
             groupBoxVideo.Controls.Remove(control2);
             control2.Top = control.Height;
             control2.Left = 0;
-            _waveFormUnDocked.PanelContainer.Controls.Add(control2);
+            _waveformUnDocked.PanelContainer.Controls.Add(control2);
 
             var control3 = (Control)trackBarWaveformPosition;
             groupBoxVideo.Controls.Remove(control3);
             control3.Top = control.Height;
             control3.Left = control2.Width + 2;
-            control3.Width = _waveFormUnDocked.PanelContainer.Width - control3.Left;
-            _waveFormUnDocked.PanelContainer.Controls.Add(control3);
+            control3.Width = _waveformUnDocked.PanelContainer.Width - control3.Left;
+            _waveformUnDocked.PanelContainer.Controls.Add(control3);
         }
 
-        public void ReDockWaveform(Control waveForm, Control buttons, Control trackBar)
+        public void ReDockWaveform(Control waveform, Control buttons, Control trackBar)
         {
-            groupBoxVideo.Controls.Add(waveForm);
-            waveForm.Top = 30;
-            waveForm.Height = groupBoxVideo.Height - (waveForm.Top + buttons.Height + 10);
+            groupBoxVideo.Controls.Add(waveform);
+            waveform.Top = 30;
+            waveform.Height = groupBoxVideo.Height - (waveform.Top + buttons.Height + 10);
 
             groupBoxVideo.Controls.Add(buttons);
-            buttons.Top = waveForm.Top + waveForm.Height + 5;
+            buttons.Top = waveform.Top + waveform.Height + 5;
 
             groupBoxVideo.Controls.Add(trackBar);
             trackBar.Top = buttons.Top;
@@ -16813,14 +16813,14 @@ namespace Nikse.SubtitleEdit.Forms
             UnDockWaveform();
             if (toolStripButtonToggleWaveform.Checked)
             {
-                _waveFormUnDocked.Show(this);
-                if (_waveFormUnDocked.Top < -999 || _waveFormUnDocked.Left < -999)
+                _waveformUnDocked.Show(this);
+                if (_waveformUnDocked.Top < -999 || _waveformUnDocked.Left < -999)
                 {
-                    _waveFormUnDocked.WindowState = FormWindowState.Minimized;
-                    _waveFormUnDocked.Top = Top + 60;
-                    _waveFormUnDocked.Left = Math.Abs(Left - 15);
-                    _waveFormUnDocked.Width = 600;
-                    _waveFormUnDocked.Height = 200;
+                    _waveformUnDocked.WindowState = FormWindowState.Minimized;
+                    _waveformUnDocked.Top = Top + 60;
+                    _waveformUnDocked.Left = Math.Abs(Left - 15);
+                    _waveformUnDocked.Width = 600;
+                    _waveformUnDocked.Height = 200;
                 }
             }
 
@@ -16865,15 +16865,15 @@ namespace Nikse.SubtitleEdit.Forms
                 _videoControlsUnDocked = null;
             }
 
-            if (_waveFormUnDocked != null && !_waveFormUnDocked.IsDisposed)
+            if (_waveformUnDocked != null && !_waveformUnDocked.IsDisposed)
             {
-                var controlWaveform = _waveFormUnDocked.PanelContainer.Controls[0];
-                var controlButtons = _waveFormUnDocked.PanelContainer.Controls[1];
-                var controlTrackBar = _waveFormUnDocked.PanelContainer.Controls[2];
-                _waveFormUnDocked.PanelContainer.Controls.Clear();
+                var controlWaveform = _waveformUnDocked.PanelContainer.Controls[0];
+                var controlButtons = _waveformUnDocked.PanelContainer.Controls[1];
+                var controlTrackBar = _waveformUnDocked.PanelContainer.Controls[2];
+                _waveformUnDocked.PanelContainer.Controls.Clear();
                 ReDockWaveform(controlWaveform, controlButtons, controlTrackBar);
-                _waveFormUnDocked.Close();
-                _waveFormUnDocked = null;
+                _waveformUnDocked.Close();
+                _waveformUnDocked = null;
             }
 
             if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
@@ -16888,7 +16888,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             _isVideoControlsUnDocked = false;
             _videoPlayerUnDocked = null;
-            _waveFormUnDocked = null;
+            _waveformUnDocked = null;
             _videoControlsUnDocked = null;
             ShowVideoPlayer();
 

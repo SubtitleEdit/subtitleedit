@@ -872,14 +872,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
         {
-            string waveFormsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string waveformsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
             string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
             long bytes = 0;
             int count = 0;
 
-            if (Directory.Exists(waveFormsFolder))
+            if (Directory.Exists(waveformsFolder))
             {
-                DirectoryInfo di = new DirectoryInfo(waveFormsFolder);
+                DirectoryInfo di = new DirectoryInfo(waveformsFolder);
 
                 // waveform data
                 bytes = 0;
@@ -2405,10 +2405,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonWaveformsFolderEmpty_Click(object sender, EventArgs e)
         {
-            string waveFormsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
-            if (Directory.Exists(waveFormsFolder))
+            string waveformsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            if (Directory.Exists(waveformsFolder))
             {
-                var di = new DirectoryInfo(waveFormsFolder);
+                var di = new DirectoryInfo(waveformsFolder);
 
                 foreach (FileInfo fileName in di.GetFiles("*.wav"))
                 {
