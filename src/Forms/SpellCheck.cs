@@ -755,8 +755,8 @@ namespace Nikse.SubtitleEdit.Forms
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
-                            else if (AutoFixNames && _currentWord.Length > 1 && suggestions.Contains(_currentWord.ToUpper()))
-                            {
+                            else if (AutoFixNames && _currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpper()))
+                            { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
                                 ChangeWord = _currentWord.ToUpper();
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
