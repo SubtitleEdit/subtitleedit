@@ -412,9 +412,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else
             {
-                var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveFormColor.R,
-                                                 Configuration.Settings.VideoControls.WaveFormColor.G,
-                                                 Configuration.Settings.VideoControls.WaveFormColor.B, nfft);
+                var list = SmoothColors(0, 0, 0, Configuration.Settings.VideoControls.WaveformColor.R,
+                                                 Configuration.Settings.VideoControls.WaveformColor.G,
+                                                 Configuration.Settings.VideoControls.WaveformColor.B, nfft);
                 for (int i = 0; i < nfft; i++)
                     palette[i] = list[i];
             }

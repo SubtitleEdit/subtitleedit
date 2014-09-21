@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class AddWaveForm : Form
+    public sealed partial class AddWaveform : Form
     {
         public string SourceVideoFileName { get; private set; }
         private bool _cancel = false;
@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _audioTrackNumber = -1;
         private int _delayInMilliseconds = 0;
 
-        public AddWaveForm()
+        public AddWaveform()
         {
             InitializeComponent();
             labelProgress.Text = string.Empty;
@@ -36,12 +36,12 @@ namespace Nikse.SubtitleEdit.Forms
             _audioTrackNumber = audioTrackNumber;
             if (_audioTrackNumber < 0)
                 _audioTrackNumber = 0;
-            Text = Configuration.Settings.Language.AddWaveForm.Title;
-            buttonRipWave.Text = Configuration.Settings.Language.AddWaveForm.GenerateWaveFormData;
-            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveForm.PleaseWait;
+            Text = Configuration.Settings.Language.AddWaveform.Title;
+            buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
+            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveform.PleaseWait;
             labelVideoFileName.Text = videoFile;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveForm.SourceVideoFile;
+            labelSourcevideoFile.Text = Configuration.Settings.Language.AddWaveform.SourceVideoFile;
             _spectrogramDirectory = spectrogramDirectory;
             _encodeParamters = Configuration.Settings.General.VlcWaveTranscodeSettings;
         }
@@ -74,10 +74,10 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
 
-                        if (MessageBox.Show(Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFound + Environment.NewLine +
+                        if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
                                             Environment.NewLine +
-                                            Configuration.Settings.Language.AddWaveForm.GoToVlcMediaPlayerHomePage,
-                                           Configuration.Settings.Language.AddWaveForm.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                            Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                           Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             Process.Start("http://www.videolan.org/");
                         }
@@ -125,9 +125,9 @@ namespace Nikse.SubtitleEdit.Forms
                 System.Threading.Thread.Sleep(100);
                 seconds += 0.1;
                 if (seconds < 60)
-                    labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveForm.ExtractingSeconds, seconds);
+                    labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingSeconds, seconds);
                 else
-                    labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveForm.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
+                    labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
                 this.Refresh();
                 if (_cancel)
                 {
@@ -213,17 +213,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var waveFile = new WavePeakGenerator(targetFile);
 
-            int sampleRate = Configuration.Settings.VideoControls.WaveFormMininumSampleRate; // Normally 128
+            int sampleRate = Configuration.Settings.VideoControls.WaveformMininumSampleRate; // Normally 128
             while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
 
-            labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
+            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
             this.Refresh();
             waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
-                labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingSpectrogram;
+                labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
                 this.Refresh();
                 Directory.CreateDirectory(_spectrogramDirectory);
                 SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
@@ -365,9 +365,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixWaveOnly()
         {
-            Text = Configuration.Settings.Language.AddWaveForm.Title;
-            buttonRipWave.Text = Configuration.Settings.Language.AddWaveForm.GenerateWaveFormData;
-            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveForm.PleaseWait;
+            Text = Configuration.Settings.Language.AddWaveform.Title;
+            buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
+            labelPleaseWait.Text = Configuration.Settings.Language.AddWaveform.PleaseWait;
             labelVideoFileName.Text = string.Empty;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonRipWave.Enabled = false;
@@ -376,7 +376,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Visible = false;
             progressBar1.Style = ProgressBarStyle.Blocks;
 
-            labelProgress.Text = Configuration.Settings.Language.AddWaveForm.GeneratingPeakFile;
+            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
             this.Refresh();
             labelPleaseWait.Visible = false;
             try

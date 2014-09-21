@@ -58,7 +58,7 @@
             this.toolStripSeparatorHelp = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripButtonHelp = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonToggleWaveForm = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToggleWaveform = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToggleVideo = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelSubtitleFormat = new System.Windows.Forms.ToolStripLabel();
@@ -198,7 +198,7 @@
             this.toolStripMenuItemImportSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemRemoveSceneChanges = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
-            this.showhideWaveFormToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showhideWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showhideVideoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.undockVideoControlsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -293,15 +293,15 @@
             this.audioVisualizer = new Nikse.SubtitleEdit.Controls.AudioVisualizer();
             this.checkBoxSyncListViewWithVideoWhilePlaying = new System.Windows.Forms.CheckBox();
             this.labelVideoInfo = new System.Windows.Forms.Label();
-            this.trackBarWaveFormPosition = new System.Windows.Forms.TrackBar();
-            this.panelWaveFormControls = new System.Windows.Forms.Panel();
+            this.trackBarWaveformPosition = new System.Windows.Forms.TrackBar();
+            this.panelWaveformControls = new System.Windows.Forms.Panel();
             this.toolStripWaveControls = new System.Windows.Forms.ToolStrip();
-            this.toolStripButtonWaveFormZoomOut = new System.Windows.Forms.ToolStripButton();
-            this.toolStripComboBoxWaveForm = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripButtonWaveFormZoomIn = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveformZoomOut = new System.Windows.Forms.ToolStripButton();
+            this.toolStripComboBoxWaveform = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripButtonWaveformZoomIn = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator16 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripButtonWaveFormPause = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButtonWaveFormPlay = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveformPause = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonWaveformPlay = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonLockCenter = new System.Windows.Forms.ToolStripButton();
             this.toolStripSplitButtonPlayRate = new System.Windows.Forms.ToolStripSplitButton();
             this.toolStripMenuItemPlayRateSlow = new System.Windows.Forms.ToolStripMenuItem();
@@ -372,8 +372,8 @@
             this.timerAutoDuration = new System.Windows.Forms.Timer(this.components);
             this.timerAutoContinue = new System.Windows.Forms.Timer(this.components);
             this.timerStillTyping = new System.Windows.Forms.Timer(this.components);
-            this.timerWaveForm = new System.Windows.Forms.Timer(this.components);
-            this.contextMenuStripWaveForm = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.timerWaveform = new System.Windows.Forms.Timer(this.components);
+            this.contextMenuStripWaveform = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.addParagraphHereToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addParagraphAndPasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFocusTextbox = new System.Windows.Forms.ToolStripMenuItem();
@@ -382,7 +382,7 @@
             this.mergeWithPreviousToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeWithNextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator11 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripMenuItemWaveFormPlaySelection = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemWaveformPlaySelection = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator24 = new System.Windows.Forms.ToolStripSeparator();
             this.showWaveformAndSpectrogramToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.showOnlyWaveformToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -464,8 +464,8 @@
             this.menuStrip1.SuspendLayout();
             this.contextMenuStripListview.SuspendLayout();
             this.groupBoxVideo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveFormPosition)).BeginInit();
-            this.panelWaveFormControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).BeginInit();
+            this.panelWaveformControls.SuspendLayout();
             this.toolStripWaveControls.SuspendLayout();
             this.tabControlButtons.SuspendLayout();
             this.tabPageTranslate.SuspendLayout();
@@ -478,7 +478,7 @@
             this.tabPageAdjust.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust1)).BeginInit();
-            this.contextMenuStripWaveForm.SuspendLayout();
+            this.contextMenuStripWaveform.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
             this.splitContainerMain.Panel2.SuspendLayout();
@@ -563,7 +563,7 @@
             this.toolStripSeparatorHelp,
             this.toolStripButtonHelp,
             this.toolStripSeparator13,
-            this.toolStripButtonToggleWaveForm,
+            this.toolStripButtonToggleWaveform,
             this.toolStripButtonToggleVideo,
             this.toolStripSeparator6,
             this.toolStripLabelSubtitleFormat,
@@ -739,17 +739,17 @@
             this.toolStripSeparator13.Name = "toolStripSeparator13";
             this.toolStripSeparator13.Size = new System.Drawing.Size(6, 40);
             // 
-            // toolStripButtonToggleWaveForm
+            // toolStripButtonToggleWaveform
             // 
-            this.toolStripButtonToggleWaveForm.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToggleWaveForm.Font = new System.Drawing.Font("Tahoma", 8.25F);
-            this.toolStripButtonToggleWaveForm.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveForm.Image")));
-            this.toolStripButtonToggleWaveForm.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-            this.toolStripButtonToggleWaveForm.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToggleWaveForm.Name = "toolStripButtonToggleWaveForm";
-            this.toolStripButtonToggleWaveForm.Size = new System.Drawing.Size(36, 37);
-            this.toolStripButtonToggleWaveForm.Text = "Show/hide wave form";
-            this.toolStripButtonToggleWaveForm.Click += new System.EventHandler(this.toolStripButtonToggleWaveForm_Click);
+            this.toolStripButtonToggleWaveform.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToggleWaveform.Font = new System.Drawing.Font("Tahoma", 8.25F);
+            this.toolStripButtonToggleWaveform.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToggleWaveform.Image")));
+            this.toolStripButtonToggleWaveform.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.toolStripButtonToggleWaveform.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToggleWaveform.Name = "toolStripButtonToggleWaveform";
+            this.toolStripButtonToggleWaveform.Size = new System.Drawing.Size(36, 37);
+            this.toolStripButtonToggleWaveform.Text = "Show/hide waveform";
+            this.toolStripButtonToggleWaveform.Click += new System.EventHandler(this.toolStripButtonToggleWaveform_Click);
             // 
             // toolStripButtonToggleVideo
             // 
@@ -1813,7 +1813,7 @@
             this.toolStripMenuItemImportSceneChanges,
             this.toolStripMenuItemRemoveSceneChanges,
             this.toolStripSeparator5,
-            this.showhideWaveFormToolStripMenuItem,
+            this.showhideWaveformToolStripMenuItem,
             this.showhideVideoToolStripMenuItem,
             this.toolStripSeparator19,
             this.undockVideoControlsToolStripMenuItem,
@@ -1877,12 +1877,12 @@
             this.toolStripSeparator5.Name = "toolStripSeparator5";
             this.toolStripSeparator5.Size = new System.Drawing.Size(205, 6);
             // 
-            // showhideWaveFormToolStripMenuItem
+            // showhideWaveformToolStripMenuItem
             // 
-            this.showhideWaveFormToolStripMenuItem.Name = "showhideWaveFormToolStripMenuItem";
-            this.showhideWaveFormToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
-            this.showhideWaveFormToolStripMenuItem.Text = "Show/hide wave form";
-            this.showhideWaveFormToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveFormToolStripMenuItemClick);
+            this.showhideWaveformToolStripMenuItem.Name = "showhideWaveformToolStripMenuItem";
+            this.showhideWaveformToolStripMenuItem.Size = new System.Drawing.Size(208, 22);
+            this.showhideWaveformToolStripMenuItem.Text = "Show/hide waveform";
+            this.showhideWaveformToolStripMenuItem.Click += new System.EventHandler(this.ShowhideWaveformToolStripMenuItemClick);
             // 
             // showhideVideoToolStripMenuItem
             // 
@@ -2573,8 +2573,8 @@
             this.groupBoxVideo.Controls.Add(this.audioVisualizer);
             this.groupBoxVideo.Controls.Add(this.checkBoxSyncListViewWithVideoWhilePlaying);
             this.groupBoxVideo.Controls.Add(this.labelVideoInfo);
-            this.groupBoxVideo.Controls.Add(this.trackBarWaveFormPosition);
-            this.groupBoxVideo.Controls.Add(this.panelWaveFormControls);
+            this.groupBoxVideo.Controls.Add(this.trackBarWaveformPosition);
+            this.groupBoxVideo.Controls.Add(this.panelWaveformControls);
             this.groupBoxVideo.Controls.Add(this.tabControlButtons);
             this.groupBoxVideo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxVideo.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -2613,12 +2613,12 @@
             this.audioVisualizer.TabIndex = 6;
             this.audioVisualizer.TextColor = System.Drawing.Color.Gray;
             this.audioVisualizer.VerticalZoomPercent = 1D;
-            this.audioVisualizer.WaveFormNotLoadedText = "Click to add wave form";
+            this.audioVisualizer.WaveformNotLoadedText = "Click to add waveform";
             this.audioVisualizer.WavePeaks = null;
             this.audioVisualizer.ZoomFactor = 1D;
-            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveForm_Click);
-            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragDrop);
-            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveFormDragEnter);
+            this.audioVisualizer.Click += new System.EventHandler(this.AudioWaveform_Click);
+            this.audioVisualizer.DragDrop += new System.Windows.Forms.DragEventHandler(this.AudioWaveformDragDrop);
+            this.audioVisualizer.DragEnter += new System.Windows.Forms.DragEventHandler(this.AudioWaveformDragEnter);
             this.audioVisualizer.MouseEnter += new System.EventHandler(this.audioVisualizer_MouseEnter);
             // 
             // checkBoxSyncListViewWithVideoWhilePlaying
@@ -2641,27 +2641,27 @@
             this.labelVideoInfo.Text = "No video file loaded";
             this.labelVideoInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // trackBarWaveFormPosition
+            // trackBarWaveformPosition
             // 
-            this.trackBarWaveFormPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.trackBarWaveformPosition.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBarWaveFormPosition.AutoSize = false;
-            this.trackBarWaveFormPosition.Location = new System.Drawing.Point(674, 267);
-            this.trackBarWaveFormPosition.Maximum = 1000;
-            this.trackBarWaveFormPosition.Name = "trackBarWaveFormPosition";
-            this.trackBarWaveFormPosition.Size = new System.Drawing.Size(297, 20);
-            this.trackBarWaveFormPosition.TabIndex = 11;
-            this.trackBarWaveFormPosition.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.trackBarWaveFormPosition.ValueChanged += new System.EventHandler(this.trackBarWaveFormPosition_ValueChanged);
+            this.trackBarWaveformPosition.AutoSize = false;
+            this.trackBarWaveformPosition.Location = new System.Drawing.Point(674, 267);
+            this.trackBarWaveformPosition.Maximum = 1000;
+            this.trackBarWaveformPosition.Name = "trackBarWaveformPosition";
+            this.trackBarWaveformPosition.Size = new System.Drawing.Size(297, 20);
+            this.trackBarWaveformPosition.TabIndex = 11;
+            this.trackBarWaveformPosition.TickStyle = System.Windows.Forms.TickStyle.None;
+            this.trackBarWaveformPosition.ValueChanged += new System.EventHandler(this.trackBarWaveformPosition_ValueChanged);
             // 
-            // panelWaveFormControls
+            // panelWaveformControls
             // 
-            this.panelWaveFormControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.panelWaveFormControls.Controls.Add(this.toolStripWaveControls);
-            this.panelWaveFormControls.Location = new System.Drawing.Point(474, 265);
-            this.panelWaveFormControls.Name = "panelWaveFormControls";
-            this.panelWaveFormControls.Size = new System.Drawing.Size(205, 30);
-            this.panelWaveFormControls.TabIndex = 10;
+            this.panelWaveformControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.panelWaveformControls.Controls.Add(this.toolStripWaveControls);
+            this.panelWaveformControls.Location = new System.Drawing.Point(474, 265);
+            this.panelWaveformControls.Name = "panelWaveformControls";
+            this.panelWaveformControls.Size = new System.Drawing.Size(205, 30);
+            this.panelWaveformControls.TabIndex = 10;
             // 
             // toolStripWaveControls
             // 
@@ -2669,12 +2669,12 @@
             this.toolStripWaveControls.Dock = System.Windows.Forms.DockStyle.None;
             this.toolStripWaveControls.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden;
             this.toolStripWaveControls.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripButtonWaveFormZoomOut,
-            this.toolStripComboBoxWaveForm,
-            this.toolStripButtonWaveFormZoomIn,
+            this.toolStripButtonWaveformZoomOut,
+            this.toolStripComboBoxWaveform,
+            this.toolStripButtonWaveformZoomIn,
             this.toolStripSeparator16,
-            this.toolStripButtonWaveFormPause,
-            this.toolStripButtonWaveFormPlay,
+            this.toolStripButtonWaveformPause,
+            this.toolStripButtonWaveformPlay,
             this.toolStripButtonLockCenter,
             this.toolStripSplitButtonPlayRate});
             this.toolStripWaveControls.Location = new System.Drawing.Point(0, 3);
@@ -2683,60 +2683,60 @@
             this.toolStripWaveControls.TabIndex = 0;
             this.toolStripWaveControls.Text = "toolStrip2";
             // 
-            // toolStripButtonWaveFormZoomOut
+            // toolStripButtonWaveformZoomOut
             // 
-            this.toolStripButtonWaveFormZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomOut.Image")));
-            this.toolStripButtonWaveFormZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormZoomOut.Name = "toolStripButtonWaveFormZoomOut";
-            this.toolStripButtonWaveFormZoomOut.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormZoomOut.Text = "toolStripButton3";
-            this.toolStripButtonWaveFormZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomOut_Click);
+            this.toolStripButtonWaveformZoomOut.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveformZoomOut.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveformZoomOut.Image")));
+            this.toolStripButtonWaveformZoomOut.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveformZoomOut.Name = "toolStripButtonWaveformZoomOut";
+            this.toolStripButtonWaveformZoomOut.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformZoomOut.Text = "toolStripButton3";
+            this.toolStripButtonWaveformZoomOut.Click += new System.EventHandler(this.toolStripButtonWaveformZoomOut_Click);
             // 
-            // toolStripComboBoxWaveForm
+            // toolStripComboBoxWaveform
             // 
-            this.toolStripComboBoxWaveForm.AutoSize = false;
-            this.toolStripComboBoxWaveForm.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolStripComboBoxWaveForm.Name = "toolStripComboBoxWaveForm";
-            this.toolStripComboBoxWaveForm.Size = new System.Drawing.Size(62, 23);
+            this.toolStripComboBoxWaveform.AutoSize = false;
+            this.toolStripComboBoxWaveform.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolStripComboBoxWaveform.Name = "toolStripComboBoxWaveform";
+            this.toolStripComboBoxWaveform.Size = new System.Drawing.Size(62, 23);
             // 
-            // toolStripButtonWaveFormZoomIn
+            // toolStripButtonWaveformZoomIn
             // 
-            this.toolStripButtonWaveFormZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormZoomIn.Image")));
-            this.toolStripButtonWaveFormZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormZoomIn.Name = "toolStripButtonWaveFormZoomIn";
-            this.toolStripButtonWaveFormZoomIn.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormZoomIn.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveFormZoomIn_Click);
+            this.toolStripButtonWaveformZoomIn.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveformZoomIn.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveformZoomIn.Image")));
+            this.toolStripButtonWaveformZoomIn.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveformZoomIn.Name = "toolStripButtonWaveformZoomIn";
+            this.toolStripButtonWaveformZoomIn.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformZoomIn.Text = "toolStripButton1";
+            this.toolStripButtonWaveformZoomIn.Click += new System.EventHandler(this.toolStripButtonWaveformZoomIn_Click);
             // 
             // toolStripSeparator16
             // 
             this.toolStripSeparator16.Name = "toolStripSeparator16";
             this.toolStripSeparator16.Size = new System.Drawing.Size(6, 25);
             // 
-            // toolStripButtonWaveFormPause
+            // toolStripButtonWaveformPause
             // 
-            this.toolStripButtonWaveFormPause.AutoToolTip = false;
-            this.toolStripButtonWaveFormPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormPause.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPause.Image")));
-            this.toolStripButtonWaveFormPause.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormPause.Name = "toolStripButtonWaveFormPause";
-            this.toolStripButtonWaveFormPause.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormPause.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPause.Visible = false;
-            this.toolStripButtonWaveFormPause.Click += new System.EventHandler(this.toolStripButtonWaveFormPause_Click);
+            this.toolStripButtonWaveformPause.AutoToolTip = false;
+            this.toolStripButtonWaveformPause.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveformPause.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveformPause.Image")));
+            this.toolStripButtonWaveformPause.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveformPause.Name = "toolStripButtonWaveformPause";
+            this.toolStripButtonWaveformPause.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformPause.Text = "toolStripButton1";
+            this.toolStripButtonWaveformPause.Visible = false;
+            this.toolStripButtonWaveformPause.Click += new System.EventHandler(this.toolStripButtonWaveformPause_Click);
             // 
-            // toolStripButtonWaveFormPlay
+            // toolStripButtonWaveformPlay
             // 
-            this.toolStripButtonWaveFormPlay.AutoToolTip = false;
-            this.toolStripButtonWaveFormPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonWaveFormPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveFormPlay.Image")));
-            this.toolStripButtonWaveFormPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonWaveFormPlay.Name = "toolStripButtonWaveFormPlay";
-            this.toolStripButtonWaveFormPlay.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonWaveFormPlay.Text = "toolStripButton1";
-            this.toolStripButtonWaveFormPlay.Click += new System.EventHandler(this.toolStripButtonWaveFormPlay_Click);
+            this.toolStripButtonWaveformPlay.AutoToolTip = false;
+            this.toolStripButtonWaveformPlay.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonWaveformPlay.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonWaveformPlay.Image")));
+            this.toolStripButtonWaveformPlay.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonWaveformPlay.Name = "toolStripButtonWaveformPlay";
+            this.toolStripButtonWaveformPlay.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonWaveformPlay.Text = "toolStripButton1";
+            this.toolStripButtonWaveformPlay.Click += new System.EventHandler(this.toolStripButtonWaveformPlay_Click);
             // 
             // toolStripButtonLockCenter
             // 
@@ -3556,13 +3556,13 @@
             this.timerStillTyping.Interval = 1500;
             this.timerStillTyping.Tick += new System.EventHandler(this.timerStillTyping_Tick);
             // 
-            // timerWaveForm
+            // timerWaveform
             // 
-            this.timerWaveForm.Tick += new System.EventHandler(this.timerWaveForm_Tick);
+            this.timerWaveform.Tick += new System.EventHandler(this.timerWaveform_Tick);
             // 
-            // contextMenuStripWaveForm
+            // contextMenuStripWaveform
             // 
-            this.contextMenuStripWaveForm.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.contextMenuStripWaveform.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.addParagraphHereToolStripMenuItem,
             this.addParagraphAndPasteToolStripMenuItem,
             this.toolStripMenuItemFocusTextbox,
@@ -3571,7 +3571,7 @@
             this.mergeWithPreviousToolStripMenuItem,
             this.mergeWithNextToolStripMenuItem,
             this.toolStripSeparator11,
-            this.toolStripMenuItemWaveFormPlaySelection,
+            this.toolStripMenuItemWaveformPlaySelection,
             this.toolStripSeparator24,
             this.showWaveformAndSpectrogramToolStripMenuItem,
             this.showOnlyWaveformToolStripMenuItem,
@@ -3579,9 +3579,9 @@
             this.toolStripSeparatorGuessTimeCodes,
             this.guessTimeCodesToolStripMenuItem,
             this.seekSilenceToolStripMenuItem});
-            this.contextMenuStripWaveForm.Name = "contextMenuStripWaveForm";
-            this.contextMenuStripWaveForm.Size = new System.Drawing.Size(275, 308);
-            this.contextMenuStripWaveForm.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveFormOpening);
+            this.contextMenuStripWaveform.Name = "contextMenuStripWaveform";
+            this.contextMenuStripWaveform.Size = new System.Drawing.Size(275, 308);
+            this.contextMenuStripWaveform.Opening += new System.ComponentModel.CancelEventHandler(this.ContextMenuStripWaveformOpening);
             // 
             // addParagraphHereToolStripMenuItem
             // 
@@ -3637,12 +3637,12 @@
             this.toolStripSeparator11.Name = "toolStripSeparator11";
             this.toolStripSeparator11.Size = new System.Drawing.Size(271, 6);
             // 
-            // toolStripMenuItemWaveFormPlaySelection
+            // toolStripMenuItemWaveformPlaySelection
             // 
-            this.toolStripMenuItemWaveFormPlaySelection.Name = "toolStripMenuItemWaveFormPlaySelection";
-            this.toolStripMenuItemWaveFormPlaySelection.Size = new System.Drawing.Size(274, 22);
-            this.toolStripMenuItemWaveFormPlaySelection.Text = "Play selection";
-            this.toolStripMenuItemWaveFormPlaySelection.Click += new System.EventHandler(this.toolStripMenuItemWaveFormPlaySelection_Click);
+            this.toolStripMenuItemWaveformPlaySelection.Name = "toolStripMenuItemWaveformPlaySelection";
+            this.toolStripMenuItemWaveformPlaySelection.Size = new System.Drawing.Size(274, 22);
+            this.toolStripMenuItemWaveformPlaySelection.Text = "Play selection";
+            this.toolStripMenuItemWaveformPlaySelection.Click += new System.EventHandler(this.toolStripMenuItemWaveformPlaySelection_Click);
             // 
             // toolStripSeparator24
             // 
@@ -4470,9 +4470,9 @@
             this.contextMenuStripListview.ResumeLayout(false);
             this.groupBoxVideo.ResumeLayout(false);
             this.groupBoxVideo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveFormPosition)).EndInit();
-            this.panelWaveFormControls.ResumeLayout(false);
-            this.panelWaveFormControls.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBarWaveformPosition)).EndInit();
+            this.panelWaveformControls.ResumeLayout(false);
+            this.panelWaveformControls.PerformLayout();
             this.toolStripWaveControls.ResumeLayout(false);
             this.toolStripWaveControls.PerformLayout();
             this.tabControlButtons.ResumeLayout(false);
@@ -4492,7 +4492,7 @@
             this.tabPageAdjust.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSecAdjust1)).EndInit();
-            this.contextMenuStripWaveForm.ResumeLayout(false);
+            this.contextMenuStripWaveform.ResumeLayout(false);
             this.splitContainerMain.Panel1.ResumeLayout(false);
             this.splitContainerMain.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).EndInit();
@@ -4745,30 +4745,30 @@
         private System.Windows.Forms.Label labelCreateF9;
         private System.Windows.Forms.Label labelAdjustTip;
         private System.Windows.Forms.ToolStripMenuItem translatepoweredByMicrosoftToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveForm;
+        private System.Windows.Forms.ToolStripButton toolStripButtonToggleWaveform;
         private Controls.VideoPlayerContainer mediaPlayer;
         private System.Windows.Forms.Panel panelVideoPlayer;
         private Controls.AudioVisualizer audioVisualizer;
-        private System.Windows.Forms.Timer timerWaveForm;
-        private System.Windows.Forms.ContextMenuStrip contextMenuStripWaveForm;
+        private System.Windows.Forms.Timer timerWaveform;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripWaveform;
         private System.Windows.Forms.ToolStripMenuItem addParagraphHereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem deleteParagraphToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem splitToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem mergeWithPreviousToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem mergeWithNextToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWaveFormPlaySelection;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemWaveformPlaySelection;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator11;
-        private System.Windows.Forms.Panel panelWaveFormControls;
+        private System.Windows.Forms.Panel panelWaveformControls;
         private System.Windows.Forms.ToolStrip toolStripWaveControls;
-        private System.Windows.Forms.ToolStripButton toolStripButtonWaveFormZoomIn;
-        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxWaveForm;
-        private System.Windows.Forms.ToolStripButton toolStripButtonWaveFormZoomOut;
+        private System.Windows.Forms.ToolStripButton toolStripButtonWaveformZoomIn;
+        private System.Windows.Forms.ToolStripComboBox toolStripComboBoxWaveform;
+        private System.Windows.Forms.ToolStripButton toolStripButtonWaveformZoomOut;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator16;
-        private System.Windows.Forms.ToolStripButton toolStripButtonWaveFormPause;
-        private System.Windows.Forms.ToolStripButton toolStripButtonWaveFormPlay;
-        private System.Windows.Forms.TrackBar trackBarWaveFormPosition;
+        private System.Windows.Forms.ToolStripButton toolStripButtonWaveformPause;
+        private System.Windows.Forms.ToolStripButton toolStripButtonWaveformPlay;
+        private System.Windows.Forms.TrackBar trackBarWaveformPosition;
         private System.Windows.Forms.Label labelVideoInfo;
-        private System.Windows.Forms.ToolStripMenuItem showhideWaveFormToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem showhideWaveformToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemImportBluRaySup;
         private System.Windows.Forms.Label labelCharactersPerSecond;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemNetworking;

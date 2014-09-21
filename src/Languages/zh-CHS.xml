@@ -96,10 +96,10 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>添加到用户词典</Title>
     <Description>添加单词到用户词典</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>生成波形数据</Title>
     <SourceVideoFile>来源视频文件:</SourceVideoFile>
-    <GenerateWaveFormData>生成波形数据</GenerateWaveFormData>
+    <GenerateWaveformData>生成波形数据</GenerateWaveformData>
     <PleaseWait>这可能需要几分钟 - 请稍候</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>未找到 VLC 媒体播放器</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit 需要 VLC 媒体播放器 1.1.x 或更新版本来提取音频数据。</VlcMediaPlayerNotFound>
@@ -108,7 +108,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <GeneratingSpectrogram>正在生成频谱图...</GeneratingSpectrogram>
     <ExtractingSeconds>正在提取音频文件: {0:0.0} 秒</ExtractingSeconds>
     <ExtractingMinutes>正在提取音频文件: {0}.{1:00} 分</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>调整时长</Title>
     <AdjustVia>调整</AdjustVia>
@@ -789,7 +789,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <ImportSceneChanges>导入场景变更...</ImportSceneChanges>
         <RemoveSceneChanges>移除场景变更</RemoveSceneChanges>
         <ShowHideVideo>显示/隐藏 视频</ShowHideVideo>
-        <ShowHideWaveForm>显示/隐藏 波形</ShowHideWaveForm>
+        <ShowHideWaveform>显示/隐藏 波形</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>显示/隐藏 波形和频谱图</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>取消停靠视频控件</UnDockVideoControls>
         <ReDockVideoControls>重新停靠视频控件</ReDockVideoControls>
@@ -847,7 +847,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <SpellCheck>拼写检查</SpellCheck>
         <Settings>设置</Settings>
         <Help>帮助</Help>
-        <ShowHideWaveForm>显示/隐藏 音频</ShowHideWaveForm>
+        <ShowHideWaveform>显示/隐藏 音频</ShowHideWaveform>
         <ShowHideVideo>显示/隐藏 视频</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -957,7 +957,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
       <TranslateTip>提示: 使用 &lt;Alt + up/down&gt; 以转到 上一行/下一行</TranslateTip>
       <CreateTip>提示: 使用 &lt;Ctrl + left/right&gt; 键</CreateTip>
       <AdjustTip>提示: 使用 &lt;Alt + up/down&gt; 以转到 上一行/下一行</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>更改波形内的时间之前: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>更改波形内的时间之前: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>已在 {0} 处插入新文本</NewTextInsertAtX>
       <Center>居中</Center>
       <PlayRate>播放速度</PlayRate>
@@ -1497,19 +1497,19 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <PreviewFontSize>字幕预览字体大小</PreviewFontSize>
     <MainWindowVideoControls>主窗口视频控制</MainWindowVideoControls>
     <CustomSearchTextAndUrl>自定义搜索文本和网址</CustomSearchTextAndUrl>
-    <WaveFormAppearance>波形外观</WaveFormAppearance>
-    <WaveFormGridColor>网格颜色</WaveFormGridColor>
-    <WaveFormShowGridLines>显示网格线</WaveFormShowGridLines>
+    <WaveformAppearance>波形外观</WaveformAppearance>
+    <WaveformGridColor>网格颜色</WaveformGridColor>
+    <WaveformShowGridLines>显示网格线</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>反转鼠标滚动方向</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>允许重叠 (当移动/调整时长时)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>鼠标滑过后设置焦点</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>允许重叠 (当移动/调整时长时)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>鼠标滑过后设置焦点</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>允许当鼠标经过时将焦点设置到列表视图</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>边界标记线的最短相接间隔需为</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>毫秒</WaveformBorderHitMs2>
-    <WaveFormColor>颜色</WaveFormColor>
-    <WaveFormSelectedColor>选定颜色</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>背景颜色</WaveFormBackgroundColor>
-    <WaveFormTextColor>文字颜色</WaveFormTextColor>
+    <WaveformColor>颜色</WaveformColor>
+    <WaveformSelectedColor>选定颜色</WaveformSelectedColor>
+    <WaveformBackgroundColor>背景颜色</WaveformBackgroundColor>
+    <WaveformTextColor>文字颜色</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>清空 'Spectrograms' 和 'Waveforms' 文件夹</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' 和 'Spectrograms' 文件夹含有 {0} 个文件 ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>频谱图</Spectrogram>
@@ -1976,8 +1976,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>新建文件夹</Title>
     <Message>新字符数据库文件夹名称</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>点击以添加波形</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>点击以添加波形</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>点击以添加 波形/频谱图</ClickToAddWaveformAndSpectrogram>
     <Seconds>秒</Seconds>
     <ZoomIn>放大</ZoomIn>
@@ -1996,8 +1996,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ShowSpectrogramOnly>仅显示频谱图</ShowSpectrogramOnly>
     <GuessTimeCodes>猜测时间码...</GuessTimeCodes>
     <SeekSilence>搜索静音...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>猜测时间码</Title>
     <StartFrom>开始于</StartFrom>
     <CurrentVideoPosition>当前视频位置</CurrentVideoPosition>
@@ -2013,7 +2013,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SplitLongLinesAt1>在此处分割过长字幕</SplitLongLinesAt1>
     <SplitLongLinesAt2>毫秒</SplitLongLinesAt2>
     <Other>其它</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - 设定新人声</Title>
     <VoiceName>人声名称</VoiceName>

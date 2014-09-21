@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
             Text = language.Title;
             tabPageGenerel.Text = language.General;
             tabPageVideoPlayer.Text = language.VideoPlayer;
-            tabPageWaveForm.Text = language.WaveformAndSpectrogram;
+            tabPageWaveform.Text = language.WaveformAndSpectrogram;
             tabPageWordLists.Text = language.WordLists;
             tabPageTools.Text = language.Tools;
             tabPageSsaStyle.Text = language.SsaStyle;
@@ -348,13 +348,13 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxMainWindowVideoControls.Text = language.MainWindowVideoControls;
             labelCustomSearch.Text = language.CustomSearchTextAndUrl;
 
-            groupBoxWaveFormAppearence.Text = language.WaveFormAppearance;
-            checkBoxWaveFormShowGrid.Text = language.WaveFormShowGridLines;
+            groupBoxWaveformAppearence.Text = language.WaveformAppearance;
+            checkBoxWaveformShowGrid.Text = language.WaveformShowGridLines;
             checkBoxReverseMouseWheelScrollDirection.Text = language.ReverseMouseWheelScrollDirection;
-            checkBoxAllowOverlap.Text = language.WaveFormAllowOverlap;
-            checkBoxWaveformHoverFocus.Text = language.WaveFormFocusMouseEnter;
-            checkBoxListViewMouseEnterFocus.Text = language.WaveFormListViewFocusMouseEnter;
-            if (string.IsNullOrEmpty(language.WaveFormListViewFocusMouseEnter)) //TODO: Remove in SE 3.4
+            checkBoxAllowOverlap.Text = language.WaveformAllowOverlap;
+            checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
+            checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
+            if (string.IsNullOrEmpty(language.WaveformListViewFocusMouseEnter)) //TODO: Remove in SE 3.4
             {
                 checkBoxWaveformHoverFocus.Visible = false;
                 checkBoxListViewMouseEnterFocus.Visible = false;
@@ -370,11 +370,11 @@ namespace Nikse.SubtitleEdit.Forms
                 labelWaveformBorderHitMs2.Visible = false;
             }
 
-            buttonWaveFormGridColor.Text = language.WaveFormGridColor;
-            buttonWaveFormColor.Text = language.WaveFormColor;
-            buttonWaveFormSelectedColor.Text = language.WaveFormSelectedColor;
-            buttonWaveFormTextColor.Text = language.WaveFormTextColor;
-            buttonWaveFormBackgroundColor.Text = language.WaveFormBackgroundColor;
+            buttonWaveformGridColor.Text = language.WaveformGridColor;
+            buttonWaveformColor.Text = language.WaveformColor;
+            buttonWaveformSelectedColor.Text = language.WaveformSelectedColor;
+            buttonWaveformTextColor.Text = language.WaveformTextColor;
+            buttonWaveformBackgroundColor.Text = language.WaveformBackgroundColor;
             groupBoxSpectrogram.Text = language.Spectrogram;
             checkBoxGenerateSpectrogram.Text = language.GenerateSpectrogram;
             labelSpectrogramAppearance.Text = language.SpectrogramAppearance;
@@ -382,7 +382,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
 
-            buttonWaveFormsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
+            buttonWaveformsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
             if (!string.IsNullOrEmpty(language.WaveformFFmpegPath)) //TODO: Remove in SE 3.4
@@ -600,22 +600,22 @@ namespace Nikse.SubtitleEdit.Forms
             ListWordListLanguages();
             _starting = false;
 
-            checkBoxWaveFormShowGrid.Checked = Configuration.Settings.VideoControls.WaveFormDrawGrid;
-            panelWaveFormGridColor.BackColor = Configuration.Settings.VideoControls.WaveFormGridColor;
-            panelWaveFormSelectedColor.BackColor = Configuration.Settings.VideoControls.WaveFormSelectedColor;
-            panelWaveFormColor.BackColor = Configuration.Settings.VideoControls.WaveFormColor;
-            panelWaveFormBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveFormBackgroundColor;
-            panelWaveFormTextColor.BackColor = Configuration.Settings.VideoControls.WaveFormTextColor;
+            checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
+            panelWaveformGridColor.BackColor = Configuration.Settings.VideoControls.WaveformGridColor;
+            panelWaveformSelectedColor.BackColor = Configuration.Settings.VideoControls.WaveformSelectedColor;
+            panelWaveformColor.BackColor = Configuration.Settings.VideoControls.WaveformColor;
+            panelWaveformBackgroundColor.BackColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
+            panelWaveformTextColor.BackColor = Configuration.Settings.VideoControls.WaveformTextColor;
             checkBoxGenerateSpectrogram.Checked = Configuration.Settings.VideoControls.GenerateSpectrogram;
             if (Configuration.Settings.VideoControls.SpectrogramAppearance == "OneColorGradient")
                 comboBoxSpectrogramAppearance.SelectedIndex = 0;
             else
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
-            checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward;
-            checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveFormAllowOverlap;
-            checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter;
-            checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveFormListViewFocusOnMouseEnter;
-            checkBoxListViewMouseEnterFocus.Enabled = Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter;
+            checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
+            checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveformAllowOverlap;
+            checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
+            checkBoxListViewMouseEnterFocus.Checked = Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter;
+            checkBoxListViewMouseEnterFocus.Enabled = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
@@ -786,8 +786,8 @@ namespace Nikse.SubtitleEdit.Forms
             treeViewShortcuts.Nodes.Add(adjustNode);
 
             var audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomIn + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomIn));
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.WaveForm.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
+            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Waveform.ZoomIn + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomIn));
+            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Waveform.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoom + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoomOut))
                 audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut));
@@ -866,13 +866,13 @@ namespace Nikse.SubtitleEdit.Forms
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
                 Utilities.SetButtonHeight(groupBoxSsaStyle, newButtonHeight, 2);
-                Utilities.SetButtonHeight(groupBoxWaveFormAppearence, newButtonHeight, 1);
+                Utilities.SetButtonHeight(groupBoxWaveformAppearence, newButtonHeight, 1);
             }
         }
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
         {
-            string waveFormsFolder = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string waveFormsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
             string spectrogramsFolder = Configuration.SpectrogramsFolder.TrimEnd(Path.DirectorySeparatorChar);
             long bytes = 0;
             int count = 0;
@@ -921,14 +921,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (count > 0)
             {
-                buttonWaveFormsFolderEmpty.Enabled = true;
-                labelWaveFormsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
+                buttonWaveformsFolderEmpty.Enabled = true;
+                labelWaveformsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, count, bytes / 1024.0 / 1024.0);
 
             }
             else
             {
-                buttonWaveFormsFolderEmpty.Enabled = false;
-                labelWaveFormsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, 0, 0);
+                buttonWaveformsFolderEmpty.Enabled = false;
+                labelWaveformsFolderInfo.Text = string.Format(language.WaveformAndSpectrogramsFolderInfo, 0, 0);
             }
         }
 
@@ -1192,21 +1192,21 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.ListViewSyntaxColorOverlap = checkBoxSyntaxOverlap.Checked;
             Configuration.Settings.Tools.ListViewSyntaxErrorColor = panelListViewSyntaxColorError.BackColor;
 
-            Configuration.Settings.VideoControls.WaveFormDrawGrid = checkBoxWaveFormShowGrid.Checked;
-            Configuration.Settings.VideoControls.WaveFormGridColor = panelWaveFormGridColor.BackColor;
-            Configuration.Settings.VideoControls.WaveFormSelectedColor = panelWaveFormSelectedColor.BackColor;
-            Configuration.Settings.VideoControls.WaveFormColor = panelWaveFormColor.BackColor;
-            Configuration.Settings.VideoControls.WaveFormBackgroundColor = panelWaveFormBackgroundColor.BackColor;
-            Configuration.Settings.VideoControls.WaveFormTextColor = panelWaveFormTextColor.BackColor;
+            Configuration.Settings.VideoControls.WaveformDrawGrid = checkBoxWaveformShowGrid.Checked;
+            Configuration.Settings.VideoControls.WaveformGridColor = panelWaveformGridColor.BackColor;
+            Configuration.Settings.VideoControls.WaveformSelectedColor = panelWaveformSelectedColor.BackColor;
+            Configuration.Settings.VideoControls.WaveformColor = panelWaveformColor.BackColor;
+            Configuration.Settings.VideoControls.WaveformBackgroundColor = panelWaveformBackgroundColor.BackColor;
+            Configuration.Settings.VideoControls.WaveformTextColor = panelWaveformTextColor.BackColor;
             Configuration.Settings.VideoControls.GenerateSpectrogram = checkBoxGenerateSpectrogram.Checked;
             if (comboBoxSpectrogramAppearance.SelectedIndex == 0)
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "OneColorGradient";
             else
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
-            Configuration.Settings.VideoControls.WaveFormMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
-            Configuration.Settings.VideoControls.WaveFormAllowOverlap = checkBoxAllowOverlap.Checked;
-            Configuration.Settings.VideoControls.WaveFormFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
-            Configuration.Settings.VideoControls.WaveFormListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
+            Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
+            Configuration.Settings.VideoControls.WaveformAllowOverlap = checkBoxAllowOverlap.Checked;
+            Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
+            Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
             Configuration.Settings.General.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
             Configuration.Settings.General.FFmpegLocation = textBoxFFmpegPath.Text;
@@ -1540,9 +1540,9 @@ namespace Nikse.SubtitleEdit.Forms
                 if (node.Text.Contains('['))
                 {
                     string text = node.Text.Substring(0, node.Text.IndexOf('[')).Trim();
-                    if (text == (Configuration.Settings.Language.WaveForm.ZoomIn).Replace("&", string.Empty))
+                    if (text == (Configuration.Settings.Language.Waveform.ZoomIn).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomIn = GetShortcut(node.Text);
-                    else if (text == (Configuration.Settings.Language.WaveForm.ZoomOut).Replace("&", string.Empty))
+                    else if (text == (Configuration.Settings.Language.Waveform.ZoomOut).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
                     else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayNewSelection) && text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
@@ -2358,54 +2358,54 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void buttonWaveFormSelectedColor_Click(object sender, EventArgs e)
+        private void buttonWaveformSelectedColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveFormSelectedColor.BackColor;
+            colorDialogSSAStyle.Color = panelWaveformSelectedColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                panelWaveFormSelectedColor.BackColor = colorDialogSSAStyle.Color;
+                panelWaveformSelectedColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 
-        private void buttonWaveFormColor_Click(object sender, EventArgs e)
+        private void buttonWaveformColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveFormColor.BackColor;
+            colorDialogSSAStyle.Color = panelWaveformColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                panelWaveFormColor.BackColor = colorDialogSSAStyle.Color;
+                panelWaveformColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 
-        private void buttonWaveFormBackgroundColor_Click(object sender, EventArgs e)
+        private void buttonWaveformBackgroundColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveFormBackgroundColor.BackColor;
+            colorDialogSSAStyle.Color = panelWaveformBackgroundColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                panelWaveFormBackgroundColor.BackColor = colorDialogSSAStyle.Color;
+                panelWaveformBackgroundColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 
-        private void buttonWaveFormGridColor_Click(object sender, EventArgs e)
+        private void buttonWaveformGridColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveFormGridColor.BackColor;
+            colorDialogSSAStyle.Color = panelWaveformGridColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                panelWaveFormGridColor.BackColor = colorDialogSSAStyle.Color;
+                panelWaveformGridColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 
-        private void buttonWaveFormTextColor_Click(object sender, EventArgs e)
+        private void buttonWaveformTextColor_Click(object sender, EventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveFormTextColor.BackColor;
+            colorDialogSSAStyle.Color = panelWaveformTextColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                panelWaveFormTextColor.BackColor = colorDialogSSAStyle.Color;
+                panelWaveformTextColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 
-        private void buttonWaveFormsFolderEmpty_Click(object sender, EventArgs e)
+        private void buttonWaveformsFolderEmpty_Click(object sender, EventArgs e)
         {
-            string waveFormsFolder = Configuration.WaveFormsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            string waveFormsFolder = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (Directory.Exists(waveFormsFolder))
             {
                 var di = new DirectoryInfo(waveFormsFolder);
@@ -2454,12 +2454,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRememberSelectedLine.Enabled = checkBoxRememberRecentFiles.Checked;
         }
 
-        private void buttonWaveFormSelectedColor_Click(object sender, MouseEventArgs e)
+        private void buttonWaveformSelectedColor_Click(object sender, MouseEventArgs e)
         {
-            colorDialogSSAStyle.Color = panelWaveFormSelectedColor.BackColor;
+            colorDialogSSAStyle.Color = panelWaveformSelectedColor.BackColor;
             if (colorDialogSSAStyle.ShowDialog() == DialogResult.OK)
             {
-                panelWaveFormSelectedColor.BackColor = colorDialogSSAStyle.Color;
+                panelWaveformSelectedColor.BackColor = colorDialogSSAStyle.Color;
             }
         }
 

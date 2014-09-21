@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic
             language.AddToNames = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToNames();
             language.AddToOcrReplaceList = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToOcrReplaceList();
             language.AddToUserDictionary = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddToUserDictionary();
-            language.AddWaveForm = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddWaveForm();
+            language.AddWaveform = new Nikse.SubtitleEdit.Logic.LanguageStructure.AddWaveform();
             language.AdjustDisplayDuration = new Nikse.SubtitleEdit.Logic.LanguageStructure.AdjustDisplayDuration();
             language.ApplyDurationLimits = new Nikse.SubtitleEdit.Logic.LanguageStructure.ApplyDurationLimits();
             language.AutoBreakUnbreakLines = new Nikse.SubtitleEdit.Logic.LanguageStructure.AutoBreakUnbreakLines();
@@ -120,8 +120,8 @@ namespace Nikse.SubtitleEdit.Logic
             language.VobSubOcrCharacter = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcrCharacter();
             language.VobSubOcrCharacterInspect = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcrCharacterInspect();
             language.VobSubOcrNewFolder = new Nikse.SubtitleEdit.Logic.LanguageStructure.VobSubOcrNewFolder();
-            language.WaveForm = new Nikse.SubtitleEdit.Logic.LanguageStructure.WaveForm();
-            language.WaveFormGenerateTimeCodes = new Nikse.SubtitleEdit.Logic.LanguageStructure.WaveFormGenerateTimeCodes();
+            language.Waveform = new Nikse.SubtitleEdit.Logic.LanguageStructure.Waveform();
+            language.WaveformGenerateTimeCodes = new Nikse.SubtitleEdit.Logic.LanguageStructure.WaveformGenerateTimeCodes();
             language.WebVttNewVoice = new Nikse.SubtitleEdit.Logic.LanguageStructure.WebVttNewVoice();
 
             using (XmlReader reader = XmlReader.Create(stream))
@@ -391,38 +391,38 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AddToUserDictionary/Description":
                     language.AddToUserDictionary.Description = reader.Value;
                     break;
-                case "AddWaveForm/Title":
-                    language.AddWaveForm.Title = reader.Value;
+                case "AddWaveform/Title":
+                    language.AddWaveform.Title = reader.Value;
                     break;
-                case "AddWaveForm/SourceVideoFile":
-                    language.AddWaveForm.SourceVideoFile = reader.Value;
+                case "AddWaveform/SourceVideoFile":
+                    language.AddWaveform.SourceVideoFile = reader.Value;
                     break;
-                case "AddWaveForm/GenerateWaveFormData":
-                    language.AddWaveForm.GenerateWaveFormData = reader.Value;
+                case "AddWaveform/GenerateWaveformData":
+                    language.AddWaveform.GenerateWaveformData = reader.Value;
                     break;
-                case "AddWaveForm/PleaseWait":
-                    language.AddWaveForm.PleaseWait = reader.Value;
+                case "AddWaveform/PleaseWait":
+                    language.AddWaveform.PleaseWait = reader.Value;
                     break;
-                case "AddWaveForm/VlcMediaPlayerNotFoundTitle":
-                    language.AddWaveForm.VlcMediaPlayerNotFoundTitle = reader.Value;
+                case "AddWaveform/VlcMediaPlayerNotFoundTitle":
+                    language.AddWaveform.VlcMediaPlayerNotFoundTitle = reader.Value;
                     break;
-                case "AddWaveForm/VlcMediaPlayerNotFound":
-                    language.AddWaveForm.VlcMediaPlayerNotFound = reader.Value;
+                case "AddWaveform/VlcMediaPlayerNotFound":
+                    language.AddWaveform.VlcMediaPlayerNotFound = reader.Value;
                     break;
-                case "AddWaveForm/GoToVlcMediaPlayerHomePage":
-                    language.AddWaveForm.GoToVlcMediaPlayerHomePage = reader.Value;
+                case "AddWaveform/GoToVlcMediaPlayerHomePage":
+                    language.AddWaveform.GoToVlcMediaPlayerHomePage = reader.Value;
                     break;
-                case "AddWaveForm/GeneratingPeakFile":
-                    language.AddWaveForm.GeneratingPeakFile = reader.Value;
+                case "AddWaveform/GeneratingPeakFile":
+                    language.AddWaveform.GeneratingPeakFile = reader.Value;
                     break;
-                case "AddWaveForm/GeneratingSpectrogram":
-                    language.AddWaveForm.GeneratingSpectrogram = reader.Value;
+                case "AddWaveform/GeneratingSpectrogram":
+                    language.AddWaveform.GeneratingSpectrogram = reader.Value;
                     break;
-                case "AddWaveForm/ExtractingSeconds":
-                    language.AddWaveForm.ExtractingSeconds = reader.Value;
+                case "AddWaveform/ExtractingSeconds":
+                    language.AddWaveform.ExtractingSeconds = reader.Value;
                     break;
-                case "AddWaveForm/ExtractingMinutes":
-                    language.AddWaveForm.ExtractingMinutes = reader.Value;
+                case "AddWaveform/ExtractingMinutes":
+                    language.AddWaveform.ExtractingMinutes = reader.Value;
                     break;
                 case "AdjustDisplayDuration/Title":
                     language.AdjustDisplayDuration.Title = reader.Value;
@@ -2935,8 +2935,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Video/ShowHideVideo":
                     language.Main.Menu.Video.ShowHideVideo = reader.Value;
                     break;
-                case "Main/Menu/Video/ShowHideWaveForm":
-                    language.Main.Menu.Video.ShowHideWaveForm = reader.Value;
+                case "Main/Menu/Video/ShowHideWaveform":
+                    language.Main.Menu.Video.ShowHideWaveform = reader.Value;
                     break;
                 case "Main/Menu/Video/ShowHideWaveformAndSpectrogram":
                     language.Main.Menu.Video.ShowHideWaveformAndSpectrogram = reader.Value;
@@ -3067,8 +3067,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ToolBar/Help":
                     language.Main.Menu.ToolBar.Help = reader.Value;
                     break;
-                case "Main/Menu/ToolBar/ShowHideWaveForm":
-                    language.Main.Menu.ToolBar.ShowHideWaveForm = reader.Value;
+                case "Main/Menu/ToolBar/ShowHideWaveform":
+                    language.Main.Menu.ToolBar.ShowHideWaveform = reader.Value;
                     break;
                 case "Main/Menu/ToolBar/ShowHideVideo":
                     language.Main.Menu.ToolBar.ShowHideVideo = reader.Value;
@@ -3376,8 +3376,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/VideoControls/AdjustTip":
                     language.Main.VideoControls.AdjustTip = reader.Value;
                     break;
-                case "Main/VideoControls/BeforeChangingTimeInWaveFormX":
-                    language.Main.VideoControls.BeforeChangingTimeInWaveFormX = reader.Value;
+                case "Main/VideoControls/BeforeChangingTimeInWaveformX":
+                    language.Main.VideoControls.BeforeChangingTimeInWaveformX = reader.Value;
                     break;
                 case "Main/VideoControls/NewTextInsertAtX":
                     language.Main.VideoControls.NewTextInsertAtX = reader.Value;
@@ -4126,26 +4126,26 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CustomSearchTextAndUrl":
                     language.Settings.CustomSearchTextAndUrl = reader.Value;
                     break;
-                case "Settings/WaveFormAppearance":
-                    language.Settings.WaveFormAppearance = reader.Value;
+                case "Settings/WaveformAppearance":
+                    language.Settings.WaveformAppearance = reader.Value;
                     break;
-                case "Settings/WaveFormGridColor":
-                    language.Settings.WaveFormGridColor = reader.Value;
+                case "Settings/WaveformGridColor":
+                    language.Settings.WaveformGridColor = reader.Value;
                     break;
-                case "Settings/WaveFormShowGridLines":
-                    language.Settings.WaveFormShowGridLines = reader.Value;
+                case "Settings/WaveformShowGridLines":
+                    language.Settings.WaveformShowGridLines = reader.Value;
                     break;
                 case "Settings/ReverseMouseWheelScrollDirection":
                     language.Settings.ReverseMouseWheelScrollDirection = reader.Value;
                     break;
-                case "Settings/WaveFormAllowOverlap":
-                    language.Settings.WaveFormAllowOverlap = reader.Value;
+                case "Settings/WaveformAllowOverlap":
+                    language.Settings.WaveformAllowOverlap = reader.Value;
                     break;
-                case "Settings/WaveFormFocusMouseEnter":
-                    language.Settings.WaveFormFocusMouseEnter = reader.Value;
+                case "Settings/WaveformFocusMouseEnter":
+                    language.Settings.WaveformFocusMouseEnter = reader.Value;
                     break;
-                case "Settings/WaveFormListViewFocusMouseEnter":
-                    language.Settings.WaveFormListViewFocusMouseEnter = reader.Value;
+                case "Settings/WaveformListViewFocusMouseEnter":
+                    language.Settings.WaveformListViewFocusMouseEnter = reader.Value;
                     break;
                 case "Settings/WaveformBorderHitMs1":
                     language.Settings.WaveformBorderHitMs1 = reader.Value;
@@ -4153,17 +4153,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformBorderHitMs2":
                     language.Settings.WaveformBorderHitMs2 = reader.Value;
                     break;
-                case "Settings/WaveFormColor":
-                    language.Settings.WaveFormColor = reader.Value;
+                case "Settings/WaveformColor":
+                    language.Settings.WaveformColor = reader.Value;
                     break;
-                case "Settings/WaveFormSelectedColor":
-                    language.Settings.WaveFormSelectedColor = reader.Value;
+                case "Settings/WaveformSelectedColor":
+                    language.Settings.WaveformSelectedColor = reader.Value;
                     break;
-                case "Settings/WaveFormBackgroundColor":
-                    language.Settings.WaveFormBackgroundColor = reader.Value;
+                case "Settings/WaveformBackgroundColor":
+                    language.Settings.WaveformBackgroundColor = reader.Value;
                     break;
-                case "Settings/WaveFormTextColor":
-                    language.Settings.WaveFormTextColor = reader.Value;
+                case "Settings/WaveformTextColor":
+                    language.Settings.WaveformTextColor = reader.Value;
                     break;
                 case "Settings/WaveformAndSpectrogramsFolderEmpty":
                     language.Settings.WaveformAndSpectrogramsFolderEmpty = reader.Value;
@@ -5434,107 +5434,107 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcrNewFolder/Message":
                     language.VobSubOcrNewFolder.Message = reader.Value;
                     break;
-                case "WaveForm/ClickToAddWaveForm":
-                    language.WaveForm.ClickToAddWaveForm = reader.Value;
+                case "Waveform/ClickToAddWaveform":
+                    language.Waveform.ClickToAddWaveform = reader.Value;
                     break;
-                case "WaveForm/ClickToAddWaveformAndSpectrogram":
-                    language.WaveForm.ClickToAddWaveformAndSpectrogram = reader.Value;
+                case "Waveform/ClickToAddWaveformAndSpectrogram":
+                    language.Waveform.ClickToAddWaveformAndSpectrogram = reader.Value;
                     break;
-                case "WaveForm/Seconds":
-                    language.WaveForm.Seconds = reader.Value;
+                case "Waveform/Seconds":
+                    language.Waveform.Seconds = reader.Value;
                     break;
-                case "WaveForm/ZoomIn":
-                    language.WaveForm.ZoomIn = reader.Value;
+                case "Waveform/ZoomIn":
+                    language.Waveform.ZoomIn = reader.Value;
                     break;
-                case "WaveForm/ZoomOut":
-                    language.WaveForm.ZoomOut = reader.Value;
+                case "Waveform/ZoomOut":
+                    language.Waveform.ZoomOut = reader.Value;
                     break;
-                case "WaveForm/AddParagraphHere":
-                    language.WaveForm.AddParagraphHere = reader.Value;
+                case "Waveform/AddParagraphHere":
+                    language.Waveform.AddParagraphHere = reader.Value;
                     break;
-                case "WaveForm/AddParagraphHereAndPasteText":
-                    language.WaveForm.AddParagraphHereAndPasteText = reader.Value;
+                case "Waveform/AddParagraphHereAndPasteText":
+                    language.Waveform.AddParagraphHereAndPasteText = reader.Value;
                     break;
-                case "WaveForm/FocusTextBox":
-                    language.WaveForm.FocusTextBox = reader.Value;
+                case "Waveform/FocusTextBox":
+                    language.Waveform.FocusTextBox = reader.Value;
                     break;
-                case "WaveForm/DeleteParagraph":
-                    language.WaveForm.DeleteParagraph = reader.Value;
+                case "Waveform/DeleteParagraph":
+                    language.Waveform.DeleteParagraph = reader.Value;
                     break;
-                case "WaveForm/Split":
-                    language.WaveForm.Split = reader.Value;
+                case "Waveform/Split":
+                    language.Waveform.Split = reader.Value;
                     break;
-                case "WaveForm/SplitAtCursor":
-                    language.WaveForm.SplitAtCursor = reader.Value;
+                case "Waveform/SplitAtCursor":
+                    language.Waveform.SplitAtCursor = reader.Value;
                     break;
-                case "WaveForm/MergeWithPrevious":
-                    language.WaveForm.MergeWithPrevious = reader.Value;
+                case "Waveform/MergeWithPrevious":
+                    language.Waveform.MergeWithPrevious = reader.Value;
                     break;
-                case "WaveForm/MergeWithNext":
-                    language.WaveForm.MergeWithNext = reader.Value;
+                case "Waveform/MergeWithNext":
+                    language.Waveform.MergeWithNext = reader.Value;
                     break;
-                case "WaveForm/PlaySelection":
-                    language.WaveForm.PlaySelection = reader.Value;
+                case "Waveform/PlaySelection":
+                    language.Waveform.PlaySelection = reader.Value;
                     break;
-                case "WaveForm/ShowWaveformAndSpectrogram":
-                    language.WaveForm.ShowWaveformAndSpectrogram = reader.Value;
+                case "Waveform/ShowWaveformAndSpectrogram":
+                    language.Waveform.ShowWaveformAndSpectrogram = reader.Value;
                     break;
-                case "WaveForm/ShowWaveformOnly":
-                    language.WaveForm.ShowWaveformOnly = reader.Value;
+                case "Waveform/ShowWaveformOnly":
+                    language.Waveform.ShowWaveformOnly = reader.Value;
                     break;
-                case "WaveForm/ShowSpectrogramOnly":
-                    language.WaveForm.ShowSpectrogramOnly = reader.Value;
+                case "Waveform/ShowSpectrogramOnly":
+                    language.Waveform.ShowSpectrogramOnly = reader.Value;
                     break;
-                case "WaveForm/GuessTimeCodes":
-                    language.WaveForm.GuessTimeCodes = reader.Value;
+                case "Waveform/GuessTimeCodes":
+                    language.Waveform.GuessTimeCodes = reader.Value;
                     break;
-                case "WaveForm/SeekSilence":
-                    language.WaveForm.SeekSilence = reader.Value;
+                case "Waveform/SeekSilence":
+                    language.Waveform.SeekSilence = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/Title":
-                    language.WaveFormGenerateTimeCodes.Title = reader.Value;
+                case "WaveformGenerateTimeCodes/Title":
+                    language.WaveformGenerateTimeCodes.Title = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/StartFrom":
-                    language.WaveFormGenerateTimeCodes.StartFrom = reader.Value;
+                case "WaveformGenerateTimeCodes/StartFrom":
+                    language.WaveformGenerateTimeCodes.StartFrom = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/CurrentVideoPosition":
-                    language.WaveFormGenerateTimeCodes.CurrentVideoPosition = reader.Value;
+                case "WaveformGenerateTimeCodes/CurrentVideoPosition":
+                    language.WaveformGenerateTimeCodes.CurrentVideoPosition = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/Beginning":
-                    language.WaveFormGenerateTimeCodes.Beginning = reader.Value;
+                case "WaveformGenerateTimeCodes/Beginning":
+                    language.WaveformGenerateTimeCodes.Beginning = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/DeleteLines":
-                    language.WaveFormGenerateTimeCodes.DeleteLines = reader.Value;
+                case "WaveformGenerateTimeCodes/DeleteLines":
+                    language.WaveformGenerateTimeCodes.DeleteLines = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/FromCurrentVideoPosition":
-                    language.WaveFormGenerateTimeCodes.FromCurrentVideoPosition = reader.Value;
+                case "WaveformGenerateTimeCodes/FromCurrentVideoPosition":
+                    language.WaveformGenerateTimeCodes.FromCurrentVideoPosition = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/DetectOptions":
-                    language.WaveFormGenerateTimeCodes.DetectOptions = reader.Value;
+                case "WaveformGenerateTimeCodes/DetectOptions":
+                    language.WaveformGenerateTimeCodes.DetectOptions = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/ScanBlocksOfMs":
-                    language.WaveFormGenerateTimeCodes.ScanBlocksOfMs = reader.Value;
+                case "WaveformGenerateTimeCodes/ScanBlocksOfMs":
+                    language.WaveformGenerateTimeCodes.ScanBlocksOfMs = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/BlockAverageVolMin1":
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMin1 = reader.Value;
+                case "WaveformGenerateTimeCodes/BlockAverageVolMin1":
+                    language.WaveformGenerateTimeCodes.BlockAverageVolMin1 = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/BlockAverageVolMin2":
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMin2 = reader.Value;
+                case "WaveformGenerateTimeCodes/BlockAverageVolMin2":
+                    language.WaveformGenerateTimeCodes.BlockAverageVolMin2 = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/BlockAverageVolMax1":
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMax1 = reader.Value;
+                case "WaveformGenerateTimeCodes/BlockAverageVolMax1":
+                    language.WaveformGenerateTimeCodes.BlockAverageVolMax1 = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/BlockAverageVolMax2":
-                    language.WaveFormGenerateTimeCodes.BlockAverageVolMax2 = reader.Value;
+                case "WaveformGenerateTimeCodes/BlockAverageVolMax2":
+                    language.WaveformGenerateTimeCodes.BlockAverageVolMax2 = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/SplitLongLinesAt1":
-                    language.WaveFormGenerateTimeCodes.SplitLongLinesAt1 = reader.Value;
+                case "WaveformGenerateTimeCodes/SplitLongLinesAt1":
+                    language.WaveformGenerateTimeCodes.SplitLongLinesAt1 = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/SplitLongLinesAt2":
-                    language.WaveFormGenerateTimeCodes.SplitLongLinesAt2 = reader.Value;
+                case "WaveformGenerateTimeCodes/SplitLongLinesAt2":
+                    language.WaveformGenerateTimeCodes.SplitLongLinesAt2 = reader.Value;
                     break;
-                case "WaveFormGenerateTimeCodes/Other":
-                    language.WaveFormGenerateTimeCodes.Other = reader.Value;
+                case "WaveformGenerateTimeCodes/Other":
+                    language.WaveformGenerateTimeCodes.Other = reader.Value;
                     break;
                 case "WebVttNewVoice/Title":
                     language.WebVttNewVoice.Title = reader.Value;

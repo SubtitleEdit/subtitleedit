@@ -96,10 +96,10 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Dodajte u korisnički rečnik</Title>
     <Description>Dodajte reč korisnički rečnik (neosjetljivost na velika i mala slova)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Sačinjavanje Talasnog oblika</Title>
     <SourceVideoFile>Izvorna Video datoteka:</SourceVideoFile>
-    <GenerateWaveFormData>&amp;Sačinite Talasni oblik</GenerateWaveFormData>
+    <GenerateWaveformData>&amp;Sačinite Talasni oblik</GenerateWaveformData>
     <PleaseWait>Ova radnja može potrajati. Sačekajte nekoliko trenutaka.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player nije pronađen</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Program zahteva VLC media player 1.1.x ili noviji za vađenje podataka o zvuku.</VlcMediaPlayerNotFound>
@@ -108,7 +108,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Pravim Spektrogram…</GeneratingSpectrogram>
     <ExtractingSeconds>Vađenje Zvučnog zapisa: {0:0.0} sekundi</ExtractingSeconds>
     <ExtractingMinutes>Vađenje Zvučnog zapisa: {0}.{1:00} minuta</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Prilagođavanje trajanja</Title>
     <AdjustVia>Prilagoditi preko:</AdjustVia>
@@ -634,7 +634,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <ChooseAudioTrack>Izaberi Audio zapis</ChooseAudioTrack>
         <CloseVideo>&amp;Zatvori Video datoteku</CloseVideo>
         <ShowHideVideo>Prikaži/Sakrij &amp;Video datoteku</ShowHideVideo>
-        <ShowHideWaveForm>Prikaži/Sakrij &amp;Talasni oblik</ShowHideWaveForm>
+        <ShowHideWaveform>Prikaži/Sakrij &amp;Talasni oblik</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Prikaži/Sakrij Talasni oblik i &amp;Spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>O&amp;tkači Video Kontrole</UnDockVideoControls>
         <ReDockVideoControls>P&amp;rikači Video Kontrole</ReDockVideoControls>
@@ -689,7 +689,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Provera Pravopisa</SpellCheck>
         <Settings>Postavke</Settings>
         <Help>Pomoć</Help>
-        <ShowHideWaveForm>Prikaži/sakrij talasni oblik</ShowHideWaveForm>
+        <ShowHideWaveform>Prikaži/sakrij talasni oblik</ShowHideWaveform>
         <ShowHideVideo>Prikaži/Sakrij Video snimak</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -795,7 +795,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Koristite 'Alt' i gornju ili donju strelicu da odete na prethodni ili slijedeći red prevoda.</TranslateTip>
       <CreateTip>Koristite 'Ctrl' i levu/desnu strelicu.</CreateTip>
       <AdjustTip>Koristite 'Alt' i gornju ili donju strelicu da odete na prethodni ili sledeći prevod.</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Promenjeno vrijeme u valnom obliku: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Promenjeno vrijeme u valnom obliku: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Ubačena je nova linija prevoda ({0}).</NewTextInsertAtX>
       <Center>Centriraj</Center>
       <PlayRate>Brzina</PlayRate>
@@ -1250,14 +1250,14 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <PreviewFontSize>Veličina fonta:</PreviewFontSize>
     <MainWindowVideoControls>Glavni prozor za upravljanje Video datotekom</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Adresa za pretragu reči:</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Izgled talasnog oblika</WaveFormAppearance>
-    <WaveFormGridColor>Boja &amp;mreže</WaveFormGridColor>
-    <WaveFormShowGridLines>&amp;Linije mreže</WaveFormShowGridLines>
+    <WaveformAppearance>Izgled talasnog oblika</WaveformAppearance>
+    <WaveformGridColor>Boja &amp;mreže</WaveformGridColor>
+    <WaveformShowGridLines>&amp;Linije mreže</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Obrnuti smer točkića na mišu</ReverseMouseWheelScrollDirection>
-    <WaveFormColor>Boja</WaveFormColor>
-    <WaveFormSelectedColor>&amp;Izabrana boja</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Boja &amp;pozadine</WaveFormBackgroundColor>
-    <WaveFormTextColor>Boja &amp;teksta</WaveFormTextColor>
+    <WaveformColor>Boja</WaveformColor>
+    <WaveformSelectedColor>&amp;Izabrana boja</WaveformSelectedColor>
+    <WaveformBackgroundColor>Boja &amp;pozadine</WaveformBackgroundColor>
+    <WaveformTextColor>Boja &amp;teksta</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Isprazni mape s oblicima i Spektrogramima</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Mape s oblicima i Spektrogramima sadrže {0} datoteke/a ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1663,8 +1663,8 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <Title>Nova mapa</Title>
     <Message>Naziv nove mape za bazu znakova:</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Novi talasni oblik.</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Novi talasni oblik.</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Novi talasni oblik ili Spektrogram.</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekundi</Seconds>
     <ZoomIn>Uvećaj</ZoomIn>
@@ -1682,8 +1682,8 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <ShowSpectrogramOnly>Prikaži samo Spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
     <SeekSilence>Tražiti tišinu...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>
     <StartFrom>Počnite od</StartFrom>
     <CurrentVideoPosition>Trenutna pozicija videozapisa</CurrentVideoPosition>
@@ -1699,5 +1699,5 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <SplitLongLinesAt1>Razdeli duge titlove na</SplitLongLinesAt1>
     <SplitLongLinesAt2>Milisekundi</SplitLongLinesAt2>
     <Other>Ostalo</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
 </Language>

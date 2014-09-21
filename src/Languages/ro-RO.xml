@@ -97,10 +97,10 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <Title>Adăugare la dicționarul propriu</Title>
     <Description>Adăugare cuvânt la dicționarul propriu (fără caractere identice)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Generarea datelor de formă audio</Title>
     <SourceVideoFile>Fișier video sursă:</SourceVideoFile>
-    <GenerateWaveFormData>Generează forma audio</GenerateWaveFormData>
+    <GenerateWaveformData>Generează forma audio</GenerateWaveformData>
     <PleaseWait>Poate dura câteva minute - te rog, așteaptă</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Nu s-a găsit player-ul VLC</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>S.E. are nevoie de player-ul VLC 1.1x sau unul mai nou ptr. extragerea datelor audio.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <GeneratingSpectrogram>Generarea spectrogramei ...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrage audio: {0:0.0} secunde</ExtractingSeconds>
     <ExtractingMinutes>Extrage audio: {0}:{1:00} minute</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Corecția duratelor</Title>
     <AdjustVia>Corectează prin</AdjustVia>
@@ -784,7 +784,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <ImportSceneChanges>Importă schimbări de scenă ...</ImportSceneChanges>
         <RemoveSceneChanges>Elimină schimbări de scenă</RemoveSceneChanges>
         <ShowHideVideo>Arată/ascunde video</ShowHideVideo>
-        <ShowHideWaveForm>Arată/ascunde forma audio</ShowHideWaveForm>
+        <ShowHideWaveform>Arată/ascunde forma audio</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Arată/ascunde forma audio și spectrograma</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Decuplează controalele video</UnDockVideoControls>
         <ReDockVideoControls>Recuplează controalele video</ReDockVideoControls>
@@ -842,7 +842,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <SpellCheck>Verifică ortografia</SpellCheck>
         <Settings>Setări</Settings>
         <Help>Ajutor</Help>
-        <ShowHideWaveForm>Arată/ascunde forma audio</ShowHideWaveForm>
+        <ShowHideWaveform>Arată/ascunde forma audio</ShowHideWaveform>
         <ShowHideVideo>Arată/ascunde video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -952,7 +952,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
       <TranslateTip>Sfat: Taste &lt;alt+↑/↓&gt; de trecut la sub. anterioară/următoare</TranslateTip>
       <CreateTip>Sfat: Taste &lt;ctrl+←/→&gt;</CreateTip>
       <AdjustTip>Sfat: Taste &lt;alt+↑/↓&gt; de trecut la sub. anterioară/următoare</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Înaintea schimbării timpului în formatul audio: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Înaintea schimbării timpului în formatul audio: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Text nou inserat la {0}</NewTextInsertAtX>
       <Center>Centru</Center>
       <PlayRate>Rata de redare (viteză)</PlayRate>
@@ -1496,19 +1496,19 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <PreviewFontSize>Examinare mărime font în subtitrare</PreviewFontSize>
     <MainWindowVideoControls>Fereastră principală de control video</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Căutare personalizată de text și url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Aspect formă de undă audio</WaveFormAppearance>
-    <WaveFormGridColor>Culoarea caroiajului</WaveFormGridColor>
-    <WaveFormShowGridLines>Arată liniile caroiajului</WaveFormShowGridLines>
+    <WaveformAppearance>Aspect formă de undă audio</WaveformAppearance>
+    <WaveformGridColor>Culoarea caroiajului</WaveformGridColor>
+    <WaveformShowGridLines>Arată liniile caroiajului</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Schimbă direcția de mișcare a rotiței mouse-ului</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Permite suprapunerea (la deplasare/redimensionare)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Setează focalizarea pe mouse</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Setează și focalizează lista pe mouse</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Permite suprapunerea (la deplasare/redimensionare)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Setează focalizarea pe mouse</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Setează și focalizează lista pe mouse</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Limitarea trebuie să fie de ordinul a</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisecundelor</WaveformBorderHitMs2>
-    <WaveFormColor>Culoarea audio</WaveFormColor>
-    <WaveFormSelectedColor>Culoarea selectată</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Culoarea fundalului</WaveFormBackgroundColor>
-    <WaveFormTextColor>Culoarea textului</WaveFormTextColor>
+    <WaveformColor>Culoarea audio</WaveformColor>
+    <WaveformSelectedColor>Culoarea selectată</WaveformSelectedColor>
+    <WaveformBackgroundColor>Culoarea fundalului</WaveformBackgroundColor>
+    <WaveformTextColor>Culoarea textului</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Golește dosarele „Spectrogramă” și „Formă Audio”</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Dosarele „Spectrograma” și „Forma Audio” conțin {0} fișier(e) ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogramă</Spectrogram>
@@ -1964,8 +1964,8 @@ Păstrezi schimbările?</KeepChangesMessage>
     <Title>Dosar nou</Title>
     <Message>Numele noului dosar al bazei de date a caracterelor</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Clic pentru a adauga forma audio</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Clic pentru a adauga forma audio</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clic aici pentru a adăuga forma audio/spectrograma</ClickToAddWaveformAndSpectrogram>
     <Seconds>secunde</Seconds>
     <ZoomIn>Transfocare de apropiere</ZoomIn>
@@ -1984,8 +1984,8 @@ Păstrezi schimbările?</KeepChangesMessage>
     <ShowSpectrogramOnly>Arată numai spectrograma</ShowSpectrogramOnly>
     <GuessTimeCodes>Estimează codurile de timp ...</GuessTimeCodes>
     <SeekSilence>Caută tacit ...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Estimează codurile de timp</Title>
     <StartFrom>Pornește de la</StartFrom>
     <CurrentVideoPosition>Poziția video curentă</CurrentVideoPosition>
@@ -2001,7 +2001,7 @@ Păstrezi schimbările?</KeepChangesMessage>
     <SplitLongLinesAt1>Scindează subtitrările lungi la</SplitLongLinesAt1>
     <SplitLongLinesAt2>milisecunde</SplitLongLinesAt2>
     <Other>Altele</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - setează voce nouă</Title>
     <VoiceName>Denumirea vocii</VoiceName>
