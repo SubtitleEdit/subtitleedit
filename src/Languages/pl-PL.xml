@@ -97,10 +97,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Dodaj do słownika użytkownika</Title>
     <Description>Dodaj wyraz do słownika użytkownika (bez uwzględniania wielkości liter)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Generuj wykres falowy audio</Title>
     <SourceVideoFile>Źródłowy plik wideo:</SourceVideoFile>
-    <GenerateWaveFormData>Generowanie danych wykresu falowego</GenerateWaveFormData>
+    <GenerateWaveformData>Generowanie danych wykresu falowego</GenerateWaveformData>
     <PleaseWait>Proszę czekać... może to potrwać kilka minut</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Nie znaleziono VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Do wyodrębnienia danych audio Subtitle Edit potrzebuje VLC media player v.1.1.x lub nowszego.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generowanie spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Dostosuj czasy trwania</Title>
     <AdjustVia>Dostosuj za pomocą</AdjustVia>
@@ -790,7 +790,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importuj zmiany w scenach...</ImportSceneChanges>
         <RemoveSceneChanges>Usuń zmiany w scenach</RemoveSceneChanges>
         <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
-        <ShowHideWaveForm>Pokaż/ukryj wykres falowy audio</ShowHideWaveForm>
+        <ShowHideWaveform>Pokaż/ukryj wykres falowy audio</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Pokaż/ukryj wykres falowy audio i spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>"Oddokuj" panel kontroli wideo</UnDockVideoControls>
         <ReDockVideoControls>"Zadokuj" panel kontroli wideo</ReDockVideoControls>
@@ -848,7 +848,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Sprawdź pisownię</SpellCheck>
         <Settings>Ustawienia</Settings>
         <Help>Pomoc</Help>
-        <ShowHideWaveForm>Pokaż/ukryj wykres falowy audio</ShowHideWaveForm>
+        <ShowHideWaveform>Pokaż/ukryj wykres falowy audio</ShowHideWaveform>
         <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -958,7 +958,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: Użyj &lt;alt+strzałki ↑/↓&gt;, aby przejść do poprzedniej/następnej linii</TranslateTip>
       <CreateTip>Tip: Użyj klawiszy &lt;ctrl+strzałki ←/→&gt;</CreateTip>
       <AdjustTip>Tip: Użyj &lt;alt+strzałki ↑/↓&gt;, aby przejść do poprzedniej/następnej linii</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Przed zmianami czasu na wykresie falowym audio: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Przed zmianami czasu na wykresie falowym audio: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>W pozycji {0} wstawiono nowy tekst napisu</NewTextInsertAtX>
       <Center>Środek</Center>
       <PlayRate>Tempo odtwarzania (szybkość)</PlayRate>
@@ -1503,19 +1503,19 @@ Kontynuować?</SubtitleAppendPrompt>
     <PreviewFontSize>Rozmiar czcionki podglądu napisów</PreviewFontSize>
     <MainWindowVideoControls>Główne okno panelu kontrolnego wideo</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Niestandardowe wyszukiwanie tekstu i URL</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Wygląd wykresu falowego</WaveFormAppearance>
-    <WaveFormGridColor>Kolor siatki</WaveFormGridColor>
-    <WaveFormShowGridLines>Pokaż linie siatki</WaveFormShowGridLines>
+    <WaveformAppearance>Wygląd wykresu falowego</WaveformAppearance>
+    <WaveformGridColor>Kolor siatki</WaveformGridColor>
+    <WaveformShowGridLines>Pokaż linie siatki</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Odwróć kierunek obrotu rolki myszki</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Zezwalaj na nakładanie (podczas przenoszenia/zmiany rozmiaru)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Skoncentruj uwagę na wejście myszki</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Koncentruj także uwagę na "Widoku listy" po wejściu myszki na jej obszar</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Zezwalaj na nakładanie (podczas przenoszenia/zmiany rozmiaru)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Skoncentruj uwagę na wejście myszki</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Koncentruj także uwagę na "Widoku listy" po wejściu myszki na jej obszar</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Oznakowanie granic musi być w</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>ms</WaveformBorderHitMs2>
-    <WaveFormColor>Kolor</WaveFormColor>
-    <WaveFormSelectedColor>Kolor zaznaczenia</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Kolor tła</WaveFormBackgroundColor>
-    <WaveFormTextColor>Kolor tekstu</WaveFormTextColor>
+    <WaveformColor>Kolor</WaveformColor>
+    <WaveformSelectedColor>Kolor zaznaczenia</WaveformSelectedColor>
+    <WaveformBackgroundColor>Kolor tła</WaveformBackgroundColor>
+    <WaveformTextColor>Kolor tekstu</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Opróżnij foldery "Spectrograms" i "Waveforms"</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Foldery "Waveforms" i "Spectrograms" zawierają {0} pliki(ów) ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1984,8 +1984,8 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Nowy folder</Title>
     <Message>Nazwa folderu bazy nowych znaków</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Kliknij, aby dodać wykres falowy</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Kliknij, aby dodać wykres falowy</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Kliknij, aby dodać wykres falowy/spektrogram</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekund</Seconds>
     <ZoomIn>Powiększ</ZoomIn>
@@ -2004,8 +2004,8 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <ShowSpectrogramOnly>Pokaż tylko spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Odgadnij kody czasowe...</GuessTimeCodes>
     <SeekSilence>Szukaj ciszy...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Odgadnij kody czasowe</Title>
     <StartFrom>Rozpocznij od</StartFrom>
     <CurrentVideoPosition>Aktualna pozycja wideo</CurrentVideoPosition>
@@ -2021,7 +2021,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <SplitLongLinesAt1>Podziel długie napisy na</SplitLongLinesAt1>
     <SplitLongLinesAt2>milisekund</SplitLongLinesAt2>
     <Other>Inne</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>Ustaw nowy głos - WebVTT</Title>
     <VoiceName>Nazwa głosu</VoiceName>

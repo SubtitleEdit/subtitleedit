@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class AddWaveForm
+    partial class AddWaveform
     {
         /// <summary>
         /// Required designer variable.
@@ -65,7 +65,7 @@
             this.buttonRipWave.Name = "buttonRipWave";
             this.buttonRipWave.Size = new System.Drawing.Size(158, 23);
             this.buttonRipWave.TabIndex = 13;
-            this.buttonRipWave.Text = "Generate wave form data";
+            this.buttonRipWave.Text = "Generate waveform data";
             this.buttonRipWave.UseVisualStyleBackColor = true;
             this.buttonRipWave.Click += new System.EventHandler(this.buttonRipWave_Click);
             // 
@@ -137,7 +137,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Generate wave form data";
+            this.Text = "Generate waveform data";
             this.Shown += new System.EventHandler(this.AddWareForm_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.AddWareForm_KeyDown);
             this.ResumeLayout(false);

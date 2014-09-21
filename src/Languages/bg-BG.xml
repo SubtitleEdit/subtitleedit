@@ -97,10 +97,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Добави към потребителския речник</Title>
     <Description>Добави дума към потребителския речник (неточно)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Създаване на данни за формата на звуковия сигнал</Title>
     <SourceVideoFile>Видео файл на източника:</SourceVideoFile>
-    <GenerateWaveFormData>Създаване на данни за формата на звуковия сигнал</GenerateWaveFormData>
+    <GenerateWaveformData>Създаване на данни за формата на звуковия сигнал</GenerateWaveformData>
     <PleaseWait>Това ще отнеме няколко минути - моля, изчакайте</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>Не е намерен VLC media player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit се нуждае от VLC media player 1.1.x или по-нова за извличане на аудио данните.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Създаване на спектрограма...</GeneratingSpectrogram>
     <ExtractingSeconds>Извличане на аудио: {0:0.0} секунди</ExtractingSeconds>
     <ExtractingMinutes>Извличане на аудио: {0}.{1:00} минути</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Настройка на времетраене</Title>
     <AdjustVia>Настройка на</AdjustVia>
@@ -783,7 +783,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Внасяне на сценни промени</ImportSceneChanges>
         <RemoveSceneChanges>Премахване на сценни промени</RemoveSceneChanges>
         <ShowHideVideo>Покажи/скрий видео</ShowHideVideo>
-        <ShowHideWaveForm>Покажи/скрий формата на звуковия сигнал</ShowHideWaveForm>
+        <ShowHideWaveform>Покажи/скрий формата на звуковия сигнал</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Покажи/скрий формата на звуковия сигнал и спектрограмата</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Видео регулатори в отделен прозорец</UnDockVideoControls>
         <ReDockVideoControls>Видео регулатори вградени в интерфейса</ReDockVideoControls>
@@ -841,7 +841,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Проверка на правопис</SpellCheck>
         <Settings>Настройки</Settings>
         <Help>Помощ</Help>
-        <ShowHideWaveForm>Покажи/скрий формата на звуковия сигнал</ShowHideWaveForm>
+        <ShowHideWaveform>Покажи/скрий формата на звуковия сигнал</ShowHideWaveform>
         <ShowHideVideo>Покажи/скрий видео</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -951,7 +951,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Използвайте клавиши &lt;alt+горна/долна стрелка&gt;, за предишни/следващи субтитри</TranslateTip>
       <CreateTip>Клавиши &lt;ctrl+лява/дясна стрелка&gt;</CreateTip>
       <AdjustTip>Клавиши &lt;alt+горна/долна стрелка&gt;, за предишни/следващи субтитри</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Преди промяната на времето във формата на звуковия сигнал: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Преди промяната на времето във формата на звуковия сигнал: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Новия текст е вмъкнат в {0}</NewTextInsertAtX>
       <Center>Център</Center>
       <PlayRate>Скорост на възпроизвеждане</PlayRate>
@@ -1490,21 +1490,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PreviewFontSize>Размер на шрифта за преглед на субтитрите</PreviewFontSize>
     <MainWindowVideoControls>Бутон за търсене на текст в Интернет при превод</MainWindowVideoControls>
     <CustomSearchTextAndUrl>URL адрес за търсене на текст</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Изглед на формата на звуковия сигнал</WaveFormAppearance>
-    <WaveFormGridColor>Цвят на мрежата</WaveFormGridColor>
-    <WaveFormShowGridLines>Показване на мрежа</WaveFormShowGridLines>
+    <WaveformAppearance>Изглед на формата на звуковия сигнал</WaveformAppearance>
+    <WaveformGridColor>Цвят на мрежата</WaveformGridColor>
+    <WaveformShowGridLines>Показване на мрежа</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Обръщане на скрул бутона на мишката</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Възможно презастъпване (при местене/оразмеряване)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>На фокус при клик на мишката</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Както и задаване на списъчен изглед при клик на мишката в списъчен изглед</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Възможно презастъпване (при местене/оразмеряване)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>На фокус при клик на мишката</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Както и задаване на списъчен изглед при клик на мишката в списъчен изглед</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Ограждащият маркер трябва да бъде</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>милисекунди</WaveformBorderHitMs2>
-    <WaveFormColor>Цвят на сигнала</WaveFormColor>
-    <WaveFormSelectedColor>Цвят на избран</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Цвят на фона</WaveFormBackgroundColor>
-    <WaveFormTextColor>Цвят на текста</WaveFormTextColor>
-    <WaveformAndSpectrogramsFolderEmpty>Изчисти папките 'Spectrograms' и 'WaveForms'</WaveformAndSpectrogramsFolderEmpty>
-    <WaveformAndSpectrogramsFolderInfo>Папките 'Spectrograms' и 'WaveForms' съдържат {0} файла ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
+    <WaveformColor>Цвят на сигнала</WaveformColor>
+    <WaveformSelectedColor>Цвят на избран</WaveformSelectedColor>
+    <WaveformBackgroundColor>Цвят на фона</WaveformBackgroundColor>
+    <WaveformTextColor>Цвят на текста</WaveformTextColor>
+    <WaveformAndSpectrogramsFolderEmpty>Изчисти папките 'Spectrograms' и 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
+    <WaveformAndSpectrogramsFolderInfo>Папките 'Spectrograms' и 'Waveforms' съдържат {0} файла ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Спектрограма</Spectrogram>
     <GenerateSpectrogram>Създаване на спектрограма</GenerateSpectrogram>
     <SpectrogramAppearance>Изглед на спектрограмата</SpectrogramAppearance>
@@ -1956,8 +1956,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Нова папка</Title>
     <Message>Име на папката с база данните със символи</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Щракнете, за да добавите формата на звуковия сигнал</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Щракнете, за да добавите формата на звуковия сигнал</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Щракнете, за да добавите формата на звуковия сигнал/спектрограма</ClickToAddWaveformAndSpectrogram>
     <Seconds>секунди</Seconds>
     <ZoomIn>Увеличаване</ZoomIn>
@@ -1976,8 +1976,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowSpectrogramOnly>Покажи само спектрограма</ShowSpectrogramOnly>
     <GuessTimeCodes>Налучкване на тайм кодове...</GuessTimeCodes>
     <SeekSilence>Търсене на тишина...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Налучкване на тайм код</Title>
     <StartFrom>Старт от</StartFrom>
     <CurrentVideoPosition>Моментната видео позиция</CurrentVideoPosition>
@@ -1993,7 +1993,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SplitLongLinesAt1>Разделяне на дълги редове на</SplitLongLinesAt1>
     <SplitLongLinesAt2>милисекунди</SplitLongLinesAt2>
     <Other>Други</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - задаване на нов глас</Title>
     <VoiceName>Име на гласа</VoiceName>

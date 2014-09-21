@@ -97,10 +97,10 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Zur Benutzerwortliste hinzufügen</Title>
     <Description>Wort zur Benutzterwortliste hinzufügen (Groß-/Kleinschreibung ignorieren)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Wellenformdaten generieren</Title>
     <SourceVideoFile>Quellvideodatei:</SourceVideoFile>
-    <GenerateWaveFormData>Wellenformdaten generieren</GenerateWaveFormData>
+    <GenerateWaveformData>Wellenformdaten generieren</GenerateWaveformData>
     <PleaseWait>Das könnte ein paar Minuten dauern - bitte warten</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player nicht gefunden</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit benötigt VLC media player 1.1.x oder höher um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
     <ExtractingMinutes>Extrahiere Audio: {0}.{1:00} Minuten</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Längen anpassen</Title>
     <AdjustVia>Anpassen über</AdjustVia>
@@ -789,7 +789,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Szenenänderungen importieren...</ImportSceneChanges>
         <RemoveSceneChanges>Szenenänderungen entfernen</RemoveSceneChanges>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
-        <ShowHideWaveForm>Wellenform anzeigen/verbergen</ShowHideWaveForm>
+        <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Wellenform und Spektogramm anzeigen/verbergen</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Videosteuerung abdocken</UnDockVideoControls>
         <ReDockVideoControls>Videosteuerung erneut andocken</ReDockVideoControls>
@@ -847,7 +847,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Rechtschreibung</SpellCheck>
         <Settings>Einstellungen</Settings>
         <Help>Hilfe</Help>
-        <ShowHideWaveForm>Wellenform anzeigen/verbergen</ShowHideWaveForm>
+        <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -957,7 +957,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: Nutze &lt;Alt+Pfeil hoch/runter&gt; für vorherigen/nächsten Untertitel</TranslateTip>
       <CreateTip>Tip: Nutze &lt;Strg+Pfeil links/rechts&gt;</CreateTip>
       <AdjustTip>Tip: Nutze &lt;Alt+Pfeil hoch/runter&gt; für vorherigen/nächsten Untertitel</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Vor Zeitänderung in Wellenform: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Vor Zeitänderung in Wellenform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Neuer Text eingefügt bei {0}</NewTextInsertAtX>
       <Center>Zentriert</Center>
       <PlayRate>Wiedergabegeschwindigkeit</PlayRate>
@@ -1506,19 +1506,19 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <PreviewFontSize>Schriftgröße für Untertitelvorschau</PreviewFontSize>
     <MainWindowVideoControls>Hauptfenster-Videosteuerung</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Benutzerdefinierter Suchtext und URL</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Wellenform-Darstellung</WaveFormAppearance>
-    <WaveFormGridColor>Rasterfarbe</WaveFormGridColor>
-    <WaveFormShowGridLines>Raster anzeigen</WaveFormShowGridLines>
+    <WaveformAppearance>Wellenform-Darstellung</WaveformAppearance>
+    <WaveformGridColor>Rasterfarbe</WaveformGridColor>
+    <WaveformShowGridLines>Raster anzeigen</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Scrollen mit Mausrad umkehren</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Überlappung erlauben (beim Verschieben/Skalieren)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Fokus auf Mauseingabe setzen</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Auch Listenansicht fokussieren bei Mauseingabe in Listenansicht</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Überlappung erlauben (beim Verschieben/Skalieren)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Fokus auf Mauseingabe setzen</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Auch Listenansicht fokussieren bei Mauseingabe in Listenansicht</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Randmarke erreicht in</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>ms</WaveformBorderHitMs2>
-    <WaveFormColor>Farbe</WaveFormColor>
-    <WaveFormSelectedColor>Farbe markiert</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Hintergrundfarbe</WaveFormBackgroundColor>
-    <WaveFormTextColor>Textfarbe</WaveFormTextColor>
+    <WaveformColor>Farbe</WaveformColor>
+    <WaveformSelectedColor>Farbe markiert</WaveformSelectedColor>
+    <WaveformBackgroundColor>Hintergrundfarbe</WaveformBackgroundColor>
+    <WaveformTextColor>Textfarbe</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Ordner für Spektogramme und Wellenform leeren</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Ordner für Spektogramme und Wellenform enthält {0} Dateien ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogramm</Spectrogram>
@@ -1985,8 +1985,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Title>Neuer Ordner</Title>
     <Message>Name des neuen Zeichendatenbank Ordners</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klicken um Wellenform hinzuzufügen</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klicken um Wellenform hinzuzufügen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klicken um Wellenform/Spektogramm hinzuzufügen</ClickToAddWaveformAndSpectrogram>
     <Seconds>Sekunden</Seconds>
     <ZoomIn>Vergrößern</ZoomIn>
@@ -2005,8 +2005,8 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ShowSpectrogramOnly>Nur Spektogramm anzeigen</ShowSpectrogramOnly>
     <GuessTimeCodes>Zeitstempel ermitteln...</GuessTimeCodes>
     <SeekSilence>Stille suchen...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Zeitstempel ermitteln</Title>
     <StartFrom>Start von</StartFrom>
     <CurrentVideoPosition>Aktuelle Videoposition</CurrentVideoPosition>
@@ -2022,7 +2022,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <SplitLongLinesAt1>Trenne lange Untertitel bei</SplitLongLinesAt1>
     <SplitLongLinesAt2>Millisekunden</SplitLongLinesAt2>
     <Other>Andere</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - Neue Sprache</Title>
     <VoiceName>Sprachname</VoiceName>

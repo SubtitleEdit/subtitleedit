@@ -79,10 +79,10 @@ http://soft98.ir
     <Title>اضافه کردن به لیست نام/غیره</Title>
     <Description>اضافه کردن به لیست نام/صدا</Description>
   </AddToNames>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>ساخت موج از اطلاعات</Title>
     <SourceVideoFile>منبع فایل تصویری :</SourceVideoFile>
-    <GenerateWaveFormData>ساخت موج از اطلاعات</GenerateWaveFormData>
+    <GenerateWaveformData>ساخت موج از اطلاعات</GenerateWaveformData>
     <PleaseWait>این کار ممکن است چند دقیقه طول بكشد - لطفا صبر کنید</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>وی ال سی مدیا پلیر پیدا نشد</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>برنامه به وی ال سی مدیا پلیر 1.1 برای استخراج داده های صوتی احتیاج دارد.</VlcMediaPlayerNotFound>
@@ -91,7 +91,7 @@ http://soft98.ir
     <GeneratingSpectrogram>مولد طیف نگار</GeneratingSpectrogram>
     <ExtractingSeconds>استخراج صدا: {0:0.0} ثانیه</ExtractingSeconds>
     <ExtractingMinutes>استخراج صدا: {0}.{1:00} دقیقه</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>تنظیم مدت زمان</Title>
     <AdjustVia>تنظیم وسیله</AdjustVia>
@@ -508,7 +508,7 @@ http://soft98.ir
         <ChooseAudioTrack>آهنگ های صوتی را انتخاب کنید</ChooseAudioTrack>
         <CloseVideo>بستن فایل تصویری</CloseVideo>
         <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
-        <ShowHideWaveForm>نمایش/پنهان سازی شکل موج</ShowHideWaveForm>
+        <ShowHideWaveform>نمایش/پنهان سازی شکل موج</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>نمایش/مخفی شکل موج و طیف نگار</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>سازمان ملل متحد کنترل اسکله های ویدئویی</UnDockVideoControls>
         <ReDockVideoControls>دوباره حوض ویدیو کنترل</ReDockVideoControls>
@@ -563,7 +563,7 @@ http://soft98.ir
         <SpellCheck>بررسی املا</SpellCheck>
         <Settings>تنظیمات</Settings>
         <Help>راهنما</Help>
-        <ShowHideWaveForm>نمایش/پنهان سازی شکل موج</ShowHideWaveForm>
+        <ShowHideWaveform>نمایش/پنهان سازی شکل موج</ShowHideWaveform>
         <ShowHideVideo>نمایش/پنهان سازی ویدئو</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -653,7 +653,7 @@ http://soft98.ir
       <TranslateTip>نکته : استفاده از &lt;alt+arrow up/down&gt; برای رفتن به قبلی/زیرنویس بعدی</TranslateTip>
       <CreateTip>نکته : استفاده از &lt;ctrl+arrow left/right&gt; کلید</CreateTip>
       <AdjustTip>نکته : استفاده از &lt;alt+arrow up/down&gt; برای رفتن به قبلی/زیرنویس بعدی</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Before changing time in wave form: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Before changing time in waveform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>New text inserted at {0}</NewTextInsertAtX>
       <Center>مرکز</Center>
       <PlayRate>سرعت بازی (سرعت)ا</PlayRate>
@@ -1025,14 +1025,14 @@ http://soft98.ir
     <PreviewFontSize>پیش نمایش سایز فونت زیرنویس</PreviewFontSize>
     <MainWindowVideoControls>صفحه اصلی ویدیو پنجره کنترل</MainWindowVideoControls>
     <CustomSearchTextAndUrl>سفارشی متن جستجو و آدرس</CustomSearchTextAndUrl>
-    <WaveFormAppearance>موج ظاهر فرم</WaveFormAppearance>
-    <WaveFormGridColor>رنگ گرید</WaveFormGridColor>
-    <WaveFormShowGridLines>نمایش خطوط شبکه</WaveFormShowGridLines>
+    <WaveformAppearance>موج ظاهر فرم</WaveformAppearance>
+    <WaveformGridColor>رنگ گرید</WaveformGridColor>
+    <WaveformShowGridLines>نمایش خطوط شبکه</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>برگرداندن چرخ موس اسکرول برای راهبری</ReverseMouseWheelScrollDirection>
-    <WaveFormColor>رنگ</WaveFormColor>
-    <WaveFormSelectedColor>انتخاب رنگ</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>برگشت رنگ</WaveFormBackgroundColor>
-    <WaveFormTextColor>رنگ متن</WaveFormTextColor>
+    <WaveformColor>رنگ</WaveformColor>
+    <WaveformSelectedColor>انتخاب رنگ</WaveformSelectedColor>
+    <WaveformBackgroundColor>برگشت رنگ</WaveformBackgroundColor>
+    <WaveformTextColor>رنگ متن</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>پوشه های طیف نگار و شکل موج خالی است</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'waveforms'and spectograms'folder contain {0} files ({1:0:00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>طیف نگار</Spectrogram>
@@ -1293,8 +1293,8 @@ http://soft98.ir
     <Title>پوشه جدید</Title>
     <Message>نام پوشه پایگاه داده جدید</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>برای اضافه کردن شکل موج (waveform) کلیک کنید</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>برای اضافه کردن شکل موج (waveform) کلیک کنید</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>کلیک کنید تا شکل موج یا طیف نگار اضافه شود</ClickToAddWaveformAndSpectrogram>
     <Seconds>ثانیه</Seconds>
     <ZoomIn>بزرگ کردن</ZoomIn>
@@ -1309,5 +1309,5 @@ http://soft98.ir
     <ShowWaveformAndSpectrogram>نمایش شکل موج و طیف نگار</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>فقط نمایش شکل موج</ShowWaveformOnly>
     <ShowSpectrogramOnly>فقط نمایش طیف نگار</ShowSpectrogramOnly>
-  </WaveForm>
+  </Waveform>
 </Language>

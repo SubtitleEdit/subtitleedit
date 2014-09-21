@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class WaveFormGenerateTimeCodes : Form
+    public partial class WaveformGenerateTimeCodes : Form
     {
         public bool StartFromVideoPosition { get; set; }
         public bool DeleteAll { get; set; }
@@ -14,11 +14,11 @@ namespace Nikse.SubtitleEdit.Forms
         public int VolumeMaximum { get; set; }
         public int DefaultMilliseconds { get; set; }
 
-        public WaveFormGenerateTimeCodes()
+        public WaveformGenerateTimeCodes()
         {
             InitializeComponent();
 
-            var l = Configuration.Settings.Language.WaveFormGenerateTimeCodes;
+            var l = Configuration.Settings.Language.WaveformGenerateTimeCodes;
             Text = l.Title;
             groupBoxStartFrom.Text = l.StartFrom;
             radioButtonStartFromPos.Text = l.CurrentVideoPosition;

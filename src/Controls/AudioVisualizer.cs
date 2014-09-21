@@ -187,7 +187,7 @@ namespace Nikse.SubtitleEdit.Controls
         public Paragraph RightClickedParagraph { get; private set; }
         public double RightClickedSeconds { get; private set; }
 
-        public string WaveFormNotLoadedText { get; set; }
+        public string WaveformNotLoadedText { get; set; }
         public Color BackgroundColor { get; set; }
         public Color Color { get; set; }
         public Color SelectedColor { get; set; }
@@ -267,8 +267,8 @@ namespace Nikse.SubtitleEdit.Controls
         {
             InitializeComponent();
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer, true);
-            WaveFormNotLoadedText = "Click to add waveform/spectrogram";
-            MouseWheel += WaveFormMouseWheel;
+            WaveformNotLoadedText = "Click to add waveform/spectrogram";
+            MouseWheel += WaveformMouseWheel;
 
             BackgroundColor = Color.Black;
             Color = Color.GreenYellow;
@@ -397,7 +397,7 @@ namespace Nikse.SubtitleEdit.Controls
             return false;
         }
 
-        internal void WaveFormPaint(object sender, PaintEventArgs e)
+        internal void WaveformPaint(object sender, PaintEventArgs e)
         {
             if (_wavePeaks != null && _wavePeaks.AllSamples != null)
             {
@@ -571,7 +571,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             SolidBrush tBrush = new SolidBrush(Color.Turquoise);
                             graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
-                                                                Configuration.Settings.Language.WaveForm.Seconds),
+                                                                Configuration.Settings.Language.Waveform.Seconds),
                                                   Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
                             tBrush.Dispose();
                         }
@@ -590,14 +590,14 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (Width > 90)
                 {
-                    e.Graphics.DrawString(WaveFormNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
+                    e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(Width / 2 - 65, Height / 2 - 10));
                 }
                 else
                 {
                     StringFormat stringFormat = new StringFormat();
                     stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
 
-                    e.Graphics.DrawString(WaveFormNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
+                    e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
                 }
                 textBrush.Dispose();
                 textFont.Dispose();
@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Controls
             return (int)Math.Round(seconds * _wavePeaks.Header.SampleRate * _zoomFactor);
         }
 
-        private void WaveFormMouseDown(object sender, MouseEventArgs e)
+        private void WaveformMouseDown(object sender, MouseEventArgs e)
         {
             if (_wavePeaks == null)
                 return;
@@ -1086,7 +1086,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void WaveFormMouseMove(object sender, MouseEventArgs e)
+        private void WaveformMouseMove(object sender, MouseEventArgs e)
         {
             if (_wavePeaks == null)
                 return;
@@ -1338,7 +1338,7 @@ namespace Nikse.SubtitleEdit.Controls
                    Math.Abs(milliseconds - paragraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection;
         }
 
-        private void WaveFormMouseUp(object sender, MouseEventArgs e)
+        private void WaveformMouseUp(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
@@ -1358,14 +1358,14 @@ namespace Nikse.SubtitleEdit.Controls
             Cursor = Cursors.Default;
         }
 
-        private void WaveFormMouseLeave(object sender, EventArgs e)
+        private void WaveformMouseLeave(object sender, EventArgs e)
         {
             Cursor = Cursors.Default;
             _mouseDown = false;
             Invalidate();
         }
 
-        private void WaveFormMouseEnter(object sender, EventArgs e)
+        private void WaveformMouseEnter(object sender, EventArgs e)
         {
             if (_wavePeaks == null || _wavePeaks.Header == null)
                 return;
@@ -1392,7 +1392,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         }
 
-        private void WaveFormMouseDoubleClick(object sender, MouseEventArgs e)
+        private void WaveformMouseDoubleClick(object sender, MouseEventArgs e)
         {
             if (_wavePeaks == null)
                 return;
@@ -1456,7 +1456,7 @@ namespace Nikse.SubtitleEdit.Controls
             return milliseconds >= paragraph.StartTime.TotalMilliseconds && milliseconds <= paragraph.EndTime.TotalMilliseconds;
         }
 
-        private void WaveFormMouseClick(object sender, MouseEventArgs e)
+        private void WaveformMouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left && OnSingleClick != null)
             {
@@ -1533,7 +1533,7 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        private void WaveFormKeyDown(object sender, KeyEventArgs e)
+        private void WaveformKeyDown(object sender, KeyEventArgs e)
         {
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Add)
             {
@@ -1655,7 +1655,7 @@ namespace Nikse.SubtitleEdit.Controls
                 OnZoomedChanged.Invoke(this, null);
         }
 
-        private void WaveFormMouseWheel(object sender, MouseEventArgs e)
+        private void WaveformMouseWheel(object sender, MouseEventArgs e)
         {
             int delta = e.Delta;
             if (!MouseWheelScrollUpIsForward)

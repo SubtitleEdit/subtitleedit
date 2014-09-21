@@ -101,11 +101,11 @@
             public string Description { get; set; }
         }
 
-        public class AddWaveForm
+        public class AddWaveform
         {
             public string Title { get; set; }
             public string SourceVideoFile { get; set; }
-            public string GenerateWaveFormData { get; set; }
+            public string GenerateWaveformData { get; set; }
             public string PleaseWait { get; set; }
             public string VlcMediaPlayerNotFoundTitle { get; set; }
             public string VlcMediaPlayerNotFound { get; set; }
@@ -1136,7 +1136,7 @@
                     public string ImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
                     public string ShowHideVideo { get; set; }
-                    public string ShowHideWaveForm { get; set; }
+                    public string ShowHideWaveform { get; set; }
                     public string ShowHideWaveformAndSpectrogram { get; set; }
                     public string UnDockVideoControls { get; set; }
                     public string ReDockVideoControls { get; set; }
@@ -1204,7 +1204,7 @@
                     public string SpellCheck { get; set; }
                     public string Settings { get; set; }
                     public string Help { get; set; }
-                    public string ShowHideWaveForm { get; set; }
+                    public string ShowHideWaveform { get; set; }
                     public string ShowHideVideo { get; set; }
                 }
 
@@ -1340,7 +1340,7 @@
                 public string CreateTip { get; set; }
                 public string AdjustTip { get; set; }
 
-                public string BeforeChangingTimeInWaveFormX { get; set; }
+                public string BeforeChangingTimeInWaveformX { get; set; }
                 public string NewTextInsertAtX { get; set; }
 
                 public string Center { get; set; }
@@ -1677,19 +1677,19 @@
             public string PreviewFontSize { get; set; }
             public string MainWindowVideoControls { get; set; }
             public string CustomSearchTextAndUrl { get; set; }
-            public string WaveFormAppearance { get; set; }
-            public string WaveFormGridColor { get; set; }
-            public string WaveFormShowGridLines { get; set; }
+            public string WaveformAppearance { get; set; }
+            public string WaveformGridColor { get; set; }
+            public string WaveformShowGridLines { get; set; }
             public string ReverseMouseWheelScrollDirection { get; set; }
-            public string WaveFormAllowOverlap { get; set; }
-            public string WaveFormFocusMouseEnter { get; set; }
-            public string WaveFormListViewFocusMouseEnter { get; set; }
+            public string WaveformAllowOverlap { get; set; }
+            public string WaveformFocusMouseEnter { get; set; }
+            public string WaveformListViewFocusMouseEnter { get; set; }
             public string WaveformBorderHitMs1 { get; set; }
             public string WaveformBorderHitMs2 { get; set; }
-            public string WaveFormColor { get; set; }
-            public string WaveFormSelectedColor { get; set; }
-            public string WaveFormBackgroundColor { get; set; }
-            public string WaveFormTextColor { get; set; }
+            public string WaveformColor { get; set; }
+            public string WaveformSelectedColor { get; set; }
+            public string WaveformBackgroundColor { get; set; }
+            public string WaveformTextColor { get; set; }
             public string WaveformAndSpectrogramsFolderEmpty { get; set; }
             public string WaveformAndSpectrogramsFolderInfo { get; set; }
             public string Spectrogram { get; set; }
@@ -2195,9 +2195,9 @@
             public string Message { get; set; }
         }
 
-        public class WaveForm
+        public class Waveform
         {
-            public string ClickToAddWaveForm { get; set; }
+            public string ClickToAddWaveform { get; set; }
             public string ClickToAddWaveformAndSpectrogram { get; set; }
             public string Seconds { get; set; }
             public string ZoomIn { get; set; }
@@ -2218,7 +2218,7 @@
             public string SeekSilence { get; set; }
         }
 
-        public class WaveFormGenerateTimeCodes
+        public class WaveformGenerateTimeCodes
         {
             public string Title { get; set; }
             public string StartFrom { get; set; }

@@ -97,10 +97,10 @@
     <Title>เพิ่มในพจนานุกรมของผู้ใช้</Title>
     <Description>เพิ่มคำในพจนานุกรมของผู้ใช้ (ลักษณะตัวพิมพ์ไม่สำคัญ)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>สร้างข้อมูลเวฟฟอร์ม</Title>
     <SourceVideoFile>ไฟล์วิดีโอต้นฉบับ:</SourceVideoFile>
-    <GenerateWaveFormData>สร้างข้อมูลเวฟฟอร์ม</GenerateWaveFormData>
+    <GenerateWaveformData>สร้างข้อมูลเวฟฟอร์ม</GenerateWaveformData>
     <PleaseWait>อาจต้องใช้เวลาสักครู่ - โปรดรอ</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>ไม่พบโปรแกรม VLC Media Player</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit ต้องใช้กับ VLC media player 1.1.x หรือใหม่กว่าเพื่อแยกข้อมูลออดิโอ</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@
     <GeneratingSpectrogram>กำลังสร้างสเปกโตแกรม...</GeneratingSpectrogram>
     <ExtractingSeconds>กำลังแยกออดิโอ: {0:0.0} วินาที</ExtractingSeconds>
     <ExtractingMinutes>กำลังแยกออดิโอ: {0}.{1:00} นาที</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>ปรับเวลา</Title>
     <AdjustVia>ปรับจาก</AdjustVia>
@@ -790,7 +790,7 @@
         <ImportSceneChanges>อิมพอร์ตฉากที่เปลี่ยนแปลง...</ImportSceneChanges>
         <RemoveSceneChanges>ลบฉากที่เปลี่ยนแปลง</RemoveSceneChanges>
         <ShowHideVideo>แสดง/ซ่อนวิดีโอ</ShowHideVideo>
-        <ShowHideWaveForm>แสดง/ซ่อนเวฟฟอร์ม</ShowHideWaveForm>
+        <ShowHideWaveform>แสดง/ซ่อนเวฟฟอร์ม</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>แสดง/ซ่อนเวฟฟอร์มและสเปคโตแกรม</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>ไม่ยึดแผงควบคุมวิดีโอ</UnDockVideoControls>
         <ReDockVideoControls>ยึดแผงควบคุมวิดีโอ</ReDockVideoControls>
@@ -848,7 +848,7 @@
         <SpellCheck>ตรวจคำ</SpellCheck>
         <Settings>การตั้งค่า</Settings>
         <Help>ช่วยเหลือ</Help>
-        <ShowHideWaveForm>แสดง/ซ่อนเวฟฟอร์ม</ShowHideWaveForm>
+        <ShowHideWaveform>แสดง/ซ่อนเวฟฟอร์ม</ShowHideWaveform>
         <ShowHideVideo>แสดง/ซ่อนวิดีโอ</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -958,7 +958,7 @@
       <TranslateTip>แนะนำ: ใช้ &lt;alt+arrow up/down&gt; ไปซับไตเติ้ลก่อน/หลัง</TranslateTip>
       <CreateTip>แนะนำ: ใช้ &lt;ctrl+arrow left/right&gt; คีย์</CreateTip>
       <AdjustTip>แนะนำ: ใช้ &lt;alt+arrow up/down&gt; ไปซับไตเติ้ลก่อน/หลัง</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>ก่อนเปลี่ยนเวลาในเวฟฟอร์ม: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>ก่อนเปลี่ยนเวลาในเวฟฟอร์ม: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>แทรกข้อความที่ {0}</NewTextInsertAtX>
       <Center>วางศูนย์</Center>
       <PlayRate>อัตราเล่น (ความเร็ว)</PlayRate>
@@ -1496,19 +1496,19 @@
     <PreviewFontSize>ขนาดฟอนต์พรีวิวซับไตเติ้ล</PreviewFontSize>
     <MainWindowVideoControls>แผงควบคุมวิดีโอหน้าต่างหลัก</MainWindowVideoControls>
     <CustomSearchTextAndUrl>ข้อความและยูอาร์แอลค้นหากำหนดเอง</CustomSearchTextAndUrl>
-    <WaveFormAppearance>ลักษณะของเวฟฟอร์ม</WaveFormAppearance>
-    <WaveFormGridColor>สีเส้นตาราง</WaveFormGridColor>
-    <WaveFormShowGridLines>แสดงเส้นตาราง</WaveFormShowGridLines>
+    <WaveformAppearance>ลักษณะของเวฟฟอร์ม</WaveformAppearance>
+    <WaveformGridColor>สีเส้นตาราง</WaveformGridColor>
+    <WaveformShowGridLines>แสดงเส้นตาราง</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>กลับทิศทางกลิ้งเมาส์</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>ยอมให้ซ้อนทับกันได้ (เมื่อย้าย/ปรับขนาด)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>โฟกัสเมื่อเมาส์เลื่อนผ่าน</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>โฟกัสที่ลิสต์วิวเมื่อเมาส์เลื่อนผ่านลิสต์วิว</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>ยอมให้ซ้อนทับกันได้ (เมื่อย้าย/ปรับขนาด)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>โฟกัสเมื่อเมาส์เลื่อนผ่าน</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>โฟกัสที่ลิสต์วิวเมื่อเมาส์เลื่อนผ่านลิสต์วิว</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>จุดชนกรอบต้องอยู่ระหว่าง</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>มิลลิวินาที</WaveformBorderHitMs2>
-    <WaveFormColor>สีเวฟฟอร์ม</WaveFormColor>
-    <WaveFormSelectedColor>สีส่วนที่เลือก</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>สีพื้น</WaveFormBackgroundColor>
-    <WaveFormTextColor>สีข้อความ</WaveFormTextColor>
+    <WaveformColor>สีเวฟฟอร์ม</WaveformColor>
+    <WaveformSelectedColor>สีส่วนที่เลือก</WaveformSelectedColor>
+    <WaveformBackgroundColor>สีพื้น</WaveformBackgroundColor>
+    <WaveformTextColor>สีข้อความ</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>ล้างโฟลเดอร์ 'Spectrograms' และ 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>โฟลเดอร์ 'Waveforms' และ 'Spectrograms' มี {0} ไฟล์ ขนาด ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>สเปกโตแกรม</Spectrogram>
@@ -1973,8 +1973,8 @@
     <Title>โฟลเดอร์ใหม่</Title>
     <Message>ชื่อโฟลเดอร์ฐานข้อมูลตัวอักษรใหม่</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>คลิกเพื่อเพิ่มเวฟฟอร์ม</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>คลิกเพื่อเพิ่มเวฟฟอร์ม</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>คลิกเพื่อเพิ่มเวฟฟอร์ม/สเปกโตแกรม</ClickToAddWaveformAndSpectrogram>
     <Seconds>วินาที</Seconds>
     <ZoomIn>ซูมเข้า</ZoomIn>
@@ -1993,8 +1993,8 @@
     <ShowSpectrogramOnly>แสดงเฉพาะสเปกโตแกรม</ShowSpectrogramOnly>
     <GuessTimeCodes>เดาไทม์โค้ด...</GuessTimeCodes>
     <SeekSilence>ค้นหาจุดเงียบ...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>เดาไทม์โค้ด</Title>
     <StartFrom>เริ่มจาก</StartFrom>
     <CurrentVideoPosition>ตำแหน่งวิดีโอปัจจุบัน</CurrentVideoPosition>
@@ -2010,7 +2010,7 @@
     <SplitLongLinesAt1>แยกซับไตเติ้ลยาวที่</SplitLongLinesAt1>
     <SplitLongLinesAt2>มิลลิวินาที</SplitLongLinesAt2>
     <Other>อื่นๆ</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - กำหนดเสียงใหม่</Title>
     <VoiceName>ตั้งชื่อของเสียง</VoiceName>

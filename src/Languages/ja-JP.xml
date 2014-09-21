@@ -96,10 +96,10 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Title>ユーザー辞書に追加</Title>
     <Description>ユーザー辞書に追加 (大文字と小文字は区別されます)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>波形データの生成</Title>
     <SourceVideoFile>ソース ビデオ ファイル:</SourceVideoFile>
-    <GenerateWaveFormData>波形データの生成</GenerateWaveFormData>
+    <GenerateWaveformData>波形データの生成</GenerateWaveformData>
     <PleaseWait>これには数分かかる可能性があります - お待ちください</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player が見つかりません</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit は オーディオ データの抽出に VLC media player 1.1.x 以降を必要とします</VlcMediaPlayerNotFound>
@@ -108,7 +108,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <GeneratingSpectrogram>スペクトログラムを生成しています...</GeneratingSpectrogram>
     <ExtractingSeconds>オーディオの抽出中: {0:0.0} 秒</ExtractingSeconds>
     <ExtractingMinutes>オーディオの抽出中: {0}.{1:00} 分</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>表示時間の調整</Title>
     <AdjustVia>調整の基準</AdjustVia>
@@ -634,7 +634,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <ChooseAudioTrack>オーディオ トラックの選択</ChooseAudioTrack>
         <CloseVideo>ビデオ ファイルを閉じる</CloseVideo>
         <ShowHideVideo>ビデオの表示/非表示の切り替え</ShowHideVideo>
-        <ShowHideWaveForm>波形の表示/非表示の切り替え</ShowHideWaveForm>
+        <ShowHideWaveform>波形の表示/非表示の切り替え</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>波形とスペクトログラムの表示/非表示の切り替え</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>ビデオ コントロールのドッキング解除</UnDockVideoControls>
         <ReDockVideoControls>ビデオ コントロールの再ドッキング</ReDockVideoControls>
@@ -689,7 +689,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <SpellCheck>スペル チェック</SpellCheck>
         <Settings>設定</Settings>
         <Help>ヘルプ</Help>
-        <ShowHideWaveForm>波形の表示/非表示の切り替え</ShowHideWaveForm>
+        <ShowHideWaveform>波形の表示/非表示の切り替え</ShowHideWaveform>
         <ShowHideVideo>ビデオの表示/非表示の切り替え</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -795,7 +795,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
       <TranslateTip>ヒント: 前/次の字幕へ移動するには &lt;alt+↑/↓&gt; を使用します</TranslateTip>
       <CreateTip>ヒント: &lt;ctrl+←/→&gt; キーを使用します</CreateTip>
       <AdjustTip>ヒント: 前/次の字幕へ移動するには &lt;alt+↑/↓&gt; を使用します</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>波形で時間を変更する前: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>波形で時間を変更する前: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>新しいテキストが {0} に挿入されました</NewTextInsertAtX>
       <Center>中央</Center>
       <PlayRate>再生レート (速度)</PlayRate>
@@ -1250,14 +1250,14 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <PreviewFontSize>字幕プレビューのフォント サイズ</PreviewFontSize>
     <MainWindowVideoControls>メイン ウィンドウのビデオ コントロール</MainWindowVideoControls>
     <CustomSearchTextAndUrl>カスタム検索のテキストと URL</CustomSearchTextAndUrl>
-    <WaveFormAppearance>波形の外観</WaveFormAppearance>
-    <WaveFormGridColor>グリッドの色</WaveFormGridColor>
-    <WaveFormShowGridLines>グリッド線を表示する</WaveFormShowGridLines>
+    <WaveformAppearance>波形の外観</WaveformAppearance>
+    <WaveformGridColor>グリッドの色</WaveformGridColor>
+    <WaveformShowGridLines>グリッド線を表示する</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>マウス ホイールのスクロール方向を反転する</ReverseMouseWheelScrollDirection>
-    <WaveFormColor>色</WaveFormColor>
-    <WaveFormSelectedColor>選択範囲の色</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>背景色</WaveFormBackgroundColor>
-    <WaveFormTextColor>テキストの色</WaveFormTextColor>
+    <WaveformColor>色</WaveformColor>
+    <WaveformSelectedColor>選択範囲の色</WaveformSelectedColor>
+    <WaveformBackgroundColor>背景色</WaveformBackgroundColor>
+    <WaveformTextColor>テキストの色</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>'Spectrograms' および 'Waveforms' フォルダーを空にする</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' および 'Spectrograms' フォルダーには {0} 個のファイルが含まれています ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>スペクトログラム</Spectrogram>
@@ -1662,8 +1662,8 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Title>新しいフォルダー</Title>
     <Message>新しい文字データベース フォルダーの名前</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>波形を追加する</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>波形を追加する</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>波形/スペクトログラムを追加する</ClickToAddWaveformAndSpectrogram>
     <Seconds>秒</Seconds>
     <ZoomIn>拡大</ZoomIn>
@@ -1681,8 +1681,8 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <ShowSpectrogramOnly>スペクトログラムのみ表示</ShowSpectrogramOnly>
     <GuessTimeCodes>タイム コードの推測...</GuessTimeCodes>
     <SeekSilence>無音の検索...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>タイム コードの推測</Title>
     <StartFrom>開始位置</StartFrom>
     <CurrentVideoPosition>現在のビデオの位置</CurrentVideoPosition>
@@ -1698,5 +1698,5 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SplitLongLinesAt1>長い字幕を分割する位置:</SplitLongLinesAt1>
     <SplitLongLinesAt2>ミリ秒</SplitLongLinesAt2>
     <Other>その他</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
 </Language>

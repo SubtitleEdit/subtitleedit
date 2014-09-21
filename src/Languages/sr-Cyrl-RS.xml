@@ -77,10 +77,10 @@
     <Title>Додавање речи у списак назива/изузетака</Title>
     <Description>Додајте реч у списак назива/изузетака:</Description>
   </AddToNames>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Сачињавање таласног облика</Title>
     <SourceVideoFile>Изворна видео датотека:</SourceVideoFile>
-    <GenerateWaveFormData>&amp;Сачини таласни облик</GenerateWaveFormData>
+    <GenerateWaveformData>&amp;Сачини таласни облик</GenerateWaveformData>
     <PleaseWait>Ова радња може потрајати. Сачекајте неколико тренутака.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player није пронађен</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Програм захтева VLC media player 1.1.x или новији за вађење података о звуку.</VlcMediaPlayerNotFound>
@@ -89,7 +89,7 @@
     <GeneratingSpectrogram>Правим спектрограм…</GeneratingSpectrogram>
     <ExtractingSeconds>Вађење звучног записа: {0:0.0} с</ExtractingSeconds>
     <ExtractingMinutes>Вађење звучног записа: {0}.{1:00} мин</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Прилагођавање трајања</Title>
     <AdjustVia>Прилагоди преко:</AdjustVia>
@@ -493,7 +493,7 @@
         <ChooseAudioTrack>Изабери звучни запис</ChooseAudioTrack>
         <CloseVideo>&amp;Затвори видео снимак</CloseVideo>
         <ShowHideVideo>Прикажи/сакриј &amp;видео снимак</ShowHideVideo>
-        <ShowHideWaveForm>Прикажи/сакриј &amp;таласни облик</ShowHideWaveForm>
+        <ShowHideWaveform>Прикажи/сакриј &amp;таласни облик</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Прикажи/сакриј таласни облик и &amp;спектрограм</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>О&amp;ткачи видео контроле</UnDockVideoControls>
         <ReDockVideoControls>П&amp;рикачи видео контроле</ReDockVideoControls>
@@ -548,7 +548,7 @@
         <SpellCheck>Провера писања</SpellCheck>
         <Settings>Поставке</Settings>
         <Help>Помоћ</Help>
-        <ShowHideWaveForm>Прикажи/сакриј таласни облик</ShowHideWaveForm>
+        <ShowHideWaveform>Прикажи/сакриј таласни облик</ShowHideWaveform>
         <ShowHideVideo>Прикажи/сакриј видео снимак</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -637,7 +637,7 @@
       <TranslateTip>Користите алт и горњу или доњу стрелицу да одете на претходни или следећи титл.</TranslateTip>
       <CreateTip>Користите ктрл и леву или десну стрелицу.</CreateTip>
       <AdjustTip>Користите алт и горњу или доњу стрелицу да одете на претходни или следећи титл.</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Промењено време у таласном облику: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Промењено време у таласном облику: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Створена је нова линија титла ({0}).</NewTextInsertAtX>
       <Center>Центрирај</Center>
       <PlayRate>Брзина</PlayRate>
@@ -1006,13 +1006,13 @@
     <PreviewFontSize>Величина фонта:</PreviewFontSize>
     <MainWindowVideoControls>Главни прозор за управљање видео снимком</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Адреса за претрагу речи:</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Изглед таласног облика</WaveFormAppearance>
-    <WaveFormGridColor>Боја &amp;мреже</WaveFormGridColor>
-    <WaveFormShowGridLines>&amp;Линије мреже</WaveFormShowGridLines>
-    <WaveFormColor>Боја</WaveFormColor>
-    <WaveFormSelectedColor>&amp;Изабрана боја</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Боја &amp;позадине</WaveFormBackgroundColor>
-    <WaveFormTextColor>Боја &amp;текста</WaveFormTextColor>
+    <WaveformAppearance>Изглед таласног облика</WaveformAppearance>
+    <WaveformGridColor>Боја &amp;мреже</WaveformGridColor>
+    <WaveformShowGridLines>&amp;Линије мреже</WaveformShowGridLines>
+    <WaveformColor>Боја</WaveformColor>
+    <WaveformSelectedColor>&amp;Изабрана боја</WaveformSelectedColor>
+    <WaveformBackgroundColor>Боја &amp;позадине</WaveformBackgroundColor>
+    <WaveformTextColor>Боја &amp;текста</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Испразни фасцикле с облицима и спектрограмима</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Фасцикле с облицима и спектрограмима садрже {0} датотеке/а ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Спектрограм</Spectrogram>
@@ -1252,8 +1252,8 @@
     <Title>Нова фасцикла</Title>
     <Message>Назив нове фасцикле за базу знакова:</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Кликните да додате таласни облик.</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Кликните да додате таласни облик.</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Кликните да додате таласни облик или спектрограм.</ClickToAddWaveformAndSpectrogram>
     <Seconds>с</Seconds>
     <ZoomIn>Увећај</ZoomIn>
@@ -1268,5 +1268,5 @@
     <ShowWaveformAndSpectrogram>Прикажи таласни облик и спектрограм</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Прикажи само таласни облик</ShowWaveformOnly>
     <ShowSpectrogramOnly>Прикажи само спектрограм</ShowSpectrogramOnly>
-  </WaveForm>
+  </Waveform>
 </Language>

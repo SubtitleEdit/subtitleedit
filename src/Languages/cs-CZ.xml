@@ -97,10 +97,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Přidat do vlastního slovníku</Title>
     <Description>Přidat slovo do vlastního slovníku (nerozlišovat velikost písmen)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Vytvořit křivku z dat</Title>
     <SourceVideoFile>Zdrojový soubor videa:</SourceVideoFile>
-    <GenerateWaveFormData>Vytvořit křivku z dat</GenerateWaveFormData>
+    <GenerateWaveformData>Vytvořit křivku z dat</GenerateWaveformData>
     <PleaseWait>Může to trvat několik minut, čekejte.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player nebyl nalezen</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit potřebuje VLC media player 1.1.x nebo novější pro extrahování zvukových dat.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Vytváření spektrogramu...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahování zvuku: {0:0,0} sekund</ExtractingSeconds>
     <ExtractingMinutes>Extrahování zvuku: {0},{1:00} minut</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Upravit trvání</Title>
     <AdjustVia>Upravit pomocí</AdjustVia>
@@ -790,7 +790,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Importovat změny scén...</ImportSceneChanges>
         <RemoveSceneChanges>Odebrat změny scén</RemoveSceneChanges>
         <ShowHideVideo>Zobrazit nebo skrýt video</ShowHideVideo>
-        <ShowHideWaveForm>Zobrazit nebo skrýt křivku</ShowHideWaveForm>
+        <ShowHideWaveform>Zobrazit nebo skrýt křivku</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Zobrazit nebo skrýt křivku a spektrogram</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Zrušit ukotvení ovládání videa</UnDockVideoControls>
         <ReDockVideoControls>Obnovit ukotvení ovládání videa</ReDockVideoControls>
@@ -848,7 +848,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Kontrola pravopisu</SpellCheck>
         <Settings>Nastavení</Settings>
         <Help>Nápověda</Help>
-        <ShowHideWaveForm>Zobrazit nebo skrýt křivku</ShowHideWaveForm>
+        <ShowHideWaveform>Zobrazit nebo skrýt křivku</ShowHideWaveform>
         <ShowHideVideo>Zobrazit nebo skrýt video</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -958,7 +958,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: Použijte &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí nebo další titulek</TranslateTip>
       <CreateTip>Tip: Použijte &lt;ctrl+šipka vlevo/vpravo&gt;</CreateTip>
       <AdjustTip>Tip: Použijte &lt;alt+šipka nahoru/dolů&gt; pro přechod na předchozí nebo další titulek</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Před změnou času ve vlnovce: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Před změnou času ve vlnovce: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nový text vložen v {0}</NewTextInsertAtX>
       <Center>Na střed</Center>
       <PlayRate>Rychlost přehrávání</PlayRate>
@@ -1506,19 +1506,19 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <PreviewFontSize>Velikost písma náhledu titulků</PreviewFontSize>
     <MainWindowVideoControls>Ovládání videa v hlavním okně</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Vlastní text hledání a adresa</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Vzhled křivky</WaveFormAppearance>
-    <WaveFormGridColor>Barva mřížky</WaveFormGridColor>
-    <WaveFormShowGridLines>Zobrazit mřížku</WaveFormShowGridLines>
+    <WaveformAppearance>Vzhled křivky</WaveformAppearance>
+    <WaveformGridColor>Barva mřížky</WaveformGridColor>
+    <WaveformShowGridLines>Zobrazit mřížku</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Obrátit směr posouvání kolečkem myši</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Povolit překrývání (při přesouvání nebo změně velikosti)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Nastavit zaměření na potvrzení myší</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Také nastavit zaměření zobrazení seznamu na potvrzení myší v zobrazení seznamu</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Povolit překrývání (při přesouvání nebo změně velikosti)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Nastavit zaměření na potvrzení myší</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Také nastavit zaměření zobrazení seznamu na potvrzení myší v zobrazení seznamu</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Označení hranice musí být v rámci</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milisekund</WaveformBorderHitMs2>
-    <WaveFormColor>Barva</WaveFormColor>
-    <WaveFormSelectedColor>Barva výběru</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Barva pozadí</WaveFormBackgroundColor>
-    <WaveFormTextColor>Barva textu</WaveFormTextColor>
+    <WaveformColor>Barva</WaveformColor>
+    <WaveformSelectedColor>Barva výběru</WaveformSelectedColor>
+    <WaveformBackgroundColor>Barva pozadí</WaveformBackgroundColor>
+    <WaveformTextColor>Barva textu</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Vyprázdnit složky 'Spectrograms' a 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Složky 'Waveforms' a 'Spectrograms' obsahují {0} souborů ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1985,8 +1985,8 @@ Zachovat změny?</KeepChangesMessage>
     <Title>Nová složka</Title>
     <Message>Název nové složky databáze znaků</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klepněte pro přidání křivky</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klepněte pro přidání křivky</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klepněte pro přidání křivky a spektrogramu</ClickToAddWaveformAndSpectrogram>
     <Seconds>sekund</Seconds>
     <ZoomIn>Zvětšit</ZoomIn>
@@ -2005,8 +2005,8 @@ Zachovat změny?</KeepChangesMessage>
     <ShowSpectrogramOnly>Zobrazit pouze spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Odhadnout časové kódy...</GuessTimeCodes>
     <SeekSilence>Hledat ticho...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Odhadnout časové kódy</Title>
     <StartFrom>Začít od</StartFrom>
     <CurrentVideoPosition>Současné pozice videa</CurrentVideoPosition>
@@ -2022,7 +2022,7 @@ Zachovat změny?</KeepChangesMessage>
     <SplitLongLinesAt1>Rozdělit dlouhé titulky po</SplitLongLinesAt1>
     <SplitLongLinesAt2>milisekundách</SplitLongLinesAt2>
     <Other>Další</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - nastavit nový hlas</Title>
     <VoiceName>Název hlasu</VoiceName>

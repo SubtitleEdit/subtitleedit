@@ -97,10 +97,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Aan gebruikerswoordenboek toevoegen</Title>
     <Description>Woord aan gebruikerswoordenboek toevoegen (niet hoofdlettergevoelig)</Description>
   </AddToUserDictionary>
-  <AddWaveForm>
+  <AddWaveform>
     <Title>Golfvormdata genereren</Title>
     <SourceVideoFile>Bronvideobestand:</SourceVideoFile>
-    <GenerateWaveFormData>Golfvormdata genereren</GenerateWaveFormData>
+    <GenerateWaveformData>Golfvormdata genereren</GenerateWaveformData>
     <PleaseWait>Dit kan enkele minuten duren - even geduld aub</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player niet gevonden</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit heeft VLC media player 1.1.x of nieuwer nodig voor de extractie van audiodata.</VlcMediaPlayerNotFound>
@@ -109,7 +109,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Spectrogram genereren...</GeneratingSpectrogram>
     <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>
     <ExtractingMinutes>Audio uitpakken: {0} {1:00} minuten</ExtractingMinutes>
-  </AddWaveForm>
+  </AddWaveform>
   <AdjustDisplayDuration>
     <Title>Tĳdsduur aanpassen</Title>
     <AdjustVia>Aanpassen via</AdjustVia>
@@ -789,7 +789,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportSceneChanges>Scènewisselingen importeren</ImportSceneChanges>
         <RemoveSceneChanges>Scènewisselingen verwĳderen</RemoveSceneChanges>
         <ShowHideVideo>Video tonen/verbergen</ShowHideVideo>
-        <ShowHideWaveForm>Golfvorm tonen/verbergen</ShowHideWaveForm>
+        <ShowHideWaveform>Golfvorm tonen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Golfvorm en spectrogram tonen/verbergen</ShowHideWaveformAndSpectrogram>
         <UnDockVideoControls>Videovenster ontkoppelen</UnDockVideoControls>
         <ReDockVideoControls>Videovenster koppelen</ReDockVideoControls>
@@ -847,7 +847,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Spellingcontrole</SpellCheck>
         <Settings>Instellingen</Settings>
         <Help>Help</Help>
-        <ShowHideWaveForm>Golfvorm tonen/verbergen</ShowHideWaveForm>
+        <ShowHideWaveform>Golfvorm tonen/verbergen</ShowHideWaveform>
         <ShowHideVideo>Video tonen/verbergen</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
@@ -957,7 +957,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: Gebruik &lt;alt+pĳl omhoog/omlaag&gt; om naar vorige/volgende ondertitel te gaan</TranslateTip>
       <CreateTip>Tip: Gebruik &lt;ctrl+pĳl links/rechts&gt;</CreateTip>
       <AdjustTip>Tip: Gebruik &lt;alt+pĳl omhoog/omlaag&gt; om naar vorige/volgende ondertitel te gaan</AdjustTip>
-      <BeforeChangingTimeInWaveFormX>Vóór tĳdaanpassing in geluidsgolf: {0}</BeforeChangingTimeInWaveFormX>
+      <BeforeChangingTimeInWaveformX>Vóór tĳdaanpassing in geluidsgolf: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nieuwe tekst ingevoegd op {0}</NewTextInsertAtX>
       <Center>Midden</Center>
       <PlayRate>Afpeelsnelheid</PlayRate>
@@ -1504,19 +1504,19 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <PreviewFontSize>Ondertitel voorbeeld lettergrootte</PreviewFontSize>
     <MainWindowVideoControls>Hoofdvenster videocontrole</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Aangepaste zoektekst en url</CustomSearchTextAndUrl>
-    <WaveFormAppearance>Golfvormweergave</WaveFormAppearance>
-    <WaveFormGridColor>Rasterkleur</WaveFormGridColor>
-    <WaveFormShowGridLines>Toon rasterlĳnen</WaveFormShowGridLines>
+    <WaveformAppearance>Golfvormweergave</WaveformAppearance>
+    <WaveformGridColor>Rasterkleur</WaveformGridColor>
+    <WaveformShowGridLines>Toon rasterlĳnen</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Muiswiel scrollrichting omkeren</ReverseMouseWheelScrollDirection>
-    <WaveFormAllowOverlap>Sta overlap toe (bĳ verplaatsen/herschalen)</WaveFormAllowOverlap>
-    <WaveFormFocusMouseEnter>Op muis invoer focussen</WaveFormFocusMouseEnter>
-    <WaveFormListViewFocusMouseEnter>Ook op muis invoer focusen in de lĳstweergave</WaveFormListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Sta overlap toe (bĳ verplaatsen/herschalen)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Op muis invoer focussen</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Ook op muis invoer focusen in de lĳstweergave</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
-    <WaveFormColor>Kleur</WaveFormColor>
-    <WaveFormSelectedColor>Geselecteerde kleur</WaveFormSelectedColor>
-    <WaveFormBackgroundColor>Achtergrondkleur</WaveFormBackgroundColor>
-    <WaveFormTextColor>Tekstkleur</WaveFormTextColor>
+    <WaveformColor>Kleur</WaveformColor>
+    <WaveformSelectedColor>Geselecteerde kleur</WaveformSelectedColor>
+    <WaveformBackgroundColor>Achtergrondkleur</WaveformBackgroundColor>
+    <WaveformTextColor>Tekstkleur</WaveformTextColor>
     <WaveformAndSpectrogramsFolderEmpty>Mappen voor spectrogrammen en golfvormen legen</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Mappen voor spectrogrammen en golfvormen bevatten {0} bestanden ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogram</Spectrogram>
@@ -1983,8 +1983,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Title>Nieuwe map</Title>
     <Message>Naam van de nieuwe karakter databankmap</Message>
   </VobSubOcrNewFolder>
-  <WaveForm>
-    <ClickToAddWaveForm>Klik om golfvorm toe te voegen</ClickToAddWaveForm>
+  <Waveform>
+    <ClickToAddWaveform>Klik om golfvorm toe te voegen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik om golfvorm/spectrogram toe te voegen</ClickToAddWaveformAndSpectrogram>
     <Seconds>Seconden</Seconds>
     <ZoomIn>Zoom in</ZoomIn>
@@ -2003,8 +2003,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <ShowSpectrogramOnly>Alleen spectrogram tonen</ShowSpectrogramOnly>
     <GuessTimeCodes>Tĳdcodes schatten...</GuessTimeCodes>
     <SeekSilence>Stilte zoeken...</SeekSilence>
-  </WaveForm>
-  <WaveFormGenerateTimeCodes>
+  </Waveform>
+  <WaveformGenerateTimeCodes>
     <Title>Schat de tĳdcodes</Title>
     <StartFrom>Start vanaf</StartFrom>
     <CurrentVideoPosition>Huidige videopositie</CurrentVideoPosition>
@@ -2020,7 +2020,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <SplitLongLinesAt1>Splits lange ondertitels op</SplitLongLinesAt1>
     <SplitLongLinesAt2>Milliseconden</SplitLongLinesAt2>
     <Other>Overige</Other>
-  </WaveFormGenerateTimeCodes>
+  </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>WebVTT - installeer nieuwe stem</Title>
     <VoiceName>Naam van de stem</VoiceName>

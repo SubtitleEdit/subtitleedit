@@ -14,7 +14,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddToNames AddToNames;
         public LanguageStructure.AddToOcrReplaceList AddToOcrReplaceList;
         public LanguageStructure.AddToUserDictionary AddToUserDictionary;
-        public LanguageStructure.AddWaveForm AddWaveForm;
+        public LanguageStructure.AddWaveform AddWaveform;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -98,8 +98,8 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.VobSubOcrCharacter VobSubOcrCharacter;
         public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
-        public LanguageStructure.WaveForm WaveForm;
-        public LanguageStructure.WaveFormGenerateTimeCodes WaveFormGenerateTimeCodes;
+        public LanguageStructure.Waveform Waveform;
+        public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
 
         public Language()
@@ -213,10 +213,10 @@ namespace Nikse.SubtitleEdit.Logic
                 Description = "Add word to user dictionary (not case sensitive)",
             };
 
-            AddWaveForm = new LanguageStructure.AddWaveForm
+            AddWaveform = new LanguageStructure.AddWaveform
             {
-                Title = "Generate wave form data",
-                GenerateWaveFormData = "Generate wave form data",
+                Title = "Generate waveform data",
+                GenerateWaveformData = "Generate waveform data",
                 SourceVideoFile = "Source video file:",
                 PleaseWait = "This may take a few minutes - please wait",
                 VlcMediaPlayerNotFoundTitle = "VLC media player not found",
@@ -1254,7 +1254,7 @@ namespace Nikse.SubtitleEdit.Logic
                         ImportSceneChanges = "Import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
                         ShowHideVideo = "Show/hide video",
-                        ShowHideWaveForm = "Show/hide waveform",
+                        ShowHideWaveform = "Show/hide waveform",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",
                         UnDockVideoControls = "Un-dock video controls",
                         ReDockVideoControls = "Re-dock video controls",
@@ -1326,7 +1326,7 @@ namespace Nikse.SubtitleEdit.Logic
                         SpellCheck = "Spell check",
                         Settings = "Settings",
                         Help = "Help",
-                        ShowHideWaveForm = "Show/hide wave form",
+                        ShowHideWaveform = "Show/hide waveform",
                         ShowHideVideo = "Show/hide video",
                     },
 
@@ -1446,7 +1446,7 @@ namespace Nikse.SubtitleEdit.Logic
                     CreateTip = "Tip: Use <ctrl+arrow left/right> keys",
                     AdjustTip = "Tip: Use <alt+arrow up/down> to go to previous/next subtitle",
 
-                    BeforeChangingTimeInWaveFormX = "Before changing time in wave form: {0}",
+                    BeforeChangingTimeInWaveformX = "Before changing time in waveform: {0}",
                     NewTextInsertAtX = "New text inserted at {0}",
 
                     Center = "Center",
@@ -1784,19 +1784,19 @@ can edit in same subtitle file (collaboration)",
                 PreviewFontSize = "Subtitle preview font size",
                 MainWindowVideoControls = "Main window video controls",
                 CustomSearchTextAndUrl = "Custom search text and url",
-                WaveFormAppearance = "Wave form appearance",
-                WaveFormGridColor = "Grid color",
-                WaveFormShowGridLines = "Show grid lines",
+                WaveformAppearance = "Waveform appearance",
+                WaveformGridColor = "Grid color",
+                WaveformShowGridLines = "Show grid lines",
                 ReverseMouseWheelScrollDirection = "Reverse mouse wheel scroll direction",
-                WaveFormAllowOverlap = "Allow overlap (when moving/resizing)",
-                WaveFormFocusMouseEnter = "Set focus on mouse enter",
-                WaveFormListViewFocusMouseEnter = "Also set list view focus on mouse enter in list view",
+                WaveformAllowOverlap = "Allow overlap (when moving/resizing)",
+                WaveformFocusMouseEnter = "Set focus on mouse enter",
+                WaveformListViewFocusMouseEnter = "Also set list view focus on mouse enter in list view",
                 WaveformBorderHitMs1 = "Border marker hit must be within",
                 WaveformBorderHitMs2 = "milliseconds",
-                WaveFormColor = "Color",
-                WaveFormSelectedColor = "Selected color",
-                WaveFormBackgroundColor = "Back color",
-                WaveFormTextColor = "Text color",
+                WaveformColor = "Color",
+                WaveformSelectedColor = "Selected color",
+                WaveformBackgroundColor = "Back color",
+                WaveformTextColor = "Text color",
                 WaveformAndSpectrogramsFolderEmpty = "Empty 'Spectrograms' and 'Waveforms' folders",
                 WaveformAndSpectrogramsFolderInfo = "'Waveforms' and 'Spectrograms' folders contain {0} files ({1:0.00} MB)",
                 Spectrogram = "Spectrogram",
@@ -2304,9 +2304,9 @@ Keep changes?",
                 Message = "Name of new character database folder",
             };
 
-            WaveForm = new LanguageStructure.WaveForm
+            Waveform = new LanguageStructure.Waveform
             {
-                ClickToAddWaveForm = "Click to add waveform",
+                ClickToAddWaveform = "Click to add waveform",
                 ClickToAddWaveformAndSpectrogram = "Click to add waveform/spectrogram",
                 Seconds = "seconds",
                 ZoomIn = "Zoom in",
@@ -2327,7 +2327,7 @@ Keep changes?",
                 GuessTimeCodes = "Guess time codes...",
             };
 
-            WaveFormGenerateTimeCodes = new LanguageStructure.WaveFormGenerateTimeCodes
+            WaveformGenerateTimeCodes = new LanguageStructure.WaveformGenerateTimeCodes
             {
                 Title = "Guess time codes",
                 StartFrom = "Start from",
