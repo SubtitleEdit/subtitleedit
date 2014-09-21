@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Name = "saveAllImagesWithHtmlIndexViewToolStripMenuItem";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Size = new System.Drawing.Size(305, 22);
-            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with html index view...";
+            this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Text = "Save all images with HTML index view...";
             this.saveAllImagesWithHtmlIndexViewToolStripMenuItem.Click += new System.EventHandler(this.saveAllImagesWithHtmlIndexViewToolStripMenuItem_Click);
             // 
             // toolStripMenuItemExport
@@ -890,7 +890,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.groupBoxOcrAutoFix.Size = new System.Drawing.Size(400, 333);
             this.groupBoxOcrAutoFix.TabIndex = 0;
             this.groupBoxOcrAutoFix.TabStop = false;
-            this.groupBoxOcrAutoFix.Text = "OCR auto correction / spellchecking";
+            this.groupBoxOcrAutoFix.Text = "OCR auto correction / spell checking";
             // 
             // buttonSpellCheckDownload
             // 

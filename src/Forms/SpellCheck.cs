@@ -969,7 +969,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void ContinueSpellcheck(Subtitle subtitle)
+        public void ContinueSpellCheck(Subtitle subtitle)
         {
             _subtitle = subtitle;
 

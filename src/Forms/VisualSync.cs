@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
                 VideoInfo videoInfo = ShowVideoInfo(fileName);
 
                 // be sure to match frames with movie
-                if (_originalSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like micro dvd
+                if (_originalSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
                 {
                     if (Math.Abs(_videoInfo.FramesPerSecond - _oldFramerate) > 0.02)
                     {

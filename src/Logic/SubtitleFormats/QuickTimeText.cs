@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {plain} {size:20}
 {timeScale:30}
 {width:160} {height:32}
-{timeStamps:absolute} {language:0}";
+{timestamps:absolute} {language:0}";
 
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(Header);

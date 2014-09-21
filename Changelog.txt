@@ -8,7 +8,7 @@
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Improved "Fix invalid italic tags"
-   * Allows for "hh:mm:ss.msec" input in Timed Text 1.0
+   * Allows for "hh:mm:ss.ms" input in Timed Text 1.0
    * Better error messages when saving a file fails - thx Andrew
    * Minor performance improvements
 * FIXED:
@@ -67,7 +67,7 @@
    * Can now import new time codes into OCR window - thx Music Fan
 * IMPROVED:
    * Improved "Fix short display times" - thx Krystian
-   * Split line improvement regarding italic/dialogue - thx moob
+   * Split line improvement regarding italic/dialog - thx moob
    * Updated Chinese Traditional translation - thx BR
    * Added ".avs" to list of known video formats - thx Peter
    * Avid STL format detection improved
@@ -76,8 +76,8 @@
 * FIXED:
    * Fixed crash in Visual Sync when using VLC as video player
    * Export to image based formats now uses font from SSA/ASS - thx mariner
-   * Do not lock explorer when dropping files (for OCR) in SE main list view - thx Jar
-   * Fixed dialogue issue in "auto-break lines" - thx fred
+   * Do not lock explorer when dropping files (for OCR) in Subtitle Edit's main list view - thx Jar
+   * Fixed dialog issue in "auto-break lines" - thx fred
    * Framerate conversion - fix for time based subs
    * Fixed issue regarding showing current vs original texts on previews - thx Krystian
    * Fixed bug in break long lines - thx moob
@@ -127,14 +127,14 @@
    * DCinema interop - better use of "Effect" - thx gena
    * Drag & drop support for subtitle comparer - thx ivandrofly
    * Better time division in "Split long lines" - thx Joel
-   * Better splitting of dialogues in "Split long lines" - thx Joel
+   * Better splitting of dialogs in "Split long lines" - thx Joel
    * Word lists improved - thx ivandrofly
    * Ctrl+I now works better in text box - thx rebawest
 * FIXED:
    * OCR via "image compare" now works again
    * Fixed several bugs regarding Blu-ray sup export - thx mariner
    * Fixed "Bridge gap in duration" when working with SSA/ASS
-   * Don't lock "settings.xml" when SE starts/exits - thx Doigt
+   * Don't lock "settings.xml" when Subtitle Edit starts/exits - thx Doigt
    * Fixed crash when exporting to DOST - thx Nguyen Hoang
    * Fixed crash in "Fix short display times" - thx ivandrofly
    * Fixed bug in batch convert regarding frame rate - thx Rasmus
@@ -198,7 +198,7 @@
    * Fixed crash in spell check - thx e257496
    * Fixed issue where it was not possible to move border in waveform
    * Fixed issue regarding alignment tags (like {\an8}) in Json - thx zatch
-   * Do not auto-break dialogues - thx pson
+   * Do not auto-break dialogs - thx pson
    * Fix bug in "Fix OCR errors" regarding "...i" - thx another-user
    * Fixed bug in "Multiple replace" regarding remembering old rules - thx Alberto
 
@@ -360,7 +360,7 @@
    * Add to "Names/noise list" in spell check now uses word in textbox 
      (and not the original word)
    * Alignment now works when exporting to sub/idx - thx adrianbergonzi
-   * Changed VLC audio extraction parameters so it works better with SE
+   * Changed VLC audio extraction parameters so it works better with Subtitle Edit
    * Fixed bug in "Find double words" - thx Matt
    * Command line convert does not prompt for PAC code page - thx Ethan
 
@@ -435,7 +435,7 @@
    * Fixed some language tags - thx Marco/Leon
    * Fixed problem in "Fix italic tags" - thx Mike
    * Fixed bugs in "Apply duration limits" - thx Mike
-   * When typing "&" SE would show "_" in the list view - thx XhmikosR
+   * When typing "&" Subtitle Edit would show "_" in the list view - thx XhmikosR
    * Allow regex search in empty string - thx vmb
    * Fixed crash when loading sub from DVD - thx Cristiano
    * Export to images now uses font size correctly
@@ -798,7 +798,7 @@
    * Export to VobSub format
    * Added new subtitle formats (now ~90!)
    * Added export to FAB image script
-   * Added import of XSub from DivX files (use File -> Open)
+   * Added import of XSub from divx files (use File -> Open)
  * IMPROVED:
    * Updated Basque translation - thx Xabier Aramendi
    * Export images alignment - thx Marcin

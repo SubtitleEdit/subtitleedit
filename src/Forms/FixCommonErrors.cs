@@ -471,7 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
             if (textSize.Height > buttonCancel.Height - 4)
             {
-                subtitleListView1.InitializeTimeStampColumWidths(this);
+                subtitleListView1.InitializeTimestampColumnWidths(this);
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
@@ -1731,7 +1731,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldText = p.Text;
                     string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     if (lines.Length == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
-                    { // dialogue
+                    { // dialog
                         lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         string line = lines[0].Trim();
 
@@ -1785,7 +1785,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
                     else
-                    { // not dialogue
+                    { // not dialog
                         if (p.Text.StartsWith('"'))
                         {
                             if (next == null || !next.Text.Contains('"'))
@@ -1935,7 +1935,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (match.Index > 2 && st.StrippedText[match.Index - 1] == ' ')
                                 {
                                     if ((Utilities.AllLettersAndNumbers + @",").Contains(st.StrippedText[match.Index - 2])
-                                        && match.Length >= 2 && Utilities.LowerCaseVowels.Contains(char.ToLower(match.Value[1])))
+                                        && match.Length >= 2 && Utilities.LowercaseVowels.Contains(char.ToLower(match.Value[1])))
                                     {
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                         p.Text = st.MergedString;
@@ -1947,7 +1947,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 else if (match.Index > Environment.NewLine.Length + 1 && Environment.NewLine.Contains(st.StrippedText[match.Index - 1]))
                                 {
                                     if ((Utilities.AllLettersAndNumbers + @",").Contains(st.StrippedText[match.Index - Environment.NewLine.Length + 1])
-                                        && match.Length >= 2 && Utilities.LowerCaseVowels.Contains(match.Value[1]))
+                                        && match.Length >= 2 && Utilities.LowercaseVowels.Contains(match.Value[1]))
                                     {
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                         p.Text = st.MergedString;
@@ -1969,7 +1969,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (match.Index < st.StrippedText.Length - 2)
                                         after = st.StrippedText[match.Index + 1];
                                     if (before != '\0' && char.IsUpper(before) && after != '\0' && char.IsLower(after) &&
-                                        !Utilities.LowerCaseVowels.Contains(char.ToLower(before)) && !Utilities.LowerCaseVowels.Contains(after))
+                                        !Utilities.LowercaseVowels.Contains(char.ToLower(before)) && !Utilities.LowercaseVowels.Contains(after))
                                     {
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "i");
                                         p.Text = st.MergedString;
@@ -1977,7 +1977,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         _totalFixes++;
                                         AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
-                                    else if (@"‘’¡¿„“()[]♪'. ".Contains(before) && !Utilities.LowerCaseVowels.Contains(char.ToLower(after)))
+                                    else if (@"‘’¡¿„“()[]♪'. ".Contains(before) && !Utilities.LowercaseVowels.Contains(char.ToLower(after)))
                                     {
                                     }
                                     else

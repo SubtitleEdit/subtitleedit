@@ -216,7 +216,7 @@ http://soft98.ir
     <MaxLengthError>Line {0} exceeds max length ({0}) by {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>معرفی عوض نشده</TextUnchangedPresentation>
     <TextLeftJustifiedText>متن توجیه شده سمت چپ</TextLeftJustifiedText>
-    <TextCentredText>میانه متن</TextCentredText>
+    <TextCenteredText>میانه متن</TextCenteredText>
     <TextRightJustifiedText>متن توجیه شده سمت راست</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -448,7 +448,7 @@ http://soft98.ir
         <CloseOriginal>بستن زیرنویس اصلی</CloseOriginal>
         <OpenContainingFolder>باز شامل پوشه</OpenContainingFolder>
         <Compare>مقایسه</Compare>
-        <ImportOcrFromDvd>vob/ifo (DVD) واردات و نام او سی آر از</ImportOcrFromDvd>
+        <ImportOcrFromDvd>VOB/IFO (DVD) واردات و نام او سی آر از</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle> VobSub (فرعی/idx) واردات/او سی آر</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>واردات/او سی آر ضبط و پخش فایل</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>MKVزیرنویس واردات از فایل</ImportSubtitleFromMatroskaFile>
@@ -458,9 +458,9 @@ http://soft98.ir
         <Export>خروجی گرفتن</Export>
         <ExportBdnXml>BDN xml/PNG</ExportBdnXml>
         <ExportBluRaySup>بلو-ری</ExportBluRaySup>
-        <ExportVobSub>Vobsub(sub/idx)</ExportVobSub>
+        <ExportVobSub>VobSub(sub/idx)</ExportVobSub>
         <ExportCavena890>cavena 890</ExportCavena890>
-        <ExportEbu>EBU stl</ExportEbu>
+        <ExportEbu>EBU STL</ExportEbu>
         <ExportPac>PAC</ExportPac>
         <ExportPlainText>متن آشکار</ExportPlainText>
         <ExportPlainTextWithoutLineBreaks>متن آشکار بدون خط های شکسته</ExportPlainTextWithoutLineBreaks>
@@ -1251,12 +1251,12 @@ http://soft98.ir
     <AllFixes>همه رفع</AllFixes>
     <GuessesUsed>حدس استفاده</GuessesUsed>
     <UnknownWords>کلمات نامعلوم</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>او سی آر اصلاح خودکار / spellchecking</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>او سی آر اصلاح خودکار / spell checking</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>تعمیر خطاهای او سی آر</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>باز کردن متن با تطبیق دادن زمان کدها</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>ذخیره کردن تصویر زیرنویس به عنوان</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>(PNG/bdn xml)ذخیره تمام عکس ها</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>html ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>HTML ذخیره تمام عکس ها با نمایه</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
     <TryModiForUnknownWords>سعی کنید او سی آر ام اس MODI کلمات ناشناخته</TryModiForUnknownWords>
     <DictionaryX>Dictionary: {0}</DictionaryX>

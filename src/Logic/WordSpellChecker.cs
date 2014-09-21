@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Forms;
 namespace Nikse.SubtitleEdit.Logic
 {
     /// <summary>
-    /// MS Word methods (late bound) for spell checking by Nikse
+    /// Microsoft Word methods (late bound) for spell checking by Nikse
     /// Mostly a bunch of hacks...
     /// </summary>
     internal class WordSpellChecker
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
             errorsAfter = int.Parse(spellingErrorsCount.ToString());
             System.Runtime.InteropServices.Marshal.ReleaseComObject(spellingErrors);
 
-            // Get spellcheck text
+            // Get spell check text
             object resultText = range.GetType().InvokeMember("Text", BindingFlags.GetProperty, null, range, null);
             range.GetType().InvokeMember("Delete", BindingFlags.InvokeMethod, null, range, null);
 

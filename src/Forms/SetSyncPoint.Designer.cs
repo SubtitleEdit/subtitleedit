@@ -211,7 +211,7 @@
             this.buttonVerify.Name = "buttonVerify";
             this.buttonVerify.Size = new System.Drawing.Size(119, 21);
             this.buttonVerify.TabIndex = 22;
-            this.buttonVerify.Text = "Play 2 secs and back";
+            this.buttonVerify.Text = "Play 2 s and back";
             this.buttonVerify.UseVisualStyleBackColor = true;
             this.buttonVerify.Click += new System.EventHandler(this.buttonStartVerify_Click);
             // 

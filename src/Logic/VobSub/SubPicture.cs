@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         }
 
         /// <summary>
-        /// For SP packet with dvd subpictures
+        /// For SP packet with DVD subpictures
         /// </summary>
         /// <param name="data">Byte data buffer</param>
         /// <param name="startDisplayControlSequenceTableAddress">Address of first control sequence in data</param>

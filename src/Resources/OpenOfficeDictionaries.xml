@@ -27,7 +27,7 @@
     <EnglishName>Breton</EnglishName>
     <NativeName>Brezhoneg</NativeName>
     <DownloadLink>http://extensions.libreoffice.org/extension-center/an-drouizig-breton-spellchecker/releases/0.11/dict-br-0.11.oxt</DownloadLink>
-    <Description>An Drouizig Breton Spellchecker</Description>
+    <Description>An Drouizig Breton Spell Checker</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Bulgarian</EnglishName>
@@ -129,7 +129,7 @@
     <EnglishName>Hindi</EnglishName>
     <NativeName>हिंदी</NativeName>
     <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2367/1/dict-hi.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fhindi-spellchecker-dictionary&amp;ts=1373919139&amp;use_mirror=kent</DownloadLink>
-    <Description>Hindi Spellchecker Dictionary</Description>
+    <Description>Hindi Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hungarian</EnglishName>
@@ -213,7 +213,7 @@
     <EnglishName>Malay</EnglishName>
     <NativeName>Malay</NativeName>
     <DownloadLink>http://ftp.sunet.se/pub/Office/OpenOffice.org/contrib/dictionaries/ms_MY.zip</DownloadLink>
-    <Description>Malay Spellchecker v0.1 - 07/10/04</Description>
+    <Description>Malay Spell Checker v0.1 - 07/10/04</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Macedonian</EnglishName>
@@ -327,7 +327,7 @@
     <EnglishName>Thai</EnglishName>
     <NativeName>ภาษาไทย</NativeName>
     <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/2365/0/dict-th.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fthai-spellchecker-dictionary&amp;ts=1373919459&amp;use_mirror=netcologne</DownloadLink>
-    <Description>Thai Spellchecker Dictionary</Description>
+    <Description>Thai Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Ukrainian</EnglishName>
@@ -339,7 +339,7 @@
     <EnglishName>Valencian</EnglishName>
     <NativeName>valencià</NativeName>
     <DownloadLink>http://www.softcatala.org/diccionaris/actualitzacions/OOo/avl.oxt</DownloadLink>
-    <Description>Valencian Catalan Spellcheck Dictionary 2.5.0</Description>
+    <Description>Valencian Catalan Spell Check Dictionary 2.5.0</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Vietnamese</EnglishName>

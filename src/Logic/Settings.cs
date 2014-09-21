@@ -497,7 +497,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool ShowOriginalAsPreviewIfAvailable { get; set; }
         public int LastPacCodePage { get; set; }
         public string OpenSubtitleExtraExtensions { get; set; }
-        public bool ListViewColumsRememberSize { get; set; }
+        public bool ListViewColumnsRememberSize { get; set; }
         public int ListViewNumberWidth { get; set; }
         public int ListViewStartWidth { get; set; }
         public int ListViewEndWidth { get; set; }
@@ -592,7 +592,7 @@ namespace Nikse.SubtitleEdit.Logic
             SmallDelayMilliseconds = 500;
             LargeDelayMilliseconds = 5000;
             OpenSubtitleExtraExtensions = "*.mp4;*.m4v;*.mkv;*.ts"; // matroska/mp4/m4v files (can contain subtitles)
-            ListViewColumsRememberSize = true;
+            ListViewColumnsRememberSize = true;
             VlcWaveTranscodeSettings = "acodec=s16l"; // "acodec=s16l,channels=1,ab=64,samplerate=8000";
             UseTimeFormatHHMMSSFF = false;
             ClearStatusBarAfterSeconds = 10;
@@ -690,7 +690,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool LineOcrDraw { get; set; }
         public bool LineOcrAdvancedItalic { get; set; }
         public string LineOcrLastLanguages { get; set; }
-        public string LineOcrLastSpellcheck { get; set; }
+        public string LineOcrLastSpellCheck { get; set; }
         public int LineOcrXOrMorePixelsMakesSpace { get; set; }
         public int LineOcrMinLineHeight { get; set; }
         public int LineOcrMaxLineHeight { get; set; }
@@ -1410,9 +1410,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("OpenSubtitleExtraExtensions");
             if (subNode != null)
                 settings.General.OpenSubtitleExtraExtensions = subNode.InnerText.Trim();
-            subNode = node.SelectSingleNode("ListViewColumsRememberSize");
+            subNode = node.SelectSingleNode("ListViewColumnsRememberSize");
             if (subNode != null)
-                settings.General.ListViewColumsRememberSize = Convert.ToBoolean(subNode.InnerText.Trim());
+                settings.General.ListViewColumnsRememberSize = Convert.ToBoolean(subNode.InnerText.Trim());
             subNode = node.SelectSingleNode("ListViewNumberWidth");
             if (subNode != null)
                 settings.General.ListViewNumberWidth = Convert.ToInt32(subNode.InnerText.Trim());
@@ -2109,9 +2109,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("LineOcrLastLanguages");
             if (subNode != null)
                 settings.VobSubOcr.LineOcrLastLanguages = subNode.InnerText;
-            subNode = node.SelectSingleNode("LineOcrLastSpellcheck");
+            subNode = node.SelectSingleNode("LineOcrLastSpellCheck");
             if (subNode != null)
-                settings.VobSubOcr.LineOcrLastSpellcheck = subNode.InnerText;
+                settings.VobSubOcr.LineOcrLastSpellCheck = subNode.InnerText;
             subNode = node.SelectSingleNode("LineOcrXOrMorePixelsMakesSpace");
             if (subNode != null)
                 settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace = Convert.ToInt32(subNode.InnerText);
@@ -2688,7 +2688,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("ShowOriginalAsPreviewIfAvailable", settings.General.ShowOriginalAsPreviewIfAvailable.ToString());
                 textWriter.WriteElementString("LastPacCodePage", settings.General.LastPacCodePage.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("OpenSubtitleExtraExtensions", settings.General.OpenSubtitleExtraExtensions);
-                textWriter.WriteElementString("ListViewColumsRememberSize", settings.General.ListViewColumsRememberSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ListViewColumnsRememberSize", settings.General.ListViewColumnsRememberSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewNumberWidth", settings.General.ListViewNumberWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewStartWidth", settings.General.ListViewStartWidth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ListViewEndWidth", settings.General.ListViewEndWidth.ToString(CultureInfo.InvariantCulture));
@@ -2936,7 +2936,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("LineOcrDraw", settings.VobSubOcr.LineOcrDraw.ToString());
                 textWriter.WriteElementString("LineOcrAdvancedItalic", settings.VobSubOcr.LineOcrAdvancedItalic.ToString());
                 textWriter.WriteElementString("LineOcrLastLanguages", settings.VobSubOcr.LineOcrLastLanguages);
-                textWriter.WriteElementString("LineOcrLastSpellcheck", settings.VobSubOcr.LineOcrLastSpellcheck);
+                textWriter.WriteElementString("LineOcrLastSpellCheck", settings.VobSubOcr.LineOcrLastSpellCheck);
                 textWriter.WriteElementString("LineOcrXOrMorePixelsMakesSpace", settings.VobSubOcr.LineOcrXOrMorePixelsMakesSpace.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMinLineHeight", settings.VobSubOcr.LineOcrMinLineHeight.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("LineOcrMaxLineHeight", settings.VobSubOcr.LineOcrMaxLineHeight.ToString(CultureInfo.InvariantCulture));

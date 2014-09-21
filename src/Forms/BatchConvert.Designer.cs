@@ -320,7 +320,7 @@
             this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
             this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(107, 13);
             this.labelHourMinSecMilliSecond.TabIndex = 0;
-            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.msec";
+            this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
             // 
             // checkBoxFixCasing
             // 

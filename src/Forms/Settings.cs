@@ -304,7 +304,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptDeleteLines.Text = language.PromptDeleteLines;
 
             comboBoxTimeCodeMode.Items.Clear();
-            comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMsec);
+            comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMS);
             comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSFF);
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 comboBoxTimeCodeMode.SelectedIndex = 1;
