@@ -69,7 +69,7 @@
    * Improved "Fix short display times" - thx Krystian
    * Split line improvement regarding italic/dialogue - thx moob
    * Updated Chinese Traditional translation - thx BR
-   * Added .avs to list of known video formats - thx Peter
+   * Added ".avs" to list of known video formats - thx Peter
    * Avid STL format detection improved
    * Allow adding words to user dictionary with a length of 1 - thx Betsy25
    * Spell check now has better suggestions for one letter words - thx Milad
@@ -83,7 +83,7 @@
    * Fixed bug in break long lines - thx moob
    * Fixed bug in export/boxing - thx mood
    * Minor syntax coloring fix regarding 2+ lines - thx Joel
-   * Format "CSV 3" should not load format "SPRUCE STL" - thx Adrian
+   * "CSV 3" format should not load "SPRUCE STL" format - thx Adrian
    * Added info about chars/sec to Statistics - thx Krystian
    * Remember "Auto fix names where only casing differ" - thx Betsy25
    * SCC format multi line italics now works - thx Shawn
@@ -118,7 +118,7 @@
    * Updated Romanian translation - thx Mircea
    * Updated Swedish translation - thx Ted
    * Updated Chinese translation - thx Leon
-   * Updated Greek translation thx ΑΚΗΣ
+   * Updated Greek translation - thx ΑΚΗΣ
    * Updated Brazilian Portuguese translation - thx Igor Rückert
    * Updated Basque translation - thx Xabier
    * Export to image based format now remembers most settings
@@ -152,7 +152,7 @@
 3.3.15 (13th April 2014)
 * NEW:
    * Added new subtitle formats (200+ formats supported!)
-   * Export to VobSub option "Anti-aliasing with transparency" thx CoOoL_BoY/moob
+   * Export to VobSub option "Anti-aliasing with transparency" - thx CoOoL_BoY/moob
    * Added ZPosition setting for DCinema interop - thx Joseph
    * Added fade up/down to DCinema interop properties - thx Raul
    * Added shortcut for Tools -> "Split long lines" - thx John
@@ -192,7 +192,7 @@
    * Updated Dutch translation - thx Quetsbeek
    * Updated Bulgarian translation - thx Iavor
    * Updated German translation - thx Siegwarth
-   * Added Serbo-Croatian letter "đ" to file format PAC - thx nenad
+   * Added Serbo-Croatian letter "đ" to PAC file format - thx nenad
    * Export to custom text format - Added "Delete" button - thx Leon
 * FIXED:
    * Fixed crash in spell check - thx e257496
@@ -211,7 +211,7 @@
    * New option for "Focus on mouse-over" for waveform/spectrogram - thx lansing
    * New setting "Gap between subtitles"
    * New subtitle formats
-   * French rules regarding L and apostrophe in spell check + OCR fix - thx René
+   * French rules regarding "L" and apostrophe in spell check + OCR fix - thx René
    * "Fix common errors" toolbar button - thx Betsy25
 * IMPROVED:
    * Updated Korean translation - thx domddol
@@ -250,7 +250,7 @@
   * Fixed bug where textbox lost connection with subtitle after "Replace" - thx HodoreeSubs
   * Fixed issue in OCR regarding expand selection - thx Thomas
   * Reset loaded image compare bitmaps after creating new OCR image set
-  * Freeze fix for subtitle format "spt" - thx Leif
+  * Freeze fix for "spt" subtitle format - thx Leif
   * Fix a bug in "Fix invalid italic tags" - thx rebawest
   * Fix a bug in waveform regarding ALT + mouse end/start move in frame mode - thx rebawest
 
@@ -472,7 +472,7 @@
    * Fixed minor language detection bug regarding Korean - thx Hoyt
    * Fixed baseline horizontal alignment in Export to Blu-ray sup - thx THXTEX
    * Fixed multi line color tags when outputting DCinema - thx lillian
-   * Fixed "line-breaks" in csv formats
+   * Fixed "line-breaks" in CSV formats
    * Fixed dead spell check download links (no more OpenOffice links)
    * Some fixes for DCinema SMTP - thx Andrew
    * Fixed bug regarding decoding &aring; to å - thx Jesper
@@ -510,7 +510,7 @@
    * Split of subtitle now keep styles - thx Kyousuke
    * Some output changes for Rhozet Marmonic - thx Itai
    * Installer version can now list installed plugins
-   * Fixed bug in format DCinema interop regarding LoadFont URI - thx Radoslav
+   * Fixed bug in DCinema interop format regarding LoadFont URI - thx Radoslav
    * Can now save " " (space) in multiple replace settings - thx dandomina
    * Italian translation now active again (broken in 3.3.4)
    * Clear suggestions in OCR now actually works
@@ -884,8 +884,8 @@
  * FIXED:
    * Possible crash when saving ebu files
    * Possible crash when fixing italics - thx StainlessS
-   * Fixed bug when editing time codes - issue 46, thx mobo
-   * Fixed memory leak in spell check - thx thx aMvEL
+   * Issue #46: Fixed bug when editing time codes - thx mobo
+   * Fixed memory leak in spell check - thx aMvEL
    * Fixed WinXP crash when OCR'ing Blu-ray/SON - thx edea
    * Can now actually use MPlayer2 on windows - thx rotulos1
    * Fixed a (rare) crash in change casing - fix names
@@ -900,9 +900,9 @@
      Flash XML, YouTube annotations and more
    * Most important shortcuts in Options -> Settings
    * Export bdn-xml/images + import/OCR bdn-xml/images
-   * Added "Point sync via other subtitle" (thx ioannis)
-   * Tools -> Make empty translation from current subtitle (thx vmb)
-   * Tools -> Show original text in audio/video previews (thx vmb)
+   * Added "Point sync via other subtitle" - thx ioannis
+   * Tools -> Make empty translation from current subtitle - thx vmb
+   * Tools -> Show original text in audio/video previews - thx vmb
    * Command line conversion between subtitle formats
      (Example: subtitleedit /convert *.srt MicroDVD - thx Carl)
    * Subtitle preview font size (below video player) is now available in 
@@ -910,7 +910,7 @@
    * Edit -> Select all
    * List view context menu: Copy as text to clipboard 
      (you can also use Ctrl+C / Ctrl+V)
-   * Text box context menu -> Split line at cursor position (thx DrJackson)
+   * Text box context menu -> Split line at cursor position - thx DrJackson
    * Import + OCR of Blu-ray sup files inside Matroska files
    * Now remembers undocked controls pos/size
    * New customizable shortcut for Adjust mode: 
@@ -918,79 +918,79 @@
      at video pos, keep duration, and go to next sub (Shift+End, thx Bavo)
    * Can now import subtitles from mp4/mv4 files
  * IMPROVED:
-   * OCR unknown words highlighting now works better (thx sialivi)
+   * OCR unknown words highlighting now works better - thx sialivi
    * OCR image compare UI improved with "Edit last char" and much more 
-     (thx Zoltan)
+     - thx Zoltan
    * OCR image compare: Compare more effective + word breaking improved
    * Merge short lines can now also merge lines ending with ".", "?", 
      or "!" (optional)
-   * Can now read Adobe Encore files starting with line numbers (thx Pier)
+   * Can now read Adobe Encore files starting with line numbers - thx Pier
    * Advanced Sub Station Alpha (and SSA) now keeps original styles 
-     (thx Rebecca)
-   * Improved Remove text for HI (thx sialivi/aMvEL)
-   * Undo now also works for original subtitle (thx Trottel)
+     - thx Rebecca
+   * Improved Remove text for HI - thx sialivi/aMvEL
+   * Undo now also works for original subtitle - thx Trottel
  * FIXED:
-   * Adjust all times did not work for MicroDVD (thx Wolf)
+   * Adjust all times did not work for MicroDVD - thx Wolf
    * Fixed a bug in VobSub parser which could cause scrambled images
    * Fixed a bug in VobSub parser so it no longer ignores custom 
      background color
    * Fixed too much cropping for VobSub pictures
    * Now removes empty Unicode white spaces from Google translate
-   * Crash when entering invalid text in source view (thx Frédéric)
+   * Crash when entering invalid text in source view - thx Frédéric
    * Fixed a few bugs in DVD Architect format + added another two 
-     new variants (thx Jacob)
+     new variants - thx Jacob
    * Fixed incorrect line-break in Microsoft Translate in last part of 
-     sub (thx Jacob)
-   * Fixed incorrect undo when working with waveform (thx Trottel/vmb)
+     sub - thx Jacob
+   * Fixed incorrect undo when working with waveform - thx Trottel/vmb
 
 
 3.1 (3rd March 2011)
  * NEW:
    * Collaboration via the internet ("Networking", also has chat)
-   * Auto-backup (never, every minute, every 5th minute or every 15th minute - thx swedelandster)
+   * Auto-backup (never, every minute, every 5th minute or every 15th minute) - thx swedelandster
    * Video player/controls/waveform can now be un-docked (e.g. for people with multiple monitors)
    * Spell check via Word (Options -> Settings:General -> Spell checker)
    * Edit original subtitle
      (Options -> Settings:General:Allow edit of original subtitle - thx Luis for testing)
    * Waveform control can adjust play rate (slow, normal, fast and very fast - VLC player only)
-   * Ability to remember the last selected line when re-opening subtitles (thx Frederic)
-   * Now remembers video file and original subtitle (thx Luis)
+   * Ability to remember the last selected line when re-opening subtitles - thx Frederic
+   * Now remembers video file and original subtitle - thx Luis
    * Support for the subtitle "QuickTime text" format (two variations) + Scenarist + Adobe Encore
-   * Added "Chars/sec" info to textbox in main window (thx Kerensky)
+   * Added "Chars/sec" info to textbox in main window - thx Kerensky
    * Options to choose font color and background color (for list view/text-boxes)
    * Can now import VobSub subtitles embedded in Matroska (.mkv) files
      (thx mosu for mkv info + thx hawk for testing)
-   * Waveform position can be locked at center via new "Center" button (thx Krystian)
+   * Waveform position can be locked at center via new "Center" button - thx Krystian
    * Can insert (a whole) subtitle after a line in the list view via context menu
-   * Auto-suggest line splitting with button while typing (thx DrJackson)
-   * Auto-wrap text while typing (option, thx swedelandster)
+   * Auto-suggest line splitting with button while typing - thx DrJackson
+   * Auto-wrap text while typing option - thx swedelandster
    * Video menu will now have a "Choose audio track" if more than one audio track exists
      (only when using VLC as video player)
-   * Bulgarian translation (thx Ivo Ivanov)
+   * Bulgarian translation - thx Ivo Ivanov
  * IMPROVED:
    * Main window: Video player will now automatically move up beside subtitle if waveform is
      displayed + some resizing of controls allowed via splitters
    * Context menu for subtitle textbox now has italic, bold, underline, font name, and color
    * Updated NHunspell (spell check component) to latest version (0.9.6)
    * Synchronization Show earlier/later changed a bit, also added a shortcut (Ctrl+Shift+A)
-   * Added a few buttons to "Multiple replace" which is now re-sizable (thx sialivi)
+   * Added a few buttons to "Multiple replace" which is now re-sizable - thx sialivi
    * Moved video controls below subtitle preview (which now displays italic)
-   * Fix common OCR errors improved (thx aMvEL, sialivi, Alberto)
-   * Remove text for HI can now also remove interjections (thx DrJackson)
-   * Start/display time changes are now undo-able (thx Luis)
+   * Fix common OCR errors improved - thx aMvEL, sialivi, Alberto
+   * Remove text for HI can now also remove interjections - thx DrJackson
+   * Start/display time changes are now undo-able - thx Luis
    * Subtitle preview on video player is more precise now (thx hawk), uses the font from Settings
      and bold (thx Leszek)
-   * "Point sync" can now also sync using only one sync point (thx tttoan)
+   * "Point sync" can now also sync using only one sync point - thx tttoan
    * VLC media player - mouse click now toggles play/pause
  * FIXED:
    * Waveform: Fixed imprecise (out of sync) waveform data for some sample rates
-   * Fixed crash with waveform track bar (thx Christian)
-   * A minor bug in initialization of waveform (thx Frederic)
-   * Fixed several bugs regarding "large fonts" / higher dpi (thx Radbert)
-   * Fixed memory leak in VobSub SubPicture class (thx Almogzt)
+   * Fixed crash with waveform track bar - thx Christian
+   * A minor bug in initialization of waveform - thx Frederic
+   * Fixed several bugs regarding "large fonts" / higher dpi - thx Radbert
+   * Fixed memory leak in VobSub SubPicture class - thx Almogzt
    * Fixed a bug that froze VLC after playing to end of video
-   * Missing line break in Sony DVD Architect w line numbers (thx Rosa)
-   * A minor bug in Visual Sync, if end scene was after video length (thx tsieberg)
+   * Missing line break in Sony DVD Architect w line numbers - thx Rosa
+   * A minor bug in Visual Sync, if end scene was after video length - thx tsieberg
    * OCR Fix Engine: Lines after "..." will no longer be changed to start with uppercase
    * Fixed bug in reading of SSA files ("," was removed) - thx Péter
    * Fixed line breaking bug in MPL format - thx Przemek
@@ -1001,19 +1001,19 @@
  * NEW:
    * Waveform control with many sync/replay/creation commands
      (thx Kerensky for the feedback)
-   * Translator mode (Edit -> Show original subtitle, thx DrJackson)
+   * Translator mode (Edit -> Show original subtitle) - thx DrJackson
    * Added Microsoft translate
-   * Option to remove blank lines when opening a subtitle (thx honeybunny)
-   * Can now read subtitles in the binary EBU format (thx corbin dallas/Iban)
-   * Can now read/write Sony DVD Architect subtitle format (thx Mark/Zedopipo)
+   * Option to remove blank lines when opening a subtitle - thx honeybunny
+   * Can now read subtitles in the binary EBU format - thx corbin dallas/Iban
+   * Can now read/write Sony DVD Architect subtitle format - thx Mark/Zedopipo
    * Setting "Font name" is possible via right-click menu in list view
-   * New cool installer (thx XhmikosR)
+   * New cool installer - thx XhmikosR
  * IMPROVED:
    * Layout changed - Translation helper + Create/adjust lines moved to main window
    * Ripping subtitles from DVD should now have correct time codes
-     (thx JeanlDvd/DvdSubEdit + gioni666)
+     - thx JeanlDvd/DvdSubEdit + gioni666
    * Ripping subtitles from DVD/VobSub files now has a an option to only OCR
-     "forced subtitles" (thx Rolf)
+     "forced subtitles" - thx Rolf
    * Ripping subtitles from VobSub files now has an option to use time codes
      from idx file (now default)
    * Updated Tesseract 2.x to 3.0
@@ -1022,22 +1022,22 @@
    * "Compare subtitle" color high-lighting is now more like other compare programs
    * Fix common errors - Fix alone lowercase "i" to "I" now works better close to
      HTML tags (thx chamallow)
-   * Updated names list (thx chamallow)
-   * "Google translate" window is now resizable (thx Kerensky)
+   * Updated names list - thx chamallow
+   * "Google translate" window is now resizable - thx Kerensky
    * Bold/italic/font tags now work better in SSA/ASS subtitles
    * Icons are now external in the "Icons" folder - you can change them easily yourself
      without re-compiling (thx 6205)
-   * New toolbar icons from gnome-look.org with some customization (thx 6205)
+   * New toolbar icons from gnome-look.org with some customization - thx 6205
  * FIXED:
-   * Merge short lines now works with italic tags (thx honeybunny)
+   * Merge short lines now works with italic tags - thx honeybunny
    * Importing subtitles from Matroska files will now correctly change the current
      encoding to UTF-8 (thx Jonathan)
    * Numerous fixes in "Remove text for hearing impaired"
-     (thx sialivi, eMWu, honeybunny, aMvEL)
-   * Tools -> Append subtitle without synchronizing (thx Les)
-   * Bug in "Spell check -> Add to names/etc list" (thx dny238)
-   * Crash in ""Auto balance selected lines" (thx Jonathan)
+     - thx sialivi, eMWu, honeybunny, aMvEL
+   * Tools -> Append subtitle without synchronizing - thx Les
+   * Bug in "Spell check -> Add to names/etc list" - thx dny238
+   * Crash in "Auto balance selected lines" - thx Jonathan
    * Crash in "Replace all"
-   * Bug in "time control" (thx eMWu)
-   * Resume spell check now works better (thx Kerensky)
-   * Fixed occasional crash in Options (thx sialivi)
+   * Bug in "time control" - thx eMWu
+   * Resume spell check now works better - thx Kerensky
+   * Fixed occasional crash in Options - thx sialivi
