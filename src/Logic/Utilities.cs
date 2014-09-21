@@ -200,14 +200,6 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
-        public static bool IsLong(string s)
-        {
-            long i;
-            if (long.TryParse(s, out i))
-                return true;
-            return false;
-        }
-
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
         {
             foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)

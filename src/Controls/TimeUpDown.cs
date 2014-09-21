@@ -141,25 +141,21 @@ namespace Nikse.SubtitleEdit.Controls
 
                     if (times.Length == 4)
                     {
-                        int hours = 0;
-                        if (Utilities.IsInteger(times[0]))
-                            hours = int.Parse(times[0]);
+                        int hours;
+                        int.TryParse(times[0], out hours);
 
-                        int minutes = 0;
-                        if (Utilities.IsInteger(times[1]))
-                            minutes = int.Parse(times[1]);
+                        int minutes;
+                        int.TryParse(times[1], out minutes);
 
-                        int seconds = 0;
-                        if (Utilities.IsInteger(times[2]))
-                            seconds = int.Parse(times[2]);
+                        int seconds;
+                        int.TryParse(times[2], out seconds);
 
-                        int milliSeconds = 0;
-                        if (Utilities.IsInteger(times[3]))
-                            milliSeconds = int.Parse(times[3].PadRight(3, '0'));
+                        int milliSeconds;
+                        int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
 
                         var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
-                        if (times[0].StartsWith('-') && tc.TotalMilliseconds > 0)
-                            tc.TotalMilliseconds = tc.TotalMilliseconds * -1;
+                        if (hours < 0 && tc.TotalMilliseconds > 0)
+                            tc.TotalMilliseconds *= -1;
                         return tc;
                     }
                 }
@@ -172,21 +168,20 @@ namespace Nikse.SubtitleEdit.Controls
 
                     if (times.Length == 4)
                     {
-                        int hours = 0;
-                        if (Utilities.IsInteger(times[0]))
-                            hours = int.Parse(times[0]);
+                        int hours;
+                        int.TryParse(times[0], out hours);
 
-                        int minutes = 0;
-                        if (Utilities.IsInteger(times[1]))
-                            minutes = int.Parse(times[1]);
+                        int minutes;
+                        int.TryParse(times[1], out minutes);
 
-                        int seconds = 0;
-                        if (Utilities.IsInteger(times[2]))
-                            seconds = int.Parse(times[2]);
+                        int seconds;
+                        int.TryParse(times[2], out seconds);
 
-                        int milliSeconds = 0;
-                        if (Utilities.IsInteger(times[3]))
-                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(int.Parse(times[3]));
+                        int milliSeconds;
+                        if (int.TryParse(times[3], out milliSeconds))
+                        {
+                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
+                        }
 
                         return new TimeCode(hours, minutes, seconds, milliSeconds);
                     }

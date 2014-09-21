@@ -308,10 +308,10 @@ namespace Nikse.SubtitleEdit.Logic
                     matches = regexTimeCodes2.Matches(line);
                 if (matches.Count == 2)
                 {
-                    string[] start = matches[0].ToString().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (Utilities.IsInteger(start[0]))
+                    var start = matches[0].Value.Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    int i;
+                    if (int.TryParse(start[0], out i))
                     {
-                        int i = int.Parse(start[0]);
                         if (count == -1 && i < 2)
                             count = i;
                         if (count != i)
