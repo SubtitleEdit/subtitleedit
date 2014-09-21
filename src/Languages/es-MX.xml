@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Quitar las etiquetas de formato</RemoveFormatting>
     <RemoveTextForHI>Quitar texto para HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Sobrescribir los archivos originales (nueva extensión si se cambia el formato)</OverwriteOriginalFiles>
-    <ReDoCasing>Rehacer</ReDoCasing>
+    <RedoCasing>Rehacer</RedoCasing>
     <Convert>Convertir</Convert>
     <NothingToConvert>¡Nada para convertir!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, elija la carpeta de salida</PleaseChooseOutputFolder>
@@ -274,7 +274,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>El texto divide el intervalo de tiempo</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Ripear subtítulos de ifo/vobs (dvd)</Title>
+    <Title>Ripear subtítulos de IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD archivos/info</DvdGroupTitle>
     <IfoFile>Archivo IFO</IfoFile>
     <IfoFiles>Archivos IFO</IfoFiles>
@@ -330,7 +330,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Línea {0} excede la longitud máxima ({1}) en {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Presentación original</TextUnchangedPresentation>
     <TextLeftJustifiedText>Justificación izquierda</TextLeftJustifiedText>
-    <TextCentredText>Justificación centrado</TextCentredText>
+    <TextCenteredText>Justificación centrado</TextCenteredText>
     <TextRightJustifiedText>Justificación derecha</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -418,7 +418,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowTimeCode>Mostrar el código de tiempo</ShowTimeCode>
     <AddNewLineAfterTimeCode>Añadir nueva línea después del código de tiempo</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Añadir una nueva línea después del texto</AddNewLineAfterTexts>
-    <AddNewLineBetweenSubtitles>Añadir nueva línea entre subitles</AddNewLineBetweenSubtitles>
+    <AddNewLineBetweenSubtitles>Añadir nueva línea entre subtitles</AddNewLineBetweenSubtitles>
     <TimeCodeFormat>Tiempo de formato de código</TimeCodeFormat>
     <Srt>.srt</Srt>
     <Milliseconds>Milisegundos</Milliseconds>
@@ -530,7 +530,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>No se pudo corregir número de texto {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} solapamientos de tiempo solucionados</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} Duraciones prolongadas</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} Etiquetas html arregladas</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} Etiquetas HTML arregladas</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} duración acortada</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} líneas unidas</XLinesUnbreaked>
     <UnneededSpace>Espacios innecesarios</UnneededSpace>
@@ -682,10 +682,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Comparar...</Compare>
         <Statistics>Estadísticas...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Importar subtítulo /OCR de vob/ifo (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importar subtítulo /OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar subtítulo /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar archivo /OCR Blu-ray sup...</ImportBluRaySupFile>
-        <ImportXSub>Importar/OCR xsub desde divx/avi...</ImportXSub>
+        <ImportXSub>Importar/OCR XSub desde divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar subtítulo de archivo Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar subtítulo codificado manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto plano...</ImportText>
@@ -696,12 +696,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Exportar texto plano...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB guión de imágenes...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Par coreano archivo ATS...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Capturas Inc. ..</ExportCaptionsInc>
@@ -1085,7 +1085,7 @@ con el archivo de video, al subtítulo actual cargado.
     <OpenMatroskaFile>Abrir archivo Matroska...</OpenMatroskaFile>
     <MatroskaFiles>Archivos Matroska</MatroskaFiles>
     <NoSubtitlesFound>subtítulos no encontrados</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>No es un archivo matroska válido: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>No es un archivo Matroska válido: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Analizando archivo Matroska. Por favor espere...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Antes de importar subtítulo de archivo Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtítulo importado desde archivo Matroska</SubtitleImportedFromMatroskaFile>
@@ -1106,8 +1106,8 @@ con el archivo de video, al subtítulo actual cargado.
     <VobSubFiles>Archivos de subtítulos VobSub</VobSubFiles>
     <OpenBluRaySupFile>Abrir archivos Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Archivos Blu-ray .sup</BluRaySupFiles>
-    <OpenXSubFiles>Abrir archivo xsub...</OpenXSubFiles>
-    <XSubFiles>Archivos xsub</XSubFiles>
+    <OpenXSubFiles>Abrir archivo XSub...</OpenXSubFiles>
+    <XSubFiles>Archivos XSub</XSubFiles>
     <BeforeImportingVobSubFile>Antes de importar los subtítulos VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Antes de importar archivo Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Antes de importar archivo BDN xml</BeforeImportingBdnXml>
@@ -1193,13 +1193,13 @@ con el archivo de video, al subtítulo actual cargado.
     <StatusLog>Estatus de registro</StatusLog>
     <XSceneChangesImported>{0} cambios de escena importados</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' ejecutado.</PluginXExecuted>
-    <NotAValidXSubFile>¡Archivo xsub inválido!</NotAValidXSubFile>
+    <NotAValidXSubFile>¡Archivo XSub inválido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de mezclar líneas con el mismo texto</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>El subtítulo con los códigos de tiempo tiene un número diferente de líneas ({0}) que el subtítulo actual ({1}) - ¿continuar de todas formas?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analizando flujo de transporte - por favor espere...</ParsingTransportStream>
-    <ErrorLoadIdx>No se pueden editar/leer los archivos idx. Los archivos idx son una parte del par de archivos idx/sub (también llamados VobSub), y SE puede abrir el archivo sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Este archivo parece estar comprimido en rar. SE no puede abrir archivos comprimidos.</ErrorLoadRar>
-    <ErrorLoadZip>Este archivo parece estar comprimido en zip. SE no puede abrir archivos comprimidos.</ErrorLoadZip>
+    <ErrorLoadIdx>No se pueden editar/leer los archivos idx. Los archivos idx son una parte del par de archivos idx/sub (también llamados VobSub), y Subtitle Edit puede abrir el archivo sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Este archivo parece estar comprimido en rar. Subtitle Edit no puede abrir archivos comprimidos.</ErrorLoadRar>
+    <ErrorLoadZip>Este archivo parece estar comprimido en zip. Subtitle Edit no puede abrir archivos comprimidos.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar subtítulos desde archivo Matroska</Title>
@@ -1465,7 +1465,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AllowEditOfOriginalSubtitle>Permitir la edición del subtítulo original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar la eliminación de líneas</PromptDeleteLines>
     <TimeCodeMode>Modo de código de tiempo</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH: MM: ss.mseg (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH: MM: ss.mseg (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH: MM: SS: FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Motor del reproductor</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1875,7 +1875,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Title>Importar subtítulo OCR VobSub (sub/idx)</Title>
     <TitleBluRay>Importar subtítulo OCR Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Método OCR</OcrMethod>
-    <OcrViaModi>OCR con Microsoft Office Document Imaging (MODI). Necesita MS Office</OcrViaModi>
+    <OcrViaModi>OCR con Microsoft Office Document Imaging (MODI). Necesita Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR con Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR con nOCR</OcrViaNOCR>
     <Language>Idioma</Language>
@@ -1908,14 +1908,14 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AllFixes>Corregir todo</AllFixes>
     <GuessesUsed>Utilizar suposiciones</GuessesUsed>
     <UnknownWords>Palabras desconocidas</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR autocorrección / revisión ortográfica</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR autocorrección / revisión ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corregir errores de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto con código de tiempo coincidente...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Guardar imagen de subtítulo como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas las imágenes (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas las imágenes con índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imágenes guardadas en {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Probar MS MODI OCR para palabras desconocidas</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Probar Microsoft MODI OCR para palabras desconocidas</TryModiForUnknownWords>
     <DictionaryX>Diccionario: {0}</DictionaryX>
     <RightToLeft>De derecha a izquierda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar sólo subtítulos forzados</ShowOnlyForcedSubtitles>

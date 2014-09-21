@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Logic.Ocr
 {
-    public class SpellcheckOcrTextResult
+    public class SpellCheckOcrTextResult
     {
         public bool Fixed { get; set; }
         public bool FixedWholeLine { get; set; }

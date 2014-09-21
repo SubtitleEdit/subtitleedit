@@ -224,8 +224,7 @@
             this.labelZPositionHelp.Name = "labelZPositionHelp";
             this.labelZPositionHelp.Size = new System.Drawing.Size(327, 47);
             this.labelZPositionHelp.TabIndex = 34;
-            this.labelZPositionHelp.Text = "Positive numbers moves text away, negative numbers moves text closer, if z-positi" +
-    "on zeo then it\'s normal \r\n2D";
+            this.labelZPositionHelp.Text = "Positive numbers move text away, negative numbers move text closer, if z-position is zero then it\'s normal \r\n2D";
             // 
             // numericUpDownZPosition
             // 

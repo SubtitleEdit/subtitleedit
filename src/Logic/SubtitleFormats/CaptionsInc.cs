@@ -127,7 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "Not supported!";
         }
 
-        private static TimeCode DecodeTimeStamp(string timeCode)
+        private static TimeCode DecodeTimestamp(string timeCode)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     i += 8;
                     if (Utilities.IsInteger(startTime))
                     {
-                        p.StartTime = DecodeTimeStamp(startTime);
+                        p.StartTime = DecodeTimestamp(startTime);
                     }
                 }
 
@@ -224,7 +224,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string endTime = Encoding.ASCII.GetString(buffer, i + 4, 8);
                     if (Utilities.IsInteger(endTime))
                     {
-                        p.EndTime = DecodeTimeStamp(endTime);
+                        p.EndTime = DecodeTimestamp(endTime);
                     }
                     while (i < buffer.Length && buffer[i] != 0xa)
                         i++;
@@ -241,7 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string endTime = Encoding.ASCII.GetString(buffer, i + 4, 8);
                         if (Utilities.IsInteger(endTime))
                         {
-                            p.EndTime = DecodeTimeStamp(endTime);
+                            p.EndTime = DecodeTimestamp(endTime);
                         }
                     }
                 }

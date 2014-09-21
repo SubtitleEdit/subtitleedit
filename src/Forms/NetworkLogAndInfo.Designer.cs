@@ -98,7 +98,7 @@
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
             this.labelWebServiceUrl.Size = new System.Drawing.Size(139, 17);
             this.labelWebServiceUrl.TabIndex = 29;
-            this.labelWebServiceUrl.Text = "Web service url";
+            this.labelWebServiceUrl.Text = "Web service URL";
             this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // textBoxUserName

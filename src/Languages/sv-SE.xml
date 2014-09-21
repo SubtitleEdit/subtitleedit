@@ -4,7 +4,7 @@
     <Title>Subtitle Edit</Title>
     <Version>3.4.2</Version>
     <TranslatedBy>Översätt av Ted</TranslatedBy>
-    <CultureName>sv-SE</CultureName>
+    <CultureName>sv-Subtitle Edit</CultureName>
     <HelpFile />
     <Ok>OK</Ok>
     <Cancel>Avbryt</Cancel>
@@ -58,7 +58,7 @@
     <SessionKey>Sessionsnyckel</SessionKey>
     <UserName>Användarnamn</UserName>
     <UserNameAlreadyInUse>Användarnamn redan i bruk</UserNameAlreadyInUse>
-    <WebServiceUrl>Webbtjänsten url</WebServiceUrl>
+    <WebServiceUrl>Webbtjänsten URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Ljud - {0}</AudioWindowTitle>
@@ -147,7 +147,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Ta bort formateringstaggar</RemoveFormatting>
     <RemoveTextForHI>Ta bort text för HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Skriv över originalfilen (ny filändelse om formatet ändras)</OverwriteOriginalFiles>
-    <ReDoCasing>Gör om formsättning</ReDoCasing>
+    <RedoCasing>Gör om formsättning</RedoCasing>
     <Convert>Konvertera</Convert>
     <NothingToConvert>Inget att konvertera!</NothingToConvert>
     <PleaseChooseOutputFolder>Välj output mapp</PleaseChooseOutputFolder>
@@ -283,7 +283,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Text uppdelar tidsluckor</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Rip texter från IFO/vobs (dvd)</Title>
+    <Title>Rip texter från IFO/VOBs (DVD)</Title>
     <DvdGroupTitle>DVD-filer/info</DvdGroupTitle>
     <IfoFile>IFO-fil</IfoFile>
     <IfoFiles>IFO-filer</IfoFiles>
@@ -339,7 +339,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Linje {0} överskrider max längd ({1}) av {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Oförändrad presentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>Vänsterjusterade text</TextLeftJustifiedText>
-    <TextCentredText>Centrerad text</TextCentredText>
+    <TextCenteredText>Centrerad text</TextCenteredText>
     <TextRightJustifiedText>Höger justerad text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -431,7 +431,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Millisekunder</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Tidskod seperator</TimeCodeSeperator>
+    <TimeCodeSeperator>Tidskod separator</TimeCodeSeperator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generera tid som text</Title>
@@ -538,7 +538,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Det går inte att fixa nummer till {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} Överlappande tidsaspekt fixad</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} Visa tids längd</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} Ogiltiga html taggar fixade</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} Ogiltiga HTML taggar fixade</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} Visad tid förkortad</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} Obrutna rader</XLinesUnbreaked>
     <UnneededSpace>Onödiga utrymme</UnneededSpace>
@@ -690,10 +690,10 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Jämför</Compare>
         <Statistics>Statistik</Statistics>
         <Plugins>Plugin</Plugins>
-        <ImportOcrFromDvd>Import/OCR text från vob/ifo (dvd)</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Import/OCR text från VOB/IFO (DVD)</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) text</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR BluRay text</ImportBluRaySupFile>
-        <ImportXSub>Import/OCR xsub från divx/avi</ImportXSub>
+        <ImportXSub>Import/OCR XSub från divx/avi</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import text från Matroska fil</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import text med manuell vald kod</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import enbart text</ImportText>
@@ -704,13 +704,13 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)</ExportVobSub>
         <ExportCavena890>Cavena 890</ExportCavena890>
-        <ExportEbu>EBU stl</ExportEbu>
+        <ExportEbu>EBU STL</ExportEbu>
         <ExportPac>PAC (Screen Electronics)</ExportPac>
         <ExportPlainText>Enkel text</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB bild manus</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Koreanska ATS-fil par</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl</ExportAvidStl>
-        <ExportDvdStudioProStl>DVD Studio Pro stl</ExportDvdStudioProStl>
+        <ExportAvidStl>Avid STL</ExportAvidStl>
+        <ExportDvdStudioProStl>DVD Studio Pro STL</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP</ExportCheetahCap>
@@ -1089,7 +1089,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <BeforeSettingFontName>Innan teckensnittsnamn</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Före skrivmaskin effekt</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Före karaoke effekt</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Innan du importerar text från dvd</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Innan du importerar text från DVD</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Öppna Matroska fil</OpenMatroskaFile>
     <MatroskaFiles>Matroska filer</MatroskaFiles>
     <NoSubtitlesFound>Inga texter hittades</NoSubtitlesFound>
@@ -1114,8 +1114,8 @@ Fortsätta?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub text filer</VobSubFiles>
     <OpenBluRaySupFile>Öppna BluRay text</OpenBluRaySupFile>
     <BluRaySupFiles>BluRay text filer</BluRaySupFiles>
-    <OpenXSubFiles>Öppna xsub fil</OpenXSubFiles>
-    <XSubFiles>xsub filer</XSubFiles>
+    <OpenXSubFiles>Öppna XSub fil</OpenXSubFiles>
+    <XSubFiles>XSub filer</XSubFiles>
     <BeforeImportingVobSubFile>Innan du importerar VobSub text</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Innan du importerar BluRay text</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Innan du importerar BDN xml-fil</BeforeImportingBdnXml>
@@ -1201,13 +1201,13 @@ Fortsätta?</SubtitleAppendPrompt>
     <StatusLog>Status log</StatusLog>
     <XSceneChangesImported>{0} scenförändringar som importerats</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' körs.</PluginXExecuted>
-    <NotAValidXSubFile>Inte en giltig xsub fil!</NotAValidXSubFile>
+    <NotAValidXSubFile>Inte en giltig XSub fil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Innan du sammanfogar linjer med samma text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Textning med tidskoder har ett annat antal rader ({0}) än aktuell undertext ({1}) - fortsätta ändå?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analysera transportström - var god vänta</ParsingTransportStream>
-    <ErrorLoadIdx>Kan inte läsa/redigera. idx filer. Idx filer är en del av en idx/sub-par (även kallad VobSub), och SE kan öppna. sub filen.</ErrorLoadIdx>
-    <ErrorLoadRar>Filen verkar vara en komprimerad. Rar-fil. SE kan inte öppna komprimerade filer.</ErrorLoadRar>
-    <ErrorLoadZip>Filen verkar vara en komprimerad. Zip-fil. SE kan inte öppna komprimerade filer.</ErrorLoadZip>
+    <ErrorLoadIdx>Kan inte läsa/redigera. idx filer. Idx filer är en del av en idx/sub-par (även kallad VobSub), och Subtitle Edit kan öppna. sub filen.</ErrorLoadIdx>
+    <ErrorLoadRar>Filen verkar vara en komprimerad. Rar-fil. Subtitle Edit kan inte öppna komprimerade filer.</ErrorLoadRar>
+    <ErrorLoadZip>Filen verkar vara en komprimerad. Zip-fil. Subtitle Edit kan inte öppna komprimerade filer.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Välj text från Matroska fil</Title>
@@ -1474,7 +1474,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <AllowEditOfOriginalSubtitle>Tillåt redigering av original text</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Fråga efter raderade rader</PromptDeleteLines>
     <TimeCodeMode>Tidskod läge</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video motor</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1491,7 +1491,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <ShowFullscreenButton>Visa helskärms knapp</ShowFullscreenButton>
     <PreviewFontSize>Förhandsgranska textstorlek</PreviewFontSize>
     <MainWindowVideoControls>Huvudfönster video kontroller</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Anpassad sökning text och url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Anpassad sökning text och URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Ljudformat inställning</WaveformAppearance>
     <WaveformGridColor>Galler färg</WaveformGridColor>
     <WaveformShowGridLines>Visa linjerna</WaveformShowGridLines>
@@ -1884,7 +1884,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <Title>Import/OCR VobSub (sub/idx) undertext</Title>
     <TitleBluRay>Import/OCR BluRay text</TitleBluRay>
     <OcrMethod>OCR-metod</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kräver MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kräver Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Språk</Language>
@@ -1917,14 +1917,14 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <AllFixes>Alla fixar</AllFixes>
     <GuessesUsed>Gissningar används</GuessesUsed>
     <UnknownWords>Okända ord</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR automatisk korrigering/stavningskontroll</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR automatisk korrigering/stavningskontroll</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Fixa OCR fel</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Import text med matchande tidkoder</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Spara text bild som</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Spara alla bilder (PNG/bdn xml)</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Spara alla bilder med html-index</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Spara alla bilder med HTML-index</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} bilder som sparats i {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Prova MS MODI OCR för okända ord</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Prova Microsoft MODI OCR för okända ord</TryModiForUnknownWords>
     <DictionaryX>Ordbok: {0}</DictionaryX>
     <RightToLeft>Höger till vänster</RightToLeft>
     <ShowOnlyForcedSubtitles>Visa endast tvingade text (påtvingad)</ShowOnlyForcedSubtitles>

@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class VideoPlayerUnDocked : Form
+    public partial class VideoPlayerUndocked : Form
     {
         private Main _mainForm = null;
         private PositionsAndSizes _positionsAndSizes = null;
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public VideoPlayerUnDocked(Main main, PositionsAndSizes positionsAndSizes, Controls.VideoPlayerContainer videoPlayerContainer)
+        public VideoPlayerUndocked(Main main, PositionsAndSizes positionsAndSizes, Controls.VideoPlayerContainer videoPlayerContainer)
         {
             InitializeComponent();
             _mainForm = main;
@@ -31,14 +31,14 @@ namespace Nikse.SubtitleEdit.Forms
             _videoPlayerContainer = videoPlayerContainer;
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
-            videoPlayerContainer.TextBox.MouseMove += VideoPlayerUnDocked_MouseMove;
+            videoPlayerContainer.TextBox.MouseMove += VideoPlayerUndocked_MouseMove;
         }
 
-        public VideoPlayerUnDocked()
+        public VideoPlayerUndocked()
         {
         }
 
-        private void VideoPlayerUnDocked_FormClosing(object sender, FormClosingEventArgs e)
+        private void VideoPlayerUndocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (RedockOnFullscreenEnd)
             {
@@ -57,9 +57,9 @@ namespace Nikse.SubtitleEdit.Forms
             _positionsAndSizes.SavePositionAndSize(this);
         }
 
-        private void VideoPlayerUnDocked_KeyDown(object sender, KeyEventArgs e)
+        private void VideoPlayerUndocked_KeyDown(object sender, KeyEventArgs e)
         {
-            VideoPlayerUnDocked_MouseMove(null, null);
+            VideoPlayerUndocked_MouseMove(null, null);
 
             if (e.Modifiers == Keys.None && e.KeyCode == Keys.Space)
             {
@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Alt && e.KeyCode == Keys.Down && WindowState == FormWindowState.Maximized)
             {
-                _mainForm.GotoNextSubPosFromvideoPos();
+                _mainForm.GotoNextSubPosFromVideoPos();
                 e.Handled = true;
             }
             else if (_redockKeys == e.KeyData)
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void VideoPlayerUnDocked_MouseMove(object sender, MouseEventArgs e)
+        private void VideoPlayerUndocked_MouseMove(object sender, MouseEventArgs e)
         {
             if (timer1.Enabled)
                 timer1.Stop();
@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                 this.Close();
         }
 
-        private void VideoPlayerUnDocked_Shown(object sender, EventArgs e)
+        private void VideoPlayerUndocked_Shown(object sender, EventArgs e)
         {
             this.Refresh();
         }

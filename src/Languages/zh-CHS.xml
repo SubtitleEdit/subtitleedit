@@ -146,7 +146,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <RemoveFormatting>删除格式化标签</RemoveFormatting>
     <RemoveTextForHI>删除 HI 文本</RemoveTextForHI>
     <OverwriteOriginalFiles>覆盖原始文件(若扩展名变更，则使用新的扩展名)</OverwriteOriginalFiles>
-    <ReDoCasing>重做外壳</ReDoCasing>
+    <RedoCasing>重做外壳</RedoCasing>
     <Convert>转换</Convert>
     <NothingToConvert>没有什么可转换的！</NothingToConvert>
     <PleaseChooseOutputFolder>请选择输出文件夹</PleaseChooseOutputFolder>
@@ -342,7 +342,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <MaxLengthError>行 {0} 超出了最大长度 ({1}) by {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>未改变的演示</TextUnchangedPresentation>
     <TextLeftJustifiedText>靠左对齐的文本</TextLeftJustifiedText>
-    <TextCentredText>居中的文本</TextCentredText>
+    <TextCenteredText>居中的文本</TextCenteredText>
     <TextRightJustifiedText>靠右对齐的文本</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -542,7 +542,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <UnableToFixTextXY>无法修复文本编号 {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} 个重叠时间已修复</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} 个显示时间已延长</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} 个无效 html 标签已修复</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} 个无效 HTML 标签已修复</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} 个显示时间已缩短</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} 行已取消断开</XLinesUnbreaked>
     <UnneededSpace>不需要的空格</UnneededSpace>
@@ -687,7 +687,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <RestoreAutoBackup>还原自动备份...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>高级 Sub Station Alpha 属性...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha 属性...</SubStationAlphaProperties>
-        <EbuProperties>EBU stl 属性...</EbuProperties>
+        <EbuProperties>EBU STL 属性...</EbuProperties>
         <PacProperties>PAC 属性...</PacProperties>
         <OpenOriginal>打开原始字幕 (翻译模式)...</OpenOriginal>
         <SaveOriginal>保存原始字幕</SaveOriginal>
@@ -699,7 +699,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <ImportOcrFromDvd>从 DVD 导入/OCR 字幕...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>导入/OCR VobSub 字幕...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>导入/OCR 蓝光字幕...</ImportBluRaySupFile>
-        <ImportXSub>从 divx/avi 导入 /OCR xsub...</ImportXSub>
+        <ImportXSub>从 divx/avi 导入 /OCR XSub...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>从 Matroska 文件导入字幕...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>手动选择编码方式导入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>导入纯文本...</ImportText>
@@ -710,12 +710,12 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <ExportBluRaySup>蓝光 sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (荧屏电子学)...</ExportPac>
         <ExportPlainText>纯文本...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB 图像脚本...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS 文件对...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1119,8 +1119,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <VobSubFiles>VobSub 字幕 (*.sub;*.idx)</VobSubFiles>
     <OpenBluRaySupFile>打开蓝光字幕...</OpenBluRaySupFile>
     <BluRaySupFiles>蓝光字幕 (*.sup)</BluRaySupFiles>
-    <OpenXSubFiles>打开 xsub 文件...</OpenXSubFiles>
-    <XSubFiles>xsub 文件</XSubFiles>
+    <OpenXSubFiles>打开 XSub 文件...</OpenXSubFiles>
+    <XSubFiles>XSub 文件</XSubFiles>
     <BeforeImportingVobSubFile>导入 VobSub 字幕之前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>导入蓝光字幕之前</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>导入 BDN xml 文件之前</BeforeImportingBdnXml>
@@ -1179,8 +1179,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <UserAndAction>用户/操作</UserAndAction>
     <NetworkMode>网络模式</NetworkMode>
     <XStartedSessionYAtZ>{0}: 已开始会话 {1} 在 {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>使用 MS Word 进行拼写检查 {0} - 行 {1}/{2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>无法启动 MS Word</UnableToStartWord>
+    <SpellChekingViaWordXLineYOfX>使用 Microsoft Word 进行拼写检查 {0} - 行 {1}/{2}</SpellChekingViaWordXLineYOfX>
+    <UnableToStartWord>无法启动 Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>拼写检查已中止。修正了 {0} 个错误。</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>拼写检查已完成。修正了 {0} 个错误。</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>打开其它字幕</OpenOtherSubtitle>
@@ -1206,7 +1206,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <StatusLog>状态记录</StatusLog>
     <XSceneChangesImported>已导入 {0} 个场景变更</XSceneChangesImported>
     <PluginXExecuted>插件 '{0}' 已执行。</PluginXExecuted>
-    <NotAValidXSubFile>不是有效的 xsub 文件!</NotAValidXSubFile>
+    <NotAValidXSubFile>不是有效的 XSub 文件!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>在合并相同文本行之前</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>带时间码的字幕与当前文件 ({1}) 的行数相差 ({0}) - 仍要继续吗?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>正在解析传送流，请稍候...</ParsingTransportStream>
@@ -1479,7 +1479,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AllowEditOfOriginalSubtitle>允许编辑原始字幕</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>删除行时提示</PromptDeleteLines>
     <TimeCodeMode>时间码模式</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>视频引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1900,7 +1900,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Title>导入/OCR VobSub 字幕 (sub/idx)</Title>
     <TitleBluRay>导入/OCR 蓝光字幕 (sup)</TitleBluRay>
     <OcrMethod>OCR 方式</OcrMethod>
-    <OcrViaModi>使用 MS Office 文档图像(MODI) OCR，需要 MS Office</OcrViaModi>
+    <OcrViaModi>使用 Microsoft Office 文档图像(MODI) OCR，需要 Microsoft Office</OcrViaModi>
     <OcrViaTesseract>使用 TesserAct OCR</OcrViaTesseract>
     <OcrViaNOCR>用 nOCR 执行 OCR</OcrViaNOCR>
     <Language>语言</Language>
@@ -1933,15 +1933,15 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AllFixes>全部修复</AllFixes>
     <GuessesUsed>已用猜测</GuessesUsed>
     <UnknownWords>未知词</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR 自动修正/拼写检查</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR 自动修正/拼写检查</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>修正 OCR 错误</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>通过匹配时间码导入文本...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>导入新的时间码</ImportNewTimeCodes>
     <SaveSubtitleImageAs>字幕图像另存为...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>保存所有图像 (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>用 html 索引保存所有图像...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>用 HTML 索引保存所有图像...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} 个图像保存在 {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>为未知词尝试 MS MODI OCR</TryModiForUnknownWords>
+    <TryModiForUnknownWords>为未知词尝试 Microsoft MODI OCR</TryModiForUnknownWords>
     <DictionaryX>字典: {0}</DictionaryX>
     <RightToLeft>从右到左</RightToLeft>
     <ShowOnlyForcedSubtitles>仅显示强制字幕</ShowOnlyForcedSubtitles>

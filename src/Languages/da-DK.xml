@@ -58,7 +58,7 @@
     <SessionKey>Sessionsnøgle</SessionKey>
     <UserName>Brugernavn</UserName>
     <UserNameAlreadyInUse>Brugernavn allerede i brug</UserNameAlreadyInUse>
-    <WebServiceUrl>Webservice url</WebServiceUrl>
+    <WebServiceUrl>Webservice URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Lydspor - {0}</AudioWindowTitle>
@@ -147,7 +147,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Fjern formaterings- tags</RemoveFormatting>
     <RemoveTextForHI>fjerne tekst for høre-hæmmede</RemoveTextForHI>
     <OverwriteOriginalFiles>Overskriv originale filer (kun hvis format ikke ændres)</OverwriteOriginalFiles>
-    <ReDoCasing>Sæt store/små bogstaver</ReDoCasing>
+    <RedoCasing>Sæt store/små bogstaver</RedoCasing>
     <Convert>Konverter</Convert>
     <NothingToConvert>Intet at konvertere!</NothingToConvert>
     <PleaseChooseOutputFolder>Vælg output mappe</PleaseChooseOutputFolder>
@@ -287,7 +287,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Tid deles</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Rip undertekster fra ifo/vobs (dvd)</Title>
+    <Title>Rip undertekster fra IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD-filer/info</DvdGroupTitle>
     <IfoFile>IFO fil</IfoFile>
     <IfoFiles>IFO filer</IfoFiles>
@@ -343,7 +343,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Linie {0} overstiger max længde ({1}) af {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Uændret præsentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>Venstre justeret tekst</TextLeftJustifiedText>
-    <TextCentredText>Centreret tekst</TextCentredText>
+    <TextCenteredText>Centreret tekst</TextCenteredText>
     <TextRightJustifiedText>Højre justeret tekst</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -543,7 +543,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Kunne ikke rette tekst nummer {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} overlappende tidskoder rettet</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} visningstider forlænget</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} ugyldig html tags rettet</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} ugyldig HTML tags rettet</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} visningstider forkortet</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} linjer har fået linjeskift fjernet</XLinesUnbreaked>
     <UnneededSpace>Unødigt mellemrum</UnneededSpace>
@@ -697,10 +697,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Sammenlign...</Compare>
         <Statistics>Statistik...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Import/OCR undertekster fra VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer/OCR VobSub (sub/idx) undertekst...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importer/OCR Blu-ray sup fil...</ImportBluRaySupFile>
-        <ImportXSub>Importer/OCR xsub fra divx/avi...</ImportXSub>
+        <ImportXSub>Importer/OCR XSub fra divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importer undertekster fra Matroska fil...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importer undertekst med manuel valgt tegnsæt...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer tekst...</ImportText>
@@ -716,7 +716,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportPlainText>Almindelig tekst...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1101,10 +1101,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <BeforeTypeWriterEffect>Før skrivemaskine effekt</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Før karaoke effekt</BeforeKaraokeEffect>
     <BeforeImportingDvdSubtitle>Før importer af undertekster fra DVD</BeforeImportingDvdSubtitle>
-    <OpenMatroskaFile>Åbn matroska fil...</OpenMatroskaFile>
+    <OpenMatroskaFile>Åbn Matroska fil...</OpenMatroskaFile>
     <MatroskaFiles>Matroska-filer</MatroskaFiles>
     <NoSubtitlesFound>Ingen undertekster fundet</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Dette er ikke en gyldig matroska fil: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Dette er ikke en gyldig Matroska fil: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Parsing Matroska filen. Vent venligst...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Før import af undertekst fra Matroska fil</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Undertekst importeret fra Matroska fil</SubtitleImportedFromMatroskaFile>
@@ -1125,8 +1125,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub undertekst filer</VobSubFiles>
     <OpenBluRaySupFile>Åbn Blu-ray sup fil...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray sup filer</BluRaySupFiles>
-    <OpenXSubFiles>Åbn xsub file...</OpenXSubFiles>
-    <XSubFiles>xsub filer</XSubFiles>
+    <OpenXSubFiles>Åbn XSub file...</OpenXSubFiles>
+    <XSubFiles>XSub filer</XSubFiles>
     <BeforeImportingVobSubFile>Før import af VobSub undertekst</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Før import af Blu-ray sup undertekst</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Før importer af BDN xml</BeforeImportingBdnXml>
@@ -1212,13 +1212,13 @@ Fortsæt?</SubtitleAppendPrompt>
     <StatusLog>Status beskeder</StatusLog>
     <XSceneChangesImported>{0} sceneskift importeret</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' afviklet</PluginXExecuted>
-    <NotAValidXSubFile>Ikke en valid xsub fil!</NotAValidXSubFile>
+    <NotAValidXSubFile>Ikke en valid XSub fil!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Før fusioner linjer med samme tekst</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Undertekst med tidskoder har et forskelligt antal linier ({0}) end nuværende undertekst ({1}) - fortsæt alligevel?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Læser transport stream - vent venligst...</ParsingTransportStream>
-    <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og SE kan kun åbne .sub filen.</ErrorLoadIdx>
-    <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. SE kan ikke åbne komprimerede filer.</ErrorLoadRar>
-    <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. SE kan ikke åbne komprimerede filer.</ErrorLoadZip>
+    <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
+    <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
+    <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1487,7 +1487,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AllowEditOfOriginalSubtitle>Tillad redigering af originale undertekst</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Spørg om slet af linjer</PromptDeleteLines>
     <TimeCodeMode>Tidskode indstillinger</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video afspiller</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1504,7 +1504,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ShowFullscreenButton>Vis fuldskærm knap</ShowFullscreenButton>
     <PreviewFontSize>Undertekst preview skriftstørrelse</PreviewFontSize>
     <MainWindowVideoControls>Hovedvinduet video-kontrol</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Egen defineret søge titel og url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Egen defineret søge titel og URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Lyd kurve udseende</WaveformAppearance>
     <WaveformGridColor>Gitter farve</WaveformGridColor>
     <WaveformShowGridLines>Vis gitterlinjer</WaveformShowGridLines>
@@ -1907,7 +1907,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Title>Importer/OCR VobSub (sub/idx) undertekst</Title>
     <TitleBluRay>Importer/OCR Blu-ray (.sup) undertekst</TitleBluRay>
     <OcrMethod>OCR-metoden</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kræver Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Sprog</Language>
@@ -1940,15 +1940,15 @@ Fortsæt?</SubtitleAppendPrompt>
     <AllFixes>Alle rettelser</AllFixes>
     <GuessesUsed>Gæt brugt</GuessesUsed>
     <UnknownWords>Ukendte ord</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR automatisk korrektion / stavekontrol</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Ret OCR-fejl</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer tekst med matchende tidskoder...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importer nye tidskoder</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Gem undertekst billede som...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Gem alle billeder (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Gem alle billeder med html-indeks...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Gem alle billeder med HTML-indeks...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} billeder gemt i {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Prøv MS MODI OCR for ukendte ord</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Prøv Microsoft MODI OCR for ukendte ord</TryModiForUnknownWords>
     <DictionaryX>Ordbog: {0}</DictionaryX>
     <RightToLeft>Højre til venstre</RightToLeft>
     <ShowOnlyForcedSubtitles>Vis kun tvungede (forced) undertekster</ShowOnlyForcedSubtitles>

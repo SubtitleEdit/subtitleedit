@@ -44,10 +44,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     containsNewLine = true;
             }
             if (sb.ToString().Contains("//") && !containsNewLine)
-                return false; // "Dvd Subtitle System" format
+                return false; // "DVD Subtitle System" format
 
             if (_maxMsDiv10 > 90 && !containsNewLine)
-                return false; // "Dvd Subtitle System" format (frame rate should not go higher than 90...)
+                return false; // "DVD Subtitle System" format (frame rate should not go higher than 90...)
 
             return subtitle.Paragraphs.Count > _errorCount;
         }

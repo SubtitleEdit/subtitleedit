@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return string.Format(CultureInfo.InvariantCulture, "{0}ms", time.TotalMilliseconds);
                 case "ticks":
                     return string.Format(CultureInfo.InvariantCulture, "{0}t", TimeSpan.FromMilliseconds(time.TotalMilliseconds).Ticks);
-                case "hh:mm:ss.msec":
+                case "hh:mm:ss.ms":
                     return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}.{3:000}", time.Hours, time.Minutes, time.Seconds, time.Milliseconds);
                 default:
                     return string.Format(CultureInfo.InvariantCulture, "{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));

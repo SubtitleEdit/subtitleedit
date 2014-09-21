@@ -145,7 +145,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RemoveFormatting>서식 태그 제거</RemoveFormatting>
     <RemoveTextForHI>청각 장애인용 텍스트 제거</RemoveTextForHI>
     <OverwriteOriginalFiles>원본 파일 덮어쓰기 (형식이 변경된 경우)</OverwriteOriginalFiles>
-    <ReDoCasing>대/소문자 구분</ReDoCasing>
+    <RedoCasing>대/소문자 구분</RedoCasing>
     <Convert>변환</Convert>
     <NothingToConvert>변환할 것이 없습니다!</NothingToConvert>
     <PleaseChooseOutputFolder>출력 폴더를 선택하십시오!</PleaseChooseOutputFolder>
@@ -341,7 +341,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MaxLengthError>행 {0}이(가) {2}에서 최대 길이 ({1})을 초과함: {3}</MaxLengthError>
     <TextUnchangedPresentation>변경되지 않은 텍스트 표시</TextUnchangedPresentation>
     <TextLeftJustifiedText>왼쪽 정렬</TextLeftJustifiedText>
-    <TextCentredText>가운데 정렬</TextCentredText>
+    <TextCenteredText>가운데 정렬</TextCenteredText>
     <TextRightJustifiedText>오른쪽 정렬</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -686,7 +686,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <RestoreAutoBackup>자동 백업된 자막 불러오기</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha(.ass)의 속성...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha(.ssa)의 속성...</SubStationAlphaProperties>
-        <EbuProperties>EBU stl 속성...</EbuProperties>
+        <EbuProperties>EBU STL 속성...</EbuProperties>
         <PacProperties>PAC 속성...</PacProperties>
         <OpenOriginal>원본 자막 열기 (번역 모드)</OpenOriginal>
         <SaveOriginal>원본 자막 저장...</SaveOriginal>
@@ -695,7 +695,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Compare>자막 비교(&amp;C)...</Compare>
         <Statistics>통계 자료(&amp;S)...</Statistics>
         <Plugins>플러그 인...</Plugins>
-        <ImportOcrFromDvd>DVD(vob/ifo)에서 자막 가져오기/OCR...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>DVD(VOB/IFO)에서 자막 가져오기/OCR...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>VobSub(sub/idx)에서 자막 가져오기/OCR...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Blu-ray(.sup)에서 자막 가져오기/OCR...</ImportBluRaySupFile>
         <ImportXSub>Divx/avi에서 XSub 가져오기/OCR...</ImportXSub>
@@ -709,12 +709,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ExportBluRaySup>블루레이 자막(sup)으로...</ExportBluRaySup>
         <ExportVobSub>VobSub(sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>일반 텍스트 파일로...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB 이미지 스크립트로...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS 파일로...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1099,7 +1099,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <OpenMatroskaFile>Matroska 파일 열기...</OpenMatroskaFile>
     <MatroskaFiles>Matroska 파일</MatroskaFiles>
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>유효한 matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Matroska 파일의 구문을 분석하는 중...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska 파일에서 자막을 추출했습니다.</SubtitleImportedFromMatroskaFile>
@@ -1485,7 +1485,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AllowEditOfOriginalSubtitle>원본 자막의 편집 허용</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>삭제 라인 알림</PromptDeleteLines>
     <TimeCodeMode>타임코드 모드</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>비디오 장치</VideoEngine>
     <DirectShow>다이렉트쇼</DirectShow>
@@ -1905,7 +1905,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>VobSub(sub/idx)에서 자막 가져오기 / OCR...</Title>
     <TitleBluRay>Blu-ray(.sup)에서 자막 가져오기 / OCR...</TitleBluRay>
     <OcrMethod>OCR 방식</OcrMethod>
-    <OcrViaModi>MS Office 문서 이미징 (MODI)에 의한 OCR...(MS Office 필요함)</OcrViaModi>
+    <OcrViaModi>Microsoft Office 문서 이미징 (MODI)에 의한 OCR...(Microsoft Office 필요함)</OcrViaModi>
     <OcrViaTesseract>TESSERACT 프로그램에 의한 OCR...</OcrViaTesseract>
     <OcrViaNOCR>NOCR에 의한 OCR</OcrViaNOCR>
     <Language>언어</Language>
@@ -1938,7 +1938,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AllFixes>수정 목록</AllFixes>
     <GuessesUsed>추측 사용</GuessesUsed>
     <UnknownWords>알 수 없는 단어</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellChecking>
     <ImportNewTimeCodes>새로운 타임코드 가져오기</ImportNewTimeCodes>
     <FixOcrErrors>OCR 오류 수정</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>타임코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>

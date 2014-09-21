@@ -278,7 +278,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Rip subtitles from ifo/vobs (dvd)";
+            this.Text = "Rip subtitles from IFO/VOBs (DVD)";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DvdSubRip_KeyDown);
             this.groupBoxDvd.ResumeLayout(false);
             this.groupBoxDvd.PerformLayout();

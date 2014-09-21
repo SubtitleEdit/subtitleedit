@@ -152,7 +152,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixItalics />
     <RemoveFormatting />
     <RemoveTextForHI />
-    <ReDoCasing />
+    <RedoCasing />
     <Convert />
     <NothingToConvert />
     <PleaseChooseOutputFolder />
@@ -286,7 +286,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>{السطر {0} تجاوز الطول الاقصى ({1}) بواسطة {2}: {3</MaxLengthError>
     <TextUnchangedPresentation>المقدمة بدون تغيير</TextUnchangedPresentation>
     <TextLeftJustifiedText>يكتب النص باتجاه اليسار</TextLeftJustifiedText>
-    <TextCentredText>مركز النص</TextCentredText>
+    <TextCenteredText>مركز النص</TextCenteredText>
     <TextRightJustifiedText>يكتب النص من اليمين</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -563,7 +563,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>قارن بينهما</Compare>
         <Statistics />
         <Plugins />
-        <ImportOcrFromDvd>vob /ifo (dvd)إستيراد / الترجمة من</ImportOcrFromDvd>
+        <ImportOcrFromDvd>VOB /IFO (DVD)إستيراد / الترجمة من</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>الترجمة / OCR VobSub (SUB / IDX) استيراد</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>OCR Blu-ray sup استيراد / ملف</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Matroska إستيراد الترجمة من ملف</ImportSubtitleFromMatroskaFile>
@@ -575,7 +575,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup />
         <ExportVobSub />
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>... (شاشة إلكترونية) PAC</ExportPac>
         <ExportPlainText />
         <ExportAdobeEncoreFabImageScript />
@@ -1234,7 +1234,7 @@ Continue?</SubtitleAppendPrompt>
     <AllowEditOfOriginalSubtitle>السماح لتحرير الترجمة الأصلية</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>حثة ليحذف السطور</PromptDeleteLines>
     <TimeCodeMode />
-    <TimeCodeModeHHMMSSMsec />
+    <TimeCodeModeHHMMSSMS />
     <TimeCodeModeHHMMSSFF />
     <VideoEngine>محرك فيديو</VideoEngine>
     <DirectShow>عرض مباشر</DirectShow>
@@ -1623,14 +1623,14 @@ Keep changes?</KeepChangesMessage>
     <AllFixes>إصلاح الكل</AllFixes>
     <GuessesUsed>استخدمت التخمينات</GuessesUsed>
     <UnknownWords>الكلمات المجهولة</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR التصحيح التلقائي / التدقيق الإملائي</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR التصحيح التلقائي / التدقيق الإملائي</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR إصلاح أخطاء</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>... استيراد النص مطابقة رموز الوقت</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>...حفظ التصوير والترجمة</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>(png/bdn xml) حفظ كافة الصور</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML حفظ كافة الصور بدليل</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{1}الصورة المحفوظة فى{}</XImagesSavedInY>
-    <TryModiForUnknownWords>محاولة MS MODI OCR لكلمات غير معروفة</TryModiForUnknownWords>
+    <TryModiForUnknownWords>محاولة Microsoft MODI OCR لكلمات غير معروفة</TryModiForUnknownWords>
     <DictionaryX>{القاموس : {0</DictionaryX>
     <RightToLeft>من اليمين إلى اليسار</RightToLeft>
     <ShowOnlyForcedSubtitles>تظهر الترجمة الإجبارية فقط</ShowOnlyForcedSubtitles>

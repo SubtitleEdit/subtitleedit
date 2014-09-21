@@ -5,7 +5,7 @@ namespace MultiLanguage
     using System.Runtime.InteropServices;
 
     [ComImport, Guid("C04D65CF-B70D-11D0-B188-00AA0038C969"), ComConversionLoss, ClassInterface((short)0), TypeLibType((short)2)]
-    public class CMLangStringClass : CMLangString, IMLangStringWStr, IMLangStringAStr
+    public class CMLangStringClass : ICMLangString, IMLangStringWStr, IMLangStringAStr
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void GetAStr([In] int lSrcPos, [In] int lSrcLen, [In] uint uCodePageIn, out uint puCodePageOut, out sbyte pszDest, [In] int cchDest, out int pcchActual, out int plActualLen);

@@ -514,8 +514,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/OverwriteOriginalFiles":
                     language.BatchConvert.OverwriteOriginalFiles = reader.Value;
                     break;
-                case "BatchConvert/ReDoCasing":
-                    language.BatchConvert.ReDoCasing = reader.Value;
+                case "BatchConvert/RedoCasing":
+                    language.BatchConvert.RedoCasing = reader.Value;
                     break;
                 case "BatchConvert/Convert":
                     language.BatchConvert.Convert = reader.Value;
@@ -1000,8 +1000,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "EbuSaveOptions/TextLeftJustifiedText":
                     language.EbuSaveOptions.TextLeftJustifiedText = reader.Value;
                     break;
-                case "EbuSaveOptions/TextCentredText":
-                    language.EbuSaveOptions.TextCentredText = reader.Value;
+                case "EbuSaveOptions/TextCenteredText":
+                    language.EbuSaveOptions.TextCenteredText = reader.Value;
                     break;
                 case "EbuSaveOptions/TextRightJustifiedText":
                     language.EbuSaveOptions.TextRightJustifiedText = reader.Value;
@@ -4072,8 +4072,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/TimeCodeMode":
                     language.Settings.TimeCodeMode = reader.Value;
                     break;
-                case "Settings/TimeCodeModeHHMMSSMsec":
-                    language.Settings.TimeCodeModeHHMMSSMsec = reader.Value;
+                case "Settings/TimeCodeModeHHMMSSMS":
+                    language.Settings.TimeCodeModeHHMMSSMS = reader.Value;
                     break;
                 case "Settings/TimeCodeModeHHMMSSFF":
                     language.Settings.TimeCodeModeHHMMSSFF = reader.Value;
@@ -5326,8 +5326,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/UnknownWords":
                     language.VobSubOcr.UnknownWords = reader.Value;
                     break;
-                case "VobSubOcr/OcrAutoCorrectionSpellchecking":
-                    language.VobSubOcr.OcrAutoCorrectionSpellchecking = reader.Value;
+                case "VobSubOcr/OcrAutoCorrectionSpellChecking":
+                    language.VobSubOcr.OcrAutoCorrectionSpellChecking = reader.Value;
                     break;
                 case "VobSubOcr/FixOcrErrors":
                     language.VobSubOcr.FixOcrErrors = reader.Value;

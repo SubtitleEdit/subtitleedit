@@ -95,10 +95,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private ShowEarlierLater _showEarlierOrLater = null;
 
-        private bool _isVideoControlsUnDocked = false;
-        private VideoPlayerUnDocked _videoPlayerUnDocked = null;
-        private WaveformUnDocked _waveformUnDocked = null;
-        private VideoControlsUndocked _videoControlsUnDocked = null;
+        private bool _isVideoControlsUndocked = false;
+        private VideoPlayerUndocked _videoPlayerUndocked = null;
+        private WaveformUndocked _waveformUndocked = null;
+        private VideoControlsUndocked _videoControlsUndocked = null;
 
         private GoogleOrMicrosoftTranslate _googleOrMicrosoftTranslate = null;
 
@@ -572,7 +572,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.WriteLine(Title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:msec] [/encoding:<encoding name>] [/fps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>] [/pac-codepage:<code page>]");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:ms] [/encoding:<encoding name>] [/fps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>] [/pac-codepage:<code page>]");
             Console.WriteLine();
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
             Console.WriteLine("    list available formats: SubtitleEdit /convert /list");
@@ -1700,7 +1700,7 @@ namespace Nikse.SubtitleEdit.Forms
             GetDictionariesToolStripMenuItem.Text = _language.Menu.SpellCheck.GetDictionaries;
             addWordToNamesetcListToolStripMenuItem.Text = _language.Menu.SpellCheck.AddToNamesEtcList;
 
-            toolStripMenuItemSyncronization.Text = _language.Menu.Synchronization.Title;
+            toolStripMenuItemSynchronization.Text = _language.Menu.Synchronization.Title;
             toolStripMenuItemAdjustAllTimes.Text = _language.Menu.Synchronization.AdjustAllTimes;
             visualSyncToolStripMenuItem.Text = _language.Menu.Synchronization.VisualSync;
             toolStripMenuItemPointSync.Text = _language.Menu.Synchronization.PointSync;
@@ -2773,7 +2773,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                // retry SP dvd (file with wrong extension)
+                // retry SP DVD (file with wrong extension)
                 if (format == null && fi.Length > 500 && IsSpDvdSupFile(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, _loading);
@@ -2784,7 +2784,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null && fi.Length > 100 && ext == ".idx")
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadIdx))
-                        MessageBox.Show("Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and SE can open the .sub file.");
+                        MessageBox.Show("Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.");
                     else
                         MessageBox.Show(_language.ErrorLoadIdx);
                     return;
@@ -2794,7 +2794,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null && fi.Length > 100 && IsRarFile(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadRar))
-                        MessageBox.Show("This file seems to be a compressed .rar file. SE cannot open compressed files.");
+                        MessageBox.Show("This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.");
                     else
                         MessageBox.Show(_language.ErrorLoadRar);
                     return;
@@ -2804,7 +2804,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (format == null && fi.Length > 100 && IsZipFile(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadZip))
-                        MessageBox.Show("This file seems to be a compressed .zip file. SE cannot open compressed files.");
+                        MessageBox.Show("This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.");
                     else
                         MessageBox.Show(_language.ErrorLoadZip);
                     return;
@@ -3151,14 +3151,14 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(_videoFileName))
                 title = Path.GetFileNameWithoutExtension(_videoFileName);
 
-            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                _videoControlsUnDocked.Text = string.Format(Configuration.Settings.Language.General.ControlsWindowTitle, title);
+            if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
+                _videoControlsUndocked.Text = string.Format(Configuration.Settings.Language.General.ControlsWindowTitle, title);
 
-            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
-                _videoPlayerUnDocked.Text = string.Format(Configuration.Settings.Language.General.VideoWindowTitle, title);
+            if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
+                _videoPlayerUndocked.Text = string.Format(Configuration.Settings.Language.General.VideoWindowTitle, title);
 
-            if (_waveformUnDocked != null && !_waveformUnDocked.IsDisposed)
-                _waveformUnDocked.Text = string.Format(Configuration.Settings.Language.General.AudioWindowTitle, title);
+            if (_waveformUndocked != null && !_waveformUndocked.IsDisposed)
+                _waveformUndocked.Text = string.Format(Configuration.Settings.Language.General.AudioWindowTitle, title);
         }
 
         private void ImportAndOcrBdnXml(string fileName, BdnXml bdnXml, List<string> list)
@@ -5884,7 +5884,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            _spellCheckForm.ContinueSpellcheck(_subtitle);
+                            _spellCheckForm.ContinueSpellCheck(_subtitle);
                         }
                     }
                     else
@@ -7323,13 +7323,13 @@ namespace Nikse.SubtitleEdit.Forms
                             next.Text = next.Text.Remove(next.Text.LastIndexOf('<'));
                         }
 
-                        // If the second subtitle (next) starts with a dialogue ("-"):
+                        // If the second subtitle (next) starts with a dialog ("-"):
                         String dialogueMarker = "";
                         if (firstWord.StartsWith('-'))
                         {
-                            // Save the dialogue marker ("-" or "- ").
+                            // Save the dialog marker ("-" or "- ").
                             dialogueMarker = (firstWord.StartsWith("- ") ? "- " : "-");
-                            // Remove the dialogue marker from the first word.
+                            // Remove the dialog marker from the first word.
                             firstWord = firstWord.Remove(0, dialogueMarker.Length);
                         }
 
@@ -7433,13 +7433,13 @@ namespace Nikse.SubtitleEdit.Forms
                             next.Text = next.Text.Remove(0, next.Text.IndexOf('>') + 1);
                         }
 
-                        // If the second subtitle (next) starts with a dialogue ("-"):
+                        // If the second subtitle (next) starts with a dialog ("-"):
                         String dialogueMarker = "";
                         if (next.Text.StartsWith('-'))
                         {
-                            // Save the dialogue marker ("-" or "- ").
+                            // Save the dialog marker ("-" or "- ").
                             dialogueMarker = (next.Text.StartsWith("- ") ? "- " : "-");
-                            // Remove the dialogue marker from the next subtitle.
+                            // Remove the dialog marker from the next subtitle.
                             next.Text = next.Text.Remove(0, dialogueMarker.Length);
                         }
 
@@ -8609,7 +8609,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveListViewWidths()
         {
-            if (Configuration.Settings.General.ListViewColumsRememberSize)
+            if (Configuration.Settings.General.ListViewColumnsRememberSize)
             {
                 Configuration.Settings.General.ListViewNumberWidth = SubtitleListview1.Columns[0].Width;
                 Configuration.Settings.General.ListViewStartWidth = SubtitleListview1.Columns[1].Width;
@@ -8621,12 +8621,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SaveUndockedPositions()
         {
-            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left + @";" + _videoPlayerUnDocked.Top + @";" + _videoPlayerUnDocked.Width + @";" + _videoPlayerUnDocked.Height;
-            if (_waveformUnDocked != null && !_waveformUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedWaveformPosition = _waveformUnDocked.Left + @";" + _waveformUnDocked.Top + @";" + _waveformUnDocked.Width + @";" + _waveformUnDocked.Height;
-            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUnDocked.Left + @";" + _videoControlsUnDocked.Top + @";" + _videoControlsUnDocked.Width + @";" + _videoControlsUnDocked.Height;
+            if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
+                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUndocked.Left + @";" + _videoPlayerUndocked.Top + @";" + _videoPlayerUndocked.Width + @";" + _videoPlayerUndocked.Height;
+            if (_waveformUndocked != null && !_waveformUndocked.IsDisposed)
+                Configuration.Settings.General.UndockedWaveformPosition = _waveformUndocked.Left + @";" + _waveformUndocked.Top + @";" + _waveformUndocked.Width + @";" + _waveformUndocked.Height;
+            if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
+                Configuration.Settings.General.UndockedVideoControlsPosition = _videoControlsUndocked.Left + @";" + _videoControlsUndocked.Top + @";" + _videoControlsUndocked.Width + @";" + _videoControlsUndocked.Height;
         }
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
@@ -9207,7 +9207,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase))
+                            else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
@@ -9402,7 +9402,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
             {
-                MessageBox.Show("Encrypted vobsub content not supported");
+                MessageBox.Show("Encrypted VobSub content not supported");
             }
 
             bool isValid;
@@ -11144,7 +11144,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.KeyData == _toggleVideoDockUndock)
             {
-                if (_isVideoControlsUnDocked)
+                if (_isVideoControlsUndocked)
                     RedockVideoControlsToolStripMenuItemClick(null, null);
                 else
                     UndockVideoControlsToolStripMenuItemClick(null, null);
@@ -11668,18 +11668,18 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.ShowFullScreenControls();
             bool setRedockOnFullscreenEnd = false;
 
-            if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
+            if (_videoPlayerUndocked == null || _videoPlayerUndocked.IsDisposed)
             {
                 UndockVideoControlsToolStripMenuItemClick(null, null);
                 setRedockOnFullscreenEnd = true;
             }
 
-            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+            if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
             {
-                _videoPlayerUnDocked.Focus();
-                _videoPlayerUnDocked.GoFullscreen();
+                _videoPlayerUndocked.Focus();
+                _videoPlayerUndocked.GoFullscreen();
                 if (setRedockOnFullscreenEnd)
-                    _videoPlayerUnDocked.RedockOnFullscreenEnd = true;
+                    _videoPlayerUndocked.RedockOnFullscreenEnd = true;
             }
         }
 
@@ -11875,16 +11875,16 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Text = Title;
 
-            string seperator = " - ";
+            string separator = " - ";
             if (!string.IsNullOrEmpty(_fileName))
             {
-                Text = Text + seperator + _fileName;
-                seperator = " + ";
+                Text = Text + separator + _fileName;
+                separator = " + ";
             }
 
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
-                Text = Text + seperator;
+                Text = Text + separator;
                 if (string.IsNullOrEmpty(_fileName))
                     Text = Text + Configuration.Settings.Language.Main.New + " + ";
                 if (!string.IsNullOrEmpty(_subtitleAlternateFileName))
@@ -12720,7 +12720,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (IsSpDvdSupFile(fileName))
                     {
-                        MessageBox.Show("Dvd sup files not supported here");
+                        MessageBox.Show("DVD sup files not supported here");
                         return;
                     }
                 }
@@ -13214,8 +13214,8 @@ namespace Nikse.SubtitleEdit.Forms
             var pb = (PictureBox)(sender as PictureBox);
             if (pb != null && pb.Name == "_pictureBoxFullscreenOver")
             {
-                if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed && _videoPlayerUnDocked.IsFullscreen)
-                    _videoPlayerUnDocked.NoFullscreen();
+                if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed && _videoPlayerUndocked.IsFullscreen)
+                    _videoPlayerUndocked.NoFullscreen();
                 else
                     GoFullscreen();
             }
@@ -13386,9 +13386,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowVideoPlayer()
         {
-            if (_isVideoControlsUnDocked)
+            if (_isVideoControlsUndocked)
             {
-                ShowHideUnDockedVideoControls();
+                ShowHideUndockedVideoControls();
             }
             else
             {
@@ -13432,39 +13432,39 @@ namespace Nikse.SubtitleEdit.Forms
             Main_Resize(null, null);
         }
 
-        private void ShowHideUnDockedVideoControls()
+        private void ShowHideUndockedVideoControls()
         {
-            if (_videoPlayerUnDocked == null || _videoPlayerUnDocked.IsDisposed)
+            if (_videoPlayerUndocked == null || _videoPlayerUndocked.IsDisposed)
                 UnDockVideoPlayer();
-            _videoPlayerUnDocked.Visible = false;
+            _videoPlayerUndocked.Visible = false;
             if (toolStripButtonToggleVideo.Checked)
             {
-                _videoPlayerUnDocked.Show(this);
-                if (_videoPlayerUnDocked.WindowState == FormWindowState.Minimized)
-                    _videoPlayerUnDocked.WindowState = FormWindowState.Normal;
+                _videoPlayerUndocked.Show(this);
+                if (_videoPlayerUndocked.WindowState == FormWindowState.Minimized)
+                    _videoPlayerUndocked.WindowState = FormWindowState.Normal;
             }
 
-            if (_waveformUnDocked == null || _waveformUnDocked.IsDisposed)
+            if (_waveformUndocked == null || _waveformUndocked.IsDisposed)
                 UnDockWaveform();
-            _waveformUnDocked.Visible = false;
+            _waveformUndocked.Visible = false;
             if (toolStripButtonToggleWaveform.Checked)
             {
-                _waveformUnDocked.Show(this);
-                if (_waveformUnDocked.WindowState == FormWindowState.Minimized)
-                    _waveformUnDocked.WindowState = FormWindowState.Normal;
+                _waveformUndocked.Show(this);
+                if (_waveformUndocked.WindowState == FormWindowState.Minimized)
+                    _waveformUndocked.WindowState = FormWindowState.Normal;
             }
 
             if (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked)
             {
-                if (_videoControlsUnDocked == null || _videoControlsUnDocked.IsDisposed)
+                if (_videoControlsUndocked == null || _videoControlsUndocked.IsDisposed)
                     UnDockVideoButtons();
-                _videoControlsUnDocked.Visible = false;
-                _videoControlsUnDocked.Show(this);
+                _videoControlsUndocked.Visible = false;
+                _videoControlsUndocked.Show(this);
             }
             else
             {
-                if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
-                    _videoControlsUnDocked.Visible = false;
+                if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
+                    _videoControlsUndocked.Visible = false;
             }
         }
 
@@ -13506,7 +13506,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
 
                 // List view
-                SubtitleListview1.InitializeTimeStampColumWidths(this);
+                SubtitleListview1.InitializeTimestampColumnWidths(this);
                 const int adjustUp = 8;
                 SubtitleListview1.Height = SubtitleListview1.Height - adjustUp;
                 groupBoxEdit.Top = groupBoxEdit.Top - adjustUp;
@@ -13973,8 +13973,8 @@ namespace Nikse.SubtitleEdit.Forms
             mediaPlayer.BringToFront();
             if (!toolStripButtonToggleVideo.Checked && !toolStripButtonToggleWaveform.Checked)
             {
-                if (_isVideoControlsUnDocked)
-                    ShowHideUnDockedVideoControls();
+                if (_isVideoControlsUndocked)
+                    ShowHideUndockedVideoControls();
                 else
                     HideVideoPlayer();
             }
@@ -13995,8 +13995,8 @@ namespace Nikse.SubtitleEdit.Forms
             panelWaveformControls.Visible = toolStripButtonToggleWaveform.Checked;
             if (!toolStripButtonToggleWaveform.Checked && !toolStripButtonToggleVideo.Checked)
             {
-                if (_isVideoControlsUnDocked)
-                    ShowHideUnDockedVideoControls();
+                if (_isVideoControlsUndocked)
+                    ShowHideUndockedVideoControls();
                 else
                     HideVideoPlayer();
             }
@@ -14419,7 +14419,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VideoControls.LastActiveTab = "Adjust";
             }
 
-            if (!_isVideoControlsUnDocked)
+            if (!_isVideoControlsUndocked)
             {
                 if (toolStripButtonToggleWaveform.Checked)
                     audioVisualizer.Left = tabControlButtons.Left + tabControlButtons.Width + 5;
@@ -14438,10 +14438,10 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!_loading)
                     Refresh();
             }
-            else if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+            else if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
             {
-                _videoControlsUnDocked.Width = tabControlButtons.Width + 20;
-                _videoControlsUnDocked.Height = tabControlButtons.Height + 65;
+                _videoControlsUndocked.Width = tabControlButtons.Width + 20;
+                _videoControlsUndocked.Height = tabControlButtons.Height + 65;
             }
         }
 
@@ -14602,8 +14602,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
             ToolStripMenuItemPlayRateNormalClick(null, null);
 
-            SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUnDocked");
-            SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveformUnDocked");
+            SetPositionFromXYString(Configuration.Settings.General.UndockedVideoPosition, "VideoPlayerUndocked");
+            SetPositionFromXYString(Configuration.Settings.General.UndockedWaveformPosition, "WaveformUndocked");
             SetPositionFromXYString(Configuration.Settings.General.UndockedVideoControlsPosition, "VideoControlsUndocked");
             if (Configuration.Settings.General.Undocked && Configuration.Settings.General.StartRememberPositionAndSize)
             {
@@ -14983,11 +14983,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (x.Name.StartsWith("Plugin"))
                     toolStripMenuItemSpellCheckMain.DropDownItems.Remove(x);
             }
-            for (int k = toolStripMenuItemSyncronization.DropDownItems.Count - 1; k > 0; k--)
+            for (int k = toolStripMenuItemSynchronization.DropDownItems.Count - 1; k > 0; k--)
             {
-                ToolStripItem x = toolStripMenuItemSyncronization.DropDownItems[k];
+                ToolStripItem x = toolStripMenuItemSynchronization.DropDownItems[k];
                 if (x.Name.StartsWith("Plugin"))
-                    toolStripMenuItemSyncronization.DropDownItems.Remove(x);
+                    toolStripMenuItemSynchronization.DropDownItems.Remove(x);
             }
             for (int k = toolStripMenuItemAutoTranslate.DropDownItems.Count - 1; k > 0; k--)
             {
@@ -15044,10 +15044,10 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 var tss = new ToolStripSeparator();
                                 tss.Name = "PluginSepSync";
-                                toolStripMenuItemSyncronization.DropDownItems.Add(tss);
+                                toolStripMenuItemSynchronization.DropDownItems.Add(tss);
                             }
                             item.Click += PluginToolClick;
-                            toolStripMenuItemSyncronization.DropDownItems.Add(item);
+                            toolStripMenuItemSynchronization.DropDownItems.Add(item);
                             syncPluginCount++;
                         }
                         else if (actionType.Equals("Translate", StringComparison.OrdinalIgnoreCase))
@@ -15918,7 +15918,7 @@ namespace Nikse.SubtitleEdit.Forms
                     tb.SelectionStart = selectionStart + tagLength;
                     tb.SelectionLength = 0;
                 }
-                // There are no dialogue lines present.
+                // There are no dialog lines present.
                 else
                 {
                     // Remove tags if present.
@@ -16243,7 +16243,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolsToolStripMenuItem.Enabled = enabled;
 
-            toolStripMenuItemSyncronization.Enabled = enabled;
+            toolStripMenuItemSynchronization.Enabled = enabled;
 
             toolStripMenuItemAutoTranslate.Enabled = enabled;
 
@@ -16679,14 +16679,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockVideoPlayer()
         {
-            bool firstUndock = _videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed;
+            bool firstUndock = _videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed;
 
-            _videoPlayerUnDocked = new VideoPlayerUnDocked(this, _formPositionsAndSizes, mediaPlayer);
-            _formPositionsAndSizes.SetPositionAndSize(_videoPlayerUnDocked);
+            _videoPlayerUndocked = new VideoPlayerUndocked(this, _formPositionsAndSizes, mediaPlayer);
+            _formPositionsAndSizes.SetPositionAndSize(_videoPlayerUndocked);
 
             if (firstUndock)
             {
-                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUnDocked.Left + @";" + _videoPlayerUnDocked.Top + @";" + _videoPlayerUnDocked.Width + @";" + _videoPlayerUnDocked.Height;
+                Configuration.Settings.General.UndockedVideoPosition = _videoPlayerUndocked.Left + @";" + _videoPlayerUndocked.Top + @";" + _videoPlayerUndocked.Width + @";" + _videoPlayerUndocked.Height;
             }
 
             Control control = null;
@@ -16704,9 +16704,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 control.Top = 0;
                 control.Left = 0;
-                control.Width = _videoPlayerUnDocked.PanelContainer.Width;
-                control.Height = _videoPlayerUnDocked.PanelContainer.Height;
-                _videoPlayerUnDocked.PanelContainer.Controls.Add(control);
+                control.Width = _videoPlayerUndocked.PanelContainer.Width;
+                control.Height = _videoPlayerUndocked.PanelContainer.Height;
+                _videoPlayerUndocked.PanelContainer.Controls.Add(control);
             }
         }
 
@@ -16720,29 +16720,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockWaveform()
         {
-            _waveformUnDocked = new WaveformUnDocked(this, _formPositionsAndSizes);
-            _formPositionsAndSizes.SetPositionAndSize(_waveformUnDocked);
+            _waveformUndocked = new WaveformUndocked(this, _formPositionsAndSizes);
+            _formPositionsAndSizes.SetPositionAndSize(_waveformUndocked);
 
             var control = audioVisualizer;
             groupBoxVideo.Controls.Remove(control);
             control.Top = 0;
             control.Left = 0;
-            control.Width = _waveformUnDocked.PanelContainer.Width;
-            control.Height = _waveformUnDocked.PanelContainer.Height - panelWaveformControls.Height;
-            _waveformUnDocked.PanelContainer.Controls.Add(control);
+            control.Width = _waveformUndocked.PanelContainer.Width;
+            control.Height = _waveformUndocked.PanelContainer.Height - panelWaveformControls.Height;
+            _waveformUndocked.PanelContainer.Controls.Add(control);
 
             var control2 = (Control)panelWaveformControls;
             groupBoxVideo.Controls.Remove(control2);
             control2.Top = control.Height;
             control2.Left = 0;
-            _waveformUnDocked.PanelContainer.Controls.Add(control2);
+            _waveformUndocked.PanelContainer.Controls.Add(control2);
 
             var control3 = (Control)trackBarWaveformPosition;
             groupBoxVideo.Controls.Remove(control3);
             control3.Top = control.Height;
             control3.Left = control2.Width + 2;
-            control3.Width = _waveformUnDocked.PanelContainer.Width - control3.Left;
-            _waveformUnDocked.PanelContainer.Controls.Add(control3);
+            control3.Width = _waveformUndocked.PanelContainer.Width - control3.Left;
+            _waveformUndocked.PanelContainer.Controls.Add(control3);
         }
 
         public void ReDockWaveform(Control waveform, Control buttons, Control trackBar)
@@ -16760,16 +16760,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UnDockVideoButtons()
         {
-            _videoControlsUnDocked = new VideoControlsUndocked(this, _formPositionsAndSizes);
-            _formPositionsAndSizes.SetPositionAndSize(_videoControlsUnDocked);
+            _videoControlsUndocked = new VideoControlsUndocked(this, _formPositionsAndSizes);
+            _formPositionsAndSizes.SetPositionAndSize(_videoControlsUndocked);
             var control = tabControlButtons;
             groupBoxVideo.Controls.Remove(control);
             control.Top = 25;
             control.Left = 0;
-            _videoControlsUnDocked.PanelContainer.Controls.Add(control);
+            _videoControlsUndocked.PanelContainer.Controls.Add(control);
 
             groupBoxVideo.Controls.Remove(checkBoxSyncListViewWithVideoWhilePlaying);
-            _videoControlsUnDocked.PanelContainer.Controls.Add(checkBoxSyncListViewWithVideoWhilePlaying);
+            _videoControlsUndocked.PanelContainer.Controls.Add(checkBoxSyncListViewWithVideoWhilePlaying);
             checkBoxSyncListViewWithVideoWhilePlaying.Top = 5;
             checkBoxSyncListViewWithVideoWhilePlaying.Left = 5;
 
@@ -16799,43 +16799,43 @@ namespace Nikse.SubtitleEdit.Forms
             splitContainerListViewAndText.SplitterDistance = splitContainerListViewAndText.Height - 109;
             if (toolStripButtonToggleVideo.Checked)
             {
-                _videoPlayerUnDocked.Show(this);
-                if (_videoPlayerUnDocked.Top < -999 || _videoPlayerUnDocked.Left < -999)
+                _videoPlayerUndocked.Show(this);
+                if (_videoPlayerUndocked.Top < -999 || _videoPlayerUndocked.Left < -999)
                 {
-                    _videoPlayerUnDocked.WindowState = FormWindowState.Minimized;
-                    _videoPlayerUnDocked.Top = Top + 40;
-                    _videoPlayerUnDocked.Left = Math.Abs(Left - 20);
-                    _videoPlayerUnDocked.Width = 600;
-                    _videoPlayerUnDocked.Height = 400;
+                    _videoPlayerUndocked.WindowState = FormWindowState.Minimized;
+                    _videoPlayerUndocked.Top = Top + 40;
+                    _videoPlayerUndocked.Left = Math.Abs(Left - 20);
+                    _videoPlayerUndocked.Width = 600;
+                    _videoPlayerUndocked.Height = 400;
                 }
             }
 
             UnDockWaveform();
             if (toolStripButtonToggleWaveform.Checked)
             {
-                _waveformUnDocked.Show(this);
-                if (_waveformUnDocked.Top < -999 || _waveformUnDocked.Left < -999)
+                _waveformUndocked.Show(this);
+                if (_waveformUndocked.Top < -999 || _waveformUndocked.Left < -999)
                 {
-                    _waveformUnDocked.WindowState = FormWindowState.Minimized;
-                    _waveformUnDocked.Top = Top + 60;
-                    _waveformUnDocked.Left = Math.Abs(Left - 15);
-                    _waveformUnDocked.Width = 600;
-                    _waveformUnDocked.Height = 200;
+                    _waveformUndocked.WindowState = FormWindowState.Minimized;
+                    _waveformUndocked.Top = Top + 60;
+                    _waveformUndocked.Left = Math.Abs(Left - 15);
+                    _waveformUndocked.Width = 600;
+                    _waveformUndocked.Height = 200;
                 }
             }
 
             UnDockVideoButtons();
-            _videoControlsUnDocked.Show(this);
-            if (_videoControlsUnDocked.Top < -999 || _videoControlsUnDocked.Left < -999)
+            _videoControlsUndocked.Show(this);
+            if (_videoControlsUndocked.Top < -999 || _videoControlsUndocked.Left < -999)
             {
-                _videoControlsUnDocked.WindowState = FormWindowState.Minimized;
-                _videoControlsUnDocked.Top = Top + 40;
-                _videoControlsUnDocked.Left = Math.Abs(Left - 10);
-                _videoControlsUnDocked.Width = tabControlButtons.Width + 20;
-                _videoControlsUnDocked.Height = tabControlButtons.Height + 65;
+                _videoControlsUndocked.WindowState = FormWindowState.Minimized;
+                _videoControlsUndocked.Top = Top + 40;
+                _videoControlsUndocked.Left = Math.Abs(Left - 10);
+                _videoControlsUndocked.Width = tabControlButtons.Width + 20;
+                _videoControlsUndocked.Height = tabControlButtons.Height + 65;
             }
 
-            _isVideoControlsUnDocked = true;
+            _isVideoControlsUndocked = true;
             SetUndockedWindowsTitle();
 
             undockVideoControlsToolStripMenuItem.Visible = false;
@@ -16855,41 +16855,41 @@ namespace Nikse.SubtitleEdit.Forms
 
             Configuration.Settings.General.Undocked = false;
 
-            if (_videoControlsUnDocked != null && !_videoControlsUnDocked.IsDisposed)
+            if (_videoControlsUndocked != null && !_videoControlsUndocked.IsDisposed)
             {
-                var control = _videoControlsUnDocked.PanelContainer.Controls[0];
-                var controlCheckBox = _videoControlsUnDocked.PanelContainer.Controls[1];
-                _videoControlsUnDocked.PanelContainer.Controls.Clear();
+                var control = _videoControlsUndocked.PanelContainer.Controls[0];
+                var controlCheckBox = _videoControlsUndocked.PanelContainer.Controls[1];
+                _videoControlsUndocked.PanelContainer.Controls.Clear();
                 ReDockVideoButtons(control, controlCheckBox);
-                _videoControlsUnDocked.Close();
-                _videoControlsUnDocked = null;
+                _videoControlsUndocked.Close();
+                _videoControlsUndocked = null;
             }
 
-            if (_waveformUnDocked != null && !_waveformUnDocked.IsDisposed)
+            if (_waveformUndocked != null && !_waveformUndocked.IsDisposed)
             {
-                var controlWaveform = _waveformUnDocked.PanelContainer.Controls[0];
-                var controlButtons = _waveformUnDocked.PanelContainer.Controls[1];
-                var controlTrackBar = _waveformUnDocked.PanelContainer.Controls[2];
-                _waveformUnDocked.PanelContainer.Controls.Clear();
+                var controlWaveform = _waveformUndocked.PanelContainer.Controls[0];
+                var controlButtons = _waveformUndocked.PanelContainer.Controls[1];
+                var controlTrackBar = _waveformUndocked.PanelContainer.Controls[2];
+                _waveformUndocked.PanelContainer.Controls.Clear();
                 ReDockWaveform(controlWaveform, controlButtons, controlTrackBar);
-                _waveformUnDocked.Close();
-                _waveformUnDocked = null;
+                _waveformUndocked.Close();
+                _waveformUndocked = null;
             }
 
-            if (_videoPlayerUnDocked != null && !_videoPlayerUnDocked.IsDisposed)
+            if (_videoPlayerUndocked != null && !_videoPlayerUndocked.IsDisposed)
             {
-                var control = _videoPlayerUnDocked.PanelContainer.Controls[0];
-                _videoPlayerUnDocked.PanelContainer.Controls.Remove(control);
+                var control = _videoPlayerUndocked.PanelContainer.Controls[0];
+                _videoPlayerUndocked.PanelContainer.Controls.Remove(control);
                 ReDockVideoPlayer(control);
-                _videoPlayerUnDocked.Close();
-                _videoPlayerUnDocked = null;
+                _videoPlayerUndocked.Close();
+                _videoPlayerUndocked = null;
                 mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
             }
 
-            _isVideoControlsUnDocked = false;
-            _videoPlayerUnDocked = null;
-            _waveformUnDocked = null;
-            _videoControlsUnDocked = null;
+            _isVideoControlsUndocked = false;
+            _videoPlayerUndocked = null;
+            _waveformUndocked = null;
+            _videoControlsUndocked = null;
             ShowVideoPlayer();
 
             audioVisualizer.Visible = toolStripButtonToggleWaveform.Checked;
@@ -17027,7 +17027,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemVideoDropDownOpening(object sender, EventArgs e)
         {
-            if (_isVideoControlsUnDocked)
+            if (_isVideoControlsUndocked)
             {
                 redockVideoControlsToolStripMenuItem.ShortcutKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
                 undockVideoControlsToolStripMenuItem.ShortcutKeys = Keys.None;
@@ -18119,7 +18119,7 @@ namespace Nikse.SubtitleEdit.Forms
             //tc.DrawMode = TabDrawMode.Normal;
         }
 
-        public void GotoNextSubPosFromvideoPos()
+        public void GotoNextSubPosFromVideoPos()
         {
             if (mediaPlayer.VideoPlayer != null && _subtitle != null)
             {
@@ -19389,7 +19389,7 @@ namespace Nikse.SubtitleEdit.Forms
                 form.Initialize(_subtitle);
                 if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (!string.IsNullOrEmpty(_language.BeforeMergeLinesWithSameText)) //TODO: Remove in SE 3.3.4
+                    if (!string.IsNullOrEmpty(_language.BeforeMergeLinesWithSameText)) //TODO: Remove in Subtitle Edit 3.3.4
                         MakeHistoryForUndo(_language.BeforeMergeLinesWithSameText);
                     else
                         MakeHistoryForUndo(_language.BeforeMergeShortLines);
@@ -19500,7 +19500,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!string.IsNullOrEmpty(_language.NotAValidXSubFile))
                             MessageBox.Show(_language.NotAValidXSubFile);
                         else
-                            MessageBox.Show("Not a valid xsub file!");
+                            MessageBox.Show("Not a valid XSub file!");
                     }
                 }
             }

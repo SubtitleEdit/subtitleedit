@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Number</Number>
     <Text>Text</Text>
-    <HourMinutesSecondsMilliseconds>Hour:min:sec:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Hour:min:sec:ms</HourMinutesSecondsMilliseconds>
     <Bold>Bold</Bold>
     <Italic>Italic</Italic>
     <Underline>Underline</Underline>
@@ -58,7 +58,7 @@
     <SessionKey>Session key</SessionKey>
     <UserName>Username</UserName>
     <UserNameAlreadyInUse>Username already in use</UserNameAlreadyInUse>
-    <WebServiceUrl>Webservice url</WebServiceUrl>
+    <WebServiceUrl>Webservice URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Remove formatting tags</RemoveFormatting>
     <RemoveTextForHI>Remove text for HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Overwrite original files (new extension if format is changed)</OverwriteOriginalFiles>
-    <ReDoCasing>Redo casing</ReDoCasing>
+    <RedoCasing>Redo casing</RedoCasing>
     <Convert>Convert</Convert>
     <NothingToConvert>Nothing to convert!</NothingToConvert>
     <PleaseChooseOutputFolder>Please choose output folder</PleaseChooseOutputFolder>
@@ -287,7 +287,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Rip subtitles from ifo/vobs (dvd)</Title>
+    <Title>Rip subtitles from IFO/VOBs (DVD)</Title>
     <DvdGroupTitle>DVD files/info</DvdGroupTitle>
     <IfoFile>IFO file</IfoFile>
     <IfoFiles>IFO files</IfoFiles>
@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Line {0} exceeds max length ({1}) by {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Unchanged presentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>Left justified text</TextLeftJustifiedText>
-    <TextCentredText>Centred text</TextCentredText>
+    <TextCenteredText>Centered text</TextCenteredText>
     <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -431,12 +431,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowTimeCode>Show time code</ShowTimeCode>
     <AddNewLineAfterTimeCode>Add new line after time code</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Add new line after text</AddNewLineAfterTexts>
-    <AddNewLineBetweenSubtitles>Add new line between subitles</AddNewLineBetweenSubtitles>
+    <AddNewLineBetweenSubtitles>Add new line between subtitles</AddNewLineBetweenSubtitles>
     <TimeCodeFormat>Time code format</TimeCodeFormat>
     <Srt>.srt</Srt>
     <Milliseconds>Milliseconds</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Time code seperator</TimeCodeSeperator>
+    <TimeCodeSeperator>Time code separator</TimeCodeSeperator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generate time as text</Title>
@@ -485,7 +485,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpaces>Fix missing spaces</FixMissingSpaces>
     <BreakLongLines>Break long lines</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogues)</RemoveLineBreaksAll>
+    <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
@@ -524,7 +524,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XIsChangedToUppercase>{0} i's changed to uppercase</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Fix first letter to uppercase after paragraph</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Merge short line (single sentence)</MergeShortLine>
-    <MergeShortLineAll>Merge short line (all except dialogues)</MergeShortLineAll>
+    <MergeShortLineAll>Merge short line (all except dialogs)</MergeShortLineAll>
     <XLineBreaksAdded>{0} line breaks added</XLineBreaksAdded>
     <BreakLongLine>Break long line</BreakLongLine>
     <FixLongDisplayTime>Fix long display time</FixLongDisplayTime>
@@ -543,7 +543,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} overlapping timestamps fixed</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} display times prolonged</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} invalid html tags fixed</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} invalid HTML tags fixed</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} display times shortened</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} lines unbreaked</XLinesUnbreaked>
     <UnneededSpace>Unneeded space</UnneededSpace>
@@ -691,7 +691,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restore auto-backup...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha properties...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha properties...</SubStationAlphaProperties>
-        <EbuProperties>EBU stl properties...</EbuProperties>
+        <EbuProperties>EBU STL properties...</EbuProperties>
         <PacProperties>PAC properties...</PacProperties>
         <OpenOriginal>Open original subtitle (translator mode)...</OpenOriginal>
         <SaveOriginal>Save original subtitle</SaveOriginal>
@@ -700,10 +700,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Compare...</Compare>
         <Statistics>Statisti&amp;cs...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Import/OCR subtitle from vob/ifo (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Import/OCR subtitle from VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) subtitle...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR Blu-ray (.sup) subtitle file...</ImportBluRaySupFile>
-        <ImportXSub>Import/OCR xsub from divx/avi...</ImportXSub>
+        <ImportXSub>Import/OCR XSub from divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import subtitle from Matroska (.mkv) file...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import subtitle with manual chosen encoding...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Import plain text...</ImportText>
@@ -714,12 +714,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Plain text...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -885,7 +885,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Merge selected lines as dialogue</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesASDialogue>Merge selected lines as dialog</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1104,11 +1104,11 @@ Continue?</SubtitleAppendPrompt>
     <BeforeSettingFontName>Before setting font name</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Before typewriter effect</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Before karaoke effect</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Before importing subtitle from dvd</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Before importing subtitle from DVD</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Open Matroska file...</OpenMatroskaFile>
     <MatroskaFiles>Matroska files</MatroskaFiles>
     <NoSubtitlesFound>No subtitles found</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>This is not a valid matroska file: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>This is not a valid Matroska file: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Parsing Matroska file. Please wait...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Before import subtitle from Matroska file</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtitle imported from Matroska file</SubtitleImportedFromMatroskaFile>
@@ -1129,8 +1129,8 @@ Continue?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub subtitle files</VobSubFiles>
     <OpenBluRaySupFile>Open Blu-ray .sup file...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup files</BluRaySupFiles>
-    <OpenXSubFiles>Open xsub file...</OpenXSubFiles>
-    <XSubFiles>xsub files</XSubFiles>
+    <OpenXSubFiles>Open XSub file...</OpenXSubFiles>
+    <XSubFiles>XSub files</XSubFiles>
     <BeforeImportingVobSubFile>Before importing VobSub subtitle</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Before importing Blu-ray sup file</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Before importing BDN xml file</BeforeImportingBdnXml>
@@ -1194,7 +1194,7 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Spell check aborted. {0} lines were modified.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Spell check completed. {0} lines were modified.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Before toggle of dialogue dashes</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogueDashes>Before toggle of dialog dashes</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Export plain text as</ExportPlainTextAs>
     <TextFiles>Text files</TextFiles>
     <SubtitleExported>Subtitle exported</SubtitleExported>
@@ -1216,13 +1216,13 @@ Continue?</SubtitleAppendPrompt>
     <StatusLog>Status log</StatusLog>
     <XSceneChangesImported>{0} scene changes imported</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executed.</PluginXExecuted>
-    <NotAValidXSubFile>Not a valid xsub file!</NotAValidXSubFile>
+    <NotAValidXSubFile>Not a valid XSub file!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Before merging lines with same text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Subtitle with time codes has a different number of lines ({0}) than current subtitle ({1}) - continue anyway?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Parsing transport stream - please wait...</ParsingTransportStream>
-    <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and SE can open the .sub file.</ErrorLoadIdx>
-    <ErrorLoadRar>This file seems to be a compressed .rar file. SE cannot open compressed files.</ErrorLoadRar>
-    <ErrorLoadZip>This file seems to be a compressed .zip file. SE cannot open compressed files.</ErrorLoadZip>
+    <ErrorLoadIdx>Cannot read/edit .idx files. Idx files are a part of an idx/sub file pair (also called VobSub), and Subtitle Edit can open the .sub file.</ErrorLoadIdx>
+    <ErrorLoadRar>This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.</ErrorLoadRar>
+    <ErrorLoadZip>This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choose subtitle from Matroska file</Title>
@@ -1424,10 +1424,10 @@ can edit in same subtitle file (collaboration)</Information>
   <SetSyncPoint>
     <Title>Set Sync point for line {0}</Title>
     <SyncPointTimeCode>Sync point time code</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 secs</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ sec</HalfASecondBack>
-    <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 secs &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
+    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Settings</Title>
@@ -1479,9 +1479,9 @@ can edit in same subtitle file (collaboration)</Information>
     <MainListViewVideoGoToPositionAndPause>Go to video position and pause</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Go to video position and play</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Go to edit text box</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video position - 1 sec and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video position - 0.5 sec and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video position - 1 sec and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Go to video position - 1 s and pause</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Go to video position - 0.5 s and pause</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Go to video position - 1 s and play</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Go to edit text box, and pause at video position</MainListViewEditTextAndPause>
     <AutoBackup>Auto-backup</AutoBackup>
     <AutoBackupEveryMinute>Every minute</AutoBackupEveryMinute>
@@ -1491,7 +1491,7 @@ can edit in same subtitle file (collaboration)</Information>
     <AllowEditOfOriginalSubtitle>Allow edit of original subtitle</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Prompt for delete lines</PromptDeleteLines>
     <TimeCodeMode>Time code mode</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video engine</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1508,7 +1508,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ShowFullscreenButton>Show fullscreen button</ShowFullscreenButton>
     <PreviewFontSize>Subtitle preview font size</PreviewFontSize>
     <MainWindowVideoControls>Main window video controls</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Custom search text and url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Custom search text and URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Waveform appearance</WaveformAppearance>
     <WaveformGridColor>Grid color</WaveformGridColor>
     <WaveformShowGridLines>Show grid lines</WaveformShowGridLines>
@@ -1593,13 +1593,13 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
-    <MergeDialogue>Merge dialogue (insert dashes)</MergeDialogue>
+    <MergeDialogue>Merge dialog (insert dashes)</MergeDialogue>
     <GoToNext>Go to next line</GoToNext>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
-    <ToggleDialogueDashes>Toggle dialogue dashes</ToggleDialogueDashes>
+    <ToggleDialogueDashes>Toggle dialog dashes</ToggleDialogueDashes>
     <Alignment>Alignment (selected lines)</Alignment>
     <CopyTextOnly>Copy text only to clip board (selected lines)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>
@@ -1882,9 +1882,9 @@ can edit in same subtitle file (collaboration)</Information>
     <StartScene>Start scene</StartScene>
     <EndScene>End scene</EndScene>
     <Synchronize>Sync</Synchronize>
-    <HalfASecondBack>&lt; ½ sec</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 secs</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Play {0} secs and back</PlayXSecondsAndBack>
+    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Play {0} s and back</PlayXSecondsAndBack>
     <FindText>Find text</FindText>
     <GoToSubPosition>Go to sub pos</GoToSubPosition>
     <KeepChangesTitle>Keep changes?</KeepChangesTitle>
@@ -1912,7 +1912,7 @@ Keep changes?</KeepChangesMessage>
     <Title>Import/OCR VobSub (sub/idx) subtitle</Title>
     <TitleBluRay>Import/OCR Blu-ray (.sup) subtitle</TitleBluRay>
     <OcrMethod>OCR method</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Language</Language>
@@ -1945,15 +1945,15 @@ Keep changes?</KeepChangesMessage>
     <AllFixes>All fixes</AllFixes>
     <GuessesUsed>Guesses used</GuessesUsed>
     <UnknownWords>Unknown words</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR auto correction / spellchecking</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR auto correction / spell checking</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Fix OCR errors</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Import text with matching time codes...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Import new time codes</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Save subtitle image as...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Save all images (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Save all images with html index...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Save all images with HTML index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} images saved in {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Try MS MODI OCR for unknown words</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Try Microsoft MODI OCR for unknown words</TryModiForUnknownWords>
     <DictionaryX>Dictionary: {0}</DictionaryX>
     <RightToLeft>Right to left</RightToLeft>
     <ShowOnlyForcedSubtitles>Show only forced subtitles</ShowOnlyForcedSubtitles>

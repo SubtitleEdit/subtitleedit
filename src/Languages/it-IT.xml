@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Numero</Number>
     <Text>Testo</Text>
-    <HourMinutesSecondsMilliseconds>Ore:min:sec:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Ore:min:sec:ms</HourMinutesSecondsMilliseconds>
     <Bold>Grassetto</Bold>
     <Italic>Corsivo</Italic>
     <Underline>Sottolineato</Underline>
@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Elimina i tag di formato</RemoveFormatting>
     <RemoveTextForHI>Elimina testo per NU</RemoveTextForHI>
     <OverwriteOriginalFiles>Sovrascrivi i file originali (nuova estensione se il formato è diverso)</OverwriteOriginalFiles>
-    <ReDoCasing>Reimposta MAIUSCOLE/minuscole</ReDoCasing>
+    <RedoCasing>Reimposta MAIUSCOLE/minuscole</RedoCasing>
     <Convert>Converti</Convert>
     <NothingToConvert>Niente da convertire!</NothingToConvert>
     <PleaseChooseOutputFolder>Scegli cartella di destinazione</PleaseChooseOutputFolder>
@@ -287,7 +287,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>I testi si suddividono il tempo vuoto</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Estrai sottotitoli da ifo/vob (dvd)</Title>
+    <Title>Estrai sottotitoli da IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD file/info</DvdGroupTitle>
     <IfoFile>File IFO</IfoFile>
     <IfoFiles>File IFO</IfoFiles>
@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Linea {0} supera lungezza max ({1}) di {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Presentazione non modificata</TextUnchangedPresentation>
     <TextLeftJustifiedText>Testo giustificato a sinistra</TextLeftJustifiedText>
-    <TextCentredText>Testo centrato</TextCentredText>
+    <TextCenteredText>Testo centrato</TextCenteredText>
     <TextRightJustifiedText>Testo giustificato a destra</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -543,7 +543,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Impossibile correggere il testo numero {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} sovrapposizione tempi corretta</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} tempi di visualizzazione prolungati</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} tag html non validi corretti</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} tag HTML non validi corretti</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} tempi di visualizzazione ridotti</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} linee divise riunite</XLinesUnbreaked>
     <UnneededSpace>Spazio non necessario</UnneededSpace>
@@ -698,10 +698,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Confronta...</Compare>
         <Statistics>Statisti&amp;che...</Statistics>
         <Plugins>Plugin...</Plugins>
-        <ImportOcrFromDvd>Importa/OCR da vob/ifo (dvd)...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importa/OCR da VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importa/OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importa/OCR sup Blu-ray...</ImportBluRaySupFile>
-        <ImportXSub>Importa/OCR xsub da divx/avi...</ImportXSub>
+        <ImportXSub>Importa/OCR XSub da divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importa sottotitolo da file Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importa sottotitolo con codifica scelta manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importa testo normale...</ImportText>
@@ -712,12 +712,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Testo normale...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1098,11 +1098,11 @@ Continuare?</SubtitleAppendPrompt>
     <BeforeSettingFontName>Prima di impostare il nome del font</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Prima dell'effetto macchina da scrivere</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Prima dell'effetto karaoke</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Prima di importare sottotitolo da dvd</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Prima di importare sottotitolo da DVD</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Apri file Matroska...</OpenMatroskaFile>
     <MatroskaFiles>File Matroska</MatroskaFiles>
     <NoSubtitlesFound>Sottotitoli non trovati</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Questo non è un file matroska valido: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Questo non è un file Matroska valido: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Analisi file Matroska. Attendere...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Prima di importare sottotitolo da file Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Sottotitolo importato da file Matroska</SubtitleImportedFromMatroskaFile>
@@ -1123,8 +1123,8 @@ Continuare?</SubtitleAppendPrompt>
     <VobSubFiles>File sottotitolo VobSub</VobSubFiles>
     <OpenBluRaySupFile>Apri file .sup da Blu-ray...</OpenBluRaySupFile>
     <BluRaySupFiles>File .sup da Blu-ray</BluRaySupFiles>
-    <OpenXSubFiles>Apri file xsub...</OpenXSubFiles>
-    <XSubFiles>xsub file</XSubFiles>
+    <OpenXSubFiles>Apri file XSub...</OpenXSubFiles>
+    <XSubFiles>XSub file</XSubFiles>
     <BeforeImportingVobSubFile>Prima di importare sottotitolo VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Prima di importare file sup da Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Prima di importare file BDN xml</BeforeImportingBdnXml>
@@ -1212,13 +1212,13 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <StatusLog>Log di stato</StatusLog>
     <XSceneChangesImported>{0} cambi scena importati</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' eseguito</PluginXExecuted>
-    <NotAValidXSubFile>Non è un file xsub valido!</NotAValidXSubFile>
+    <NotAValidXSubFile>Non è un file XSub valido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Prima di unire linee con lo stesso testo</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Il sottotitolo con timecode ha un differente numero di linee ({0}) rispetto a quello corrente ({1}) - continuare comunque?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analisi transport stream, attendere...</ParsingTransportStream>
-    <ErrorLoadIdx>Impossibile leggere/modificare il file .idx. I file .idx fanno parte di una coppia di file .idx/.sub (chiamati anche VobSub), e SE può aprire il file .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>I file sembra essere un file .rar compresso. SE non può aprire file compressi.</ErrorLoadRar>
-    <ErrorLoadZip>I file sembra essere un file .zip compresso. SE non può aprire file compressi.</ErrorLoadZip>
+    <ErrorLoadIdx>Impossibile leggere/modificare il file .idx. I file .idx fanno parte di una coppia di file .idx/.sub (chiamati anche VobSub), e Subtitle Edit può aprire il file .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>I file sembra essere un file .rar compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadRar>
+    <ErrorLoadZip>I file sembra essere un file .zip compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
@@ -1420,10 +1420,10 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
   <SetSyncPoint>
     <Title>Imposta punto sincr. per linea {0}</Title>
     <SyncPointTimeCode>Punto sincr. time code</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 sec</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ sec</HalfASecondBack>
-    <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 sec &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
+    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Preferenze</Title>
@@ -1475,9 +1475,9 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <MainListViewVideoGoToPositionAndPause>Vai alla posizione del video e metti in pausa</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Vai alla posizione del video e riproduci</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Vai al box modifica testo</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Vai alla posizione del video - 1 sec e metti in pausa</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Vai alla posizione del video - 0.5 sec e metti in pausa</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Vai alla posizione del video - 1 sec e riproduci</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Vai alla posizione del video - 1 s e metti in pausa</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Vai alla posizione del video - 0.5 s e metti in pausa</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Vai alla posizione del video - 1 s e riproduci</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Vai al box modifica testo e metti in pausa alla posizione del video</MainListViewEditTextAndPause>
     <AutoBackup>Backup automatico</AutoBackup>
     <AutoBackupEveryMinute>Ogni minuto</AutoBackupEveryMinute>
@@ -1487,7 +1487,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <AllowEditOfOriginalSubtitle>Abilita la modifica del sottotitolo originale</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Chiedi prima di eliminare le linee</PromptDeleteLines>
     <TimeCodeMode>Modo time code</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Motore video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1504,7 +1504,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <ShowFullscreenButton>Mostra pulsante schermo intero</ShowFullscreenButton>
     <PreviewFontSize>Anteprima dimensione font sottotitolo</PreviewFontSize>
     <MainWindowVideoControls>Controlli video sulla finestra principale</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Ricerca personalizzata testo e url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Ricerca personalizzata testo e URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Apparenza forma d'onda</WaveformAppearance>
     <WaveformGridColor>Colore griglia</WaveformGridColor>
     <WaveformShowGridLines>Mostra linee nella griglia</WaveformShowGridLines>
@@ -1909,7 +1909,7 @@ Mantenere le modifiche?</KeepChangesMessage>
     <Title>Importa/OCR sottotitoli VobSub (sub/idx)</Title>
     <TitleBluRay>Importa/OCR sottotitoli Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Metodo OCR</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI) - Richiede MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI) - Richiede Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Lingua</Language>
@@ -1942,15 +1942,15 @@ Mantenere le modifiche?</KeepChangesMessage>
     <AllFixes>Tutte le correzioni</AllFixes>
     <GuessesUsed>Indovinate usate</GuessesUsed>
     <UnknownWords>Parole sconosciute</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Correzione automatica OCR / Correttore ortografico</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Correzione automatica OCR / Correttore ortografico</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Correggi errori OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa testo con time code corrispondenti...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importa nuovi timecode</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Salva l'immagine del sottotitolo come...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Salva tutte le immagini (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Salva tutte le immagini con indice html...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Salva tutte le immagini con indice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} immagini salvate in {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Prova MS MODI OCR per parole sconosciute</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Prova Microsoft MODI OCR per parole sconosciute</TryModiForUnknownWords>
     <DictionaryX>Dizionari: {0}</DictionaryX>
     <RightToLeft>Da destra a sinistra</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostra solo sottotitoli forced</ShowOnlyForcedSubtitles>

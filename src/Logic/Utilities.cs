@@ -547,7 +547,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (text == null || text.Length < 3)
                 return text;
 
-            // do not autobreak dialogues
+            // do not autobreak dialogs
             if (text.Contains('-') && text.Contains(Environment.NewLine))
             {
                 string dialogS = Utilities.RemoveHtmlTags(text);
@@ -630,7 +630,7 @@ namespace Nikse.SubtitleEdit.Logic
             int splitPos = -1;
             int mid = s.Length / 2;
 
-            // try to find " - " with uppercase letter after (dialogue)
+            // try to find " - " with uppercase letter after (dialog)
             if (splitPos == -1 && s.Contains(" - "))
             {
                 for (int j = 0; j < (maximumLength / 2) + 5; j++)
@@ -2457,7 +2457,7 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        public static string LowerCaseVowels
+        public static string LowercaseVowels
         {
             get
             {

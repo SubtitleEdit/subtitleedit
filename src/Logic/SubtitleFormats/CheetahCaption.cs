@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "Not supported!";
         }
 
-        private static TimeCode DecodeTimeStamp(byte[] buffer, int index)
+        private static TimeCode DecodeTimestamp(byte[] buffer, int index)
         {
             return new TimeCode(buffer[index], buffer[index + 1], buffer[index + 2], FramesToMillisecondsMax999(buffer[index + 3]));
         }
@@ -265,12 +265,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (textLength > 0 && buffer.Length >= i + textLength)
                 {
                     byte firstByte = buffer[i + 1];
-                    p.StartTime = DecodeTimeStamp(buffer, i + 2);
+                    p.StartTime = DecodeTimestamp(buffer, i + 2);
 
                     if (last != null && last.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
                         last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
 
-                    p.EndTime = DecodeTimeStamp(buffer, i + 6);
+                    p.EndTime = DecodeTimestamp(buffer, i + 6);
 
                     var sb = new StringBuilder();
                     int j = 0;

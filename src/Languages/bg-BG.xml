@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Премахване на форматни тагове</RemoveFormatting>
     <RemoveTextForHI>Премахване на текст за ГЛУХИ</RemoveTextForHI>
     <OverwriteOriginalFiles>Презаписване на орииналните файлове (ново разширение ако формата е променен)</OverwriteOriginalFiles>
-    <ReDoCasing>Редо рамка</ReDoCasing>
+    <RedoCasing>Редо рамка</RedoCasing>
     <Convert>Конвертиране</Convert>
     <NothingToConvert>Няма нищо за конвертиране!</NothingToConvert>
     <PleaseChooseOutputFolder>Моля изберете изходна папка</PleaseChooseOutputFolder>
@@ -283,7 +283,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Текста дели времетраенето</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Сваляне на субтитри от ifo/vobs (dvd)</Title>
+    <Title>Сваляне на субтитри от IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD файлове/info</DvdGroupTitle>
     <IfoFile>IFO файл</IfoFile>
     <IfoFiles>IFO файлове</IfoFiles>
@@ -339,7 +339,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>На ред {0} е превишен макс. брой знаци ({1}) на {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Показване на текста без промените</TextUnchangedPresentation>
     <TextLeftJustifiedText>Подравняване на текста вляво</TextLeftJustifiedText>
-    <TextCentredText>Текст в центъра</TextCentredText>
+    <TextCenteredText>Текст в центъра</TextCenteredText>
     <TextRightJustifiedText>Подравняване на текста вдясно</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -538,7 +538,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Не може да се поправи текст номер {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} застъпващи се времена са поправени</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} времена на показване са удължени</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} невалидни html тага са поправени</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} невалидни HTML тага са поправени</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} времена на показване са намалени</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} редове са слети</XLinesUnbreaked>
     <UnneededSpace>Ненужни интервали</UnneededSpace>
@@ -690,7 +690,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Сравняване...</Compare>
         <Statistics>Статистики</Statistics>
         <Plugins>Приставки...</Plugins>
-        <ImportOcrFromDvd>Внасяне/OCR на субтитри от vob/ifo (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Внасяне/OCR на субтитри от VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Внасяне/OCR на субтитри VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Внасяне/OCR на субтитри от файл Blu-ray sup...</ImportBluRaySupFile>
         <ImportXSub>Импортиране/OCR sub от divx/avi...</ImportXSub>
@@ -704,12 +704,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Чист текст</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1087,11 +1087,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeSettingFontName>Преди настройката на шрифта</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Преди ефекта пишеща машина</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Преди ефекта караоке</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Преди внасянето на субтитри от dvd</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Преди внасянето на субтитри от DVD</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Отваряне на файл Matroska...</OpenMatroskaFile>
     <MatroskaFiles>Matroska файлове</MatroskaFiles>
     <NoSubtitlesFound>Няма намерени субтитри</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Това е невалиден matroska файл: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Това е невалиден Matroska файл: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Обработка на файла Matroska. Моля, изчакайте...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Преди внасянето на субтитри от файла Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Субтитрите са внесени от файла Matroska</SubtitleImportedFromMatroskaFile>
@@ -1112,8 +1112,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VobSubFiles>Файл със субтитри VobSub</VobSubFiles>
     <OpenBluRaySupFile>Отваряне на файл Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Файлове Blu-ray .sup</BluRaySupFiles>
-    <OpenXSubFiles>Отваряне на xsub файл...</OpenXSubFiles>
-    <XSubFiles>xsub файлове</XSubFiles>
+    <OpenXSubFiles>Отваряне на XSub файл...</OpenXSubFiles>
+    <XSubFiles>XSub файлове</XSubFiles>
     <BeforeImportingVobSubFile>Преди внасянето на субтитри VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Преди внасянето на файла Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Преди внасянето на файла BDN xml</BeforeImportingBdnXml>
@@ -1199,13 +1199,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <StatusLog>Статус лог</StatusLog>
     <XSceneChangesImported>Внесени са (0) промени на сцени</XSceneChangesImported>
     <PluginXExecuted>Изпълнени са (0) плъгина</PluginXExecuted>
-    <NotAValidXSubFile>Невалиден xsub файл!</NotAValidXSubFile>
+    <NotAValidXSubFile>Невалиден XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Преди сливането на редове с еднакъв текст</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитри с различен тайм код имат ({0}) различни редове с ({1}), продължение?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Анализ на странспортния стрийм, изчакайте, моля...</ParsingTransportStream>
-    <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а SE може да отвори .sub файла.</ErrorLoadIdx>
-    <ErrorLoadRar>Изглежда това са архивни .rar файлове. SE не може да отваря арховни файлове.</ErrorLoadRar>
-    <ErrorLoadZip>Изглежда това са архивни .zup файлове. SE не може да отваря арховни файлове.</ErrorLoadZip>
+    <ErrorLoadIdx>Невъзможно да се прочете/редактира .idx файла. IDX файловете са част от idx/sub свързани файлове (наречени VodSub), а Subtitle Edit може да отвори .sub файла.</ErrorLoadIdx>
+    <ErrorLoadRar>Изглежда това са архивни .rar файлове. Subtitle Edit не може да отваря арховни файлове.</ErrorLoadRar>
+    <ErrorLoadZip>Изглежда това са архивни .zup файлове. Subtitle Edit не може да отваря арховни файлове.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Изберете субтитри от Matroska файла</Title>
@@ -1472,7 +1472,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllowEditOfOriginalSubtitle>Разрешаване редактиране на оригиналните субтитри</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Запитване преди изтриване на редове</PromptDeleteLines>
     <TimeCodeMode>Режим "Тайм Код"</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>ЧЧ:ММ:СС:милисек (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>ЧЧ:ММ:СС:милисек (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>ЧЧ:ММ:СС:ФФ (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Видео обработка</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1881,7 +1881,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Внасяне на OCR VobSub (sub/idx) субтитри</Title>
     <TitleBluRay>Внасяне/OCR Blu-ray (.sup) субтитри</TitleBluRay>
     <OcrMethod>OCR метод</OcrMethod>
-    <OcrViaModi>OCR чрез Microsoft Office Document Imaging (MODI). Необходим е MS Office</OcrViaModi>
+    <OcrViaModi>OCR чрез Microsoft Office Document Imaging (MODI). Необходим е Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR чрез Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR чрез nOCR</OcrViaNOCR>
     <Language>Език</Language>
@@ -1914,14 +1914,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Всички поправки</AllFixes>
     <GuessesUsed>Използвани подсказки</GuessesUsed>
     <UnknownWords>Непознати думи</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR авто корекция / проверка правопис</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR авто корекция / проверка правопис</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Поправяне на OCR грешки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Внасяне на текст със съответните кодове за време...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Запис на изображението със субтитри като...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Запис на всички изображения (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Запис на всички изображения в html index...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Запис на всички изображения в HTML index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} изображения са записани в {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Опитайте MS MODI OCR за непознати думи</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Опитайте Microsoft MODI OCR за непознати думи</TryModiForUnknownWords>
     <DictionaryX>Речник: {0}</DictionaryX>
     <RightToLeft>Отдясно наляво</RightToLeft>
     <ShowOnlyForcedSubtitles>Показване само на зададените субтитри</ShowOnlyForcedSubtitles>

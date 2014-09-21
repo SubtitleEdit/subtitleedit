@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Forms
                 case "ticks":
                     comboBoxTimeCodeFormat.SelectedIndex = 4;
                     break;
-                case "hh:mm:ss.msec":
+                case "hh:mm:ss.ms":
                     comboBoxTimeCodeFormat.SelectedIndex = 1;
                     break;
                 default: // hh:mm:ss:ff

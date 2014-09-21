@@ -433,8 +433,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             // write WDS
             packetHeader[10] = 0x17;                                            // ID
-            int timeStamp = pic.StartTimeForWrite - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS)
+            int timestamp = pic.StartTimeForWrite - windowInitTime;
+            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS (keep DTS)
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
             for (int i = 0; i < packetHeader.Length; i++)
                 buf[index++] = packetHeader[i];
@@ -469,8 +469,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             if (bufSize > 0xffe4)
                 bufSize = 0xffe4;
             packetHeader[10] = 0x15;                                            // ID
-            timeStamp = dts + imageDecodeTime;
-            ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS
+            timestamp = dts + imageDecodeTime;
+            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerODSFirst.Length + bufSize); // size
             for (int i = 0; i < packetHeader.Length; i++)
@@ -526,8 +526,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
             // write WDS
             packetHeader[10] = 0x17;                                            // ID
-            timeStamp = pic.EndTimeForWrite - windowInitTime;
-            ToolBox.SetDWord(packetHeader, 2, timeStamp);                       // PTS (keep DTS of PCS)
+            timestamp = pic.EndTimeForWrite - windowInitTime;
+            ToolBox.SetDWord(packetHeader, 2, timestamp);                       // PTS (keep DTS of PCS)
             ToolBox.SetWord(packetHeader, 11, headerWds.Length);                // size
             for (int i = 0; i < packetHeader.Length; i++)
                 buf[index++] = packetHeader[i];

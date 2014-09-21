@@ -149,7 +149,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Remover etiquetas de formatação</RemoveFormatting>
     <RemoveTextForHI>Eliminar texto para Surdos</RemoveTextForHI>
     <OverwriteOriginalFiles>Substituir os ficheiros originais (nova extensão se o formato for alterado)</OverwriteOriginalFiles>
-    <ReDoCasing>Refazer maiúsculas/minúsculas</ReDoCasing>
+    <RedoCasing>Refazer maiúsculas/minúsculas</RedoCasing>
     <Convert>Converter</Convert>
     <NothingToConvert>Nada para converter!</NothingToConvert>
     <PleaseChooseOutputFolder>Por favor, seleccione a pasta de saída</PleaseChooseOutputFolder>
@@ -345,7 +345,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Linha {0} excede ao comprimento máximo ({1}) em {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Apresentação original</TextUnchangedPresentation>
     <TextLeftJustifiedText>Alinhado à esquerda</TextLeftJustifiedText>
-    <TextCentredText>Centralizado</TextCentredText>
+    <TextCenteredText>Centralizado</TextCenteredText>
     <TextRightJustifiedText>Alinhado à direita</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -689,7 +689,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restaurar cópia de segurança automática...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced Sub Station Alpha propriedades...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha propriedades...</SubStationAlphaProperties>
-        <EbuProperties>EBU stl propriedades...</EbuProperties>
+        <EbuProperties>EBU STL propriedades...</EbuProperties>
         <PacProperties>PAC propriedades...</PacProperties>
         <OpenOriginal>Abrir legenda original (modo tradutor)...</OpenOriginal>
         <SaveOriginal>Guardar legenda original</SaveOriginal>
@@ -698,10 +698,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Comparar...</Compare>
         <Statistics>Estatísti&amp;ca...</Statistics>
         <Plugins>Plugins...</Plugins>
-        <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importar legenda /OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importar legenda /OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importar legenda /OCR Blu-ray (.sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importar /OCR xsub de ficheiros divx/avi...</ImportXSub>
+        <ImportXSub>Importar /OCR XSub de ficheiros divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importar legenda de ficheiro Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importar legenda seleccionando codificação manualmente...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importar texto sem formatação...</ImportText>
@@ -712,12 +712,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Texto sem formatação...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB imagem script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Par de ficheiros Korean ATS...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Subtítulo Inc...</ExportCaptionsInc>
@@ -1124,8 +1124,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <VobSubFiles>Ficheiros de legenda VobSub</VobSubFiles>
     <OpenBluRaySupFile>Abrir ficheiro (.sup) de Blu-ray...</OpenBluRaySupFile>
     <BluRaySupFiles>Ficheiros Blu-ray (.sup)</BluRaySupFiles>
-    <OpenXSubFiles>Abrir Ficheiros xsub...</OpenXSubFiles>
-    <XSubFiles>Ficheiros xsub</XSubFiles>
+    <OpenXSubFiles>Abrir Ficheiros XSub...</OpenXSubFiles>
+    <XSubFiles>Ficheiros XSub</XSubFiles>
     <BeforeImportingVobSubFile>Antes de importar legenda VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Antes de importar ficheiro (.sup) de Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Antes de importar ficheiro BDN xml</BeforeImportingBdnXml>
@@ -1184,7 +1184,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <UserAndAction>Utilizador/acção</UserAndAction>
     <NetworkMode>Modo de rede</NetworkMode>
     <XStartedSessionYAtZ>{0}: Sessão iniciada {1} de {2}</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Verificação ortográfica usando o MS Word {0} - linha {1} / {2}</SpellChekingViaWordXLineYOfX>
+    <SpellChekingViaWordXLineYOfX>Verificação ortográfica usando o Microsoft Word {0} - linha {1} / {2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Impossível iniciar o Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Verificação ortográfica cancelada. {0} linhas modificadas.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Verificação ortográfica completa. {0} linhas modificadas.</SpellCheckCompletedXCorrections>
@@ -1211,13 +1211,13 @@ Deseja continuar?</SubtitleAppendPrompt>
     <StatusLog>Estado do registo</StatusLog>
     <XSceneChangesImported>{0} mudanças de cena importados</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' executado.</PluginXExecuted>
-    <NotAValidXSubFile>Ficheiro xsub invalido!</NotAValidXSubFile>
+    <NotAValidXSubFile>Ficheiro XSub invalido!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Antes de combinar as linhas com o mesmo texto</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Legenda com códigos de tempo tem um número diferente de linhas ({0}) do que as legendas actuais ({1}) - mesmo assim deseja continuar?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>A analisar o fluxo de transporte - por favor aguarde...</ParsingTransportStream>
-    <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o SE pode abrir o ficheiro sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O SE não pode abrir ficheiros comprimidos.</ErrorLoadRar>
-    <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O SE não pode abrir ficheiros comprimidos.</ErrorLoadZip>
+    <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
+    <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
@@ -1486,7 +1486,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo de código de tempo</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Mseg (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.Mseg (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1908,7 +1908,7 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Importar legenda OCR VobSub (sub/idx)</Title>
     <TitleBluRay>Importar legenda OCR Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Método OCR</OcrMethod>
-    <OcrViaModi>OCR com o Microsoft Office Document Imaging (MODI). Necessita do MS Office</OcrViaModi>
+    <OcrViaModi>OCR com o Microsoft Office Document Imaging (MODI). Necessita do Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR com Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR com o nOCR</OcrViaNOCR>
     <Language>Idioma</Language>
@@ -1941,7 +1941,7 @@ Manter as alterações?</KeepChangesMessage>
     <AllFixes>Corrigir tudo</AllFixes>
     <GuessesUsed>Suposições usadas</GuessesUsed>
     <UnknownWords>Palavras desconhecidas</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Auto correcção OCR / verificação ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corrigir erros de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto com código de tempo correspondente...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importar códigos de tempo novos</ImportNewTimeCodes>
@@ -1949,7 +1949,7 @@ Manter as alterações?</KeepChangesMessage>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imagens guardadas em {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Tentar MS MODI OCR para palavras desconhecidas</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Tentar Microsoft MODI OCR para palavras desconhecidas</TryModiForUnknownWords>
     <DictionaryX>Dicionário: {0}</DictionaryX>
     <RightToLeft>Direita para esquerda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar somente legendas forçadas</ShowOnlyForcedSubtitles>

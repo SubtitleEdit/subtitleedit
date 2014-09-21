@@ -84,9 +84,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     {
                         if (packet.Payload != null && packet.Payload.Length > 10)
                         {
-                            int presentationTimeStampDecodeTimeStampFlags = packet.Payload[7] >> 6;
-                            if (presentationTimeStampDecodeTimeStampFlags == Helper.B00000010 ||
-                                presentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
+                            int presentationTimestampDecodeTimestampFlags = packet.Payload[7] >> 6;
+                            if (presentationTimestampDecodeTimestampFlags == Helper.B00000010 ||
+                                presentationTimestampDecodeTimestampFlags == Helper.B00000011)
                             {
                                 FirstVideoPts = (ulong)packet.Payload[9 + 4] >> 1;
                                 FirstVideoPts += (ulong)packet.Payload[9 + 3] << 7;
@@ -187,13 +187,13 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                         if (item.DataIdentifier == 0x16)
                         {
                             if (startMsList.Count <= endMsList.Count)
-                                startMsList.Add(item.PresentationTimeStampToMilliseconds());
+                                startMsList.Add(item.PresentationTimestampToMilliseconds());
                             else
-                                endMsList.Add(item.PresentationTimeStampToMilliseconds());
+                                endMsList.Add(item.PresentationTimestampToMilliseconds());
                         }
                         //else if (item.DataBuffer[0] == 0x80)
                         //{ //TODO Load bd sub after 0x80, so we can be sure to get correct time code???
-                        //    endMsList.Add(item.PresentationTimeStampToMilliseconds() / 90);
+                        //    endMsList.Add(item.PresentationTimestampToMilliseconds() / 90);
                         //}
                     }
                     SubtitlesLookup.Add(pid, list);
@@ -263,10 +263,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                     if (pes.ObjectDataList.Count > 0)
                     {
                         var sub = new TransportStreamSubtitle();
-                        sub.StartMilliseconds = pes.PresentationTimeStampToMilliseconds();
+                        sub.StartMilliseconds = pes.PresentationTimestampToMilliseconds();
                         sub.Pes = pes;
-                        if (i + 1 < list.Count && list[i + 1].PresentationTimeStampToMilliseconds() > 25)
-                            sub.EndMilliseconds = list[i + 1].PresentationTimeStampToMilliseconds() - 25;
+                        if (i + 1 < list.Count && list[i + 1].PresentationTimestampToMilliseconds() > 25)
+                            sub.EndMilliseconds = list[i + 1].PresentationTimestampToMilliseconds() - 25;
                         if (sub.EndMilliseconds < sub.StartMilliseconds)
                             sub.EndMilliseconds = sub.StartMilliseconds + 3500;
                         subtitles.Add(sub);

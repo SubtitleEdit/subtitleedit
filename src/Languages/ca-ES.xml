@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Suprimeix etiquetes formatació</RemoveFormatting>
     <RemoveTextForHI>Suprimeix text per HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Sobreescriu fitxers originals (nova extensió si es canvia el format)</OverwriteOriginalFiles>
-    <ReDoCasing>Refés coberta</ReDoCasing>
+    <RedoCasing>Refés coberta</RedoCasing>
     <Convert>Converteix</Convert>
     <NothingToConvert>Res a convertir</NothingToConvert>
     <PleaseChooseOutputFolder>Trieu carpeta sortida</PleaseChooseOutputFolder>
@@ -339,7 +339,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Línia {0} supera llàrgaria màx ({1}) per {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Presntació original</TextUnchangedPresentation>
     <TextLeftJustifiedText>Justificat a l'esquerre</TextLeftJustifiedText>
-    <TextCentredText>Centrat</TextCentredText>
+    <TextCenteredText>Centrat</TextCenteredText>
     <TextRightJustifiedText>Justificat a la dreta</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -538,7 +538,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>No pot fixar-se nombre text {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} solapaments de temps solucionats</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} durades prolongades</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} etiquetes html fixades</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} etiquetes HTML fixades</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} durades recurtades</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} salts de línia desfets</XLinesUnbreaked>
     <UnneededSpace>Espais innecessaris</UnneededSpace>
@@ -693,7 +693,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importa/OCR subtítol des de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importa/OCR subtítol VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importa/OCR fitxer sup Blu-ray...</ImportBluRaySupFile>
-        <ImportXSub>Importa/OCR xsub des de divx/avi...</ImportXSub>
+        <ImportXSub>Importa/OCR XSub des de divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importa subtítol de contenidor Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importa subtítol amb codificació escollida manualment...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importa text pla...</ImportText>
@@ -704,12 +704,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VoSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Exporta text pla...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Ordre imatge Adobe Encore FAB...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Fitxer parell Korean ATS...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Llegendes Inc</ExportCaptionsInc>
@@ -1108,8 +1108,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VobSubFiles>Fitxers subtítol VobSub</VobSubFiles>
     <OpenBluRaySupFile>Obre fitxer .sup Blu-ray...</OpenBluRaySupFile>
     <BluRaySupFiles>Fitxers .sup Blu-ray</BluRaySupFiles>
-    <OpenXSubFiles>Obre fitxer xsub...</OpenXSubFiles>
-    <XSubFiles>fitxers xsub</XSubFiles>
+    <OpenXSubFiles>Obre fitxer XSub...</OpenXSubFiles>
+    <XSubFiles>fitxers XSub</XSubFiles>
     <BeforeImportingVobSubFile>Abans importa subtítol VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Abans importa fitxer sup Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Abans importa fitxer xml BDN</BeforeImportingBdnXml>
@@ -1169,7 +1169,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NetworkMode>Mode xarxa</NetworkMode>
     <XStartedSessionYAtZ>{0}: Ha iniciat sessió {1} at {2}</XStartedSessionYAtZ>
     <SpellChekingViaWordXLineYOfX>Corrector ortogràfic amb Wordt {0} - línia {1} / {2}</SpellChekingViaWordXLineYOfX>
-    <UnableToStartWord>No pot iniciar-se MS Word</UnableToStartWord>
+    <UnableToStartWord>No pot iniciar-se Microsoft Word</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Corrector ortogràfic avortat. {0} línies modificades.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Corrector ortogràfic completat. {0} línies modificades.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Obre altre subtítol</OpenOtherSubtitle>
@@ -1195,13 +1195,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <StatusLog>Registre d'Estat</StatusLog>
     <XSceneChangesImported>{0} canvis d'escena importats</XSceneChangesImported>
     <PluginXExecuted>Complement '{0}' executat.</PluginXExecuted>
-    <NotAValidXSubFile>No és un fitxer xsub vàlid!</NotAValidXSubFile>
+    <NotAValidXSubFile>No és un fitxer XSub vàlid!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Abans de combinar línies amb el mateix text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>El subtítol amb codis de temps té un nombre de línies ({0}) diferent al subtítol actual ({1}) - Continua igualment?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analitzant flux de transport - espereu si us plau...</ParsingTransportStream>
-    <ErrorLoadIdx>No pot llegir-se fitxers .idx. Els fitxers .idx son part d'un fitxer parell idx/sub (també anomenat VobSub) i SE pot obrir el fitxer .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Aquest fitxer sembla un fitxer comprimit .rar. SE no pot obrir fitxers comprimits.</ErrorLoadRar>
-    <ErrorLoadZip>Aquest fitxer sembla un fitxer comprimit .zip. SE no pot obrir fitxers comprimits.</ErrorLoadZip>
+    <ErrorLoadIdx>No pot llegir-se fitxers .idx. Els fitxers .idx son part d'un fitxer parell idx/sub (també anomenat VobSub) i Subtitle Edit pot obrir el fitxer .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Aquest fitxer sembla un fitxer comprimit .rar. Subtitle Edit no pot obrir fitxers comprimits.</ErrorLoadRar>
+    <ErrorLoadZip>Aquest fitxer sembla un fitxer comprimit .zip. Subtitle Edit no pot obrir fitxers comprimits.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Escolliu subtítol des de fitxer Matroska</Title>
@@ -1468,7 +1468,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllowEditOfOriginalSubtitle>Permet edició subtítol original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Sol·licita confirmació suprimeix línies</PromptDeleteLines>
     <TimeCodeMode>Mòde codi temps</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Mseg (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.Mseg (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Motor de Video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1877,7 +1877,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Importa/OCR subtítol VobSub (sub/idx)</Title>
     <TitleBluRay>Importa/OCR subtítol (.sup) Blu-ray</TitleBluRay>
     <OcrMethod>Mètode OCR</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging(MODI). Cal MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging(MODI). Cal Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Idioma</Language>
@@ -1910,14 +1910,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Fixa-ho tot</AllFixes>
     <GuessesUsed>Endevinades</GuessesUsed>
     <UnknownWords>Mots desconeguts</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Auto correcció/corrector ortogràfic d'OCR</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Auto correcció/corrector ortogràfic d'OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Fixa errors d'OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa text amb codi de temps coincident...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Desa imatge de subtítol com a ...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Desa totes les imatges (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Desa totes les imatges amb index html</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Desa totes les imatges amb index HTML</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imatges desades en {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Prova MS MODI OCR amb mots desconeguts</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Prova Microsoft MODI OCR amb mots desconeguts</TryModiForUnknownWords>
     <DictionaryX>Diccionari: {0}</DictionaryX>
     <RightToLeft>Dreta a esquerre</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostra només subtítols forçats</ShowOnlyForcedSubtitles>

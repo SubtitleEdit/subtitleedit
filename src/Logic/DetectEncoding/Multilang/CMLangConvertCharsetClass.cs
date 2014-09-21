@@ -4,7 +4,7 @@ namespace MultiLanguage
     using System.Runtime.InteropServices;
 
     [ComImport, ClassInterface((short)0), TypeLibType((short)2), Guid("D66D6F99-CDAA-11D0-B822-00C04FC9B31F")]
-    public class CMLangConvertCharsetClass : CMLangConvertCharset
+    public class CMLangConvertCharsetClass : ICMLangConvertCharset
     {
         [MethodImpl(MethodImplOptions.InternalCall, MethodCodeType = MethodCodeType.Runtime)]
         public virtual extern void DoConversion([In] ref byte pSrcStr, [In, Out] ref uint pcSrcSize, [In] ref byte pDstStr, [In, Out] ref uint pcDstSize);
