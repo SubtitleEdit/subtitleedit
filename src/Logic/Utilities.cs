@@ -1961,18 +1961,21 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static bool IsValidRegex(string testPattern)
         {
-            if (!string.IsNullOrEmpty(testPattern))
+            if (string.IsNullOrEmpty(testPattern))
             {
-                try
-                {
-                    Regex.Match("", testPattern);
-                    return true;
-                }
-                catch (ArgumentException)
-                { // BAD PATTERN: Syntax error
-                }
+                return false;
             }
-            return false;
+
+            try
+            {
+                Regex.Match("", testPattern);
+            }
+            catch (ArgumentException)
+            {
+                // BAD PATTERN: Syntax error
+                return false;
+            }
+            return true;
         }
 
         public static Regex MakeWordSearchRegex(string word)
