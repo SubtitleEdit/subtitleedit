@@ -153,8 +153,6 @@ namespace Nikse.SubtitleEdit.Forms
         private Bitmap GenerateImageFromTextWithStyle(string text, bool bold)
         {
             bool subtitleFontBold = bold;
-            const bool subtitleAlignLeft = true;
-            const bool subtitleAlignRight = false;
 
             text = Utilities.RemoveHtmlTags(text);
 
@@ -192,12 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
             var lefts = new List<float>();
             foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (subtitleAlignLeft)
-                    lefts.Add(5);
-                else if (subtitleAlignRight)
-                    lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, subtitleFontBold) + 15));
-                else
-                    lefts.Add((float)(bmp.Width - g.MeasureString(line, font).Width * 0.8 + 15) / 2);
+                lefts.Add(5);
             }
 
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
