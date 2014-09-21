@@ -798,6 +798,8 @@ namespace Nikse.SubtitleEdit.Controls
         {
             PanelPlayer.Height = Height - (ControlsHeight + SubtitlesHeight);
             PanelPlayer.Width = Width;
+            if (_videoPlayer != null)
+                _videoPlayer.Resize(PanelPlayer.Width, PanelPlayer.Height);
 
             _panelSubtitle.Top = Height - (ControlsHeight + SubtitlesHeight);
             _panelSubtitle.Width = Width;

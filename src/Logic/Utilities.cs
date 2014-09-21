@@ -1890,6 +1890,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (gs.VideoPlayer == "MPlayer" && MPlayer.IsInstalled)
                 return new MPlayer();
 
+            if (gs.VideoPlayer == "MPC-HC" && Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc.IsInstalled)
+                return new Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc();
+
             if (IsQuartsDllInstalled)
                 return new QuartsPlayer();
             //if (IsWmpAvailable)
@@ -1911,6 +1914,7 @@ namespace Nikse.SubtitleEdit.Logic
                 videoPlayerContainer.EnableMouseWheelStep();
                 videoPlayerContainer.VideoWidth = videoInfo.Width;
                 videoPlayerContainer.VideoHeight = videoInfo.Height;
+                videoPlayerContainer.VideoPlayer.Resize(videoPlayerContainer.PanelPlayer.Width, videoPlayerContainer.PanelPlayer.Height);
             }
             catch (Exception exception)
             {
