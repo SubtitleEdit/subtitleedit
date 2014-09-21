@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
-                
+
                 var len = v >> 2;
                 if (len > (w - x))
                     len = (w - x);
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic
                     Color c = fourColors[color];
                     bmp.SetPixel(x, y, c, len);
                 }
-                
+
                 x += len;
                 if (x >= w)
                 {

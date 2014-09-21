@@ -8839,7 +8839,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (end > 0)
                 {
                     string f = s.Substring(0, end);
-                    
+
                     if (f.Contains(" face=") && !f.Contains(" color="))
                     {
                         var start = s.IndexOf(" face=", StringComparison.Ordinal);
@@ -10702,7 +10702,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == (Keys.Control | Keys.Shift) && e.KeyCode == Keys.ShiftKey)
                 return;
 
-            
             var fc = FindFocusedControl(this);
             if (fc != null && e.Modifiers != Keys.Control && e.Modifiers != (Keys.Control | Keys.Shift) && e.Modifiers != (Keys.Control | Keys.Shift | Keys.Alt))
             {
@@ -10711,11 +10710,10 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
 
                 // do not check for shortcuts if a number is being entered and a time box is focused
-                if (fc.Parent != null && (fc.Parent.Name == timeUpDownStartTime.Name || fc.Parent.Name == numericUpDownDuration.Name) && 
+                if (fc.Parent != null && (fc.Parent.Name == timeUpDownStartTime.Name || fc.Parent.Name == numericUpDownDuration.Name) &&
                     (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9 || e.KeyValue >= 48 && e.KeyValue <= 57))
                     return;
             }
-
 
             bool inListView = tabControlSubtitle.SelectedIndex == TabControlListView;
 

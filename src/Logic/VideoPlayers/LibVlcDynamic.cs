@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private void LoadLibVlcDynamic()
         {
             _libvlc_new = (libvlc_new)GetDllType(typeof(libvlc_new), "libvlc_new");
-//            _libvlc_get_version = (libvlc_get_version)GetDllType(typeof(libvlc_get_version), "libvlc_get_version");
+            //_libvlc_get_version = (libvlc_get_version)GetDllType(typeof(libvlc_get_version), "libvlc_get_version");
             _libvlc_release = (libvlc_release)GetDllType(typeof(libvlc_release), "libvlc_release");
 
             _libvlc_media_new_path = (libvlc_media_new_path)GetDllType(typeof(libvlc_media_new_path), "libvlc_media_new_path");
@@ -210,13 +210,13 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             _libvlc_media_player_play = (libvlc_media_player_play)GetDllType(typeof(libvlc_media_player_play), "libvlc_media_player_play");
             _libvlc_media_player_stop = (libvlc_media_player_stop)GetDllType(typeof(libvlc_media_player_stop), "libvlc_media_player_stop");
-//            _libvlc_media_player_pause = (libvlc_media_player_pause)GetDllType(typeof(libvlc_media_player_pause), "libvlc_media_player_pause");
+            //_libvlc_media_player_pause = (libvlc_media_player_pause)GetDllType(typeof(libvlc_media_player_pause), "libvlc_media_player_pause");
             _libvlc_media_player_set_hwnd = (libvlc_media_player_set_hwnd)GetDllType(typeof(libvlc_media_player_set_hwnd), "libvlc_media_player_set_hwnd");
             _libvlc_media_player_is_playing = (libvlc_media_player_is_playing)GetDllType(typeof(libvlc_media_player_is_playing), "libvlc_media_player_is_playing");
             _libvlc_media_player_set_pause = (libvlc_media_player_set_pause)GetDllType(typeof(libvlc_media_player_set_pause), "libvlc_media_player_set_pause");
             _libvlc_media_player_get_time = (libvlc_media_player_get_time)GetDllType(typeof(libvlc_media_player_get_time), "libvlc_media_player_get_time");
             _libvlc_media_player_set_time = (libvlc_media_player_set_time)GetDllType(typeof(libvlc_media_player_set_time), "libvlc_media_player_set_time");
-//            _libvlc_media_player_get_fps = (libvlc_media_player_get_fps)GetDllType(typeof(libvlc_media_player_get_fps), "libvlc_media_player_get_fps");
+            //_libvlc_media_player_get_fps = (libvlc_media_player_get_fps)GetDllType(typeof(libvlc_media_player_get_fps), "libvlc_media_player_get_fps");
             _libvlc_media_player_get_state = (libvlc_media_player_get_state)GetDllType(typeof(libvlc_media_player_get_state), "libvlc_media_player_get_state");
             _libvlc_media_player_get_length = (libvlc_media_player_get_length)GetDllType(typeof(libvlc_media_player_get_length), "libvlc_media_player_get_length");
             _libvlc_media_player_release = (libvlc_media_player_release)GetDllType(typeof(libvlc_media_player_release), "libvlc_media_player_release");
@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private bool IsAllMethodsLoaded()
         {
             return _libvlc_new != null &&
-//                   _libvlc_get_version != null &&
+                //_libvlc_get_version != null &&
                    _libvlc_release != null &&
                    _libvlc_media_new_path != null &&
                    _libvlc_media_player_new_from_media != null &&
@@ -241,12 +241,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                    _libvlc_audio_set_volume != null &&
                    _libvlc_media_player_play != null &&
                    _libvlc_media_player_stop != null &&
-//                   _libvlc_media_player_pause != null &&
+                //_libvlc_media_player_pause != null &&
                    _libvlc_media_player_set_hwnd != null &&
                    _libvlc_media_player_is_playing != null &&
                    _libvlc_media_player_get_time != null &&
                    _libvlc_media_player_set_time != null &&
-//                   _libvlc_media_player_get_fps != null &&
+                //_libvlc_media_player_get_fps != null &&
                    _libvlc_media_player_get_state != null &&
                    _libvlc_media_player_get_length != null &&
                    _libvlc_media_player_release != null &&
@@ -659,7 +659,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     _videoEndTimer.Start();
                 }
 
-                _libvlc_media_player_play(_mediaPlayer);                
+                _libvlc_media_player_play(_mediaPlayer);
                 _videoLoadedTimer = new Timer { Interval = 100 };
                 _videoLoadedTimer.Tick += VideoLoadedTimer_Tick;
                 _videoLoadedTimer.Start();
