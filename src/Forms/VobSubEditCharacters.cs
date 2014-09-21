@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var a in additions)
                     Additions.Add(a);
 
-                int makeHigher = 40;
+                const int makeHigher = 40;
                 labelImageCompareFiles.Top = labelImageCompareFiles.Top - makeHigher;
                 listBoxFileNames.Top = listBoxFileNames.Top - makeHigher;
                 listBoxFileNames.Height = listBoxFileNames.Height + makeHigher;

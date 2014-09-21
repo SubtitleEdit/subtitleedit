@@ -1449,7 +1449,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             int i = 0;
             bool isItalic = false;
             bool isBold = parameter.SubtitleFontBold;
-            float top = 5;
+            const float top = 5f;
             bool newLine = false;
             float left = 1.0f;
             float leftMargin = left;
@@ -1900,7 +1900,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 text = Utilities.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
                 var brush = new SolidBrush(parameter.BorderColor);
                 int x = 3;
-                int y = 3;
+                const int y = 3;
                 sf.Alignment = StringAlignment.Near;
                 if (parameter.AlignLeft)
                 {

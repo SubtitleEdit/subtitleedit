@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         public NOcrChar GetMatch(NikseBitmap nbmp)
         {
             const int NocrMinColor = 300;
-            int topMargin = 1;
+            const int topMargin = 1;
             double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
 
             foreach (NOcrChar oc in OcrCharacters)

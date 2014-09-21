@@ -1002,7 +1002,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             int feIndex = index;
-            int endDelimiter = 0x00;
+            const int endDelimiter = 0x00;
             byte alignment = buffer[feIndex + 1];
             byte verticalAlignment = buffer[feIndex - 1];
             var p = new Paragraph();

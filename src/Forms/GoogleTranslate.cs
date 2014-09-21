@@ -339,10 +339,10 @@ namespace Nikse.SubtitleEdit.Forms
             StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
             string content = reader.ReadToEnd();
 
-            string key = "{\"translatedText\":";
-            if (content.Contains(key))
+            var indexOfTranslatedText = content.IndexOf("{\"translatedText\":", StringComparison.Ordinal);
+            if (indexOfTranslatedText >= 0)
             {
-                int start = content.IndexOf(key, StringComparison.Ordinal) + key.Length + 1;
+                var start = indexOfTranslatedText + 19;
                 int end = content.IndexOf("\"}", start, StringComparison.Ordinal);
                 string translatedText = content.Substring(start, end - start);
                 string test = translatedText.Replace("\\u003c", "<");
@@ -366,11 +366,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string RemovePStyleParameters(string test)
         {
-            string key = "<p style";
-            int startPosition = test.IndexOf(key, StringComparison.Ordinal);
+            var startPosition = test.IndexOf("<p style", StringComparison.Ordinal);
             while (startPosition >= 0)
             {
-                int endPosition = test.IndexOf('>', startPosition + key.Length);
+                var endPosition = test.IndexOf('>', startPosition + 8);
                 if (endPosition > 0)
                     return test.Remove(startPosition + 2, endPosition - startPosition - 2);
             }

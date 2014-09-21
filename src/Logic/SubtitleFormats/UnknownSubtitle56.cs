@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var sb = new StringBuilder();
-            string format = "{0:0000}\t{1}\t{2}";
+            const string format = "{0:0000}\t{1}\t{2}";
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {

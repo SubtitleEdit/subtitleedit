@@ -193,8 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
             Font font;
             try
             {
-                var fontStyle = FontStyle.Regular;
-                font = new Font(_subtitleFontName, _subtitleFontSize, fontStyle);
+                font = new Font(_subtitleFontName, _subtitleFontSize, FontStyle.Regular);
             }
             catch (Exception exception)
             {

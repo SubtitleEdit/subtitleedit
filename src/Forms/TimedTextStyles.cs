@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), comboBoxFontWeight.Text == "bold") + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), comboBoxFontWeight.Text == "bold") + 1;
 
-                float left = 5;
+                const float left = 5f;
                 //if (radioButtonTopLeft.Checked || radioButtonMiddleLeft.Checked || radioButtonBottomLeft.Checked)
                 //    left = (float)numericUpDownMarginLeft.Value;
                 //else if (radioButtonTopRight.Checked || radioButtonMiddleRight.Checked || radioButtonBottomRight.Checked)
@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //else
                 //    left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
-                float top = 2;
+                const float top = 2f;
                 //if (radioButtonTopLeft.Checked || radioButtonTopCenter.Checked || radioButtonTopRight.Checked)
                 //    top = (float)numericUpDownMarginVertical.Value;
                 //else if (radioButtonMiddleLeft.Checked || radioButtonMiddleCenter.Checked || radioButtonMiddleRight.Checked)
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //else
                 //    top = bmp.Height - measuredHeight - ((int)numericUpDownMarginVertical.Value);
 
-                int leftMargin = 0;
+                const int leftMargin = 0;
                 int pathPointsStart = -1;
 
                 //if (radioButtonOpaqueBox.Checked)
@@ -153,13 +153,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 TextDraw.DrawText(font, sf, path, sb, comboBoxFontStyle.Text == "italic", comboBoxFontWeight.Text == "bold", false, left, top, ref newLine, leftMargin, ref pathPointsStart);
 
-                int outline = 0; // (int)numericUpDownOutline.Value;
-
-                if (outline > 0)
-                {
-                    Color outlineColor = Color.White;
-                    g.DrawPath(new Pen(outlineColor, outline), path);
-                }
+                //int outline = 0; // (int)numericUpDownOutline.Value;
+                //if (outline > 0)
+                //{
+                //    Color outlineColor = Color.White;
+                //    g.DrawPath(new Pen(outlineColor, outline), path);
+                //}
                 g.FillPath(new SolidBrush(panelFontColor.BackColor), path);
             }
             pictureBoxPreview.Image = bmp;

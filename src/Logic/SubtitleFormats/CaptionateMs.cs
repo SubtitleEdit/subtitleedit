@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            string xmlStructure = @"<captionate>
+            const string xmlStructure = @"<captionate>
 <timeformat>ms</timeformat>
 <namesareprefixed>namesareprefixed</namesareprefixed>
 <captioninfo>

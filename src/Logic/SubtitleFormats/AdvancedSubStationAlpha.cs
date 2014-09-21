@@ -106,7 +106,7 @@ Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour,
 [Events]
 Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text";
 
-            string headerNoStyles = @"[Script Info]
+            const string headerNoStyles = @"[Script Info]
 ; This is an Advanced Sub Station Alpha v4+ script.
 Title: {0}
 ScriptType: v4.00+
@@ -188,7 +188,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         if (ssaStyle != null)
                         {
                             // Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-                            string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},0,100,100,0,0,{10},{11},{12},{13},{14},{15},{16},1";
+                            const string styleFormat = "Style: {0},{1},{2},{3},{4},{5},{6},{7},{8},{9},0,100,100,0,0,{10},{11},{12},{13},{14},{15},{16},1";
                             string bold = "0";
                             if (ssaStyle.Bold)
                                 bold = "1";
@@ -323,7 +323,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         if (!int.TryParse(fontSize, out fSize))
                             fSize = 20;
 
-                        string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
+                        const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
                         ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, GetSsaColorString(c)));
                     }
                 }

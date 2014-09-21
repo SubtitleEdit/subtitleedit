@@ -450,7 +450,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             string result = ToUtf8XmlString(xml).Replace("encoding=\"utf-8\"", "encoding=\"UTF-8\"").Replace(" xmlns:dcst=\"dcst\"", string.Empty);
 
-            string res = "Nikse.SubtitleEdit.Resources.SMPTE-428-7-2010-DCST.xsd.gz";
+            const string res = "Nikse.SubtitleEdit.Resources.SMPTE-428-7-2010-DCST.xsd.gz";
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
             Stream strm = asm.GetManifestResourceStream(res);
             if (strm != null)

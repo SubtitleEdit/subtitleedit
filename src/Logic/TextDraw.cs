@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var sb = new StringBuilder(text);
             bool newLine = false;
-            int leftMargin = 0;
+            const int leftMargin = 0;
             int pathPointsStart = -1;
             DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             var sb = new StringBuilder(text);
             bool newLine = false;
-            int leftMargin = 0;
+            const int leftMargin = 0;
             int pathPointsStart = -1;
             DrawText(font, sf, path, sb, false, bold, false, 0, 0, ref newLine, leftMargin, ref pathPointsStart);
 

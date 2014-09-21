@@ -58,8 +58,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_previewBuffer != null)
                 {
                     Encoding encoding = Pac.GetEncoding(CodePageIndex);
-                    int FEIndex = 0;
-                    int endDelimiter = 0x00;
+                    const int FEIndex = 0;
+                    const int endDelimiter = 0x00;
                     StringBuilder sb = new StringBuilder();
                     int index = FEIndex + 3;
                     while (index < _previewBuffer.Length && _previewBuffer[index] != endDelimiter)

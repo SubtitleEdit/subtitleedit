@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using System.IO;
+using MultiLanguage;
 
 namespace Nikse.SubtitleEdit.Logic.DetectEncoding
 {
@@ -391,7 +392,7 @@ namespace Nikse.SubtitleEdit.Logic.DetectEncoding
                 int srcLen = input.Length;
 
                 // setup options (none)
-                MultiLanguage.MLDETECTCP options = MultiLanguage.MLDETECTCP.MLDETECTCP_NONE;
+                const MLDETECTCP options = MultiLanguage.MLDETECTCP.MLDETECTCP_NONE;
 
                 // finally... call to DetectInputCodepage
                 multilang2.DetectInputCodepage(options, 0,

@@ -49,8 +49,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string start = p.StartTime.ToHHMMSSFF();
                 string end = p.EndTime.ToHHMMSSFF();
                 string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));
-                string readability = "011";
-                string interval = "06:14";
+                const string readability = "011";
+                const string interval = "06:14";
                 string nbc = text.Length.ToString().PadLeft(3, '0');
                 sb.AppendLine(string.Format(paragraphWriteFormat, count, start, end, duration, readability, interval, nbc, text));
                 sb.AppendLine();

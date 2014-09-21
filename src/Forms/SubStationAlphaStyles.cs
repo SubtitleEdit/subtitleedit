@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (radioButtonTopCenter.Checked || radioButtonMiddleCenter.Checked || radioButtonBottomCenter.Checked)
                     left -= (int)(numericUpDownShadowWidth.Value / 2);
 
-                int leftMargin = 0;
+                const int leftMargin = 0;
                 int pathPointsStart = -1;
 
                 if (radioButtonOpaqueBox.Checked)
