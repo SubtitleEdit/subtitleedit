@@ -1831,10 +1831,6 @@ namespace Nikse.SubtitleEdit.Logic
                 if (IsRunningOnMono())
                     return false;
 
-                string quartsInteropFileName = Path.GetDirectoryName(Application.ExecutablePath).TrimEnd('\\') + @"\Interop.QuartzTypeLib.dll";
-                if (!File.Exists(quartsInteropFileName))
-                    return false;
-
                 string quartzFileName = Environment.GetFolderPath(Environment.SpecialFolder.System).TrimEnd('\\') + @"\quartz.dll";
                 return File.Exists(quartzFileName);
             }
