@@ -544,7 +544,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
         public static List<PcsData> ParseBluRaySup(Stream ms, StringBuilder log, bool fromMatroskaFile)
         {
-            SupSegment segment;
             long position = ms.Position;
             int segmentCount = 0;
             var palettes = new Dictionary<int, List<PaletteInfo>>();
@@ -553,7 +552,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             PcsData latestPcs = null;
             int latestCompNum = -1;
             var pcsList = new List<PcsData>();
-            byte[] buffer;
             byte[] headerBuffer;
             if (fromMatroskaFile)
                 headerBuffer = new byte[3];
@@ -566,6 +564,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
 
                 // Read segment header
                 ms.Read(headerBuffer, 0, headerBuffer.Length);
+                SupSegment segment;
                 if (fromMatroskaFile)
                     segment = ParseSegmentHeaderFromMatroska(headerBuffer);
                 else
@@ -573,7 +572,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 position += headerBuffer.Length;
 
                 // Read segment data
-                buffer = new byte[segment.Size];
+                var buffer = new byte[segment.Size];
                 ms.Read(buffer, 0, buffer.Length);
                 log.Append(segmentCount + ": ");
 

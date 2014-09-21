@@ -67,7 +67,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //<Time begin="0:03:24.8" end="0:03:29.4" /><clear/>Man stjæler ikke fra Chavo, nej.
-            Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
             foreach (string line in lines)
@@ -86,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (startParts.Length == 4 && endParts.Length == 4)
                         {
                             string text = line.Substring(line.LastIndexOf("/>", StringComparison.Ordinal) + 2);
-                            p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                            var p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                             subtitle.Paragraphs.Add(p);
                         }
                     }

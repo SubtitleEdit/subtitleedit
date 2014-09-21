@@ -62,7 +62,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             //00:03:15:22 00:03:23:10 This is line one.
             //This is line two.
-            Paragraph p = null;
             subtitle.Paragraphs.Clear();
             _errorCount = 0;
             foreach (string line in lines)
@@ -79,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         string text = line.Remove(0, regexTimeCodes.Match(line).Length - 1).Trim();
                         text = text.Replace("//", Environment.NewLine);
-                        p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
+                        var p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), text);
                         subtitle.Paragraphs.Add(p);
                     }
                 }

@@ -75,7 +75,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             ImageDisplayArea = new Rectangle();
             Bitmap bmp = null;
             var displayControlSequenceTableAddresses = new List<int>();
-            byte[] imageContrast = null;
             int imageTopFieldDataAddress = 0;
             int imageBottomFieldDataAddress = 0;
             bool bitmapGenerated = false;
@@ -132,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                         case (int)DisplayControlCommand.SetContrast: // 4
                             if (colorLookUpTable != null && fourColors.Count == 4)
                             {
-                                imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
+                                var imageContrast = new[] { _data[commandIndex + 1], _data[commandIndex + 2] };
                                 if (imageContrast[0] + imageContrast[1] > 0)
                                 {
                                     SetTransparency(fourColors, 3, (imageContrast[0] & 0xF0) >> 4);

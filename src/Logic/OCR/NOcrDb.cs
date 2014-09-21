@@ -82,7 +82,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         {
             const int NocrMinColor = 300;
             int topMargin = 1;
-            int index = 0;
             double widthPercent = nbmp.Height * 100.0 / nbmp.Width;
 
             foreach (NOcrChar oc in OcrCharacters)
@@ -91,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 { // only very accurate matches
 
                     bool ok = true;
-                    index = 0;
+                    var index = 0;
                     while (index < oc.LinesForeground.Count && ok)
                     {
                         NOcrPoint op = oc.LinesForeground[index];

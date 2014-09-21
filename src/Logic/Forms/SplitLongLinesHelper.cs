@@ -28,11 +28,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             int numberOfSplits = 0;
             Subtitle splittedSubtitle = new Subtitle();
             string language = Utilities.AutoDetectGoogleLanguage(subtitle);
-            Paragraph p = null;
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;
-                p = subtitle.GetParagraphOrDefault(i);
+                var p = subtitle.GetParagraphOrDefault(i);
                 if (p != null && p.Text != null)
                 {
                     string oldText = Utilities.RemoveHtmlTags(p.Text);

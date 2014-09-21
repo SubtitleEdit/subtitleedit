@@ -1502,13 +1502,12 @@ namespace Nikse.SubtitleEdit.Forms
         {
             //            var nbmp = new NikseBitmap(parentBitmap);
             int w = targetItem.NikseBitmap.Width;
-            int index = 0;
             foreach (NOcrChar oc in nOcrChars)
             {
                 if (oc.ExpandCount > 1 && oc.Width > w && targetItem.X + oc.Width < nbmp.Width)
                 {
                     bool ok = true;
-                    index = 0;
+                    var index = 0;
                     while (index < oc.LinesForeground.Count && ok)
                     {
                         NOcrPoint op = oc.LinesForeground[index];
@@ -4954,7 +4953,6 @@ namespace Nikse.SubtitleEdit.Forms
             List<ImageSplitterItem> lines = NikseBitmapImageSplitter.SplitVertical(bitmap);
             List<ImageSplitterItem> list = NikseBitmapImageSplitter.SplitBitmapToLetters(lines, p.NumberOfPixelsIsSpace, p.RightToLeft, Configuration.Settings.VobSubOcr.TopToBottom);
 
-            int index;
             int outerIndex = 0;
             while (outerIndex < list.Count)
             {
@@ -4971,6 +4969,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int smallestDifference = 10000;
                     int smallestIndex = -1;
 
+                    int index;
                     if (smallestDifference > 0)
                     {
                         index = 0;
@@ -5051,13 +5050,12 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    CompareMatch match;
                     double differencePercentage = smallestDifference * 100.0 / (item.NikseBitmap.Width * item.NikseBitmap.Height);
                     double maxDiff = (double)p.MaxErrorPercent;
                     if (differencePercentage <= maxDiff && smallestIndex >= 0)
                     {
                         var hit = p.CompareBitmaps[smallestIndex];
-                        match = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
+                        var match = new CompareMatch(hit.Text, hit.Italic, hit.ExpandCount, hit.Name);
                         matches.Add(new CompareMatch(match.Text, match.Italic, 0, null));
                         if (match.ExpandCount > 0)
                             outerIndex += match.ExpandCount - 1;
@@ -5128,7 +5126,6 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareMatch match = null;
 
                     var nbmp = item.NikseBitmap;
-                    int index2 = 0;
                     int topMargin = item.Y - item.ParentY;
                     foreach (NOcrChar oc in _nOcrDb.OcrCharacters)
                     {
@@ -5136,7 +5133,7 @@ namespace Nikse.SubtitleEdit.Forms
                         { // only very accurate matches
 
                             bool ok = true;
-                            index2 = 0;
+                            var index2 = 0;
                             while (index2 < oc.LinesForeground.Count && ok)
                             {
                                 NOcrPoint op = oc.LinesForeground[index2];

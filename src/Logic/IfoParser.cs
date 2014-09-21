@@ -308,11 +308,11 @@ namespace Nikse.SubtitleEdit.Logic
                 // Cell Playback Info Table to retrieve duration
                 _fs.Position = tableStart + programChainAdress + 0xE8;
                 _fs.Position = tableStart + programChainAdress + GetEndian(2);
-                int max = 0;
                 List<int> timeArray = new List<int>();
                 for (int k = 0; k < programChain.NumberOfPGC; k++)
                 {
                     int time = 0;
+                    int max;
                     if (k == programChain.NumberOfPGC - 1)
                         max = programChain.NumberOfCells;
                     else

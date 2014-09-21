@@ -366,11 +366,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             settings.OmitXmlDeclaration = omitXmlDeclaration;
 
             StringWriter textWriter = null;
-            XmlWriter xmlWriter = null;
             try
             {
                 textWriter = new StringWriter();
-                xmlWriter = XmlWriter.Create(textWriter, settings);
+                var xmlWriter = XmlWriter.Create(textWriter, settings);
                 xml.Save(xmlWriter);
                 xmlWriter.Flush();
                 return textWriter.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();

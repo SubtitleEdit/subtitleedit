@@ -351,9 +351,6 @@ namespace Nikse.SubtitleEdit.Logic
             byte[] bufferUnEqual = new byte[Width * Height];
             int indexBufferEqual = 0;
             int indexBufferUnEqual = 0;
-            bool indexHalfNibble = false;
-            int lastColor = -1;
-            int count = -1;
 
             _pixelAddress = -4;
             for (int y = 0; y < Height; y++)
@@ -370,9 +367,9 @@ namespace Nikse.SubtitleEdit.Logic
                     index = indexBufferUnEqual;
                     buffer = bufferUnEqual;
                 }
-                indexHalfNibble = false;
-                lastColor = -1;
-                count = 0;
+                var indexHalfNibble = false;
+                var lastColor = -1;
+                var count = 0;
 
                 for (int x = 0; x < Width; x++)
                 {
@@ -730,10 +727,9 @@ namespace Nikse.SubtitleEdit.Logic
             bool done = false;
             int newTop = 0;
             int y = 0;
-            int x = 0;
             while (!done && y < Height)
             {
-                x = 0;
+                var x = 0;
                 while (!done && x < Width)
                 {
                     Color c = GetPixel(x, y);
@@ -770,10 +766,9 @@ namespace Nikse.SubtitleEdit.Logic
             bool done = false;
             int newTop = 0;
             int y = 0;
-            int x = 0;
             while (!done && y < Height)
             {
-                x = 0;
+                var x = 0;
                 while (!done && x < Width)
                 {
                     int alpha = GetAlpha(x, y);

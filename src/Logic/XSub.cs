@@ -34,8 +34,6 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int w = bmp.Width;
             int h = bmp.Height;
-            int v;
-            int len, color;
             int nibbleOffset = 0;
             var nibble_end = buf.Length * 2;
             var x = 0;
@@ -44,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (nibbleOffset >= nibble_end)
                     return -1;
-                v = GetNibble(buf, nibbleOffset++);
+                var v = GetNibble(buf, nibbleOffset++);
                 if (v < 0x4)
                 {
                     v = (v << 4) | GetNibble(buf, nibbleOffset++);
@@ -61,16 +59,18 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
-                len = v >> 2;
+                
+                var len = v >> 2;
                 if (len > (w - x))
                     len = (w - x);
-                color = v & 0x03;
 
+                var color = v & 0x03;
                 if (color > 0)
                 {
                     Color c = fourColors[color];
                     bmp.SetPixel(x, y, c, len);
                 }
+                
                 x += len;
                 if (x >= w)
                 {

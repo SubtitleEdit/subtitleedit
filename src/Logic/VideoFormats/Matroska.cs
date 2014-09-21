@@ -158,26 +158,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         public List<MatroskaTrackInfo> GetTrackInfo()
         {
-            byte b;
-            bool done;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
-            bool endOfFile;
-
             _tracks = new List<MatroskaTrackInfo>();
             using (_f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                matroskaId = GetMatroskaId();
-                b = (byte)_f.ReadByte();
-                sizeOfSize = GetMatroskaVariableIntLength(b);
-                dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                var matroskaId = GetMatroskaId();
+                var b = (byte)_f.ReadByte();
+                var sizeOfSize = GetMatroskaVariableIntLength(b);
+                var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                 _f.Seek(dataSize, SeekOrigin.Current);
 
-                done = false;
-                endOfFile = false;
+                var done = false;
+                var endOfFile = false;
                 while (endOfFile == false && done == false)
                 {
                     matroskaId = GetMatroskaId();
@@ -191,6 +183,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                        long afterPosition;
                         if (matroskaId == 0x1549A966) // segment info
                         {
                             afterPosition = _f.Position + dataSize;
@@ -223,26 +216,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         /// <returns>Start time in milliseconds</returns>
         public Int64 GetTrackStartTime(int trackNumber)
         {
-            byte b;
-            bool done;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
-            bool endOfFile;
-
             _tracks = new List<MatroskaTrackInfo>();
             using (_f = new FileStream(_fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                matroskaId = GetMatroskaId();
-                b = (byte)_f.ReadByte();
-                sizeOfSize = GetMatroskaVariableIntLength(b);
-                dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                var matroskaId = GetMatroskaId();
+                var b = (byte)_f.ReadByte();
+                var sizeOfSize = GetMatroskaVariableIntLength(b);
+                var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                 _f.Seek(dataSize, SeekOrigin.Current);
 
-                done = false;
-                endOfFile = false;
+                var done = false;
+                var endOfFile = false;
                 while (endOfFile == false && done == false)
                 {
                     matroskaId = GetMatroskaId();
@@ -256,6 +241,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                        long afterPosition;
                         if (matroskaId == 0x1549A966) // segment info
                         {
                             afterPosition = _f.Position + dataSize;
@@ -287,27 +273,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private Int64 FindTrackStartInCluster(int targetTrackNumber)
         {
-            byte b;
             bool done = false;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
             long clusterTimeCode = 0;
             int trackStartTime = -1;
 
             while (_f.Position < _f.Length && done == false)
             {
-                matroskaId = GetMatroskaClusterId();
+                var matroskaId = GetMatroskaClusterId();
 
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)_f.ReadByte();
-                    sizeOfSize = GetMatroskaVariableIntLength(b);
-                    dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                    var b = (byte)_f.ReadByte();
+                    var sizeOfSize = GetMatroskaVariableIntLength(b);
+                    var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                    long afterPosition;
                     if (matroskaId == 0xE7) // Timecode
                     {
                         afterPosition = _f.Position + dataSize;
@@ -428,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private long GetMatroskaDataSize(long sizeOfSize, byte firstByte)
         {
-            byte b4, b5, b6, b7, b8;
+            byte b5, b6, b7, b8;
             long result = 0;
 
             if (sizeOfSize == 8)
@@ -456,7 +438,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             else if (sizeOfSize == 6)
             {
                 firstByte = (byte)(firstByte & 3); // 00000011
-                b4 = (byte)_f.ReadByte();
+                var b4 = (byte)_f.ReadByte();
                 b5 = (byte)_f.ReadByte();
                 b6 = (byte)_f.ReadByte();
                 b7 = (byte)_f.ReadByte();
@@ -504,7 +486,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
         private long GetMatroskaVariableSizeUnsignedInt(long sizeOfSize)
         {
             byte firstByte = (byte)_f.ReadByte();
-            byte b3, b4, b5, b6, b7, b8;
+            byte b4, b5, b6, b7, b8;
             long result = 0;
 
             if (sizeOfSize >= 8)
@@ -513,7 +495,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             }
             else if (sizeOfSize == 7)
             {
-                b3 = (byte)_f.ReadByte();
+                var b3 = (byte)_f.ReadByte();
                 b4 = (byte)_f.ReadByte();
                 b5 = (byte)_f.ReadByte();
                 b6 = (byte)_f.ReadByte();
@@ -702,24 +684,20 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private void AnalyzeMatroskaTrackVideo(long endPosition)
         {
-            byte b;
             bool done = false;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
 
             while (_f.Position < endPosition && done == false)
             {
-                matroskaId = GetMatroskaTrackVideoId();
+                var matroskaId = GetMatroskaTrackVideoId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)_f.ReadByte();
-                    sizeOfSize = GetMatroskaVariableIntLength(b);
-                    dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                    var b = (byte)_f.ReadByte();
+                    var sizeOfSize = GetMatroskaVariableIntLength(b);
+                    var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                    long afterPosition;
                     if (matroskaId == 0xB0) //// PixelWidth
                     {
                         afterPosition = _f.Position + dataSize;
@@ -758,13 +736,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private void AnalyzeMatroskaTrackEntry()
         {
-            byte b;
             bool done = false;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
             long defaultDuration = 0;
-            long afterPosition;
             bool isVideo = false;
             bool isAudio = false;
             bool isSubtitle = false;
@@ -779,15 +752,16 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
             while (_f.Position < _f.Length && done == false)
             {
-                matroskaId = GetMatroskaTrackEntryId();
+                var matroskaId = GetMatroskaTrackEntryId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)_f.ReadByte();
-                    sizeOfSize = GetMatroskaVariableIntLength(b);
-                    dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                    var b = (byte)_f.ReadByte();
+                    var sizeOfSize = GetMatroskaVariableIntLength(b);
+                    var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                    long afterPosition;
                     if (matroskaId == 0x23E383)// Default Duration
                     {
                         afterPosition = _f.Position + dataSize;
@@ -969,26 +943,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private void AnalyzeMatroskaSegmentInformation(long endPosition)
         {
-            byte b;
             bool done = false;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
             long timeCodeScale = 0;
             double duration8b = 0;
 
             while (_f.Position < endPosition && done == false)
             {
-                matroskaId = GetMatroskaSegmentId();
+                var matroskaId = GetMatroskaSegmentId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)_f.ReadByte();
-                    sizeOfSize = GetMatroskaVariableIntLength(b);
-                    dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                    var b = (byte)_f.ReadByte();
+                    var sizeOfSize = GetMatroskaVariableIntLength(b);
+                    var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                    long afterPosition;
                     if (matroskaId == 0x2AD7B1)// TimecodeScale - u-integer     Timecode scale in nanoseconds (1.000.000 means all timecodes in the segment are expressed in milliseconds).
                     {
                         afterPosition = _f.Position + dataSize;
@@ -1054,28 +1024,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private void AnalyzeMatroskaTracks()
         {
-            byte b;
             bool done = false;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
             _subtitleList = new List<MatroskaSubtitleInfo>();
 
             while (_f.Position < _f.Length && done == false)
             {
-                matroskaId = GetMatroskaTracksId();
+                var matroskaId = GetMatroskaTracksId();
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)_f.ReadByte();
-                    sizeOfSize = GetMatroskaVariableIntLength(b);
-                    dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                    var b = (byte)_f.ReadByte();
+                    var sizeOfSize = GetMatroskaVariableIntLength(b);
+                    var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                     if (matroskaId == 0xAE)
                     {
-                        afterPosition = _f.Position + dataSize;
+                        var afterPosition = _f.Position + dataSize;
                         AnalyzeMatroskaTrackEntry();
                         _f.Seek(afterPosition, SeekOrigin.Begin);
                     }
@@ -1094,13 +1059,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                                    ref double millisecondDuration,
                                    ref string videoCodec)
         {
-            byte b;
-            bool done;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
-            bool endOfFile;
-
             _durationInMilliseconds = 0;
 
             _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -1113,14 +1071,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             else
             {
                 isValid = true;
-                b = (byte)_f.ReadByte();
-                sizeOfSize = GetMatroskaVariableIntLength(b);
-                dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                var b = (byte)_f.ReadByte();
+                var sizeOfSize = GetMatroskaVariableIntLength(b);
+                var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                 _f.Seek(dataSize, SeekOrigin.Current);
 
-                done = false;
-                endOfFile = false;
+                var done = false;
+                var endOfFile = false;
                 while (endOfFile == false && done == false)
                 {
                     matroskaId = GetMatroskaId();
@@ -1134,6 +1092,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                        long afterPosition;
                         if (matroskaId == 0x1549A966) // segment info
                         {
                             afterPosition = _f.Position + dataSize;
@@ -1219,27 +1178,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         private void AnalyzeMatroskaCluster()
         {
-            byte b;
             bool done = false;
-            UInt32 matroskaId;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
             long clusterTimeCode = 0;
             long duration = 0;
 
             while (_f.Position < _f.Length && done == false)
             {
-                matroskaId = GetMatroskaClusterId();
+                var matroskaId = GetMatroskaClusterId();
 
                 if (matroskaId == 0)
                     done = true;
                 else
                 {
-                    b = (byte)_f.ReadByte();
-                    sizeOfSize = GetMatroskaVariableIntLength(b);
-                    dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                    var b = (byte)_f.ReadByte();
+                    var sizeOfSize = GetMatroskaVariableIntLength(b);
+                    var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                    long afterPosition;
                     if (matroskaId == 0xE7) // Timecode
                     {
                         afterPosition = _f.Position + dataSize;
@@ -1382,13 +1337,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         public List<MatroskaSubtitleInfo> GetMatroskaSubtitleTracks(string fileName, out bool isValid)
         {
-            byte b;
-            bool done;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
-            bool endOfFile;
-
             _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             var matroskaId = GetMatroskaId();
@@ -1399,14 +1347,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             else
             {
                 isValid = true;
-                b = (byte)_f.ReadByte();
-                sizeOfSize = GetMatroskaVariableIntLength(b);
-                dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                var b = (byte)_f.ReadByte();
+                var sizeOfSize = GetMatroskaVariableIntLength(b);
+                var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                 _f.Seek(dataSize, SeekOrigin.Current);
 
-                done = false;
-                endOfFile = false;
+                var done = false;
+                var endOfFile = false;
                 while (endOfFile == false && done == false)
                 {
                     matroskaId = GetMatroskaId();
@@ -1420,6 +1368,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                        long afterPosition;
                         if (matroskaId == 0x1549A966) // segment info
                         {
                             afterPosition = _f.Position + dataSize;
@@ -1452,12 +1401,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
 
         public List<SubtitleSequence> GetMatroskaSubtitle(string fileName, int trackNumber, out bool isValid, LoadMatroskaCallback callback)
         {
-            byte b;
-            bool done;
-            int sizeOfSize;
-            long dataSize;
-            long afterPosition;
-            bool endOfFile;
             _subtitleRipTrackNumber = trackNumber;
 
             _f = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
@@ -1470,14 +1413,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
             else
             {
                 isValid = true;
-                b = (byte)_f.ReadByte();
-                sizeOfSize = GetMatroskaVariableIntLength(b);
-                dataSize = GetMatroskaDataSize(sizeOfSize, b);
+                var b = (byte)_f.ReadByte();
+                var sizeOfSize = GetMatroskaVariableIntLength(b);
+                var dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
                 _f.Seek(dataSize, SeekOrigin.Current);
 
-                done = false;
-                endOfFile = false;
+                var done = false;
+                var endOfFile = false;
                 while (endOfFile == false && done == false)
                 {
                     matroskaId = GetMatroskaId();
@@ -1491,6 +1434,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats
                         sizeOfSize = GetMatroskaVariableIntLength(b);
                         dataSize = GetMatroskaDataSize(sizeOfSize, b);
 
+                        long afterPosition;
                         if (matroskaId == 0x1549A966) // segment info
                         {
                             afterPosition = _f.Position + dataSize;

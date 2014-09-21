@@ -139,11 +139,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
 
                 //0001 01:00:15:08 01:00:18:05
-                string[] parts;
                 try
                 {
                     string start = line.Substring(5, 11);
-                    parts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+                    var parts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     int startHours = int.Parse(parts[0]);
                     int startMinutes = int.Parse(parts[1]);
                     int startSeconds = int.Parse(parts[2]);
