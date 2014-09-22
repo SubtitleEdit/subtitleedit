@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode generatorItem = xml.CreateElement("generatoritem");
                 string fontStyle = "1"; //1==plain
-                string s = Utilities.RemoveHtmlFontTag(p.Text).Trim();
+                var s = HtmlUtils.RemoveOpenCloseTags(p.Text, HtmlUtils.TAG_FONT).Trim();
                 if ((s.StartsWith("<i><b>") && s.EndsWith("</b></i>")) || (s.StartsWith("<b><i>") && s.EndsWith("</i></b>")))
                     fontStyle = "4"; //4==bold/italic
                 else if (s.StartsWith("<i>") && s.EndsWith("</i>"))

@@ -823,28 +823,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
-            s = RemoveSingleLetterHtmlTags(s);
-            s = RemoveParagraphTag(s);
-            return RemoveHtmlFontTag(s);
-        }
-
-        private static string RemoveSingleLetterHtmlTags(string s)
-        {
-            s = s.Replace("<i>", string.Empty);
-            s = s.Replace("<і>", string.Empty);  // different unicode chars
-            s = s.Replace("</i>", string.Empty);
-            s = s.Replace("</і>", string.Empty); // different unicode chars
-            s = s.Replace("<b>", string.Empty);
-            s = s.Replace("</b>", string.Empty);
-            s = s.Replace("<u>", string.Empty);
-            s = s.Replace("</u>", string.Empty);
-            s = s.Replace("<I>", string.Empty);
-            s = s.Replace("</I>", string.Empty);
-            s = s.Replace("<B>", string.Empty);
-            s = s.Replace("</B>", string.Empty);
-            s = s.Replace("<U>", string.Empty);
-            s = s.Replace("</U>", string.Empty);
-            return s;
+            return HtmlUtils.RemoveOpenCloseTags(s, HtmlUtils.TAG_I, HtmlUtils.TAG_B, HtmlUtils.TAG_U, HtmlUtils.TAG_P, HtmlUtils.TAG_FONT, HtmlUtils.TAG_CYRILLIC_I);
         }
 
         public static string RemoveHtmlTags(string s, bool alsoSsaTags)
@@ -878,38 +857,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     k = -1;
                 }
-            }
-            return s;
-        }
-
-        public static string RemoveHtmlFontTag(string s)
-        {
-            s = s.Replace("</font>", string.Empty);
-            s = s.Replace("</FONT>", string.Empty);
-            s = s.Replace("</Font>", string.Empty);
-            s = s.Replace("<font>", string.Empty);
-            s = s.Replace("<FONT>", string.Empty);
-            s = s.Replace("<Font>", string.Empty);
-            while (s.Contains("<font", StringComparison.OrdinalIgnoreCase))
-            {
-                int startIndex = s.ToLower().IndexOf("<font", StringComparison.Ordinal);
-                int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
-                s = s.Remove(startIndex, (endIndex - startIndex) + 1);
-            }
-            return s;
-        }
-
-        public static string RemoveParagraphTag(string s)
-        {
-            s = s.Replace("</p>", string.Empty);
-            s = s.Replace("</P>", string.Empty);
-            s = s.Replace("<p>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
-            while (s.Contains("<p ", StringComparison.OrdinalIgnoreCase))
-            {
-                int startIndex = s.IndexOf("<p ", StringComparison.OrdinalIgnoreCase);
-                int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
-                s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
         }
@@ -2649,7 +2596,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
-                    string cleanText = RemoveSingleLetterHtmlTags(text);
+                    var cleanText = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TAG_I, HtmlUtils.TAG_B, HtmlUtils.TAG_U, HtmlUtils.TAG_CYRILLIC_I);
                     bool isFixed = false;
 
                     // Foo.</i>

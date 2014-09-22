@@ -848,13 +848,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string MakePacItalicsAndRemoveOtherTags(string text)
         {
-            text = Utilities.RemoveHtmlFontTag(text).Trim();
-            text = text.Replace("<u>", string.Empty);
-            text = text.Replace("</u>", string.Empty);
+            text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TAG_FONT, HtmlUtils.TAG_U).Trim();
+            if (!text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
+                return text;
+
             text = text.Replace("<I>", "<i>");
             text = text.Replace("</I>", "</i>");
-            if (!text.Contains("<i>"))
-                return text;
 
             if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>") && text.EndsWith("</i>"))
                 return "<" + Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");

@@ -267,9 +267,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeText(string s)
         {
-            s = s.Replace("<b>", string.Empty).Replace("<B>", string.Empty).Replace("</b>", string.Empty).Replace("</B>", string.Empty);
-            s = s.Replace("<u>", string.Empty).Replace("<U>", string.Empty).Replace("</u>", string.Empty).Replace("</U>", string.Empty);
-            s = Utilities.RemoveHtmlFontTag(s);
+            s = HtmlUtils.RemoveOpenCloseTags(s, HtmlUtils.TAG_B, HtmlUtils.TAG_U, HtmlUtils.TAG_FONT);
             if (s.StartsWith("{\\an3}") || s.StartsWith("{\\an6}"))
                 s = "/STYLE RIGHT" + Environment.NewLine + s.Remove(0, 6).Trim();
             if (s.StartsWith("{\\an1}") || s.StartsWith("{\\an4}"))

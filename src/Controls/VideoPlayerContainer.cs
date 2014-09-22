@@ -307,15 +307,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
-                text = text.Replace("<b>", string.Empty);
-                text = text.Replace("</b>", string.Empty);
-                text = text.Replace("<B>", string.Empty);
-                text = text.Replace("</B>", string.Empty);
-                text = text.Replace("<u>", string.Empty);
-                text = text.Replace("</u>", string.Empty);
-                text = text.Replace("<U>", string.Empty);
-                text = text.Replace("</U>", string.Empty);
-                //    text = Utilities.RemoveHtmlFontTag(text);
+                text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TAG_B, HtmlUtils.TAG_U);
 
                 // display italic
                 var sb = new StringBuilder();
