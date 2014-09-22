@@ -66,27 +66,10 @@ namespace Test
         public static void MyClassInitialize(TestContext testContext)
         {
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            Stream strm = asm.GetManifestResourceStream("Test.Hunspellx86.dll");
-            if (strm != null)
-            {
-                using (Stream file = File.OpenWrite("Hunspellx86.dll"))
-                {
-                    CopyStream(strm, file);
-                }
-            }
-
-            strm = asm.GetManifestResourceStream("Test.Hunspellx64.dll");
-            if (strm != null)
-            {
-                using (Stream file = File.OpenWrite("Hunspellx64.dll"))
-                {
-                    CopyStream(strm, file);
-                }
-            }
-
+            
             if (!Directory.Exists("Directories"))
                 Directory.CreateDirectory("Dictionaries");
-            strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
+            var strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
             if (strm != null)
             {
                 using (Stream file = File.OpenWrite(Path.Combine("Dictionaries", "en_US.aff")))
