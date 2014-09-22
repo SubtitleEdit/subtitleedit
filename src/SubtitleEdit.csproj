@@ -1909,7 +1909,7 @@
     <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll"
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
 "$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel
 "$(ProjectDir)..\build_helpers.bat" lang</PostBuildEvent>
   </PropertyGroup>
