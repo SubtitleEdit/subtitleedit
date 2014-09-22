@@ -8135,7 +8135,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (allLinesStartAndEndsWithItalic)
             {
-                text = text.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim();
+                text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TAG_I).Trim();
                 text = "<i>" + text + "</i>";
             }
             return text;
@@ -17137,8 +17137,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewTextAlternate.Text.Contains("<i>"))
                     {
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("<i>", string.Empty);
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("</i>", string.Empty);
+                        textBoxListViewTextAlternate.Text = HtmlUtils.RemoveOpenCloseTags(textBoxListViewTextAlternate.Text, HtmlUtils.TAG_I);
                     }
                     else
                     {
