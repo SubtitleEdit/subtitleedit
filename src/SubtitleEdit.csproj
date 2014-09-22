@@ -789,6 +789,7 @@
     <Compile Include="Logic\Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
+    <Compile Include="Logic\HtmlUtils.cs" />
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NativeMethods.cs" />

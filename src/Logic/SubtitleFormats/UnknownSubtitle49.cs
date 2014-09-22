@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = Utilities.RemoveHtmlFontTag(p.Text);
+                var text = HtmlUtils.RemoveOpenCloseTags(p.Text, HtmlUtils.TagFont);
                 if (!text.Contains(Environment.NewLine))
                     text = Environment.NewLine + text;
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine));
