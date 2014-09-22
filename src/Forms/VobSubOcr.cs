@@ -7639,19 +7639,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void textBoxCurrentText_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyData == _italicShortcut) // Ctrl+i (or cusstom) = italic
+            if (e.KeyData == _italicShortcut) // Ctrl+I (or custom) = Italic
             {
                 TextBox tb = textBoxCurrentText;
                 string text = tb.SelectedText;
                 int selectionStart = tb.SelectionStart;
-                if (text.Contains("<o>"))
+                if (text.Contains("<i>"))
                 {
-                    text = text.Replace("<i>", string.Empty);
-                    text = text.Replace("</i>", string.Empty);
+                    text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TAG_I);
                 }
                 else
                 {
-                    text = string.Format("<i>{0}</{1}>", text);
+                    text = string.Format("<i>{0}</i>", text);
                 }
                 tb.SelectedText = text;
                 tb.SelectionStart = selectionStart;

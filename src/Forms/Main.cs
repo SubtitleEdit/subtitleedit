@@ -7177,12 +7177,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewText.Text.Contains("<i>"))
                     {
-                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("<i>", string.Empty);
-                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("</i>", string.Empty);
+                        textBoxListViewText.Text = HtmlUtils.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtils.TAG_I);
                     }
                     else
                     {
-                        textBoxListViewText.Text = string.Format("<{i}>{0}</i>", textBoxListViewText.Text);
+                        textBoxListViewText.Text = string.Format("<i>{0}</i>", textBoxListViewText.Text);
                     }
                 }
                 else
