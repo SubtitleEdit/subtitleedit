@@ -60,12 +60,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Hunspellx86.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Hunspellx64.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Dictionaries\en_US.aff" />
     <EmbeddedResource Include="Dictionaries\en_US.dic" />
   </ItemGroup>
@@ -74,8 +68,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>COPY /Y /V "$(SolutionDir)packages\NHunspell.1.2.5359.26126\content\*.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
