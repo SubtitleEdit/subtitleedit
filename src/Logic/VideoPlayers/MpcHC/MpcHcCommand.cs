@@ -23,6 +23,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         public const UInt32 SetPosition = 0xA0002000;
         public const UInt32 SetSubtitleTrack = 0xA0002005;
         public const UInt32 GetCurrentPosition = 0xA0003004;
+        public const UInt32 IncreaseVolume = 0xA0004003;
+        public const UInt32 DecreaseVolume = 0xA0004004;
         public const UInt32 CloseApplication = 0xA0004006;
         public const UInt32 SetSpeed = 0xA0004008;
     }
