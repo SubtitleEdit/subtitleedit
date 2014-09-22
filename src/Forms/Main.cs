@@ -7177,12 +7177,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewText.Text.Contains("<i>"))
                     {
-                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("<i>", string.Empty);
-                        textBoxListViewText.Text = textBoxListViewText.Text.Replace("</i>", string.Empty);
+                        textBoxListViewText.Text = HtmlUtils.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtils.TagItalic);
                     }
                     else
                     {
-                        textBoxListViewText.Text = string.Format("<{i}>{0}</i>", textBoxListViewText.Text);
+                        textBoxListViewText.Text = string.Format("<i>{0}</i>", textBoxListViewText.Text);
                     }
                 }
                 else
@@ -8136,7 +8135,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (allLinesStartAndEndsWithItalic)
             {
-                text = text.Replace("<i>", string.Empty).Replace("</i>", string.Empty).Trim();
+                text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic).Trim();
                 text = "<i>" + text + "</i>";
             }
             return text;
@@ -17138,8 +17137,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewTextAlternate.Text.Contains("<i>"))
                     {
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("<i>", string.Empty);
-                        textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Replace("</i>", string.Empty);
+                        textBoxListViewTextAlternate.Text = HtmlUtils.RemoveOpenCloseTags(textBoxListViewTextAlternate.Text, HtmlUtils.TagItalic);
                     }
                     else
                     {

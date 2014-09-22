@@ -1859,7 +1859,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    string lineNoHtml = Utilities.RemoveHtmlFontTag(line.Replace("<i>", string.Empty).Replace("</i>", string.Empty));
+                    var lineNoHtml = HtmlUtils.RemoveOpenCloseTags(line, HtmlUtils.TagItalic, HtmlUtils.TagFont);
                     if (parameter.AlignLeft)
                         lefts.Add(5);
                     else if (parameter.AlignRight)
@@ -1870,7 +1870,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                foreach (var line in HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic, HtmlUtils.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                 {
                     if (parameter.AlignLeft)
                         lefts.Add(5);

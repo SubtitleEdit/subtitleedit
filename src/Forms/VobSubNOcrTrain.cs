@@ -188,12 +188,6 @@ namespace Nikse.SubtitleEdit.Forms
             bmp = new Bitmap(sizeX, sizeY);
             g = Graphics.FromImage(bmp);
 
-            var lefts = new List<float>();
-            foreach (string line in Utilities.RemoveHtmlFontTag(text.Replace("<i>", string.Empty).Replace("</i>", string.Empty)).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
-            {
-                lefts.Add(5);
-            }
-
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             g.SmoothingMode = SmoothingMode.AntiAlias;
             g.CompositingQuality = CompositingQuality.HighQuality;
@@ -206,13 +200,10 @@ namespace Nikse.SubtitleEdit.Forms
             // display italic
             var sb = new StringBuilder();
             int i = 0;
-            float left = 5;
-            if (lefts.Count > 0)
-                left = lefts[0];
+            const float left = 5f;
             float top = 5;
             bool newLine = false;
-            int lineNumber = 0;
-            float leftMargin = left;
+            const float leftMargin = left;
             int newLinePathPoint = -1;
             Color c = _subtitleColor;
             while (i < text.Length)
@@ -224,12 +215,6 @@ namespace Nikse.SubtitleEdit.Forms
                     top += lineHeight;
                     newLine = true;
                     i += Environment.NewLine.Length - 1;
-                    lineNumber++;
-                    if (lineNumber < lefts.Count)
-                    {
-                        leftMargin = lefts[lineNumber];
-                        left = leftMargin;
-                    }
                 }
                 else
                 {

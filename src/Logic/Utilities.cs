@@ -454,15 +454,14 @@ namespace Nikse.SubtitleEdit.Logic
             while (six < s.Length)
             {
                 var letter = s[six];
-                bool tagFound = letter == '<' && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
-                                                s.Substring(six).StartsWith("</font") || s.Substring(six).StartsWith("</FONT") ||
-                                                s.Substring(six).StartsWith("</Font") || s.Substring(six).StartsWith("</Font") ||
-                                                s.Substring(six).StartsWith("<u") || s.Substring(six).StartsWith("</u") ||
-                                                s.Substring(six).StartsWith("<U") || s.Substring(six).StartsWith("</U") ||
-                                                s.Substring(six).StartsWith("<b") || s.Substring(six).StartsWith("</b") ||
-                                                s.Substring(six).StartsWith("<B") || s.Substring(six).StartsWith("</B") ||
-                                                s.Substring(six).StartsWith("<i") || s.Substring(six).StartsWith("</i") ||
-                                                s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
+                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
                 int endIndex = -1;
                 if (tagFound)
                     endIndex = s.IndexOf('>', six + 1);
@@ -598,15 +597,14 @@ namespace Nikse.SubtitleEdit.Logic
             while (six < s.Length)
             {
                 var letter = s[six];
-                bool tagFound = letter == '<' && (s.Substring(six).StartsWith("<font ", StringComparison.Ordinal) || s.Substring(six).StartsWith("</font ", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("</font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</FONT", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<u", StringComparison.Ordinal) || s.Substring(six).StartsWith("</u", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<U", StringComparison.Ordinal) || s.Substring(six).StartsWith("</U", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<b", StringComparison.Ordinal) || s.Substring(six).StartsWith("</b", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<B", StringComparison.Ordinal) || s.Substring(six).StartsWith("</B", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<i", StringComparison.Ordinal) || s.Substring(six).StartsWith("</i", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<I", StringComparison.Ordinal) || s.Substring(six).StartsWith("<I", StringComparison.Ordinal));
+                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
                 int endIndex = -1;
                 if (tagFound)
                     endIndex = s.IndexOf('>', six + 1);
@@ -824,28 +822,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
-            s = RemoveSingleLetterHtmlTags(s);
-            s = RemoveParagraphTag(s);
-            return RemoveHtmlFontTag(s);
-        }
-
-        private static string RemoveSingleLetterHtmlTags(string s)
-        {
-            s = s.Replace("<i>", string.Empty);
-            s = s.Replace("<і>", string.Empty);  // different unicode chars
-            s = s.Replace("</i>", string.Empty);
-            s = s.Replace("</і>", string.Empty); // different unicode chars
-            s = s.Replace("<b>", string.Empty);
-            s = s.Replace("</b>", string.Empty);
-            s = s.Replace("<u>", string.Empty);
-            s = s.Replace("</u>", string.Empty);
-            s = s.Replace("<I>", string.Empty);
-            s = s.Replace("</I>", string.Empty);
-            s = s.Replace("<B>", string.Empty);
-            s = s.Replace("</B>", string.Empty);
-            s = s.Replace("<U>", string.Empty);
-            s = s.Replace("</U>", string.Empty);
-            return s;
+            return HtmlUtils.RemoveOpenCloseTags(s, HtmlUtils.TagItalic, HtmlUtils.TagBold, HtmlUtils.TagUnderline, HtmlUtils.TagParagraph, HtmlUtils.TagFont, HtmlUtils.TagCyrillicI);
         }
 
         public static string RemoveHtmlTags(string s, bool alsoSsaTags)
@@ -879,38 +856,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     k = -1;
                 }
-            }
-            return s;
-        }
-
-        public static string RemoveHtmlFontTag(string s)
-        {
-            s = s.Replace("</font>", string.Empty);
-            s = s.Replace("</FONT>", string.Empty);
-            s = s.Replace("</Font>", string.Empty);
-            s = s.Replace("<font>", string.Empty);
-            s = s.Replace("<FONT>", string.Empty);
-            s = s.Replace("<Font>", string.Empty);
-            while (s.Contains("<font", StringComparison.OrdinalIgnoreCase))
-            {
-                int startIndex = s.ToLower().IndexOf("<font", StringComparison.Ordinal);
-                int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
-                s = s.Remove(startIndex, (endIndex - startIndex) + 1);
-            }
-            return s;
-        }
-
-        public static string RemoveParagraphTag(string s)
-        {
-            s = s.Replace("</p>", string.Empty);
-            s = s.Replace("</P>", string.Empty);
-            s = s.Replace("<p>", string.Empty);
-            s = s.Replace("<P>", string.Empty);
-            while (s.Contains("<p ", StringComparison.OrdinalIgnoreCase))
-            {
-                int startIndex = s.IndexOf("<p ", StringComparison.OrdinalIgnoreCase);
-                int endIndex = Math.Max(s.IndexOf('>'), startIndex + 4);
-                s = s.Remove(startIndex, (endIndex - startIndex) + 1);
             }
             return s;
         }
@@ -2650,7 +2595,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
-                    string cleanText = RemoveSingleLetterHtmlTags(text);
+                    var cleanText = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic, HtmlUtils.TagBold, HtmlUtils.TagUnderline, HtmlUtils.TagCyrillicI);
                     bool isFixed = false;
 
                     // Foo.</i>
