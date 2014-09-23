@@ -7,6 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class SonyDVDArchitect : SubtitleFormat
     {
+
+        static Regex Regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ ]+-[ ]+\d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
+
         public override string Extension
         {
             get { return ".sub"; }
@@ -48,7 +51,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {   // 00:04:10:92 - 00:04:13:32    Raise Yourself To Help Mankind
             // 00:04:27:92 - 00:04:30:92    الجهة المتولية للمسئولية الاجتماعية لشركتنا.
 
-            var regex = new Regex(@"^\d\d:\d\d:\d\d:\d\d[ ]+-[ ]+\d\d:\d\d:\d\d:\d\d", RegexOptions.Compiled);
             _errorCount = 0;
             Paragraph lastParagraph = null;
             foreach (string line in lines)
@@ -59,8 +61,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 bool success = false;
-                var match = regex.Match(line);
-                if (line.Length > 26 && match.Success)
+
+                Match match = null;
+                if (line.Length > 26 && line[2] == ':')
+                    match = Regex.Match(line);
+
+                if (match != null && match.Success)
                 {
                     string s = line.Substring(0, match.Length);
                     s = s.Replace(" - ", ":");

@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var header = new StringBuilder();
             foreach (string line in lines)
             {
-                if (_timeCode.Match(line).Success)
+                if (line.StartsWith('[') && _timeCode.Match(line).Success)
                 {
                     string s = line;
                     s = line.Substring(1, 8);
