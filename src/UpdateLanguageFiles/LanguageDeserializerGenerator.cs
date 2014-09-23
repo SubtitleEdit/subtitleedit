@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Logic
             var sb = new StringBuilder();
             sb.AppendLine(@"using System.IO;
 using System.Xml;
+using Nikse.SubtitleEdit.Logic;
 
 // !!! THIS FILE IS AUTO-GENERATED!!!
 // !!! THIS FILE IS AUTO-GENERATED!!!
@@ -66,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic
             sb.AppendLine("\t}");
             sb.AppendLine("}");
 
-            return sb.ToString().Replace("[NewObjects]", newObjectsString.ToString()).Replace("\t", "    ").Replace(" " + Environment.NewLine, Environment.NewLine);
+            return sb.ToString().Replace("[NewObjects]", newObjectsString.ToString()).Replace("Nikse.SubtitleEdit.Logic.", string.Empty).Replace("\t", "    ").Replace(" " + Environment.NewLine, Environment.NewLine);
         }
 
         private static string SubElementDeserializer(Type classType, string currentName, string xmlPath, StringBuilder newObjectsString)
