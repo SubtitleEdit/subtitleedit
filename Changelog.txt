@@ -43,7 +43,7 @@
    * Minor performance improvements
    * Added ".mxf" to list of known video formats - thx Haroldo
 * FIXED:
-   * Reverted "Framerate conversion fix" from 3.4.1
+   * Reverted "Frame rate conversion fix" from 3.4.1
    * Fixed "Split line" button appear wrongly - thx Quetsbeek
    * Changes to interjections now work instantly
    * Detection of SSA/ASS tags in remove text for HI - thx Thunderbolt8
@@ -78,7 +78,7 @@
    * Export to image based formats now uses font from SSA/ASS - thx mariner
    * Do not lock explorer when dropping files (for OCR) in Subtitle Edit's main list view - thx Jar
    * Fixed dialog issue in "auto-break lines" - thx fred
-   * Framerate conversion - fix for time based subs
+   * Frame rate conversion - fix for time based subs
    * Fixed issue regarding showing current vs original texts on previews - thx Krystian
    * Fixed bug in break long lines - thx moob
    * Fixed bug in export/boxing - thx mood
@@ -821,7 +821,7 @@
    * Bug in replace when showing original subtitle - thx Krystian
    * Bug in auto break lines regarding italic tags - thx Majid
    * Crash when merging lines (original sub) in some cases - thx Krystian
-   * Bug when saving framerate with "," instead of "." - thx yannick
+   * Bug when saving frame rate with "," instead of "." - thx yannick
    * Wrong time codes when appending frame based subs - thx Klos
    * MPlayer works much better now, also on Linux. 
      (Use MPlayer2 for precise seeking)

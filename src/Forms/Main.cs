@@ -10345,7 +10345,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ToolStripMenuItemChangeFramerateClick(object sender, EventArgs e)
+        private void ToolStripMenuItemChangeFrameRateClick(object sender, EventArgs e)
         {
             if (IsSubtitleLoaded)
             {
@@ -10354,26 +10354,26 @@ namespace Nikse.SubtitleEdit.Forms
                     lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
                 ReloadFromSourceView();
-                var changeFramerate = new ChangeFrameRate();
-                _formPositionsAndSizes.SetPositionAndSize(changeFramerate);
-                changeFramerate.Initialize(CurrentFrameRate.ToString());
-                if (changeFramerate.ShowDialog(this) == DialogResult.OK)
+                var changeFrameRate = new ChangeFrameRate();
+                _formPositionsAndSizes.SetPositionAndSize(changeFrameRate);
+                changeFrameRate.Initialize(CurrentFrameRate.ToString());
+                if (changeFrameRate.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeChangeFrameRate);
 
-                    double oldFramerate = changeFramerate.OldFrameRate;
-                    double newFramerate = changeFramerate.NewFrameRate;
-                    _subtitle.ChangeFramerate(oldFramerate, newFramerate);
+                    double oldFrameRate = changeFrameRate.OldFrameRate;
+                    double newFrameRate = changeFrameRate.NewFrameRate;
+                    _subtitle.ChangeFrameRate(oldFrameRate, newFrameRate);
 
-                    ShowStatus(string.Format(_language.FrameRateChangedFromXToY, oldFramerate, newFramerate));
-                    toolStripComboBoxFrameRate.Text = newFramerate.ToString();
+                    ShowStatus(string.Format(_language.FrameRateChangedFromXToY, oldFrameRate, newFrameRate));
+                    toolStripComboBoxFrameRate.Text = newFrameRate.ToString();
 
                     ShowSource();
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     _subtitleListViewIndex = -1;
                     SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex);
                 }
-                _formPositionsAndSizes.SavePositionAndSize(changeFramerate);
+                _formPositionsAndSizes.SavePositionAndSize(changeFrameRate);
             }
             else
             {

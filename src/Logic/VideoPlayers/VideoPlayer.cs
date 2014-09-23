@@ -26,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         public abstract event EventHandler OnVideoLoaded;
         public abstract event EventHandler OnVideoEnded;
         public virtual void Resize(int width, int height)
-        { 
+        {
         }
     }
 }
