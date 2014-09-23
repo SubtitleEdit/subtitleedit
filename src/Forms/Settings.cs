@@ -123,6 +123,8 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerVLC.Checked = true;
             else if (gs.VideoPlayer.Trim().Equals("MPlayer", StringComparison.OrdinalIgnoreCase) && Utilities.IsMPlayerAvailable)
                 radioButtonVideoPlayerMPlayer.Checked = true;
+            else if (gs.VideoPlayer.Trim().Equals("MPC-HC", StringComparison.OrdinalIgnoreCase) && Utilities.IsMpcHcInstalled)
+                radioButtonVideoPlayerMpcHc.Checked = true;
             else if (Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Checked = true;
             else if (Utilities.IsMPlayerAvailable)
@@ -323,8 +325,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelDirectShowDescription.Text = language.DirectShowDescription;
 
-            radioButtonVideoPlayerManagedDirectX.Text = language.ManagedDirectX;
-            labelManagedDirectXDescription.Text = language.ManagedDirectXDescription;
+            if (!string.IsNullOrEmpty(language.MpcHc))
+            {
+                radioButtonVideoPlayerMpcHc.Text = language.MpcHc;
+                labelMpcHcDescription.Text = language.MpcHcDescription;
+            }
+
             radioButtonVideoPlayerMPlayer.Text = language.MPlayer;
             labelVideoPlayerMPlayer.Text = language.MPlayerDescription;
             if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
@@ -333,7 +339,6 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
             }
             if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
-
                 Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
@@ -1099,6 +1104,8 @@ namespace Nikse.SubtitleEdit.Forms
                 gs.VideoPlayer = "MPlayer";
             //else if (radioButtonVideoPlayerManagedDirectX.Checked)
             //    gs.VideoPlayer = "ManagedDirectX";
+            else if (radioButtonVideoPlayerMpcHc.Checked)
+                gs.VideoPlayer = "MPC-HC";
             else if (radioButtonVideoPlayerVLC.Checked)
                 gs.VideoPlayer = "VLC";
             else

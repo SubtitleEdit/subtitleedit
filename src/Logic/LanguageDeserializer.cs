@@ -4094,6 +4094,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ManagedDirectXDescription":
                     language.Settings.ManagedDirectXDescription = reader.Value;
                     break;
+                case "Settings/MpcHc":
+                    language.Settings.MpcHc = reader.Value;
+                    break;
+                case "Settings/MpcHcDescription":
+                    language.Settings.MpcHcDescription = reader.Value;
+                    break;
                 case "Settings/MPlayer":
                     language.Settings.MPlayer = reader.Value;
                     break;

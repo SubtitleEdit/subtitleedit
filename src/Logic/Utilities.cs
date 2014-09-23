@@ -1869,6 +1869,25 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static bool IsMpcHcInstalled
+        {
+            get
+            {
+                if (IsRunningOnMono())
+                    return false;
+
+                try
+                {
+                    return VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() != null;
+                }
+                catch (FileNotFoundException)
+                {
+                    return false;
+                }
+            }
+        }
+        
+
         public static VideoPlayer GetVideoPlayer()
         {
             GeneralSettings gs = Configuration.Settings.General;
