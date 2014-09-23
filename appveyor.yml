@@ -1,0 +1,3 @@
+test_script:
+    - set
+    - vstest.console /logger:Appveyor /Settings:"%APPVEYOR_BUILD_FOLDER%\src\Local.testsettings" %APPVEYOR_BUILD_FOLDER%\src\Test\bin\$(configuration)\Test.dll
