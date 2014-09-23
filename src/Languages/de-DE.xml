@@ -147,7 +147,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Formatierung entfernen</RemoveFormatting>
     <RemoveTextForHI>Text für Hörgeschädigte entfernen</RemoveTextForHI>
     <OverwriteOriginalFiles>Originaldateien überschreiben</OverwriteOriginalFiles>
-    <ReDoCasing>Groß-/Kleinschreibung neu setzen</ReDoCasing>
+    <RedoCasing>Groß-/Kleinschreibung neu setzen</RedoCasing>
     <Convert>Umwandeln</Convert>
     <NothingToConvert>Nichts umzuwandeln!</NothingToConvert>
     <PleaseChooseOutputFolder>Bitte Ausgabeordner wählen</PleaseChooseOutputFolder>
@@ -343,7 +343,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Zeile {0} überschreitet die max. Länge von {1} um {2} Zeichen: {3}</MaxLengthError>
     <TextUnchangedPresentation>Unveränderte Präsentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>linksbündiger Text</TextLeftJustifiedText>
-    <TextCentredText>zentrierter Text</TextCentredText>
+    <TextCenteredText>zentrierter Text</TextCenteredText>
     <TextRightJustifiedText>rechtsbündiger Text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -699,7 +699,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importiere/OCR DVD-Untertitel (VOB/IFO)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importiere/OCR VobSub-Untertitel (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importiere/OCR Untertitel aus Blu-ray-Datei (sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importiere/OCR Untertitel aus DivX/AVI (xSub)...</ImportXSub>
+        <ImportXSub>Importiere/OCR Untertitel aus divx/AVI (xSub)...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importiere Untertitel aus Matroska-Datei...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importiere Untertitel mit manuell gewählter Kodierung...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importiere Text...</ImportText>
@@ -1217,9 +1217,9 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Vor Zeilenverbinden mit gleichem Text</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Untertitel mit Zeitstempel hat eine andere Zeilenanzahl ({0}) als der aktuelle ({1}) - Trotzdem fortfahren?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Untersuche Transport Stream - Bitte warten...</ParsingTransportStream>
-    <ErrorLoadIdx>SE kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (auch VobSub genannt). SE kann die .sub Datei öffnen.</ErrorLoadIdx>
-    <ErrorLoadRar>Diese Datei ist ein .rar Archiv. SE kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
-    <ErrorLoadZip>Diese Datei ist ein .zip Archiv. SE kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
+    <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (auch VobSub genannt). Subtitle Edit kann die .sub Datei öffnen.</ErrorLoadIdx>
+    <ErrorLoadRar>Diese Datei ist ein .rar Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
+    <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -1488,7 +1488,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AllowEditOfOriginalSubtitle>Erlaube Bearbeitung des Original-Untertitels</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nachfrage beim Löschen von Texten</PromptDeleteLines>
     <TimeCodeMode>Zeitstempelmodus</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.ms (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.ms (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video Engine</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1909,7 +1909,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Title>Importiere/OCR VobSub-Untertitel (sub/idx)</Title>
     <TitleBluRay>Importiere/OCR Blu-ray-Untertitel (sup)</TitleBluRay>
     <OcrMethod>OCR-Methode</OcrMethod>
-    <OcrViaModi>OCR mit Microsoft Office Document Imaging (MODI). Benötigt MS Office</OcrViaModi>
+    <OcrViaModi>OCR mit Microsoft Office Document Imaging (MODI). Benötigt Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR mit Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Sprache</Language>
@@ -1942,7 +1942,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AllFixes>Alle Korrekturen</AllFixes>
     <GuessesUsed>Erraten</GuessesUsed>
     <UnknownWords>Unbekannte Wörter</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR-Auto-Korrektur / Rechtschreibprüfung</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR-Auto-Korrektur / Rechtschreibprüfung</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Korrigiere OCR-Fehler</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importiere Text mit passenden Zeitstempeln...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importiere neue Zeitstempel</ImportNewTimeCodes>

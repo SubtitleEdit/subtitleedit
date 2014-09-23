@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".ass", StringComparison.OrdinalIgnoreCase) && !all.Contains("[V4 Styles]"))
             {
             }
-            else if (!all.Contains("dialogue:", StringComparison.OrdinalIgnoreCase))
+            else if (!all.Contains("dialog:", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -686,7 +686,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip empty and comment lines
                 }
-                else if (line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
+                else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -762,7 +762,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         string[] splittedLine;
 
-                        if (s.StartsWith("dialogue:", StringComparison.Ordinal))
+                        if (s.StartsWith("dialog:", StringComparison.Ordinal))
                             splittedLine = line.Substring(10).Split(',');
                         else
                             splittedLine = line.Split(',');

@@ -147,7 +147,7 @@
     <RemoveFormatting>ลบแท็กจัดรูปแบบ</RemoveFormatting>
     <RemoveTextForHI>ลบข้อความช่วยฟัง</RemoveTextForHI>
     <OverwriteOriginalFiles>เขียนทับไฟล์ต้นฉบับ (นามสกุลใหม่ถ้าเปลี่ยนรูปแบบไฟล์)</OverwriteOriginalFiles>
-    <ReDoCasing>ทำซ้ำเปลี่ยนลักษณะตัวพิมพ์</ReDoCasing>
+    <RedoCasing>ทำซ้ำเปลี่ยนลักษณะตัวพิมพ์</RedoCasing>
     <Convert>แปลง</Convert>
     <NothingToConvert>ไม่มีข้อมูลที่ต้องแปลง!</NothingToConvert>
     <PleaseChooseOutputFolder>โปรดเลือกโฟลเดอร์เอาท์พุต</PleaseChooseOutputFolder>
@@ -287,7 +287,7 @@
     <DivideEven>ข้อความแบ่งช่องว่างออกจากกัน</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>ริปซับไตเติ้ลจากไฟล์ ifo/vobs (dvd)</Title>
+    <Title>ริปซับไตเติ้ลจากไฟล์ IFO/VOB (DVD)</Title>
     <DvdGroupTitle>ไฟล์/ข้อมูลดีวีดี</DvdGroupTitle>
     <IfoFile>ไฟล์ IFO</IfoFile>
     <IfoFiles>ไฟล์ IFO</IfoFiles>
@@ -343,7 +343,7 @@
     <MaxLengthError>บรรทัด {0} ความยาวเกิน ({1}) ไป {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>การแสดงผลไม่เปลี่ยนแปลง</TextUnchangedPresentation>
     <TextLeftJustifiedText>ข้อความชิดซ้าย</TextLeftJustifiedText>
-    <TextCentredText>ข้อความวางศูนย์</TextCentredText>
+    <TextCenteredText>ข้อความวางศูนย์</TextCenteredText>
     <TextRightJustifiedText>ข้อความชิดขวา</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -543,7 +543,7 @@
     <UnableToFixTextXY>ไม่สามารถแก้ข้อความที่ {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} เวลาซ้อนกันที่แก้แล้ว</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} เวลาแสดงผลที่ยืดแล้ว</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} แท็ก html ไม่ถูกต้องที่แก้แล้ว</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} แท็ก HTML ไม่ถูกต้องที่แก้แล้ว</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} เวลาแสดงผลที่หดแล้ว</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} บรรทัดที่รวมแล้ว</XLinesUnbreaked>
     <UnneededSpace>ช่องว่างที่ไม่จำเป็น</UnneededSpace>
@@ -688,7 +688,7 @@
         <RestoreAutoBackup>เรียกคืนจากแบ็คอัพอัตโนมัติ...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>คุณสมบัติ Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>คุณสมบัติ Sub Station Alpha...</SubStationAlphaProperties>
-        <EbuProperties>คุณสมบัติ EBU stl...</EbuProperties>
+        <EbuProperties>คุณสมบัติ EBU STL...</EbuProperties>
         <PacProperties>คุณสมบัติ PAC...</PacProperties>
         <OpenOriginal>เปิดซับไตเติ้ลต้นฉบับ (โหมดนักแปล)...</OpenOriginal>
         <SaveOriginal>บันทึกซับไตเติ้ลต้นฉบับ</SaveOriginal>
@@ -711,12 +711,12 @@
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Plain text...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1205,13 +1205,13 @@
     <StatusLog>ล็อกสถานะ</StatusLog>
     <XSceneChangesImported>{0} ฉากที่เปลี่ยนแปลงอิมพอร์ตแล้ว</XSceneChangesImported>
     <PluginXExecuted>ปลั๊กอิน '{0}' ทำงานแล้ว</PluginXExecuted>
-    <NotAValidXSubFile>ไม่ใช่ไฟล์ xsub ที่ถูกต้อง!</NotAValidXSubFile>
+    <NotAValidXSubFile>ไม่ใช่ไฟล์ XSub ที่ถูกต้อง!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>ก่อนการรวมบรรทัดที่มีข้อความเหมือนกัน</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>ซับไตเติ้ลมีไทม์โค้ดที่มีจำนวนบรรทัด ({0}) ต่างจากซับไตเติ้ลปัจจุบัน ({1}) - ทำต่อหรือไม่</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>กำลังแยกสตรีมการส่ง - โปรดรอ...</ParsingTransportStream>
-    <ErrorLoadIdx>ไม่สามารถอ่าน/แก้ไขไฟล์ .idx ไฟล์ idx เป็นส่วนหนึ่งของคู่ไฟล์ idx/sub (หรือเรียกว่าว็อบซับ) และ SE เปิดไฟล์ .sub ได้</ErrorLoadIdx>
-    <ErrorLoadRar>ไฟล์นี้น่าจะถูกบีบอัดแบบ .rar ซึ่ง SE ไม่สามารถเปิดไฟล์บีบอัดได้</ErrorLoadRar>
-    <ErrorLoadZip>ไฟล์นี้น่าจะถูกบีบอัดแบบ .zip ซึ่ง SE ไม่สามารถเปิดไฟล์บีบอัดได้</ErrorLoadZip>
+    <ErrorLoadIdx>ไม่สามารถอ่าน/แก้ไขไฟล์ .idx ไฟล์ idx เป็นส่วนหนึ่งของคู่ไฟล์ idx/sub (หรือเรียกว่าว็อบซับ) และ Subtitle Edit เปิดไฟล์ .sub ได้</ErrorLoadIdx>
+    <ErrorLoadRar>ไฟล์นี้น่าจะถูกบีบอัดแบบ .rar ซึ่ง Subtitle Edit ไม่สามารถเปิดไฟล์บีบอัดได้</ErrorLoadRar>
+    <ErrorLoadZip>ไฟล์นี้น่าจะถูกบีบอัดแบบ .zip ซึ่ง Subtitle Edit ไม่สามารถเปิดไฟล์บีบอัดได้</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>เลือกซับไตเติ้ลจากไฟล์มาทรอสกา</Title>
@@ -1478,7 +1478,7 @@
     <AllowEditOfOriginalSubtitle>ยอมให้แก้ซับไตเติ้ลต้นฉบับ</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>ยืนยันก่อนลบบรรทัด</PromptDeleteLines>
     <TimeCodeMode>โหมดไทม์โค้ด</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>เอนจิ้นของวิดีโอ</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1897,7 +1897,7 @@
     <Title>อิมพอร์ต/โอซีอาร์ซับไตเติ้ลว็อบซับ (sub/idx)</Title>
     <TitleBluRay>อิมพอร์ต/โอซีอาร์ซับไตเติ้ลบลูเรย์ (.sup)</TitleBluRay>
     <OcrMethod>วิธีโอซีอาร์</OcrMethod>
-    <OcrViaModi>โอซีอาร์ด้วย Microsoft Office Document Imaging (MODI) ต้องมี MS Office</OcrViaModi>
+    <OcrViaModi>โอซีอาร์ด้วย Microsoft Office Document Imaging (MODI) ต้องมี Microsoft Office</OcrViaModi>
     <OcrViaTesseract>โอซีอาร์ด้วย Tesseract</OcrViaTesseract>
     <OcrViaNOCR>โอซีอาร์ด้วย nOCR</OcrViaNOCR>
     <Language>ภาษา</Language>
@@ -1930,15 +1930,15 @@
     <AllFixes>ส่วนที่แก้ทั้งหมด</AllFixes>
     <GuessesUsed>สิ่งที่เดาไปทั้งหมด</GuessesUsed>
     <UnknownWords>คำที่ไม่รู้จัก</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>แก้ไข/ตรวจคำโอซีอาร์อัตโนมัติ</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>แก้ไข/ตรวจคำโอซีอาร์อัตโนมัติ</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>แก้ข้อผิดพลาดโอซีอาร์</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>อิมพอร์ตข้อความด้วยไทม์โค้ดที่ตรงกัน...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>อิมพอร์ตไทม์โค้ดใหม่</ImportNewTimeCodes>
     <SaveSubtitleImageAs>บันทึกภาพซับไตเติ้ลเป็น...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>บันทึกภาพทั้งหมด (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>บันทึกภาพทั้งหมดพร้อมอินเด็กซ์ html...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>บันทึกภาพทั้งหมดพร้อมอินเด็กซ์ HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} ภาพถูกบรรทึกใน {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>พยายามใช้ MS MODI OCR กับคำที่ไม่รู้จัก</TryModiForUnknownWords>
+    <TryModiForUnknownWords>พยายามใช้ Microsoft MODI OCR กับคำที่ไม่รู้จัก</TryModiForUnknownWords>
     <DictionaryX>พจนานุกรม: {0}</DictionaryX>
     <RightToLeft>ขวาไปซ้าย</RightToLeft>
     <ShowOnlyForcedSubtitles>แสดงซับไตเติ้ลบังคับเท่านั้น</ShowOnlyForcedSubtitles>

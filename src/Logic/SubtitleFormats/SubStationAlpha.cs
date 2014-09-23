@@ -386,7 +386,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                         string[] splittedLine;
 
-                        if (s.StartsWith("dialogue:", StringComparison.Ordinal))
+                        if (s.StartsWith("dialog:", StringComparison.Ordinal))
                             splittedLine = line.Substring(10).Split(',');
                         else
                             splittedLine = line.Split(',');

@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Convert a x-color image to four colors, for e.g. dvd sub pictures.
+        /// Convert a x-color image to four colors, for e.g. DVD sub pictures.
         /// </summary>
         /// <param name="background">Background color</param>
         /// <param name="pattern">Pattern color, normally white or yellow</param>

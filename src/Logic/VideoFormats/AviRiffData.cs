@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Logic
         public short wLanguage;
         public int dwInitialFrames;
         public int dwScale;
-        public int dwRate;       // dwRate/dwScale is stream tick rate in ticks/sec
+        public int dwRate;       // dwRate/dwScale is stream tick rate in ticks/s
         public int dwStart;
         public int dwLength;
         public int dwSuggestedBufferSize;

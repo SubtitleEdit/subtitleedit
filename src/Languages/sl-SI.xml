@@ -153,7 +153,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <RemoveFormatting>Odstrani oznake zapisane datoteke</RemoveFormatting>
     <RemoveTextForHI>Odstrani besedilo za HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Prepiši originalno datoteko (Nova razširitev, če je format spremenjen)</OverwriteOriginalFiles>
-    <ReDoCasing>Ponovi primere</ReDoCasing>
+    <RedoCasing>Ponovi primere</RedoCasing>
     <Convert>Pretvoti</Convert>
     <NothingToConvert>Ni kaj pretvarjat!</NothingToConvert>
     <PleaseChooseOutputFolder>Prosim, izberi izhodno mapo</PleaseChooseOutputFolder>
@@ -268,7 +268,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <DivideEven>Besedilo deli čase intervala</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Kopiraj besedilo iz ifo/vobs (dvd)</Title>
+    <Title>Kopiraj besedilo iz IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD datoteke/info</DvdGroupTitle>
     <IfoFile>IFO datoteka</IfoFile>
     <IfoFiles>IFO datoteke</IfoFiles>
@@ -324,7 +324,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <MaxLengthError>Vrstica {0} maks. presežek vrstice ({1}) za {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Nespremenjena predstavitev</TextUnchangedPresentation>
     <TextLeftJustifiedText>Levo pravilno besedilo</TextLeftJustifiedText>
-    <TextCentredText>Besedilo na sredini</TextCentredText>
+    <TextCenteredText>Besedilo na sredini</TextCenteredText>
     <TextRightJustifiedText>Desno pravilno besedilo</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -517,7 +517,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <UnableToFixTextXY>Ne gre popraviti št. vrstice {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} prekoračene časovne označbe popravljene</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} predolgi predvajalni časi</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} nepravilne html oznake popravljene</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} nepravilne HTML oznake popravljene</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} skrajšani predvajalni časi</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} odstranjeni lomi vrstic</XLinesUnbreaked>
     <UnneededSpace>Nepotrebni presledki</UnneededSpace>
@@ -669,10 +669,10 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <Compare>&amp;Primerjaj...</Compare>
         <Statistics>&amp;Statistika...</Statistics>
         <Plugins>Vtičniki...</Plugins>
-        <ImportOcrFromDvd>Uvozi/OCR podnapis iz vob/ifo (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Uvozi/OCR podnapis iz VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Uvozi/OCR VobSub (sub/idx) podnapis...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Uvozi/OCR Blu-ray sup datoteka...</ImportBluRaySupFile>
-        <ImportXSub>Uvozi/OCR xsub iz divx/avi...</ImportXSub>
+        <ImportXSub>Uvozi/OCR XSub iz divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Uvozi podnapis iz Matroska datoteke...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Uvozi podnapis iz izbrane kodirane datoteke...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Uvozi izvorno besedilo...</ImportText>
@@ -683,12 +683,12 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Samo besedilo...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1088,8 +1088,8 @@ Nadaljujem?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub podnapis datoteke</VobSubFiles>
     <OpenBluRaySupFile>Odpri Blu-ray .sup datoteko...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup datoteke</BluRaySupFiles>
-    <OpenXSubFiles>Odpri xsub datoteko...</OpenXSubFiles>
-    <XSubFiles>xsub datoteke</XSubFiles>
+    <OpenXSubFiles>Odpri XSub datoteko...</OpenXSubFiles>
+    <XSubFiles>XSub datoteke</XSubFiles>
     <BeforeImportingVobSubFile>Pred uvozom VobSub podnapisa</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Pred uvozom Blu-ray sup datoteke</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Pred uvozom BDN xml datoteke</BeforeImportingBdnXml>
@@ -1174,12 +1174,12 @@ Nadaljujem?</SubtitleAppendPrompt>
     <StatusLog>Poročilo stanja</StatusLog>
     <XSceneChangesImported>{0} spremembe prizorov shranjene</XSceneChangesImported>
     <PluginXExecuted>Vtičnik '{0}' izvršen.</PluginXExecuted>
-    <NotAValidXSubFile>Ni veljavna xsub datoteka!</NotAValidXSubFile>
+    <NotAValidXSubFile>Ni veljavna XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Pred združitvijo vrstic z enakim besedilom</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Podnapis s časovnim zapisom ima drugače oštevilčene vrstice ({0}) kot trenutni ({1}) - nadaljujem vseeno?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ErrorLoadIdx>Ne gre beri/popravi .idx datoteke. Idx datoteka je del idx/sub datoteke (imenovane VobSub), SE lahko odpira le sub datoteke.</ErrorLoadIdx>
-    <ErrorLoadRar>Ta datoteka je kompresirana .rar datoteka. SE ne odpira kompresiranih datotek.</ErrorLoadRar>
-    <ErrorLoadZip>Ta datoteka je kompresirana .zip datoteka. SE ne odpira kompresiranih datotek.</ErrorLoadZip>
+    <ErrorLoadIdx>Ne gre beri/popravi .idx datoteke. Idx datoteka je del idx/sub datoteke (imenovane VobSub), Subtitle Edit lahko odpira le sub datoteke.</ErrorLoadIdx>
+    <ErrorLoadRar>Ta datoteka je kompresirana .rar datoteka. Subtitle Edit ne odpira kompresiranih datotek.</ErrorLoadRar>
+    <ErrorLoadZip>Ta datoteka je kompresirana .zip datoteka. Subtitle Edit ne odpira kompresiranih datotek.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Izberi podanapis iz Matroska datoteke</Title>
@@ -1422,7 +1422,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <AllowEditOfOriginalSubtitle>Dovoli urejanje izvornega podnapisa</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Opomni za brisanje vrstic</PromptDeleteLines>
     <TimeCodeMode>Način časovnega zapisa</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video pogon</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1438,7 +1438,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <ShowFullscreenButton>Prikaži gumb Celoten zaslon</ShowFullscreenButton>
     <PreviewFontSize>Velikost pisave predogleda podnapisa</PreviewFontSize>
     <MainWindowVideoControls>Video nadzoe glavnega okna</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Navadno iskanje besedila in url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Navadno iskanje besedila in URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Oblika krivulje</WaveformAppearance>
     <WaveformGridColor>Barva mreže</WaveformGridColor>
     <WaveformShowGridLines>Prikaži vrstice mreže</WaveformShowGridLines>
@@ -1823,7 +1823,7 @@ Ohranim spremembe?</KeepChangesMessage>
     <Title>Uvozi/OCR VobSub (sub/idx) podnapis</Title>
     <TitleBluRay>Uvozi/OCR Blu-ray (.sup) podnapis</TitleBluRay>
     <OcrMethod>OCR metoda</OcrMethod>
-    <OcrViaModi>OCR z Microsoft Office Document Imaging (MODI). Potrebuješ MS Office</OcrViaModi>
+    <OcrViaModi>OCR z Microsoft Office Document Imaging (MODI). Potrebuješ Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR z Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR z nOCR</OcrViaNOCR>
     <Language>Jezik</Language>
@@ -1856,14 +1856,14 @@ Ohranim spremembe?</KeepChangesMessage>
     <AllFixes>Vsi popravki</AllFixes>
     <GuessesUsed>Uporabljena ugibanja</GuessesUsed>
     <UnknownWords>Neznane besede</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR samodejno popravljanje / črkovalnik</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR samodejno popravljanje / črkovalnik</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Uredi OCR napake</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Uvozi besedilo s pripadajočimi časovnimi zapisi...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Shrani sliko podnapisa kot...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Shrani vse slike (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Shrani vse slike s html indeks...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Shrani vse slike s HTML indeks...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} slike shranjene v {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Poskusi MS MODI OCR za neznane besede</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Poskusi Microsoft MODI OCR za neznane besede</TryModiForUnknownWords>
     <DictionaryX>Slovar: {0}</DictionaryX>
     <RightToLeft>Iz desne na levo</RightToLeft>
     <ShowOnlyForcedSubtitles>Pokaži edino vsiljene podnapise</ShowOnlyForcedSubtitles>

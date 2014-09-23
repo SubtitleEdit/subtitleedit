@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             Aggressive
         }
 
-        // Dictionaries/spellchecking/fixing
+        // Dictionaries/spell checking/fixing
         private Dictionary<string, string> _wordReplaceList;
         private Dictionary<string, string> _partialLineWordBoundaryReplaceList;
         private Dictionary<string, string> _partialLineAlwaysReplaceList;
@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         /// Advanced OCR fixing via replace/spelling dictionaries + some hardcoded rules
         /// </summary>
         /// <param name="threeLetterIsoLanguageName">E.g. eng for English</param>
-        /// <param name="parentForm">Used for centering/show spellcheck dialog</param>
+        /// <param name="parentForm">Used for centering/show spell check dialog</param>
         public OcrFixEngine(string threeLetterIsoLanguageName, string hunspellName, Form parentForm)
         {
             if (threeLetterIsoLanguageName == "per")
@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     _abbreviationList.Add(name);
             }
 
-            // Load Hunspell spellchecker
+            // Load Hunspell spell checker
             try
             {
                 if (!File.Exists(dictionary + ".dic"))
@@ -1488,7 +1488,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             if (promptForFixingErrors && line.Length == 1 && !IsWordKnownOrNumber(line, line))
             {
-                SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, line, localIgnoreWords);
+                SpellCheckOcrTextResult res = SpellCheckOcrText(line, bitmap, line, localIgnoreWords);
                 if (res.FixedWholeLine || res.Fixed)
                     return res.Line;
                 wordsNotFound++;
@@ -1686,7 +1686,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             if (word.EndsWith("</i>"))
                                 word = word.Remove(word.Length - 4, 4);
 
-                            SpellcheckOcrTextResult res = SpellcheckOcrText(line, bitmap, word, suggestions);
+                            SpellCheckOcrTextResult res = SpellCheckOcrText(line, bitmap, word, suggestions);
 
                             if (res.FixedWholeLine)
                             {
@@ -1738,12 +1738,12 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         }
 
         /// <summary>
-        /// Spellcheck for OCR
+        /// SpellCheck for OCR
         /// </summary>
         /// <returns>True, if word is fixed</returns>
-        private SpellcheckOcrTextResult SpellcheckOcrText(string line, Bitmap bitmap, string word, List<string> suggestions)
+        private SpellCheckOcrTextResult SpellCheckOcrText(string line, Bitmap bitmap, string word, List<string> suggestions)
         {
-            var result = new SpellcheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
+            var result = new SpellCheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
             _spellCheck.Initialize(word, suggestions, line, bitmap);
             _spellCheck.ShowDialog(_parentForm);
             switch (_spellCheck.ActionResult)

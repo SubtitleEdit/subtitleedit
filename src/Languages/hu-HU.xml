@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Számok</Number>
     <Text>Szöveg</Text>
-    <HourMinutesSecondsMilliseconds>Óra:perc:mp:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Óra:perc:mp:ms</HourMinutesSecondsMilliseconds>
     <Bold>Félkövér</Bold>
     <Italic>Dõlt</Italic>
     <Underline>Aláhúzás</Underline>
@@ -58,7 +58,7 @@
     <SessionKey>Munkamenet kulcs</SessionKey>
     <UserName>Felhasználónév</UserName>
     <UserNameAlreadyInUse>A felhasználónév már használatban van</UserNameAlreadyInUse>
-    <WebServiceUrl>Webszolgáltatás url</WebServiceUrl>
+    <WebServiceUrl>Webszolgáltatás URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Videó - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audió - {0}</AudioWindowTitle>
@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Formázási címkék eltávolítása</RemoveFormatting>
     <RemoveTextForHI>HI szöveg eltávolítása</RemoveTextForHI>
     <OverwriteOriginalFiles>Eredeti fájlok felülírása (új kiterjesztés ha a formátum módosult)</OverwriteOriginalFiles>
-    <ReDoCasing>Redo casing</ReDoCasing>
+    <RedoCasing>Redo casing</RedoCasing>
     <Convert>Konvertálás</Convert>
     <NothingToConvert>Nincs konvertálandó!</NothingToConvert>
     <PleaseChooseOutputFolder>Kérjük, válasszon kimeneti mappát</PleaseChooseOutputFolder>
@@ -283,7 +283,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Feliratok rippelése ifo/vob fájlokból (dvd)</Title>
+    <Title>Feliratok rippelése IFO/VOB fájlokból (DVD)</Title>
     <DvdGroupTitle>DVD fájlok/információ</DvdGroupTitle>
     <IfoFile>IFO fájl</IfoFile>
     <IfoFiles>IFO fájlok</IfoFiles>
@@ -339,7 +339,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>{0} sor túllépte a max ({1}) hosszúságot {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Módosítatlan prezentáció</TextUnchangedPresentation>
     <TextLeftJustifiedText>Balra zárt szöveg</TextLeftJustifiedText>
-    <TextCentredText>Szöveg középre</TextCentredText>
+    <TextCenteredText>Szöveg középre</TextCenteredText>
     <TextRightJustifiedText>Jobbra zárt szöveg</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -539,7 +539,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>A(z) {0} szövegszám nem javítható: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} átfedési időbélyeg javítva</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} megjelenítési idő meghosszabítva</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} érvénytelen html címke javítva</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} érvénytelen HTML címke javítva</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} megjelenítési idő megrövidítve</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} tördelés nélküli sor</XLinesUnbreaked>
     <UnneededSpace>Szükségtelen szóköz</UnneededSpace>
@@ -691,10 +691,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>Összehasonlítás...</Compare>
         <Statistics>Statisztikák...</Statistics>
         <Plugins>Beépülők...</Plugins>
-        <ImportOcrFromDvd>Felirat importálás/OCR vob/ifo fájlból (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Felirat importálás/OCR VOB/IFO fájlból (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>VobSub (sub/idx) felirat importálás/OCR...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>OCR Blu-ray (.sup) feliratfájl importálása...</ImportBluRaySupFile>
-        <ImportXSub>Importálás/OCR xsub divx/avi fájlból...</ImportXSub>
+        <ImportXSub>Importálás/OCR XSub divx/avi fájlból...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Felirat importálása Matroska (.mkv) fájlból...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Felirat importálás egy manuálisan választott kódolással...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Egyszerű szöveg importálása...</ImportText>
@@ -705,12 +705,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Egyszerű szöveg...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB képszkript...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS állománypár...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1095,7 +1095,7 @@ Folytatja?</SubtitleAppendPrompt>
     <OpenMatroskaFile>Matroska fájl megnyitása...</OpenMatroskaFile>
     <MatroskaFiles>Matroska fájlok</MatroskaFiles>
     <NoSubtitlesFound>Nincs felirat</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Ez nem érvényes matroska fájl: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Ez nem érvényes Matroska fájl: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Matroska fájl elemzés. Kis türelmet...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>A Matroska fájlból történő felirat importálás előtti állapotra fájlból</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Felirat importálva a Matroska fájlból</SubtitleImportedFromMatroskaFile>
@@ -1116,8 +1116,8 @@ Folytatja?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub felirat fájlok</VobSubFiles>
     <OpenBluRaySupFile>Blu-ray .sup fájl megnyitása...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup fájlok</BluRaySupFiles>
-    <OpenXSubFiles>Az xsub fájl megnyitása...</OpenXSubFiles>
-    <XSubFiles>xsub fájlok</XSubFiles>
+    <OpenXSubFiles>Az XSub fájl megnyitása...</OpenXSubFiles>
+    <XSubFiles>XSub fájlok</XSubFiles>
     <BeforeImportingVobSubFile>A VobSub felirat importálása előtti állapotra</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Blu-ray sup fájl importálása előtt</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>A BDN xml fájl importálása előtt</BeforeImportingBdnXml>
@@ -1203,13 +1203,13 @@ Folytatja?</SubtitleAppendPrompt>
     <StatusLog>Állapotnapló</StatusLog>
     <XSceneChangesImported>{0} jelenet változás importálása</XSceneChangesImported>
     <PluginXExecuted>'{0}' beépülő végrehajtva.</PluginXExecuted>
-    <NotAValidXSubFile>Nem érvényes xsub fájl!</NotAValidXSubFile>
+    <NotAValidXSubFile>Nem érvényes XSub fájl!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>A sorok azonos szöveggel való összevonása előtt</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Az időkódokat tartalmazó felirat eltérő sorszámokkal rendelkezik ({0}), mint a jelenlegi ({1}) felirat - folytatja?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Átviteli adatfolyam elemzése - kis türelmet...</ParsingTransportStream>
-    <ErrorLoadIdx>Nem lehet olvasni/szerkeszteni az .idx fájlokat. Az idx fájlok egy idx/sub állomány pár részei (más néven VobSub), és az SE nem tudja megnyitni a .sub fájlt.</ErrorLoadIdx>
-    <ErrorLoadRar>Ez a fájl úgy tűnik, hogy egy tömörített .rar fájl. Az SE nem tudja megnyitni a tömörített fájlokat.</ErrorLoadRar>
-    <ErrorLoadZip>Ez a fájl úgy tűnik, hogy egy tömörített .zip fájl. Az SE nem tudja megnyitni a tömörített fájlokat.</ErrorLoadZip>
+    <ErrorLoadIdx>Nem lehet olvasni/szerkeszteni az .idx fájlokat. Az idx fájlok egy idx/sub állomány pár részei (más néven VobSub), és az Subtitle Edit nem tudja megnyitni a .sub fájlt.</ErrorLoadIdx>
+    <ErrorLoadRar>Ez a fájl úgy tűnik, hogy egy tömörített .rar fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadRar>
+    <ErrorLoadZip>Ez a fájl úgy tűnik, hogy egy tömörített .zip fájl. Az Subtitle Edit nem tudja megnyitni a tömörített fájlokat.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Válassza ki a feliratot a Matroska fájlból</Title>
@@ -1476,7 +1476,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AllowEditOfOriginalSubtitle>Az eredeti felirat szerkesztésének engedélyezése</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Kérdezzen rá a sorok törlésére</PromptDeleteLines>
     <TimeCodeMode>Időkód mód</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Videó modul</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1493,7 +1493,7 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <ShowFullscreenButton>Teljes képernyőre állító gomb megjelenítése</ShowFullscreenButton>
     <PreviewFontSize>Felirat előnézeti betűméret</PreviewFontSize>
     <MainWindowVideoControls>Főablak videóvezérlők</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Egyéni szöveg és url keresés</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Egyéni szöveg és URL keresés</CustomSearchTextAndUrl>
     <WaveformAppearance>Hullámforma megjelenítés</WaveformAppearance>
     <WaveformGridColor>Rácsvonalak színe</WaveformGridColor>
     <WaveformShowGridLines>Rácsvonalak megjelenítése</WaveformShowGridLines>
@@ -1887,7 +1887,7 @@ Megtartja a változásokat?</KeepChangesMessage>
     <Title>VobSub (sub/idx) felirat importálás/OCR</Title>
     <TitleBluRay>Blu-ray (.sup) felirat importálás/OCR</TitleBluRay>
     <OcrMethod>OCR mód</OcrMethod>
-    <OcrViaModi>Optikai karakterfelismerés Microsoft Office dokumentum képkezelésen (MODI) keresztül . MS Office szükséges hozzá.</OcrViaModi>
+    <OcrViaModi>Optikai karakterfelismerés Microsoft Office dokumentum képkezelésen (MODI) keresztül. Microsoft Office szükséges hozzá.</OcrViaModi>
     <OcrViaTesseract>Optikai karakterfelismerés Tesseract-on keresztül</OcrViaTesseract>
     <OcrViaNOCR>OCR - nOCR-n keresztül</OcrViaNOCR>
     <Language>Nyelv</Language>
@@ -1920,14 +1920,14 @@ Megtartja a változásokat?</KeepChangesMessage>
     <AllFixes>Összes javítás</AllFixes>
     <GuessesUsed>Használt becslések</GuessesUsed>
     <UnknownWords>Ismeretlen szavak</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR auto korrekció / helyesírás-ellenőrzés</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR auto korrekció / helyesírás-ellenőrzés</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR hibák javítása</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Az egyező időkódú szöveg importálása...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Felirat-kép mentése mint...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Az összes kép mentése (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Az összes kép mentése az html index-el...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Az összes kép mentése az HTML index-el...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} kép mentve: {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Próbálja az MS MODI OCR módot az ismeretlen szavakhoz</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Próbálja az Microsoft MODI OCR módot az ismeretlen szavakhoz</TryModiForUnknownWords>
     <DictionaryX>Szótár: {0}</DictionaryX>
     <RightToLeft>Jobbról-balra</RightToLeft>
     <ShowOnlyForcedSubtitles>Csak a kényszerített feliratok megjelenítése</ShowOnlyForcedSubtitles>

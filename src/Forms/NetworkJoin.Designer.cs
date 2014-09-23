@@ -65,7 +65,7 @@
             this.labelWebServiceUrl.Name = "labelWebServiceUrl";
             this.labelWebServiceUrl.Size = new System.Drawing.Size(114, 16);
             this.labelWebServiceUrl.TabIndex = 16;
-            this.labelWebServiceUrl.Text = "Web service url";
+            this.labelWebServiceUrl.Text = "Web service URL";
             this.labelWebServiceUrl.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // comboBoxWebServiceUrl

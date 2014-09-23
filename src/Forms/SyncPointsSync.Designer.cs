@@ -198,7 +198,7 @@
             this.labelSyncInfo.Name = "labelSyncInfo";
             this.labelSyncInfo.Size = new System.Drawing.Size(284, 13);
             this.labelSyncInfo.TabIndex = 17;
-            this.labelSyncInfo.Text = "Set at least two sync points to make rough syncronization";
+            this.labelSyncInfo.Text = "Set at least two sync points to make rough synchronization";
             // 
             // buttonApplySync
             // 

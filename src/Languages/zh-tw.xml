@@ -147,7 +147,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <RemoveFormatting>移除格式化標籤</RemoveFormatting>
     <RemoveTextForHI>移除 HI 文字</RemoveTextForHI>
     <OverwriteOriginalFiles>覆寫原始檔案 (如果格式已變更則使用新的副檔案名稱)</OverwriteOriginalFiles>
-    <ReDoCasing>重做大小寫</ReDoCasing>
+    <RedoCasing>重做大小寫</RedoCasing>
     <Convert>轉換</Convert>
     <NothingToConvert>無可轉換的內容！</NothingToConvert>
     <PleaseChooseOutputFolder>請選擇輸出資料夾</PleaseChooseOutputFolder>
@@ -339,7 +339,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <MaxLengthError>行 {0} 超出了經由 {2} 的最大長度 ({1}): {3}</MaxLengthError>
     <TextUnchangedPresentation>未變更的演示</TextUnchangedPresentation>
     <TextLeftJustifiedText>靠左對齊的文字</TextLeftJustifiedText>
-    <TextCentredText>置中的文字</TextCentredText>
+    <TextCenteredText>置中的文字</TextCenteredText>
     <TextRightJustifiedText>靠右對齊的文字</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -539,7 +539,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <UnableToFixTextXY>無法修復文字編號 {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} 個重疊時間戳記已修復</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} 個顯示時間已延長</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} 個無效 html 標籤已修復</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} 個無效 HTML 標籤已修復</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} 個顯示時間已縮短</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} 行已取消換行</XLinesUnbreaked>
     <UnneededSpace>不需要的空格</UnneededSpace>
@@ -694,7 +694,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ImportOcrFromDvd>從 vob/ifo (DVD) 匯入/OCR 字幕...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>匯入/OCR VobSub (sub/idx) 字幕...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>匯入/OCR 藍光字幕檔案 (.sup) ...</ImportBluRaySupFile>
-        <ImportXSub>從 divx/avi 匯入/OCR xsub...</ImportXSub>
+        <ImportXSub>從 divx/avi 匯入/OCR XSub...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>從 Matroska 檔案 (.mkv) 匯入字幕...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>手動選擇編碼方式匯入字幕...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>匯入純文字...</ImportText>
@@ -705,12 +705,12 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ExportBluRaySup>藍光 sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>純文字...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB 圖像腳本...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS 檔案對...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1116,8 +1116,8 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <VobSubFiles>VobSub 字幕檔案</VobSubFiles>
     <OpenBluRaySupFile>開啟藍光 .sup 檔案...</OpenBluRaySupFile>
     <BluRaySupFiles>藍光 .sup 檔案</BluRaySupFiles>
-    <OpenXSubFiles>開啟 xsub 檔案...</OpenXSubFiles>
-    <XSubFiles>xsub 檔案</XSubFiles>
+    <OpenXSubFiles>開啟 XSub 檔案...</OpenXSubFiles>
+    <XSubFiles>XSub 檔案</XSubFiles>
     <BeforeImportingVobSubFile>匯入 VobSub 字幕之前</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>匯入藍光 sup 檔案之前</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>匯入 BDN xml 檔案之前</BeforeImportingBdnXml>
@@ -1203,7 +1203,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <StatusLog>狀態記錄</StatusLog>
     <XSceneChangesImported>已匯入 {0} 個場景變更</XSceneChangesImported>
     <PluginXExecuted>外掛程式 '{0}' 已執行。</PluginXExecuted>
-    <NotAValidXSubFile>不是有效的 xsub 檔案！</NotAValidXSubFile>
+    <NotAValidXSubFile>不是有效的 XSub 檔案！</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>合併文字相同的行之前</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>帶時間碼的字幕與目前字幕 ({1}) 的行數相差 ({0}) - 仍要繼續嗎？</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>正在解析傳輸串流，請稍候......</ParsingTransportStream>
@@ -1478,7 +1478,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <AllowEditOfOriginalSubtitle>允許編輯原始字幕</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>刪除行時提示</PromptDeleteLines>
     <TimeCodeMode>時間碼模式</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>視訊引擎</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1889,7 +1889,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <Title>匯入/OCR VobSub (sub/idx) 字幕</Title>
     <TitleBluRay>匯入/OCR 藍光 (.sup) 字幕</TitleBluRay>
     <OcrMethod>OCR 方式</OcrMethod>
-    <OcrViaModi>使用 Microsoft Office Document Imaging (MODI) 進行 OCR，需要 MS Office</OcrViaModi>
+    <OcrViaModi>使用 Microsoft Office Document Imaging (MODI) 進行 OCR，需要 Microsoft Office</OcrViaModi>
     <OcrViaTesseract>使用 TesserAct 進行 OCR</OcrViaTesseract>
     <OcrViaNOCR>使用 nOCR 進行 OCR</OcrViaNOCR>
     <Language>語言</Language>
@@ -1922,14 +1922,14 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <AllFixes>全部修復</AllFixes>
     <GuessesUsed>已用猜測</GuessesUsed>
     <UnknownWords>未知單字</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR 自動修正/拼寫檢查</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR 自動修正/拼寫檢查</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>修正 OCR 錯誤</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>匯入符合時間碼的文字...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>將字幕圖像另存為...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>儲存所有圖像 (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>使用 html 索引儲存所有圖像...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>使用 HTML 索引儲存所有圖像...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} 個圖像已被儲存於 {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>未知單字嘗試使用 MS MODI OCR</TryModiForUnknownWords>
+    <TryModiForUnknownWords>未知單字嘗試使用 Microsoft MODI OCR</TryModiForUnknownWords>
     <DictionaryX>字典: {0}</DictionaryX>
     <RightToLeft>由右至左</RightToLeft>
     <ShowOnlyForcedSubtitles>僅顯示強制字幕</ShowOnlyForcedSubtitles>

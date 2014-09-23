@@ -150,7 +150,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Αφαίρεση ετικετών μορφοποίησης</RemoveFormatting>
     <RemoveTextForHI>Αφαίρεση κειμένου από HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Αντικατάσταση αρχικών αρχείων (νέα επέκταση, εάν η μορφή έχει αλλάξει)</OverwriteOriginalFiles>
-    <ReDoCasing>Επανάληψη του casing</ReDoCasing>
+    <RedoCasing>Επανάληψη του casing</RedoCasing>
     <Convert>Μετατροπή</Convert>
     <NothingToConvert>Δεν υπάρχει κάτι για μετατροπή!</NothingToConvert>
     <PleaseChooseOutputFolder>Παρακαλώ επιλέξτε τον φάκελο εξαγωγής</PleaseChooseOutputFolder>
@@ -286,7 +286,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Το κείμενο χωρίζει τα κενά χρόνου</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Rip υποτίτλων από ifo/vobs (dvd)</Title>
+    <Title>Rip υποτίτλων από IFO/VOB (DVD)</Title>
     <DvdGroupTitle>Αρχεία/Πληροφορίες DVD</DvdGroupTitle>
     <IfoFile>Αρχείο IFO</IfoFile>
     <IfoFiles>Αρχεία IFO</IfoFiles>
@@ -342,7 +342,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Η Γραμμή {0} υπερβαίνει το μέγιστο μήκος ({1}) κατά {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Αμετάβλητη παρουσίαση</TextUnchangedPresentation>
     <TextLeftJustifiedText>Αριστερά στοιχισμένο κείμενο</TextLeftJustifiedText>
-    <TextCentredText>Κεντραρισμένο κείμενο</TextCentredText>
+    <TextCenteredText>Κεντραρισμένο κείμενο</TextCenteredText>
     <TextRightJustifiedText>Δεξιά στοιχισμένο κείμενο</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -542,7 +542,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Αδυναμία επιδιόρθωσης του κειμένου με αριθμό {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} επικαλυπτόμενες χρονικές στιγμές επιδιορθώθηκαν</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} χρόνοι εμφάνισης επεκτάθηκαν</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} με έγκυρες ετικέτες html επιδιορθώθηκαν</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} με έγκυρες ετικέτες HTML επιδιορθώθηκαν</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} χρόνοι εμφάνισης σμικρύνθηκαν</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} γραμμές ενώθηκαν</XLinesUnbreaked>
     <UnneededSpace>Αχρείαστο διάστημα</UnneededSpace>
@@ -694,10 +694,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Σύγκριση...</Compare>
         <Statistics>Στατιστι&amp;κά...</Statistics>
         <Plugins>Πρόσθετα...</Plugins>
-        <ImportOcrFromDvd>Εισαγωγή/OCR υπότιτλου από VOB/IFO (DVD) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Εισαγωγή/OCR υπότιτλου από VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Εισαγωγή/OCR υπότιτλου VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Εισαγωγή/OCR αρχείου Blu-ray sup...</ImportBluRaySupFile>
-        <ImportXSub>Εισαγωγή/OCR xsub από divx/avi...</ImportXSub>
+        <ImportXSub>Εισαγωγή/OCR XSub από divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Εισαγωγή/OCR υπότιτλου από αρχείο Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Εισαγωγή υπότιτλου με επιλογή κωδικοποίησης...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Εισαγωγή απλού κειμένου...</ImportText>
@@ -708,12 +708,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Ηλεκτρονικά οθόνης)...</ExportPac>
         <ExportPlainText>Εξαγωγή ως απλό κείμενο</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1119,8 +1119,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <VobSubFiles>Αρχεία υποτίτλων VobSub</VobSubFiles>
     <OpenBluRaySupFile>Άνοιγμα αρχείου Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Αρχεία Blu-ray .sup</BluRaySupFiles>
-    <OpenXSubFiles>Άνοιγμα αρχείου xsub...</OpenXSubFiles>
-    <XSubFiles>Αρχεία xsub</XSubFiles>
+    <OpenXSubFiles>Άνοιγμα αρχείου XSub...</OpenXSubFiles>
+    <XSubFiles>Αρχεία XSub</XSubFiles>
     <BeforeImportingVobSubFile>Πριν από εισαγωγή αρχείου VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Πριν από εισαγωγή αρχείου Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Πριν από εισαγωγή αρχείου BDN xml</BeforeImportingBdnXml>
@@ -1210,9 +1210,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BeforeMergeLinesWithSameText>Πριν από τη συγχώνευση γραμμών με το ίδιο κείμενο</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Ο υπότιτλος με τους κώδικες χρόνου έχει διαφορετικόι αριθμό γραμμών ({0}) από τον τρέχων υπότιτλο ({1}) - να συνεχίσει ούτως ή άλλως;</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Ανάλυση ροής μεταφοράς - παρακαλώ περιμένετε...</ParsingTransportStream>
-    <ErrorLoadIdx>Δεν μπορώ να διαβάσω/επεξεργαστώ .idx αρχεία. Τα .idx αρχεία είναι μέλη από τα ζεύγη idx/sub αρχείων (γνωστά και ως VobSub) και ο SE δεν μπορεί να ανοίξει .sub αρχεία.</ErrorLoadIdx>
-    <ErrorLoadRar>Το αρχείο μοιάζει να είναι συμπιεσμένο .rar. Το SE δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadRar>
-    <ErrorLoadZip>Το αρχείο μοιάζει να είναι συμπιεσμένο .zip. Το SE δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadZip>
+    <ErrorLoadIdx>Δεν μπορώ να διαβάσω/επεξεργαστώ .idx αρχεία. Τα .idx αρχεία είναι μέλη από τα ζεύγη idx/sub αρχείων (γνωστά και ως VobSub) και ο Subtitle Edit δεν μπορεί να ανοίξει .sub αρχεία.</ErrorLoadIdx>
+    <ErrorLoadRar>Το αρχείο μοιάζει να είναι συμπιεσμένο .rar. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadRar>
+    <ErrorLoadZip>Το αρχείο μοιάζει να είναι συμπιεσμένο .zip. Το Subtitle Edit δεν μπορεί να ανοίξει συμπιεσμένα αρχεία.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Επιλογή υπότιτλου από αρχείο Matroska</Title>
@@ -1479,7 +1479,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllowEditOfOriginalSubtitle>Να επιτρέπεται η επεξεργασία του αρχικού υπότιτλου</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Ερώτηση για διαγραφή γραμμών</PromptDeleteLines>
     <TimeCodeMode>Στυλ κωδικοποίησης χρόνου</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Μηχανισμός απόδοσης βίντεο</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1890,7 +1890,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Εισαγωγή/OCR υπότιτλου VobSub (sub/idx)</Title>
     <TitleBluRay>Εισαγωγή/OCR υπότιτλου Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Μέθοδος OCR</OcrMethod>
-    <OcrViaModi>OCR μέσω Microsoft Office Document Imaging (MODI). Προϋποθέτει MS Office</OcrViaModi>
+    <OcrViaModi>OCR μέσω Microsoft Office Document Imaging (MODI). Προϋποθέτει Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR μέσω Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR μέσω nOCR</OcrViaNOCR>
     <Language>Γλώσσα</Language>
@@ -1923,14 +1923,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AllFixes>Όλες οι επιδιορθώσεις</AllFixes>
     <GuessesUsed>Μαντεψιές</GuessesUsed>
     <UnknownWords>Άγνωστες λέξεις</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Αυτόματη διόρθωση/ορθογραφικός έλεγχος OCR</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Αυτόματη διόρθωση/ορθογραφικός έλεγχος OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Επιδιόρθωση σφαλμάτων OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Εισαγωγή κειμένου με αντιστοιχία κωδικών χρόνου...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Αποθήκευση εικόνας υπότιτλου ως...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Αποθήκευση όλων των εικόνων(png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Αποθήκευση όλων των εικόνων με html...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Αποθήκευση όλων των εικόνων με HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} εικόνες αποθηκεύτηκαν στο {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Χρήση MS MODI OCR για άγνωστες λέξεις</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Χρήση Microsoft MODI OCR για άγνωστες λέξεις</TryModiForUnknownWords>
     <DictionaryX>Λεξικό: {0}</DictionaryX>
     <RightToLeft>Από δεξιά προς αριστερά</RightToLeft>
     <ShowOnlyForcedSubtitles>Εμφάνιση μόνο υποχρεωτικών υποτίτλων</ShowOnlyForcedSubtitles>

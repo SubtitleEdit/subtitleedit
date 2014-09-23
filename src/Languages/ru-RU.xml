@@ -152,7 +152,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <RemoveFormatting>Удалить теги форматирования</RemoveFormatting>
     <RemoveTextForHI>Удалить текст для HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Заменить оригинальные файлы (с новым расширением, если изменён формат)</OverwriteOriginalFiles>
-    <ReDoCasing>Изменить регистр</ReDoCasing>
+    <RedoCasing>Изменить регистр</RedoCasing>
     <Convert>Конвертировать</Convert>
     <NothingToConvert>Конвертировать нечего!</NothingToConvert>
     <PleaseChooseOutputFolder>Пожалуйста, выберите папку вывода</PleaseChooseOutputFolder>
@@ -345,7 +345,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <MaxLengthError>В строке {0} превышено макс. число символов ({1}) на {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Показывать без изменений</TextUnchangedPresentation>
     <TextLeftJustifiedText>Выровнять текст по левому краю</TextLeftJustifiedText>
-    <TextCentredText>Выровнять текст по центру</TextCentredText>
+    <TextCenteredText>Выровнять текст по центру</TextCenteredText>
     <TextRightJustifiedText>Выровнять текст по правому краю</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -702,7 +702,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ImportOcrFromDvd>Импорт/OCR субтитров из VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Импорт/OCR VobSub (sub/idx) субтитров...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Импорт/OCR файла Blu-ray sup...</ImportBluRaySupFile>
-        <ImportXSub>Импорт/OCR xsub из divx/avi...</ImportXSub>
+        <ImportXSub>Импорт/OCR XSub из divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Импорт субтитров из файла Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Импорт субтитров с выбором кодировки...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Импорт простого текста...</ImportText>
@@ -713,12 +713,12 @@ https://github.com/SubtitleEdit/subtitleedit
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Plain text...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1126,8 +1126,8 @@ https://github.com/SubtitleEdit/subtitleedit
     <VobSubFiles>Файлы субтитров VobSub</VobSubFiles>
     <OpenBluRaySupFile>Открыть файл Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Файлы Blu-ray .sup</BluRaySupFiles>
-    <OpenXSubFiles>Открыть файл xsub...</OpenXSubFiles>
-    <XSubFiles>Файлы xsub</XSubFiles>
+    <OpenXSubFiles>Открыть файл XSub...</OpenXSubFiles>
+    <XSubFiles>Файлы XSub</XSubFiles>
     <BeforeImportingVobSubFile>Перед импортом субтитров VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Перед импортом файла Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Перед импортом файла BDN xml</BeforeImportingBdnXml>
@@ -1221,13 +1221,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <StatusLog>Журнал состояния</StatusLog>
     <XSceneChangesImported>Импортировано изменений: {0}</XSceneChangesImported>
     <PluginXExecuted>Плагин '{0}' запущен.</PluginXExecuted>
-    <NotAValidXSubFile>Не допустимый xsub файл!</NotAValidXSubFile>
+    <NotAValidXSubFile>Не допустимый XSub файл!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Перед объединением строк с одинаковым текстом</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Субтитры с тайм кодом имеют различное число строк ({0}) в отличии от текущих субтитров ({1}). Вы хотите продолжить?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Анализ потокового носителя - ожидайте...</ParsingTransportStream>
-    <ErrorLoadIdx>Не удается прочитать/изменить файлы .idx. Эти файлы являются частью idx/sub (называемые VobSub) и SE может открыть файл .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Возможно файл является архивом .rar. SE не поддерживает загрузку сжатых файлов.</ErrorLoadRar>
-    <ErrorLoadZip>Возможно файл является архивом .zip. SE не поддерживает загрузку сжатых файлов.</ErrorLoadZip>
+    <ErrorLoadIdx>Не удается прочитать/изменить файлы .idx. Эти файлы являются частью idx/sub (называемые VobSub) и Subtitle Edit может открыть файл .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Возможно файл является архивом .rar. Subtitle Edit не поддерживает загрузку сжатых файлов.</ErrorLoadRar>
+    <ErrorLoadZip>Возможно файл является архивом .zip. Subtitle Edit не поддерживает загрузку сжатых файлов.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Выбор субтитров из файла Matroska</Title>
@@ -1494,7 +1494,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <AllowEditOfOriginalSubtitle>Разрешить редактировать исходные субтитры</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Выдать запрос перед удаление строк</PromptDeleteLines>
     <TimeCodeMode>Режим таймкода:</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Видеодекодер</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1909,7 +1909,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Title>Импорт / OCR VobSub (sub/idx) субтитров</Title>
     <TitleBluRay>Импорт / OCR Blu-ray (.sup) субтитров</TitleBluRay>
     <OcrMethod>Метод OCR</OcrMethod>
-    <OcrViaModi>OCR с помощью MS Office (MODI). Требуется установленный MS Office</OcrViaModi>
+    <OcrViaModi>OCR с помощью Microsoft Office (MODI). Требуется установленный Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR с помощью Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR с помощью nOCR</OcrViaNOCR>
     <Language>Язык</Language>
@@ -1942,14 +1942,14 @@ https://github.com/SubtitleEdit/subtitleedit
     <AllFixes>Все исправления</AllFixes>
     <GuessesUsed>Предположения</GuessesUsed>
     <UnknownWords>Неизвестные слова</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Коррекция OCR / Орфография</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Коррекция OCR / Орфография</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Исправить OCR ошибки</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Импорт текста с подбором временных меток...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Сохранить изображение субтитра как...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Сохранить все изображения (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Сохранить все изображения в индексный HTML файл...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} изображений записано в {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Попробовать MS MODI OCR для неизвестных слов</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Попробовать Microsoft MODI OCR для неизвестных слов</TryModiForUnknownWords>
     <DictionaryX>Словарь: {0}</DictionaryX>
     <RightToLeft>Справа налево</RightToLeft>
     <ShowOnlyForcedSubtitles>Показать только принудительные субтитры</ShowOnlyForcedSubtitles>

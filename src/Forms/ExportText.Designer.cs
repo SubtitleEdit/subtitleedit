@@ -208,7 +208,7 @@
             this.labelTimeCodeSeperator.Name = "labelTimeCodeSeperator";
             this.labelTimeCodeSeperator.Size = new System.Drawing.Size(104, 13);
             this.labelTimeCodeSeperator.TabIndex = 3;
-            this.labelTimeCodeSeperator.Text = "Time code seperator";
+            this.labelTimeCodeSeperator.Text = "Time code separator";
             // 
             // radioButtonTimeCodeHHMMSSFF
             // 

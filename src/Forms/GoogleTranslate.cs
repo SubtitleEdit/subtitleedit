@@ -85,8 +85,8 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                subtitleListViewFrom.InitializeTimeStampColumWidths(this);
-                subtitleListViewTo.InitializeTimeStampColumWidths(this);
+                subtitleListViewFrom.InitializeTimestampColumnWidths(this);
+                subtitleListViewTo.InitializeTimestampColumnWidths(this);
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }

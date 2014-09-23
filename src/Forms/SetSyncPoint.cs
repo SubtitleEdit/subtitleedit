@@ -51,7 +51,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public TimeSpan SyncronizationPoint
+        public TimeSpan SynchronizationPoint
         {
             get { return timeUpDownLine.TimeCode.TimeSpan; }
         }

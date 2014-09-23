@@ -16,10 +16,10 @@ namespace Nikse.SubtitleEdit.Forms
         public List<Color> Palette;
         public List<string> Languages;
         private LanguageStructure.DvdSubRip _language;
-        private long _lastPresentationTimeStamp = 0;
-        private long _lastVobPresentationTimeStamp = 0;
+        private long _lastPresentationTimestamp = 0;
+        private long _lastVobPresentationTimestamp = 0;
         private long _lastNavEndPts = 0;
-        private long _accumulatedPresentationTimeStamp;
+        private long _accumulatedPresentationTimestamp;
 
         public string SelectedLanguage
         {
@@ -151,10 +151,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _abort = false;
             buttonStartRipping.Text = _language.Abort;
-            _lastPresentationTimeStamp = 0;
-            _lastVobPresentationTimeStamp = 0;
+            _lastPresentationTimestamp = 0;
+            _lastVobPresentationTimestamp = 0;
             _lastNavEndPts = 0;
-            _accumulatedPresentationTimeStamp = 0;
+            _accumulatedPresentationTimestamp = 0;
 
             progressBarRip.Visible = true;
             var ms = new MemoryStream();
@@ -267,8 +267,8 @@ namespace Nikse.SubtitleEdit.Forms
                     VobSubPack vsp = new VobSubPack(buffer, null);
                     if (IsSubtitlePack(buffer))
                     {
-                        if (vsp.PacketizedElementaryStream.PresentationTimeStamp.HasValue && _accumulatedPresentationTimeStamp != 0)
-                            UpdatePresentationTimeStamp(buffer, _accumulatedPresentationTimeStamp, vsp);
+                        if (vsp.PacketizedElementaryStream.PresentationTimestamp.HasValue && _accumulatedPresentationTimestamp != 0)
+                            UpdatePresentationTimestamp(buffer, _accumulatedPresentationTimestamp, vsp);
 
                         stream.Write(buffer, 0, 0x800);
                         if (bytesRead < 0x800)
@@ -281,21 +281,21 @@ namespace Nikse.SubtitleEdit.Forms
                             uint vobu_s_ptm = Helper.GetEndian(buffer, 0x0039, 4);
                             uint vobu_e_ptm = Helper.GetEndian(buffer, 0x003d, 4);
 
-                            _lastPresentationTimeStamp = vobu_e_ptm;
+                            _lastPresentationTimestamp = vobu_e_ptm;
 
                             if (firstNavStartPTS == 0)
                             {
                                 firstNavStartPTS = vobu_s_ptm;
                                 if (vobNumber == 0)
-                                    _accumulatedPresentationTimeStamp = -vobu_s_ptm;
+                                    _accumulatedPresentationTimestamp = -vobu_s_ptm;
                             }
-                            if (vobu_s_ptm + firstNavStartPTS + _accumulatedPresentationTimeStamp < _lastVobPresentationTimeStamp)
+                            if (vobu_s_ptm + firstNavStartPTS + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
                             {
-                                _accumulatedPresentationTimeStamp += _lastNavEndPts - vobu_s_ptm;
+                                _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
                             }
                             else if (_lastNavEndPts > vobu_e_ptm)
                             {
-                                _accumulatedPresentationTimeStamp += _lastNavEndPts - vobu_s_ptm;
+                                _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
                             }
                             _lastNavEndPts = vobu_e_ptm;
                         }
@@ -309,38 +309,38 @@ namespace Nikse.SubtitleEdit.Forms
                 lba++;
             }
             fs.Close();
-            _lastVobPresentationTimeStamp = _lastPresentationTimeStamp;
+            _lastVobPresentationTimestamp = _lastPresentationTimestamp;
         }
 
         /// <summary>
         /// Write the 5 PTS bytes to buffer
         /// </summary>
-        private static void UpdatePresentationTimeStamp(byte[] buffer, long addPresentationTimeStamp, VobSubPack vsp)
+        private static void UpdatePresentationTimestamp(byte[] buffer, long addPresentationTimestamp, VobSubPack vsp)
         {
-            const int presentationTimeStampIndex = 23;
-            long newPts = addPresentationTimeStamp + ((long)vsp.PacketizedElementaryStream.PresentationTimeStamp.Value);
+            const int presentationTimestampIndex = 23;
+            long newPts = addPresentationTimestamp + ((long)vsp.PacketizedElementaryStream.PresentationTimestamp.Value);
 
             var buffer5b = BitConverter.GetBytes((UInt64)newPts);
             if (BitConverter.IsLittleEndian)
             {
-                buffer[presentationTimeStampIndex + 4] = (byte)(buffer5b[0] << 1 | Helper.B00000001); // last 7 bits + '1'
-                buffer[presentationTimeStampIndex + 3] = (byte)((buffer5b[0] >> 7) + (buffer5b[1] << 1)); // the next 8 bits (1 from last byte, 7 from next)
-                buffer[presentationTimeStampIndex + 2] = (byte)((buffer5b[1] >> 6 | Helper.B00000001) + (buffer5b[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
-                buffer[presentationTimeStampIndex + 1] = (byte)((buffer5b[2] >> 6) + (buffer5b[3] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
-                buffer[presentationTimeStampIndex] = (byte)((buffer5b[3] >> 6 | Helper.B00000001) + (buffer5b[4] << 2));
+                buffer[presentationTimestampIndex + 4] = (byte)(buffer5b[0] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimestampIndex + 3] = (byte)((buffer5b[0] >> 7) + (buffer5b[1] << 1)); // the next 8 bits (1 from last byte, 7 from next)
+                buffer[presentationTimestampIndex + 2] = (byte)((buffer5b[1] >> 6 | Helper.B00000001) + (buffer5b[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimestampIndex + 1] = (byte)((buffer5b[2] >> 6) + (buffer5b[3] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
+                buffer[presentationTimestampIndex] = (byte)((buffer5b[3] >> 6 | Helper.B00000001) + (buffer5b[4] << 2));
             }
             else
             {
-                buffer[presentationTimeStampIndex + 4] = (byte)(buffer5b[7] << 1 | Helper.B00000001); // last 7 bits + '1'
-                buffer[presentationTimeStampIndex + 3] = (byte)((buffer5b[7] >> 7) + (buffer5b[6] << 1)); // the next 8 bits (1 from last byte, 7 from next)
-                buffer[presentationTimeStampIndex + 2] = (byte)((buffer5b[6] >> 6 | Helper.B00000001) + (buffer5b[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
-                buffer[presentationTimeStampIndex + 1] = (byte)((buffer5b[5] >> 6) + (buffer5b[4] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
-                buffer[presentationTimeStampIndex] = (byte)((buffer5b[4] >> 6 | Helper.B00000001) + (buffer5b[3] << 2));
+                buffer[presentationTimestampIndex + 4] = (byte)(buffer5b[7] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimestampIndex + 3] = (byte)((buffer5b[7] >> 7) + (buffer5b[6] << 1)); // the next 8 bits (1 from last byte, 7 from next)
+                buffer[presentationTimestampIndex + 2] = (byte)((buffer5b[6] >> 6 | Helper.B00000001) + (buffer5b[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimestampIndex + 1] = (byte)((buffer5b[5] >> 6) + (buffer5b[4] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
+                buffer[presentationTimestampIndex] = (byte)((buffer5b[4] >> 6 | Helper.B00000001) + (buffer5b[3] << 2));
             }
-            if (vsp.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010)
-                buffer[presentationTimeStampIndex] += Helper.B00100000;
+            if (vsp.PacketizedElementaryStream.PresentationTimestampDecodeTimestampFlags == Helper.B00000010)
+                buffer[presentationTimestampIndex] += Helper.B00100000;
             else
-                buffer[presentationTimeStampIndex] += Helper.B00110000;
+                buffer[presentationTimestampIndex] += Helper.B00110000;
         }
 
         internal static bool IsPrivateStream2(byte[] buffer, int index)

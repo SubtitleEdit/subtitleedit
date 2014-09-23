@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Aantal</Number>
     <Text>Tekst</Text>
-    <HourMinutesSecondsMilliseconds>uur:min:sec:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>uur:min:sec:ms</HourMinutesSecondsMilliseconds>
     <Bold>Vet</Bold>
     <Italic>Cursief</Italic>
     <Underline>Onderstrepen</Underline>
@@ -147,7 +147,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Formateringstekens verwĳderen</RemoveFormatting>
     <RemoveTextForHI>Tekst voor slechthorenden verwĳderen</RemoveTextForHI>
     <OverwriteOriginalFiles>Originele bestanden vervangen (nieuwe extensie als formaat gewĳzigd is)</OverwriteOriginalFiles>
-    <ReDoCasing>Hoofd-/kleine letters herzien</ReDoCasing>
+    <RedoCasing>Hoofd-/kleine letters herzien</RedoCasing>
     <Convert>Converteren</Convert>
     <NothingToConvert>Niets te converteren</NothingToConvert>
     <PleaseChooseOutputFolder>Doelmap kiezen alstublieft</PleaseChooseOutputFolder>
@@ -287,8 +287,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Teksten verdelen hiaattĳd</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Ondertitels van dvd (vob/ifo) rippen</Title>
-    <DvdGroupTitle>Dvd-bestanden/info</DvdGroupTitle>
+    <Title>Ondertitels van DVD (VOB/IFO) rippen</Title>
+    <DvdGroupTitle>DVD-bestanden/info</DvdGroupTitle>
     <IfoFile>IFO-bestand</IfoFile>
     <IfoFiles>IFO-bestanden</IfoFiles>
     <VobFiles>VOB-bestanden</VobFiles>
@@ -343,7 +343,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Regel {0} overschrĳdt max. lengte ({1}) met {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Ongewĳzigde presentatie</TextUnchangedPresentation>
     <TextLeftJustifiedText>Links uitgelĳnde tekst</TextLeftJustifiedText>
-    <TextCentredText>Gecentreerde tekst</TextCentredText>
+    <TextCenteredText>Gecentreerde tekst</TextCenteredText>
     <TextRightJustifiedText>Rechts uitgelĳnde tekst</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -696,10 +696,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Vergelĳken...</Compare>
         <Statistics>Statistie&amp;ken...</Statistics>
         <Plugins>Plug-ins...</Plugins>
-        <ImportOcrFromDvd>Import/OCR dvd-ondertitel (vob/ifo)...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Import/OCR DVD-ondertitel (VOB/IFO)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub ondertitel (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Import/OCR blu-ray ondertitel (sup)...</ImportBluRaySupFile>
-        <ImportXSub>Import/OCR xsub-ondertitel (divx/avi)...</ImportXSub>
+        <ImportXSub>Import/OCR XSub-ondertitel (divx/avi)...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importeer ondertitel uit Matroska-bestand...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importeer ondertitel met handmatig gekozen codering...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importeer platte tekst...</ImportText>
@@ -783,7 +783,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <Video>
         <Title>&amp;Video</Title>
         <OpenVideo>Videobestand openen...</OpenVideo>
-        <OpenDvd>Dvd openen...</OpenDvd>
+        <OpenDvd>DVD openen...</OpenDvd>
         <ChooseAudioTrack>Audiospoor kiezen</ChooseAudioTrack>
         <CloseVideo>Videobestand sluiten</CloseVideo>
         <ImportSceneChanges>Scènewisselingen importeren</ImportSceneChanges>
@@ -1099,11 +1099,11 @@ Verder gaan?</SubtitleAppendPrompt>
     <BeforeSettingFontName>Vóór instellen lettertype</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Vóór schrĳfmachine effect</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Vóór karaoke-effect</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Vóór ondertitelimport van dvd</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Vóór ondertitelimport van DVD</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Matroska-bestand openen...</OpenMatroskaFile>
     <MatroskaFiles>Matroska-bestanden</MatroskaFiles>
     <NoSubtitlesFound>Geen ondertitels gevonden</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Dit is geen geldig matroska bestand: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Dit is geen geldig Matroska bestand: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Matroska-bestand analyseren. Even geduld aub...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Vóór ondertitelimport uit Matroska-bestand</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Ondertitel uit Matroska bestand geïmporteerd</SubtitleImportedFromMatroskaFile>
@@ -1124,8 +1124,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <VobSubFiles>VobSub ondertitelbestanden</VobSubFiles>
     <OpenBluRaySupFile>Blu-ray sup-bestand openen...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray sup-bestanden</BluRaySupFiles>
-    <OpenXSubFiles>xsub-bestand openen...</OpenXSubFiles>
-    <XSubFiles>xsub-bestanden</XSubFiles>
+    <OpenXSubFiles>XSub-bestand openen...</OpenXSubFiles>
+    <XSubFiles>XSub-bestanden</XSubFiles>
     <BeforeImportingVobSubFile>Vóór VobSub ondertitel import</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Vóór Blu-ray sup-bestand import</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Vóór BDN xml-bestand import</BeforeImportingBdnXml>
@@ -1211,13 +1211,13 @@ Verder gaan?</SubtitleAppendPrompt>
     <StatusLog>Status logboek</StatusLog>
     <XSceneChangesImported>{0} scènewisselingen geïmporteerd</XSceneChangesImported>
     <PluginXExecuted>Plug-in '{0}' uitgevoerd.</PluginXExecuted>
-    <NotAValidXSubFile>Ongeldig xsub-bestand</NotAValidXSubFile>
+    <NotAValidXSubFile>Ongeldig XSub-bestand</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vóór samenvoegen regels met dezelfde tekst</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Ondertitel met tĳdcodes heeft een ander aantal regels ({0}) dan huidige ondertitel ({1}) - Toch doorgaan?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyseer transportstroom - even geduld aub...</ParsingTransportStream>
-    <ErrorLoadIdx>SE kan idx-bestanden niet lezen. Die maken deel uit van een idx/sub bestandspaar (ook wel VobSub genoemd). SE kan het sub-bestand openen.</ErrorLoadIdx>
-    <ErrorLoadRar>Dit is een rar-bestand. SE kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
-    <ErrorLoadZip>Dit is een zip-bestand. SE kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
+    <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een idx/sub bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
+    <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
+    <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
@@ -1322,8 +1322,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
-    <Title>Dvd openen met VLC</Title>
-    <OpenDvdFrom>Dvd openen met...</OpenDvdFrom>
+    <Title>DVD openen met VLC</Title>
+    <OpenDvdFrom>DVD openen met...</OpenDvdFrom>
     <Disc>Disk</Disc>
     <Folder>Map</Folder>
     <ChooseDrive>Station kiezen</ChooseDrive>
@@ -1421,7 +1421,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SyncPointTimeCode>Sync-punt tĳdcode</SyncPointTimeCode>
     <ThreeSecondsBack>&lt;&lt; 3 seconden</ThreeSecondsBack>
     <HalfASecondBack>&lt;&lt; ½ seconde</HalfASecondBack>
-    <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
+    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
     <ThreeSecondsForward>3 seconden &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
@@ -1474,9 +1474,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainListViewVideoGoToPositionAndPause>Ga naar videopositie en pauzeer</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ga naar videopositie en speel af</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Ga naar tekstbewerkingsvak</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar videopositie - 1 sec en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie - ½ sec en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie - 1 sec en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar videopositie - 1 s en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie - ½ s en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie - 1 s en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Ga naar tekstbewerkingsvak en pauzeer op videopositie</MainListViewEditTextAndPause>
     <AutoBackup>Automatische back-up</AutoBackup>
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
@@ -1486,7 +1486,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AllowEditOfOriginalSubtitle>Sta bewerking van de originele ondertitel toe</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Verwĳderen van tekst bevestigen</PromptDeleteLines>
     <TimeCodeMode>Tĳdcode-modus</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.ms (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.ms (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01: 12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Videospeler</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1503,7 +1503,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ShowFullscreenButton>Toon volledig scherm knop</ShowFullscreenButton>
     <PreviewFontSize>Ondertitel voorbeeld lettergrootte</PreviewFontSize>
     <MainWindowVideoControls>Hoofdvenster videocontrole</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Aangepaste zoektekst en url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Aangepaste zoektekst en URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Golfvormweergave</WaveformAppearance>
     <WaveformGridColor>Rasterkleur</WaveformGridColor>
     <WaveformShowGridLines>Toon rasterlĳnen</WaveformShowGridLines>
@@ -1877,9 +1877,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <StartScene>Begin scène</StartScene>
     <EndScene>Einde scène</EndScene>
     <Synchronize>Synchroniseren</Synchronize>
-    <HalfASecondBack>&lt; ½ sec</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 sec</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Speel {0} sec en spoel terug</PlayXSecondsAndBack>
+    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Speel {0} s en spoel terug</PlayXSecondsAndBack>
     <FindText>Tekst zoeken</FindText>
     <GoToSubPosition>Ga naar ondertitel positie</GoToSubPosition>
     <KeepChangesTitle>Wĳzigingen behouden?</KeepChangesTitle>
@@ -1907,7 +1907,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Title>Importeer/OCR VobSub (sub/idx) ondertitel</Title>
     <TitleBluRay>Importeer/OCR Blu-ray (sup) ondertitel</TitleBluRay>
     <OcrMethod>OCR methode</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Vereist MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Vereist Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
     <Language>Taal</Language>
@@ -1940,15 +1940,15 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <AllFixes>Alle herstellingen</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Herstel OCR fouten</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importeer tekst met bĳpassende tĳdcodes...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importeer nieuwe tĳdcodes.</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Ondertitelbeeld opslaan als...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Alle afbeeldingen opslaan (png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Alle afbeeldingen opslaan met html index...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Alle afbeeldingen opslaan met HTML index...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} afbeeldingen opgeslagen in {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Probeer MS MODI OCR voor onbekende woorden</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Probeer Microsoft MODI OCR voor onbekende woorden</TryModiForUnknownWords>
     <DictionaryX>Woordenboek: {0}</DictionaryX>
     <RightToLeft>Van rechts naar links</RightToLeft>
     <ShowOnlyForcedSubtitles>Toon alleen gedwongen ondertitels</ShowOnlyForcedSubtitles>

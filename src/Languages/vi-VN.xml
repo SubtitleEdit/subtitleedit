@@ -154,7 +154,7 @@ Rất hân hạnh được chào đón.
     <FixItalics>Sữa lỗi chữ in nghiêng</FixItalics>
     <RemoveFormatting> Gỡ định dạng thẻ</RemoveFormatting>
     <RemoveTextForHI>Gỡ bỏ văn bản của HI</RemoveTextForHI>
-    <ReDoCasing>Quay lại cách hiển thị trước</ReDoCasing>
+    <RedoCasing>Quay lại cách hiển thị trước</RedoCasing>
     <Convert>Chuyển đổi</Convert>
     <NothingToConvert>Không thể chuyển đổi!</NothingToConvert>
     <PleaseChooseOutputFolder>Vui lòng chọn đường dẫn đầu ra thư mục</PleaseChooseOutputFolder>
@@ -243,7 +243,7 @@ Rất hân hạnh được chào đón.
     <ChooseColor>Chọn màusắc ...</ChooseColor>
   </DCinemaProperties>
   <DvdSubRip>
-    <Title>Trích xuất phụ đề từ ifo/vobs (dvd)</Title>
+    <Title>Trích xuất phụ đề từ IFO/VOB (DVD)</Title>
     <DvdGroupTitle>Tập tin DVD/Thông tin</DvdGroupTitle>
     <IfoFile>Tập tin IFO</IfoFile>
     <IfoFiles>Tập tin IFO</IfoFiles>
@@ -299,7 +299,7 @@ Rất hân hạnh được chào đón.
     <TextUnchangedPresentation>Trình bày không thay đổi</TextUnchangedPresentation>
     <TextLeftJustifiedText>Chứng minh văn bản bên trái
 </TextLeftJustifiedText>
-    <TextCentredText>Văn bản ở giữa</TextCentredText>
+    <TextCenteredText>Văn bản ở giữa</TextCenteredText>
     <TextRightJustifiedText>Chứng minh văn bản bên phải</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -455,7 +455,7 @@ Rất hân hạnh được chào đón.
     <UnableToFixTextXY>Không thể sửa lỗi văn bản số {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} Sữa chữa thời gian bị trùng lặp</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} hiển thị số lần kéo dài</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{ 0} sửa lỗi thẻ html không hợp lệ</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{ 0} sửa lỗi thẻ HTML không hợp lệ</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} số lần hiển thị rút ngắn</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} dòng không rõ bị gỡ bỏ</XLinesUnbreaked>
     <UnneededSpace>Không gian không cần thiết</UnneededSpace>
@@ -576,25 +576,24 @@ Rất hân hạnh được chào đón.
         <Compare>&amp;So sánh...</Compare>
         <Statistics>Số liệu &amp;thống kê...</Statistics>
         <Plugins>Trình cắm...</Plugins>
-        <ImportOcrFromDvd>Nhập vào/Phụ đề OCR từ vob/ifo (dvd) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Nhập vào/Phụ đề OCR từ VOB/IFO (DVD) ...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Nhập vào/Phụ đề OCR VobSub(sub/idx) ...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Nhập vào/OCR hỗ trợ tập tin Blu-ray ...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Nhập vào phụ đề từ tập tin Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Nhập vào phụ đề với lựa chọn mã hóa...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Nhập vào văn bản thuần túy...</ImportText>
-        <ImportTimecodes>Nhập vào mã thời gian...
-</ImportTimecodes>
+        <ImportTimecodes>Nhập vào mã thời gian...</ImportTimecodes>
         <Export>Xuất ra</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
         <ExportBluRaySup>Hỗ trợ Blu-ray...</ExportBluRaySup>
         <ExportVobSub>VobSub(sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Màn hình điện tử)...</ExportPac>
         <ExportPlainText>Văn bản thuần túy...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Hình ảnh nguyên bản Adobe Encore FAB ...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Cặp tập tin Hàn Quốc ATS...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Chú thích Inc ..</ExportCaptionsInc>
@@ -951,11 +950,11 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <BeforeSettingFontName>Trước khi thiết lập tên phông chữ</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Trước khi làm hiệu ứng cho chữ</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Trước khi làm hiệu ứng karaoke</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Trước khi nhập vào phụ đề từ dvd</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Trước khi nhập vào phụ đề từ DVD</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Mở tập tin Matroska...</OpenMatroskaFile>
     <MatroskaFiles>Tập tin Matroska</MatroskaFiles>
     <NoSubtitlesFound>Không có phụ đề được tìm thấy</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Đây không phải là một tập tin matroska hợp lệ: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Đây không phải là một tập tin Matroska hợp lệ: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Phân tích cú pháp tập tin Matroska. Xin vui lòng chờ...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Trước khi nhập vào phụ đề từ tập tin Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Nhập vào phụ đề từ tập tin Matroska</SubtitleImportedFromMatroskaFile>
@@ -1252,7 +1251,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <AllowEditOfOriginalSubtitle>Cho phép chỉnh sửa phụ đề của ban</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Nhắc nhở dòng bị xóa</PromptDeleteLines>
     <TimeCodeMode>Chế độ mã hóa thời gian</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH: MM: SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH: MM: SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH: MM: SS: FF (00:00:01: 12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Phương tiện video</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1270,7 +1269,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <VolumeNotes>0 là không có âm thanh, 100 là âm lượng cao nhất</VolumeNotes>
     <PreviewFontSize>Xem trước kích thước phông chữ</PreviewFontSize>
     <MainWindowVideoControls> Cửa sổ chính điều khiển video</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Tự chọn để tìm văn bản và url</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Tự chọn để tìm văn bản và URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Xuất hiện dạng sóng</WaveformAppearance>
     <WaveformGridColor>Dạng lưới màu</WaveformGridColor>
     <WaveformShowGridLines>Hiển thị dòng theo dạng lưới</WaveformShowGridLines>
@@ -1640,14 +1639,14 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <AllFixes>Tất cả các bản sửa lỗi</AllFixes>
     <GuessesUsed>Phỏng đoán sử dụng</GuessesUsed>
     <UnknownWords>Từ ngữ không rõ ràng</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR tự động sửa chữa/kiểm tra chính tả</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR tự động sửa chữa/kiểm tra chính tả</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Sửa lỗi OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Văn bản nhập vào với mã thời gian chính xác...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Lưu hình ảnh phụ đề như...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Lưu tất cả các hình ảnh(png/BDN xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Lưu tất cả các hình ảnh với chỉ số html...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Lưu tất cả các hình ảnh với chỉ số HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} hình ảnh được lưu trong {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Hãy thử MS MODI OCR cho các từ ngữ chưa biết</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Hãy thử Microsoft MODI OCR cho các từ ngữ chưa biết</TryModiForUnknownWords>
     <DictionaryX>Từ điển: {0}</DictionaryX>
     <RightToLeft>Từ phải sang trái</RightToLeft>
     <ShowOnlyForcedSubtitles>Hiển thị phụ đề bắt buộc</ShowOnlyForcedSubtitles>

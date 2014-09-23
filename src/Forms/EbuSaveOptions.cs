@@ -50,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxJustificationCode.Items.Clear();
             comboBoxJustificationCode.Items.Add(language.TextUnchangedPresentation);
             comboBoxJustificationCode.Items.Add(language.TextLeftJustifiedText);
-            comboBoxJustificationCode.Items.Add(language.TextCentredText);
+            comboBoxJustificationCode.Items.Add(language.TextCenteredText);
             comboBoxJustificationCode.Items.Add(language.TextRightJustifiedText);
 
             labelErrors.Text = language.Errors;
@@ -214,7 +214,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonImport_Click(object sender, EventArgs e)
         {
-            openFileDialog1.Filter = "Ebu stl files (*.stl)|*.stl";
+            openFileDialog1.Filter = "EBU STL files (*.stl)|*.stl";
             openFileDialog1.FileName = string.Empty;
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {

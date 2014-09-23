@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                     if (p.PacketizedElementaryStream != null && p.PacketizedElementaryStream.SubPictureStreamId.HasValue &&
                         p.PacketizedElementaryStream.SubPictureStreamId.Value == uniqueStreamId)
                     {
-                        if (p.PacketizedElementaryStream.PresentationTimeStampDecodeTimeStampFlags > 0)
+                        if (p.PacketizedElementaryStream.PresentationTimestampDecodeTimestampFlags > 0)
                         {
                             if (lastIdxParagraph == null || p.IdxLine.FilePosition != lastIdxParagraph.FilePosition)
                             {
@@ -158,7 +158,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                     list.Add(new VobSubMergedPack(ms.ToArray(), pts, streamId, lastIdxParagraph));
                                 ms.Close();
                                 ms = new MemoryStream();
-                                pts = TimeSpan.FromMilliseconds(Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimeStamp / ticksPerMillisecond)); //90000F * 1000)); (PAL)
+                                pts = TimeSpan.FromMilliseconds(Convert.ToDouble(p.PacketizedElementaryStream.PresentationTimestamp / ticksPerMillisecond)); //90000F * 1000)); (PAL)
                                 streamId = p.PacketizedElementaryStream.SubPictureStreamId.Value;
                             }
                         }

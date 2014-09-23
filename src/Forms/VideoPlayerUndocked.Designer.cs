@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class VideoPlayerUnDocked
+    partial class VideoPlayerUndocked
     {
         /// <summary>
         /// Required designer variable.
@@ -48,7 +48,7 @@
             this.timer1.Interval = 3000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // VideoPlayerUnDocked
+            // VideoPlayerUndocked
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -56,12 +56,12 @@
             this.Controls.Add(this.panelContainer);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.KeyPreview = true;
-            this.Name = "VideoPlayerUnDocked";
-            this.Text = "VideoPlayerUnDocked";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VideoPlayerUnDocked_FormClosing);
-            this.Shown += new System.EventHandler(this.VideoPlayerUnDocked_Shown);
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoPlayerUnDocked_KeyDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.VideoPlayerUnDocked_MouseMove);
+            this.Name = "VideoPlayerUndocked";
+            this.Text = "VideoPlayerUndocked";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.VideoPlayerUndocked_FormClosing);
+            this.Shown += new System.EventHandler(this.VideoPlayerUndocked_Shown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VideoPlayerUndocked_KeyDown);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.VideoPlayerUndocked_MouseMove);
             this.ResumeLayout(false);
 
         }
