@@ -11,6 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         internal delegate bool EnumedWindow(IntPtr handleWindow, ArrayList handles);
 
         #region structs, constants and enums
+
         public struct CopyDataStruct
         {
             public UIntPtr dwData;
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             Maximize = 3, // is this the right value?
             /// <summary>
             /// Activates the window and displays it as a maximized window.
-            /// </summary>      
+            /// </summary>
             ShowMaximized = 3,
             /// <summary>
             /// Displays a window in its most recent size and position. This value
@@ -119,9 +120,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         }
 
         public const Int32 WindowsMessageCopyData = 0x4A;
-        #endregion
+
+        #endregion structs, constants and enums
 
         #region Win32 API
+
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommands nCmdShow);
@@ -146,6 +149,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         [DllImport("user32.dll")]
         internal static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
         #endregion Win32 API
 
     }

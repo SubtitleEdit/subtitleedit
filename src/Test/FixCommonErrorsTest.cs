@@ -66,7 +66,7 @@ namespace Test
         public static void MyClassInitialize(TestContext testContext)
         {
             System.Reflection.Assembly asm = System.Reflection.Assembly.GetExecutingAssembly();
-            
+
             if (!Directory.Exists("Directories"))
                 Directory.CreateDirectory("Dictionaries");
             var strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
