@@ -186,11 +186,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static string EncodeText(string text)
         {
             if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
-                return Utilities.HtmlEncode(text);
+                return WebUtility.HtmlEncode(text);
             else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
-                return Utilities.HtmlEncodeFull(text);
+                return HtmlUtils.EncodeNamed(text);
             else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
-                return Utilities.HtmlEncodeFullNumeric(text);
+                return HtmlUtils.EncodeNumeric(text);
             return text;
         }
 
