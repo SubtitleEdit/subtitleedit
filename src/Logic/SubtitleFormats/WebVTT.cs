@@ -81,17 +81,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line;
-
-                if (RegexTimeCodesMiddle.IsMatch(s))
+                bool isTimeCode = line.Contains("-->");
+                if (isTimeCode && RegexTimeCodesMiddle.IsMatch(s))
+                if (isTimeCode && RegexTimeCodesMiddle.IsMatch(s))
                 {
                     s = "00:" + s; // start is without hours, end is with hours
                 }
-                if (RegexTimeCodesShort.IsMatch(s))
+                if (isTimeCode && RegexTimeCodesShort.IsMatch(s))
                 {
                     s = "00:" + s.Replace("--> ", "--> 00:");
                 }
 
-                if (RegexTimeCodes.IsMatch(s))
+                if (isTimeCode && RegexTimeCodes.IsMatch(s))
                 {
                     textDone = false;
                     if (p != null)
