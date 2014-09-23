@@ -12,9 +12,14 @@ namespace UpdateAssemblyInfo
             if (File.Exists(p))
                 return p;
 
-            p = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles(x86)"), @"Git\bin\git.exe");
-            if (File.Exists(p))
-                return p;
+            // This variable doesn't get set on every Windows configuration. (@alfaproject vm for example)
+            var programFiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            if (programFiles != null)
+            {
+                p = Path.Combine(programFiles, @"Git\bin\git.exe");
+                if (File.Exists(p))
+                    return p;
+            }
 
             p = @"C:\Program Files\Git\bin\git.exe";
             if (File.Exists(p))
