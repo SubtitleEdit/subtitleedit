@@ -8,6 +8,7 @@ using System.Drawing.Text;
 using System.Globalization;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -18,13 +19,12 @@ namespace Nikse.SubtitleEdit.Forms
         private string _ssaFontName;
         private double _ssaFontSize;
         private int _ssaFontColor;
-        private bool _starting = true;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
         private string oldVlcLocation;
         private string oldVlcLocationRelative;
 
-        private List<string> _wordListNamesEtc = new List<string>();
+        private readonly List<string> _wordListNamesEtc = new List<string>();
         private List<string> _userWordList = new List<string>();
         private Dictionary<string, string> _ocrFixWords = new Dictionary<string, string>();
         private Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();
@@ -598,7 +598,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             ListWordListLanguages();
-            _starting = false;
 
             checkBoxWaveformShowGrid.Checked = Configuration.Settings.VideoControls.WaveformDrawGrid;
             panelWaveformGridColor.BackColor = Configuration.Settings.VideoControls.WaveformGridColor;
@@ -1728,7 +1727,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // OCR fix words
                 LoadOcrFixList(true);
 
-                LoadNamesEtc(language, _starting, true);
+                LoadNamesEtc(language, true);
             }
         }
 
@@ -1784,54 +1783,31 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void LoadNamesEtc(string language, bool async, bool reloadListBox)
+        private void LoadNamesEtc(string language, bool reloadListBox)
         {
-            if (reloadListBox)
-                listBoxNamesEtc.Items.Clear();
-            _wordListNamesEtc = new List<string>();
-
-            if (async)
-            {
-                var bw = new System.ComponentModel.BackgroundWorker();
-                bw.RunWorkerCompleted += BwRunWorkerCompleted;
-                bw.DoWork += BwDoWork;
-                bw.RunWorkerAsync(language);
-            }
-            else
+            var task = Task.Factory.StartNew(() =>
             {
                 // names etc
+                _wordListNamesEtc.Clear();
                 Utilities.LoadNamesEtcWordLists(_wordListNamesEtc, _wordListNamesEtc, language);
                 _wordListNamesEtc.Sort();
-
-                if (reloadListBox)
+                return _wordListNamesEtc;
+            });
+            
+            if (reloadListBox)
+            {
+                // reload the listbox on a continuation ui thead
+                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
+                task.ContinueWith(originalTask =>
                 {
                     listBoxNamesEtc.BeginUpdate();
-                    foreach (string name in _wordListNamesEtc)
+                    listBoxNamesEtc.Items.Clear();
+                    foreach (var name in originalTask.Result)
+                    {
                         listBoxNamesEtc.Items.Add(name);
+                    }
                     listBoxNamesEtc.EndUpdate();
-                }
-            }
-        }
-
-        private void BwDoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
-        {
-            Utilities.LoadNamesEtcWordLists(_wordListNamesEtc, _wordListNamesEtc, e.Argument.ToString());
-            _wordListNamesEtc.Sort();
-        }
-
-        private void BwRunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
-        {
-            try
-            {
-                listBoxNamesEtc.BeginUpdate();
-                foreach (string name in _wordListNamesEtc)
-                {
-                    listBoxNamesEtc.Items.Add(name);
-                }
-                listBoxNamesEtc.EndUpdate();
-            }
-            catch
-            {
+                }, uiContext);
             }
         }
 
@@ -1851,7 +1827,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
                 Utilities.AddWordToLocalNamesEtcList(text, language);
-                LoadNamesEtc(language, false, true);
+                LoadNamesEtc(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
                 textBoxNameEtc.Focus();
@@ -1932,7 +1908,7 @@ namespace Nikse.SubtitleEdit.Forms
                             doc.DocumentElement.AppendChild(node);
                         }
                         doc.Save(localNamesEtcFileName);
-                        LoadNamesEtc(language, false, false); // reload
+                        LoadNamesEtc(language, false); // reload
 
                         globalNamesEtc.Sort();
                         doc = new XmlDocument();
@@ -1945,7 +1921,7 @@ namespace Nikse.SubtitleEdit.Forms
                             doc.DocumentElement.AppendChild(node);
                         }
                         doc.Save(Utilities.DictionaryFolder + "names_etc.xml");
-                        LoadNamesEtc(language, false, true); // reload
+                        LoadNamesEtc(language, true); // reload
 
                         if (index < listBoxNamesEtc.Items.Count)
                             listBoxNamesEtc.SelectedIndex = index;
