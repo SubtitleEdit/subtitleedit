@@ -12,9 +12,6 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
     public class MpcHc : VideoPlayer, IDisposable
     {
 
-        //MPC-HC X64 AppId = 2ACBF1FA-F5C3-4B19-A774-B22A31F231B9
-        //MPC-HC X86 AppId = 2624B969-7135-4EB1-B0F6-2D8C397B45F7
-
         private const string ModePlay = "0";
         private const string ModePause = "1";
         private string _playMode = string.Empty;
@@ -134,53 +131,51 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         void OnCopyData(object sender, EventArgs e)
         {
-            Message m = (Message)sender;
-            if (m != null)
-            {
-                var cds = (NativeMethods.CopyDataStruct)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.CopyDataStruct));
-                var command = cds.dwData.ToUInt32();
-                var param = Marshal.PtrToStringAuto(cds.lpData);
-                var multiParam = param.Split('|');
+            var message = (Message)sender;
+            var cds = (NativeMethods.CopyDataStruct)Marshal.PtrToStructure(message.LParam, typeof(NativeMethods.CopyDataStruct));
+            var command = cds.dwData.ToUInt32();
+            var param = Marshal.PtrToStringAuto(cds.lpData);
+            var multiParam = param.Split('|');
 
-                switch (cds.dwData.ToUInt32())
-                {
-                    case MpcHcCommand.Connect:
-                        _positionTimer.Stop();
-                        _mpcHandle = (IntPtr)Convert.ToInt64(Marshal.PtrToStringAuto(cds.lpData));
-                        SendMpcMessage(MpcHcCommand.OpenFile, _videoFileName);
-                        _positionTimer.Start();
-                        break;
-                    case MpcHcCommand.PlayMode:
-                        _playMode = param;
-                        if (param == ModePlay && _loaded == 0)
+            switch (cds.dwData.ToUInt32())
+            {
+                case MpcHcCommand.Connect:
+                    _positionTimer.Stop();
+                    _mpcHandle = (IntPtr)Convert.ToInt64(Marshal.PtrToStringAuto(cds.lpData));
+                    SendMpcMessage(MpcHcCommand.OpenFile, _videoFileName);
+                    _positionTimer.Start();
+                    break;
+                case MpcHcCommand.PlayMode:
+                    _playMode = param;
+                    if (param == ModePlay && _loaded == 0)
+                    {
+                        _loaded = 1;
+                        if (!HijackMpcHc())
                         {
-                            _loaded = 1;
-                            if (!HiJackMpcHc())
-                            {
-                                Application.DoEvents();
-                                HiJackMpcHc();
-                            }
+                            Application.DoEvents();
+                            HijackMpcHc();
                         }
-                        break;
-                    case MpcHcCommand.NowPlaying:
-                        if (_loaded == 1)
-                        {
-                            _loaded = 2;
-                            _durationInSeconds = double.Parse(multiParam[4], CultureInfo.InvariantCulture);
-                            Pause();
-                            Resize(_initialWidth, _initialHeight);
-                            if (OnVideoLoaded != null)
-                                OnVideoLoaded.Invoke(this, new EventArgs());
-                        }
-                        break;
-                    case MpcHcCommand.NotifyEndOfStream:
-                        if (OnVideoEnded != null)
-                            OnVideoEnded.Invoke(this, new EventArgs());
-                        break;
-                    case MpcHcCommand.CurrentPosition:
-                        _positionInSeconds = double.Parse(param, CultureInfo.InvariantCulture);
-                        break;
-                }
+                    }
+                    break;
+                case MpcHcCommand.NowPlaying:
+                    if (_loaded == 1)
+                    {
+                        _loaded = 2;
+                        _durationInSeconds = double.Parse(multiParam[4], CultureInfo.InvariantCulture);
+                        Pause();
+                        Resize(_initialWidth, _initialHeight);
+                        if (OnVideoLoaded != null)
+                            OnVideoLoaded.Invoke(this, new EventArgs());
+                        SendMpcMessage(MpcHcCommand.SetSubtitleTrack, "-1");
+                    }
+                    break;
+                case MpcHcCommand.NotifyEndOfStream:
+                    if (OnVideoEnded != null)
+                        OnVideoEnded.Invoke(this, new EventArgs());
+                    break;
+                case MpcHcCommand.CurrentPosition:
+                    _positionInSeconds = double.Parse(param, CultureInfo.InvariantCulture);
+                    break;
             }
         }
 
@@ -198,30 +193,29 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             return windowHandles;
         }
 
-        private static bool IsHpcHcVideo(IntPtr hWnd)
+        private static bool IsWindowHpcHcVideo(IntPtr hWnd)
         {
-            var className = new StringBuilder(256); // Pre-allocate 256 characters, since this is the maximum class name length.
+            var className = new StringBuilder(256);
             int returnCode = NativeMethods.GetClassName(hWnd, className, className.Capacity); // Get the window class name
             if (returnCode != 0)
                 return (className.ToString().EndsWith(":b:0000000000010003:0000000000000006:0000000000000000")); // MPC-HC video class???
             return false;
         }
 
-        private bool HiJackMpcHc()
+        private bool HijackMpcHc()
         {
             IntPtr handle = _process.MainWindowHandle;
             var handles = GetChildWindows();
             foreach (var h in handles)
             {
-                if (IsHpcHcVideo((IntPtr)h))
+                if (IsWindowHpcHcVideo((IntPtr)h))
                 {
                     _videoHandle = (IntPtr)h;
                     NativeMethods.SetParent((IntPtr)h, _videoPanelHandle);
-                    NativeMethods.SetWindowPos(handle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -999, -999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
+                    NativeMethods.SetWindowPos(handle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
                     return true;
                 }
             }        
-            NativeMethods.SetParent(handle, _videoPanelHandle);
             return false;
         }
 
@@ -238,48 +232,42 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
             if (IntPtr.Size == 8) // 64-bit
             {
+                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1");
+                if (key != null)
+                {
+                    path = (string)key.GetValue("InstallLocation");
+                    path = Path.Combine(path, "mpc-hc64.exe");
+                    if (File.Exists(path))
+                        return path;
+                }
+
                 path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc64.exe");
+                if (File.Exists(path))
+                    return path;
+
+                path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe");
                 if (File.Exists(path))
                     return path;
             }
             else 
             {
+                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1");
+                if (key != null)
+                {
+                    path = (string)key.GetValue("InstallLocation");
+                    path = Path.Combine(path, "mpc-hc64.exe");
+                    if (File.Exists(path))
+                        return path;
+                }
+
                 path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
                     return path;
-            }
-
-            var key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey(@"SOFTWARE\MPC-HC\MPC-HC");
-            if (key != null)
-            {
-                path = (string)key.GetValue("ExePath");
+               
+                path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
                     return path;
             }
-
-            path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc.exe");
-            if (File.Exists(path))
-                return path;
-
-            path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc.exe");
-            if (File.Exists(path))
-                return path;
-
-            path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc64.exe");
-            if (File.Exists(path))
-                return path;
-
-            path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe");
-            if (File.Exists(path))
-                return path;
-
-            path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe");
-            if (File.Exists(path))
-                return path;
-
-            path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc.exe");
-            if (File.Exists(path))
-                return path;
 
             return null;
         }

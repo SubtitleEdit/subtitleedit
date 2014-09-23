@@ -10,6 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         public MessageHandlerWindow()
         {
             InitializeComponent();
+            Text = Guid.NewGuid().ToString();
         }
 
         protected override void WndProc(ref Message m)
