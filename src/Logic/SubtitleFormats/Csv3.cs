@@ -37,8 +37,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (line.StartsWith("$FontName") || line.StartsWith("$ColorIndex1"))
                     return false;
-                Match m = CsvLine.Match(line);
-                if (m.Success)
+                Match m = null;
+                if (line.Length > 8 && line[2] == ':')
+                    m = CsvLine.Match(line);
+                if (m != null && m.Success)
                 {
                     fine++;
                     string s = line.Remove(0, m.Length);
