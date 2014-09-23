@@ -211,7 +211,7 @@
             this.toolStripSeparator9 = new System.Windows.Forms.ToolStripSeparator();
             this.GetDictionariesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addWordToNamesetcListToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemSyncronization = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemSynchronization = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemAdjustAllTimes = new System.Windows.Forms.ToolStripMenuItem();
             this.visualSyncToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemPointSync = new System.Windows.Forms.ToolStripMenuItem();
@@ -854,7 +854,7 @@
             this.toolsToolStripMenuItem,
             this.toolStripMenuItemVideo,
             this.toolStripMenuItemSpellCheckMain,
-            this.toolStripMenuItemSyncronization,
+            this.toolStripMenuItemSynchronization,
             this.toolStripMenuItemAutoTranslate,
             this.optionsToolStripMenuItem,
             this.toolStripMenuItemNetworking,
@@ -1072,7 +1072,7 @@
             // 
             this.toolStripMenuItemImportDvdSubtitles.Name = "toolStripMenuItemImportDvdSubtitles";
             this.toolStripMenuItemImportDvdSubtitles.Size = new System.Drawing.Size(337, 22);
-            this.toolStripMenuItemImportDvdSubtitles.Text = "Import/OCR subtitle from vob/ifo (dvd) ...";
+            this.toolStripMenuItemImportDvdSubtitles.Text = "Import/OCR subtitle from VOB/IFO (DVD) ...";
             this.toolStripMenuItemImportDvdSubtitles.Click += new System.EventHandler(this.ToolStripMenuItemImportDvdSubtitlesClick);
             // 
             // toolStripMenuItemSubIdx
@@ -1093,7 +1093,7 @@
             // 
             this.toolStripMenuItemImportXSub.Name = "toolStripMenuItemImportXSub";
             this.toolStripMenuItemImportXSub.Size = new System.Drawing.Size(337, 22);
-            this.toolStripMenuItemImportXSub.Text = "Import/OCR xsub from divx/avi...";
+            this.toolStripMenuItemImportXSub.Text = "Import/OCR XSub from divx/avi...";
             this.toolStripMenuItemImportXSub.Click += new System.EventHandler(this.toolStripMenuItemImportXSub_Click);
             // 
             // toolStripMenuItemImportOcrHardSub
@@ -1183,7 +1183,7 @@
             // 
             this.toolStripMenuItemAvidStl.Name = "toolStripMenuItemAvidStl";
             this.toolStripMenuItemAvidStl.Size = new System.Drawing.Size(258, 22);
-            this.toolStripMenuItemAvidStl.Text = "Avid stl...";
+            this.toolStripMenuItemAvidStl.Text = "Avid STL...";
             this.toolStripMenuItemAvidStl.Click += new System.EventHandler(this.toolStripMenuItemAvidStl_Click);
             // 
             // toolStripMenuItemExportPngXml
@@ -1979,18 +1979,18 @@
             this.addWordToNamesetcListToolStripMenuItem.Text = "Add word to names/etc list";
             this.addWordToNamesetcListToolStripMenuItem.Click += new System.EventHandler(this.AddWordToNamesetcListToolStripMenuItemClick);
             // 
-            // toolStripMenuItemSyncronization
+            // toolStripMenuItemSynchronization
             // 
-            this.toolStripMenuItemSyncronization.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripMenuItemSynchronization.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItemAdjustAllTimes,
             this.visualSyncToolStripMenuItem,
             this.toolStripMenuItemPointSync,
             this.pointSyncViaOtherSubtitleToolStripMenuItem,
             this.toolStripMenuItemChangeFrameRate2,
             this.changeSpeedInPercentToolStripMenuItem});
-            this.toolStripMenuItemSyncronization.Name = "toolStripMenuItemSyncronization";
-            this.toolStripMenuItemSyncronization.Size = new System.Drawing.Size(97, 20);
-            this.toolStripMenuItemSyncronization.Text = "Syncronization";
+            this.toolStripMenuItemSynchronization.Name = "toolStripMenuItemSynchronization";
+            this.toolStripMenuItemSynchronization.Size = new System.Drawing.Size(97, 20);
+            this.toolStripMenuItemSynchronization.Text = "Synchronization";
             // 
             // toolStripMenuItemAdjustAllTimes
             // 
@@ -2378,7 +2378,7 @@
             // 
             this.toolStripMenuItemMergeDialogue.Name = "toolStripMenuItemMergeDialogue";
             this.toolStripMenuItemMergeDialogue.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemMergeDialogue.Text = "Merge selected lines as dialogue";
+            this.toolStripMenuItemMergeDialogue.Text = "Merge selected lines as dialog";
             this.toolStripMenuItemMergeDialogue.Click += new System.EventHandler(this.ToolStripMenuItemMergeDialogueClick);
             // 
             // mergeBeforeToolStripMenuItem
@@ -2855,7 +2855,7 @@
             this.buttonCustomUrl2.Name = "buttonCustomUrl2";
             this.buttonCustomUrl2.Size = new System.Drawing.Size(244, 21);
             this.buttonCustomUrl2.TabIndex = 4;
-            this.buttonCustomUrl2.Text = "Custom url";
+            this.buttonCustomUrl2.Text = "Custom URL";
             this.buttonCustomUrl2.UseVisualStyleBackColor = true;
             this.buttonCustomUrl2.Click += new System.EventHandler(this.buttonCustomUrl2_Click);
             // 
@@ -2866,7 +2866,7 @@
             this.buttonCustomUrl1.Name = "buttonCustomUrl1";
             this.buttonCustomUrl1.Size = new System.Drawing.Size(244, 21);
             this.buttonCustomUrl1.TabIndex = 3;
-            this.buttonCustomUrl1.Text = "Custom url";
+            this.buttonCustomUrl1.Text = "Custom URL";
             this.buttonCustomUrl1.UseVisualStyleBackColor = true;
             this.buttonCustomUrl1.Click += new System.EventHandler(this.buttonCustomUrl_Click);
             // 
@@ -4677,7 +4677,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator9;
         private System.Windows.Forms.ToolStripMenuItem GetDictionariesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem addWordToNamesetcListToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSyncronization;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSynchronization;
         private System.Windows.Forms.ToolStripMenuItem visualSyncToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemPointSync;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemAdjustAllTimes;

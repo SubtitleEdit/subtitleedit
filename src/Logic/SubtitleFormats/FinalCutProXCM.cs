@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "      <spine>" + Environment.NewLine +
                 "        <clip offset=\"0s\" name=\"Untitled\" duration=\"147005859/24000s\" tcFormat=\"NDF\">" + Environment.NewLine +
                 "          <video offset=\"0s\" ref=\"r6\" duration=\"147005859/24000s\">" + Environment.NewLine +
-                "            <audio lane=\"-1\" offset=\"0s\" ref=\"r6\" duration=\"147005000/24000s\" role=\"dialogue\"/>" + Environment.NewLine +
+                "            <audio lane=\"-1\" offset=\"0s\" ref=\"r6\" duration=\"147005000/24000s\" role=\"dialog\"/>" + Environment.NewLine +
                 "          </video>" + Environment.NewLine +
                 "        </clip>" + Environment.NewLine +
                 "      </spine>" + Environment.NewLine +

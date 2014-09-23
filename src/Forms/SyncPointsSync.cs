@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private Subtitle _originalSubtitle;
         private Subtitle _otherSubtitle;
-        private SortedDictionary<int, TimeSpan> _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
+        private SortedDictionary<int, TimeSpan> _synchronizationPoints = new SortedDictionary<int, TimeSpan>();
         private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
@@ -54,8 +54,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFindTextOther.Text = Configuration.Settings.Language.VisualSync.FindText;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            SubtitleListview1.InitializeTimeStampColumWidths(this);
-            subtitleListView2.InitializeTimeStampColumWidths(this);
+            SubtitleListview1.InitializeTimestampColumnWidths(this);
+            subtitleListView2.InitializeTimestampColumnWidths(this);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             Utilities.InitializeSubtitleFont(subtitleListView2);
             SubtitleListview1.AutoSizeAllColumns(this);
@@ -139,19 +139,19 @@ namespace Nikse.SubtitleEdit.Forms
             MinimumSize = new Size(Width - 50, MinimumSize.Height);
         }
 
-        private void RefreshSyncronizationPointsUI()
+        private void RefreshSynchronizationPointsUI()
         {
-            buttonApplySync.Enabled = _syncronizationPoints.Count > 0;
-            labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, _syncronizationPoints.Count);
+            buttonApplySync.Enabled = _synchronizationPoints.Count > 0;
+            labelNoOfSyncPoints.Text = string.Format(Configuration.Settings.Language.PointSync.SyncPointsX, _synchronizationPoints.Count);
 
             listBoxSyncPoints.Items.Clear();
 
             for (int i = 0; i < SubtitleListview1.Items.Count; i++)
             {
-                if (_syncronizationPoints.ContainsKey(i))
+                if (_synchronizationPoints.ContainsKey(i))
                 {
                     var p = new Paragraph();
-                    p.StartTime.TotalMilliseconds = _syncronizationPoints[i].TotalMilliseconds;
+                    p.StartTime.TotalMilliseconds = _synchronizationPoints[i].TotalMilliseconds;
                     p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + _subtitle.Paragraphs[i].Duration.TotalMilliseconds;
                     SubtitleListview1.SetStartTime(i, p);
 
@@ -184,11 +184,11 @@ namespace Nikse.SubtitleEdit.Forms
                     getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
                     if (getTime.ShowDialog(this) == DialogResult.OK)
                     {
-                        if (_syncronizationPoints.ContainsKey(index))
-                            _syncronizationPoints[index] = getTime.SyncronizationPoint;
+                        if (_synchronizationPoints.ContainsKey(index))
+                            _synchronizationPoints[index] = getTime.SynchronizationPoint;
                         else
-                            _syncronizationPoints.Add(index, getTime.SyncronizationPoint);
-                        RefreshSyncronizationPointsUI();
+                            _synchronizationPoints.Add(index, getTime.SynchronizationPoint);
+                        RefreshSynchronizationPointsUI();
                         _videoFileName = getTime.VideoFileName;
                     }
                     Activate();
@@ -204,11 +204,11 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = SubtitleListview1.SelectedItems[0].Index;
                 int indexOther = subtitleListView2.SelectedItems[0].Index;
 
-                if (_syncronizationPoints.ContainsKey(index))
-                    _syncronizationPoints[index] = TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds);
+                if (_synchronizationPoints.ContainsKey(index))
+                    _synchronizationPoints[index] = TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds);
                 else
-                    _syncronizationPoints.Add(index, TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds));
-                RefreshSyncronizationPointsUI();
+                    _synchronizationPoints.Add(index, TimeSpan.FromMilliseconds(_otherSubtitle.Paragraphs[indexOther].StartTime.TotalMilliseconds));
+                RefreshSynchronizationPointsUI();
             }
         }
 
@@ -217,9 +217,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle != null)
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                if (_syncronizationPoints.ContainsKey(index))
-                    _syncronizationPoints.Remove(index);
-                RefreshSyncronizationPointsUI();
+                if (_synchronizationPoints.ContainsKey(index))
+                    _synchronizationPoints.Remove(index);
+                RefreshSynchronizationPointsUI();
             }
         }
 
@@ -299,20 +299,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSync_Click(object sender, EventArgs e)
         {
-            if (_syncronizationPoints.Count == 1)
+            if (_synchronizationPoints.Count == 1)
             {
-                foreach (KeyValuePair<int, TimeSpan> kvp in _syncronizationPoints)
+                foreach (KeyValuePair<int, TimeSpan> kvp in _synchronizationPoints)
                     AdjustViaShowEarlierLater(kvp.Key, kvp.Value.TotalMilliseconds);
-                _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
+                _synchronizationPoints = new SortedDictionary<int, TimeSpan>();
                 SubtitleListview1.Fill(_subtitle);
-                RefreshSyncronizationPointsUI();
+                RefreshSynchronizationPointsUI();
                 return;
             }
 
             int endIndex = -1;
             int minIndex = 0;
             List<int> syncIndices = new List<int>();
-            foreach (KeyValuePair<int, TimeSpan> kvp in _syncronizationPoints)
+            foreach (KeyValuePair<int, TimeSpan> kvp in _synchronizationPoints)
                 syncIndices.Add(kvp.Key);
             for (int i = 0; i < syncIndices.Count; i++)
             {
@@ -331,14 +331,14 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         maxIndex = syncIndices[i]; // maxIndex = syncIndices[i + 1];
 
-                    Sync(startIndex, endIndex, minIndex, maxIndex, _syncronizationPoints[startIndex].TotalMilliseconds / 1000.0, _syncronizationPoints[endIndex].TotalMilliseconds / 1000.0);
+                    Sync(startIndex, endIndex, minIndex, maxIndex, _synchronizationPoints[startIndex].TotalMilliseconds / 1000.0, _synchronizationPoints[endIndex].TotalMilliseconds / 1000.0);
 
                     minIndex = endIndex;
                 }
             }
-            _syncronizationPoints = new SortedDictionary<int, TimeSpan>();
+            _synchronizationPoints = new SortedDictionary<int, TimeSpan>();
             SubtitleListview1.Fill(_subtitle);
-            RefreshSyncronizationPointsUI();
+            RefreshSynchronizationPointsUI();
         }
 
         private void AdjustViaShowEarlierLater(int index, double newTotalMilliseconds)
@@ -362,7 +362,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count == 1)
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                if (_syncronizationPoints.ContainsKey(index))
+                if (_synchronizationPoints.ContainsKey(index))
                     buttonRemoveSyncPoint_Click(null, null);
                 else
                     buttonSetSyncPoint_Click(null, null);

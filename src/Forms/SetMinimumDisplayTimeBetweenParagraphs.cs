@@ -24,7 +24,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
-            SubtitleListview1.InitializeTimeStampColumWidths(this);
+            SubtitleListview1.InitializeTimestampColumnWidths(this);
             FixLargeFonts();
 
             groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;

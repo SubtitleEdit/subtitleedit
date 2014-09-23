@@ -445,7 +445,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string Name
         {
-            get { return "EBU stl"; }
+            get { return "EBU STL"; }
         }
 
         public override bool IsTimeBased

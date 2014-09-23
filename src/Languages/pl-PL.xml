@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Usuń tagi formatujące</RemoveFormatting>
     <RemoveTextForHI>Usuń tekst dla HI</RemoveTextForHI>
     <OverwriteOriginalFiles>Nadpisz oryginalne pliki (nowe rozszerzenie, jeśli format jest zmieniany)</OverwriteOriginalFiles>
-    <ReDoCasing>Ponów wielkie litery</ReDoCasing>
+    <RedoCasing>Ponów wielkie litery</RedoCasing>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Linia {0} przekracza maksymalną długość ({1}) o {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Prezentacja bez zmian</TextUnchangedPresentation>
     <TextLeftJustifiedText>Wyrównanie tekstu do lewej</TextLeftJustifiedText>
-    <TextCentredText>Wyrównanie tekstu do środka</TextCentredText>
+    <TextCenteredText>Wyrównanie tekstu do środka</TextCenteredText>
     <TextRightJustifiedText>Wyrównanie tekstu do prawej</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -688,7 +688,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Przywróć automatycznie zapisaną kopię zapasową...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Właściwości Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Właściwości Sub Station Alpha...</SubStationAlphaProperties>
-        <EbuProperties>Właściwości EBU stl...</EbuProperties>
+        <EbuProperties>Właściwości EBU STL...</EbuProperties>
         <PacProperties>Właściwości PAC...</PacProperties>
         <OpenOriginal>Otwórz oryginalne napisy (tryb tłumacza)...</OpenOriginal>
         <SaveOriginal>Zapisz oryginalne napisy</SaveOriginal>
@@ -700,7 +700,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importuj/OCR napisy z VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importuj/OCR napisy z BluRay (.sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importuj/OCR xsub z divx/avi...</ImportXSub>
+        <ImportXSub>Importuj/OCR XSub z divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importuj napisy z pliku Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznym wyborem kodowania...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importuj czysty tekst...</ImportText>
@@ -711,12 +711,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Zwykły tekst...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Skrypt obrazu Adobe Encore FAB...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Koreańskie pary plików ATS...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1123,8 +1123,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <VobSubFiles>Pliki napisów VobSub</VobSubFiles>
     <OpenBluRaySupFile>Otwórz plik Blu-ray .sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Pliki Blu-ray .sup</BluRaySupFiles>
-    <OpenXSubFiles>Otwórz plik xsub...</OpenXSubFiles>
-    <XSubFiles>Pliki xsub</XSubFiles>
+    <OpenXSubFiles>Otwórz plik XSub...</OpenXSubFiles>
+    <XSubFiles>Pliki XSub</XSubFiles>
     <BeforeImportingVobSubFile>Przed importem napisów VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Przed importem napisów BluRay (.sup)</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Przed importem pliku BDN xml</BeforeImportingBdnXml>
@@ -1210,13 +1210,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <StatusLog>Status Dziennika zdarzeń</StatusLog>
     <XSceneChangesImported>Zaimportowano {0} zmian w scenach</XSceneChangesImported>
     <PluginXExecuted>Wtyczka '{0}' wykonana.</PluginXExecuted>
-    <NotAValidXSubFile>Niepoprawny plik xsub!</NotAValidXSubFile>
+    <NotAValidXSubFile>Niepoprawny plik XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Przed połączeniem linii z takim samym tekstem</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Napisy z kodami czasowymi różnią się ilością linii ({0}) od aktualnych napisów ({1}) - Czy na pewno chcesz kontynuować?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Parsowanie strumienia transportowego - proszę czekać...</ParsingTransportStream>
-    <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane również VobSub), a SE może otworzyć tylko plik .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. SE nie otwiera plików skompresowanych.</ErrorLoadRar>
-    <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. SE nie otwiera plików skompresowanych.</ErrorLoadZip>
+    <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane również VobSub), a Subtitle Edit może otworzyć tylko plik .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
+    <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -1485,7 +1485,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <AllowEditOfOriginalSubtitle>Zezwalaj na edycję oryginalnych napisów</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Pytaj podczas usuwania linii</PromptDeleteLines>
     <TimeCodeMode>Tryb kodów czasowych</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Silnik wideo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1908,7 +1908,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Importuj/OCR napisy VobSub (sub/idx)</Title>
     <TitleBluRay>Importuj/OCR napisy Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Metoda OCR</OcrMethod>
-    <OcrViaModi>OCR za pomocą Microsoft Office Document Imaging (MODI). Wymagany MS Office</OcrViaModi>
+    <OcrViaModi>OCR za pomocą Microsoft Office Document Imaging (MODI). Wymagany Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR za pomocą Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR za pomocą nOCR</OcrViaNOCR>
     <Language>Język</Language>
@@ -1941,15 +1941,15 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <AllFixes>Wszystkie poprawki</AllFixes>
     <GuessesUsed>Użyte przypuszczenia</GuessesUsed>
     <UnknownWords>Nierozpoznane słowa</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Automatyczna korekta OCR / Sprawdzanie pisowni</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Automatyczna korekta OCR / Sprawdzanie pisowni</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Popraw błędy OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importuj tekst z pasującymi kodami czasowymi...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importuj nowe kody czasowe</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Zapisz obraz napisu jako...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Zapisz wszystkie obrazy (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Zapisz wszystkie obrazy z indeksem html...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Zapisz wszystkie obrazy z indeksem HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>Zapisano {0} obrazów w {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Wypróbuj MS MODI OCR dla nieznanych słów</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Wypróbuj Microsoft MODI OCR dla nieznanych słów</TryModiForUnknownWords>
     <DictionaryX>Słownik: {0}</DictionaryX>
     <RightToLeft>Od prawej do lewej</RightToLeft>
     <ShowOnlyForcedSubtitles>Pokaż tylko wymuszone napisy</ShowOnlyForcedSubtitles>

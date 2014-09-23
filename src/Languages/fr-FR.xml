@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Numéro</Number>
     <Text>Texte</Text>
-    <HourMinutesSecondsMilliseconds>heure:min:sec:msec</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>heure:min:sec:ms</HourMinutesSecondsMilliseconds>
     <Bold>Gras</Bold>
     <Italic>Italique</Italic>
     <Underline>Souligner</Underline>
@@ -147,7 +147,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Supprimer les balises de mise en forme</RemoveFormatting>
     <RemoveTextForHI>Supprimer texte surdité</RemoveTextForHI>
     <OverwriteOriginalFiles>Remplacer les fichiers originaux (nouvelle extension si le format est différent)</OverwriteOriginalFiles>
-    <ReDoCasing>Définir majuscules/minuscules</ReDoCasing>
+    <RedoCasing>Définir majuscules/minuscules</RedoCasing>
     <Convert>Convertir</Convert>
     <NothingToConvert>Rien à convertir !</NothingToConvert>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
@@ -343,7 +343,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Ligne {0} dépasse longueur max ({1}) à {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Présentation inchangée</TextUnchangedPresentation>
     <TextLeftJustifiedText>Texte justifié à gauche</TextLeftJustifiedText>
-    <TextCentredText>Texte centré</TextCentredText>
+    <TextCenteredText>Texte centré</TextCenteredText>
     <TextRightJustifiedText>Texte justifié à droite</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -410,7 +410,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <SaveBluRraySupAs>Enregistrer en tant que Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Enregistrer en tant que VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Enregistrer en tant FabImage Script</SaveFabImageScriptAs>
-    <SaveDvdStudioProStlAs>Enregistrer en tant Dvd Studio Pro Stl</SaveDvdStudioProStlAs>
+    <SaveDvdStudioProStlAs>Enregistrer en tant DVD Studio Pro Stl</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Certaines lignes sont trop longues:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Hauteur de ligne</LineHeight>
@@ -485,7 +485,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpaces>Rajouter les espaces manquants</FixMissingSpaces>
     <BreakLongLines>Couper les lignes longues</BreakLongLines>
     <RemoveLineBreaks>Supprimer les sauts de lignes dans les paragraphes courts avec une seule phrase</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogues)</RemoveLineBreaksAll>
+    <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogs)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Corriger le 'i' majuscule à l'intérieur des mots (erreur OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Remplacer les apostrophes doubles ('') par un guillemet (")</FixDoubleApostrophes>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
@@ -496,7 +496,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Corriger les erreurs OCR fréquentes (d'après la liste des correctifs OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erreurs OCR fréquentes corrigées (d'après le fichier OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Supprimer les espaces entre les numéros</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Corriger les dialogues sur une ligne</FixDialogsOnOneLine>
+    <FixDialogsOnOneLine>Corriger les dialogs sur une ligne</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Suppressions des espaces entre les numéros: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Corriger le turque ANSI par Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Corriger le 'i' danois</FixDanishLetterI>
@@ -524,7 +524,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <XIsChangedToUppercase>{0} i mis en majuscule</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Mettre la première lettre en majuscule après un paragraphe</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Fusionner ligne courte</MergeShortLine>
-    <MergeShortLineAll>Joindre lignes courtes (sauf dialogues)</MergeShortLineAll>
+    <MergeShortLineAll>Joindre lignes courtes (sauf dialogs)</MergeShortLineAll>
     <XLineBreaksAdded>{0} saut(s) de lignes ajouté(s)</XLineBreaksAdded>
     <BreakLongLine>Couper ligne longue</BreakLongLine>
     <FixLongDisplayTime>Corriger temps long</FixLongDisplayTime>
@@ -543,7 +543,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Impossible de corriger le texte n°{0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} chevauchement(s) temporel(s) corrigé(s)</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} temps d'affichage prolongé(s)</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} marquage(s) html corrigé(s)</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} marquage(s) HTML corrigé(s)</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} temps d'affichage raccourci(s)</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} ligne(s) recollée(s)</XLinesUnbreaked>
     <UnneededSpace>Espace inutile</UnneededSpace>
@@ -688,7 +688,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restauration à partir d'auto-backup...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Advanced SubStation Alpha propriétés...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>SubStation Alpha propriétés...</SubStationAlphaProperties>
-        <EbuProperties>EBU stl propriétés...</EbuProperties>
+        <EbuProperties>EBU STL propriétés...</EbuProperties>
         <PacProperties>PAC propriétés...</PacProperties>
         <OpenOriginal>Ouvrir sous-titre original (mode traduction)...</OpenOriginal>
         <SaveOriginal>Sauver original</SaveOriginal>
@@ -700,7 +700,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <ImportOcrFromDvd>Importer sous-titres OCR de VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importer sous-titres OCR de VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importer sous-titres OCR de Blu-ray (sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importer sous-titres OCR de divx/avi (xsub)...</ImportXSub>
+        <ImportXSub>Importer sous-titres OCR de divx/avi (XSub)...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importer sous-titres d'un fichier Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importer sous-titres en choisissant l'encodage...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importer texte...</ImportText>
@@ -711,12 +711,12 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Texte en clair...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS file pair...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -882,7 +882,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copier la colonne de texte en cours</ColumnCopyOriginalTextToCurrent>
         <Split>Scinder</Split>
         <MergeSelectedLines>Fusionner (lignes sélec.)</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Fusionner - style dialogue</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesASDialogue>Fusionner - style dialog</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Fusionner ligne précédente</MergeWithLineBefore>
         <MergeWithLineAfter>Fusionner ligne suivante</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -952,8 +952,8 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
       <SearchTextOnline>Chercher texte en ligne</SearchTextOnline>
       <GoogleTranslate>Traduction Google</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>
-      <SecondsBackShort>&lt;&lt; secs</SecondsBackShort>
-      <SecondsForwardShort>secs &gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;&lt; s</SecondsBackShort>
+      <SecondsForwardShort>s &gt;&gt;</SecondsForwardShort>
       <VideoPosition>Position vidéo:</VideoPosition>
       <TranslateTip>&lt;alt+flèche haut/bas&gt; pour avancer/reculer d'un sous-titre</TranslateTip>
       <CreateTip>&lt;ctrl+flèche gauche/droite&gt;</CreateTip>
@@ -1121,8 +1121,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <VobSubFiles>Fichiers sous-titres VobSub</VobSubFiles>
     <OpenBluRaySupFile>Ouvrir sous-titres Blu-ray (sup)...</OpenBluRaySupFile>
     <BluRaySupFiles>Fichiers sous-titres Blu-ray</BluRaySupFiles>
-    <OpenXSubFiles>Ouvrir fichiers xsub...</OpenXSubFiles>
-    <XSubFiles>Fichiers xsub</XSubFiles>
+    <OpenXSubFiles>Ouvrir fichiers XSub...</OpenXSubFiles>
+    <XSubFiles>Fichiers XSub</XSubFiles>
     <BeforeImportingVobSubFile>Avant d'importer des sous-titres VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Avant d'importer des sous-titres Blu-ray</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Avant d'importer un fichier XML BDN</BeforeImportingBdnXml>
@@ -1186,7 +1186,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Vérification d'orthographe annulée. {0} lignes modifiées.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Vérification d'orthographe terminée. {0} lignes modifiées.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Ouvrir un autre sous-titre</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Avant de modifier les tirets de dialogue</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogueDashes>Avant de modifier les tirets de dialog</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Export de texte brut</ExportPlainTextAs>
     <TextFiles>Fichiers texte</TextFiles>
     <SubtitleExported>Sous-titres exportés</SubtitleExported>
@@ -1214,9 +1214,9 @@ Poursuivre?</SubtitleAppendPrompt>
 
  Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
-    <ErrorLoadIdx>SE ne peut pas lire les fichiers .idx. Ils font partie de paires de fichiers idx/sub (également appelés VobSub). SE peut ouvrir le fichier .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Ce fichier est une archive .rar. SE ne peut pas ouvrir les fichiers compressés.</ErrorLoadRar>
-    <ErrorLoadZip>Ce fichier est une archive .zip. SE ne peut pas ouvrir les fichiers compressés.</ErrorLoadZip>
+    <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx. Ils font partie de paires de fichiers idx/sub (également appelés VobSub). Subtitle Edit peut ouvrir le fichier .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Ce fichier est une archive .rar. Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadRar>
+    <ErrorLoadZip>Ce fichier est une archive .zip. Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska
@@ -1421,10 +1421,10 @@ Poursuivre?</SubtitleAppendPrompt>
   <SetSyncPoint>
     <Title>Définir point de synchronisation à la ligne {0}</Title>
     <SyncPointTimeCode>Sync. le code de temps</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 secs</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ sec</HalfASecondBack>
-    <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 secs &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
+    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Configuration</Title>
@@ -1488,7 +1488,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <AllowEditOfOriginalSubtitle>Autoriser la modification du sous-titre original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmer la suppression des lignes</PromptDeleteLines>
     <TimeCodeMode>Mode de timecode :</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Moteur de rendu vidéo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1505,7 +1505,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <ShowFullscreenButton>Afficher touche plein écran</ShowFullscreenButton>
     <PreviewFontSize>Taille de police pour aperçu :</PreviewFontSize>
     <MainWindowVideoControls>Contrôles principaux de la fenêtre vidéo</MainWindowVideoControls>
-    <CustomSearchTextAndUrl>Recherche texte et url personnalisée</CustomSearchTextAndUrl>
+    <CustomSearchTextAndUrl>Recherche texte et URL personnalisée</CustomSearchTextAndUrl>
     <WaveformAppearance>Apparence du spectrogramme</WaveformAppearance>
     <WaveformGridColor>Couleur de la grille</WaveformGridColor>
     <WaveformShowGridLines>Afficher le quadrillage</WaveformShowGridLines>
@@ -1850,7 +1850,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Remove>Effacer</Remove>
     <RemoveAll>Supprimer tout</RemoveAll>
     <ImportStyleFromFile>Importer fichier de style...</ImportStyleFromFile>
-    <ExportStyleToFile>Exportation fichier de style…  (Ajoute le style si le fichier existe déjà)</ExportStyleToFile>
+    <ExportStyleToFile>Exportation fichier de style... (Ajoute le style si le fichier existe déjà)</ExportStyleToFile>
     <ChooseStyle>Choisir le style à importer</ChooseStyle>
     <StyleAlreadyExits>Style existe déjà: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Style '{0}' exporté dans fichier '{1}'</StyleXExportedToFileY>
@@ -1880,8 +1880,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <StartScene>Scène initiale</StartScene>
     <EndScene>Scène finale</EndScene>
     <Synchronize>Synchroniser</Synchronize>
-    <HalfASecondBack>&lt; ½ sec</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 sec</ThreeSecondsBack>
+    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
     <PlayXSecondsAndBack>Lire {0} s puis retour</PlayXSecondsAndBack>
     <FindText>Rechercher texte</FindText>
     <GoToSubPosition>Aller sous-position</GoToSubPosition>
@@ -1941,13 +1941,13 @@ Poursuivre?</SubtitleAppendPrompt>
     <AllFixes>Tous les correctifs</AllFixes>
     <GuessesUsed>Suppositions utilisées</GuessesUsed>
     <UnknownWords>Mots inconnus</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Correction auto. OCR/Vérification d'orthographe</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Correction auto. OCR/Vérification d'orthographe</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Correction des erreurs</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importer du texte avec les timecodes correspondants...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importer nouveaux timecodes</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Sauver images de sous-titre sous...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Enregistrer toutes les images (PNG/BDN xml )...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Enregistrer toutes les images avec index html...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Enregistrer toutes les images avec index HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} images enregistrées dans {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Tenter OCR MODI pour mots inconnus</TryModiForUnknownWords>
     <DictionaryX>Dictionnaire: {0}</DictionaryX>
@@ -2024,6 +2024,6 @@ Poursuivre?</SubtitleAppendPrompt>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>Web VTT – Définir l’interprète</Title>
-    <VoiceName>Interprète du dialogue</VoiceName>
+    <VoiceName>Interprète du dialog</VoiceName>
   </WebVttNewVoice>
 </Language>

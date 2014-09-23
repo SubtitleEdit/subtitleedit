@@ -245,7 +245,7 @@ namespace Nikse.SubtitleEdit.Forms
         // SP vobsub list (mp4)
         private List<SubPicturesWithSeparateTimeCodes> _mp4List;
 
-        // XSub (DivX)
+        // XSub (divx)
         private List<XSub> _xSubList;
 
         // DVB (from transport stream)
@@ -328,7 +328,7 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.Columns[2].Width = 90;
             subtitleListView1.Columns[3].Width = 70;
             subtitleListView1.Columns[4].Width = 150;
-            subtitleListView1.InitializeTimeStampColumWidths(this);
+            subtitleListView1.InitializeTimestampColumnWidths(this);
 
             groupBoxImagePalette.Text = language.ImagePalette;
             checkBoxCustomFourColors.Text = language.UseCustomColors;
@@ -351,7 +351,7 @@ namespace Nikse.SubtitleEdit.Forms
                 checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
             }
 
-            groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellchecking;
+            groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellChecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
             checkBoxAutoBreakLines.Text = language.AutoBreakSubtitleIfMoreThanTwoLines;
             checkBoxAutoBreakLines.Checked = Configuration.Settings.VobSubOcr.AutoBreakSubtitleIfMoreThanTwoLines;
@@ -6920,7 +6920,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ShowOcrMethodGroupBox(groupBoxNOCR);
                 Configuration.Settings.VobSubOcr.LastOcrMethod = "nOCR";
-                SetSpellCheckLanguage(Configuration.Settings.VobSubOcr.LineOcrLastSpellcheck);
+                SetSpellCheckLanguage(Configuration.Settings.VobSubOcr.LineOcrLastSpellCheck);
 
                 comboBoxNOcrLanguage.Items.Clear();
                 int index = 0;
@@ -7770,7 +7770,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (comboBoxOcrMethod.SelectedIndex == 3) // line OCR
             {
-                Configuration.Settings.VobSubOcr.LineOcrLastSpellcheck = LanguageString;
+                Configuration.Settings.VobSubOcr.LineOcrLastSpellCheck = LanguageString;
                 if (comboBoxNOcrLanguage.Items.Count > 0 && comboBoxNOcrLanguage.SelectedIndex >= 0)
                     Configuration.Settings.VobSubOcr.LineOcrLastLanguages = comboBoxNOcrLanguage.Items[comboBoxNOcrLanguage.SelectedIndex].ToString();
             }

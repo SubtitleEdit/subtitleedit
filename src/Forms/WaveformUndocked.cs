@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class WaveformUnDocked : Form
+    public partial class WaveformUndocked : Form
     {
         private Main _mainForm = null;
         private PositionsAndSizes _positionsAndSizes = null;
@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public WaveformUnDocked(Main mainForm, PositionsAndSizes positionsAndSizes)
+        public WaveformUndocked(Main mainForm, PositionsAndSizes positionsAndSizes)
         {
             InitializeComponent();
             _mainForm = mainForm;
@@ -27,11 +27,11 @@ namespace Nikse.SubtitleEdit.Forms
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
-        public WaveformUnDocked()
+        public WaveformUndocked()
         {
         }
 
-        private void WaveformUnDocked_FormClosing(object sender, FormClosingEventArgs e)
+        private void WaveformUndocked_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing && panelContainer.Controls.Count > 0)
             {
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Forms
             _positionsAndSizes.SavePositionAndSize(this);
         }
 
-        private void WaveformUnDocked_KeyDown(object sender, KeyEventArgs e)
+        private void WaveformUndocked_KeyDown(object sender, KeyEventArgs e)
         {
             if (_redockKeys == e.KeyData)
                 _mainForm.RedockVideoControlsToolStripMenuItemClick(null, null);

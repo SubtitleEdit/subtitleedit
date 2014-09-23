@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public readonly int DataAlignmentIndicator;
         public readonly int Copyright;
         public readonly int OriginalOrCopy;
-        public readonly int PresentationTimeStampDecodeTimeStampFlags;
+        public readonly int PresentationTimestampDecodeTimestampFlags;
         public readonly int ElementaryStreamClockReferenceFlag;
         public readonly int EsRateFlag;
         public readonly int DsmTrickModeFlag;
@@ -29,8 +29,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public readonly int ExtensionFlag;
         public readonly int HeaderDataLength;
 
-        public readonly UInt64? PresentationTimeStamp;
-        public readonly UInt64? DecodeTimeStamp;
+        public readonly UInt64? PresentationTimestamp;
+        public readonly UInt64? DecodeTimestamp;
 
         public readonly int? SubPictureStreamId;
 
@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             DataAlignmentIndicator = buffer[index + 6] & Helper.B00000100;
             Copyright = buffer[index + 6] & Helper.B00000010;
             OriginalOrCopy = buffer[index + 6] & Helper.B00000001;
-            PresentationTimeStampDecodeTimeStampFlags = buffer[index + 7] >> 6;
+            PresentationTimestampDecodeTimestampFlags = buffer[index + 7] >> 6;
             ElementaryStreamClockReferenceFlag = buffer[index + 7] & Helper.B00100000;
             EsRateFlag = buffer[index + 7] & Helper.B00010000;
             DsmTrickModeFlag = buffer[index + 7] & Helper.B00001000;
@@ -65,19 +65,19 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
 
             int tempIndex = index + 9;
-            if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010 ||
-                PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
+            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000010 ||
+                PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                PresentationTimeStamp = Convert.ToUInt64(bString, 2);
+                PresentationTimestamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
-            if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
+            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
             {
                 string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                DecodeTimeStamp = Convert.ToUInt64(bString, 2);
+                DecodeTimestamp = Convert.ToUInt64(bString, 2);
             }
 
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2HeaderLength;

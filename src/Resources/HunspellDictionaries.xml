@@ -16,7 +16,7 @@
     <EnglishName>Albanian</EnglishName>
     <NativeName>Shqip</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/sq_AL.zip</DownloadLink>
-    <Description>Albanian Spellchecker Dictionary</Description>
+    <Description>Albanian Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Bulgarian</EnglishName>
@@ -112,7 +112,7 @@
     <EnglishName>Gujarati</EnglishName>
     <NativeName>ગુજરાતી</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/gu_IN.zip</DownloadLink>
-    <Description>Gujarati Spellchecker Dictionary</Description>
+    <Description>Gujarati Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Hebrew</EnglishName>
@@ -160,7 +160,7 @@
     <EnglishName>Kurdish</EnglishName>
     <NativeName>Kurdî</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ku_TR.zip</DownloadLink>
-    <Description>Rastnivîs Kurdish Spellchecker</Description>
+    <Description>Rastnivîs Kurdish Spell Checker</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Latin</EnglishName>
@@ -178,13 +178,13 @@
     <EnglishName>Macedonian</EnglishName>
     <NativeName>Македонски</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/mk_MK.zip</DownloadLink>
-    <Description>Macedonian Spellchecker Dictionary</Description>
+    <Description>Macedonian Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Marathi</EnglishName>
     <NativeName>मराठी</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/mr_IN.zip</DownloadLink>
-    <Description>Marathi Spellchecker and Hyphnation Dictionary</Description>
+    <Description>Marathi Spell Checker and Hyphnation Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Ndebele, South</EnglishName>
@@ -196,7 +196,7 @@
     <EnglishName>Nepali</EnglishName>
     <NativeName>नेपाली</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ne_NP.zip</DownloadLink>
-    <Description>Nepali Spellchecker Dictionary</Description>
+    <Description>Nepali Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Northern Sotho</EnglishName>
@@ -220,7 +220,7 @@
     <EnglishName>Occitan</EnglishName>
     <NativeName>Occitan</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/oc_FR.zip</DownloadLink>
-    <Description>Spellchecker occitan lengadocian </Description>
+    <Description>Spell Checker occitan lengadocian </Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Polish</EnglishName>
@@ -232,7 +232,7 @@
     <EnglishName>Portuguese (Brazilian)</EnglishName>
     <NativeName>Português (do Brasil)</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/pt_BR.zip</DownloadLink>
-    <Description>Vero - Brazilian Portuguese Spellchecking Dictionary &amp;amp; Hyphenator</Description>
+    <Description>Vero - Brazilian Portuguese Spell Checking Dictionary &amp;amp; Hyphenator</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Portuguese (European)</EnglishName>
@@ -310,7 +310,7 @@
     <EnglishName>Thai</EnglishName>
     <NativeName>ภาษาไทย</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/th_TH.zip</DownloadLink>
-    <Description>Thai Spellchecker Dictionary</Description>
+    <Description>Thai Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Tsonga</EnglishName>
@@ -328,13 +328,13 @@
     <EnglishName>Urdu (India)</EnglishName>
     <NativeName>اردو</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ur_PK.zip</DownloadLink>
-    <Description>Urdu Spellchecker Dictionary</Description>
+    <Description>Urdu Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Urdu (Pakistan)</EnglishName>
     <NativeName>اردو</NativeName>
     <DownloadLink>http://ftp.nluug.nl/office/openoffice/contrib/dictionaries/ur_PK.zip</DownloadLink>
-    <Description>Urdu Spellchecker Dictionary</Description>
+    <Description>Urdu Spell Checker Dictionary</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Venda</EnglishName>

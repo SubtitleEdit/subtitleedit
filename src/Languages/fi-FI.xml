@@ -58,7 +58,7 @@
     <SessionKey>Istuntoavain</SessionKey>
     <UserName>Käyttäjänimi</UserName>
     <UserNameAlreadyInUse>Käyttäjänimi on jo käytössä</UserNameAlreadyInUse>
-    <WebServiceUrl>WebService url</WebServiceUrl>
+    <WebServiceUrl>WebService URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Video - {0}</VideoWindowTitle>
     <AudioWindowTitle>Audio - {0}</AudioWindowTitle>
@@ -147,7 +147,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <RemoveFormatting>Poista muotoilutunnisteet</RemoveFormatting>
     <RemoveTextForHI>Poista HI-teksti</RemoveTextForHI>
     <OverwriteOriginalFiles>Korvaa alkuperäinen tiedosto (uusi tiedostopääte tiedostomuodon muuttuessa)</OverwriteOriginalFiles>
-    <ReDoCasing>Palauta kirjainkoko</ReDoCasing>
+    <RedoCasing>Palauta kirjainkoko</RedoCasing>
     <Convert>Muunna</Convert>
     <NothingToConvert>Ei muunnettavaa!</NothingToConvert>
     <PleaseChooseOutputFolder>Valitse kohdekansio</PleaseChooseOutputFolder>
@@ -283,7 +283,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <DivideEven>Jaa aikaväli tekstien kesken</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Irroita tekstitys ifo/vobs-tiedostoista (dvd)</Title>
+    <Title>Irroita tekstitys IFO/VOBs-tiedostoista (DVD)</Title>
     <DvdGroupTitle>DVD tiedostot/tiedot</DvdGroupTitle>
     <IfoFile>IFO-tiedosto</IfoFile>
     <IfoFiles>IFO-tiedostot</IfoFiles>
@@ -339,7 +339,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <MaxLengthError>Rivinpituus {0} on suurempi kuin enimmäispituus ({1}) {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Muuttumaton esitys</TextUnchangedPresentation>
     <TextLeftJustifiedText>Vasemmalle tasattu teksti</TextLeftJustifiedText>
-    <TextCentredText>Keskitetty teksti</TextCentredText>
+    <TextCenteredText>Keskitetty teksti</TextCenteredText>
     <TextRightJustifiedText>Oikealle tasattu teksti</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -539,7 +539,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <UnableToFixTextXY>Tekstinumeroa {0} ei voi korjata: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} päällekkäistä aikaleimaa korjattu</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>Pidennetty {0} näyttöaikaa</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Korjattu {0} virheellistä html-tunnistetta</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>Korjattu {0} virheellistä HTML-tunnistetta</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>Lyhennetty {0} näyttöaikaa</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} riviä yhdistetty</XLinesUnbreaked>
     <UnneededSpace>Tarpeeton välilyönti</UnneededSpace>
@@ -691,10 +691,10 @@ Siirrytäänkö VLC media playerin kotisivulle?
         <Compare>Vertaa...</Compare>
         <Statistics>Tilastot...</Statistics>
         <Plugins>Laajennukset</Plugins>
-        <ImportOcrFromDvd>Tuo/tekstitunnista tekstitys vob/ifo (dvd) -tiedostosta...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Tuo/tekstitunnista tekstitys VOB/IFO (DVD) -tiedostosta...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Tuo/tekstitunnista VobSub (sub/idx) -tekstitys...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Tuo/tekstitunnista Blu-ray sup -tiedosto...</ImportBluRaySupFile>
-        <ImportXSub>Tuo/tekstitunnista xsub divx/avi -tiedostosta...</ImportXSub>
+        <ImportXSub>Tuo/tekstitunnista XSub divx/avi -tiedostosta...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Tuo tekstitys Matroska -tiedostosta...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Tuo tekstitys manuaalisesti valitulla koodauksella...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Tuo pelkkä teksti...</ImportText>
@@ -705,12 +705,12 @@ Siirrytäänkö VLC media playerin kotisivulle?
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena-890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>* Pelkkä teksti...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korealainen ATS tiedostopari...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1089,7 +1089,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja ja
     <BeforeSettingFontName>Ennen fontin asetusta</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Ennen kirjoituskonetehostetta</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Ennen karaoketehostetta</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Ennen tekstityksen tuontia dvd-levyltä</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Ennen tekstityksen tuontia DVD-levyltä</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Avaa Matroska tiedosto...</OpenMatroskaFile>
     <MatroskaFiles>Matroska tiedostot</MatroskaFiles>
     <NoSubtitlesFound>Tekstityksiä ei löydy</NoSubtitlesFound>
@@ -1114,8 +1114,8 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja ja
     <VobSubFiles>VobSub-tekstitystiedostot</VobSubFiles>
     <OpenBluRaySupFile>Avaa Blu-ray .sup -tiedosto...</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray .sup -tiedostot</BluRaySupFiles>
-    <OpenXSubFiles>Avaa xsub-tiedosto...</OpenXSubFiles>
-    <XSubFiles>xsub-tiedostot</XSubFiles>
+    <OpenXSubFiles>Avaa XSub-tiedosto...</OpenXSubFiles>
+    <XSubFiles>XSub-tiedostot</XSubFiles>
     <BeforeImportingVobSubFile>Ennen VobSub-tekstityksen tuontia</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Ennen Blu-ray sup-tiedoston tuontia</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Ennen BDN xml tiedoston tuontia</BeforeImportingBdnXml>
@@ -1205,7 +1205,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     </XSceneChangesImported>
     <PluginXExecuted>Suoritettiin laajennus '{0}'.
     </PluginXExecuted>
-    <NotAValidXSubFile>Tiedosto ei ole xsub-muodossa!</NotAValidXSubFile>
+    <NotAValidXSubFile>Tiedosto ei ole XSub-muodossa!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Ennen samansisältöisten rivien yhdistämistä</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Aikaleimat sisältävässä tekstityksessä on eri rivimäärä ({0)} kuin nykyisessä tekstityksessä - jatketaanko silti?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Luodaan siirtovirtausta - odota...</ParsingTransportStream>
@@ -1476,7 +1476,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <AllowEditOfOriginalSubtitle>Salli alkuperäisen tekstityksen muokkaaminen</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Kysy poistetaanko rivit</PromptDeleteLines>
     <TimeCodeMode>Aikaleimamuoto</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.Msek (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Videomoottori</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1886,7 +1886,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <Title>Tuo/tekstintunnista VobSub (sub/idx) -tekstitys</Title>
     <TitleBluRay>Tuo/tekstintunnista Blu-ray (.sup) -tekstitys</TitleBluRay>
     <OcrMethod>Tekstintunnistusmenetelmä</OcrMethod>
-    <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää MS Officea</OcrViaModi>
+    <OcrViaModi>Tekstintunnistus Microsoft Office Document Imaging (MODI) avulla. Edellyttää Microsoft Officea</OcrViaModi>
     <OcrViaTesseract>Tekstintunnistus Tesseractin avulla</OcrViaTesseract>
     <OcrViaNOCR>Tekstintunnistus käyttäen nOCR:ia</OcrViaNOCR>
     <Language>Kieli</Language>
@@ -1919,14 +1919,14 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <AllFixes>Kaikki korjaukset</AllFixes>
     <GuessesUsed>Arvaukset</GuessesUsed>
     <UnknownWords>Tuntemattomat sanat</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Tekstintunnistuksen automaattinen korjaus/oikoluku</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Tekstintunnistuksen automaattinen korjaus/oikoluku</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Korjaa tekstintunnistusvirheet</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Tuo tekstit, joissa yhtenevät aikaleimat...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Tallenna kuvatekstitys nimellä...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Tallenna kaikki kuvat (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Tallenna kaikki kuvat html-indeksillä...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Tallenna kaikki kuvat HTML-indeksillä...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} kuvaa tallennettu kohteeseen {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Kokeile tuntemattomiin sanoihin 'MS MODI' tekstintunnistusta</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Kokeile tuntemattomiin sanoihin 'Microsoft MODI' tekstintunnistusta</TryModiForUnknownWords>
     <DictionaryX>Sanasto: {0}</DictionaryX>
     <RightToLeft>Oikealta vasemmalle</RightToLeft>
     <ShowOnlyForcedSubtitles>Näytä vain pakotetut tekstitykset</ShowOnlyForcedSubtitles>

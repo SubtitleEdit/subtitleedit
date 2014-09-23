@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.
-                //-ab indicates the bit rate (in this example 160kb/sec)
+                //-ab indicates the bit rate (in this example 160kb/s)
                 //-vol 448 will boot volume... 256 is normal
                 //-ac 2 means 2 channels
 

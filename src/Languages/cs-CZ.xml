@@ -147,7 +147,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveFormatting>Odebrat tagy formátování</RemoveFormatting>
     <RemoveTextForHI>Odebrat text pro sluchově postižené</RemoveTextForHI>
     <OverwriteOriginalFiles>Přepsat původní soubory (nová přípona při změně formátu)</OverwriteOriginalFiles>
-    <ReDoCasing>Znovu velikost písmen</ReDoCasing>
+    <RedoCasing>Znovu velikost písmen</RedoCasing>
     <Convert>Převést</Convert>
     <NothingToConvert>Není co převést!</NothingToConvert>
     <PleaseChooseOutputFolder>Vyberte výstupní složku</PleaseChooseOutputFolder>
@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Řádek {0} překračuje maximální délku ({1}) o {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Nezměněná prezentace</TextUnchangedPresentation>
     <TextLeftJustifiedText>Text zarovnaný doleva</TextLeftJustifiedText>
-    <TextCentredText>Text zarovnaný na střed</TextCentredText>
+    <TextCenteredText>Text zarovnaný na střed</TextCenteredText>
     <TextRightJustifiedText>Text zarovnaný doprava</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -543,7 +543,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Nelze opravit text číslo {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Opraveno {0} překrývajících se časových kódů</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>Prodlouženo {0} časů zobrazení</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných html tagů</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných HTML tagů</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>Zkráceno {0} časů zobrazení</XDisplayTimesShortned>
     <XLinesUnbreaked>Zrušeno zalomení {0} řádků</XLinesUnbreaked>
     <UnneededSpace>Nadbytečná mezera</UnneededSpace>
@@ -688,7 +688,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Obnovit automatickou zálohu...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Vlastnosti Advanced Sub Station Alpha...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Vlastnosti Sub Station Alpha...</SubStationAlphaProperties>
-        <EbuProperties>Vlastnosti EBU stl...</EbuProperties>
+        <EbuProperties>Vlastnosti EBU STL...</EbuProperties>
         <PacProperties>Vlastnosti PAC...</PacProperties>
         <OpenOriginal>Otevřít původní titulky (překladatelský režim)...</OpenOriginal>
         <SaveOriginal>Uložit původní titulky</SaveOriginal>
@@ -697,10 +697,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Porovnat...</Compare>
         <Statistics>&amp;Statistika...</Statistics>
         <Plugins>Doplňky...</Plugins>
-        <ImportOcrFromDvd>Importovat/OCR titulky z vob/ifo (DVD) ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importovat/OCR titulky z vob/ifo (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importovat/OCR soubor titulků Blu-ray (.sup)...</ImportBluRaySupFile>
-        <ImportXSub>Importovat/OCR xsub z divx/avi...</ImportXSub>
+        <ImportXSub>Importovat/OCR XSub z divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importovat titulky ze souboru Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importovat titulky s ručně vybraným kódováním...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importovat prostý text...</ImportText>
@@ -711,12 +711,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Prostý text...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB image script...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korejské dvojice souborů ATS...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -1126,8 +1126,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <VobSubFiles>Soubor titulků VobSub</VobSubFiles>
     <OpenBluRaySupFile>Otevřít soubor Blu-ray sup...</OpenBluRaySupFile>
     <BluRaySupFiles>Soubory Blu-ray sup</BluRaySupFiles>
-    <OpenXSubFiles>Otevřít soubor xsub...</OpenXSubFiles>
-    <XSubFiles>Soubory xsub</XSubFiles>
+    <OpenXSubFiles>Otevřít soubor XSub...</OpenXSubFiles>
+    <XSubFiles>Soubory XSub</XSubFiles>
     <BeforeImportingVobSubFile>Před importováním titulků VobSub</BeforeImportingVobSubFile>
     <BeforeImportingBluRaySupFile>Před importováním souboru Blu-ray sup</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Před importováním souboru BDN xml</BeforeImportingBdnXml>
@@ -1213,13 +1213,13 @@ Pokračovat?</SubtitleAppendPrompt>
     <StatusLog>Záznam stavu</StatusLog>
     <XSceneChangesImported>Importováno {0} změn scén</XSceneChangesImported>
     <PluginXExecuted>Spuštěn doplněk '{0}'.</PluginXExecuted>
-    <NotAValidXSubFile>Není platný soubor xsub!</NotAValidXSubFile>
+    <NotAValidXSubFile>Není platný soubor XSub!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Před sloučením řádků se stejným textem</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analýza datového proudu přenosu - čekejte...</ParsingTransportStream>
-    <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a SE může otevřít soubor .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Soubor se zdá být komprimovaný soubor .rar. SE neumí otvírat komprimované soubory.</ErrorLoadRar>
-    <ErrorLoadZip>Soubor se zdá být komprimovaný soubor .zip. SE neumí otvírat komprimované soubory.</ErrorLoadZip>
+    <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a Subtitle Edit může otevřít soubor .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Soubor se zdá být komprimovaný soubor .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
+    <ErrorLoadZip>Soubor se zdá být komprimovaný soubor .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
@@ -1488,7 +1488,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Dotázat se na odstranění řádků</PromptDeleteLines>
     <TimeCodeMode>Režim časového kódu</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS,ms (00:00:01,500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS,ms (00:00:01,500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Modul videa</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1909,7 +1909,7 @@ Zachovat změny?</KeepChangesMessage>
     <Title>Importovat/OCR titulky VobSub (sub/idx)</Title>
     <TitleBluRay>Importovat/OCR titulky Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Metoda OCR</OcrMethod>
-    <OcrViaModi>OCR pomocí Microsoft Office Document Imaging (MODI). Requires MS Office</OcrViaModi>
+    <OcrViaModi>OCR pomocí Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR pomocí Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR pomocí nOCR</OcrViaNOCR>
     <Language>Jazyk</Language>
@@ -1942,15 +1942,15 @@ Zachovat změny?</KeepChangesMessage>
     <AllFixes>Všechny opravy</AllFixes>
     <GuessesUsed>Použité odhady</GuessesUsed>
     <UnknownWords>Neznámá slova</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>Automatická oprava a kontrola pravopisu OCR</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>Automatická oprava a kontrola pravopisu OCR</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Opravit chyby OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importovat text s odpovídajícími kódy časů...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importovat nové časové kódy</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Uložit snímek titulku jako...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Uložit všechny snímky (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>Uložit všechny snímky s html indexem...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>Uložit všechny snímky s HTML indexem...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>Uloženo {0} snímků do {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Zkusit MS MODI OCR pro neznámá slova</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Zkusit Microsoft MODI OCR pro neznámá slova</TryModiForUnknownWords>
     <DictionaryX>Slovník: {0}</DictionaryX>
     <RightToLeft>Zprava doleva</RightToLeft>
     <ShowOnlyForcedSubtitles>Zobrazit pouze vynucené titulky</ShowOnlyForcedSubtitles>

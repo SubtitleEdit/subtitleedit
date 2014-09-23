@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             var sb = new StringBuilder();
             sb.AppendLine(@"# VobSub index file, v7 (do not modify this line!)
 #
-# To repair desyncronization, you can insert gaps this way:
+# To repair desynchronization, you can insert gaps this way:
 # (it usually happens after vob id changes)
 #
 #    delay: [sign]hh:mm:ss:ms

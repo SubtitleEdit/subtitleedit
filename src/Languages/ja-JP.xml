@@ -147,7 +147,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <FixItalics>斜体を修正する</FixItalics>
     <RemoveFormatting>整形タグを削除する</RemoveFormatting>
     <RemoveTextForHI>HI 用テキストを削除する</RemoveTextForHI>
-    <ReDoCasing>大文字と小文字をやり直す</ReDoCasing>
+    <RedoCasing>大文字と小文字をやり直す</RedoCasing>
     <Convert>変換</Convert>
     <NothingToConvert>変換するものがありません!</NothingToConvert>
     <PleaseChooseOutputFolder>出力フォルダーを選択してください</PleaseChooseOutputFolder>
@@ -281,7 +281,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <MaxLengthError>行 {0} が {2} による最大の長さ ({1}) を超えています: {3}</MaxLengthError>
     <TextUnchangedPresentation>身変更の提示</TextUnchangedPresentation>
     <TextLeftJustifiedText>左揃え</TextLeftJustifiedText>
-    <TextCentredText>中央揃え</TextCentredText>
+    <TextCenteredText>中央揃え</TextCenteredText>
     <TextRightJustifiedText>右揃え</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -558,7 +558,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <Compare>比較(&amp;C)...</Compare>
         <Statistics>統計(&amp;C)...</Statistics>
         <Plugins>プラグイン...</Plugins>
-        <ImportOcrFromDvd>vob/ifo (DVD) から字幕をインポート/OCR...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>VOB/IFO (DVD) から字幕をインポート/OCR...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>VobSub (sub/idx) から字幕をインポート/OCR...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Blu-ray sup ファイルをインポート/OCR...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Matroska ファイルから字幕をインポート...</ImportSubtitleFromMatroskaFile>
@@ -570,12 +570,12 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>プレーン テキスト...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB イメージ スクリプト...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS ファイル ペア...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -937,7 +937,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <OpenMatroskaFile>Matroska ファイルを開く...</OpenMatroskaFile>
     <MatroskaFiles>Matroska ファイル</MatroskaFiles>
     <NoSubtitlesFound>字幕が見つかりません</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>これは有効な matroska ファイルではありません: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>これは有効な Matroska ファイルではありません: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Matroska ファイルを構文解析しています。お待ちください...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Matroska ファイルから字幕をインポートする前</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska ファイルから字幕がインポートされました</SubtitleImportedFromMatroskaFile>
@@ -1231,7 +1231,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <AllowEditOfOriginalSubtitle>翻訳前の字幕の編集を許可する</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>行の削除を確認する</PromptDeleteLines>
     <TimeCodeMode>タイム コード モード</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.ミリ秒 (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.ミリ秒 (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>ビデオ エンジン</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1620,14 +1620,14 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <AllFixes>すべての修正</AllFixes>
     <GuessesUsed>使用された推測</GuessesUsed>
     <UnknownWords>不明な単語</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR 自動修正 / スペル チェック</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR 自動修正 / スペル チェック</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR エラーを修正する</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>一致するタイム コード付きテキストのインポート...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>名前を付けて字幕イメージを保存...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>すべてのイメージ (png/bdn xml) の保存...</SaveAllSubtitleImagesAsBdnXml>
-    <SaveAllSubtitleImagesWithHtml>html インデックスを付けてすべてのイメージを保存...</SaveAllSubtitleImagesWithHtml>
+    <SaveAllSubtitleImagesWithHtml>HTML インデックスを付けてすべてのイメージを保存...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{1} に {0} 個のイメージが保存されました</XImagesSavedInY>
-    <TryModiForUnknownWords>不明な単語に MS MODI OCR を使用する</TryModiForUnknownWords>
+    <TryModiForUnknownWords>不明な単語に Microsoft MODI OCR を使用する</TryModiForUnknownWords>
     <DictionaryX>辞書: {0}</DictionaryX>
     <RightToLeft>右から左</RightToLeft>
     <ShowOnlyForcedSubtitles>強制された字幕のみ表示する</ShowOnlyForcedSubtitles>

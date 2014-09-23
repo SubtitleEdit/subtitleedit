@@ -160,7 +160,7 @@
             public string RemoveFormatting { get; set; }
             public string RemoveTextForHI { get; set; }
             public string OverwriteOriginalFiles { get; set; }
-            public string ReDoCasing { get; set; }
+            public string RedoCasing { get; set; }
             public string Convert { get; set; }
             public string NothingToConvert { get; set; }
             public string PleaseChooseOutputFolder { get; set; }
@@ -390,7 +390,7 @@
             public string MaxLengthError { get; set; }
             public string TextUnchangedPresentation { get; set; }
             public string TextLeftJustifiedText { get; set; }
-            public string TextCentredText { get; set; }
+            public string TextCenteredText { get; set; }
             public string TextRightJustifiedText { get; set; }
         }
 
@@ -1659,7 +1659,7 @@
             public string AllowEditOfOriginalSubtitle { get; set; }
             public string PromptDeleteLines { get; set; }
             public string TimeCodeMode { get; set; }
-            public string TimeCodeModeHHMMSSMsec { get; set; }
+            public string TimeCodeModeHHMMSSMS { get; set; }
             public string TimeCodeModeHHMMSSFF { get; set; }
             public string VideoEngine { get; set; }
             public string DirectShow { get; set; }
@@ -2145,7 +2145,7 @@
             public string AllFixes { get; set; }
             public string GuessesUsed { get; set; }
             public string UnknownWords { get; set; }
-            public string OcrAutoCorrectionSpellchecking { get; set; }
+            public string OcrAutoCorrectionSpellChecking { get; set; }
             public string FixOcrErrors { get; set; }
             public string ImportTextWithMatchingTimeCodes { get; set; }
             public string ImportNewTimeCodes { get; set; }

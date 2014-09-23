@@ -283,7 +283,7 @@
             this.comboBoxTimeCodeFormat.FormattingEnabled = true;
             this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
             "hh:mm:ss:ff",
-            "hh:mm:ss.msec",
+            "hh:mm:ss.ms",
             "Seconds",
             "Milliseconds",
             "Ticks"});

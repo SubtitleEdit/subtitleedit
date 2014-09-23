@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public readonly int DataAlignmentIndicator;
         public readonly int Copyright;
         public readonly int OriginalOrCopy;
-        public readonly int PresentationTimeStampDecodeTimeStampFlags;
+        public readonly int PresentationTimestampDecodeTimestampFlags;
         public readonly int ElementaryStreamClockReferenceFlag;
         public readonly int EsRateFlag;
         public readonly int DsmTrickModeFlag;
@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         public readonly int ExtensionFlag;
         public readonly int HeaderDataLength;
 
-        public readonly UInt64? PresentationTimeStamp;
-        public readonly UInt64? DecodeTimeStamp;
+        public readonly UInt64? PresentationTimestamp;
+        public readonly UInt64? DecodeTimestamp;
 
         public readonly int? SubPictureStreamId;
 
@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             DataAlignmentIndicator = buffer[index + 6] & Helper.B00000100;
             Copyright = buffer[index + 6] & Helper.B00000010;
             OriginalOrCopy = buffer[index + 6] & Helper.B00000001;
-            PresentationTimeStampDecodeTimeStampFlags = buffer[index + 7] >> 6;
+            PresentationTimestampDecodeTimestampFlags = buffer[index + 7] >> 6;
             ElementaryStreamClockReferenceFlag = buffer[index + 7] & Helper.B00100000;
             EsRateFlag = buffer[index + 7] & Helper.B00010000;
             DsmTrickModeFlag = buffer[index + 7] & Helper.B00001000;
@@ -63,31 +63,31 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
 
             int tempIndex = index + 9;
-            if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000010 ||
-                PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
+            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000010 ||
+                PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
             {
-                PresentationTimeStamp = (ulong)buffer[tempIndex + 4] >> 1;
-                PresentationTimeStamp += (ulong)buffer[tempIndex + 3] << 7;
-                PresentationTimeStamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
-                PresentationTimeStamp += (ulong)buffer[tempIndex + 1] << 22;
-                PresentationTimeStamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
+                PresentationTimestamp = (ulong)buffer[tempIndex + 4] >> 1;
+                PresentationTimestamp += (ulong)buffer[tempIndex + 3] << 7;
+                PresentationTimestamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
+                PresentationTimestamp += (ulong)buffer[tempIndex + 1] << 22;
+                PresentationTimestamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
 
                 //string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 //bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                //PresentationTimeStamp = Convert.ToUInt64(bString, 2);
+                //PresentationTimestamp = Convert.ToUInt64(bString, 2);
                 tempIndex += 5;
             }
-            if (PresentationTimeStampDecodeTimeStampFlags == Helper.B00000011)
+            if (PresentationTimestampDecodeTimestampFlags == Helper.B00000011)
             {
                 //string bString = Helper.GetBinaryString(buffer, tempIndex, 5);
                 //bString = bString.Substring(4, 3) + bString.Substring(8, 15) + bString.Substring(24, 15);
-                //DecodeTimeStamp = Convert.ToUInt64(bString, 2);
+                //DecodeTimestamp = Convert.ToUInt64(bString, 2);
 
-                DecodeTimeStamp = (ulong)buffer[tempIndex + 4] >> 1;
-                DecodeTimeStamp += (ulong)buffer[tempIndex + 3] << 7;
-                DecodeTimeStamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
-                DecodeTimeStamp += (ulong)buffer[tempIndex + 1] << 22;
-                DecodeTimeStamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
+                DecodeTimestamp = (ulong)buffer[tempIndex + 4] >> 1;
+                DecodeTimestamp += (ulong)buffer[tempIndex + 3] << 7;
+                DecodeTimestamp += (ulong)(buffer[tempIndex + 2] & Helper.B11111110) << 14;
+                DecodeTimestamp += (ulong)buffer[tempIndex + 1] << 22;
+                DecodeTimestamp += (ulong)(buffer[tempIndex + 0] & Helper.B00001110) << 29;
             }
 
             int dataIndex = index + HeaderDataLength + 24 - Mpeg2Header.Length;

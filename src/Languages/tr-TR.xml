@@ -147,7 +147,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixItalics>İtalikleri düzelt</FixItalics>
     <RemoveFormatting>Biçimlendirme etiketlerini kaldır</RemoveFormatting>
     <RemoveTextForHI>HI için metin kaldır</RemoveTextForHI>
-    <ReDoCasing>Harf durumunu yeniden yap</ReDoCasing>
+    <RedoCasing>Harf durumunu yeniden yap</RedoCasing>
     <Convert>Dönüştür</Convert>
     <NothingToConvert>Dönüştürmek için bir şey yok!</NothingToConvert>
     <PleaseChooseOutputFolder>Lütfen çıktı klasörünü seçin</PleaseChooseOutputFolder>
@@ -226,7 +226,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <ChooseColor>Renk seç...</ChooseColor>
   </DCinemaProperties>
   <DvdSubRip>
-    <Title>Ifo/vobs (dvd) dosyasından altyazı riple</Title>
+    <Title>IFO/VOBs (DVD) dosyasından altyazı riple</Title>
     <DvdGroupTitle>DVD dosyaları/bilgi</DvdGroupTitle>
     <IfoFile>IFO dosyası</IfoFile>
     <IfoFiles>IFO dosyaları</IfoFiles>
@@ -281,7 +281,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <MaxLengthError>Line {0} exceeds max length ({1}) by {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Unchanged presentation</TextUnchangedPresentation>
     <TextLeftJustifiedText>Left justified text</TextLeftJustifiedText>
-    <TextCentredText>Ortalanmış metin</TextCentredText>
+    <TextCenteredText>Ortalanmış metin</TextCenteredText>
     <TextRightJustifiedText>Right justified text</TextRightJustifiedText>
   </EbuSaveOptions>
   <EffectKaraoke>
@@ -379,7 +379,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpaces>Eksik alanları düzelt</FixMissingSpaces>
     <BreakLongLines>Uzun satırları ayır</BreakLongLines>
     <RemoveLineBreaks>Remove line breaks in short texts with only one sentence</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogues)</RemoveLineBreaksAll>
+    <RemoveLineBreaksAll>Remove line breaks in short texts (all except dialogs)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Fix uppercase 'i' inside lowercase words (OCR error)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Fix double apostrophe characters ('') to a single quote (")</FixDoubleApostrophes>
     <AddPeriods>Add period after lines where next line start with uppercase letter</AddPeriods>
@@ -418,7 +418,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <XIsChangedToUppercase>{0} i's changed to uppercase</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Paragraftan sonraki ilk harfi büyük harf olarak düzelt</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Kısa satırı birleştir (tek cümle)</MergeShortLine>
-    <MergeShortLineAll>Merge short line (all except dialogues)</MergeShortLineAll>
+    <MergeShortLineAll>Merge short line (all except dialogs)</MergeShortLineAll>
     <XLineBreaksAdded>{0} line breaks added</XLineBreaksAdded>
     <BreakLongLine>Uzun satırları ayır</BreakLongLine>
     <FixLongDisplayTime>Uzun görüntü sürelerini düzelt</FixLongDisplayTime>
@@ -437,7 +437,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Unable to fix text number {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} overlapping timestamps fixed</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} display times prolonged</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Geçersiz {0} html etiketi düzeltildi</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>Geçersiz {0} HTML etiketi düzeltildi</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} görüntü süresi kısaltıldı</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} lines unbreaked</XLinesUnbreaked>
     <UnneededSpace>Gereksiz boşluklar</UnneededSpace>
@@ -558,7 +558,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Karşılaştır...</Compare>
         <Statistics>İstatistikler...</Statistics>
         <Plugins>Ekletiler</Plugins>
-        <ImportOcrFromDvd>Vob/ifo (dvd) dosyasından altyazı aktar ...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>VOB/IFO (DVD) dosyasından altyazı aktar...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>VobSub (sub/idx) altyazı aktar...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Blu-ray sup dosyası aktar...</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>Matroska dosyasından altyazı aktar...</ImportSubtitleFromMatroskaFile>
@@ -570,12 +570,12 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
-        <ExportEbu>EBU stl...</ExportEbu>
+        <ExportEbu>EBU STL...</ExportEbu>
         <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>Düz metin...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB görüntü komutu...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Kore ATS dosya çifti...</ExportKoreanAtsFilePair>
-        <ExportAvidStl>Avid stl...</ExportAvidStl>
+        <ExportAvidStl>Avid STL...</ExportAvidStl>
         <ExportDvdStudioProStl>DVD Studio Pro STL...</ExportDvdStudioProStl>
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Captions Inc...</ExportCaptionsInc>
@@ -937,7 +937,7 @@ Continue?</SubtitleAppendPrompt>
     <OpenMatroskaFile>Matroska dosyası aç...</OpenMatroskaFile>
     <MatroskaFiles>Matroska dosyaları</MatroskaFiles>
     <NoSubtitlesFound>Bulunan altyazı yok</NoSubtitlesFound>
-    <NotAValidMatroskaFileX>Geçersiz matroska dosyası: {0}</NotAValidMatroskaFileX>
+    <NotAValidMatroskaFileX>Geçersiz Matroska dosyası: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Matroska dosyası ayrıştırılıyor. Lütfen bekleyin...</ParsingMatroskaFile>
     <BeforeImportFromMatroskaFile>Matroska dosyasından içe altyazı aktarılmasından önce</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska dosyasından altyazı aktarıldı</SubtitleImportedFromMatroskaFile>
@@ -1019,7 +1019,7 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Yazım denetimi iptal edildi. {0} satırları düzeltildi.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Yazım denetimi tamamlandı. {0} satırları değiştirildi.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Diğer altyazıyı aç</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Before toggle of dialogue dashes</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogueDashes>Before toggle of dialog dashes</BeforeToggleDialogueDashes>
     <ExportPlainTextAs>Düz metni dışa faklı aktar</ExportPlainTextAs>
     <TextFiles>Metin dosyaları</TextFiles>
     <SubtitleExported>Altyazı dışa aktarıldı</SubtitleExported>
@@ -1231,7 +1231,7 @@ Yeni oturum başlatın.</Information>
     <AllowEditOfOriginalSubtitle>Orijinal altyazının düzenlenmesine izin ver</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Satırları silmek için sor</PromptDeleteLines>
     <TimeCodeMode>Zaman kodu modu</TimeCodeMode>
-    <TimeCodeModeHHMMSSMsec>HH:MM:SS.Msec (00:00:01.500)</TimeCodeModeHHMMSSMsec>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Video motoru</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
@@ -1324,7 +1324,7 @@ Yeni oturum başlatın.</Information>
     <GoToNext>Sonraki satıra git</GoToNext>
     <GoToPrevious>Önceki satıra git</GoToPrevious>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
-    <ToggleDialogueDashes>Toogle dialogue dashes</ToggleDialogueDashes>
+    <ToggleDialogueDashes>Toogle dialog dashes</ToggleDialogueDashes>
     <Alignment>Hizalama (seçilen satırlar)</Alignment>
     <CopyTextOnly>Metni panoya kopyala (seçilen satırlar)</CopyTextOnly>
     <AutoDurationSelectedLines>Otomatik süre (seçilen satırlar)</AutoDurationSelectedLines>
@@ -1569,7 +1569,7 @@ Yeni oturum başlatın.</Information>
     <Synchronize>Senk.</Synchronize>
     <HalfASecondBack>&lt; ½ s</HalfASecondBack>
     <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Play {0} secs and back</PlayXSecondsAndBack>
+    <PlayXSecondsAndBack>Play {0} s and back</PlayXSecondsAndBack>
     <FindText>Metin bul</FindText>
     <GoToSubPosition>Altyazı süresine git</GoToSubPosition>
     <KeepChangesTitle>Değişiklikler saklansın mı?</KeepChangesTitle>
@@ -1597,7 +1597,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <Title> VobSub (sub/idx) altyazı aktar</Title>
     <TitleBluRay>Blu-ray (.sup) altyazı aktar</TitleBluRay>
     <OcrMethod>OCR method</OcrMethod>
-    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires MS Office</OcrViaModi>
+    <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <Language>Dil</Language>
     <OcrViaImageCompare>OCR via image compare</OcrViaImageCompare>
@@ -1622,14 +1622,14 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <AllFixes>Tüm düzeltmeler</AllFixes>
     <GuessesUsed>Guesses used</GuessesUsed>
     <UnknownWords>Bilinmeyen kelimeler</UnknownWords>
-    <OcrAutoCorrectionSpellchecking>OCR otomatik doğrulama / imla kontrolü</OcrAutoCorrectionSpellchecking>
+    <OcrAutoCorrectionSpellChecking>OCR otomatik doğrulama / imla kontrolü</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>OCR hatalarını düzelt</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Import text with matching time codes...</ImportTextWithMatchingTimeCodes>
     <SaveSubtitleImageAs>Farklı kaydet...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Tüm görüntüleri (png/bdn xml) kaydet...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Html index ile birlikte tüm görüntüleri kaydet...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} görüntü {1} içine kaydedildi.</XImagesSavedInY>
-    <TryModiForUnknownWords>Bilinmeyen kelimeler için MS MODI OCR deneyin</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Bilinmeyen kelimeler için Microsoft MODI OCR deneyin</TryModiForUnknownWords>
     <DictionaryX>Sözlük: {0}</DictionaryX>
     <RightToLeft>Sağdan sola</RightToLeft>
     <ShowOnlyForcedSubtitles>Show only forced subtitles</ShowOnlyForcedSubtitles>

@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartVerify.Name = "buttonStartVerify";
             this.buttonStartVerify.Size = new System.Drawing.Size(119, 21);
             this.buttonStartVerify.TabIndex = 3;
-            this.buttonStartVerify.Text = "Play 2 secs and back";
+            this.buttonStartVerify.Text = "Play 2 s and back";
             this.buttonStartVerify.UseVisualStyleBackColor = true;
             this.buttonStartVerify.Click += new System.EventHandler(this.ButtonStartVerifyClick);
             // 
@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartThreeSecondsBack.Name = "buttonStartThreeSecondsBack";
             this.buttonStartThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
             this.buttonStartThreeSecondsBack.TabIndex = 1;
-            this.buttonStartThreeSecondsBack.Text = "< 3 secs";
+            this.buttonStartThreeSecondsBack.Text = "< 3 s";
             this.buttonStartThreeSecondsBack.UseVisualStyleBackColor = true;
             this.buttonStartThreeSecondsBack.Click += new System.EventHandler(this.ButtonStartThreeSecondsBackClick);
             // 
@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonStartHalfASecondBack.Name = "buttonStartHalfASecondBack";
             this.buttonStartHalfASecondBack.Size = new System.Drawing.Size(60, 21);
             this.buttonStartHalfASecondBack.TabIndex = 2;
-            this.buttonStartHalfASecondBack.Text = "< ½ sec";
+            this.buttonStartHalfASecondBack.Text = "< ½ s";
             this.buttonStartHalfASecondBack.UseVisualStyleBackColor = true;
             this.buttonStartHalfASecondBack.Click += new System.EventHandler(this.ButtonStartHalfASecondBackClick);
             // 
@@ -252,7 +252,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonEndVerify.Name = "buttonEndVerify";
             this.buttonEndVerify.Size = new System.Drawing.Size(118, 21);
             this.buttonEndVerify.TabIndex = 3;
-            this.buttonEndVerify.Text = "Play 2 secs and back";
+            this.buttonEndVerify.Text = "Play 2 s and back";
             this.buttonEndVerify.UseVisualStyleBackColor = true;
             this.buttonEndVerify.Click += new System.EventHandler(this.ButtonEndVerifyClick);
             // 
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonThreeSecondsBack.Name = "buttonThreeSecondsBack";
             this.buttonThreeSecondsBack.Size = new System.Drawing.Size(60, 21);
             this.buttonThreeSecondsBack.TabIndex = 1;
-            this.buttonThreeSecondsBack.Text = "< 3 secs";
+            this.buttonThreeSecondsBack.Text = "< 3 s";
             this.buttonThreeSecondsBack.UseVisualStyleBackColor = true;
             this.buttonThreeSecondsBack.Click += new System.EventHandler(this.ButtonThreeSecondsBackClick);
             // 
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.buttonEndHalfASecondBack.Name = "buttonEndHalfASecondBack";
             this.buttonEndHalfASecondBack.Size = new System.Drawing.Size(60, 21);
             this.buttonEndHalfASecondBack.TabIndex = 2;
-            this.buttonEndHalfASecondBack.Text = "< ½ sec";
+            this.buttonEndHalfASecondBack.Text = "< ½ s";
             this.buttonEndHalfASecondBack.UseVisualStyleBackColor = true;
             this.buttonEndHalfASecondBack.Click += new System.EventHandler(this.ButtonEndHalfASecondBackClick);
             // 

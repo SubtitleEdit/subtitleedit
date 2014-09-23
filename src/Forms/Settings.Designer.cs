@@ -1597,7 +1597,7 @@
             this.labelCustomSearch.Name = "labelCustomSearch";
             this.labelCustomSearch.Size = new System.Drawing.Size(137, 13);
             this.labelCustomSearch.TabIndex = 1;
-            this.labelCustomSearch.Text = "Custom search text and url";
+            this.labelCustomSearch.Text = "Custom search text and URL";
             // 
             // comboBoxCustomSearch1
             // 
