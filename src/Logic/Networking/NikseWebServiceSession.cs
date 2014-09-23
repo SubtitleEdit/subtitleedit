@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                 {
                     StartMilliseconds = (int)p.StartTime.TotalMilliseconds,
                     EndMilliseconds = (int)p.EndTime.TotalMilliseconds,
-                    Text = Utilities.HtmlEncode(p.Text.Replace(Environment.NewLine, "<br />"))
+                    Text = WebUtility.HtmlEncode(p.Text.Replace(Environment.NewLine, "<br />"))
                 });
             }
 
@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
                     {
                         StartMilliseconds = (int)p.StartTime.TotalMilliseconds,
                         EndMilliseconds = (int)p.EndTime.TotalMilliseconds,
-                        Text = Utilities.HtmlEncode(p.Text.Replace(Environment.NewLine, "<br />"))
+                        Text = WebUtility.HtmlEncode(p.Text.Replace(Environment.NewLine, "<br />"))
                     });
                 }
             }
@@ -204,7 +204,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
 
         public void SendChatMessage(string message)
         {
-            _seWs.SendMessage(SessionId, Utilities.HtmlEncode(message.Replace(Environment.NewLine, "<br />")), CurrentUser);
+            _seWs.SendMessage(SessionId, WebUtility.HtmlEncode(message.Replace(Environment.NewLine, "<br />")), CurrentUser);
         }
 
         internal void UpdateLine(int index, Paragraph paragraph)
@@ -213,7 +213,7 @@ namespace Nikse.SubtitleEdit.Logic.Networking
             {
                 StartMilliseconds = (int)paragraph.StartTime.TotalMilliseconds,
                 EndMilliseconds = (int)paragraph.EndTime.TotalMilliseconds,
-                Text = Utilities.HtmlEncode(paragraph.Text.Replace(Environment.NewLine, "<br />"))
+                Text = WebUtility.HtmlEncode(paragraph.Text.Replace(Environment.NewLine, "<br />"))
             }, CurrentUser);
             AddToWsUserLog(CurrentUser, index, "UPD", true);
         }
