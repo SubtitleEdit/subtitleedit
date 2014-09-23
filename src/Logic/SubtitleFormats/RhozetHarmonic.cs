@@ -147,6 +147,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(allText);

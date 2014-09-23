@@ -34,12 +34,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             string xmlAsString = sb.ToString().Trim();
             if ((xmlAsString.Contains("<tt>") || xmlAsString.Contains("<tt ")) && (xmlAsString.Contains("<sub>")))
             {
                 XmlDocument xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -103,6 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim());
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("div/p"))

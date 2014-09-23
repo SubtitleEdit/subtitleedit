@@ -35,6 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 xmlAsString.Contains("/ttaf1"))
             {
                 var xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -139,6 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim().Replace("http://www.w3.org/2006/04/ttaf1#styling\"xml:lang", "http://www.w3.org/2006/04/ttaf1#styling\" xml:lang"));
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);

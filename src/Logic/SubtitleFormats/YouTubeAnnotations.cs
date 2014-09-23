@@ -128,6 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!sb.ToString().Contains("</annotations>") || !sb.ToString().Contains("</TEXT>"))
                 return;
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 string xmlText = sb.ToString();

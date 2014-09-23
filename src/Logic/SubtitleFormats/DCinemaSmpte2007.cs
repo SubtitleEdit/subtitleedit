@@ -488,6 +488,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Replace("<dcst:", "<").Replace("</dcst:", "</").Replace("xmlns=\"http://www.smpte-ra.org/schemas/428-7/2007/DCST\"", string.Empty)); // tags might be prefixed with namespace (or not)... so we just remove them
 
             var ss = Configuration.Settings.SubtitleSettings;

@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (xmlAsString.Contains("<DCSubtitle"))
             {
                 var xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -462,6 +463,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim());
 
             var ss = Configuration.Settings.SubtitleSettings;

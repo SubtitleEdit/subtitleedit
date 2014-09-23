@@ -44,6 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 </xml>".Replace("'", "\"");
 
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(xmlStructure);
             const string innerXml = "<comment value=\"\"/><time value=\"{0}\"/><duration value=\"{1}\"/>";
             XmlNode root = xml.DocumentElement.SelectSingleNode("layers/layer");
@@ -70,6 +71,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(allText);

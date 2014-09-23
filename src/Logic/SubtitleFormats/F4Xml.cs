@@ -60,6 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             var doc = new XmlDocument();
+            doc.XmlResolver = null;
             doc.LoadXml(xml);
             var content = doc.DocumentElement.SelectSingleNode("content");
             if (content == null)

@@ -30,6 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (xmlAsString.Contains("<subtitle"))
             {
                 var xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -98,6 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim());
 
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("subtitle"))

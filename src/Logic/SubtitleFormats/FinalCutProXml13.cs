@@ -133,8 +133,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             try
             {
+                xml.XmlResolver = null;
                 xml.LoadXml(x.Trim());
-
                 foreach (XmlNode node in xml.SelectNodes("//project/sequence/spine/clip/video/param[@name='Text']"))
                 {
                     try

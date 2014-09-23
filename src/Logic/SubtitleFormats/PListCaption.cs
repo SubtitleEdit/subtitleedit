@@ -48,6 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (xmlAsString.Contains("</plist>") && xmlAsString.Contains("</dict>"))
             {
                 XmlDocument xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -126,6 +127,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim());
             string lastKey = string.Empty;
             foreach (XmlNode node in xml.DocumentElement.SelectNodes("array/dict"))

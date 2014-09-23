@@ -45,6 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             var doc = new XmlDocument();
+            doc.XmlResolver = null;
             doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine + @"<xmldict>
     <key>document</key>
     <dict>
@@ -184,6 +185,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.AppendLine(line);
             }
             var doc = new XmlDocument();
+            doc.XmlResolver = null;
             try
             {
                 doc.LoadXml(sb.ToString());
