@@ -52,7 +52,7 @@ POPD
 IF /I "%BUILDTYPE%" == "Clean" GOTO END
 
 CALL :SubDetectSevenzipPath
-IF DEFINED SEVENZIP_PATH IF EXIST "%SEVENZIP_PATH%" (
+IF DEFINED SEVENZIP IF EXIST "%SEVENZIP%" (
   CALL :SubGetVersion
   CALL :SubZipFile
 )
@@ -101,7 +101,7 @@ COPY /Y /V "..\..\..\Tesseract\tessdata\configs\hocr"    "temp_zip\Tesseract\tes
 COPY /Y /V "..\..\..\Tesseract\tessdata\eng.traineddata" "temp_zip\Tesseract\tessdata\"
 
 PUSHD "temp_zip"
-START "" /B /WAIT "%SEVENZIP_PATH%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL
+START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 
