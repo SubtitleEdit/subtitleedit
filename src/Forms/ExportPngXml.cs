@@ -97,10 +97,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (comboBoxFramerate.SelectedItem == null)
+                if (comboBoxFrameRate.SelectedItem == null)
                     return 25;
 
-                string s = comboBoxFramerate.SelectedItem.ToString();
+                string s = comboBoxFrameRate.SelectedItem.ToString();
                 s = s.Replace(",", ".").Trim();
                 double d;
                 if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
@@ -654,17 +654,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
                     string dropValue = "30000";
-                    if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "23.98")
+                    if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
                         dropValue = "23976";
-                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "24")
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "24")
                         dropValue = "24000";
-                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "25")
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "25")
                         dropValue = "25000";
-                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "29.97")
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "29.97")
                         dropValue = "29970";
-                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "30")
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "30")
                         dropValue = "30000";
-                    else if (comboBoxFramerate.Items[comboBoxFramerate.SelectedIndex].ToString() == "59.94")
+                    else if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "59.94")
                         dropValue = "59940";
                     header = header.Replace("[DROPVALUE]", dropValue);
 
@@ -2557,61 +2557,61 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
-            comboBoxFramerate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
+            comboBoxFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
             checkBoxTransAntiAliase.Visible = exportType == "VOBSUB";
             if (exportType == "BDNXML")
             {
                 labelFrameRate.Top = labelLanguage.Top;
-                comboBoxFramerate.Top = comboBoxLanguage.Top;
-                comboBoxFramerate.Items.Add("23.976");
-                comboBoxFramerate.Items.Add("24");
-                comboBoxFramerate.Items.Add("25");
-                comboBoxFramerate.Items.Add("29.97");
-                comboBoxFramerate.Items.Add("30");
-                comboBoxFramerate.Items.Add("50");
-                comboBoxFramerate.Items.Add("59.94");
-                comboBoxFramerate.SelectedIndex = 2;
+                comboBoxFrameRate.Top = comboBoxLanguage.Top;
+                comboBoxFrameRate.Items.Add("23.976");
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("30");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.SelectedIndex = 2;
             }
             else if (exportType == "DOST")
             {
                 labelFrameRate.Top = labelLanguage.Top;
-                comboBoxFramerate.Top = comboBoxLanguage.Top;
-                comboBoxFramerate.Items.Add("23.98");
-                comboBoxFramerate.Items.Add("24");
-                comboBoxFramerate.Items.Add("25");
-                comboBoxFramerate.Items.Add("29.97");
-                comboBoxFramerate.Items.Add("30");
-                comboBoxFramerate.Items.Add("59.94");
-                comboBoxFramerate.SelectedIndex = 2;
+                comboBoxFrameRate.Top = comboBoxLanguage.Top;
+                comboBoxFrameRate.Items.Add("23.98");
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("30");
+                comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.SelectedIndex = 2;
             }
             else if (exportType == "IMAGE/FRAME")
             {
                 labelFrameRate.Top = labelLanguage.Top;
-                comboBoxFramerate.Top = comboBoxLanguage.Top;
-                comboBoxFramerate.Items.Add("23.976");
-                comboBoxFramerate.Items.Add("24");
-                comboBoxFramerate.Items.Add("25");
-                comboBoxFramerate.Items.Add("29.97");
-                comboBoxFramerate.Items.Add("30");
-                comboBoxFramerate.Items.Add("50");
-                comboBoxFramerate.Items.Add("59.94");
-                comboBoxFramerate.Items.Add("60");
-                comboBoxFramerate.SelectedIndex = 2;
+                comboBoxFrameRate.Top = comboBoxLanguage.Top;
+                comboBoxFrameRate.Items.Add("23.976");
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("30");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.Items.Add("60");
+                comboBoxFrameRate.SelectedIndex = 2;
             }
             else if (exportType == "BLURAYSUP")
             {
                 labelFrameRate.Top = labelLanguage.Top;
-                comboBoxFramerate.Top = comboBoxLanguage.Top;
-                comboBoxFramerate.Items.Add("23.976");
-                comboBoxFramerate.Items.Add("24");
-                comboBoxFramerate.Items.Add("25");
-                comboBoxFramerate.Items.Add("29.97");
-                comboBoxFramerate.Items.Add("50");
-                comboBoxFramerate.Items.Add("59.94");
-                comboBoxFramerate.SelectedIndex = 1;
-                comboBoxFramerate.DropDownStyle = ComboBoxStyle.DropDownList;
+                comboBoxFrameRate.Top = comboBoxLanguage.Top;
+                comboBoxFrameRate.Items.Add("23.976");
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.SelectedIndex = 1;
+                comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
             }
-            if (comboBoxFramerate.Items.Count >= 2)
+            if (comboBoxFrameRate.Items.Count >= 2)
             {
                 SetLastFrameRate(Configuration.Settings.Tools.ExportLastFrameRate);
             }
@@ -2736,14 +2736,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void SetLastFrameRate(double lastFrameRate)
         {
-            for (int i = 0; i < comboBoxFramerate.Items.Count; i++)
+            for (int i = 0; i < comboBoxFrameRate.Items.Count; i++)
             {
                 double d;
-                if (double.TryParse(comboBoxFramerate.Items[i].ToString().Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
+                if (double.TryParse(comboBoxFrameRate.Items[i].ToString().Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
                 {
                     if (Math.Abs(lastFrameRate - d) < 0.01)
                     {
-                        comboBoxFramerate.SelectedIndex = i;
+                        comboBoxFrameRate.SelectedIndex = i;
                         return;
                     }
                 }

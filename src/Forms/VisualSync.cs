@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
         private VideoInfo _videoInfo;
         private string _subtitleFileName;
         private Subtitle _originalSubtitle;
-        private double _oldFramerate;
+        private double _oldFrameRate;
         private bool _frameRateChanged;
         private bool _isStartSceneActive;
         private double _startGoBackPosition;
@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // be sure to match frames with movie
                 if (_originalSubtitle.WasLoadedWithFrameNumbers) // frame based subtitles like MicroDVD
                 {
-                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFramerate) > 0.02)
+                    if (Math.Abs(_videoInfo.FramesPerSecond - _oldFrameRate) > 0.02)
                     {
                         _originalSubtitle.CalculateTimeCodesFromFrameNumbers(_videoInfo.FramesPerSecond);
                         LoadAndShowOriginalSubtitle();
@@ -318,7 +318,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(Bitmap bitmap, Subtitle subtitle, string fileName, string title, double framerate)
+        internal void Initialize(Bitmap bitmap, Subtitle subtitle, string fileName, string title, double frameRate)
         {
             if (bitmap != null)
             {
@@ -327,7 +327,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _originalSubtitle = subtitle;
-            _oldFramerate = framerate;
+            _oldFrameRate = frameRate;
             _subtitleFileName = fileName;
             Text = title;
         }

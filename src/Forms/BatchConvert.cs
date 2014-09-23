@@ -830,7 +830,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
                             double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
                         {
-                            sub.ChangeFramerate(fromFrameRate, toFrameRate);
+                            sub.ChangeFrameRate(fromFrameRate, toFrameRate);
                         }
 
                         if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
