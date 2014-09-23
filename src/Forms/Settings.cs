@@ -72,13 +72,13 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSpellCheck.Checked = gs.ShowToolbarSpellCheck;
             checkBoxHelp.Checked = gs.ShowToolbarHelp;
 
-            comboBoxFramerate.Items.Add((23.976).ToString());
-            comboBoxFramerate.Items.Add((24.0).ToString());
-            comboBoxFramerate.Items.Add((25.0).ToString());
-            comboBoxFramerate.Items.Add((29.97).ToString());
+            comboBoxFrameRate.Items.Add((23.976).ToString());
+            comboBoxFrameRate.Items.Add((24.0).ToString());
+            comboBoxFrameRate.Items.Add((25.0).ToString());
+            comboBoxFrameRate.Items.Add((29.97).ToString());
 
             checkBoxShowFrameRate.Checked = gs.ShowFrameRate;
-            comboBoxFramerate.Text = gs.DefaultFrameRate.ToString();
+            comboBoxFrameRate.Text = gs.DefaultFrameRate.ToString();
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
@@ -1047,7 +1047,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.ShowFrameRate = checkBoxShowFrameRate.Checked;
             double outFrameRate;
-            if (double.TryParse(comboBoxFramerate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
+            if (double.TryParse(comboBoxFrameRate.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out outFrameRate))
                 gs.DefaultFrameRate = outFrameRate;
 
             gs.DefaultEncoding = Encoding.UTF8.BodyName;
