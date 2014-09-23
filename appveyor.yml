@@ -1,3 +1,19 @@
+# Variables
+configuration:
+#  - Debug
+  - Release
+
+# build options
+build:
+  project: src\SubtitleEdit.sln
+  verbosity: minimal
+
+# custom test command
 test_script:
-    - set
-    - vstest.console /logger:Appveyor /Settings:"%APPVEYOR_BUILD_FOLDER%\src\Local.testsettings" %APPVEYOR_BUILD_FOLDER%\src\Test\bin\$(configuration)\Test.dll
+  - vstest.console /logger:Appveyor /Settings:"%APPVEYOR_BUILD_FOLDER%\src\Local.testsettings" %APPVEYOR_BUILD_FOLDER%\src\Test\bin\%CONFIGURATION%\Test.dll
+
+cache:
+  - src\packages            # preserve the "src\packages" directory
+
+matrix:
+  fast_finish: true
