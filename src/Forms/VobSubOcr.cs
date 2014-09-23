@@ -978,7 +978,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SetTesseractLanguageFromLanguageString(string languageString)
         {
-            // try to match language from vob to tesseract language
+            // try to match language from vob to Tesseract language
             if (comboBoxTesseractLanguages.SelectedIndex >= 0 && comboBoxTesseractLanguages.Items.Count > 1 && languageString != null)
             {
                 languageString = languageString.ToLower();
@@ -5633,7 +5633,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                MessageBox.Show("Unable to start 'tesseract' - make sure tesseract-ocr 3.x is installed!");
+                MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 3.x is installed!");
                 throw;
             }
             process.WaitForExit(5000);
@@ -6247,7 +6247,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (_modiEnabled && checkBoxUseModiInTesseractForUnknownWords.Checked)
                     {
-                        // which is best - modi or tesseract - we find out here
+                        // which is best - modi or Tesseract - we find out here
                         string modiText = CallModi(index);
 
                         if (modiText.Length == 0)
@@ -6300,7 +6300,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return string.Empty;
                 }
 
-                //check tesseract... find some otherway to do this...
+                //check Tesseract... find an other way to do this...
                 //string tmp = Utilities.RemoveHtmlTags(line).Trim();
                 //if (!tmp.TrimEnd().EndsWith("..."))
                 //{

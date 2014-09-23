@@ -54,7 +54,7 @@
             this.comboBoxBottomMargin = new System.Windows.Forms.ComboBox();
             this.labelBottomMargin = new System.Windows.Forms.Label();
             this.labelFrameRate = new System.Windows.Forms.Label();
-            this.comboBoxFramerate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelLanguage = new System.Windows.Forms.Label();
             this.comboBoxLanguage = new System.Windows.Forms.ComboBox();
             this.labelImageFormat = new System.Windows.Forms.Label();
@@ -173,7 +173,7 @@
             this.groupBoxImageSettings.Controls.Add(this.comboBoxBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelBottomMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelFrameRate);
-            this.groupBoxImageSettings.Controls.Add(this.comboBoxFramerate);
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxFrameRate);
             this.groupBoxImageSettings.Controls.Add(this.labelLanguage);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLanguage);
             this.groupBoxImageSettings.Controls.Add(this.labelImageFormat);
@@ -412,13 +412,13 @@
             this.labelFrameRate.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.labelFrameRate.Visible = false;
             // 
-            // comboBoxFramerate
+            // comboBoxFrameRate
             // 
-            this.comboBoxFramerate.FormattingEnabled = true;
-            this.comboBoxFramerate.Location = new System.Drawing.Point(532, 134);
-            this.comboBoxFramerate.Name = "comboBoxFramerate";
-            this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFramerate.TabIndex = 25;
+            this.comboBoxFrameRate.FormattingEnabled = true;
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(532, 134);
+            this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrameRate.TabIndex = 25;
             // 
             // labelLanguage
             // 
@@ -916,7 +916,7 @@
         private System.Windows.Forms.Label labelLanguage;
         private System.Windows.Forms.ComboBox comboBoxLanguage;
         private System.Windows.Forms.Label labelFrameRate;
-        private System.Windows.Forms.ComboBox comboBoxFramerate;
+        private System.Windows.Forms.ComboBox comboBoxFrameRate;
         private System.Windows.Forms.ComboBox comboBoxBottomMargin;
         private System.Windows.Forms.Label labelBottomMargin;
         private System.Windows.Forms.CheckBox checkBoxSkipEmptyFrameAtStart;

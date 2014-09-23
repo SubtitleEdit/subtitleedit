@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Calculate the time codes from framenumber/framerate
+        /// Calculate the time codes from frame number/frame rate
         /// </summary>
         /// <param name="frameRate">Number of frames per second</param>
         /// <returns>True if times could be calculated</returns>
@@ -256,7 +256,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         /// <summary>
-        /// Calculate the frame numbers from time codes/framerate
+        /// Calculate the frame numbers from time codes/frame rate
         /// </summary>
         /// <param name="frameRate"></param>
         /// <returns></returns>
@@ -297,15 +297,15 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public void ChangeFramerate(double oldFramerate, double newFramerate)
+        public void ChangeFrameRate(double oldFrameRate, double newFrameRate)
         {
             foreach (Paragraph p in Paragraphs)
             {
-                double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFramerate;
-                double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFramerate;
-                p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFramerate);
-                p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFramerate);
-                p.CalculateFrameNumbersFromTimeCodes(newFramerate);
+                double startFrame = p.StartTime.TotalMilliseconds / 1000.0 * oldFrameRate;
+                double endFrame = p.EndTime.TotalMilliseconds / 1000.0 * oldFrameRate;
+                p.StartTime.TotalMilliseconds = startFrame * (1000.0 / newFrameRate);
+                p.EndTime.TotalMilliseconds = endFrame * (1000.0 / newFrameRate);
+                p.CalculateFrameNumbersFromTimeCodes(newFrameRate);
             }
         }
 

@@ -431,9 +431,9 @@ namespace Nikse.SubtitleEdit.Forms
             this.comboBoxOcrMethod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOcrMethod.FormattingEnabled = true;
             this.comboBoxOcrMethod.Items.AddRange(new object[] {
-            "OCR via tesseract",
+            "OCR via Tesseract",
             "OCR via image compare",
-            "OCR via Microsoftr MODI",
+            "OCR via Microsoft MODI",
             "OCR via nOCR"});
             this.comboBoxOcrMethod.Location = new System.Drawing.Point(13, 20);
             this.comboBoxOcrMethod.Name = "comboBoxOcrMethod";

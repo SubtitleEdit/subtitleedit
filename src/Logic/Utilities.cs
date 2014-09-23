@@ -1886,7 +1886,6 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
         }
-        
 
         public static VideoPlayer GetVideoPlayer()
         {

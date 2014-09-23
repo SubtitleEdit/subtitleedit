@@ -2030,8 +2030,8 @@
             // 
             this.toolStripMenuItemChangeFrameRate2.Name = "toolStripMenuItemChangeFrameRate2";
             this.toolStripMenuItemChangeFrameRate2.Size = new System.Drawing.Size(336, 22);
-            this.toolStripMenuItemChangeFrameRate2.Text = "Change framerate...";
-            this.toolStripMenuItemChangeFrameRate2.Click += new System.EventHandler(this.ToolStripMenuItemChangeFramerateClick);
+            this.toolStripMenuItemChangeFrameRate2.Text = "Change frame rate...";
+            this.toolStripMenuItemChangeFrameRate2.Click += new System.EventHandler(this.ToolStripMenuItemChangeFrameRateClick);
             // 
             // changeSpeedInPercentToolStripMenuItem
             // 

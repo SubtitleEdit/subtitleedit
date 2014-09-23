@@ -79,7 +79,7 @@
             this.comboBoxSubtitleFontSize = new System.Windows.Forms.ComboBox();
             this.labelSubtitleFont = new System.Windows.Forms.Label();
             this.labelDefaultFileEncoding = new System.Windows.Forms.Label();
-            this.comboBoxFramerate = new System.Windows.Forms.ComboBox();
+            this.comboBoxFrameRate = new System.Windows.Forms.ComboBox();
             this.labelDefaultFrameRate = new System.Windows.Forms.Label();
             this.tabPageToolBar = new System.Windows.Forms.TabPage();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
@@ -442,7 +442,7 @@
             this.groupBoxMiscellaneous.Controls.Add(this.comboBoxSubtitleFontSize);
             this.groupBoxMiscellaneous.Controls.Add(this.labelSubtitleFont);
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFileEncoding);
-            this.groupBoxMiscellaneous.Controls.Add(this.comboBoxFramerate);
+            this.groupBoxMiscellaneous.Controls.Add(this.comboBoxFrameRate);
             this.groupBoxMiscellaneous.Controls.Add(this.labelDefaultFrameRate);
             this.groupBoxMiscellaneous.Location = new System.Drawing.Point(6, 6);
             this.groupBoxMiscellaneous.Name = "groupBoxMiscellaneous";
@@ -976,13 +976,13 @@
             this.labelDefaultFileEncoding.TabIndex = 2;
             this.labelDefaultFileEncoding.Text = "Default file encoding";
             // 
-            // comboBoxFramerate
+            // comboBoxFrameRate
             // 
-            this.comboBoxFramerate.FormattingEnabled = true;
-            this.comboBoxFramerate.Location = new System.Drawing.Point(205, 23);
-            this.comboBoxFramerate.Name = "comboBoxFramerate";
-            this.comboBoxFramerate.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxFramerate.TabIndex = 1;
+            this.comboBoxFrameRate.FormattingEnabled = true;
+            this.comboBoxFrameRate.Location = new System.Drawing.Point(205, 23);
+            this.comboBoxFrameRate.Name = "comboBoxFrameRate";
+            this.comboBoxFrameRate.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxFrameRate.TabIndex = 1;
             // 
             // labelDefaultFrameRate
             // 
@@ -991,7 +991,7 @@
             this.labelDefaultFrameRate.Name = "labelDefaultFrameRate";
             this.labelDefaultFrameRate.Size = new System.Drawing.Size(93, 13);
             this.labelDefaultFrameRate.TabIndex = 0;
-            this.labelDefaultFrameRate.Text = "Default framerate";
+            this.labelDefaultFrameRate.Text = "Default frame rate";
             // 
             // tabPageToolBar
             // 
@@ -3443,7 +3443,7 @@
         private System.Windows.Forms.CheckBox checkBoxSettings;
         private System.Windows.Forms.Label labelDefaultFrameRate;
         private System.Windows.Forms.Label labelDefaultFileEncoding;
-        private System.Windows.Forms.ComboBox comboBoxFramerate;
+        private System.Windows.Forms.ComboBox comboBoxFrameRate;
         private System.Windows.Forms.CheckBox checkBoxSubtitleFontBold;
         private System.Windows.Forms.ComboBox comboBoxSubtitleFontSize;
         private System.Windows.Forms.Label labelSubtitleFont;
