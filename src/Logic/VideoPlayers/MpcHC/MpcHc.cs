@@ -240,9 +240,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (File.Exists(path))
                     return path;
 
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
-                    path = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
+                    path = Path.GetDirectoryName(Configuration.Settings.General.MpcHcLocation);
                     if (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase))
                         return path;
                 }
@@ -270,9 +270,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (File.Exists(path))
                     return path;
 
-                if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.MpcHcLocation))
                 {
-                    path = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
+                    path = Path.GetDirectoryName(Configuration.Settings.General.MpcHcLocation);
                     if (File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
                         return path;
                 }
