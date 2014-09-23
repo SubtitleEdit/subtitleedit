@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
@@ -670,7 +671,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _importLanguageString = _importLanguageString.Substring(0, languageString.IndexOf('(') - 1).Trim();
         }
 
-        internal void InitializeBatch(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void InitializeBatch(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             Initialize(subtitles, vobSubOcrSettings, fileName);
             FormVobSubOcr_Shown(null, null);
@@ -749,7 +750,7 @@ namespace Nikse.SubtitleEdit.Forms
             SetButtonsEnabledAfterOcrDone();
         }
 
-        internal void Initialize(List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
+        internal void Initialize(List<BluRaySupParser.PcsData> subtitles, VobSubOcrSettings vobSubOcrSettings, string fileName)
         {
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
@@ -1095,7 +1096,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _subtitle = new Subtitle();
 
-            _bluRaySubtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
+            _bluRaySubtitles = new List<BluRaySupParser.PcsData>();
             int max = _bluRaySubtitlesOriginal.Count;
             for (int i = 0; i < max; i++)
             {
@@ -6704,7 +6705,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         string fileName = Path.Combine(Configuration.OcrFolder, newFolder.FolderName + ".db");
-                        if (System.IO.File.Exists(fileName))
+                        if (File.Exists(fileName))
                         {
                             MessageBox.Show("OCR db already exists!");
                             return;

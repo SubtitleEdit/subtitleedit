@@ -151,9 +151,9 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
-            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)
+            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic)
             {
-                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
+                var libVlc = (LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
                 libVlc.AudioTrackNumber = _audioTrackNumber;
             }
         }
@@ -274,7 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GetTime_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (videoPlayerContainer1.VideoPlayer != null) // && videoPlayerContainer1.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            if (videoPlayerContainer1.VideoPlayer != null) // && videoPlayerContainer1.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 videoPlayerContainer1.VideoPlayer.DisposeVideoPlayer();
             }

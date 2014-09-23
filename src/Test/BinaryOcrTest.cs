@@ -2,6 +2,7 @@
 using Nikse.SubtitleEdit.Logic.Ocr.Binary;
 using Nikse.SubtitleEdit.Logic;
 using System.Drawing;
+using System.IO;
 
 namespace Test
 {
@@ -11,7 +12,7 @@ namespace Test
         [TestMethod]
         public void TestMethodBinOcrSaveLoad()
         {
-            string tempFileName = System.IO.Path.GetTempFileName();
+            string tempFileName = Path.GetTempFileName();
             var db = new BinaryOcrDb(tempFileName);
             var nbmp = new NikseBitmap(2, 2);
             nbmp.SetPixel(0, 0, Color.Transparent);
@@ -59,7 +60,7 @@ namespace Test
 
             try
             {
-                System.IO.File.Delete(tempFileName);
+                File.Delete(tempFileName);
             }
             catch
             {

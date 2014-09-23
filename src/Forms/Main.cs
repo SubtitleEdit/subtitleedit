@@ -4,6 +4,7 @@ using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.Networking;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.TransportStream;
 using Nikse.SubtitleEdit.Logic.VideoFormats;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
@@ -2810,7 +2811,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (format == null && fi.Length < 100 * 1000000 && Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser.IsDvbSup(fileName))
+                if (format == null && fi.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
                     ImportSubtitleFromDvbSupFile(fileName);
                     return;
@@ -3125,9 +3126,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var buffer = new byte[192 + 192 + 5];
                 fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 fs.Read(buffer, 0, buffer.Length);
-                if (buffer[0] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[188] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
+                if (buffer[0] == Packet.SynchronizationByte && buffer[188] == Packet.SynchronizationByte)
                     return false;
-                if (buffer[4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte && buffer[192 + 192 + 4] == Nikse.SubtitleEdit.Logic.TransportStream.Packet.SynchronizationByte)
+                if (buffer[4] == Packet.SynchronizationByte && buffer[192 + 4] == Packet.SynchronizationByte && buffer[192 + 192 + 4] == Packet.SynchronizationByte)
                     return true;
                 return false;
             }
@@ -9519,7 +9520,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
                 _subtitleListViewIndex = -1;
                 _subtitle.Paragraphs.Clear();
-                var subtitles = new List<Nikse.SubtitleEdit.Logic.BluRaySup.BluRaySupParser.PcsData>();
+                var subtitles = new List<BluRaySupParser.PcsData>();
                 StringBuilder log = new StringBuilder();
                 foreach (SubtitleSequence p in sub)
                 {
@@ -9624,7 +9625,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromDvbSupFile(string fileName)
         {
-            var subtitles = Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser.GetDvbSup(fileName);
+            var subtitles = TransportStreamParser.GetDvbSup(fileName);
 
             var formSubOcr = new VobSubOcr();
             _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
@@ -9666,7 +9667,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 ShowStatus(_language.ParsingTransportStream);
             Refresh();
-            var tsParser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
+            var tsParser = new TransportStreamParser();
             tsParser.ParseTSFile(fileName);
             ShowStatus(string.Empty);
 
@@ -19850,7 +19851,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var properties = new EbuSaveOptions();
 
-            var header = new Nikse.SubtitleEdit.Logic.SubtitleFormats.Ebu.EbuGeneralSubtitleInformation();
+            var header = new Ebu.EbuGeneralSubtitleInformation();
             if (_subtitle != null && _subtitle.Header != null && (_subtitle.Header.Contains("STL2") || _subtitle.Header.Contains("STL3")))
             {
                 header = Ebu.ReadHeader(Encoding.UTF8.GetBytes(_subtitle.Header));

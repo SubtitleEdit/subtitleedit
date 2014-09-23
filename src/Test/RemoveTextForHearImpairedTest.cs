@@ -1,5 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using Nikse.SubtitleEdit.Logic.Forms;
 
 namespace Test
 {
@@ -30,10 +31,10 @@ namespace Test
             }
         }
 
-        private static Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI GetRemoveTextForHiLib()
+        private static RemoveTextForHI GetRemoveTextForHiLib()
         {
-            var hiSettings = new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHISettings();
-            return new Nikse.SubtitleEdit.Logic.Forms.RemoveTextForHI(hiSettings);
+            var hiSettings = new RemoveTextForHISettings();
+            return new RemoveTextForHI(hiSettings);
         }
 
         #region Additional test attributes

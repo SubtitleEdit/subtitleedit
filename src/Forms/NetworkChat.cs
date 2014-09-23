@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewChat.Columns[1].Text = Configuration.Settings.Language.General.Text;
         }
 
-        internal void Initialize(Nikse.SubtitleEdit.Logic.Networking.NikseWebServiceSession networkSession)
+        internal void Initialize(NikseWebServiceSession networkSession)
         {
             _networkSession = networkSession;
             Text = Configuration.Settings.Language.NetworkChat.Title + " - " + _networkSession.CurrentUser.UserName;
