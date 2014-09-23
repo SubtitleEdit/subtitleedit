@@ -1800,7 +1800,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _wordListNamesEtc.Sort();
                 return _wordListNamesEtc;
             });
-            
+
             if (reloadListBox)
             {
                 // reload the listbox on a continuation ui thead

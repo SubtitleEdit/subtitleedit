@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC 
+namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 {
     public class MpcHc : VideoPlayer, IDisposable
     {
@@ -55,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         public override double Duration
         {
-            get 
+            get
             {
                 return _durationInSeconds;
             }
@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         public override void Play()
         {
             _playMode = ModePlay;
-            SendMpcMessage(MpcHcCommand.Play);               
+            SendMpcMessage(MpcHcCommand.Play);
         }
 
         public override void Pause()
@@ -128,12 +128,12 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             _positionTimer.Tick += PositionTimerTick;
         }
 
-        void PositionTimerTick(object sender, EventArgs e)
+        private void PositionTimerTick(object sender, EventArgs e)
         {
             SendMpcMessage(MpcHcCommand.GetCurrentPosition);
         }
 
-        void OnCopyData(object sender, EventArgs e)
+        private void OnCopyData(object sender, EventArgs e)
         {
             var message = (Message)sender;
             var cds = (NativeMethods.CopyDataStruct)Marshal.PtrToStructure(message.LParam, typeof(NativeMethods.CopyDataStruct));
@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     NativeMethods.SetWindowPos(handle, (IntPtr)NativeMethods.SpecialWindowHandles.HWND_TOP, -9999, -9999, 0, 0, NativeMethods.SetWindowPosFlags.SWP_NOACTIVATE);
                     return true;
                 }
-            }        
+            }
             return false;
         }
 
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (File.Exists(path))
                     return path;
             }
-            else 
+            else
             {
                 path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
@@ -289,7 +289,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
                     return path;
-               
+
                 path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
                     return path;
@@ -338,7 +338,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);   
+            GC.SuppressFinalize(this);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             {
                 if (disposing)
                 {
-                    // release managed resources                
+                    // release managed resources
                     if (_positionTimer != null)
                     {
                         _positionTimer.Stop();
