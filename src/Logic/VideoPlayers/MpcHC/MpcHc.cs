@@ -105,6 +105,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             if (ownerControl == null)
                 return;
 
+            VideoFileName = videoFileName;
+            OnVideoLoaded = onVideoLoaded;
+            OnVideoEnded = onVideoEnded;
+
             _initialWidth = ownerControl.Width;
             _initialHeight = ownerControl.Height;
             _form = new MessageHandlerWindow();
@@ -116,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             _videoFileName = videoFileName;
             _startInfo = new ProcessStartInfo();
             _startInfo.FileName = GetMpcHcFileName();
-            _startInfo.Arguments = "/slave " + _messageHandlerHandle;
+            _startInfo.Arguments = "/new /minimized /slave " + _messageHandlerHandle;
             _process = Process.Start(_startInfo);
             _process.WaitForInputIdle();
             _positionTimer = new Timer();
@@ -193,7 +197,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             return windowHandles;
         }
 
-        private static bool IsWindowHpcHcVideo(IntPtr hWnd)
+        private static bool IsWindowMpcHcVideo(IntPtr hWnd)
         {
             var className = new StringBuilder(256);
             int returnCode = NativeMethods.GetClassName(hWnd, className, className.Capacity); // Get the window class name
@@ -208,7 +212,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             var handles = GetChildWindows();
             foreach (var h in handles)
             {
-                if (IsWindowHpcHcVideo((IntPtr)h))
+                if (IsWindowMpcHcVideo((IntPtr)h))
                 {
                     _videoHandle = (IntPtr)h;
                     NativeMethods.SetParent((IntPtr)h, _videoPanelHandle);
@@ -226,12 +230,23 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             NativeMethods.ShowWindow(_process.MainWindowHandle, NativeMethods.ShowWindowCommands.Hide);
         }
 
-        private string GetMpcHcFileName()
+        public static string GetMpcHcFileName()
         {
             string path;
 
             if (IntPtr.Size == 8) // 64-bit
             {
+                path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc64.exe");
+                if (File.Exists(path))
+                    return path;
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
+                {
+                    path = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
+                    if (File.Exists(path) && path.EndsWith("mpc-hc64.exe", StringComparison.OrdinalIgnoreCase))
+                        return path;
+                }
+
                 var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1");
                 if (key != null)
                 {
@@ -251,11 +266,22 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
             }
             else 
             {
+                path = Path.Combine(Configuration.BaseDirectory, @"MPC-HC\mpc-hc.exe");
+                if (File.Exists(path))
+                    return path;
+
+                if (!string.IsNullOrEmpty(Configuration.Settings.General.VlcLocation))
+                {
+                    path = Path.GetDirectoryName(Configuration.Settings.General.VlcLocation);
+                    if (File.Exists(path) && path.EndsWith("mpc-hc.exe", StringComparison.OrdinalIgnoreCase))
+                        return path;
+                }
+
                 var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1");
                 if (key != null)
                 {
                     path = (string)key.GetValue("InstallLocation");
-                    path = Path.Combine(path, "mpc-hc64.exe");
+                    path = Path.Combine(path, "mpc-hc.exe");
                     if (File.Exists(path))
                         return path;
                 }

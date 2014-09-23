@@ -140,6 +140,7 @@
             this.labelCustomSearch = new System.Windows.Forms.Label();
             this.comboBoxCustomSearch1 = new System.Windows.Forms.ComboBox();
             this.groupBoxVideoPlayerDefault = new System.Windows.Forms.GroupBox();
+            this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowFullscreenButton = new System.Windows.Forms.CheckBox();
             this.checkBoxVideoPlayerShowMuteButton = new System.Windows.Forms.CheckBox();
             this.labelVideoPlayerPreviewFontSize = new System.Windows.Forms.Label();
@@ -154,10 +155,10 @@
             this.radioButtonVideoPlayerVLC = new System.Windows.Forms.RadioButton();
             this.labelVideoPlayerMPlayer = new System.Windows.Forms.Label();
             this.labelDirectShowDescription = new System.Windows.Forms.Label();
-            this.labelManagedDirectXDescription = new System.Windows.Forms.Label();
+            this.labelMpcHcDescription = new System.Windows.Forms.Label();
             this.radioButtonVideoPlayerMPlayer = new System.Windows.Forms.RadioButton();
             this.radioButtonVideoPlayerDirectShow = new System.Windows.Forms.RadioButton();
-            this.radioButtonVideoPlayerManagedDirectX = new System.Windows.Forms.RadioButton();
+            this.radioButtonVideoPlayerMpcHc = new System.Windows.Forms.RadioButton();
             this.tabPageWaveform = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.buttonBrowseToFFmpeg = new System.Windows.Forms.Button();
@@ -282,7 +283,6 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.checkBoxVideoPlayerPreviewFontBold = new System.Windows.Forms.CheckBox();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1595,7 +1595,7 @@
             this.labelCustomSearch.AutoSize = true;
             this.labelCustomSearch.Location = new System.Drawing.Point(12, 20);
             this.labelCustomSearch.Name = "labelCustomSearch";
-            this.labelCustomSearch.Size = new System.Drawing.Size(137, 13);
+            this.labelCustomSearch.Size = new System.Drawing.Size(144, 13);
             this.labelCustomSearch.TabIndex = 1;
             this.labelCustomSearch.Text = "Custom search text and URL";
             // 
@@ -1630,6 +1630,16 @@
             this.groupBoxVideoPlayerDefault.Size = new System.Drawing.Size(813, 98);
             this.groupBoxVideoPlayerDefault.TabIndex = 14;
             this.groupBoxVideoPlayerDefault.TabStop = false;
+            // 
+            // checkBoxVideoPlayerPreviewFontBold
+            // 
+            this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
+            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(465, 45);
+            this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
+            this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
+            this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 23;
+            this.checkBoxVideoPlayerPreviewFontBold.Text = "Bold";
+            this.checkBoxVideoPlayerPreviewFontBold.UseVisualStyleBackColor = true;
             // 
             // checkBoxVideoPlayerShowFullscreenButton
             // 
@@ -1703,10 +1713,10 @@
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerVLC);
             this.groupBoxVideoEngine.Controls.Add(this.labelVideoPlayerMPlayer);
             this.groupBoxVideoEngine.Controls.Add(this.labelDirectShowDescription);
-            this.groupBoxVideoEngine.Controls.Add(this.labelManagedDirectXDescription);
+            this.groupBoxVideoEngine.Controls.Add(this.labelMpcHcDescription);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMPlayer);
             this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerDirectShow);
-            this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerManagedDirectX);
+            this.groupBoxVideoEngine.Controls.Add(this.radioButtonVideoPlayerMpcHc);
             this.groupBoxVideoEngine.Location = new System.Drawing.Point(6, 6);
             this.groupBoxVideoEngine.Name = "groupBoxVideoEngine";
             this.groupBoxVideoEngine.Size = new System.Drawing.Size(813, 123);
@@ -1759,7 +1769,7 @@
             this.labelVideoPlayerVLC.ForeColor = System.Drawing.Color.Gray;
             this.labelVideoPlayerVLC.Location = new System.Drawing.Point(167, 49);
             this.labelVideoPlayerVLC.Name = "labelVideoPlayerVLC";
-            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(209, 11);
+            this.labelVideoPlayerVLC.Size = new System.Drawing.Size(208, 11);
             this.labelVideoPlayerVLC.TabIndex = 13;
             this.labelVideoPlayerVLC.Text = "libvlc.dll from VLC media player (1.1.0 or newer)";
             // 
@@ -1779,7 +1789,7 @@
             this.labelVideoPlayerMPlayer.AutoSize = true;
             this.labelVideoPlayerMPlayer.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelVideoPlayerMPlayer.ForeColor = System.Drawing.Color.Gray;
-            this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 70);
+            this.labelVideoPlayerMPlayer.Location = new System.Drawing.Point(167, 93);
             this.labelVideoPlayerMPlayer.Name = "labelVideoPlayerMPlayer";
             this.labelVideoPlayerMPlayer.Size = new System.Drawing.Size(83, 11);
             this.labelVideoPlayerMPlayer.TabIndex = 11;
@@ -1796,25 +1806,24 @@
             this.labelDirectShowDescription.TabIndex = 10;
             this.labelDirectShowDescription.Text = "Quartz.dll in system32";
             // 
-            // labelManagedDirectXDescription
+            // labelMpcHcDescription
             // 
-            this.labelManagedDirectXDescription.AutoSize = true;
-            this.labelManagedDirectXDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelManagedDirectXDescription.ForeColor = System.Drawing.Color.Gray;
-            this.labelManagedDirectXDescription.Location = new System.Drawing.Point(167, 93);
-            this.labelManagedDirectXDescription.Name = "labelManagedDirectXDescription";
-            this.labelManagedDirectXDescription.Size = new System.Drawing.Size(314, 11);
-            this.labelManagedDirectXDescription.TabIndex = 9;
-            this.labelManagedDirectXDescription.Text = "Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX";
-            this.labelManagedDirectXDescription.Visible = false;
+            this.labelMpcHcDescription.AutoSize = true;
+            this.labelMpcHcDescription.Font = new System.Drawing.Font("Tahoma", 6.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelMpcHcDescription.ForeColor = System.Drawing.Color.Gray;
+            this.labelMpcHcDescription.Location = new System.Drawing.Point(167, 70);
+            this.labelMpcHcDescription.Name = "labelMpcHcDescription";
+            this.labelMpcHcDescription.Size = new System.Drawing.Size(160, 11);
+            this.labelMpcHcDescription.TabIndex = 9;
+            this.labelMpcHcDescription.Text = "Media Player Classic - Home Cinema";
             // 
             // radioButtonVideoPlayerMPlayer
             // 
             this.radioButtonVideoPlayerMPlayer.AutoSize = true;
-            this.radioButtonVideoPlayerMPlayer.Location = new System.Drawing.Point(10, 67);
+            this.radioButtonVideoPlayerMPlayer.Location = new System.Drawing.Point(10, 89);
             this.radioButtonVideoPlayerMPlayer.Name = "radioButtonVideoPlayerMPlayer";
             this.radioButtonVideoPlayerMPlayer.Size = new System.Drawing.Size(69, 17);
-            this.radioButtonVideoPlayerMPlayer.TabIndex = 8;
+            this.radioButtonVideoPlayerMPlayer.TabIndex = 28;
             this.radioButtonVideoPlayerMPlayer.TabStop = true;
             this.radioButtonVideoPlayerMPlayer.Text = "MPlayer2";
             this.radioButtonVideoPlayerMPlayer.UseVisualStyleBackColor = true;
@@ -1830,17 +1839,16 @@
             this.radioButtonVideoPlayerDirectShow.Text = "DirectShow ";
             this.radioButtonVideoPlayerDirectShow.UseVisualStyleBackColor = true;
             // 
-            // radioButtonVideoPlayerManagedDirectX
+            // radioButtonVideoPlayerMpcHc
             // 
-            this.radioButtonVideoPlayerManagedDirectX.AutoSize = true;
-            this.radioButtonVideoPlayerManagedDirectX.Location = new System.Drawing.Point(10, 90);
-            this.radioButtonVideoPlayerManagedDirectX.Name = "radioButtonVideoPlayerManagedDirectX";
-            this.radioButtonVideoPlayerManagedDirectX.Size = new System.Drawing.Size(106, 17);
-            this.radioButtonVideoPlayerManagedDirectX.TabIndex = 6;
-            this.radioButtonVideoPlayerManagedDirectX.TabStop = true;
-            this.radioButtonVideoPlayerManagedDirectX.Text = "Managed DirectX";
-            this.radioButtonVideoPlayerManagedDirectX.UseVisualStyleBackColor = true;
-            this.radioButtonVideoPlayerManagedDirectX.Visible = false;
+            this.radioButtonVideoPlayerMpcHc.AutoSize = true;
+            this.radioButtonVideoPlayerMpcHc.Location = new System.Drawing.Point(10, 66);
+            this.radioButtonVideoPlayerMpcHc.Name = "radioButtonVideoPlayerMpcHc";
+            this.radioButtonVideoPlayerMpcHc.Size = new System.Drawing.Size(64, 17);
+            this.radioButtonVideoPlayerMpcHc.TabIndex = 27;
+            this.radioButtonVideoPlayerMpcHc.TabStop = true;
+            this.radioButtonVideoPlayerMpcHc.Text = "MPC-HC";
+            this.radioButtonVideoPlayerMpcHc.UseVisualStyleBackColor = true;
             // 
             // tabPageWaveform
             // 
@@ -1890,7 +1898,7 @@
             this.labelFFmpegPath.AutoSize = true;
             this.labelFFmpegPath.Location = new System.Drawing.Point(6, 49);
             this.labelFFmpegPath.Name = "labelFFmpegPath";
-            this.labelFFmpegPath.Size = new System.Drawing.Size(71, 13);
+            this.labelFFmpegPath.Size = new System.Drawing.Size(70, 13);
             this.labelFFmpegPath.TabIndex = 2;
             this.labelFFmpegPath.Text = "FFmpeg path";
             // 
@@ -1899,7 +1907,7 @@
             this.checkBoxUseFFmpeg.AutoSize = true;
             this.checkBoxUseFFmpeg.Location = new System.Drawing.Point(6, 20);
             this.checkBoxUseFFmpeg.Name = "checkBoxUseFFmpeg";
-            this.checkBoxUseFFmpeg.Size = new System.Drawing.Size(201, 17);
+            this.checkBoxUseFFmpeg.Size = new System.Drawing.Size(200, 17);
             this.checkBoxUseFFmpeg.TabIndex = 1;
             this.checkBoxUseFFmpeg.Text = "Use FFmpeg for wave file extraction";
             this.checkBoxUseFFmpeg.UseVisualStyleBackColor = true;
@@ -1972,7 +1980,7 @@
             this.labelWaveformsFolderInfo.AutoSize = true;
             this.labelWaveformsFolderInfo.Location = new System.Drawing.Point(10, 20);
             this.labelWaveformsFolderInfo.Name = "labelWaveformsFolderInfo";
-            this.labelWaveformsFolderInfo.Size = new System.Drawing.Size(207, 13);
+            this.labelWaveformsFolderInfo.Size = new System.Drawing.Size(205, 13);
             this.labelWaveformsFolderInfo.TabIndex = 0;
             this.labelWaveformsFolderInfo.Text = "\'Waveforms\' folder contains x files (x mb)";
             // 
@@ -3289,16 +3297,6 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
-            // checkBoxVideoPlayerPreviewFontBold
-            // 
-            this.checkBoxVideoPlayerPreviewFontBold.AutoSize = true;
-            this.checkBoxVideoPlayerPreviewFontBold.Location = new System.Drawing.Point(465, 45);
-            this.checkBoxVideoPlayerPreviewFontBold.Name = "checkBoxVideoPlayerPreviewFontBold";
-            this.checkBoxVideoPlayerPreviewFontBold.Size = new System.Drawing.Size(46, 17);
-            this.checkBoxVideoPlayerPreviewFontBold.TabIndex = 23;
-            this.checkBoxVideoPlayerPreviewFontBold.Text = "Bold";
-            this.checkBoxVideoPlayerPreviewFontBold.UseVisualStyleBackColor = true;
-            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3467,10 +3465,10 @@
         private System.Windows.Forms.GroupBox groupBoxVideoEngine;
         private System.Windows.Forms.Label labelVideoPlayerMPlayer;
         private System.Windows.Forms.Label labelDirectShowDescription;
-        private System.Windows.Forms.Label labelManagedDirectXDescription;
+        private System.Windows.Forms.Label labelMpcHcDescription;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerMPlayer;
         private System.Windows.Forms.RadioButton radioButtonVideoPlayerDirectShow;
-        private System.Windows.Forms.RadioButton radioButtonVideoPlayerManagedDirectX;
+        private System.Windows.Forms.RadioButton radioButtonVideoPlayerMpcHc;
         private System.Windows.Forms.CheckBox checkBoxRememberWindowPosition;
         private System.Windows.Forms.TextBox textBoxShowLineBreaksAs;
         private System.Windows.Forms.Label labelShowLineBreaksAs;
