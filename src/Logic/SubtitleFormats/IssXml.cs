@@ -82,6 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 title = "Subtitle Edit subtitle";
 
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(xmlStructure);
             //TODO: set variables...
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("TrackList/Track/StItemList");
@@ -150,6 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(sb.ToString().Trim());

@@ -80,6 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             XmlDocument xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(xmlString);

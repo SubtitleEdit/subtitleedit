@@ -157,11 +157,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(sb.ToString().Trim());
 
-                XmlDocument header = new XmlDocument();
+                var header = new XmlDocument();
+                header.XmlResolver = null;
                 header.LoadXml(sb.ToString());
                 if (header.SelectSingleNode("sequence/media/video/track") != null)
                     header.RemoveChild(header.SelectSingleNode("sequence/media/video/track"));

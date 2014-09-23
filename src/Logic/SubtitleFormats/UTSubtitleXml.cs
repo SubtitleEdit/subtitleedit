@@ -74,6 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!sb.ToString().Contains("<uts") || !sb.ToString().Contains("secOut="))
                 return;
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 string xmlText = sb.ToString();

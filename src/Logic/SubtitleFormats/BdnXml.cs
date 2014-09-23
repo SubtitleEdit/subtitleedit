@@ -38,6 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<Subtitle/>";
 
             XmlDocument xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(xmlStructure);
 
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -82,6 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             XmlDocument xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(xmlString);

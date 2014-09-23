@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
-
+            xml.XmlResolver = null;
             var cd = xml.DocumentElement.SelectSingleNode("CaptionData");
             foreach (Paragraph p in subtitle.Paragraphs)
             {
@@ -107,6 +107,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return;
 
             var xml = new XmlDocument();
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(allText);

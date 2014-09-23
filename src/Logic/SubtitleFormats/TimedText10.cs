@@ -39,6 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
                 var xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -397,7 +398,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             var xml = new XmlDocument();
-
+            xml.XmlResolver = null;
             try
             {
                 xml.LoadXml(sb.ToString().Trim());

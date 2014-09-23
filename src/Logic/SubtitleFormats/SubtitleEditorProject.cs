@@ -31,6 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 xmlAsString.Contains("<subtitle "))
             {
                 XmlDocument xml = new XmlDocument();
+                xml.XmlResolver = null;
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -145,6 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
             XmlDocument xml = new XmlDocument();
+            xml.XmlResolver = null;
             xml.LoadXml(sb.ToString().Trim());
 
             XmlNode div = xml.DocumentElement.SelectSingleNode("subtitles");
