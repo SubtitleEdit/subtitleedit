@@ -1890,8 +1890,8 @@ namespace Nikse.SubtitleEdit.Logic
             if (gs.VideoPlayer == "MPlayer" && MPlayer.IsInstalled)
                 return new MPlayer();
 
-            if (gs.VideoPlayer == "MPC-HC" && Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc.IsInstalled)
-                return new Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc();
+            if (gs.VideoPlayer == "MPC-HC" && VideoPlayers.MpcHC.MpcHc.IsInstalled)
+                return new VideoPlayers.MpcHC.MpcHc();
 
             if (IsQuartsDllInstalled)
                 return new QuartsPlayer();

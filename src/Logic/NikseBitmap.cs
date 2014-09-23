@@ -419,15 +419,15 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void WriteRLE(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
         {
-            if (count <= Nikse.SubtitleEdit.Logic.VobSub.Helper.B00000011) // 1-3 repetitions
+            if (count <= Helper.B00000011) // 1-3 repetitions
             {
                 WriteOneNibble(buffer, count, lastColor, ref index, ref indexHalfNibble);
             }
-            else if (count <= Nikse.SubtitleEdit.Logic.VobSub.Helper.B00001111) // 4-15 repetitions
+            else if (count <= Helper.B00001111) // 4-15 repetitions
             {
                 WriteTwoNibbles(buffer, count, lastColor, ref index, indexHalfNibble);
             }
-            else if (count <= Nikse.SubtitleEdit.Logic.VobSub.Helper.B00111111) // 4-15 repetitions
+            else if (count <= Helper.B00111111) // 4-15 repetitions
             {
                 WriteThreeNibbles(buffer, count, lastColor, ref index, ref indexHalfNibble); // 16-63 repetitions
             }
@@ -452,7 +452,7 @@ namespace Nikse.SubtitleEdit.Logic
                 byte firstNibble = (byte)(n >> 4);
                 buffer[index] = firstNibble;
                 index++;
-                byte secondNibble = (byte)((n & Nikse.SubtitleEdit.Logic.VobSub.Helper.B00001111) << 4);
+                byte secondNibble = (byte)((n & Helper.B00001111) << 4);
                 buffer[index] = (byte)secondNibble;
             }
             else
@@ -460,7 +460,7 @@ namespace Nikse.SubtitleEdit.Logic
                 byte firstNibble = (byte)(n >> 8);
                 buffer[index] = firstNibble;
                 index++;
-                byte secondNibble = (byte)(n & Nikse.SubtitleEdit.Logic.VobSub.Helper.B11111111);
+                byte secondNibble = (byte)(n & Helper.B11111111);
                 buffer[index] = (byte)secondNibble;
                 index++;
             }

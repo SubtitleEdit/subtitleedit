@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.IO;
 using System.Text;
 using System.Windows.Forms;
 
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonTrain_Click(object sender, EventArgs e)
         {
-            if (!System.IO.File.Exists(textBoxInputFile.Text))
+            if (!File.Exists(textBoxInputFile.Text))
             {
                 return;
             }
@@ -78,7 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
             int numberOfCharactersSkipped = 0;
             var nOcrD = new NOcrDb(textBoxNOcrDb.Text);
             var lines = new List<string>();
-            foreach (string line in System.IO.File.ReadAllLines(textBoxInputFile.Text))
+            foreach (string line in File.ReadAllLines(textBoxInputFile.Text))
                 lines.Add(line);
             var format = new SubRip();
             var sub = new Subtitle();

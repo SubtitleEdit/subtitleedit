@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic.Ocr;
 using System.Drawing;
+using System.IO;
 
 namespace Test
 {
@@ -11,7 +12,7 @@ namespace Test
         [TestMethod]
         public void TestNOcrSaveLoad()
         {
-            string tempFileName = System.IO.Path.GetTempFileName();
+            string tempFileName = Path.GetTempFileName();
             var db = new NOcrDb(tempFileName);
 
             var nOcrChar = new NOcrChar("t");
@@ -52,7 +53,7 @@ namespace Test
 
             try
             {
-                System.IO.File.Delete(tempFileName);
+                File.Delete(tempFileName);
             }
             catch
             {
