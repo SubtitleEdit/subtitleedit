@@ -453,15 +453,14 @@ namespace Nikse.SubtitleEdit.Logic
             while (six < s.Length)
             {
                 var letter = s[six];
-                bool tagFound = letter == '<' && (s.Substring(six).StartsWith("<font ") || s.Substring(six).StartsWith("</font ") ||
-                                                s.Substring(six).StartsWith("</font") || s.Substring(six).StartsWith("</FONT") ||
-                                                s.Substring(six).StartsWith("</Font") || s.Substring(six).StartsWith("</Font") ||
-                                                s.Substring(six).StartsWith("<u") || s.Substring(six).StartsWith("</u") ||
-                                                s.Substring(six).StartsWith("<U") || s.Substring(six).StartsWith("</U") ||
-                                                s.Substring(six).StartsWith("<b") || s.Substring(six).StartsWith("</b") ||
-                                                s.Substring(six).StartsWith("<B") || s.Substring(six).StartsWith("</B") ||
-                                                s.Substring(six).StartsWith("<i") || s.Substring(six).StartsWith("</i") ||
-                                                s.Substring(six).StartsWith("<I") || s.Substring(six).StartsWith("<I"));
+                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
                 int endIndex = -1;
                 if (tagFound)
                     endIndex = s.IndexOf('>', six + 1);
@@ -597,15 +596,14 @@ namespace Nikse.SubtitleEdit.Logic
             while (six < s.Length)
             {
                 var letter = s[six];
-                bool tagFound = letter == '<' && (s.Substring(six).StartsWith("<font ", StringComparison.Ordinal) || s.Substring(six).StartsWith("</font ", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("</font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</FONT", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) || s.Substring(six).StartsWith("</Font", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<u", StringComparison.Ordinal) || s.Substring(six).StartsWith("</u", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<U", StringComparison.Ordinal) || s.Substring(six).StartsWith("</U", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<b", StringComparison.Ordinal) || s.Substring(six).StartsWith("</b", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<B", StringComparison.Ordinal) || s.Substring(six).StartsWith("</B", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<i", StringComparison.Ordinal) || s.Substring(six).StartsWith("</i", StringComparison.Ordinal) ||
-                                                s.Substring(six).StartsWith("<I", StringComparison.Ordinal) || s.Substring(six).StartsWith("<I", StringComparison.Ordinal));
+                var tagFound = letter == '<' && (s.Substring(six).StartsWith("<font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</font", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</u", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</b", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("<i", StringComparison.OrdinalIgnoreCase)
+                                                 || s.Substring(six).StartsWith("</i", StringComparison.OrdinalIgnoreCase));
                 int endIndex = -1;
                 if (tagFound)
                     endIndex = s.IndexOf('>', six + 1);
