@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
 
         internal delegate bool EnumedWindow(IntPtr handleWindow, ArrayList handles);
 
-        #region structs/consts and enums
+        #region structs, constants and enums
         public struct CopyDataStruct
         {
             public UIntPtr dwData;
