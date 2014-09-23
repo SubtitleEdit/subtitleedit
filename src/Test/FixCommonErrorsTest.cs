@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Test
 {
@@ -30,7 +31,7 @@ namespace Test
         {
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
-            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), System.Text.Encoding.UTF8);
+            target.Initialize(subtitle, new SubRip(), System.Text.Encoding.UTF8);
         }
 
         private static void InitializeFixCommonErrorsLine(Nikse.SubtitleEdit.Forms.FixCommonErrors target, string line, string line2)
@@ -38,7 +39,7 @@ namespace Test
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph(line, 100, 10000));
             subtitle.Paragraphs.Add(new Paragraph(line2, 10001, 30000));
-            target.Initialize(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), System.Text.Encoding.UTF8);
+            target.Initialize(subtitle, new SubRip(), System.Text.Encoding.UTF8);
         }
 
         #region Additional test attributes
@@ -83,8 +84,8 @@ namespace Test
                 }
             }
 
-            if (!System.IO.Directory.Exists("Directories"))
-                System.IO.Directory.CreateDirectory("Dictionaries");
+            if (!Directory.Exists("Directories"))
+                Directory.CreateDirectory("Dictionaries");
             strm = asm.GetManifestResourceStream("Test.Dictionaries.en_US.aff");
             if (strm != null)
             {

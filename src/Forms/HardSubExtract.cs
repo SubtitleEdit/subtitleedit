@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
             //if (sub.Paragraphs.Count > 0)
             //{
             //    OcrFileName = fileNameNoExt + ".srt";
-            //    System.IO.File.WriteAllText(OcrFileName, sub.ToText(new SubRip()));
+            //    File.WriteAllText(OcrFileName, sub.ToText(new SubRip()));
             //}
             //lock (this)
             //{

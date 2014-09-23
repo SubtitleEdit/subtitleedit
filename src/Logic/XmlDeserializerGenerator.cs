@@ -39,7 +39,6 @@ namespace Nikse.SubtitleEdit.Logic
             sb.AppendLine("\t\t}");
             sb.AppendLine("\t}");
             sb.AppendLine("}");
-            System.IO.File.WriteAllText(@"C:\Data\subtitleedit\subtitleedit\src\Logic\LanguageDeserializer.cs", sb.ToString());
             return sb.ToString();
         }
 

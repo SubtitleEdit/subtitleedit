@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -182,9 +183,9 @@ namespace Nikse.SubtitleEdit.Forms
             _startStopPosition = _startGoBackPosition + 0.1;
             MediaPlayerStart.Play();
 
-            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic))
+            if (MediaPlayerStart.VideoPlayer.GetType() == typeof(LibVlcDynamic))
             {
-                MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
+                MediaPlayerEnd.VideoPlayer = (MediaPlayerStart.VideoPlayer as LibVlcDynamic).MakeSecondMediaPlayer(MediaPlayerEnd.PanelPlayer, VideoFileName, VideoEndLoaded, VideoEndEnded);
             }
             else
             {
@@ -193,9 +194,9 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             timerProgressBarRefresh.Start();
 
-            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)
+            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is LibVlcDynamic)
             {
-                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)MediaPlayerStart.VideoPlayer;
+                var libVlc = (LibVlcDynamic)MediaPlayerStart.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
         }
@@ -214,9 +215,9 @@ namespace Nikse.SubtitleEdit.Forms
             _endStopPosition = _endGoBackPosition + 0.1;
             MediaPlayerEnd.Play();
 
-            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)
+            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
             {
-                var libVlc = (Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
+                var libVlc = (LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
             }
         }
@@ -719,12 +720,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void VisualSync_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerStart.VideoPlayer.Pause();
                 MediaPlayerStart.VideoPlayer.DisposeVideoPlayer();
             }
-            if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerEnd.VideoPlayer.Pause();
                 MediaPlayerEnd.VideoPlayer.DisposeVideoPlayer();
@@ -738,11 +739,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void timerProgressBarRefresh_Tick(object sender, EventArgs e)
         {
-            if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            if (MediaPlayerStart.VideoPlayer != null) // && MediaPlayerStart.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerStart.RefreshProgressBar();
             }
-            if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(Nikse.SubtitleEdit.Logic.VideoPlayers.QuartsPlayer))
+            if (MediaPlayerEnd.VideoPlayer != null) // && MediaPlayerEnd.VideoPlayer.GetType() == typeof(QuartsPlayer))
             {
                 MediaPlayerEnd.RefreshProgressBar();
             }
