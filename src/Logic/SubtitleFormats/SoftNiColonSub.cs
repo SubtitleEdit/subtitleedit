@@ -192,7 +192,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 }
                                 text = lineSb.ToString();
 
-                                // Replace "</i>line break<i>" with just a line break (Subrip does not need to close italics and open them again in the next line).
+                                // Replace "</i>line break<i>" with just a line break (SubRip does not need to close italics and open them again in the next line).
                                 text = text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
                                 // Subtitle appears at the top (add tag)
