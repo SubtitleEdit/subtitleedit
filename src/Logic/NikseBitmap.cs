@@ -47,18 +47,18 @@ namespace Nikse.SubtitleEdit.Logic
             if (inputBitmap.PixelFormat != PixelFormat.Format32bppArgb)
             {
                 var newBitmap = new Bitmap(inputBitmap.Width, inputBitmap.Height, PixelFormat.Format32bppArgb);
-                for (int y = 0; y < inputBitmap.Height; y++)
-                    for (int x = 0; x < inputBitmap.Width; x++)
-                        newBitmap.SetPixel(x, y, inputBitmap.GetPixel(x, y));
+                using (var gr = Graphics.FromImage(newBitmap))
+                {
+                    gr.DrawImage(inputBitmap, 0, 0);
+                }
+                inputBitmap.Dispose();
                 inputBitmap = newBitmap;
             }
 
-            _bitmapData = new byte[Width * Height * 4];
-            BitmapData bitmapdata = inputBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
-
-            //Buffer.BlockCopy(buffer, dataIndex, DataBuffer, 0, dataSize);
-            Marshal.Copy(bitmapdata.Scan0, _bitmapData, 0, _bitmapData.Length);
-            inputBitmap.UnlockBits(bitmapdata);
+            var bitmapData = inputBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            _bitmapData = new byte[bitmapData.Stride * Height];
+            Marshal.Copy(bitmapData.Scan0, _bitmapData, 0, _bitmapData.Length);
+            inputBitmap.UnlockBits(bitmapData);
         }
 
         public NikseBitmap(NikseBitmap input)
