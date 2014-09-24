@@ -5457,9 +5457,9 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Refresh();
             if (_abort)
             {
+                bmp.Dispose();
                 SetButtonsEnabledAfterOcrDone();
                 _mainOcrRunning = false;
-                bmp.Dispose();
                 return true;
             }
 
