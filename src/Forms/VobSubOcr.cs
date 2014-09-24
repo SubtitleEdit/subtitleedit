@@ -6665,9 +6665,15 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 textBoxCurrentText.Text = _subtitle.Paragraphs[_selectedIndex].Text;
                 if (_mainOcrRunning && _mainOcrBitmap != null)
+                {
                     ShowSubtitleImage(_selectedIndex, _mainOcrBitmap);
+                }
                 else
-                    ShowSubtitleImage(_selectedIndex);
+                {
+                    // TODO: Refactor ShowSubtitleImage
+                    var bmp = ShowSubtitleImage(_selectedIndex);
+                    bmp.Dispose();
+                }
                 numericUpDownStartNumber.Value = _selectedIndex + 1;
             }
             else
