@@ -97,8 +97,6 @@ namespace Nikse.SubtitleEdit.Forms
             _selectedMatch = match;
             if (!string.IsNullOrEmpty(match.Name))
             {
-                Bitmap bitmap = new Bitmap(1, 1);
-
                 if (_binOcrDb != null)
                 {
                     bool bobFound = false;
@@ -110,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
                             checkBoxItalic.Checked = bob.Italic;
                             _selectedCompareBinaryOcrBitmap = bob;
 
-                            bitmap = bob.ToOldBitmap();
+                            var bitmap = bob.ToOldBitmap();
                             pictureBoxCompareBitmap.Image = bitmap;
                             pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
                             pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
@@ -140,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 checkBoxItalic.Checked = bob.Italic;
                                 _selectedCompareBinaryOcrBitmap = bob;
 
-                                bitmap = bob.ToOldBitmap();
+                                var bitmap = bob.ToOldBitmap();
                                 pictureBoxCompareBitmap.Image = bitmap;
                                 pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
                                 pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
@@ -173,24 +171,18 @@ namespace Nikse.SubtitleEdit.Forms
                                     int pos = Convert.ToInt32(name);
                                     f.Position = pos;
                                     ManagedBitmap mbmp = new ManagedBitmap(f);
-                                    bitmap = mbmp.ToOldBitmap();
+                                    var bitmap = mbmp.ToOldBitmap();
                                     pictureBoxCompareBitmap.Image = bitmap;
                                     pictureBoxCompareBitmapDouble.Width = bitmap.Width * 2;
                                     pictureBoxCompareBitmapDouble.Height = bitmap.Height * 2;
                                     pictureBoxCompareBitmapDouble.Image = bitmap;
+                                    labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
                                 }
                                 catch (Exception exception)
                                 {
+                                    labelImageInfo.Text = Configuration.Settings.Language.VobSubEditCharacters.Image;
                                     MessageBox.Show(exception.Message);
                                 }
-                            }
-
-                            try
-                            {
-                                labelImageInfo.Text = string.Format(Configuration.Settings.Language.VobSubEditCharacters.Image + " - {0}x{1}", bitmap.Width, bitmap.Height);
-                            }
-                            catch
-                            {
                             }
 
                             _selectedCompareNode = node;
