@@ -358,13 +358,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                     if (_form != null)
                     {
                         _form.OnCopyData -= OnCopyData;
-                        _form.Dispose();
+//                        _form.Dispose(); this give an error when doing File -> Exit...
                         _form = null;
                     }
 
                     if (_process != null)
+                    {
                         _process.Dispose();
-                    _process = null;
+                        _process = null;
+                    }
                     _startInfo = null;
                 }
                 ReleaseUnmangedResources();
