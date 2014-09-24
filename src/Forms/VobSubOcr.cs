@@ -5452,6 +5452,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 SetButtonsEnabledAfterOcrDone();
                 _mainOcrRunning = false;
+                bmp.Dispose();
                 return true;
             }
 
