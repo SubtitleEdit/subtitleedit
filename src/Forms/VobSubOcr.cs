@@ -957,7 +957,13 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (languageStreamIds.Count > 1)
             {
-                DvdSubRipChooseLanguage ChooseLanguage = new DvdSubRipChooseLanguage();
+                var ChooseLanguage = new DvdSubRipChooseLanguage();
+                if (ShowInTaskbar)
+                {
+                    ChooseLanguage.Icon = (Icon)this.Icon.Clone();
+                    ChooseLanguage.ShowInTaskbar = true;
+                    ChooseLanguage.ShowIcon = true;
+                }
                 ChooseLanguage.Initialize(_vobSubMergedPackist, _palette, vobSubParser.IdxLanguages, string.Empty);
                 Form form = _main;
                 if (form == null)
