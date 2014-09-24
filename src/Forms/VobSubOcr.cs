@@ -14,6 +14,7 @@ using System.IO;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 
@@ -7351,17 +7352,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var last = _lastAdditions[_lastAdditions.Count - 1];
                 numericUpDownStartNumber.Value = last.Index + 1;
-                Timer t = new Timer();
-                t.Interval = 200;
-                t.Tick += t_Tick;
-                t.Start();
-            }
-        }
 
-        private void t_Tick(object sender, EventArgs e)
-        {
-            (sender as Timer).Stop();
-            ButtonStartOcrClick(null, null);
+                // Simulate a click on ButtonStartOcr in 200ms.
+                var uiContext = TaskScheduler.FromCurrentSynchronizationContext();
+                Utilities.TaskDelay(200).ContinueWith(_ => ButtonStartOcrClick(null, null), uiContext);
+            }
         }
 
         private void VobSubOcr_Resize(object sender, EventArgs e)
