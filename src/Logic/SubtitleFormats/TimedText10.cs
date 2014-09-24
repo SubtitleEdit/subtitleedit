@@ -523,6 +523,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     p.Extra = SetExtra(p);
 
+                    p.Text = p.Text.Trim();
+                    while (p.Text.Contains(Environment.NewLine + Environment.NewLine))
+                        p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
+
                     subtitle.Paragraphs.Add(p);
                 }
                 catch (Exception ex)
