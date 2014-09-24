@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
-    /// MicroDvd with time codes...?
+    /// MicroDVD with time codes...?
     /// </summary>
     public class UnknownSubtitle11 : SubtitleFormat
     {

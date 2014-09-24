@@ -63,7 +63,7 @@ namespace Test
 
         #endregion Additional test attributes
 
-        #region Subrip (.srt)
+        #region SubRip (.srt)
 
         private static List<string> GetSrtLines(string text)
         {
@@ -158,7 +158,7 @@ Line 3";
             Assert.AreEqual(expected, actual);
         }
 
-        #endregion Subrip (.srt)
+        #endregion SubRip (.srt)
 
         #region Advanced Sub Station alpha (.ass)
 
