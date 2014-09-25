@@ -162,40 +162,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string GetInstallerPath()
         {
-            Microsoft.Win32.RegistryKey key = null;
-            try
+            var value = Utilities.GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", "InstallLocation");
+            if (value != null && Directory.Exists(value))
             {
-                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
-                if (key != null)
-                {
-                    var value = (string)key.GetValue("InstallLocation");
-                    if (value != null && Directory.Exists(value))
-                    {
-                        return value;
-                    }
-                }
+                return value;
+            }
 
-                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
-                if (key != null)
-                {
-                    var value = (string)key.GetValue("InstallLocation");
-                    if (value != null && Directory.Exists(value))
-                    {
-                        return value;
-                    }
-                }
-            }
-            catch (System.Security.SecurityException)
+            value = Utilities.GetRegistryValue(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", "InstallLocation");
+            if (value != null && Directory.Exists(value))
             {
-                // The user does not have the permissions required to read the registry key.
+                return value;
             }
-            finally
-            {
-                if (key != null)
-                {
-                    key.Dispose();
-                }
-            }
+
             return null;
         }
 
