@@ -5622,7 +5622,7 @@ namespace Nikse.SubtitleEdit.Forms
             process.StartInfo.Arguments += " hocr";
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
 
-            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
             {
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.RedirectStandardError = true;
@@ -6572,7 +6572,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Directory.Exists(Configuration.TesseractFolder))
             {
                 Directory.CreateDirectory(Configuration.TesseractFolder);
-                if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
+                if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
                 {
                     Process process = new Process();
                     ProcessStartInfo startInfo = new ProcessStartInfo();

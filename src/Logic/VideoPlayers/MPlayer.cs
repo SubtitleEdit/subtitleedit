@@ -139,7 +139,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer = new Process();
                 _mplayer.StartInfo.FileName = mplayerExeName;
                 //vo options: gl, gl2, directx:noaccel
-                if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+                if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
                     _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -loop 0 -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
                 else
                     _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -loop 0 -osdlevel 0 -vo direct3d -wid " + (int)ownerControl.Handle + " \"" + videoFileName + "\" ";
@@ -304,7 +304,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         {
             get
             {
-                if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+                if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
                     return "mplayer";
 
                 string fileName = Path.Combine(Configuration.BaseDirectory, "mplayer2.exe");
