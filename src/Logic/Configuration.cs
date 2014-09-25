@@ -3,28 +3,22 @@ using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-
     /// <summary>
     /// Configuration settings via Singleton pattern
     /// </summary>
     public class Configuration
     {
-        private string _baseDir;
-        private string _dataDir;
-        private Settings _settings;
-
-        public static Configuration Instance
-        {
-            get { return Nested.instance; }
-        }
+        private static readonly Lazy<Configuration> _instance = new Lazy<Configuration>(() => new Configuration());
+        
+        private readonly string _baseDir;
+        private readonly string _dataDir;
+        private readonly Lazy<Settings> _settings;
 
         private Configuration()
         {
-        }
-
-        private class Nested
-        {
-            internal static readonly Configuration instance = new Configuration();
+            _baseDir = GetBaseDirectory();
+            _dataDir = GetDataDirectory();
+            _settings = new Lazy<Settings>(Settings.GetSettings);
         }
 
         public static string SettingsFileName
@@ -69,9 +63,9 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (Directory.Exists("/usr/share/tesseract-ocr/tessdata"))
                         return "/usr/share/tesseract-ocr/tessdata";
-                    else if (Directory.Exists("/usr/share/tesseract/tessdata"))
+                    if (Directory.Exists("/usr/share/tesseract/tessdata"))
                         return "/usr/share/tesseract/tessdata";
-                    else if (Directory.Exists("/usr/share/tessdata"))
+                    if (Directory.Exists("/usr/share/tessdata"))
                         return "/usr/share/tessdata";
                 }
                 return TesseractFolder + "tessdata";
@@ -138,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                return Path.Combine(Configuration.DataDirectory, "Plugins");
+                return Path.Combine(DataDirectory, "Plugins");
             }
         }
 
@@ -146,50 +140,23 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                if (Instance._dataDir == null)
-                {
-                    if (IsRunningOnLinux() || IsRunningOnMac())
-                    {
-                        Instance._dataDir = BaseDirectory;
-                    }
-                    else
-                    {
-                        string installerPath = GetInstallerPath();
-                        bool hasUninstallFiles = Directory.GetFiles(BaseDirectory, "unins*.*").Length > 0;
-                        bool hasDictionaryFolder = Directory.Exists(Path.Combine(BaseDirectory, "Dictionaries"));
-                        string appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+                return _instance.Value._dataDir;
+            }
+        }
 
-                        if ((installerPath != null && installerPath.TrimEnd(Path.DirectorySeparatorChar).Equals(BaseDirectory.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase)) ||
-                            hasUninstallFiles ||
-                            (!hasDictionaryFolder && Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
-                        {
-                            if (Directory.Exists(appDataRoamingPath))
-                            {
-                                Instance._dataDir = appDataRoamingPath + Path.DirectorySeparatorChar;
-                            }
-                            else
-                            {
-                                try
-                                {
-                                    Directory.CreateDirectory(appDataRoamingPath);
-                                    Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
-                                    Instance._dataDir = appDataRoamingPath + Path.DirectorySeparatorChar;
-                                }
-                                catch
-                                {
-                                    Instance._dataDir = BaseDirectory;
-                                    System.Windows.Forms.MessageBox.Show("Please re-install Subtitle Edit (installer version)");
-                                    System.Windows.Forms.Application.ExitThread();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            Instance._dataDir = BaseDirectory;
-                        }
-                    }
-                }
-                return Instance._dataDir;
+        public static string BaseDirectory
+        {
+            get
+            {
+                return _instance.Value._baseDir;
+            }
+        }
+
+        public static Settings Settings
+        {
+            get
+            {
+                return _instance.Value._settings.Value;
             }
         }
 
@@ -232,32 +199,52 @@ namespace Nikse.SubtitleEdit.Logic
             return null;
         }
 
-        public static string BaseDirectory
+        private static string GetBaseDirectory()
         {
-            get
-            {
-                if (Instance._baseDir == null)
-                {
-                    System.Reflection.Assembly a = System.Reflection.Assembly.GetEntryAssembly();
-                    if (a != null)
-                        Instance._baseDir = Path.GetDirectoryName(a.Location);
-                    else
-                        Instance._baseDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            var assembly = System.Reflection.Assembly.GetEntryAssembly();
+            var baseDirectory = Path.GetDirectoryName(assembly == null
+                ? System.Reflection.Assembly.GetExecutingAssembly().Location
+                : assembly.Location);
 
-                    if (!Instance._baseDir.EndsWith(Path.DirectorySeparatorChar))
-                        Instance._baseDir += Path.DirectorySeparatorChar;
-                }
-                return Instance._baseDir;
-            }
+            return baseDirectory.EndsWith(Path.DirectorySeparatorChar)
+                ? baseDirectory
+                : baseDirectory + Path.DirectorySeparatorChar;
         }
 
-        public static Settings Settings
+        private string GetDataDirectory()
         {
-            get
+            if (IsRunningOnLinux() || IsRunningOnMac())
             {
-                if (Instance._settings == null)
-                    Instance._settings = Settings.GetSettings();
-                return Instance._settings;
+                return _baseDir;
+            }
+
+            var installerPath = GetInstallerPath();
+            var hasUninstallFiles = Directory.GetFiles(_baseDir, "unins*.*").Length > 0;
+            var hasDictionaryFolder = Directory.Exists(Path.Combine(_baseDir, "Dictionaries"));
+            var appDataRoamingPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Subtitle Edit");
+
+            if ((installerPath == null || !installerPath.TrimEnd(Path.DirectorySeparatorChar).Equals(_baseDir.TrimEnd(Path.DirectorySeparatorChar), StringComparison.OrdinalIgnoreCase))
+                && !hasUninstallFiles && (hasDictionaryFolder || !Directory.Exists(Path.Combine(appDataRoamingPath, "Dictionaries"))))
+            {
+                return _baseDir;
+            }
+
+            if (Directory.Exists(appDataRoamingPath))
+            {
+                return appDataRoamingPath + Path.DirectorySeparatorChar;
+            }
+
+            try
+            {
+                Directory.CreateDirectory(appDataRoamingPath);
+                Directory.CreateDirectory(Path.Combine(appDataRoamingPath, "Dictionaries"));
+                return appDataRoamingPath + Path.DirectorySeparatorChar;
+            }
+            catch
+            {
+                System.Windows.Forms.MessageBox.Show("Please re-install Subtitle Edit (installer version)");
+                System.Windows.Forms.Application.ExitThread();
+                return _baseDir;
             }
         }
     }
