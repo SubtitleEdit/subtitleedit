@@ -529,26 +529,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
 
             // XP via registry path
-            var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\VideoLAN\VLC");
-            if (key != null)
-            {
-                path = (string)key.GetValue("InstallDir");
-                if (path != null && Directory.Exists(path))
-                    path = Path.Combine(path, fileName);
-                if (File.Exists(path))
-                    return path;
-            }
+            path = Utilities.GetRegistryValue(@"SOFTWARE\VideoLAN\VLC", "InstallDir");
+            if (path != null && Directory.Exists(path))
+                path = Path.Combine(path, fileName);
+            if (File.Exists(path))
+                return path;
 
             // Winows 7 via registry path
-            key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\VideoLAN\VLC");
-            if (key != null)
-            {
-                path = (string)key.GetValue("InstallDir");
-                if (path != null && Directory.Exists(path))
-                    path = Path.Combine(path, fileName);
-                if (File.Exists(path))
-                    return path;
-            }
+            path = Utilities.GetRegistryValue(@"SOFTWARE\Wow6432Node\VideoLAN\VLC", "InstallDir");
+            if (path != null && Directory.Exists(path))
+                path = Path.Combine(path, fileName);
+            if (File.Exists(path))
+                return path;
 
             path = Path.Combine(@"C:\Program Files (x86)\VideoLAN\VLC", fileName);
             if (File.Exists(path))

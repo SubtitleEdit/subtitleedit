@@ -3462,5 +3462,40 @@ namespace Nikse.SubtitleEdit.Logic
             t.Change(millisecondsDelay, -1);
             return tcs.Task;
         }
+
+        /// <summary>
+        /// Retrieves the specified registry subkey value.
+        /// </summary>
+        /// <param name="keyName">The path of the subkey to open.</param>
+        /// <param name="valueName">The name of the value to retrieve.</param>
+        /// <returns>The value of the subkey requested, or <b>null</b> if the operation failed.</returns>
+        public static string GetRegistryValue(string keyName, string valueName)
+        {
+            Microsoft.Win32.RegistryKey key = null;
+            try
+            {
+                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(keyName);
+                if (key != null)
+                {
+                    var value = key.GetValue(valueName);
+                    if (value != null)
+                    {
+                        return (string)value;
+                    }
+                }
+            }
+            catch (System.Security.SecurityException)
+            {
+                // The user does not have the permissions required to read the registry key.
+            }
+            finally
+            {
+                if (key != null)
+                {
+                    key.Dispose();
+                }
+            }
+            return null;
+        }
     }
 }

@@ -247,20 +247,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                 }
 
-                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1");
-                if (key != null)
+                path = Utilities.GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1", "InstallLocation");
+                if (path != null)
                 {
-                    path = (string)key.GetValue("InstallLocation");
                     path = Path.Combine(path, "mpc-hc64.exe");
                     if (File.Exists(path))
                         return path;
                 }
 
-                path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc64.exe");
+                path = @"C:\Program Files\MPC-HC\mpc-hc64.exe";
                 if (File.Exists(path))
                     return path;
 
-                path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe");
+                path = @"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe";
                 if (File.Exists(path))
                     return path;
             }
@@ -277,20 +276,19 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                 }
 
-                var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1");
-                if (key != null)
+                path = Utilities.GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1", "InstallLocation");
+                if (path != null)
                 {
-                    path = (string)key.GetValue("InstallLocation");
                     path = Path.Combine(path, "mpc-hc.exe");
                     if (File.Exists(path))
                         return path;
                 }
 
-                path = Path.Combine(@"C:\Program Files (x86)\MPC-HC\mpc-hc.exe");
+                path = @"C:\Program Files (x86)\MPC-HC\mpc-hc.exe";
                 if (File.Exists(path))
                     return path;
 
-                path = Path.Combine(@"C:\Program Files\MPC-HC\mpc-hc.exe");
+                path = @"C:\Program Files\MPC-HC\mpc-hc.exe";
                 if (File.Exists(path))
                     return path;
             }
