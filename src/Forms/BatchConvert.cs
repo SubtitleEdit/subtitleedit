@@ -781,9 +781,11 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (isVobSub)
                         {
                             item.SubItems[3].Text = "OCR...";
-                            var vobSubOcr = new VobSubOcr();
-                            vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr);
-                            sub = vobSubOcr.SubtitleFromOcr;
+                            using (var vobSubOcr = new VobSubOcr())
+                            {
+                                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr);
+                                sub = vobSubOcr.SubtitleFromOcr;
+                            }
                         }
 
                         if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name && _assStyle != null)
