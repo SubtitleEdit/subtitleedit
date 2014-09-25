@@ -511,7 +511,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxSpellChecker.SelectedIndex = 0;
 
-            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
             {
                 comboBoxSpellChecker.SelectedIndex = 0;
                 comboBoxSpellChecker.Enabled = false;
@@ -2631,7 +2631,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialogFFmpeg.FileName = string.Empty;
             openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToFFmpeg;
-            if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
+            if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
             {
                 openFileDialogFFmpeg.Filter = "FFmpeg.exe|FFmpeg.exe";
             }
@@ -2648,7 +2648,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             openFileDialogFFmpeg.FileName = string.Empty;
             openFileDialogFFmpeg.Title = Configuration.Settings.Language.Settings.WaveformBrowseToVLC;
-            if (!Utilities.IsRunningOnLinux() && !Utilities.IsRunningOnMac())
+            if (!Configuration.IsRunningOnLinux() && !Configuration.IsRunningOnMac())
             {
                 openFileDialogFFmpeg.Filter = "vlc.exe|vlc.exe";
             }

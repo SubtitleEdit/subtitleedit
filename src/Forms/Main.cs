@@ -566,7 +566,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void BatchConvert(string[] args) // E.g.: /convert *.txt SubRip
         {
             const int ATTACH_PARENT_PROCESS = -1;
-            if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
+            if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
                 NativeMethods.AttachConsole(ATTACH_PARENT_PROCESS);
 
             Console.WriteLine();
@@ -609,7 +609,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Console.WriteLine();
                 Console.Write(currentDir + ">");
-                if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
+                if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
                     NativeMethods.FreeConsole();
                 Environment.Exit(1);
             }
@@ -953,7 +953,7 @@ namespace Nikse.SubtitleEdit.Forms
             Console.WriteLine();
             Console.Write(currentDir + ">");
 
-            if (!Utilities.IsRunningOnMac() && !Utilities.IsRunningOnLinux())
+            if (!Configuration.IsRunningOnMac() && !Configuration.IsRunningOnLinux())
                 NativeMethods.FreeConsole();
 
             if (count == converted && errors == 0)
@@ -14642,7 +14642,7 @@ namespace Nikse.SubtitleEdit.Forms
             OpenVideo(_videoFileName);
             timerTextUndo.Start();
             timerAlternateTextUndo.Start();
-            if (Utilities.IsRunningOnLinux())
+            if (Configuration.IsRunningOnLinux())
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
                 numericUpDownDuration.Width = numericUpDownDuration.Width + 10;

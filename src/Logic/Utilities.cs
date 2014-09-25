@@ -1660,16 +1660,6 @@ namespace Nikse.SubtitleEdit.Logic
             return Type.GetType("Mono.Runtime") != null;
         }
 
-        public static bool IsRunningOnLinux()
-        {
-            return Environment.OSVersion.Platform == PlatformID.Unix;
-        }
-
-        public static bool IsRunningOnMac()
-        {
-            return Environment.OSVersion.Platform == PlatformID.MacOSX;
-        }
-
         public static void ShowHelp(string parameter)
         {
             string helpFile = Configuration.Settings.Language.General.HelpFile;
@@ -1808,7 +1798,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                if (IsRunningOnMono() || IsRunningOnLinux())
+                if (Configuration.IsRunningOnLinux() || IsRunningOnMono())
                     return File.Exists(Path.Combine(Configuration.BaseDirectory, "mplayer"));
 
                 return MPlayer.GetMPlayerFileName != null;
@@ -1837,7 +1827,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             GeneralSettings gs = Configuration.Settings.General;
 
-            if (Utilities.IsRunningOnLinux() || Utilities.IsRunningOnMac())
+            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
                 return new MPlayer();
 
             //if (Utilities.IsRunningOnMac())
