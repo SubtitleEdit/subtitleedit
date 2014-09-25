@@ -702,11 +702,11 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (isMatroska)
+                        if (isMatroska
+                            && (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
                         {
-                            if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
+                            using (var mkv = new Matroska())
                             {
-                                Matroska mkv = new Matroska();
                                 bool isValid = false;
                                 bool hasConstantFrameRate = false;
                                 double frameRate = 0;
