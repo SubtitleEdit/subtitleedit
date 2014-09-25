@@ -195,25 +195,41 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string GetInstallerPath()
         {
-            string installerPath = null;
-            var key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
-            if (key != null)
+            Microsoft.Win32.RegistryKey key = null;
+            try
             {
-                string temp = (string)key.GetValue("InstallLocation");
-                if (temp != null && Directory.Exists(temp))
-                    installerPath = temp;
-            }
-            if (installerPath == null)
-            {
+                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
+                if (key != null)
+                {
+                    var value = (string)key.GetValue("InstallLocation");
+                    if (value != null && Directory.Exists(value))
+                    {
+                        return value;
+                    }
+                }
+
                 key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1");
                 if (key != null)
                 {
-                    string temp = (string)key.GetValue("InstallLocation");
-                    if (temp != null && Directory.Exists(temp))
-                        installerPath = temp;
+                    var value = (string)key.GetValue("InstallLocation");
+                    if (value != null && Directory.Exists(value))
+                    {
+                        return value;
+                    }
                 }
             }
-            return installerPath;
+            catch (System.Security.SecurityException)
+            {
+                // The user does not have the permissions required to read the registry key.
+            }
+            finally
+            {
+                if (key != null)
+                {
+                    key.Dispose();
+                }
+            }
+            return null;
         }
 
         public static string BaseDirectory
