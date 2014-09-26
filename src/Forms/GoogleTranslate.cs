@@ -378,13 +378,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static Encoding GetScreenScrapingEncoding(string languagePair)
         {
-            WebClient webClient = null;
             try
             {
                 string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
-                webClient = new WebClient();
-                webClient.Proxy = Utilities.GetProxy();
-                string result = webClient.DownloadString(url).ToLower();
+                var result = Utilities.DownloadString(url).ToLower();
                 int idx = result.IndexOf("charset", StringComparison.Ordinal);
                 int end = result.IndexOf('"', idx + 8);
                 string charset = result.Substring(idx, end - idx).Replace("charset=", string.Empty);
@@ -393,13 +390,6 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             {
                 return Encoding.Default;
-            }
-            finally
-            {
-                if (webClient != null)
-                {
-                    webClient.Dispose();
-                }
             }
         }
 
@@ -418,11 +408,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
-            var webClient = new WebClient();
-            webClient.Proxy = Utilities.GetProxy();
-            webClient.Encoding = encoding;
-            string result = webClient.DownloadString(url);
-            webClient.Dispose();
+            var result = Utilities.DownloadString(url);
             int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
             var sb = new StringBuilder();
             if (startIndex > 0)
