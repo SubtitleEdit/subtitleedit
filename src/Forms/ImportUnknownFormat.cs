@@ -72,10 +72,11 @@ namespace Nikse.SubtitleEdit.Forms
                 // check for RTF file
                 if (fileName.EndsWith(".rtf", StringComparison.OrdinalIgnoreCase) && !textBoxText.Text.TrimStart().StartsWith("{\\rtf"))
                 {
-                    var rtBox = new RichTextBox();
-                    rtBox.Rtf = textBoxText.Text;
-                    textBoxText.Text = rtBox.Text;
-                    rtBox.Dispose();
+                    using (var rtb = new RichTextBox())
+                    {
+                        rtb.Rtf = textBoxText.Text;
+                        textBoxText.Text = rtb.Text;
+                    }
                 }
             }
             catch (Exception ex)
