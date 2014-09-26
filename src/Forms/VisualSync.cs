@@ -527,14 +527,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindTextEndClick(object sender, EventArgs e)
         {
-            var findSubtitle = new FindSubtitleLine();
-            findSubtitle.Initialize(_paragraphs, " " + "(" + _language.EndScene.ToLower() + ")");
-            findSubtitle.ShowDialog();
-            if (findSubtitle.SelectedIndex >= 0)
+            using (var findSubtitle = new FindSubtitleLine())
             {
-                comboBoxEndTexts.SelectedIndex = findSubtitle.SelectedIndex;
+                findSubtitle.Initialize(_paragraphs, " " + "(" + _language.EndScene.ToLower() + ")");
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                {
+                    comboBoxEndTexts.SelectedIndex = findSubtitle.SelectedIndex;
+                }
             }
-            findSubtitle.Dispose();
         }
 
         private void HighlightStartScene()
