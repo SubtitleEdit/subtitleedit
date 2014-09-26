@@ -55,26 +55,26 @@ namespace Nikse.SubtitleEdit.Logic
             _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
             _regExList = LoadRegExList(doc, "RegularExpressions");
 
-            foreach (var kp in LoadReplaceList(userDoc, "WholeWords"))
-            {
-                if (!WordReplaceList.ContainsKey(kp.Key))
-                    WordReplaceList.Add(kp.Key, kp.Value);
-            }
             foreach (var kp in LoadReplaceList(userDoc, "RemovedWholeWords"))
             {
                 if (WordReplaceList.ContainsKey(kp.Key))
                     WordReplaceList.Remove(kp.Key);
             }
-
-            foreach (var kp in LoadReplaceList(userDoc, "PartialLines"))
+            foreach (var kp in LoadReplaceList(userDoc, "WholeWords"))
             {
-                if (!PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
-                    PartialLineWordBoundaryReplaceList.Add(kp.Key, kp.Value);
+                if (!WordReplaceList.ContainsKey(kp.Key))
+                    WordReplaceList.Add(kp.Key, kp.Value);
             }
+
             foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialLines"))
             {
                 if (PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
                     PartialLineWordBoundaryReplaceList.Remove(kp.Key);
+            }
+            foreach (var kp in LoadReplaceList(userDoc, "PartialLines"))
+            {
+                if (!PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
+                    PartialLineWordBoundaryReplaceList.Add(kp.Key, kp.Value);
             }
         }
 
@@ -689,9 +689,21 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (word.Contains(' '))
             {
-                return DeletePartialLineFromWordList(word);
+                if (DeletePartialLineFromWordList(word))
+                {
+                    if (PartialLineWordBoundaryReplaceList.ContainsKey(word))
+                        PartialLineWordBoundaryReplaceList.Remove(word);
+                    return true;
+                }
+                return false;
             }
-            return DeleteWordFromWordList(word);
+            if (DeleteWordFromWordList(word))
+            {
+                if (WordReplaceList.ContainsKey(word))
+                    WordReplaceList.Remove(word);
+                return true;
+            }
+            return false;
         }
 
         private bool DeleteWordFromWordList(string fromWord)
@@ -730,28 +742,27 @@ namespace Nikse.SubtitleEdit.Logic
             bool removed = false;
             if (userDictionary.ContainsKey((word)))
             {
+                userDictionary.Remove(word);
                 XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode(replaceListName);
                 if (wholeWordsNode != null)
                 {
+                    wholeWordsNode.RemoveAll();
                     foreach (var kvp in userDictionary)
                     {
-                        if (kvp.Key != word)
-                        {
-                            XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
-                            XmlAttribute aFrom = userDoc.CreateAttribute("from");
-                            XmlAttribute aTo = userDoc.CreateAttribute("to");
-                            aFrom.InnerText = kvp.Key;
-                            aTo.InnerText = kvp.Value;
-                            newNode.Attributes.Append(aTo);
-                            newNode.Attributes.Append(aFrom);
-                            wholeWordsNode.AppendChild(newNode);
-                        }
+                        XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
+                        XmlAttribute aFrom = userDoc.CreateAttribute("from");
+                        XmlAttribute aTo = userDoc.CreateAttribute("to");
+                        aFrom.InnerText = kvp.Key;
+                        aTo.InnerText = kvp.Value;
+                        newNode.Attributes.Append(aTo);
+                        newNode.Attributes.Append(aFrom);
+                        wholeWordsNode.AppendChild(newNode);
                     }
                     userDoc.Save(ReplaceListXmlFileNameUser);
                     removed = true;
                 }
             }
-            else if (dictionary.ContainsKey((word)))
+            if (dictionary.ContainsKey((word)))
             {
                 XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode("Removed" + replaceListName);
                 if (wholeWordsNode != null)
@@ -822,9 +833,21 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (fromWord.Contains(' '))
             {
-                return SavePartialLineToWordList(fromWord, toWord);
+                if (SavePartialLineToWordList(fromWord, toWord))
+                {
+                    if (!PartialLineWordBoundaryReplaceList.ContainsKey(fromWord))
+                        PartialLineWordBoundaryReplaceList.Add(fromWord, toWord);
+                    return true;
+                }
+                return false;
             }
-            return SaveWordToWordList(fromWord, toWord);
+            if (SaveWordToWordList(fromWord, toWord))
+            {
+                if (!WordReplaceList.ContainsKey(fromWord))
+                    WordReplaceList.Add(fromWord, toWord);
+                return true;
+            }
+            return false;
         }
 
         private bool SaveWordToWordList(string fromWord, string toWord)
@@ -859,10 +882,9 @@ namespace Nikse.SubtitleEdit.Logic
                 throw new ArgumentNullException("dictionary");
             if (userDictionary == null)
                 throw new ArgumentNullException("userDictionary");
-            if (dictionary.ContainsKey(fromWord))
-                return false;
             if (userDictionary.ContainsKey(fromWord))
                 return false;
+
             userDictionary.Add(fromWord, toWord);
             XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode(replaceListName);
             if (wholeWordsNode != null)
