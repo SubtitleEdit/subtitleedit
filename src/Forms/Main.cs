@@ -3849,13 +3849,14 @@ namespace Nikse.SubtitleEdit.Forms
                                        Configuration.Settings.Tools.ListViewSyntaxErrorColor.ToArgb();
 
             var oldAllowEditOfOriginalSubtitle = Configuration.Settings.General.AllowEditOfOriginalSubtitle;
-            var settings = new Settings();
-            settings.Initialize(this.Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image,
-                                toolStripButtonFind.Image, toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonVisualSync.Image, toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
-            _formPositionsAndSizes.SetPositionAndSize(settings);
-            settings.ShowDialog(this);
-            _formPositionsAndSizes.SavePositionAndSize(settings);
-            settings.Dispose();
+            using (var settings = new Settings())
+            {
+                settings.Initialize(this.Icon, toolStripButtonFileNew.Image, toolStripButtonFileOpen.Image, toolStripButtonSave.Image, toolStripButtonSaveAs.Image,
+                    toolStripButtonFind.Image, toolStripButtonReplace.Image, toolStripButtonFixCommonErrors.Image, toolStripButtonVisualSync.Image, toolStripButtonSpellCheck.Image, toolStripButtonSettings.Image, toolStripButtonHelp.Image);
+                _formPositionsAndSizes.SetPositionAndSize(settings);
+                settings.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(settings);
+            }
 
             try
             { // can have some problems with fonts...
