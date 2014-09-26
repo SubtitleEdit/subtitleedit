@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             list.Add(pes);
         }
 
-        private void DetectFormat(Stream ms)
+        internal void DetectFormat(Stream ms)
         {
             if (ms.Length > 192 + 192 + 5)
             {
