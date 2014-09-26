@@ -208,107 +208,90 @@ namespace Nikse.SubtitleEdit.Forms
         {
             long firstNavStartPTS = 0;
 
-            FileStream fs = null;
-            bool tryAgain = true;
-            while (tryAgain)
+            using (var fs = FileUtils.RetryOpenRead(vobFileName))
             {
-                try
+                byte[] buffer = new byte[0x800];
+                long position = 0;
+                progressBarRip.Maximum = 100;
+                progressBarRip.Value = 0;
+                int lba = 0;
+                long length = fs.Length;
+                while (position < length && !_abort)
                 {
-                    fs = new FileStream(vobFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    tryAgain = false;
-                }
-                catch (IOException exception)
-                {
-                    var result = MessageBox.Show(string.Format("An error occured while opening file: {0}", exception.Message), "", MessageBoxButtons.RetryCancel);
-                    if (result == DialogResult.Cancel)
-                        return;
-                    if (result == DialogResult.Retry)
-                        tryAgain = true;
-                }
-            }
+                    int bytesRead = 0;
 
-            byte[] buffer = new byte[0x800];
-            long position = 0;
-            progressBarRip.Maximum = 100;
-            progressBarRip.Value = 0;
-            int lba = 0;
-            long length = fs.Length;
-            while (position < length && !_abort)
-            {
-                int bytesRead = 0;
-
-                // Reading and test for IO errors... and allow abort/retry/ignore
-                tryAgain = true;
-                while (tryAgain && position < length)
-                {
-                    tryAgain = false;
-                    try
+                    // Reading and test for IO errors... and allow abort/retry/ignore
+                    var tryAgain = true;
+                    while (tryAgain && position < length)
                     {
-                        fs.Seek(position, SeekOrigin.Begin);
-                        bytesRead = fs.Read(buffer, 0, 0x0800);
-                    }
-                    catch (IOException exception)
-                    {
-                        var result = MessageBox.Show(string.Format("An error occured while reading file: {0}", exception.Message), "", MessageBoxButtons.AbortRetryIgnore);
-                        if (result == DialogResult.Abort)
-                            return;
-                        if (result == DialogResult.Retry)
-                            tryAgain = true;
-                        if (result == DialogResult.Ignore)
+                        tryAgain = false;
+                        try
                         {
-                            position += 0x800;
-                            tryAgain = true;
+                            fs.Seek(position, SeekOrigin.Begin);
+                            bytesRead = fs.Read(buffer, 0, 0x0800);
                         }
-                    }
-                }
-
-                if (VobSubParser.IsMpeg2PackHeader(buffer))
-                {
-                    VobSubPack vsp = new VobSubPack(buffer, null);
-                    if (IsSubtitlePack(buffer))
-                    {
-                        if (vsp.PacketizedElementaryStream.PresentationTimestamp.HasValue && _accumulatedPresentationTimestamp != 0)
-                            UpdatePresentationTimestamp(buffer, _accumulatedPresentationTimestamp, vsp);
-
-                        stream.Write(buffer, 0, 0x800);
-                        if (bytesRead < 0x800)
-                            stream.Write(Encoding.ASCII.GetBytes(new string(' ', 0x800 - bytesRead)), 0, 0x800 - bytesRead);
-                    }
-                    else if (IsPrivateStream2(buffer, 0x26))
-                    {
-                        if (Helper.GetEndian(buffer, 0x0026, 4) == 0x1bf && Helper.GetEndian(buffer, 0x400, 4) == 0x1bf)
+                        catch (IOException exception)
                         {
-                            uint vobu_s_ptm = Helper.GetEndian(buffer, 0x0039, 4);
-                            uint vobu_e_ptm = Helper.GetEndian(buffer, 0x003d, 4);
-
-                            _lastPresentationTimestamp = vobu_e_ptm;
-
-                            if (firstNavStartPTS == 0)
+                            var result = MessageBox.Show(string.Format("An error occured while reading file: {0}", exception.Message), "", MessageBoxButtons.AbortRetryIgnore);
+                            if (result == DialogResult.Abort)
+                                return;
+                            if (result == DialogResult.Retry)
+                                tryAgain = true;
+                            if (result == DialogResult.Ignore)
                             {
-                                firstNavStartPTS = vobu_s_ptm;
-                                if (vobNumber == 0)
-                                    _accumulatedPresentationTimestamp = -vobu_s_ptm;
+                                position += 0x800;
+                                tryAgain = true;
                             }
-                            if (vobu_s_ptm + firstNavStartPTS + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
-                            {
-                                _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
-                            }
-                            else if (_lastNavEndPts > vobu_e_ptm)
-                            {
-                                _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
-                            }
-                            _lastNavEndPts = vobu_e_ptm;
                         }
                     }
 
-                }
-                position += 0x800;
+                    if (VobSubParser.IsMpeg2PackHeader(buffer))
+                    {
+                        VobSubPack vsp = new VobSubPack(buffer, null);
+                        if (IsSubtitlePack(buffer))
+                        {
+                            if (vsp.PacketizedElementaryStream.PresentationTimestamp.HasValue && _accumulatedPresentationTimestamp != 0)
+                                UpdatePresentationTimestamp(buffer, _accumulatedPresentationTimestamp, vsp);
 
-                progressBarRip.Value = (int)((position * 100) / length);
-                Application.DoEvents();
-                lba++;
+                            stream.Write(buffer, 0, 0x800);
+                            if (bytesRead < 0x800)
+                                stream.Write(Encoding.ASCII.GetBytes(new string(' ', 0x800 - bytesRead)), 0, 0x800 - bytesRead);
+                        }
+                        else if (IsPrivateStream2(buffer, 0x26))
+                        {
+                            if (Helper.GetEndian(buffer, 0x0026, 4) == 0x1bf && Helper.GetEndian(buffer, 0x400, 4) == 0x1bf)
+                            {
+                                uint vobu_s_ptm = Helper.GetEndian(buffer, 0x0039, 4);
+                                uint vobu_e_ptm = Helper.GetEndian(buffer, 0x003d, 4);
+
+                                _lastPresentationTimestamp = vobu_e_ptm;
+
+                                if (firstNavStartPTS == 0)
+                                {
+                                    firstNavStartPTS = vobu_s_ptm;
+                                    if (vobNumber == 0)
+                                        _accumulatedPresentationTimestamp = -vobu_s_ptm;
+                                }
+                                if (vobu_s_ptm + firstNavStartPTS + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
+                                {
+                                    _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
+                                }
+                                else if (_lastNavEndPts > vobu_e_ptm)
+                                {
+                                    _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
+                                }
+                                _lastNavEndPts = vobu_e_ptm;
+                            }
+                        }
+
+                    }
+                    position += 0x800;
+
+                    progressBarRip.Value = (int) ((position * 100) / length);
+                    Application.DoEvents();
+                    lba++;
+                }
             }
-            fs.Close();
             _lastVobPresentationTimestamp = _lastPresentationTimestamp;
         }
 
