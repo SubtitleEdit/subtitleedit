@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             _spellCheck.Location = new Point(parentForm.Left + (parentForm.Width / 2 - _spellCheck.Width / 2),
                                              parentForm.Top + (parentForm.Height / 2 - _spellCheck.Height / 2));
 
-            _ocrFixReplaceList = new OcrFixReplaceList(threeLetterIsoLanguageName);
+            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(threeLetterIsoLanguageName);
             LoadSpellingDictionaries(threeLetterIsoLanguageName, hunspellName); // Hunspell etc.
 
             AutoGuessesUsed = new List<string>();
@@ -1249,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 case OcrSpellCheck.Action.AllwaysUseSuggestion:
                     try
                     {
-                        _ocrFixReplaceList.SaveWordToWordList(word, _spellCheck.Word);
+                        _ocrFixReplaceList.AddWordOrPartial(word, _spellCheck.Word);
                     }
                     catch (Exception exception)
                     {
@@ -1262,7 +1262,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 case OcrSpellCheck.Action.ChangeAndSave:
                     try
                     {
-                        _ocrFixReplaceList.SaveWordToWordList(word, _spellCheck.Word);
+                        _ocrFixReplaceList.AddWordOrPartial(word, _spellCheck.Word);
                     }
                     catch (Exception exception)
                     {
@@ -1281,7 +1281,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     result.FixedWholeLine = true;
                     break;
                 case OcrSpellCheck.Action.ChangeAllWholeText:
-                    _ocrFixReplaceList.SaveWordToWholeLineList(_spellCheck.OriginalWholeText, _spellCheck.Paragraph);
+                    _ocrFixReplaceList.AddToWholeLineList(_spellCheck.OriginalWholeText, _spellCheck.Paragraph);
                     result.Line = _spellCheck.Paragraph;
                     result.FixedWholeLine = true;
                     break;
