@@ -778,7 +778,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Mevcut altyazı için yeni çeviri oluştur</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>Toplu dönüştürme...</BatchConvert>
         <GenerateTimeAsText>Süreyi metin olarak oluştur</GenerateTimeAsText>
-        <MeasurementConverter>Ölçü/Birim  değiştirici</MeasurementConverter>
+        <MeasurementConverter>Ölçü/Birim değiştirici</MeasurementConverter>
         <SplitSubtitle>Altyazı böl...</SplitSubtitle>
         <AppendSubtitle>Altyazı ekle...</AppendSubtitle>
         <JoinSubtitles>Altyazılar ekle</JoinSubtitles>
@@ -1154,7 +1154,7 @@ Continue?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>Ocr değiştirme listesi çifti '{0} -&gt; {1}' OCR değiştirme listesine eklendi</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Ocr değiştirme listesi çifti '{0} -&gt; {1}' OCR değiştirme listesine eklenmedi</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} satır seçildi</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Altyazıda müzik notaları  var. ANSI olarak kaydetmek, bunların kaybolmasına yol açar. Kaydetmeye devam edilsin mi?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Altyazıda müzik notaları var. ANSI olarak kaydetmek, bunların kaybolmasına yol açar. Kaydetmeye devam edilsin mi?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Altyazıda unicode karakterler var. ANSI olarak kaydetmek, bunların kaybolmasına yol açar. Kaydetmeye devam edilsin mi?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Altyazıda eksi time code var. Kaydetmeye devam edilsin mi?</NegativeTimeWarning>
     <BeforeMergeShortLines>Kısa satırların birleştirilmesinden önce</BeforeMergeShortLines>
@@ -1214,8 +1214,8 @@ Continue?</SubtitleAppendPrompt>
     <PluginXExecuted>{0} düzenleme eklendi</PluginXExecuted>
     <NotAValidXSubFile>Geçerli XSub dosyası değil</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Aynı metinleri birleştirmeden önce</BeforeMergeLinesWithSameText>
-    <ImportTimeCodesDifferentNumberOfLinesWarning>Time cole verilmiş  altyazı, farklı satırlarda var  Devam edilsin mi?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream>Ayrıştırma işlemi devam ediyor.  - Lütfen bekleyin.</ParsingTransportStream>
+    <ImportTimeCodesDifferentNumberOfLinesWarning>Time cole verilmiş altyazı, farklı satırlarda var Devam edilsin mi?</ImportTimeCodesDifferentNumberOfLinesWarning>
+    <ParsingTransportStream>Ayrıştırma işlemi devam ediyor. - Lütfen bekleyin.</ParsingTransportStream>
     <ErrorLoadIdx>Bu .idx dosyası okunamadı/düzeltilemedi. .idx dosyaları idx/sub dosya parçalarıdır. (VobSub olarak da geçer) Subtitle Edir bu dosyayı açamıyor.</ErrorLoadIdx>
     <ErrorLoadRar>Bu dosya .rar olarak sıkıştırılmış. Subtitle Edit bu dosyayı açamaz.</ErrorLoadRar>
     <ErrorLoadZip>Bu dosya .zip olarak sıkıştırılmış. Subtitle Edit bu dosyayı açamaz.</ErrorLoadZip>
@@ -1455,7 +1455,7 @@ Yeni oturum başlatın.</Information>
     <AutoWrapWhileTyping>Auto-wrap while typing</AutoWrapWhileTyping>
     <DurationMinimumMilliseconds>Min. süre, milisaniye</DurationMinimumMilliseconds>
     <DurationMaximumMilliseconds>Mak. süre, milisaniye</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Altyazılar arasında  minimum milisaniye boşluğu</MinimumGapMilliseconds>
+    <MinimumGapMilliseconds>Altyazılar arasında minimum milisaniye boşluğu</MinimumGapMilliseconds>
     <SubtitleFont>Altyazı yazı tipi</SubtitleFont>
     <SubtitleFontSize>Altyazı boyutu</SubtitleFontSize>
     <SubtitleBold>Kalın</SubtitleBold>
@@ -1610,7 +1610,7 @@ Yeni oturum başlatın.</Information>
     <WaveformPlayNewSelection>Yeni seçimi oynat</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Seçilmiş ilk altyazıyı oynat</WaveformPlayFirstSelectedSubtitle>
     <WaveformFocusListView>Liste görünümüne odakla</WaveformFocusListView>
-    <GoBack1Frame>1  kare geri</GoBack1Frame>
+    <GoBack1Frame>1 kare geri</GoBack1Frame>
     <GoForward1Frame>1 Kare ileri</GoForward1Frame>
     <GoBack100Milliseconds>100 ms geri</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms ileri</GoForward100Milliseconds>
@@ -1786,7 +1786,7 @@ Yeni oturum başlatın.</Information>
     <DurationMinimum>Süre - minimum: {0:0.000} saniye</DurationMinimum>
     <DurationMaximum>Süre - maksimum: {0:0.000} saniye</DurationMaximum>
     <DurationAverage>Süre - ortalama: {0:0.000} saniye</DurationAverage>
-    <CharactersPerSecondMinimum>Karakter/saniye en az  {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMinimum>Karakter/saniye en az {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Karakter/saniye en çok {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Karakter/saniye ortalama {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
@@ -1852,7 +1852,7 @@ Yeni oturum başlatın.</Information>
     <Remove>Sil</Remove>
     <RemoveAll>Tümünü sil</RemoveAll>
     <ImportStyleFromFile>Dosyadan stil yükle</ImportStyleFromFile>
-    <ExportStyleToFile>Şu dosyaya  stil aktar. (stil mevcut değilse ekleyin)</ExportStyleToFile>
+    <ExportStyleToFile>Şu dosyaya stil aktar. (stil mevcut değilse ekleyin)</ExportStyleToFile>
     <ChooseStyle>İçe aktarılacak stili seçin</ChooseStyle>
     <StyleAlreadyExits>Var olan stil : {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Stil '{0}' çıkartılan dosya '{1}'</StyleXExportedToFileY>
@@ -1931,7 +1931,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <SubtitleImage>Altyazı görüntüsü</SubtitleImage>
     <SubtitleText>Altyazı metni</SubtitleText>
     <UnableToCreateCharacterDatabaseFolder>'Karakter veritabanı klasörü': {0} oluşturulamıyor</UnableToCreateCharacterDatabaseFolder>
-    <SubtitleImageXofY>Altyazı göründütü {0} den  {1} e</SubtitleImageXofY>
+    <SubtitleImageXofY>Altyazı göründütü {0} den {1} e</SubtitleImageXofY>
     <ImagePalette>Image palette</ImagePalette>
     <UseCustomColors>Özel renk kullan</UseCustomColors>
     <Transparent>Saydam</Transparent>
