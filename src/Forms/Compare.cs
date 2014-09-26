@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (Main.HasVobSubHeader(openFileDialog1.FileName) || Main.IsBluRaySupFile(openFileDialog1.FileName))
+                if (FileUtils.IsVobSub(openFileDialog1.FileName) || FileUtils.IsBluRaySup(openFileDialog1.FileName))
                 {
                     MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
-                if (Main.HasVobSubHeader(openFileDialog1.FileName) || Main.IsBluRaySupFile(openFileDialog1.FileName))
+                if (FileUtils.IsVobSub(openFileDialog1.FileName) || FileUtils.IsBluRaySup(openFileDialog1.FileName))
                 {
                     MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                     return;
@@ -873,7 +873,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (!listExt.Contains(Path.GetExtension(filePath)))
                 return;
-            if (Main.HasVobSubHeader(filePath) || Main.IsBluRaySupFile(filePath))
+            if (FileUtils.IsVobSub(filePath) || FileUtils.IsBluRaySup(filePath))
             {
                 MessageBox.Show(Configuration.Settings.Language.CompareSubtitles.CannotCompareWithImageBasedSubtitles);
                 return;

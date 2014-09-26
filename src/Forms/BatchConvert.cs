@@ -361,11 +361,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    if (Main.IsBluRaySupFile(fileName))
+                    if (FileUtils.IsBluRaySup(fileName))
                     {
                         item.SubItems.Add("Blu-ray");
                     }
-                    else if (Main.HasVobSubHeader(fileName))
+                    else if (FileUtils.IsVobSub(fileName))
                     {
                         item.SubItems.Add("VobSub");
                     }
@@ -680,12 +680,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
                     bool isVobSub = false;
                     bool isMatroska = false;
-                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && Main.IsBluRaySupFile(fileName))
+                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtils.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
                         bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
                     }
-                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && Main.HasVobSubHeader(fileName))
+                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtils.IsVobSub(fileName))
                     {
                         isVobSub = true;
                     }

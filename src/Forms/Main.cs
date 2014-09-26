@@ -2257,12 +2257,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (ext == ".sup")
                 {
-                    if (IsBluRaySupFile(fileName))
+                    if (FileUtils.IsBluRaySup(fileName))
                     {
                         ImportAndOcrBluRaySup(fileName, _loading);
                         return;
                     }
-                    else if (IsSpDvdSupFile(fileName))
+                    else if (FileUtils.IsSpDvdSup(fileName))
                     {
                         ImportAndOcrSpDvdSup(fileName, _loading);
                         return;
@@ -2295,13 +2295,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && IsTransportStream(fileName))
+                if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && FileUtils.IsTransportStream(fileName))
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
                 }
 
-                if ((ext == ".m2ts") && fi.Length > 10000 && IsM2TransportStream(fileName))
+                if ((ext == ".m2ts") && fi.Length > 10000 && FileUtils.IsM2TransportStream(fileName))
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
@@ -2319,7 +2319,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
 
                     // retry bluray sup (file with wrong extension)
-                    if (IsBluRaySupFile(fileName))
+                    if (FileUtils.IsBluRaySup(fileName))
                     {
                         ImportAndOcrBluRaySup(fileName, _loading);
                         return;
@@ -2768,14 +2768,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // retry bluray (file with wrong extension)
-                if (format == null && fi.Length > 500 && IsBluRaySupFile(fileName))
+                if (format == null && fi.Length > 500 && FileUtils.IsBluRaySup(fileName))
                 {
                     ImportAndOcrBluRaySup(fileName, _loading);
                     return;
                 }
 
                 // retry SP DVD (file with wrong extension)
-                if (format == null && fi.Length > 500 && IsSpDvdSupFile(fileName))
+                if (format == null && fi.Length > 500 && FileUtils.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, _loading);
                     return;
@@ -2792,7 +2792,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for .rar file
-                if (format == null && fi.Length > 100 && IsRarFile(fileName))
+                if (format == null && fi.Length > 100 && FileUtils.IsRar(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadRar))
                         MessageBox.Show("This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.");
@@ -2802,7 +2802,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for .zip file
-                if (format == null && fi.Length > 100 && IsZipFile(fileName))
+                if (format == null && fi.Length > 100 && FileUtils.IsZip(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadZip))
                         MessageBox.Show("This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.");
@@ -3089,60 +3089,6 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 textBoxSource.Enabled = true;
-            }
-        }
-
-        private static bool IsTransportStream(string fileName)
-        {
-            FileStream fs = null;
-            try
-            {
-                var buffer = new byte[3761];
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                fs.Read(buffer, 0, buffer.Length);
-                if (buffer[0] == 0x47 && buffer[188] == 0x47) // 47hex (71 dec or 'G') == TS sync byte
-                    return true;
-                return buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
-            }
-        }
-
-        private static bool IsM2TransportStream(string fileName)
-        {
-            FileStream fs = null;
-            try
-            {
-                var buffer = new byte[192 + 192 + 5];
-                fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                fs.Read(buffer, 0, buffer.Length);
-                if (buffer[0] == Packet.SynchronizationByte && buffer[188] == Packet.SynchronizationByte)
-                    return false;
-                if (buffer[4] == Packet.SynchronizationByte && buffer[192 + 4] == Packet.SynchronizationByte && buffer[192 + 192 + 4] == Packet.SynchronizationByte)
-                    return true;
-                return false;
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
-                return false;
-            }
-            finally
-            {
-                if (fs != null)
-                {
-                    fs.Close();
-                }
             }
         }
 
@@ -5281,11 +5227,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                             // do not allow blu-ray/vobsub
                             string extension = Path.GetExtension(fileName).ToLower();
-                            if (extension == ".sub" && (IsVobSubFile(fileName, false) || IsSpDvdSupFile(fileName)))
+                            if (extension == ".sub" && (IsVobSubFile(fileName, false) || FileUtils.IsSpDvdSup(fileName)))
                             {
                                 format = null;
                             }
-                            else if (extension == ".sup" && IsBluRaySupFile(fileName))
+                            else if (extension == ".sup" && FileUtils.IsBluRaySup(fileName))
                             {
                                 format = null;
                             }
@@ -10186,15 +10132,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     OpenSubtitle(fileName, null);
                 }
-                else if (fi.Length < 250000000 && ext == ".sup" && IsBluRaySupFile(fileName)) // max 250 mb
+                else if (fi.Length < 250000000 && ext == ".sup" && FileUtils.IsBluRaySup(fileName)) // max 250 mb
                 {
                     OpenSubtitle(fileName, null);
                 }
-                else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && IsTransportStream(fileName))
+                else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && FileUtils.IsTransportStream(fileName))
                 {
                     OpenSubtitle(fileName, null);
                 }
-                else if (ext == ".m2ts" && IsM2TransportStream(fileName))
+                else if (ext == ".m2ts" && FileUtils.IsM2TransportStream(fileName))
                 {
                     OpenSubtitle(fileName, null);
                 }
@@ -10384,7 +10330,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                bool isHeaderOk = HasVobSubHeader(subFileName);
+                bool isHeaderOk = FileUtils.IsVobSub(subFileName);
                 if (isHeaderOk)
                 {
                     if (!verbose)
@@ -10402,75 +10348,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (verbose)
                     MessageBox.Show(ex.Message);
-            }
-            return false;
-        }
-
-        public static bool HasVobSubHeader(string subFileName)
-        {
-            var buffer = new byte[4];
-            var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read) { Position = 0 };
-            fs.Read(buffer, 0, 4);
-            bool isHeaderOk = VobSubParser.IsMpeg2PackHeader(buffer) || VobSubParser.IsPrivateStream1(buffer, 0);
-            fs.Close();
-            return isHeaderOk;
-        }
-
-        public static bool IsBluRaySupFile(string subFileName)
-        {
-            using (var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                return fs.ReadByte() == 0x50
-                    && fs.ReadByte() == 0x47; // 80 + 71 - P G
-            }
-        }
-
-        public static bool IsRarFile(string fileName)
-        {
-            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                var buffer = new byte[4];
-                fs.Read(buffer, 0, 4);
-                return "Rar!" == Encoding.ASCII.GetString(buffer, 0, buffer.Length);
-            }
-        }
-
-        public static bool IsZipFile(string fileName)
-        {
-            var buffer = new byte[4];
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite) { Position = 0 };
-            fs.Read(buffer, 0, 4);
-            fs.Close();
-            return buffer[0] == 0x50 && buffer[1] == 0x4B && buffer[2] == 0x03 && buffer[3] == 0x04;
-        }
-
-        private static bool IsSpDvdSupFile(string subFileName)
-        {
-            using (var fs = new FileStream(subFileName, FileMode.Open, FileAccess.Read, FileShare.Read))
-            {
-                byte[] buffer = new byte[SpHeader.SpHeaderLength];
-                if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
-                {
-                    return false;
-                }
-
-                var header = new SpHeader(buffer);
-                if (header.Identifier == "SP" && header.NextBlockPosition > 4)
-                {
-                    buffer = new byte[header.NextBlockPosition];
-                    int bytesRead = fs.Read(buffer, 0, buffer.Length);
-                    if (bytesRead == buffer.Length)
-                    {
-                        buffer = new byte[SpHeader.SpHeaderLength];
-                        bytesRead = fs.Read(buffer, 0, buffer.Length);
-                        if (bytesRead == buffer.Length)
-                        {
-                            header = new SpHeader(buffer);
-                            fs.Close();
-                            return header.Identifier == "SP";
-                        }
-                    }
-                }
             }
             return false;
         }
@@ -12713,12 +12590,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (Path.GetExtension(fileName).Equals(".sup", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (IsBluRaySupFile(fileName))
+                    if (FileUtils.IsBluRaySup(fileName))
                     {
                         MessageBox.Show("Bluray sup files not supported here");
                         return;
                     }
-                    else if (IsSpDvdSupFile(fileName))
+                    else if (FileUtils.IsSpDvdSup(fileName))
                     {
                         MessageBox.Show("DVD sup files not supported here");
                         return;
