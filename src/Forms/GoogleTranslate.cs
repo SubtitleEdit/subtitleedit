@@ -378,13 +378,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static Encoding GetScreenScrapingEncoding(string languagePair)
         {
+            WebClient webClient = null;
             try
             {
                 string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), "123 456");
-                var webClient = new WebClient();
+                webClient = new WebClient();
                 webClient.Proxy = Utilities.GetProxy();
                 string result = webClient.DownloadString(url).ToLower();
-                webClient.Dispose();
                 int idx = result.IndexOf("charset", StringComparison.Ordinal);
                 int end = result.IndexOf('"', idx + 8);
                 string charset = result.Substring(idx, end - idx).Replace("charset=", string.Empty);
@@ -393,6 +393,13 @@ namespace Nikse.SubtitleEdit.Forms
             catch
             {
                 return Encoding.Default;
+            }
+            finally
+            {
+                if (webClient != null)
+                {
+                    webClient.Dispose();
+                }
             }
         }
 
