@@ -42,92 +42,96 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             buffer[1400] = (byte)(gridDataCount % 256); // paragraphs - low byte
             buffer[1401] = (byte)(gridDataCount / 256); // paragraphs - high byte
 
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            fs.Write(buffer, 0, buffer.Length);
-
-            p = null;
-            for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                p = subtitle.Paragraphs[i];
-                Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
-
-                WriteTime(fs, p.StartTime);
-
-                buffer = new byte[] { // styles 00 00 80 BF 00 00 00 C0 02 00 01 00
-                    0,
-                    0,
-                    0x80, //horizontal align, 0x80BF= center, 0x0000=left, 0x00c0=right
-                    0xBF,
-                    0,
-                    0,
-                    0,
-                    0xC0, // vertical Position: C0=bottom, 0=top
-                    2, //justification, 1=left, 2=center
-                    0,
-                    1, //1=normal font, 3=italic
-                    0 };
-
-                string text = p.Text;
-                if (text.StartsWith("{\\a6}"))
-                {
-                    text = p.Text.Remove(0, 5);
-                    buffer[7] = 0; // align top
-                }
-                else if (text.StartsWith("{\\a1}"))
-                {
-                    text = p.Text.Remove(0, 5);
-                    buffer[2] = 0; // align left
-                    buffer[3] = 0; // align left
-                }
-                else if (text.StartsWith("{\\a3}"))
-                {
-                    text = p.Text.Remove(0, 5);
-                    buffer[2] = 0; // align right
-                    buffer[3] = 0xc0; // align right
-                }
-                else if (text.StartsWith("{\\a5}"))
-                {
-                    text = p.Text.Remove(0, 5);
-                    buffer[7] = 0; // align top
-                    buffer[2] = 0; // align left
-                    buffer[3] = 0; // align left
-                }
-                else if (text.StartsWith("{\\a7}"))
-                {
-                    text = p.Text.Remove(0, 5);
-                    buffer[7] = 0; // align top
-                    buffer[2] = 0; // align right
-                    buffer[3] = 0xc0; // align right
-                }
-
-                if (text.StartsWith("<i>") && text.EndsWith("</i>"))
-                    buffer[10] = 3;
                 fs.Write(buffer, 0, buffer.Length);
 
-                text = Utilities.RemoveHtmlTags(text);
-                if (text.Length > 118)
-                    text = text.Substring(0, 118);
-                fs.WriteByte((byte)(text.Length));
-                buffer = Encoding.GetEncoding(1252).GetBytes(text);
-                fs.Write(buffer, 0, buffer.Length);
+                p = null;
+                for (int i = 0; i < subtitle.Paragraphs.Count; i++)
+                {
+                    p = subtitle.Paragraphs[i];
+                    Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
 
-                for (int j = 0; j < 74; j++)
-                    fs.WriteByte(0);
+                    WriteTime(fs, p.StartTime);
 
-                if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
-                { // write empty end
+                    buffer = new byte[] {
+                        // styles 00 00 80 BF 00 00 00 C0 02 00 01 00
+                        0,
+                        0,
+                        0x80, //horizontal align, 0x80BF= center, 0x0000=left, 0x00c0=right
+                        0xBF,
+                        0,
+                        0,
+                        0,
+                        0xC0, // vertical Position: C0=bottom, 0=top
+                        2, //justification, 1=left, 2=center
+                        0,
+                        1, //1=normal font, 3=italic
+                        0
+                    };
+
+                    string text = p.Text;
+                    if (text.StartsWith("{\\a6}"))
+                    {
+                        text = p.Text.Remove(0, 5);
+                        buffer[7] = 0; // align top
+                    }
+                    else if (text.StartsWith("{\\a1}"))
+                    {
+                        text = p.Text.Remove(0, 5);
+                        buffer[2] = 0; // align left
+                        buffer[3] = 0; // align left
+                    }
+                    else if (text.StartsWith("{\\a3}"))
+                    {
+                        text = p.Text.Remove(0, 5);
+                        buffer[2] = 0; // align right
+                        buffer[3] = 0xc0; // align right
+                    }
+                    else if (text.StartsWith("{\\a5}"))
+                    {
+                        text = p.Text.Remove(0, 5);
+                        buffer[7] = 0; // align top
+                        buffer[2] = 0; // align left
+                        buffer[3] = 0; // align left
+                    }
+                    else if (text.StartsWith("{\\a7}"))
+                    {
+                        text = p.Text.Remove(0, 5);
+                        buffer[7] = 0; // align top
+                        buffer[2] = 0; // align right
+                        buffer[3] = 0xc0; // align right
+                    }
+
+                    if (text.StartsWith("<i>") && text.EndsWith("</i>"))
+                        buffer[10] = 3;
+                    fs.Write(buffer, 0, buffer.Length);
+
+                    text = Utilities.RemoveHtmlTags(text);
+                    if (text.Length > 118)
+                        text = text.Substring(0, 118);
+                    fs.WriteByte((byte) (text.Length));
+                    buffer = Encoding.GetEncoding(1252).GetBytes(text);
+                    fs.Write(buffer, 0, buffer.Length);
+
+                    for (int j = 0; j < 74; j++)
+                        fs.WriteByte(0);
+
+                    if (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds > 100)
+                    {
+                        // write empty end
+                        WriteTime(fs, p.EndTime);
+                        buffer = new byte[] { 0, 0, 0, 0xC0, 0, 0, 0, 0, 0x01, 0, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                        fs.Write(buffer, 0, buffer.Length);
+                    }
+                }
+                if (p != null)
+                {
                     WriteTime(fs, p.EndTime);
-                    buffer = new byte[] { 0, 0, 0, 0xC0, 0, 0, 0, 0, 0x01, 0, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                    buffer = new byte[] { 0, 0, 0x80, 0xBF, 0, 0, 0, 0xC0, 0x02, 0, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x40, 0x40, 0x40, 0, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0x80, 0x80, 0x80, 0, 0x01, 0, 0, 0, 0xFF, 0, 0, 0, 0x01, 0, 0, 0, 0x02, 0, 0, 0, 0x48, 0, 0, 0, 0x30, 0, 0, 0, 0x48, 0, 0, 0, 0x30, 0, 0, 0, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
                     fs.Write(buffer, 0, buffer.Length);
                 }
             }
-            if (p != null)
-            {
-                WriteTime(fs, p.EndTime);
-                buffer = new byte[] { 0, 0, 0x80, 0xBF, 0, 0, 0, 0xC0, 0x02, 0, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x40, 0x40, 0x40, 0, 0xFF, 0xFF, 0xFF, 0, 0, 0, 0, 0, 0x80, 0x80, 0x80, 0, 0x01, 0, 0, 0, 0xFF, 0, 0, 0, 0x01, 0, 0, 0, 0x02, 0, 0, 0, 0x48, 0, 0, 0, 0x30, 0, 0, 0, 0x48, 0, 0, 0, 0x30, 0, 0, 0, 0x01, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                fs.Write(buffer, 0, buffer.Length);
-            }
-            fs.Close();
         }
 
         private static void WriteTime(FileStream fs, TimeCode timeCode)
