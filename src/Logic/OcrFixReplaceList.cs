@@ -10,7 +10,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class OcrFixReplaceList
     {
-
         private static readonly Regex RegExQuestion = new Regex(@"\S\?[A-ZÆØÅÄÖÉÈÀÙÂÊÎÔÛËÏa-zæøåäöéèàùâêîôûëï]", RegexOptions.Compiled);
         private static readonly Regex RegExIandZero = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][I1]", RegexOptions.Compiled);
         private static readonly Regex RegExTime1 = new Regex(@"[a-zæøåöääöéèàùâêîôûëï][0]", RegexOptions.Compiled);
@@ -18,8 +17,8 @@ namespace Nikse.SubtitleEdit.Logic
         private static readonly Regex HexNumber = new Regex(@"^#?[\dABDEFabcdef]+$", RegexOptions.Compiled);
         private static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
-        private readonly Dictionary<string, string> _wordReplaceList;
-        private readonly Dictionary<string, string> _partialLineWordBoundaryReplaceList;
+        public Dictionary<string, string> WordReplaceList;
+        public readonly Dictionary<string, string> PartialLineWordBoundaryReplaceList;
         private readonly Dictionary<string, string> _partialLineAlwaysReplaceList;
         private readonly Dictionary<string, string> _beginLineReplaceList;
         private readonly Dictionary<string, string> _endLineReplaceList;
@@ -29,10 +28,11 @@ namespace Nikse.SubtitleEdit.Logic
         private readonly Dictionary<string, string> _regExList;
         private readonly string _replaceListXmlFileName;
 
-        public OcrFixReplaceList(string languageId)
+        public OcrFixReplaceList(string replaceListXmlFileName)
         {
-            _wordReplaceList = new Dictionary<string, string>();
-            _partialLineWordBoundaryReplaceList = new Dictionary<string, string>();
+            _replaceListXmlFileName = replaceListXmlFileName;
+            WordReplaceList = new Dictionary<string, string>();
+            PartialLineWordBoundaryReplaceList = new Dictionary<string, string>();
             _partialLineAlwaysReplaceList = new Dictionary<string, string>();
             _beginLineReplaceList = new Dictionary<string, string>();
             _endLineReplaceList = new Dictionary<string, string>();
@@ -41,29 +41,46 @@ namespace Nikse.SubtitleEdit.Logic
             _partialWordReplaceList = new Dictionary<string, string>();
             _regExList = new Dictionary<string, string>();
 
-            _replaceListXmlFileName = Configuration.DictionariesFolder + languageId + "_OCRFixReplaceList.xml";
-            if (File.Exists(_replaceListXmlFileName))
-            {
-                var doc = new XmlDocument();
-                try
-                {
-                    doc.Load(_replaceListXmlFileName);
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show("Unable to load " + _replaceListXmlFileName + ": " + exception.Message + Environment.NewLine);
-                }
+            var doc = LoadXmlReplaceListDocument();
+            var userDoc = LoadXmlReplaceListUserDocument();
 
-                _wordReplaceList = LoadReplaceList(doc, "WholeWords");
-                _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
-                _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
-                _partialLineWordBoundaryReplaceList = LoadReplaceList(doc, "PartialLines");
-                _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialAlwaysLines");
-                _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
-                _endLineReplaceList = LoadReplaceList(doc, "EndLines");
-                _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
-                _regExList = LoadRegExList(doc, "RegularExpressions");
+
+            WordReplaceList = LoadReplaceList(doc, "WholeWords");
+            _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
+            _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
+            PartialLineWordBoundaryReplaceList = LoadReplaceList(doc, "PartialLines");
+            _partialLineAlwaysReplaceList = LoadReplaceList(doc, "PartialAlwaysLines");
+            _beginLineReplaceList = LoadReplaceList(doc, "BeginLines");
+            _endLineReplaceList = LoadReplaceList(doc, "EndLines");
+            _wholeLineReplaceList = LoadReplaceList(doc, "WholeLines");
+            _regExList = LoadRegExList(doc, "RegularExpressions");
+
+            foreach (var kp in LoadReplaceList(userDoc, "WholeWords"))
+            {
+                if (!WordReplaceList.ContainsKey(kp.Key))
+                    WordReplaceList.Add(kp.Key, kp.Value);
             }
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedWholeWords"))
+            {
+                if (WordReplaceList.ContainsKey(kp.Key))
+                    WordReplaceList.Remove(kp.Key);
+            }
+
+            foreach (var kp in LoadReplaceList(userDoc, "PartialLines"))
+            {
+                if (!PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
+                    PartialLineWordBoundaryReplaceList.Add(kp.Key, kp.Value);
+            }
+            foreach (var kp in LoadReplaceList(userDoc, "RemovedPartialLines"))
+            {
+                if (PartialLineWordBoundaryReplaceList.ContainsKey(kp.Key))
+                    PartialLineWordBoundaryReplaceList.Remove(kp.Key);
+            }
+        }
+
+        public static OcrFixReplaceList FromLanguageId(string languageId)
+        {
+            return new OcrFixReplaceList(Configuration.DictionariesFolder + languageId + "_OCRFixReplaceList.xml");
         }
 
         private static Dictionary<string, string> LoadReplaceList(XmlDocument doc, string name)
@@ -114,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string FixOcrErrorViaLineReplaceList(string input)
         {
-            // Whole line
+            // Whole fromLine
             foreach (string from in _wholeLineReplaceList.Keys)
             {
                 if (input == from)
@@ -139,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic
                 newText = newText.Remove(0, 3);
             }
 
-            // begin line
+            // begin fromLine
             string[] lines = newText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             var sb = new StringBuilder();
             foreach (string l in lines)
@@ -188,10 +205,10 @@ namespace Nikse.SubtitleEdit.Logic
             }
             newText += post;
 
-            foreach (string from in _partialLineWordBoundaryReplaceList.Keys)
+            foreach (string from in PartialLineWordBoundaryReplaceList.Keys)
             {
                 if (newText.Contains(from))
-                    newText = ReplaceWord(newText, from, _partialLineWordBoundaryReplaceList[from]);
+                    newText = ReplaceWord(newText, from, PartialLineWordBoundaryReplaceList[from]);
             }
 
             foreach (string from in _partialLineAlwaysReplaceList.Keys)
@@ -382,54 +399,54 @@ namespace Nikse.SubtitleEdit.Logic
                     word = word.Insert(match.Index + 2, " ");
             }
 
-            foreach (string from in _wordReplaceList.Keys)
+            foreach (string from in WordReplaceList.Keys)
             {
                 if (word.Length == from.Length)
                 {
                     if (word == from)
-                        return pre + _wordReplaceList[from] + post;
+                        return pre + WordReplaceList[from] + post;
                 }
                 else if (word.Length + post.Length == from.Length)
                 {
                     if (string.CompareOrdinal(word + post, from) == 0)
-                        return pre + _wordReplaceList[from];
+                        return pre + WordReplaceList[from];
                 }
                 if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
                 {
-                    return _wordReplaceList[from];
+                    return WordReplaceList[from];
                 }
             }
 
             if (Configuration.Settings.Tools.OcrFixUseHardcodedRules)
             {
-                // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
+                // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
                 word = FixIor1InsideLowerCaseWord(word);
 
-                // uppercase 0 inside lowercase word (will be replaced by lowercase L)
+                // uppercase 0 inside lowercase fromWord (will be replaced by lowercase L)
                 word = Fix0InsideLowerCaseWord(word);
 
-                // uppercase I or 1 inside lowercase word (will be replaced by lowercase L)
+                // uppercase I or 1 inside lowercase fromWord (will be replaced by lowercase L)
                 word = FixIor1InsideLowerCaseWord(word);
 
                 word = FixLowerCaseLInsideUpperCaseWord(word); // eg. SCARLETTl => SCARLETTI
             }
 
-            // Retry word replace list
-            foreach (string from in _wordReplaceList.Keys)
+            // Retry fromWord replace list
+            foreach (string from in WordReplaceList.Keys)
             {
                 if (word.Length == from.Length)
                 {
                     if (string.CompareOrdinal(word, from) == 0)
-                        return pre + _wordReplaceList[from] + post;
+                        return pre + WordReplaceList[from] + post;
                 }
                 else if (word.Length + post.Length == from.Length)
                 {
                     if (string.CompareOrdinal(word + post, from) == 0)
-                        return pre + _wordReplaceList[from];
+                        return pre + WordReplaceList[from];
                 }
                 if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
                 {
-                    return _wordReplaceList[from];
+                    return WordReplaceList[from];
                 }
             }
 
@@ -647,102 +664,241 @@ namespace Nikse.SubtitleEdit.Logic
             if (word.Length == 0)
                 return preWordPost;
 
-            foreach (string from in _wordReplaceList.Keys)
+            foreach (string from in WordReplaceList.Keys)
             {
                 if (word.Length == from.Length)
                 {
                     if (string.CompareOrdinal(word, from) == 0)
-                        return pre + _wordReplaceList[from] + post;
+                        return pre + WordReplaceList[from] + post;
                 }
                 else if (word.Length + post.Length == from.Length)
                 {
                     if (string.CompareOrdinal(word + post, from) == 0)
-                        return pre + _wordReplaceList[from];
+                        return pre + WordReplaceList[from];
                 }
                 if (pre.Length + word.Length + post.Length == from.Length && string.CompareOrdinal(preWordPost, from) == 0)
                 {
-                    return _wordReplaceList[from];
+                    return WordReplaceList[from];
                 }
             }
 
             return preWordPost;
         }
 
-        public void SaveWordToWordList(string word, string spellCheckWord)
+        public bool RemoveWordOrPartial(string word)
         {
-            if (_replaceListXmlFileName != null)
+            if (word.Contains(' '))
             {
-                var doc = new XmlDocument();
-                if (File.Exists(_replaceListXmlFileName))
+                return DeletePartialLineFromWordList(word);
+            }
+            return DeleteWordFromWordList(word);
+        }
+
+        private bool DeleteWordFromWordList(string fromWord)
+        {
+            const string replaceListName = "WholeWords";
+
+            var doc = LoadXmlReplaceListDocument();
+            var list = LoadReplaceList(doc, replaceListName);
+
+            var userDoc = LoadXmlReplaceListUserDocument();
+            var userList = LoadReplaceList(userDoc, replaceListName);
+
+            return DeleteFromList(fromWord, userDoc, replaceListName, "Word", list, userList);
+        }
+
+        private bool DeletePartialLineFromWordList(string fromWord)
+        {
+            const string replaceListName = "PartialLines";
+
+            var doc = LoadXmlReplaceListDocument();
+            var list = LoadReplaceList(doc, replaceListName);
+
+            var userDoc = LoadXmlReplaceListUserDocument();
+            var userList = LoadReplaceList(userDoc, replaceListName);
+
+            return DeleteFromList(fromWord, userDoc, replaceListName, "LinePart", list, userList);
+        }
+
+        private bool DeleteFromList(string word, XmlDocument userDoc, string replaceListName, string elementName, Dictionary<string, string> dictionary, Dictionary<string, string> userDictionary)
+        {
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+            if (userDictionary == null)
+                throw new ArgumentNullException("userDictionary");
+
+            bool removed = false;
+            if (userDictionary.ContainsKey((word)))
+            {
+                XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode(replaceListName);
+                if (wholeWordsNode != null)
                 {
-                    try
+                    foreach (var kvp in userDictionary)
                     {
-                        doc.Load(_replaceListXmlFileName);
+                        if (kvp.Key != word)
+                        {
+                            XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
+                            XmlAttribute aFrom = userDoc.CreateAttribute("from");
+                            XmlAttribute aTo = userDoc.CreateAttribute("to");
+                            aFrom.InnerText = kvp.Key;
+                            aTo.InnerText = kvp.Value;
+                            newNode.Attributes.Append(aTo);
+                            newNode.Attributes.Append(aFrom);
+                            wholeWordsNode.AppendChild(newNode);
+                        }
                     }
-                    catch
-                    {
-                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
-                    }
+                    userDoc.Save(ReplaceListXmlFileNameUser);
+                    removed = true;
                 }
-                else
+            }
+            else if (dictionary.ContainsKey((word)))
+            {
+                XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode("Removed" + replaceListName);
+                if (wholeWordsNode != null)
+                {
+                    XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
+                    XmlAttribute aFrom = userDoc.CreateAttribute("from");
+                    XmlAttribute aTo = userDoc.CreateAttribute("to");
+                    aFrom.InnerText = word;
+                    aTo.InnerText = string.Empty;
+                    newNode.Attributes.Append(aTo);
+                    newNode.Attributes.Append(aFrom);
+                    wholeWordsNode.AppendChild(newNode);
+                    userDoc.Save(ReplaceListXmlFileNameUser);
+                    removed = true;
+                }
+            }
+            return removed;
+        }     
+
+        private XmlDocument LoadXmlReplaceListDocument()
+        {
+            var doc = new XmlDocument();
+            if (File.Exists(_replaceListXmlFileName))
+            {
+                try
+                {
+                    doc.Load(_replaceListXmlFileName);
+                }
+                catch
                 {
                     doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
                 }
-                if (!_wordReplaceList.ContainsKey(word))
-                    _wordReplaceList.Add(word, spellCheckWord);
-                XmlNode wholeWordsNode = doc.DocumentElement.SelectSingleNode("WholeWords");
-                if (wholeWordsNode != null)
-                {
-                    XmlNode newNode = doc.CreateNode(XmlNodeType.Element, "Word", null);
-                    XmlAttribute aFrom = doc.CreateAttribute("from");
-                    XmlAttribute aTo = doc.CreateAttribute("to");
-                    aFrom.InnerText = word;
-                    aTo.InnerText = spellCheckWord;
-                    newNode.Attributes.Append(aFrom);
-                    newNode.Attributes.Append(aTo);
-                    wholeWordsNode.AppendChild(newNode);
-                    doc.Save(_replaceListXmlFileName);
-                }
             }
+            else
+            {
+                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
+            }
+            return doc;
         }
 
-        public void SaveWordToWholeLineList(string line, string spellCheckLine)
+        private string ReplaceListXmlFileNameUser
+        {
+            get { return Path.Combine(Path.GetDirectoryName(_replaceListXmlFileName), Path.GetFileNameWithoutExtension(_replaceListXmlFileName) + "_User" + Path.GetExtension(_replaceListXmlFileName)); }
+        }
+
+        private XmlDocument LoadXmlReplaceListUserDocument()
+        {
+            var doc = new XmlDocument();
+            if (File.Exists(ReplaceListXmlFileNameUser))
+            {
+                try
+                {
+                    doc.Load(ReplaceListXmlFileNameUser);
+                }
+                catch
+                {
+                    doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+                }
+            }
+            else
+            {
+                doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/><RemovedWholeWords/><RemovedPartialLines/><RemovedBeginLines/><RemovedEndLines/><RemovedWholeLines/></ReplaceList>");
+            }
+            return doc;
+        }
+
+        public bool AddWordOrPartial(string fromWord, string toWord)
+        {
+            if (fromWord.Contains(' '))
+            {
+                return SavePartialLineToWordList(fromWord, toWord);
+            }
+            return SaveWordToWordList(fromWord, toWord);
+        }
+
+        private bool SaveWordToWordList(string fromWord, string toWord)
+        {
+            const string replaceListName = "WholeWords";
+
+            var doc = LoadXmlReplaceListDocument();
+            var list = LoadReplaceList(doc, replaceListName);
+
+            var userDoc = LoadXmlReplaceListUserDocument();
+            var userList = LoadReplaceList(userDoc, replaceListName);
+
+            return SaveToList(fromWord, toWord, userDoc, replaceListName, "Word", list, userList);
+        }
+
+        private bool SavePartialLineToWordList(string fromWord, string toWord)
+        {
+            const string replaceListName = "PartialLines";
+
+            var doc = LoadXmlReplaceListDocument();
+            var list = LoadReplaceList(doc, replaceListName);
+
+            var userDoc = LoadXmlReplaceListUserDocument();
+            var userList = LoadReplaceList(userDoc, replaceListName);
+
+            return SaveToList(fromWord, toWord, userDoc, replaceListName, "LinePart", list, userList);
+        }
+
+        private bool SaveToList(string fromWord, string toWord, XmlDocument userDoc, string replaceListName, string elementName, Dictionary<string, string> dictionary, Dictionary<string, string> userDictionary)
+        {
+            if (dictionary == null)
+                throw new ArgumentNullException("dictionary");
+            if (userDictionary == null)
+                throw new ArgumentNullException("userDictionary");
+            if (dictionary.ContainsKey(fromWord))
+                return false;
+            if (userDictionary.ContainsKey(fromWord))
+                return false;
+            userDictionary.Add(fromWord, toWord);
+            XmlNode wholeWordsNode = userDoc.DocumentElement.SelectSingleNode(replaceListName);
+            if (wholeWordsNode != null)
+            {
+                XmlNode newNode = userDoc.CreateNode(XmlNodeType.Element, elementName, null);
+                XmlAttribute aFrom = userDoc.CreateAttribute("from");
+                XmlAttribute aTo = userDoc.CreateAttribute("to");
+                aTo.InnerText = toWord;
+                aFrom.InnerText = fromWord;
+                newNode.Attributes.Append(aFrom);
+                newNode.Attributes.Append(aTo);
+                wholeWordsNode.AppendChild(newNode);
+                userDoc.Save(ReplaceListXmlFileNameUser);
+            }
+            return true;
+        }     
+
+        public void AddToWholeLineList(string fromLine, string toLine)
         {
             try
             {
-                if (_replaceListXmlFileName != null)
+                var userDocument = LoadXmlReplaceListUserDocument();
+                if (!_wholeLineReplaceList.ContainsKey(fromLine))
+                    _wholeLineReplaceList.Add(fromLine, toLine);
+                XmlNode wholeWordsNode = userDocument.DocumentElement.SelectSingleNode("WholeLines");
+                if (wholeWordsNode != null)
                 {
-                    var doc = new XmlDocument();
-                    if (File.Exists(_replaceListXmlFileName))
-                    {
-                        try
-                        {
-                            doc.Load(_replaceListXmlFileName);
-                        }
-                        catch
-                        {
-                            doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
-                        }
-                    }
-                    else
-                    {
-                        doc.LoadXml("<ReplaceList><WholeWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></ReplaceList>");
-                    }
-                    if (!_wholeLineReplaceList.ContainsKey(line))
-                        _wholeLineReplaceList.Add(line, spellCheckLine);
-                    XmlNode wholeWordsNode = doc.DocumentElement.SelectSingleNode("WholeLines");
-                    if (wholeWordsNode != null)
-                    {
-                        XmlNode newNode = doc.CreateNode(XmlNodeType.Element, "Line", null);
-                        XmlAttribute aFrom = doc.CreateAttribute("from");
-                        XmlAttribute aTo = doc.CreateAttribute("to");
-                        aFrom.InnerText = line;
-                        aTo.InnerText = spellCheckLine;
-                        newNode.Attributes.Append(aFrom);
-                        newNode.Attributes.Append(aTo);
-                        wholeWordsNode.AppendChild(newNode);
-                        doc.Save(_replaceListXmlFileName);
-                    }
+                    XmlNode newNode = userDocument.CreateNode(XmlNodeType.Element, "Line", null);
+                    XmlAttribute aFrom = userDocument.CreateAttribute("from");
+                    XmlAttribute aTo = userDocument.CreateAttribute("to");
+                    aTo.InnerText = toLine;
+                    aFrom.InnerText = fromLine;
+                    newNode.Attributes.Append(aFrom);
+                    newNode.Attributes.Append(aTo);
+                    wholeWordsNode.AppendChild(newNode);
+                    userDocument.Save(_replaceListXmlFileName);
                 }
             }
             catch (Exception exception)
