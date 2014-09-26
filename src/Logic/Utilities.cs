@@ -306,12 +306,18 @@ namespace Nikse.SubtitleEdit.Logic
             return -1;
         }
 
-        public static string ReadTextFileViaUrlAndProxyIfAvailable(string url)
+        /// <summary>
+        /// Downloads the requested resource as a <see cref="String"/> using the configured <see cref="WebProxy"/>.
+        /// </summary>
+        /// <param name="address">A <see cref="String"/> containing the URI to download.</param>
+        /// <returns>A <see cref="String"/> containing the requested resource.</returns>
+        public static string DownloadString(string address)
         {
-            var wc = new WebClient { Proxy = GetProxy() };
-            var ms = new MemoryStream(wc.DownloadData(url));
-            var reader = new StreamReader(ms);
-            return reader.ReadToEnd().Trim();
+            using (var wc = new WebClient())
+            {
+                wc.Proxy = GetProxy();
+                return wc.DownloadString(address).Trim();
+            }
         }
 
         public static WebProxy GetProxy()
@@ -2118,7 +2124,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 try
                 {
-                    string xml = ReadTextFileViaUrlAndProxyIfAvailable(Configuration.Settings.WordLists.NamesEtcUrl);
+                    var xml = DownloadString(Configuration.Settings.WordLists.NamesEtcUrl);
                     namesEtcDoc.LoadXml(xml);
                     loaded = true;
                 }
@@ -2157,7 +2163,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 try
                 {
-                    string xml = ReadTextFileViaUrlAndProxyIfAvailable(Configuration.Settings.WordLists.NamesEtcUrl);
+                    var xml = DownloadString(Configuration.Settings.WordLists.NamesEtcUrl);
                     namesEtcDoc.LoadXml(xml);
                     loaded = true;
                 }
