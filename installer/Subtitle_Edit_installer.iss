@@ -167,8 +167,8 @@ Name: desktopicon;        Description: {cm:CreateDesktopIcon};     GroupDescript
 Name: desktopicon\user;   Description: {cm:tsk_CurrentUser};       GroupDescription: {cm:AdditionalIcons}; Flags: exclusive
 Name: desktopicon\common; Description: {cm:tsk_AllUsers};          GroupDescription: {cm:AdditionalIcons}; Flags: unchecked exclusive
 Name: quicklaunchicon;    Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked;             OnlyBelowVersion: 6.01
-Name: reset_dictionaries; Description: {cm:tsk_ResetDictionaries}; GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: DictionariesExistCheck()
-Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: SettingsExistCheck()
+Name: reset_dictionaries; Description: {cm:tsk_ResetDictionaries}; GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: DictionariesExist()
+Name: reset_settings;     Description: {cm:tsk_ResetSettings};     GroupDescription: {cm:tsk_Other};       Flags: checkedonce unchecked; Check: SettingsExist()
 
 
 [Files]
@@ -361,7 +361,7 @@ const installer_mutex = 'subtitle_edit_setup_mutex';
 
 
 // Check if Subtitle Edit's settings exist
-function SettingsExistCheck(): Boolean;
+function SettingsExist(): Boolean;
 begin
   if FileExists(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml')) then
     Result := True
@@ -371,7 +371,7 @@ end;
 
 
 // Check if Dictionaries exist
-function DictionariesExistCheck(): Boolean;
+function DictionariesExist(): Boolean;
 var
   FindRec: TFindRec;
 begin
@@ -455,7 +455,7 @@ begin
   // When uninstalling ask user to delete Subtitle Edit's dictionaries and settings
   // based on whether these files exist only
   if CurUninstallStep = usUninstall then begin
-    if SettingsExistCheck() or DictionariesExistCheck() then begin
+    if SettingsExist() or DictionariesExist() then begin
       if SuppressibleMsgBox(CustomMessage('msg_DeleteSettings'), mbConfirmation, MB_YESNO or MB_DEFBUTTON2, IDNO) = IDYES then begin
         CleanUpDictionaries();
         DeleteFile(ExpandConstant('{userappdata}\Subtitle Edit\Settings.xml'));
