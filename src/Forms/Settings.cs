@@ -1016,7 +1016,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (!found)
                             cultures.Add(culture);
-                    } 
+                    }
                     else if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
                     {
                         bool found = false;
@@ -2085,7 +2085,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
                 return;
 
-
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb == null)
                 return;
@@ -2136,7 +2135,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = listBoxOcrFixList.SelectedIndex;
             string text = listBoxOcrFixList.Items[index].ToString();
             string key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
-            
+
             if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
             {
                 DialogResult result;

@@ -84,7 +84,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             System.Windows.Forms.RichTextBox rtBox = null;
             try
             {
-                rtBox = new System.Windows.Forms.RichTextBox {
+                rtBox = new System.Windows.Forms.RichTextBox
+                {
                     Rtf = rtf
                 };
 

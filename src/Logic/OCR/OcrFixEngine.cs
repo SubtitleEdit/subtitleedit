@@ -75,7 +75,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             AutoGuessesUsed = new List<string>();
             UnknownWordsFound = new List<string>();
-        }       
+        }
 
         private void LoadSpellingDictionaries(string threeLetterIsoLanguageName, string hunspellName)
         {
@@ -582,7 +582,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
             return text;
         }
-        
+
         public static string FixLowerCaseLInsideUpperCaseWord(string word)
         {
             if (word.Length > 3 && word.Replace("l", string.Empty).ToUpper() == word.Replace("l", string.Empty))

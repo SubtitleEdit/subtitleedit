@@ -287,7 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     position += 0x800;
 
-                    progressBarRip.Value = (int) ((position * 100) / length);
+                    progressBarRip.Value = (int)((position * 100) / length);
                     Application.DoEvents();
                     lba++;
                 }
