@@ -847,8 +847,8 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainTextBoxUnbreak { get; set; }
         public string MainWaveformInsertAtCurrentPosition { get; set; }
         public string MainInsertBefore { get; set; }
-        public string MainMergeDialogue { get; set; }
-        public string MainToogleFocus { get; set; }
+        public string MainMergeDialog { get; set; }
+        public string MainToggleFocus { get; set; }
         public string WaveformVerticalZoom { get; set; }
         public string WaveformVerticalZoomOut { get; set; }
         public string WaveformZoomIn { get; set; }
@@ -952,7 +952,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainTextBoxInsertAfter = "Alt+Insert";
             MainTextBoxAutoBreak = "Control+R";
             MainTextBoxUnbreak = string.Empty;
-            MainMergeDialogue = string.Empty;
+            MainMergeDialog = string.Empty;
             WaveformVerticalZoom = "Shift+Add";
             WaveformVerticalZoomOut = "Shift+Subtract";
             WaveformPlaySelection = string.Empty;
@@ -2460,12 +2460,12 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainInsertBefore");
                 if (subNode != null)
                     settings.Shortcuts.MainInsertBefore = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainMergeDialogue");
+                subNode = node.SelectSingleNode("MainMergeDialog");
                 if (subNode != null)
-                    settings.Shortcuts.MainMergeDialogue = subNode.InnerText;
-                subNode = node.SelectSingleNode("MainToogleFocus");
+                    settings.Shortcuts.MainMergeDialog = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainToggleFocus");
                 if (subNode != null)
-                    settings.Shortcuts.MainToogleFocus = subNode.InnerText;
+                    settings.Shortcuts.MainToggleFocus = subNode.InnerText;
                 subNode = node.SelectSingleNode("WaveformVerticalZoom");
                 if (subNode != null)
                     settings.Shortcuts.WaveformVerticalZoom = subNode.InnerText;
@@ -3064,8 +3064,8 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("MainTextBoxUnbreak", settings.Shortcuts.MainTextBoxUnbreak);
                 textWriter.WriteElementString("MainWaveformInsertAtCurrentPosition", settings.Shortcuts.MainWaveformInsertAtCurrentPosition);
                 textWriter.WriteElementString("MainInsertBefore", settings.Shortcuts.MainInsertBefore);
-                textWriter.WriteElementString("MainMergeDialogue", settings.Shortcuts.MainMergeDialogue);
-                textWriter.WriteElementString("MainToogleFocus", settings.Shortcuts.MainToogleFocus);
+                textWriter.WriteElementString("MainMergeDialog", settings.Shortcuts.MainMergeDialog);
+                textWriter.WriteElementString("MainToggleFocus", settings.Shortcuts.MainToggleFocus);
                 textWriter.WriteElementString("WaveformVerticalZoom", settings.Shortcuts.WaveformVerticalZoom);
                 textWriter.WriteElementString("WaveformVerticalZoomOut", settings.Shortcuts.WaveformVerticalZoomOut);
                 textWriter.WriteElementString("WaveformZoomIn", settings.Shortcuts.WaveformZoomIn);

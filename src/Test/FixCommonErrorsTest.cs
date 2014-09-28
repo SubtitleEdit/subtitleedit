@@ -153,7 +153,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixShortLinesDialogue()
+        public void FixShortLinesDialog()
         {
             var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "- Hallo!" + Environment.NewLine + "- Hi");
@@ -163,7 +163,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixShortLinesDialogueItalic()
+        public void FixShortLinesDialogItalic()
         {
             var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Hallo!" + Environment.NewLine + "- Hi</i>");
@@ -176,7 +176,7 @@ namespace Test
         ///</summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixShortLinesDialogueItalicTwo()
+        public void FixShortLinesDialogItalicTwo()
         {
             var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
@@ -600,7 +600,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void StartWithUppercaseAfterParagraphNormalDialogue1()
+        public void StartWithUppercaseAfterParagraphNormalDialog1()
         {
             Paragraph prev = new Paragraph("Bye.", 0, 1000);
             Paragraph p = new Paragraph("- Moss! Jesus Christ!" + Environment.NewLine + "- what is it?", 1200, 5000);
@@ -610,7 +610,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void StartWithUppercaseAfterParagraphNormalDialogue2()
+        public void StartWithUppercaseAfterParagraphNormalDialog2()
         {
             Paragraph prev = new Paragraph("Bye.", 0, 1000);
             Paragraph p = new Paragraph("<i>- Moss! Jesus Christ!" + Environment.NewLine + "- what is it?</i>", 1200, 5000);
@@ -620,7 +620,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void StartWithUppercaseAfterParagraphNormalDialogue3()
+        public void StartWithUppercaseAfterParagraphNormalDialog3()
         {
             Paragraph prev = new Paragraph("Bye.", 0, 1000);
             Paragraph p = new Paragraph("<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- what is it?</i>", 1200, 5000);
@@ -630,7 +630,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void StartWithUppercaseAfterParagraphNormalDialogue4()
+        public void StartWithUppercaseAfterParagraphNormalDialog4()
         {
             Paragraph prev = new Paragraph("Bye.", 0, 1000);
             Paragraph p = new Paragraph("<i>- moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- what is it?</i>", 1200, 5000);
@@ -650,7 +650,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void StartWithUppercaseAfterParagraphNormalDialogueNoChange1()
+        public void StartWithUppercaseAfterParagraphNormalDialogNoChange1()
         {
             Paragraph prev = new Paragraph("Bye -", 0, 1000);
             Paragraph p = new Paragraph("- moss!", 1200, 5000);
@@ -660,7 +660,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void StartWithUppercaseAfterParagraphNormalDialogueNoChange2()
+        public void StartWithUppercaseAfterParagraphNormalDialogNoChange2()
         {
             Paragraph prev = new Paragraph("Bye -", 0, 1000);
             Paragraph p = new Paragraph("- moss!" + Environment.NewLine + " - Bye.", 1200, 5000);

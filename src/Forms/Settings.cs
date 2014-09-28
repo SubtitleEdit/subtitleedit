@@ -717,9 +717,9 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialogue + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialogue));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToogleFocus));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogueDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialog + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialog));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToggleFocus));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.AutoDurationSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
@@ -1431,11 +1431,11 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainInsertAfter = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainInsertBefore = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Settings.MergeDialogue.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainMergeDialogue = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.MergeDialog.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainMergeDialog = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleFocus.Replace("&", string.Empty))
-                        Configuration.Settings.Shortcuts.MainToogleFocus = GetShortcut(node.Text);
-                    else if (text == Configuration.Settings.Language.Settings.ToggleDialogueDashes.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainToggleFocus = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.ToggleDialogDashes.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewToggleDashes = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.Alignment.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewAlignment = GetShortcut(node.Text);

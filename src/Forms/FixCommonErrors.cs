@@ -390,7 +390,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample))
                 _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! -> Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
             else
-                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, _language.FixDialoguesOneLineExample, delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
+                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
 
             if (Language == "tr")
             {

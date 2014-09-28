@@ -882,7 +882,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopiuj tekst z oryginału do aktualnego</ColumnCopyOriginalTextToCurrent>
         <Split>Podziel</Split>
         <MergeSelectedLines>Połącz zaznaczone linie</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Połącz zaznaczone linie jako dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Połącz zaznaczone linie jako dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Połącz z linią przed</MergeWithLineBefore>
         <MergeWithLineAfter>Połącz z linią po</MergeWithLineAfter>
         <Normal>Zwykły</Normal>
@@ -1188,7 +1188,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Sprawdzanie pisowni zostało przerwane. {0} linii zostało zmodyfikowanych.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Sprawdzanie pisowni zostało zakończone. {0} linii zostało zmodyfikowanych.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otwórz inne napisy</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Przed przełączeniem myślników dialogu</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Przed przełączeniem myślników dialogu</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Eksportuj jako zwykły tekst</ExportPlainTextAs>
     <TextFiles>Pliki tekstowe</TextFiles>
     <SubtitleExported>Eksportowane napisy</SubtitleExported>
@@ -1588,13 +1588,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <AdjustSetEndAndOffsetTheRest>Ustaw koniec, przesuń pozostałe</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ustaw koniec, przesuń pozostałe i przejdź do następnej</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Klawisz Down - utwórz nowy, Klawisz Up - ustaw czas zakończenia</MainCreateStartDownEndUp>
-    <MergeDialogue>Połącz dialogi (wstaw myślniki)</MergeDialogue>
+    <MergeDialog>Połącz dialogi (wstaw myślniki)</MergeDialog>
     <GoToNext>Przejdź do następnej linii</GoToNext>
     <GoToPrevious>Przejdź do poprzedniej linii</GoToPrevious>
     <GoToCurrentSubtitleStart>Przejdź do początku aktualnej linii</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Przejdź do końca aktualnej linii</GoToCurrentSubtitleEnd>
     <ToggleFocus>Przełącz fokus między "Widokiem listy" i polem tekstowym napisów</ToggleFocus>
-    <ToggleDialogueDashes>Przełącz myślniki dialogów</ToggleDialogueDashes>
+    <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <Alignment>Wyrównanie (zaznaczone linie)</Alignment>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
     <AutoDurationSelectedLines>Automatyczny czas trwania (zaznaczone linie)</AutoDurationSelectedLines>

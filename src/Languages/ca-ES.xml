@@ -875,7 +875,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Còpia test des de l'original a l'actual</ColumnCopyOriginalTextToCurrent>
         <Split>Divideix</Split>
         <MergeSelectedLines>Combina selecció de línies</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combina selecció de línies com a diàleg</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Combina selecció de línies com a diàleg</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combina amb línia anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combina amb línia posterior</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1173,7 +1173,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckAbortedXCorrections>Corrector ortogràfic avortat. {0} línies modificades.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Corrector ortogràfic completat. {0} línies modificades.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Obre altre subtítol</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Abans commutació guions de diàleg</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Abans commutació guions de diàleg</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exporta text pla com</ExportPlainTextAs>
     <TextFiles>Fitxers de text</TextFiles>
     <SubtitleExported>Subtítol exportat</SubtitleExported>
@@ -1570,13 +1570,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetEndAndOffsetTheRest>Estableix final, compensa la resta</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Estableix final, compensa la resta i vés al següent</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Crea nou amb tecla-avall, estableix final amb tecla-amunt</MainCreateStartDownEndUp>
-    <MergeDialogue>Combina diàleg (insereix guions)</MergeDialogue>
+    <MergeDialog>Combina diàleg (insereix guions)</MergeDialog>
     <GoToNext>Vés a línia següent</GoToNext>
     <GoToPrevious>Vés a línia anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Vés a línia inici actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Vés a línia final actual</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alterna focus entre vista llista i quadre de text subtítol</ToggleFocus>
-    <ToggleDialogueDashes>Activa/desactiva guions diàleg</ToggleDialogueDashes>
+    <ToggleDialogDashes>Activa/desactiva guions diàleg</ToggleDialogDashes>
     <Alignment>Alíniat (selecció línies)</Alignment>
     <CopyTextOnly>Copia text només al porta-retalls (selecció línies)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-durada (selecció línies)</AutoDurationSelectedLines>

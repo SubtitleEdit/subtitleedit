@@ -721,7 +721,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
         <ColumnPasteFromClipboard>クリップボードから貼り付け...</ColumnPasteFromClipboard>
         <Split>分割</Split>
         <MergeSelectedLines>選択された行の結合</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>会話として選択された行を結合</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>会話として選択された行を結合</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>前の行と結合</MergeWithLineBefore>
         <MergeWithLineAfter>後の行と結合</MergeWithLineAfter>
         <Normal>通常</Normal>
@@ -1019,7 +1019,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <SpellCheckAbortedXCorrections>スペル チェックが中止されました。{0} 行変更されました。</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>スペル チェックが完了しました。{0} 行変更されました。</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>他の字幕を開く</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>会話のダッシュの切り替え前</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>会話のダッシュの切り替え前</BeforeToggleDialogDashes>
     <ExportPlainTextAs>プレーン テキストとしてエクスポート</ExportPlainTextAs>
     <TextFiles>テキスト ファイル</TextFiles>
     <SubtitleExported>字幕がエクスポートされました</SubtitleExported>
@@ -1320,11 +1320,11 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <AdjustSelected100MsBack>選択された行を 100 ミリ秒戻す</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>終了時間を維持して開始時間を設定</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>キー↓で新規作成、キー↑で終了時間の設定</MainCreateStartDownEndUp>
-    <MergeDialogue>会話の結合 (ダッシュの挿入)</MergeDialogue>
+    <MergeDialog>会話の結合 (ダッシュの挿入)</MergeDialog>
     <GoToNext>次の行へ移動</GoToNext>
     <GoToPrevious>前の行へ移動</GoToPrevious>
     <ToggleFocus>リスト ビューと字幕テキスト ボックス間のフォーカスの切り替え</ToggleFocus>
-    <ToggleDialogueDashes>会話のダッシュの切り替え</ToggleDialogueDashes>
+    <ToggleDialogDashes>会話のダッシュの切り替え</ToggleDialogDashes>
     <Alignment>配置 (選択された行)</Alignment>
     <CopyTextOnly>クリップボードへテキストのみをコピー (選択された行)</CopyTextOnly>
     <AutoDurationSelectedLines>表示時間の自動調整 (選択された行)</AutoDurationSelectedLines>

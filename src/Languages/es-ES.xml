@@ -850,7 +850,7 @@ con el archivo de vídeo, al subtítulo actual cargado.
     <SpellCheckAbortedXCorrections>Rev. ortográfica cancelada. {0} líneas modificadas.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Rev. ortográfica completada. {0} líneas modificadas.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Abrir otro subtítulo</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Antes de cambiar guiones de diálogo</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Antes de cambiar guiones de diálogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportar texto plano como</ExportPlainTextAs>
     <TextFiles>Archivos de texto</TextFiles>
   </Main>
@@ -1080,7 +1080,7 @@ pueden editar el mismo archivo de subtítulo (colaboración)</Information>
     <ToggleDockUndockOfVideoControls>Cambiar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posición final e ir al siguiente</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ajustar inicio de autoduración e ir al siguiente</AdjustSetStartAutoDurationAndGoToNext>
-    <ToggleDialogueDashes>Cambiar guiones de diálogo</ToggleDialogueDashes>
+    <ToggleDialogDashes>Cambiar guiones de diálogo</ToggleDialogDashes>
     <VerticalZoom>Zoom Vertical</VerticalZoom>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
     <GoForward100Milliseconds>100 ms adelante</GoForward100Milliseconds>

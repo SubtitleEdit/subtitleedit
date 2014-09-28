@@ -581,7 +581,7 @@ http://soft98.ir
         <CopyToClipboard>کپی از متن در حافظه موقت</CopyToClipboard>
         <Split>انشعاب</Split>
         <MergeSelectedLines>انتخاب خط ادغام</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>ترکیب کردن خط های انتخاب شده از گفتگو ها</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>ترکیب کردن خط های انتخاب شده از گفتگو ها</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>قبل از ادغام با خط</MergeWithLineBefore>
         <MergeWithLineAfter>پس از ادغام با خط</MergeWithLineAfter>
         <Normal>عادی</Normal>
@@ -858,7 +858,7 @@ http://soft98.ir
     <SpellCheckAbortedXCorrections>بررسی املا خاتمه یافت. {0} خطوط تغییر یافتهاست.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>املا چک به پایان رسید. {0} خطوط تغییر یافتهاست.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>باز کردن زیرنویس دیگر</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>قبل ضامن از گفتگوی خط ها</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>قبل ضامن از گفتگوی خط ها</BeforeToggleDialogDashes>
     <ExportPlainTextAs>خروجی گرفتن نقشه متن از</ExportPlainTextAs>
     <TextFiles>فایل های متنی</TextFiles>
   </Main>
@@ -1094,11 +1094,11 @@ http://soft98.ir
     <AdjustSelected100MsBack>حرکت خط های انتخاب شده 100 میلی ثانیه به عقب</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>تنظیم کردن زمان شروع،نگه داشتن زمان پایان</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>create new at key-down,set end time at key up</MainCreateStartDownEndUp>
-    <MergeDialogue>ادغام کردن گفتگو ها/جاگذاری خط ها</MergeDialogue>
+    <MergeDialog>ادغام کردن گفتگو ها/جاگذاری خط ها</MergeDialog>
     <GoToNext>برو به خط بعدی</GoToNext>
     <GoToPrevious>برو به خط قبلی</GoToPrevious>
     <ToggleFocus>ضامن مرکز میان لیست ظاهری و جعبه متن زیرنویس</ToggleFocus>
-    <ToggleDialogueDashes>کنترل ضامن خط های گفتگوها</ToggleDialogueDashes>
+    <ToggleDialogDashes>کنترل ضامن خط های گفتگوها</ToggleDialogDashes>
     <VerticalZoom>بزرگنمایی عمودی</VerticalZoom>
     <WaveformSeekSilenceForward>جستجوی آرام بعدی</WaveformSeekSilenceForward>
     <WaveformSeekSilenceBack>جستجوی آرام قبلی</WaveformSeekSilenceBack>

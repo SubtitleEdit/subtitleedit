@@ -1811,13 +1811,13 @@
     <Content Include="Icons\SpellCheck.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\VideoToogle.png">
+    <Content Include="Icons\VideoToggle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Icons\VisualSync.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Icons\WaveformToogle.png">
+    <Content Include="Icons\WaveformToggle.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Resources\pictureBoxFS.Image.png" />

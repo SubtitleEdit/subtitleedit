@@ -581,7 +581,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixedOkXY>Corrigidos e OK - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>NÃo -&gt; Não</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
-    <FixDialoguesOneLineExample>Olá João! - Olá Ida! -&gt; Olá João!&lt;br /&gt;- Olá Ida!</FixDialoguesOneLineExample>
+    <FixDialogsOneLineExample>Olá João! - Olá Ida! -&gt; Olá João!&lt;br /&gt;- Olá Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -886,7 +886,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1195,7 +1195,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Verificação ortográfica cancelada. {0} linhas modificadas.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Verificação ortográfica completa. {0} linhas modificadas.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Abrir outra legenda</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Antes de alternar traços de diálogo</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Antes de alternar traços de diálogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportar texto sem formatação como</ExportPlainTextAs>
     <TextFiles>Ficheiros de texto</TextFiles>
     <SubtitleExported>Legenda exportada</SubtitleExported>
@@ -1596,13 +1596,13 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AdjustSetEndAndOffsetTheRest>Defenir o fim, compensar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir o fim, compensar o resto e ir para a próxima</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Criar novo na tecla para baixo, definir tempo final na tecla para cima</MainCreateStartDownEndUp>
-    <MergeDialogue>Combinar os diálogos (inserir hífens)</MergeDialogue>
+    <MergeDialog>Combinar os diálogos (inserir hífens)</MergeDialog>
     <GoToNext>Ir para a linha seguinte</GoToNext>
     <GoToPrevious>Ir para a linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para o início da linha actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para o final da linha actual</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alternar o realce entre a caixa de texto da legenda e a aba (Lista) na janela principal</ToggleFocus>
-    <ToggleDialogueDashes>Alternar hífens de diálogo</ToggleDialogueDashes>
+    <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>

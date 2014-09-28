@@ -879,7 +879,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Αντιγραφή κειμένου από το αρχικό στο τρέχων</ColumnCopyOriginalTextToCurrent>
         <Split>Διαχωρισμός</Split>
         <MergeSelectedLines>Συγχώνευση επιλεγμένων γραμμών</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Ένωση επιλεγμένων γραμμών ως διάλογο</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Ένωση επιλεγμένων γραμμών ως διάλογο</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Συγχώνευση με τη γραμμή πριν</MergeWithLineBefore>
         <MergeWithLineAfter>Συγχώνευση με τη γραμμή μετά</MergeWithLineAfter>
         <Normal>Κανονικά</Normal>
@@ -1184,7 +1184,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckAbortedXCorrections>Ο ορθογραφικός έλεγχος ματαιώθηκε. {0} γραμμές τροποποιήθηκαν.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Ο ορθογραφικός έλεγχος ολοκληρώθηκε. {0} γραμμές τροποποιήθηκαν.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Άνοιγμα άλλου υπότιτλου</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>σενάρια διαλόγου</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>σενάρια διαλόγου</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Εξαγωγή απλού αρχείου κειμένου ως</ExportPlainTextAs>
     <TextFiles>Αρχεία κειμένου</TextFiles>
     <SubtitleExported>Ο υπότιτπλος εξίχθηκε</SubtitleExported>
@@ -1581,13 +1581,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetEndAndOffsetTheRest>Ρύθμιση λήξης, αντιστάθμιση των υπολοίπων</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ρύθμιση λήξης, αντιστάθμιση των υπολοίπων και πήγαινε στο επόμενο</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Δημιουργία νέου στο πάτημα του κάτω βέλους, ορισμός χρόνου λήξης στο πάτημα του πάνω βέλους</MainCreateStartDownEndUp>
-    <MergeDialogue>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialogue>
+    <MergeDialog>Συγχώνευση διαλόγου (εισαγωγή παυλών)</MergeDialog>
     <GoToNext>Πήγαινε στην επόμενη γραμμή</GoToNext>
     <GoToPrevious>Πήγαινε στην προηγούμενη γραμμή</GoToPrevious>
     <GoToCurrentSubtitleStart>Πήγαινε στην αρχή της τρέχουσας γραμμής</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Πήγαινε στο τέλος της τρέχουσας γραμμής</GoToCurrentSubtitleEnd>
     <ToggleFocus>Εναλλαγή εστίασης υποτίτλου μεταξύ προβολής λίστας και πλαισίου κειμένου</ToggleFocus>
-    <ToggleDialogueDashes>Εναλλαγή γραμμών διαλόγου</ToggleDialogueDashes>
+    <ToggleDialogDashes>Εναλλαγή γραμμών διαλόγου</ToggleDialogDashes>
     <Alignment>Στοίχιση (επιλεγμένες γραμμές)</Alignment>
     <CopyTextOnly>Αντιγραφή μόνο του κειμένου στο πρόχειρο (επιλεγμένες γραμμές)</CopyTextOnly>
     <AutoDurationSelectedLines>Αυτόματη διάρκεια (επιλεγμένες γραμμές)</AutoDurationSelectedLines>

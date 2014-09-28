@@ -881,7 +881,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Tekst van origineel naar huidige kopiëren</ColumnCopyOriginalTextToCurrent>
         <Split>Afbreken</Split>
         <MergeSelectedLines>Geselecteerde tekst samenvoegen</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Geselecteerd tekst als dialoog samenvoegen</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Geselecteerd tekst als dialoog samenvoegen</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Met vorige tekst samenvoegen</MergeWithLineBefore>
         <MergeWithLineAfter>Met volgende tekst samenvoegen</MergeWithLineAfter>
         <Normal>Normaal</Normal>
@@ -1189,7 +1189,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Spellingcontrole afgebroken. {0} regels werden gewĳzigd.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Spellingcontrole voltooid. {0} regels werden gewĳzigd.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Andere ondertitel openen</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Vóór wĳzigen van dialoogstreepjes</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Vóór wĳzigen van dialoogstreepjes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Platte tekst exporteren als</ExportPlainTextAs>
     <TextFiles>Tekstbestanden</TextFiles>
     <SubtitleExported>Ondertitel geëxporteerd</SubtitleExported>
@@ -1588,13 +1588,13 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <AdjustSetEndAndOffsetTheRest>Stel einde in, compenseer de rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Stel einde in, compenseer de rest en naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Maak nieuwe met pĳl omlaag , bepaal eindtĳd met pĳl omhoog</MainCreateStartDownEndUp>
-    <MergeDialogue>Samenvoegen dialoog (voeg koppelteken in)</MergeDialogue>
+    <MergeDialog>Samenvoegen dialoog (voeg koppelteken in)</MergeDialog>
     <GoToNext>Ga naar volgende regel</GoToNext>
     <GoToPrevious>Ga naar vorige regel</GoToPrevious>
     <GoToCurrentSubtitleStart>Naar start van huidige tekst</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Naar einde van huidige tekst</GoToCurrentSubtitleEnd>
     <ToggleFocus>Tussen lĳstweergave en tekstvak wisselen</ToggleFocus>
-    <ToggleDialogueDashes>Dialoogstreepjes wisselen</ToggleDialogueDashes>
+    <ToggleDialogDashes>Dialoogstreepjes wisselen</ToggleDialogDashes>
     <Alignment>Uitlĳning (geselecteerde regels)</Alignment>
     <CopyTextOnly>Alleen tekst kopiëren naar klembord (geselecteerde regels)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-duur (geselecteerde regels)</AutoDurationSelectedLines>

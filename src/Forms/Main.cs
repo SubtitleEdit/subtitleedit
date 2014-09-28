@@ -161,7 +161,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTextBoxInsertAfter = Keys.None;
         private Keys _mainTextBoxAutoBreak = Keys.None;
         private Keys _mainTextBoxUnbreak = Keys.None;
-        private Keys _mainMergeDialogue = Keys.None;
+        private Keys _mainMergeDialog = Keys.None;
         private Keys _mainToggleFocus = Keys.None;
         private Keys _mainListViewToggleDashes = Keys.None;
         private Keys _mainListViewAutoDuration = Keys.None;
@@ -1773,7 +1773,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             splitLineToolStripMenuItem.Text = _language.Menu.ContextMenu.Split;
             toolStripMenuItemMergeLines.Text = _language.Menu.ContextMenu.MergeSelectedLines;
-            toolStripMenuItemMergeDialogue.Text = _language.Menu.ContextMenu.MergeSelectedLinesASDialogue;
+            toolStripMenuItemMergeDialog.Text = _language.Menu.ContextMenu.MergeSelectedLinesAsDialog;
             mergeBeforeToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineBefore;
             mergeAfterToolStripMenuItem.Text = _language.Menu.ContextMenu.MergeWithLineAfter;
             normalToolStripMenuItem.Text = _language.Menu.ContextMenu.Normal;
@@ -6112,7 +6112,7 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripSeparatorBreakLines.Visible = false;
                     if (_subtitleAlternate != null && noNetWorkSession)
                         toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = true;
-                    toolStripMenuItemMergeDialogue.Visible = false;
+                    toolStripMenuItemMergeDialog.Visible = false;
                 }
                 else if (SubtitleListview1.SelectedItems.Count == 2)
                 {
@@ -6123,7 +6123,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mergeBeforeToolStripMenuItem.Visible = false;
                     splitLineToolStripMenuItem.Visible = false;
                     typeEffectToolStripMenuItem.Visible = false;
-                    toolStripMenuItemMergeDialogue.Visible = true;
+                    toolStripMenuItemMergeDialog.Visible = true;
                 }
                 else if (SubtitleListview1.SelectedItems.Count >= 2)
                 {
@@ -6160,7 +6160,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    toolStripMenuItemMergeDialogue.Visible = false;
+                    toolStripMenuItemMergeDialog.Visible = false;
                 }
 
                 if (formatType != typeof(SubRip))
@@ -7271,13 +7271,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a dialog ("-"):
-                        String dialogueMarker = "";
+                        String dialogMarker = "";
                         if (firstWord.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
-                            dialogueMarker = (firstWord.StartsWith("- ") ? "- " : "-");
+                            dialogMarker = (firstWord.StartsWith("- ") ? "- " : "-");
                             // Remove the dialog marker from the first word.
-                            firstWord = firstWord.Remove(0, dialogueMarker.Length);
+                            firstWord = firstWord.Remove(0, dialogMarker.Length);
                         }
 
                         // If the second subtitle starts with "...":
@@ -7288,9 +7288,9 @@ namespace Nikse.SubtitleEdit.Forms
                             firstWord = firstWord.TrimStart('.');
                         }
 
-                        // Add positionTag + startTag + dialogueMarker + "..." + text to 'next'.
+                        // Add positionTag + startTag + dialogMarker + "..." + text to 'next'.
                         if (idx > 0)
-                            next.Text = positionTag + startTag + dialogueMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + next.Text.Trim();
+                            next.Text = positionTag + startTag + dialogMarker + (nextSubtitleStartsWithEllipsis ? "..." : "") + next.Text.Trim();
 
                         // Add text + firstWord + "..." + endTag to First line.
                         p.Text = (idx == 0 ? startTag : "") + p.Text.Trim() + " " + firstWord.Trim() + (idx > 0 && firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
@@ -7381,13 +7381,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         // If the second subtitle (next) starts with a dialog ("-"):
-                        String dialogueMarker = "";
+                        String dialogMarker = "";
                         if (next.Text.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
-                            dialogueMarker = (next.Text.StartsWith("- ") ? "- " : "-");
+                            dialogMarker = (next.Text.StartsWith("- ") ? "- " : "-");
                             // Remove the dialog marker from the next subtitle.
-                            next.Text = next.Text.Remove(0, dialogueMarker.Length);
+                            next.Text = next.Text.Remove(0, dialogMarker.Length);
                         }
 
                         // If the second subtitle starts with "...":
@@ -7402,8 +7402,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (idx > 0)
                             p.Text = p.Text + (firstSubtitleEndsWithEllipsis ? "..." : "") + endTag;
 
-                        // Add positionTag + startTag + dialogueMarker + "..." + lastWord to 'next'.
-                        next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogueMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + lastWord.Trim() + " " + next.Text.Trim();
+                        // Add positionTag + startTag + dialogMarker + "..." + lastWord to 'next'.
+                        next.Text = (idx > 0 ? positionTag : "") + (idx > 0 ? startTag : "") + dialogMarker + (nextSubtitleStartsWithEllipsis && idx > 0 ? "..." : "") + lastWord.Trim() + " " + next.Text.Trim();
 
                         // Now, idx will hold the position of the first line break, if any.
                         idx = next.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
@@ -10651,9 +10651,9 @@ namespace Nikse.SubtitleEdit.Forms
                 e.SuppressKeyPress = true;
                 textBoxListViewText.Focus();
             }
-            else if (_mainMergeDialogue == e.KeyData && inListView)
+            else if (_mainMergeDialog == e.KeyData && inListView)
             {
-                MergeDialogues();
+                MergeDialogs();
                 e.SuppressKeyPress = true;
             }
             else if (_mainListViewToggleDashes == e.KeyData && inListView)
@@ -11674,7 +11674,7 @@ namespace Nikse.SubtitleEdit.Forms
             return newLines.ToString().Trim();
         }
 
-        private void MergeDialogues()
+        private void MergeDialogs()
         {
             if (SubtitleListview1.SelectedItems.Count == 2 && SubtitleListview1.SelectedIndices[0] + 1 == SubtitleListview1.SelectedIndices[1])
                 MergeWithLineAfter(true);
@@ -11693,7 +11693,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (line.TrimStart().StartsWith('-') || line.TrimStart().StartsWith("<i>-") || line.TrimStart().StartsWith("<i> -"))
                         hasStartDash = true;
                 }
-                MakeHistoryForUndo(_language.BeforeToggleDialogueDashes);
+                MakeHistoryForUndo(_language.BeforeToggleDialogDashes);
                 if (hasStartDash)
                     RemoveDashes();
                 else
@@ -14739,8 +14739,8 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTextBoxInsertAfter = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter);
             _mainTextBoxAutoBreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak);
             _mainTextBoxUnbreak = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxUnbreak);
-            _mainMergeDialogue = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialogue);
-            _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToogleFocus);
+            _mainMergeDialog = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainMergeDialog);
+            _mainToggleFocus = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainToggleFocus);
             _waveformVerticalZoom = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoom);
             _waveformVerticalZoomOut = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut);
             _waveformZoomIn = Utilities.GetKeys(Configuration.Settings.Shortcuts.WaveformZoomIn);
@@ -15743,7 +15743,7 @@ namespace Nikse.SubtitleEdit.Forms
                 // Get current line index (the line where the cursor is).
                 int selectedLineNumber = tb.GetLineFromCharIndex(tb.SelectionStart);
 
-                Boolean isDialogue = false;
+                Boolean isDialog = false;
                 int lineNumber = 0;
                 string templine = string.Empty;
                 var lineSb = new StringBuilder();
@@ -15767,7 +15767,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (templine.StartsWith('-') || templine.StartsWith("<" + tag + ">-"))
                     {
-                        isDialogue = true;
+                        isDialog = true;
                         // Apply tags to current line (it is the selected line). Or remove them.
                         if (selectedLineNumber == lineNumber)
                         {
@@ -15789,7 +15789,7 @@ namespace Nikse.SubtitleEdit.Forms
                     lineSb.Append(positionTag + templine);
                     lineNumber++;
                 }
-                if (isDialogue)
+                if (isDialog)
                 {
                     text = lineSb.ToString();
                     tb.Text = text;
@@ -18048,9 +18048,9 @@ namespace Nikse.SubtitleEdit.Forms
             exportBdnXmlPng.ShowDialog(this);
         }
 
-        private void ToolStripMenuItemMergeDialogueClick(object sender, EventArgs e)
+        private void ToolStripMenuItemMergeDialogClick(object sender, EventArgs e)
         {
-            MergeDialogues();
+            MergeDialogs();
         }
 
         private void MainKeyUp(object sender, KeyEventArgs e)

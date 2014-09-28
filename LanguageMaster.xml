@@ -580,7 +580,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixedOkXY>Fixed and OK - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
-    <FixDialoguesOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialoguesOneLineExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Need dictionaries?</Title>
@@ -885,7 +885,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copy text from original to current</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Merge selected lines</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Merge selected lines as dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Merge selected lines as dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Merge with line before</MergeWithLineBefore>
         <MergeWithLineAfter>Merge with line after</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1194,7 +1194,7 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Spell check aborted. {0} lines were modified.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Spell check completed. {0} lines were modified.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Open other subtitle</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Before toggle of dialog dashes</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Export plain text as</ExportPlainTextAs>
     <TextFiles>Text files</TextFiles>
     <SubtitleExported>Subtitle exported</SubtitleExported>
@@ -1595,13 +1595,13 @@ can edit in same subtitle file (collaboration)</Information>
     <AdjustSetEndAndOffsetTheRest>Set end, offset the rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set end, offset the rest and go to next</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Create new at key-down, set end time at key-up</MainCreateStartDownEndUp>
-    <MergeDialogue>Merge dialog (insert dashes)</MergeDialogue>
+    <MergeDialog>Merge dialog (insert dashes)</MergeDialog>
     <GoToNext>Go to next line</GoToNext>
     <GoToPrevious>Go to previous line</GoToPrevious>
     <GoToCurrentSubtitleStart>Go to current line start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Go to current line end</GoToCurrentSubtitleEnd>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
-    <ToggleDialogueDashes>Toggle dialog dashes</ToggleDialogueDashes>
+    <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <Alignment>Alignment (selected lines)</Alignment>
     <CopyTextOnly>Copy text only to clip board (selected lines)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-duration (selected lines)</AutoDurationSelectedLines>

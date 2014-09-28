@@ -882,7 +882,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopier text fra original to aktuel</ColumnCopyOriginalTextToCurrent>
         <Split>Split</Split>
         <MergeSelectedLines>Flet markerede linjer</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Flet valgte linjer som dialog (bindestreg foran)</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Flet med linjen før</MergeWithLineBefore>
         <MergeWithLineAfter>Flet med linjen efter</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1190,7 +1190,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Stavekontrol afbrudt. {0} korrektioner blev foretaget.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Stavekontrol færdig. {0} korrektioner blev foretaget.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Åbne anden undertekst</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Før skift af dialog tankestreger</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Før skift af dialog tankestreger</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Eksporter almindelig tekst som</ExportPlainTextAs>
     <TextFiles>Tekst filer</TextFiles>
     <SubtitleExported>Subtitle eksporteret</SubtitleExported>
@@ -1589,13 +1589,13 @@ Fortsæt?</SubtitleAppendPrompt>
     <AdjustSetEndAndOffsetTheRest>Set sluttid, juster resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Set sluttid, juster resten og gå til næste</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Opret ny på tast-ned, sæt sluttid ved tast-op</MainCreateStartDownEndUp>
-    <MergeDialogue>Flet dialog (indsæt tankestreger)</MergeDialogue>
+    <MergeDialog>Flet dialog (indsæt tankestreger)</MergeDialog>
     <GoToNext>Gå til næste linje</GoToNext>
     <GoToPrevious>Gå til forrige line</GoToPrevious>
     <GoToCurrentSubtitleStart>Gå til nuværende linje start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Gå til nuværende linje slut</GoToCurrentSubtitleEnd>
     <ToggleFocus>Skift fokus imellem liste visning og undertekst tekstboks</ToggleFocus>
-    <ToggleDialogueDashes>Toogle dialog tankestreger</ToggleDialogueDashes>
+    <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <Alignment>Justering (valgte linier)</Alignment>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>

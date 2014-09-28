@@ -876,7 +876,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copiază text din original la cel curent</ColumnCopyOriginalTextToCurrent>
         <Split>Scindează</Split>
         <MergeSelectedLines>Îmbină linii selectate</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Îmbină linii selectate ca dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Îmbină linii selectate ca dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Îmbină cu linia de dinainte</MergeWithLineBefore>
         <MergeWithLineAfter>Îmbină cu linia de după</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1181,7 +1181,7 @@ care ar trebui să fie deja sincronizată cu fișierul video.
     <SpellCheckAbortedXCorrections>Verificare ortografică revocată. {0} linii au fost modificate.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Verificarea ortografică finalizată. {0} linii au fost modificate.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Deschide altă subtitrare</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Înaintea comutării liniuțelor de dialog</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Înaintea comutării liniuțelor de dialog</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportă text ca și</ExportPlainTextAs>
     <TextFiles>Fișiere text</TextFiles>
     <SubtitleExported>Subtitrare exportată</SubtitleExported>
@@ -1580,13 +1580,13 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <AdjustSetEndAndOffsetTheRest>Setează Sfârșitul, decalează restul</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Setează Sfârșitul, decalează restul și treci la următoarea</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Creează Nou cu tasta ↓, setează Sfârșitul cu tasta ↑</MainCreateStartDownEndUp>
-    <MergeDialogue>Îmbină dialoguri (inserează liniuțe de dialog)</MergeDialogue>
+    <MergeDialog>Îmbină dialoguri (inserează liniuțe de dialog)</MergeDialog>
     <GoToNext>Se trece la linia următoare</GoToNext>
     <GoToPrevious>Se trece la linia anterioară</GoToPrevious>
     <GoToCurrentSubtitleStart>Se trece la linia curentă de Start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Se trece la linia curentă de Sfârșit</GoToCurrentSubtitleEnd>
     <ToggleFocus>Comută focalizarea între lista de explorare și caseta text a subtitrării</ToggleFocus>
-    <ToggleDialogueDashes>Comută liniuțele de dialog</ToggleDialogueDashes>
+    <ToggleDialogDashes>Comută liniuțele de dialog</ToggleDialogDashes>
     <Alignment>Aliniere (linii selectate)</Alignment>
     <CopyTextOnly>Copiază doar textul în clipboard (linii selectate)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-durată (linii selectate)</AutoDurationSelectedLines>

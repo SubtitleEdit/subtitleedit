@@ -882,7 +882,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopírovat text z původního do aktuálního</ColumnCopyOriginalTextToCurrent>
         <Split>Rozdělit</Split>
         <MergeSelectedLines>Sloučit vybrané řádky</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Sloučit vybrané řádky jako dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Sloučit vybrané řádky jako dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Sloučit s předchozím řádkem</MergeWithLineBefore>
         <MergeWithLineAfter>Sloučit s následujícím řádkem</MergeWithLineAfter>
         <Normal>Normální</Normal>
@@ -1191,7 +1191,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Kontrola pravopisu přerušena. {0} řádků bylo změněno.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Kontrola pravopisu dokončena. {0} řádků bylo změněno.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otevřít jiné titulky</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Před přepnutím dialogových pomlček</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Před přepnutím dialogových pomlček</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportovat prostý text jako</ExportPlainTextAs>
     <TextFiles>Textové soubory</TextFiles>
     <SubtitleExported>Titulky byly exportovány</SubtitleExported>
@@ -1590,13 +1590,13 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AdjustSetEndAndOffsetTheRest>Nastavit konec, vyrovnat zbytek</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Nastavit konec, vyrovnat zbytek a přejít na další</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Vytvořit nový šipkou dolů, nastavit čas konce šipkou nahoru</MainCreateStartDownEndUp>
-    <MergeDialogue>Sloučit dialog (vložit pomlčky)</MergeDialogue>
+    <MergeDialog>Sloučit dialog (vložit pomlčky)</MergeDialog>
     <GoToNext>Přejít na další řádek</GoToNext>
     <GoToPrevious>Přejít na předchozí řádek</GoToPrevious>
     <GoToCurrentSubtitleStart>Přejít na začátek aktuálního řádku</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Přejít na konec aktuálního řádku</GoToCurrentSubtitleEnd>
     <ToggleFocus>Přepnout mezi zobrazením seznamu a textovým oknem titulků</ToggleFocus>
-    <ToggleDialogueDashes>Přepnout dialogové pomlčky</ToggleDialogueDashes>
+    <ToggleDialogDashes>Přepnout dialogové pomlčky</ToggleDialogDashes>
     <Alignment>Zarovnání (vybrané řádky)</Alignment>
     <CopyTextOnly>Kopírovat text pouze do schránky (vybrané řádky)</CopyTextOnly>
     <AutoDurationSelectedLines>Automatické trvání (vybrané řádky)</AutoDurationSelectedLines>

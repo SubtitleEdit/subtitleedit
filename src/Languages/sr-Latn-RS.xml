@@ -721,7 +721,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnPasteFromClipboard>Zalepi (iz Clipboarda)...</ColumnPasteFromClipboard>
         <Split>Razdvoji</Split>
         <MergeSelectedLines>Spoji izabrane linije</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Spoji odabrane linije kao dijalog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Spoji odabrane linije kao dijalog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Spoji s linijom iza</MergeWithLineBefore>
         <MergeWithLineAfter>Spoji s linijom ispred</MergeWithLineAfter>
         <Normal>Ukloni oznake</Normal>
@@ -1019,7 +1019,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <SpellCheckAbortedXCorrections>Provera pravopisa je prekinuta. Izmenjeno linija: {0}.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Provera pravopisa je završena. Izmenjeno linija: {0}.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otvaranje drugog prevoda</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Pre smenjivanja dijaloga crtica</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Pre smenjivanja dijaloga crtica</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Izvezi tekstualnu datoteku(.txt) kao</ExportPlainTextAs>
     <TextFiles>Tekstualne datoteke (.txt)</TextFiles>
     <SubtitleExported>Prevod je izvežen</SubtitleExported>
@@ -1320,11 +1320,11 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <AdjustSelected100MsBack>Premesti odabrane linije 100 ms nazad</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>Postavite vreme početka, zadržite vreme završetka</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>Kreirajte novi na tipka-dole, postavite vreme završetka na tipka-gore</MainCreateStartDownEndUp>
-    <MergeDialogue>Spoji dijalog (ubaci crtice)</MergeDialogue>
+    <MergeDialog>Spoji dijalog (ubaci crtice)</MergeDialog>
     <GoToNext>Idi na sledeću liniju</GoToNext>
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
     <ToggleFocus>Prebacivanje fokusa između prikaza popisa i prevoda okvira teksta</ToggleFocus>
-    <ToggleDialogueDashes>Prebacivanje između dijaloga</ToggleDialogueDashes>
+    <ToggleDialogDashes>Prebacivanje između dijaloga</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u memoriju (odabrane linije)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-trajanje (odabrane linije)</AutoDurationSelectedLines>

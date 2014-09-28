@@ -876,7 +876,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
         <ColumnCopyOriginalTextToCurrent>從原始文字複製到目前行</ColumnCopyOriginalTextToCurrent>
         <Split>分割</Split>
         <MergeSelectedLines>合併選擇的行</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>將選擇的行合併為對話</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>將選擇的行合併為對話</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>與前行合併</MergeWithLineBefore>
         <MergeWithLineAfter>與後行合併</MergeWithLineAfter>
         <Normal>標準</Normal>
@@ -1181,7 +1181,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <SpellCheckAbortedXCorrections>拼寫檢查已中止。已修改 {0} 行。</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>拼寫檢查已完成。已修改 {0} 行。</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>開啟其它字幕</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>切換對話破折號之前</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>切換對話破折號之前</BeforeToggleDialogDashes>
     <ExportPlainTextAs>將純文字匯出為</ExportPlainTextAs>
     <TextFiles>文字檔案</TextFiles>
     <SubtitleExported>字幕已匯出</SubtitleExported>
@@ -1580,13 +1580,13 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <AdjustSetEndAndOffsetTheRest>設定結束時間，偏移其後的所有時間</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>設定結束時間，偏移其後的所有時間並移至下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>使用 ↓ 建立新的起始時間，使用 ↑ 設定結束時間</MainCreateStartDownEndUp>
-    <MergeDialogue>合併對話 (插入破折號)</MergeDialogue>
+    <MergeDialog>合併對話 (插入破折號)</MergeDialog>
     <GoToNext>移至下一行</GoToNext>
     <GoToPrevious>移至上一行</GoToPrevious>
     <GoToCurrentSubtitleStart>移至目前行的起始時間</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>移至目前行的結束時間</GoToCurrentSubtitleEnd>
     <ToggleFocus>在清單檢視和字幕文字框之間切換焦點</ToggleFocus>
-    <ToggleDialogueDashes>切換對話破折號</ToggleDialogueDashes>
+    <ToggleDialogDashes>切換對話破折號</ToggleDialogDashes>
     <Alignment>對齊 (選擇的行)</Alignment>
     <CopyTextOnly>僅複製文字到剪貼簿 (選擇的行)</CopyTextOnly>
     <AutoDurationSelectedLines>自動設定持續時間 (選擇的行)</AutoDurationSelectedLines>

@@ -876,7 +876,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Szöveg másolása az eredetiből a jelenlegibe</ColumnCopyOriginalTextToCurrent>
         <Split>Felosztás</Split>
         <MergeSelectedLines>A kijelölt sorok összevonása</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>A kijelölt sorok összevonása párbeszédként</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>A kijelölt sorok összevonása párbeszédként</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Egyesítés az előző sorral</MergeWithLineBefore>
         <MergeWithLineAfter>Egyesítés a következő sorral</MergeWithLineAfter>
         <Normal>Normál</Normal>
@@ -1181,7 +1181,7 @@ Folytatja?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>A helyesírás-ellenőrzés megszakadt. {0} sor módosítva.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>A helyesírás-ellenőrzés befejeződött. {0} sor módosítva.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>További felirat megnyitása</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>A párbeszéd gondolatjelek váltása előtt</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>A párbeszéd gondolatjelek váltása előtt</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Egyszerű szöveg exportálása mint</ExportPlainTextAs>
     <TextFiles>Szövegfájlok</TextFiles>
     <SubtitleExported>Felirat exportálva</SubtitleExported>
@@ -1578,13 +1578,13 @@ szerkesztheti ugyanazt a feliratfájlt</Information>
     <AdjustSetEndAndOffsetTheRest>A befejezés és a többi eltolás beállítása</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>A befejezés és a többi eltolás beállítása és ugrás a következőre</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Új létrehozása a le gombbal, befejezési idő beállítása a fel gombbal</MainCreateStartDownEndUp>
-    <MergeDialogue>Párbeszéd egyesítése (gondolatjelek beszúrása)</MergeDialogue>
+    <MergeDialog>Párbeszéd egyesítése (gondolatjelek beszúrása)</MergeDialog>
     <GoToNext>Ugrás a következő sorra</GoToNext>
     <GoToPrevious>Ugrás az előző sorra</GoToPrevious>
     <GoToCurrentSubtitleStart>Ugrás a jelenlegi sor elejére</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ugrás a jelenlegi sor végére</GoToCurrentSubtitleEnd>
     <ToggleFocus>Fókuszváltás a listanézet és felirat szövegdoboz között</ToggleFocus>
-    <ToggleDialogueDashes>Párbeszéd gondolatjel váltó</ToggleDialogueDashes>
+    <ToggleDialogDashes>Párbeszéd gondolatjel váltó</ToggleDialogDashes>
     <Alignment>Igazítás (kijelölt sorok)</Alignment>
     <CopyTextOnly>Csak szöveg másolása a vágólapra (kijelölt sorok)</CopyTextOnly>
     <AutoDurationSelectedLines>Automatikus időtartam (kijelölt sorok)</AutoDurationSelectedLines>

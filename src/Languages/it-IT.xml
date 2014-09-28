@@ -883,7 +883,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copia testo da originale a corrente</ColumnCopyOriginalTextToCurrent>
         <Split>Dividi</Split>
         <MergeSelectedLines>Unisci linee selezionate</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Unisci linee selezionate come dialogo</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Unisci linee selezionate come dialogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Unisci con linea precedente</MergeWithLineBefore>
         <MergeWithLineAfter>Unisci con linea successiva</MergeWithLineAfter>
         <Normal>Normale</Normal>
@@ -1190,7 +1190,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <SpellCheckAbortedXCorrections>Controllo ortografico annullato. {0} linee modificate.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Controllo ortografico completato. {0} linee modificate.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Apri un altro sottotitolo</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Prima di alterna trattini di dialogo</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Prima di alterna trattini di dialogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Esporta testo semplice come</ExportPlainTextAs>
     <TextFiles>File di testo</TextFiles>
     <SubtitleExported>Sottotitolo esportato</SubtitleExported>
@@ -1589,13 +1589,13 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <AdjustSetEndAndOffsetTheRest>Imposta fine, sposta il resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Imposta fine, sposta il resto e vai al successivo</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Crea nuovo a pressione tasto, imposta fine a rilascio tasto</MainCreateStartDownEndUp>
-    <MergeDialogue>Unisci dialoghi (inserisci trattini)</MergeDialogue>
+    <MergeDialog>Unisci dialoghi (inserisci trattini)</MergeDialog>
     <GoToNext>Vai alla linea successiva</GoToNext>
     <GoToPrevious>Vai alla linea precedente</GoToPrevious>
     <GoToCurrentSubtitleStart>Vai all'inizio della linea corrente</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Vai alla fine della linea corrente</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alterna focus tra lista sorgente e casella testo sottotitolo</ToggleFocus>
-    <ToggleDialogueDashes>Alterna trattini di dialogo</ToggleDialogueDashes>
+    <ToggleDialogDashes>Alterna trattini di dialogo</ToggleDialogDashes>
     <Alignment>Allineamento (linee selezionate)</Alignment>
     <CopyTextOnly>Copia il testo negli appunti (linee selezionate)</CopyTextOnly>
     <AutoDurationSelectedLines>Durata automatica (linee selezionate)</AutoDurationSelectedLines>

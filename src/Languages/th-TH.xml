@@ -882,7 +882,7 @@
         <ColumnCopyOriginalTextToCurrent>สำเนาข้อความจากต้นฉบับสู่ปัจจุบัน</ColumnCopyOriginalTextToCurrent>
         <Split>แยก</Split>
         <MergeSelectedLines>รวมบรรทัดที่เลือก</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>รวมบรรทัดที่เลือกเป็นบทสนทนา</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>รวมบรรทัดที่เลือกเป็นบทสนทนา</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>รวมกับบรรทัดก่อน</MergeWithLineBefore>
         <MergeWithLineAfter>รวมกับบรรทัดหลัง</MergeWithLineAfter>
         <Normal>ปกติ</Normal>
@@ -1183,7 +1183,7 @@
     <SpellCheckAbortedXCorrections>ตรวจคำถูกยกเลิก {0} บรรทัดที่แก้แล้ว</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>ตรวจคำสำเร็จ {0} บรรทัดที่แก้แล้ว</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>เปิดซับไตเติ้ลอื่น</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>ก่อนสลับยัติภังค์ (-) ในบทสนทนา</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>ก่อนสลับยัติภังค์ (-) ในบทสนทนา</BeforeToggleDialogDashes>
     <ExportPlainTextAs>เอ็กซ์พอร์ตข้อความเป็น</ExportPlainTextAs>
     <TextFiles>ไฟล์ข้อความ</TextFiles>
     <SubtitleExported>ซับไตเติ้ลเอ็กซ์พอร์ตแล้ว</SubtitleExported>
@@ -1580,13 +1580,13 @@
     <AdjustSetEndAndOffsetTheRest>กำหนดเวลาสิ้นสุด ออฟเซ็ตส่วนที่เหลือ</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>กำหนดสิ้นสุด ออฟเซ็ตส่วนที่เหลือ และไปตำแหน่งถัดไป</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>สร้างที่ลูกศรลง กำหนดเวลาสิ้นสุดที่ลูกศรขึ้น</MainCreateStartDownEndUp>
-    <MergeDialogue>รวมบทสนทนา (แทรกยัติภังค์)</MergeDialogue>
+    <MergeDialog>รวมบทสนทนา (แทรกยัติภังค์)</MergeDialog>
     <GoToNext>ไปบรรทัดถัดไป</GoToNext>
     <GoToPrevious>ไปบรรทัดก่อนหน้า</GoToPrevious>
     <GoToCurrentSubtitleStart>ไปต้นบรรทัดปัจจุบัน</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>ไปท้ายบรรทัดปัจจุบัน</GoToCurrentSubtitleEnd>
     <ToggleFocus>สลับโฟกัสระหว่างลิสต์วิวและกล่องข้อความซับไตเติ้ล</ToggleFocus>
-    <ToggleDialogueDashes>สลับยัติภังค์ในบทสนทนา</ToggleDialogueDashes>
+    <ToggleDialogDashes>สลับยัติภังค์ในบทสนทนา</ToggleDialogDashes>
     <Alignment>การวางแนว (บรรทัดที่เลือก)</Alignment>
     <CopyTextOnly>สำเนาข้อความไปคลิปบอร์ดเท่านั้น (บรรทัดที่เลือก)</CopyTextOnly>
     <AutoDurationSelectedLines>ระยะเวลาอัตโนมัติ (บรรทัดที่เลือก)</AutoDurationSelectedLines>
