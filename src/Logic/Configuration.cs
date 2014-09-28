@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic
     public class Configuration
     {
         private static readonly Lazy<Configuration> _instance = new Lazy<Configuration>(() => new Configuration());
-        
+
         private readonly string _baseDir;
         private readonly string _dataDir;
         private readonly Lazy<Settings> _settings;
@@ -159,7 +159,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return _instance.Value._settings.Value;
             }
         }
-
 
         /// <summary>
         /// Retrieves the specified registry subkey value.

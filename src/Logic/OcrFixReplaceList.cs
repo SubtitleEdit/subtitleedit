@@ -44,7 +44,6 @@ namespace Nikse.SubtitleEdit.Logic
             var doc = LoadXmlReplaceListDocument();
             var userDoc = LoadXmlReplaceListUserDocument();
 
-
             WordReplaceList = LoadReplaceList(doc, "WholeWords");
             _partialWordReplaceListAlways = LoadReplaceList(doc, "PartialWordsAlways");
             _partialWordReplaceList = LoadReplaceList(doc, "PartialWords");
@@ -780,7 +779,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
             return removed;
-        }     
+        }
 
         private XmlDocument LoadXmlReplaceListDocument()
         {
@@ -900,7 +899,7 @@ namespace Nikse.SubtitleEdit.Logic
                 userDoc.Save(ReplaceListXmlFileNameUser);
             }
             return true;
-        }     
+        }
 
         public void AddToWholeLineList(string fromLine, string toLine)
         {

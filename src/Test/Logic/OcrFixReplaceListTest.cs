@@ -78,9 +78,9 @@ namespace Test.Logic
             {
                 File.Delete(fileName);
             }
-            catch 
+            catch
             {
-                
+
             }
         }
 
@@ -216,7 +216,6 @@ namespace Test.Logic
 
             }
         }
-
 
     }
 }
