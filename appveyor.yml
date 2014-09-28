@@ -10,7 +10,7 @@ build:
 
 # custom test command
 test_script:
-  - vstest.console /logger:Appveyor /Settings:"%APPVEYOR_BUILD_FOLDER%\src\Local.testsettings" %APPVEYOR_BUILD_FOLDER%\src\Test\bin\%CONFIGURATION%\Test.dll
+  - vstest.console /logger:Appveyor /Settings:"%APPVEYOR_BUILD_FOLDER%\src\Local.testsettings" "%APPVEYOR_BUILD_FOLDER%\src\Test\bin\%CONFIGURATION%\Test.dll"
 
 cache:
   - src\packages            # preserve the "src\packages" directory
