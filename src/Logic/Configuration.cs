@@ -4,7 +4,7 @@ using System.IO;
 namespace Nikse.SubtitleEdit.Logic
 {
     /// <summary>
-    /// Configuration settings via Singleton pattern
+    /// Configuration settings via Singleton pattern (note: Do not call Utilities from this class)
     /// </summary>
     public class Configuration
     {
@@ -160,15 +160,51 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+
+        /// <summary>
+        /// Retrieves the specified registry subkey value.
+        /// </summary>
+        /// <param name="keyName">The path of the subkey to open.</param>
+        /// <param name="valueName">The name of the value to retrieve.</param>
+        /// <returns>The value of the subkey requested, or <b>null</b> if the operation failed.</returns>
+        public static string GetRegistryValue(string keyName, string valueName)
+        {
+            Microsoft.Win32.RegistryKey key = null;
+            try
+            {
+                key = Microsoft.Win32.Registry.LocalMachine.OpenSubKey(keyName);
+                if (key != null)
+                {
+                    var value = key.GetValue(valueName);
+                    if (value != null)
+                    {
+                        return (string)value;
+                    }
+                }
+            }
+            catch (System.Security.SecurityException)
+            {
+                // The user does not have the permissions required to read the registry key.
+            }
+            finally
+            {
+                if (key != null)
+                {
+                    key.Dispose();
+                }
+            }
+            return null;
+        }
+
         private static string GetInstallerPath()
         {
-            var value = Utilities.GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", "InstallLocation");
+            var value = GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", "InstallLocation");
             if (value != null && Directory.Exists(value))
             {
                 return value;
             }
 
-            value = Utilities.GetRegistryValue(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", "InstallLocation");
+            value = GetRegistryValue(@"SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\SubtitleEdit_is1", "InstallLocation");
             if (value != null && Directory.Exists(value))
             {
                 return value;
