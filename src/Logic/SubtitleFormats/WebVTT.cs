@@ -83,7 +83,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string s = line;
                 bool isTimeCode = line.Contains("-->");
                 if (isTimeCode && RegexTimeCodesMiddle.IsMatch(s))
-                if (isTimeCode && RegexTimeCodesMiddle.IsMatch(s))
                 {
                     s = "00:" + s; // start is without hours, end is with hours
                 }
