@@ -884,7 +884,7 @@ https://github.com/SubtitleEdit/subtitleedit
         <ColumnCopyOriginalTextToCurrent>Копировать текст из оригинала</ColumnCopyOriginalTextToCurrent>
         <Split>Разделить</Split>
         <MergeSelectedLines>Объединить выделенные строки</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Объединить выбранные строки как диалог</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Объединить выбранные строки как диалог</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Объединить с предыдущей строкой</MergeWithLineBefore>
         <MergeWithLineAfter>Объединить со следующей строкой</MergeWithLineAfter>
         <Normal>Обычный</Normal>
@@ -1199,7 +1199,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <SpellCheckAbortedXCorrections>Проверка орфографии прервана. Изменено строк: {0}.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Проверка орфографии завершена. Изменено строк: {0}.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Открыть другие субтитры</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Перед переключением тире для диалога</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Перед переключением тире для диалога</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Экспорт простого текста как</ExportPlainTextAs>
     <TextFiles>Текстовые файлы</TextFiles>
     <SubtitleExported>Выполнен экспорт субтитров</SubtitleExported>
@@ -1597,13 +1597,13 @@ https://github.com/SubtitleEdit/subtitleedit
     <AdjustSetEndAndOffsetTheRest>Установить конец, сместить остаток</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Установить конец, сместить остаток и перейти к следующему субтитру</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Создать новый - DOWN, установить конечное время - UP</MainCreateStartDownEndUp>
-    <MergeDialogue>Объединить диалог (вставить тире)</MergeDialogue>
+    <MergeDialog>Объединить диалог (вставить тире)</MergeDialog>
     <GoToNext>Перейти к следующей строке</GoToNext>
     <GoToPrevious>Перейти к предыдущей строке</GoToPrevious>
     <GoToCurrentSubtitleStart>Перейти к началу текущей строки</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Перейти к концу текущей строки</GoToCurrentSubtitleEnd>
     <ToggleFocus>Переключить фокус между списком и полем ввода субтитра</ToggleFocus>
-    <ToggleDialogueDashes>Вкл./Откл. тире диалогов</ToggleDialogueDashes>
+    <ToggleDialogDashes>Вкл./Откл. тире диалогов</ToggleDialogDashes>
     <Alignment>Выравнивание (выделенные строки)</Alignment>
     <CopyTextOnly>Копировать в буфер только текст (выделенные строки)</CopyTextOnly>
     <AutoDurationSelectedLines>Автопродолжительность (выделенные строки)</AutoDurationSelectedLines>

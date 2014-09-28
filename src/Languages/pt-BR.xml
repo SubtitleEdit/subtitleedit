@@ -881,7 +881,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o atual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar linhas selecionadas</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combinar linhas selecionadas como diálogo</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Combinar linhas selecionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar com linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1186,7 +1186,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Rev. ortográfica cancelada. {0} linhas modificadas.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Rev. ortográfica completada. {0} linhas modificadas.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Abrir outra legenda</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Antes de alterar traços de diálogo</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Antes de alterar traços de diálogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportar texto simples como</ExportPlainTextAs>
     <TextFiles>Arquivos de texto</TextFiles>
     <SubtitleExported>Legenda exportada</SubtitleExported>
@@ -1585,13 +1585,13 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <AdjustSetEndAndOffsetTheRest>Definir final, deslocar o resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Definir final, deslocar o resto e ir para próximo</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Criar novo (seta abaixo), definir tempo final (seta acima)</MainCreateStartDownEndUp>
-    <MergeDialogue>Combinar diálogo (inserir traços)</MergeDialogue>
+    <MergeDialog>Combinar diálogo (inserir traços)</MergeDialog>
     <GoToNext>Ir para próxima linha</GoToNext>
     <GoToPrevious>Ir para linha anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir para início da linha atual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir para fim da linha atual</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alternar foco entre exibição em lista e caixa de texto de legenda</ToggleFocus>
-    <ToggleDialogueDashes>Alternar traços de diálogo</ToggleDialogueDashes>
+    <ToggleDialogDashes>Alternar traços de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas selecionadas)</Alignment>
     <CopyTextOnly>Copiar somente texto para área de transferência (linhas selecionadas)</CopyTextOnly>
     <AutoDurationSelectedLines>Duração automática (linhas selecionadas)</AutoDurationSelectedLines>

@@ -646,7 +646,7 @@
             public string FixedOkXY { get; set; }
             public string FixOcrErrorExample { get; set; }
             public string FixSpaceBetweenNumbersExample { get; set; }
-            public string FixDialoguesOneLineExample { get; set; }
+            public string FixDialogsOneLineExample { get; set; }
         }
 
         public class GetDictionaries
@@ -987,7 +987,7 @@
             public string SpellCheckAbortedXCorrections { get; set; }
             public string SpellCheckCompletedXCorrections { get; set; }
             public string OpenOtherSubtitle { get; set; }
-            public string BeforeToggleDialogueDashes { get; set; }
+            public string BeforeToggleDialogDashes { get; set; }
             public string ExportPlainTextAs { get; set; }
             public string TextFiles { get; set; }
             public string SubtitleExported { get; set; }
@@ -1240,7 +1240,7 @@
                     public string ColumnCopyOriginalTextToCurrent { get; set; }
                     public string Split { get; set; }
                     public string MergeSelectedLines { get; set; }
-                    public string MergeSelectedLinesASDialogue { get; set; }
+                    public string MergeSelectedLinesAsDialog { get; set; }
                     public string MergeWithLineBefore { get; set; }
                     public string MergeWithLineAfter { get; set; }
                     public string Normal { get; set; }
@@ -1763,13 +1763,13 @@
             public string AdjustSetEndAndOffsetTheRest { get; set; }
             public string AdjustSetEndAndOffsetTheRestAndGoToNext { get; set; }
             public string MainCreateStartDownEndUp { get; set; }
-            public string MergeDialogue { get; set; }
+            public string MergeDialog { get; set; }
             public string GoToNext { get; set; }
             public string GoToPrevious { get; set; }
             public string GoToCurrentSubtitleStart { get; set; }
             public string GoToCurrentSubtitleEnd { get; set; }
             public string ToggleFocus { get; set; }
-            public string ToggleDialogueDashes { get; set; }
+            public string ToggleDialogDashes { get; set; }
             public string Alignment { get; set; }
             public string CopyTextOnly { get; set; }
             public string AutoDurationSelectedLines { get; set; }

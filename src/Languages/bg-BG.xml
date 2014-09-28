@@ -875,7 +875,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Копиране на текста от оригинал към работните</ColumnCopyOriginalTextToCurrent>
         <Split>Разделяне</Split>
         <MergeSelectedLines>Сливане на избраните редове</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Разделяне на избрания ред като диалог</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Разделяне на избрания ред като диалог</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Сливане с предишния ред</MergeWithLineBefore>
         <MergeWithLineAfter>Сливане със следващия ред</MergeWithLineAfter>
         <Normal>Нормален</Normal>
@@ -1177,7 +1177,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SpellCheckAbortedXCorrections>Проверката на правопис е прекратена. {0} реда са променени.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Проверката на правопис е готова. {0} реда са променени.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Отваряне на други субтитри</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Преди тиретата за диалог</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Преди тиретата за диалог</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Изнасяне на чист текст като</ExportPlainTextAs>
     <TextFiles>Текстови файлове</TextFiles>
     <SubtitleExported>Субтитрите са изнесени</SubtitleExported>
@@ -1574,13 +1574,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <AdjustSetEndAndOffsetTheRest>Задаване на край и начало на останалите</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Задаване на край и начало на останлите, и преминаване на следващите</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Задайте ново със стрелка надолу, задайте крайно време със стрелка нагоре</MainCreateStartDownEndUp>
-    <MergeDialogue>Обединете диалога (вмъкване на тирета)</MergeDialogue>
+    <MergeDialog>Обединете диалога (вмъкване на тирета)</MergeDialog>
     <GoToNext>Отиване на следващ ред</GoToNext>
     <GoToPrevious>Отиване на предишен ред</GoToPrevious>
     <GoToCurrentSubtitleStart>Позициониране в началото на моментния ред</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Позициониране в края на моментния ред</GoToCurrentSubtitleEnd>
     <ToggleFocus>Показване на фокус между Изглед списък и реда за писане</ToggleFocus>
-    <ToggleDialogueDashes>Размяна на диалоговите тирета</ToggleDialogueDashes>
+    <ToggleDialogDashes>Размяна на диалоговите тирета</ToggleDialogDashes>
     <Alignment>Подравняване (редовете в момента)</Alignment>
     <CopyTextOnly>Копиране само на текста в клип борда (избрания ред)</CopyTextOnly>
     <AutoDurationSelectedLines>Авто времетраене (избрания ред(ове))</AutoDurationSelectedLines>

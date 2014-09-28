@@ -881,7 +881,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <ColumnCopyOriginalTextToCurrent>从原始文本列复制到当前列</ColumnCopyOriginalTextToCurrent>
         <Split>分割</Split>
         <MergeSelectedLines>合并所选行</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>合并所选行为对话</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>合并所选行为对话</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>与前行合并</MergeWithLineBefore>
         <MergeWithLineAfter>与后行合并</MergeWithLineAfter>
         <Normal>正常</Normal>
@@ -1184,7 +1184,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SpellCheckAbortedXCorrections>拼写检查已中止。修正了 {0} 个错误。</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>拼写检查已完成。修正了 {0} 个错误。</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>打开其它字幕</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>开关对话前的破折号</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>开关对话前的破折号</BeforeToggleDialogDashes>
     <ExportPlainTextAs>导出为纯文本文件</ExportPlainTextAs>
     <TextFiles>文本文件</TextFiles>
     <SubtitleExported>字幕已导出</SubtitleExported>
@@ -1581,13 +1581,13 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AdjustSetEndAndOffsetTheRest>设置结束时间，偏移其后的所有时间</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>设置结束时间，偏移其后的所有时间并转到下一行</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>用向下方向键创建新的开始时间，用向上方向键设置结束时间</MainCreateStartDownEndUp>
-    <MergeDialogue>合并对话 (插入破折号)</MergeDialogue>
+    <MergeDialog>合并对话 (插入破折号)</MergeDialog>
     <GoToNext>转到下一行</GoToNext>
     <GoToPrevious>转到上一行</GoToPrevious>
     <GoToCurrentSubtitleStart>转到当前行的起始时间点</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>转到当前行尾</GoToCurrentSubtitleEnd>
     <ToggleFocus>在列表视图和文本窗口之间切换焦点</ToggleFocus>
-    <ToggleDialogueDashes>开关对话前的破折号</ToggleDialogueDashes>
+    <ToggleDialogDashes>开关对话前的破折号</ToggleDialogDashes>
     <Alignment>排列 (所选行)</Alignment>
     <CopyTextOnly>仅复制文本 (所选行)</CopyTextOnly>
     <AutoDurationSelectedLines>自动时长 (所选行)</AutoDurationSelectedLines>

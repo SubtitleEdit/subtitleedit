@@ -880,7 +880,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <ColumnCopyOriginalTextToCurrent>원본에서 텍스트 복사</ColumnCopyOriginalTextToCurrent>
         <Split>줄 분할</Split>
         <MergeSelectedLines>선택한 줄 병합</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>선택한 대화 라인 병합</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>선택한 대화 라인 병합</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>이전 줄과 병합</MergeWithLineBefore>
         <MergeWithLineAfter>다음 줄과 병합</MergeWithLineAfter>
         <Normal>기본</Normal>
@@ -1187,7 +1187,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SpellCheckAbortedXCorrections>맞춤법 검사 중지! {0} 줄이 변경됨.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>맞춤법 검사 완료! {0} 줄이 변경됨.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>다른 자막 열기</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>대화 대시(-) 전환 전</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>대화 대시(-) 전환 전</BeforeToggleDialogDashes>
     <ExportPlainTextAs>일반 텍스트 파일로 내보내기</ExportPlainTextAs>
     <TextFiles>텍스트 파일</TextFiles>
     <SubtitleExported>내보낸 자막</SubtitleExported>
@@ -1587,13 +1587,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <AdjustSetEndAndOffsetTheRest>끝 설정, 나머지 보충</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>끝 설정, 나머지 보충하고 다음으로 이동</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>'↓'키로 새로 만들기, '↑'키로 종료 시간 설정</MainCreateStartDownEndUp>
-    <MergeDialogue>대화 병합 (대시 삽입)</MergeDialogue>
+    <MergeDialog>대화 병합 (대시 삽입)</MergeDialog>
     <GoToNext>다음 줄로 이동</GoToNext>
     <GoToPrevious>이전 줄로 이동</GoToPrevious>
     <GoToCurrentSubtitleStart>현재 줄의 시작 지점으로 이동</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>현재 줄의 끝 지점으로 이동</GoToCurrentSubtitleEnd>
     <ToggleFocus>목록 보기와 자막 텍스트 상자 간의 포커스 전환</ToggleFocus>
-    <ToggleDialogueDashes>대화의 대시('-') 전환</ToggleDialogueDashes>
+    <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <CopyTextOnly>클립 보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>

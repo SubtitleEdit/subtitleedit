@@ -882,7 +882,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copier la colonne de texte en cours</ColumnCopyOriginalTextToCurrent>
         <Split>Scinder</Split>
         <MergeSelectedLines>Fusionner (lignes sélec.)</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Fusionner - style dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Fusionner - style dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Fusionner ligne précédente</MergeWithLineBefore>
         <MergeWithLineAfter>Fusionner ligne suivante</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1186,7 +1186,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Vérification d'orthographe annulée. {0} lignes modifiées.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Vérification d'orthographe terminée. {0} lignes modifiées.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Ouvrir un autre sous-titre</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Avant de modifier les tirets de dialog</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Avant de modifier les tirets de dialog</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Export de texte brut</ExportPlainTextAs>
     <TextFiles>Fichiers texte</TextFiles>
     <SubtitleExported>Sous-titres exportés</SubtitleExported>
@@ -1590,13 +1590,13 @@ Poursuivre?</SubtitleAppendPrompt>
     <AdjustSetEndAndOffsetTheRest>Régler la fin, déplacer le reste</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Régler la fin, déplacer le reste et passer au suivant</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Créez la durée de démarrage du début à la fin</MainCreateStartDownEndUp>
-    <MergeDialogue>Participer à la conversation (Insert traits d'union)</MergeDialogue>
+    <MergeDialog>Participer à la conversation (Insert traits d'union)</MergeDialog>
     <GoToNext>Aller à la ligne suivante</GoToNext>
     <GoToPrevious>Aller à la ligne précédente</GoToPrevious>
     <GoToCurrentSubtitleStart>Aller au début de la ligne active</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Aller à la fin de la ligne active</GoToCurrentSubtitleEnd>
     <ToggleFocus>Naviguer entre mode liste et zone de texte</ToggleFocus>
-    <ToggleDialogueDashes>Activer/Désactiver le son</ToggleDialogueDashes>
+    <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
     <CopyTextOnly>Copier du texte dans le presse-papier (lignes sélectionnées)</CopyTextOnly>
     <AutoDurationSelectedLines>Durée automatique (lignes sélectionnées)</AutoDurationSelectedLines>

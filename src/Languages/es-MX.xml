@@ -866,7 +866,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copiar el texto del original al actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar líneas seleccionadas</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combinar líneas seleccionadas como diálogo</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Combinar líneas seleccionadas como diálogo</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Combinar con línea anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar con línea siguiente</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1171,7 +1171,7 @@ con el archivo de video, al subtítulo actual cargado.
     <SpellCheckAbortedXCorrections>Revisión ortográfica cancelada. {0} líneas modificadas.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Revisión ortográfica completada. {0} líneas modificadas.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Abrir otro subtítulo</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Antes de cambiar guiones de diálogo</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Antes de cambiar guiones de diálogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportar texto plano como</ExportPlainTextAs>
     <TextFiles>Archivos de texto</TextFiles>
     <SubtitleExported>exportado</SubtitleExported>
@@ -1567,13 +1567,13 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AdjustSetEndAndOffsetTheRest>Ajustar final, compensar al resto</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ajustar final, compensar el resto e ir al siguiente</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Crear inicio con la tecla-abajo, ajustar final con la tecla-arriba</MainCreateStartDownEndUp>
-    <MergeDialogue>Unir diálogo (guiones de inserción)</MergeDialogue>
+    <MergeDialog>Unir diálogo (guiones de inserción)</MergeDialog>
     <GoToNext>Ir a la línea siguiente</GoToNext>
     <GoToPrevious>Ir a la línea anterior</GoToPrevious>
     <GoToCurrentSubtitleStart>Ir al inicio de la línea actual</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Ir al final de la línea actual</GoToCurrentSubtitleEnd>
     <ToggleFocus>Alternar el enfoque entre la vista de lista y cuadro de texto del subtítulo</ToggleFocus>
-    <ToggleDialogueDashes>Cambiar guiones del diálogo</ToggleDialogueDashes>
+    <ToggleDialogDashes>Cambiar guiones del diálogo</ToggleDialogDashes>
     <Alignment>Alineación (líneas seleccionadas)</Alignment>
     <CopyTextOnly>Copia solo el texto al portapapeles (líneas seleccionadas)</CopyTextOnly>
     <AutoDurationSelectedLines>Autoduración (líneas seleccionadas)</AutoDurationSelectedLines>

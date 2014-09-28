@@ -851,7 +851,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopiraj besedilo iz izvornega podnapisa v trenutnega</ColumnCopyOriginalTextToCurrent>
         <Split>Razdeli</Split>
         <MergeSelectedLines>Združi izbrane vrstice</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Združi izbrane vrstice kot dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Združi izbrane vrstice kot dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Združi s prejšnjo vrstico</MergeWithLineBefore>
         <MergeWithLineAfter>Združi s kasnejšo vrstico</MergeWithLineAfter>
         <Normal>Normalno</Normal>
@@ -1152,7 +1152,7 @@ Nadaljujem?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Črkovalnik preklican. {0} spremenjenih vrstic.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Črkovalnik zaključil. {0} spremenjenih vrstic.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Odpri drugi podnapis</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Pred zamenjavo pomišljajev za dialoge</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Pred zamenjavo pomišljajev za dialoge</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Izvozi čisto besedilo kot...</ExportPlainTextAs>
     <TextFiles>Datoteke besedila</TextFiles>
     <SubtitleExported>Podnapis izvožen</SubtitleExported>
@@ -1521,13 +1521,13 @@ popravlja enak podnapis (sodelovanje)</Information>
     <AdjustSetEndAndOffsetTheRest>Nastavi konec, odstrani ostalo</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Nastavi konec, odstrani ostalo in pojdi naprej</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Ustvari novo pri tipki dol, nastavi končni čas pri tipki gor</MainCreateStartDownEndUp>
-    <MergeDialogue>Združi dialoge (vstavi pomšljaje)</MergeDialogue>
+    <MergeDialog>Združi dialoge (vstavi pomšljaje)</MergeDialog>
     <GoToNext>Pojdi na naslednjo vrstico</GoToNext>
     <GoToPrevious>Pojdi na prejšnjo vrstico</GoToPrevious>
     <GoToCurrentSubtitleStart>Pojdi na trenutno začetno vrstico</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Pojdi na trenutno končno vrstico</GoToCurrentSubtitleEnd>
     <ToggleFocus>Preklopi fokus med pogledom vsebine in okvirjem podnapisa</ToggleFocus>
-    <ToggleDialogueDashes>Prestavi pomišljaje dialoga</ToggleDialogueDashes>
+    <ToggleDialogDashes>Prestavi pomišljaje dialoga</ToggleDialogDashes>
     <Alignment>Poravnava (izbrane vrstice)</Alignment>
     <CopyTextOnly>Kopiraj besedilo edino v odložišče (izbrane vrstice)</CopyTextOnly>
     <AutoDurationSelectedLines>Samodejno trajanje (izbrane vrstice)</AutoDurationSelectedLines>

@@ -874,7 +874,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopiatu idazkia jatorrizkotik oraingora</ColumnCopyOriginalTextToCurrent>
         <Split>Banandu</Split>
         <MergeSelectedLines>Batu hautaturiko lerroak</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Batu hautaturiko lerroak elkarrizketa bezala</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Batu hautaturiko lerroak elkarrizketa bezala</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Batu aur&amp;reko lerroarekin</MergeWithLineBefore>
         <MergeWithLineAfter>Batu hurre&amp;ngo lerroarekin</MergeWithLineAfter>
         <Normal>Arrunta</Normal>
@@ -1176,7 +1176,7 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Idaz-egiaztapena utzita. {0} lerro aldatuta.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Idaz-egiaztapena osatuta. {0} lerro aldatuta.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Ireki beste azpidatzi bat</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Elkarrizketa marratxoak aldatu aurretik</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Elkarrizketa marratxoak aldatu aurretik</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Esportatu idatzi laua honela</ExportPlainTextAs>
     <TextFiles>Idatzi agiriak</TextFiles>
     <SubtitleExported>Azpidatzia esportaturik</SubtitleExported>
@@ -1571,13 +1571,13 @@ Jarraitu nahi duzu?</SubtitleAppendPrompt>
     <AdjustSetEndAndOffsetTheRest>Ezarri amaiera, orekatu gainontzekoa</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ezarri amaiera, orekatu gainontzekoa eta joan hurrengora</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Sortu berria behera-tekla, ezarri amaiera denbora gora-tekla</MainCreateStartDownEndUp>
-    <MergeDialogue>Batu elkarrizketa (txertatu marratxoak)</MergeDialogue>
+    <MergeDialog>Batu elkarrizketa (txertatu marratxoak)</MergeDialog>
     <GoToNext>Joan hurrengo lerrora</GoToNext>
     <GoToPrevious>Joan aurreko lerrora</GoToPrevious>
     <GoToCurrentSubtitleStart>Joan oraingo lerro hasierara</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Joan oraingo lerro amaierara</GoToCurrentSubtitleEnd>
     <ToggleFocus>Aldatu fokoa zerrenda ikusi eta azpidatziaren idaz kutxa artean</ToggleFocus>
-    <ToggleDialogueDashes>Aldatu elkarrizketa marratxoak</ToggleDialogueDashes>
+    <ToggleDialogDashes>Aldatu elkarrizketa marratxoak</ToggleDialogDashes>
     <Alignment>Lerrokapena (hautaturiko lerroak)</Alignment>
     <CopyTextOnly>Kopiatu idatzia bakarrik gakora (hautaturiko lerroak)</CopyTextOnly>
     <AutoDurationSelectedLines>Berez-iraupena (hautaturiko lerroak)</AutoDurationSelectedLines>

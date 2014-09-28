@@ -881,7 +881,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Text vom Original einfügen</ColumnCopyOriginalTextToCurrent>
         <Split>Trennen</Split>
         <MergeSelectedLines>Ausgewählte Texte verbinden</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Ausgewählte Texte als Dialog verbinden</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Ausgewählte Texte als Dialog verbinden</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Mit vorherigen Text verbinden</MergeWithLineBefore>
         <MergeWithLineAfter>Mit folgendem Text verbinden</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1191,7 +1191,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Rechtschreibprüfung abgebrochen. {0} Texte geändert.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Rechtschreibprüfung abgeschlossen. {0} Texte geändert.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Anderen Untertitel öffnen</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Vor Änderung der Dialogstriche</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Vor Änderung der Dialogstriche</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Als Text exportieren</ExportPlainTextAs>
     <TextFiles>Textdateien</TextFiles>
     <SubtitleExported>Untertitel exportiert</SubtitleExported>
@@ -1590,13 +1590,13 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AdjustSetEndAndOffsetTheRest>Ende setzen, Rest verschieben</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ende setzen, Rest verschieben und zum Nächsten</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Neue Startzeit mit Pfeil unten, Endzeit mit Pfeil hoch setzen</MainCreateStartDownEndUp>
-    <MergeDialogue>Dialoge verbinden ('-' einfügen)</MergeDialogue>
+    <MergeDialog>Dialoge verbinden ('-' einfügen)</MergeDialog>
     <GoToNext>Zum nächsten Text</GoToNext>
     <GoToPrevious>Zum vorherigen Text</GoToPrevious>
     <GoToCurrentSubtitleStart>Zum aktuellen Textstart</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Zum aktuellen Textende</GoToCurrentSubtitleEnd>
     <ToggleFocus>Zwischen Listenansicht und Textbox umschalten</ToggleFocus>
-    <ToggleDialogueDashes>Dialog Striche umschalten</ToggleDialogueDashes>
+    <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
     <CopyTextOnly>Nur Text in Zwischenablage kopieren (gewählte Zeilen)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-Dauer (gewählte Zeilen)</AutoDurationSelectedLines>

@@ -1649,8 +1649,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixSpaceBetweenNumbersExample":
                     language.FixCommonErrors.FixSpaceBetweenNumbersExample = reader.Value;
                     break;
-                case "FixCommonErrors/FixDialoguesOneLineExample":
-                    language.FixCommonErrors.FixDialoguesOneLineExample = reader.Value;
+                case "FixCommonErrors/FixDialogsOneLineExample":
+                    language.FixCommonErrors.FixDialogsOneLineExample = reader.Value;
                     break;
                 case "GetDictionaries/Title":
                     language.GetDictionaries.Title = reader.Value;
@@ -2531,8 +2531,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/OpenOtherSubtitle":
                     language.Main.OpenOtherSubtitle = reader.Value;
                     break;
-                case "Main/BeforeToggleDialogueDashes":
-                    language.Main.BeforeToggleDialogueDashes = reader.Value;
+                case "Main/BeforeToggleDialogDashes":
+                    language.Main.BeforeToggleDialogDashes = reader.Value;
                     break;
                 case "Main/ExportPlainTextAs":
                     language.Main.ExportPlainTextAs = reader.Value;
@@ -3164,8 +3164,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/ContextMenu/MergeSelectedLines":
                     language.Main.Menu.ContextMenu.MergeSelectedLines = reader.Value;
                     break;
-                case "Main/Menu/ContextMenu/MergeSelectedLinesASDialogue":
-                    language.Main.Menu.ContextMenu.MergeSelectedLinesASDialogue = reader.Value;
+                case "Main/Menu/ContextMenu/MergeSelectedLinesAsDialog":
+                    language.Main.Menu.ContextMenu.MergeSelectedLinesAsDialog = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/MergeWithLineBefore":
                     language.Main.Menu.ContextMenu.MergeWithLineBefore = reader.Value;
@@ -4385,8 +4385,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainCreateStartDownEndUp":
                     language.Settings.MainCreateStartDownEndUp = reader.Value;
                     break;
-                case "Settings/MergeDialogue":
-                    language.Settings.MergeDialogue = reader.Value;
+                case "Settings/MergeDialog":
+                    language.Settings.MergeDialog = reader.Value;
                     break;
                 case "Settings/GoToNext":
                     language.Settings.GoToNext = reader.Value;
@@ -4403,8 +4403,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/ToggleFocus":
                     language.Settings.ToggleFocus = reader.Value;
                     break;
-                case "Settings/ToggleDialogueDashes":
-                    language.Settings.ToggleDialogueDashes = reader.Value;
+                case "Settings/ToggleDialogDashes":
+                    language.Settings.ToggleDialogDashes = reader.Value;
                     break;
                 case "Settings/Alignment":
                     language.Settings.Alignment = reader.Value;

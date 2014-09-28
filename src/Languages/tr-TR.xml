@@ -579,7 +579,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <FixedOkXY>Düzeltildi ve TAMAM - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>YApMa-&gt;Yapma</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 _&gt;1100</FixSpaceBetweenNumbersExample>
-    <FixDialoguesOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br/&gt;-Hi Ida</FixDialoguesOneLineExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br/&gt;-Hi Ida</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Sözlüklere ihtiyacınız mı var?</Title>
@@ -884,7 +884,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Orijinalden kopyala</ColumnCopyOriginalTextToCurrent>
         <Split>Böl</Split>
         <MergeSelectedLines>Seçilen satırları birleştir</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Seçilen satırları diyalog olarak birleştir</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Seçilen satırları diyalog olarak birleştir</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Önceki satırla birleştir</MergeWithLineBefore>
         <MergeWithLineAfter>Sonraki satırla birleştir</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1190,7 +1190,7 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Yazım denetimi iptal edildi. {0} satırları düzeltildi.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Yazım denetimi tamamlandı. {0} satırları değiştirildi.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Diğer altyazıyı aç</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Before toggle of dialog dashes</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Before toggle of dialog dashes</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Düz metni dışa faklı aktar</ExportPlainTextAs>
     <TextFiles>Metin dosyaları</TextFiles>
     <SubtitleExported>Altyazı dışa aktarıldı</SubtitleExported>
@@ -1591,13 +1591,13 @@ Yeni oturum başlatın.</Information>
     <AdjustSetEndAndOffsetTheRest>Bitişi ayarla, süreyi gir.</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Bitişi ayarla, süreyi gir, sonraki satıra geç</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Tuşa basınca yeni oluştur, tuştan çekince bilitş süresi gir</MainCreateStartDownEndUp>
-    <MergeDialogue>Konuşma birleştir (tire ekler)</MergeDialogue>
+    <MergeDialog>Konuşma birleştir (tire ekler)</MergeDialog>
     <GoToNext>Sonraki satıra git</GoToNext>
     <GoToPrevious>Önceki satıra git</GoToPrevious>
     <GoToCurrentSubtitleStart>Geçerli satırın başına git</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Geçerli sürenin sonuna git</GoToCurrentSubtitleEnd>
     <ToggleFocus>Toggle focus between list view and subtitle text box</ToggleFocus>
-    <ToggleDialogueDashes>Toogle dialog dashes</ToggleDialogueDashes>
+    <ToggleDialogDashes>Toggle dialog dashes</ToggleDialogDashes>
     <Alignment>Hizalama (seçilen satırlar)</Alignment>
     <CopyTextOnly>Metni panoya kopyala (seçilen satırlar)</CopyTextOnly>
     <AutoDurationSelectedLines>Otomatik süre (seçilen satırlar)</AutoDurationSelectedLines>

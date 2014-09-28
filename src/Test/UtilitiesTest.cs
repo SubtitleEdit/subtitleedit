@@ -198,7 +198,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixUnneededSpacesDialogueDotDotDotLine1()
+        public void FixUnneededSpacesDialogDotDotDotLine1()
         {
             string s = Utilities.RemoveUnneededSpaces("- ... Careful", "en");
             Assert.AreEqual(s, "- ...Careful");
@@ -206,7 +206,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixUnneededSpacesDialogueDotDotDotLine2()
+        public void FixUnneededSpacesDialogDotDotDotLine2()
         {
             string s = Utilities.RemoveUnneededSpaces("- Hi!" + Environment.NewLine + "- ... Careful", "en");
             Assert.AreEqual(s, "- Hi!" + Environment.NewLine + "- ...Careful");

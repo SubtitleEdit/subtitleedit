@@ -726,7 +726,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnPasteFromClipboard />
         <Split>انقسام</Split>
         <MergeSelectedLines>دمج اسطر مختارة</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue />
+        <MergeSelectedLinesAsDialog />
         <MergeWithLineBefore>دمج مع السطر قبل</MergeWithLineBefore>
         <MergeWithLineAfter>دمج مع السطر بعد</MergeWithLineAfter>
         <Normal>طبيعي</Normal>
@@ -1022,7 +1022,7 @@ Continue?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>التدقيق الإملائي إحبط. {0} تعديل الأسطر</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>التدقيق الإملائي إكتمل. {0} تعديل الأسطر</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>أفتح ترجمة أخرى</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes />
+    <BeforeToggleDialogDashes />
     <ExportPlainTextAs />
     <TextFiles />
     <SubtitleExported />
@@ -1323,11 +1323,11 @@ Continue?</SubtitleAppendPrompt>
     <AdjustSelected100MsBack />
     <AdjustSetStartTimeOnly />
     <MainCreateStartDownEndUp />
-    <MergeDialogue />
+    <MergeDialog />
     <GoToNext />
     <GoToPrevious />
     <ToggleFocus />
-    <ToggleDialogueDashes />
+    <ToggleDialogDashes />
     <Alignment />
     <CopyTextOnly />
     <AutoDurationSelectedLines />

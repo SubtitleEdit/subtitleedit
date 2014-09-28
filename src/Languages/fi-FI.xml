@@ -876,7 +876,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
         <ColumnCopyOriginalTextToCurrent>Kopioi teksti alkuperäiseltä nykyiseen</ColumnCopyOriginalTextToCurrent>
         <Split>Katkaisu</Split>
         <MergeSelectedLines>Yhdistä valitut rivit</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Yhdistä valitut rivit vuoropuheluna</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Yhdistä valitut rivit vuoropuheluna</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Yhdistä edelliseen riviin</MergeWithLineBefore>
         <MergeWithLineAfter>Yhdistä seuraavaan riviin</MergeWithLineAfter>
         <Normal>Normaali</Normal>
@@ -1181,7 +1181,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <SpellCheckAbortedXCorrections>Oikoluku keskeytetty. {0} riviä muokattu.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Oikeinkirjoituksen tarkistaminen on valmis. {0} riviä muokattu.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Avaa muu tekstitys</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Ennen vuoropuhelun väliviivojen vaihtoa</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Ennen vuoropuhelun väliviivojen vaihtoa</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Vie pelkkä teksti seuraavasti</ExportPlainTextAs>
     <TextFiles>Tekstitiedostot</TextFiles>
     <SubtitleExported>Tekstitys viety</SubtitleExported>
@@ -1578,13 +1578,13 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <AdjustSetEndAndOffsetTheRest>Aseta loppu, liu'uta muita</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Aseta loppu, liu'uta muita ja siirry seuraavaan</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Luo uusi alasnuolella, aseta loppuaika ylösnuolella</MainCreateStartDownEndUp>
-    <MergeDialogue>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialogue>
+    <MergeDialog>Yhdistä vuoropuhelu (lisää viivoja)</MergeDialog>
     <GoToNext>Siirry seuraavalle riville</GoToNext>
     <GoToPrevious>Siirry edelliselle riville</GoToPrevious>
     <GoToCurrentSubtitleStart>Siirry nykyisen rivin alkuun</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Siirry nykyisen rivin loppuun</GoToCurrentSubtitleEnd>
     <ToggleFocus>Vaihda listanäkymän ja tekstitysruudun välillä</ToggleFocus>
-    <ToggleDialogueDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogueDashes>
+    <ToggleDialogDashes>Vaihda vuoropuhelun katkoviivat</ToggleDialogDashes>
     <Alignment>Tasaus (valitut rivit)</Alignment>
     <CopyTextOnly>Kopioi vain teksti leikepöydälle (valitut rivit)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-kesto (valitut rivit)</AutoDurationSelectedLines>

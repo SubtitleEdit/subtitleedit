@@ -820,7 +820,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopiraj tekst iz originala u trenutnu</ColumnCopyOriginalTextToCurrent>
         <Split>Razdvoji</Split>
         <MergeSelectedLines>Spoji izabrane linije</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Spoji odabrane linije kao dijalog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Spoji odabrane linije kao dijalog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Spoji s linijom iza</MergeWithLineBefore>
         <MergeWithLineAfter>Spoji s linijom ispred</MergeWithLineAfter>
         <Normal>Ukloni oznake</Normal>
@@ -1122,7 +1122,7 @@ koji bi trebao biti usklađen s video datotekom.
     <SpellCheckAbortedXCorrections>Provjera pravopisa je prekinuta. Izmijenjeno linija: {0}.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Provjera pravopisa je završena. Izmijenjeno linija: {0}.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Otvaranje drugog podnaslova</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Prije preklopni od dijaloga crtica</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Prije preklopni od dijaloga crtica</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Spremi običan tekst kao</ExportPlainTextAs>
     <TextFiles>Tekstualne datoteke</TextFiles>
     <SubtitleExported>Podnaslov izvezen</SubtitleExported>
@@ -1469,13 +1469,13 @@ koji bi trebao biti usklađen s video datotekom.
     <AdjustSelected100MsBack>Premjesti odabrane linije 100 ms nazad</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Postavi početno vrijeme. Zadrži trajanje</AdjustSetStartTimeKeepDuration>
     <MainCreateStartDownEndUp>Stvori novi na tipka-dolje, postavite vrijeme završetka na tipka-gore</MainCreateStartDownEndUp>
-    <MergeDialogue>Spoji dijalog (ubaci crtice)</MergeDialogue>
+    <MergeDialog>Spoji dijalog (ubaci crtice)</MergeDialog>
     <GoToNext>Idi na sljedeću liniju</GoToNext>
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
     <GoToCurrentSubtitleStart>Idi na trenutni početak linije</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Idi na trenutni završetak linije</GoToCurrentSubtitleEnd>
     <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova teksnog okvira</ToggleFocus>
-    <ToggleDialogueDashes>Prebacivanje između dijaloga</ToggleDialogueDashes>
+    <ToggleDialogDashes>Prebacivanje između dijaloga</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto-trajanje (odabrane linije)</AutoDurationSelectedLines>

@@ -875,7 +875,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Kopiera text från original till aktuell</ColumnCopyOriginalTextToCurrent>
         <Split>Splitta</Split>
         <MergeSelectedLines>Sammanfoga markerade rader</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Sammanfoga markerade linjer som dialog</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Sammanfoga markerade linjer som dialog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Slå ihop med rad före</MergeWithLineBefore>
         <MergeWithLineAfter>Slå ihop med rad efter</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1179,7 +1179,7 @@ Fortsätta?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Stavningskontroll avbruten. {0} rader ändrades.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Stavningskontroll slutförd. {0} rader ändrades.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Öppna annan text</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Innan byte av dialog streck</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Innan byte av dialog streck</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Exportera klartext som</ExportPlainTextAs>
     <TextFiles>Textfiler</TextFiles>
     <SubtitleExported>Text exporterad</SubtitleExported>
@@ -1576,13 +1576,13 @@ kan redigera i samma textningsfil (samarbete)</Information>
     <AdjustSetEndAndOffsetTheRest>Ange slut, kompensera resten</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Ange slut, kompensera och gå till nästa</AdjustSetEndAndOffsetTheRestAndGoToNext>
     <MainCreateStartDownEndUp>Skapa ny key-down, ställ sluttid med key-up</MainCreateStartDownEndUp>
-    <MergeDialogue>Sammanfoga dialogen (infoga streck)</MergeDialogue>
+    <MergeDialog>Sammanfoga dialogen (infoga streck)</MergeDialog>
     <GoToNext>Gå till nästa rad</GoToNext>
     <GoToPrevious>Gå till föregående rad</GoToPrevious>
     <GoToCurrentSubtitleStart>Gå till aktuell rad start</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Gå till aktuell rad slut</GoToCurrentSubtitleEnd>
     <ToggleFocus>Växla fokus mellan listvyn och textning textrutan</ToggleFocus>
-    <ToggleDialogueDashes>Växla dialog streck</ToggleDialogueDashes>
+    <ToggleDialogDashes>Växla dialog streck</ToggleDialogDashes>
     <Alignment>Justering (markerade linjer)</Alignment>
     <CopyTextOnly>Kopiera text till urklipp (utvalda linjer)</CopyTextOnly>
     <AutoDurationSelectedLines>Auto längd (utvalda linjer)</AutoDurationSelectedLines>

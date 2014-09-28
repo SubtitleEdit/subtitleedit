@@ -741,7 +741,7 @@ Rất hân hạnh được chào đón.
         <ColumnCopyOriginalTextToCurrent>Sao chép văn bản từ ban đầu hiện tại</ColumnCopyOriginalTextToCurrent>
         <Split>Chia</Split>
         <MergeSelectedLines>Gộp các dòng được lựa chọn</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Dòng được chọn chọn là đối thoại</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesAsDialog>Dòng được chọn chọn là đối thoại</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Gộp với dòng trước</MergeWithLineBefore>
         <MergeWithLineAfter>Gộp với dòng sau</MergeWithLineAfter>
         <Normal>Bình thường</Normal>
@@ -1036,7 +1036,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <SpellCheckAbortedXCorrections>Hủy bỏ kiểm tra chính tả . {0} dòng đã được sửa.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Kiểm tra chính tả hoàn tất. {0} dòng đã được sửi.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Mở phụ đề khác</OpenOtherSubtitle>
-    <BeforeToggleDialogueDashes>Trước khi chuyển đổi các dấu gạch ngang của cuộc đối thoại</BeforeToggleDialogueDashes>
+    <BeforeToggleDialogDashes>Trước khi chuyển đổi các dấu gạch ngang của cuộc đối thoại</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Xuất văn bản đơn giản...</ExportPlainTextAs>
     <TextFiles>Tập tin văn bản</TextFiles>
     <SubtitleExported>Xuất phụ đề</SubtitleExported>
@@ -1340,11 +1340,11 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <AdjustSelected100MsBack>Di chuyển dòng được lựa chọn 100 ms lùi lại</AdjustSelected100MsBack>
     <AdjustSetStartTimeOnly>Thiết lập thời gian bắt đầu, giữ đến lúc kết thúc</AdjustSetStartTimeOnly>
     <MainCreateStartDownEndUp>Tạo mới khóa bên dưới, thiết lập thời gian kết thúc tại khóa bên trên</MainCreateStartDownEndUp>
-    <MergeDialogue>Ghép các đối thoại (chèn thêm "-" )</MergeDialogue>
+    <MergeDialog>Ghép các đối thoại (chèn thêm "-" )</MergeDialog>
     <GoToNext>Tơi dòng tiếp theo</GoToNext>
     <GoToPrevious>Trở lại dòng trước</GoToPrevious>
     <ToggleFocus>Chuyển đổi tập trung giữa xem danh sách và hộp văn bản phụ đề</ToggleFocus>
-    <ToggleDialogueDashes>Dấu gạch ngang khi chuyển đổi đối thoại</ToggleDialogueDashes>
+    <ToggleDialogDashes>Dấu gạch ngang khi chuyển đổi đối thoại</ToggleDialogDashes>
     <Alignment>Liên kết (các dòng được chọn)</Alignment>
     <CopyTextOnly>Sao chép văn bản hiển thị vào clip board (các dòng được chọn)</CopyTextOnly>
     <AutoDurationSelectedLines>Tự động giới hạn (các dòng được chọn)</AutoDurationSelectedLines>

@@ -257,7 +257,7 @@
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.splitLineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemMergeLines = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripMenuItemMergeDialogue = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemMergeDialog = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeBeforeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeAfterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
@@ -2198,7 +2198,7 @@
             this.toolStripSeparator7,
             this.splitLineToolStripMenuItem,
             this.toolStripMenuItemMergeLines,
-            this.toolStripMenuItemMergeDialogue,
+            this.toolStripMenuItemMergeDialog,
             this.mergeBeforeToolStripMenuItem,
             this.mergeAfterToolStripMenuItem,
             this.toolStripSeparator8,
@@ -2374,12 +2374,12 @@
             this.toolStripMenuItemMergeLines.Text = "Merge selected lines";
             this.toolStripMenuItemMergeLines.Click += new System.EventHandler(this.ToolStripMenuItemMergeLinesClick);
             // 
-            // toolStripMenuItemMergeDialogue
+            // toolStripMenuItemMergeDialog
             // 
-            this.toolStripMenuItemMergeDialogue.Name = "toolStripMenuItemMergeDialogue";
-            this.toolStripMenuItemMergeDialogue.Size = new System.Drawing.Size(284, 22);
-            this.toolStripMenuItemMergeDialogue.Text = "Merge selected lines as dialog";
-            this.toolStripMenuItemMergeDialogue.Click += new System.EventHandler(this.ToolStripMenuItemMergeDialogueClick);
+            this.toolStripMenuItemMergeDialog.Name = "toolStripMenuItemMergeDialog";
+            this.toolStripMenuItemMergeDialog.Size = new System.Drawing.Size(284, 22);
+            this.toolStripMenuItemMergeDialog.Text = "Merge selected lines as dialog";
+            this.toolStripMenuItemMergeDialog.Click += new System.EventHandler(this.ToolStripMenuItemMergeDialogClick);
             // 
             // mergeBeforeToolStripMenuItem
             // 
@@ -4853,7 +4853,7 @@
         private System.Windows.Forms.Timer timerTextUndo;
         private System.Windows.Forms.Timer timerAlternateTextUndo;
         private System.Windows.Forms.ToolStripMenuItem adobeEncoreFABImageScriptToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDialogue;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemMergeDialog;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemSurroundWithMusicSymbols;
         private System.Windows.Forms.ToolStripMenuItem superscriptToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem subscriptToolStripMenuItem;
