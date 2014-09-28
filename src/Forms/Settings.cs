@@ -2135,7 +2135,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             int index = listBoxOcrFixList.SelectedIndex;
             string text = listBoxOcrFixList.Items[index].ToString();
-            string key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal)).Trim();
+            string key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal));
             
             if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
             {
