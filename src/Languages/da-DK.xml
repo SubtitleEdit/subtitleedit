@@ -306,7 +306,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Afbrudt af bruger</AbortedByUser>
     <ReadingSubtitleData>Læser undertekst data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper vob fil {1} af {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO type er '{0}' og ikke 'DVD video-VTS «. {1} Prøv en anden fil end {2}</WrongIfoType>
+    <WrongIfoType>IFO type er '{0}' og ikke 'DVD video-VTS'. {1} Prøv en anden fil end {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Vælg sprog</Title>
@@ -507,7 +507,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Ret linjer (tilføj -) startende med bindestreg (-)</FixHyphensAdd>
     <FixHyphen>Ret linje startende med bindestreg (-)</FixHyphen>
     <XHyphensFixed>Bindestreger rettet: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Hvordan har du det? -&gt;" Hvordan har du det? "</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Hvordan har du det? -&gt; "Hvordan har du det?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Manglende antal gåseøjne tilføjet: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Ret tekster med mere end 2 linjer</Fix3PlusLines>
     <Fix3PlusLine>Ret tekst med mere end 2 linjer</Fix3PlusLine>
@@ -531,11 +531,11 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Ret ugyldig kursiv tag</FixInvalidItalicTag>
     <FixShortDisplayTime>Ret kort visningstid</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Fix overlappende visningstid</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;Hvad skal jeg dog lave? -&gt; Hvad skal jeg dog lave?&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hej du,  der. -&gt; Hej du, der.</RemoveUnneededSpacesExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;Hvad skal jeg dog lave?&lt;i&gt; -&gt; &lt;i&gt;Hvad skal jeg dog lave?&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Hej  du , der. -&gt; Hej du, der.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Hej du!. -&gt; Hej du!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hej.Du. -&gt; Hej. Du.</FixMissingSpacesExample>
-    <FixUppercaseIInsindeLowercaseWordsExample>Jorden er Fiad. -&gt; Jorden er flad.</FixUppercaseIInsindeLowercaseWordsExample>
+    <FixUppercaseIInsindeLowercaseWordsExample>Jorden er fIad. -&gt; Jorden er flad.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekst nummer {0}: Start tidspunkt er senere end sluttidspunkt: {1} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Kunne ikke rette tekst nummer {0}: Start tidspunkt er senere udgangen sluttidspunkt: {1}</UnableToFixStartTimeLaterThanEndTime>
@@ -572,12 +572,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixMissingOpenBracket>{0} rettet manglende [</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} lave musik notation</XFixMusicNotation>
     <FixDoubleDashExample>'Whoa-- um yeah!' -&gt; 'Whoa... um yeah!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude! " -&gt; 'Robert: Sup dude! "</FixDoubleGreaterThanExample>
-    <FixEllipsesStartExample>'... og så har vi '-&gt;' og så har vi '</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>»clanks] Pas på!" -&gt; '[Clanks] Pas på! "</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '* sweet dreams are'</FixMusicNotationExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Robert: Sup dude!' -&gt; 'Robert: Sup dude!'</FixDoubleGreaterThanExample>
+    <FixEllipsesStartExample>'... og så har vi' -&gt; 'og så har vi'</FixEllipsesStartExample>
+    <FixMissingOpenBracketExample>'clanks] Pas på!' -&gt; '[clanks] Pas på!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} vigtige log beskeder!</NumberOfImportantLogMessages>
     <FixedOkXY>Rettet og OK - '{0}': {1}</FixedOkXY>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hej Mads! - Hej Ida! -&gt; Hej Mads!&lt;br /&gt;- Hej Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1494,6 +1496,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed kode fra DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
