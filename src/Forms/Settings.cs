@@ -21,11 +21,13 @@ namespace Nikse.SubtitleEdit.Forms
         private int _ssaFontColor;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
+        private string oldVlcLocation;
+        private string oldVlcLocationRelative;
+
         private readonly List<string> _wordListNamesEtc = new List<string>();
         private List<string> _userWordList = new List<string>();
-        private OcrFixReplaceList _ocrFixReplaceList;
-        private readonly string _oldVlcLocation;
-        private readonly string _oldVlcLocationRelative;
+        private Dictionary<string, string> _ocrFixWords = new Dictionary<string, string>();
+        private Dictionary<string, string> _ocrFixPartialLines = new Dictionary<string, string>();
 
         private class ComboBoxLanguage
         {
@@ -534,7 +536,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxMergeShortLineLength.Items.Clear();
             for (int i = 10; i < 100; i++)
-                comboBoxMergeShortLineLength.Items.Add(i.ToString(CultureInfo.InvariantCulture));
+                comboBoxMergeShortLineLength.Items.Add(i.ToString());
 
             if (toolsSettings.MergeLinesShorterThan >= 10 && toolsSettings.MergeLinesShorterThan - 10 < comboBoxMergeShortLineLength.Items.Count)
                 comboBoxMergeShortLineLength.SelectedIndex = toolsSettings.MergeLinesShorterThan - 10;
@@ -846,8 +848,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
             buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
 
-            _oldVlcLocation = Configuration.Settings.General.VlcLocation;
-            _oldVlcLocationRelative = Configuration.Settings.General.VlcLocationRelative;
+            oldVlcLocation = Configuration.Settings.General.VlcLocation;
+            oldVlcLocationRelative = Configuration.Settings.General.VlcLocationRelative;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
@@ -861,8 +863,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -937,7 +939,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Icon icon, Image newFile, Image openFile, Image saveFile, Image saveFileAs, Image find, Image replace, Image fixCommonErrors,
                                Image visualSync, Image spellCheck, Image settings, Image help)
         {
-            Icon = (Icon)icon.Clone();
+            this.Icon = (Icon)icon.Clone();
             pictureBoxNew.Image = (Image)newFile.Clone();
             pictureBoxOpen.Image = (Image)openFile.Clone();
             pictureBoxSave.Image = (Image)saveFile.Clone();
@@ -989,17 +991,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!found)
                                 cultures.Add(culture);
                         }
-                        else if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
-                        {
-                            bool found = false;
-                            foreach (CultureInfo ci in cultures)
-                            {
-                                if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
-                                    found = true;
-                            }
-                            if (!found)
-                                cultures.Add(culture);
-                        }
                     }
 
                 }
@@ -1007,17 +998,6 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (var culture in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
                     if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml").Length == 1)
-                    {
-                        bool found = false;
-                        foreach (CultureInfo ci in cultures)
-                        {
-                            if (ci.ThreeLetterISOLanguageName == culture.ThreeLetterISOLanguageName)
-                                found = true;
-                        }
-                        if (!found)
-                            cultures.Add(culture);
-                    } 
-                    else if (Directory.GetFiles(dir, culture.ThreeLetterISOLanguageName + "_OCRFixReplaceList_User.xml").Length == 1)
                     {
                         bool found = false;
                         foreach (CultureInfo ci in cultures)
@@ -1675,9 +1655,11 @@ namespace Nikse.SubtitleEdit.Forms
                 var measuredWidth = TextDraw.MeasureTextWidth(font, sb.ToString(), false) + 1;
                 var measuredHeight = TextDraw.MeasureTextHeight(font, sb.ToString(), false) + 1;
 
-                float left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
+                float left = 5;
+                left = ((float)(bmp.Width - measuredWidth * 0.8 + 15) / 2);
 
-                float top = bmp.Height - measuredHeight - 10;
+                float top = 2;
+                top = bmp.Height - measuredHeight - ((int)10);
 
                 const int leftMargin = 0;
                 int pathPointsStart = -1;
@@ -1762,22 +1744,33 @@ namespace Nikse.SubtitleEdit.Forms
             if (cb == null)
                 return;
 
+            _ocrFixWords = new Dictionary<string, string>();
+            _ocrFixPartialLines = new Dictionary<string, string>();
+
             if (reloadListBox)
                 listBoxOcrFixList.Items.Clear();
-            _ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(cb.CultureInfo.ThreeLetterISOLanguageName);
-            if (reloadListBox)
+            string replaceListXmlFileName = Utilities.DictionaryFolder + cb.CultureInfo.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml";
+            if (File.Exists(replaceListXmlFileName))
             {
-                listBoxOcrFixList.BeginUpdate();
-                foreach (var pair in _ocrFixReplaceList.WordReplaceList)
+                var doc = new XmlDocument();
+                doc.Load(replaceListXmlFileName);
+                _ocrFixWords = Logic.Ocr.OcrFixEngine.LoadReplaceList(doc, "WholeWords");
+                _ocrFixPartialLines = Logic.Ocr.OcrFixEngine.LoadReplaceList(doc, "PartialLines");
+
+                if (reloadListBox)
                 {
-                    listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
+                    listBoxOcrFixList.BeginUpdate();
+                    foreach (var pair in _ocrFixWords)
+                    {
+                        listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
+                    }
+                    foreach (var pair in _ocrFixPartialLines)
+                    {
+                        listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
+                    }
+                    listBoxOcrFixList.Sorted = true;
+                    listBoxOcrFixList.EndUpdate();
                 }
-                foreach (var pair in _ocrFixReplaceList.PartialLineWordBoundaryReplaceList)
-                {
-                    listBoxOcrFixList.Items.Add(pair.Key + " --> " + pair.Value);
-                }
-                listBoxOcrFixList.Sorted = true;
-                listBoxOcrFixList.EndUpdate();
             }
         }
 
@@ -2085,19 +2078,63 @@ namespace Nikse.SubtitleEdit.Forms
             if (key.Length == 0 || value.Length == 0 || key == value || Utilities.IsInteger(key))
                 return;
 
+            Dictionary<string, string> dictionary = _ocrFixWords;
+            string elementName = "Word";
+            string parentName = "WholeWords";
+
+            if (key.Contains(' '))
+            {
+                dictionary = _ocrFixPartialLines;
+                elementName = "LinePart";
+                parentName = "PartialLines";
+            }
 
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb == null)
                 return;
 
-            var added = _ocrFixReplaceList.AddWordOrPartial(key, value);
-            if (!added)
+            if (dictionary.ContainsKey(key))
             {
                 MessageBox.Show(Configuration.Settings.Language.Settings.WordAlreadyExists);
                 return;
             }
 
+            dictionary.Add(key, value);
+
+            //Sort
+            var sortedDictionary = new SortedDictionary<string, string>();
+            foreach (var pair in dictionary)
+            {
+                if (!sortedDictionary.ContainsKey(pair.Key))
+                    sortedDictionary.Add(pair.Key, pair.Value);
+            }
+
+            string replaceListXmlFileName = Utilities.DictionaryFolder + cb.CultureInfo.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml";
+            var doc = new XmlDocument();
+            if (File.Exists(replaceListXmlFileName))
+                doc.Load(replaceListXmlFileName);
+            else
+                doc.LoadXml("<OCRFixReplaceList><WholeWords/><PartialWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></OCRFixReplaceList>");
+
+            XmlNode wholeWords = doc.DocumentElement.SelectSingleNode(parentName);
+            wholeWords.RemoveAll();
+            foreach (var pair in sortedDictionary)
+            {
+                XmlNode node = doc.CreateElement(elementName);
+
+                XmlAttribute wordFrom = doc.CreateAttribute("from");
+                wordFrom.InnerText = pair.Key;
+                node.Attributes.Append(wordFrom);
+
+                XmlAttribute wordTo = doc.CreateAttribute("to");
+                wordTo.InnerText = pair.Value;
+                node.Attributes.Append(wordTo);
+
+                wholeWords.AppendChild(node);
+            }
+            doc.Save(replaceListXmlFileName);
             LoadOcrFixList(true);
+
             textBoxOcrFixKey.Text = string.Empty;
             textBoxOcrFixValue.Text = string.Empty;
             textBoxOcrFixKey.Focus();
@@ -2136,8 +2173,7 @@ namespace Nikse.SubtitleEdit.Forms
             int index = listBoxOcrFixList.SelectedIndex;
             string text = listBoxOcrFixList.Items[index].ToString();
             string key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal)).Trim();
-            
-            if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
+            if (_ocrFixWords.ContainsKey(key))
             {
                 DialogResult result;
                 if (itemsToRemoveCount == 1)
@@ -2146,18 +2182,42 @@ namespace Nikse.SubtitleEdit.Forms
                     result = MessageBox.Show(string.Format(Configuration.Settings.Language.Main.DeleteXLinesPrompt, itemsToRemoveCount), "Subtitle Edit", MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
+                    int removeCount = 0;
+
                     for (int idx = listBoxOcrFixList.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxOcrFixList.SelectedIndices[idx];
                         text = listBoxOcrFixList.Items[index].ToString();
                         key = text.Substring(0, text.IndexOf(" --> ", StringComparison.Ordinal)).Trim();
 
-                        if (_ocrFixReplaceList.WordReplaceList.ContainsKey(key) || _ocrFixReplaceList.PartialLineWordBoundaryReplaceList.ContainsKey(key))
+                        if (_ocrFixWords.ContainsKey(key))
                         {
-                            _ocrFixReplaceList.RemoveWordOrPartial(key);
+                            _ocrFixWords.Remove(key);
+                            removeCount++;
                         }
                         listBoxOcrFixList.Items.RemoveAt(index);
                     }
+                    string replaceListXmlFileName = Utilities.DictionaryFolder + cb.CultureInfo.ThreeLetterISOLanguageName + "_OCRFixReplaceList.xml";
+                    var doc = new XmlDocument();
+                    doc.Load(replaceListXmlFileName);
+
+                    XmlNode wholeWords = doc.DocumentElement.SelectSingleNode("WholeWords");
+                    wholeWords.RemoveAll();
+                    foreach (var pair in _ocrFixWords)
+                    {
+                        XmlNode node = doc.CreateElement("Word");
+
+                        XmlAttribute wordFrom = doc.CreateAttribute("from");
+                        wordFrom.InnerText = pair.Key;
+                        node.Attributes.Append(wordFrom);
+
+                        XmlAttribute wordTo = doc.CreateAttribute("to");
+                        wordTo.InnerText = pair.Value;
+                        node.Attributes.Append(wordTo);
+
+                        wholeWords.AppendChild(node);
+                    }
+                    doc.Save(replaceListXmlFileName);
 
                     LoadOcrFixList(false);
                     buttonRemoveOcrFix.Enabled = false;
@@ -2603,8 +2663,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonCancel_Click(object sender, EventArgs e)
         {
-            Configuration.Settings.General.VlcLocation = _oldVlcLocation;
-            Configuration.Settings.General.VlcLocationRelative = _oldVlcLocationRelative;
+            Configuration.Settings.General.VlcLocation = oldVlcLocation;
+            Configuration.Settings.General.VlcLocationRelative = oldVlcLocationRelative;
 
             DialogResult = DialogResult.Cancel;
         }

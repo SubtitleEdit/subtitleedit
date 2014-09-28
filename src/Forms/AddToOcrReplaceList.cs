@@ -1,16 +1,17 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using System.Xml;
+using Nikse.SubtitleEdit.Logic;
+using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AddToOcrReplaceList : Form
     {
-        private string _threeLetterIsoLanguageName;
+        private string _threeLetterISOLanguageName;
 
         public AddToOcrReplaceList()
         {
@@ -24,8 +25,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
+            Graphics graphics = this.CreateGraphics();
+            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -37,21 +38,81 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string key = textBoxOcrFixKey.Text.Trim();
             string value = textBoxOcrFixValue.Text.Trim();
-            if (key.Length == 0 || value.Length == 0 || key == value)
+            if (key.Length == 0 || value.Length == 0)
                 return;
+            if (key == value)
+                return;
+
+            var ocrFixWords = new Dictionary<string, string>();
+            var ocrFixPartialLines = new Dictionary<string, string>();
 
             try
             {
                 var ci = new CultureInfo(LanguageString.Replace("_", "-"));
-                _threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
+                _threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
             }
-            catch (Exception exception)
+            catch
             {
-                MessageBox.Show(exception.Message);
+            }
+
+            string replaceListXmlFileName = Utilities.DictionaryFolder + _threeLetterISOLanguageName + "_OCRFixReplaceList.xml";
+            if (File.Exists(replaceListXmlFileName))
+            {
+                var xml = new XmlDocument();
+                xml.Load(replaceListXmlFileName);
+                ocrFixWords = Logic.Ocr.OcrFixEngine.LoadReplaceList(xml, "WholeWords");
+                ocrFixPartialLines = Logic.Ocr.OcrFixEngine.LoadReplaceList(xml, "PartialLines");
+            }
+            Dictionary<string, string> dictionary = ocrFixWords;
+            string elementName = "Word";
+            string parentName = "WholeWords";
+
+            if (key.Contains(' '))
+            {
+                dictionary = ocrFixPartialLines;
+                elementName = "LinePart";
+                parentName = "PartialLines";
+            }
+
+            if (dictionary.ContainsKey(key))
+            {
+                MessageBox.Show(Configuration.Settings.Language.Settings.WordAlreadyExists);
                 return;
             }
-            var ocrFixReplaceList = OcrFixReplaceList.FromLanguageId(_threeLetterIsoLanguageName);
-            ocrFixReplaceList.AddWordOrPartial(key, value);
+
+            dictionary.Add(key, value);
+
+            //Sort
+            var sortedDictionary = new SortedDictionary<string, string>();
+            foreach (var pair in dictionary)
+            {
+                if (!sortedDictionary.ContainsKey(pair.Key))
+                    sortedDictionary.Add(pair.Key, pair.Value);
+            }
+
+            var doc = new XmlDocument();
+            if (File.Exists(replaceListXmlFileName))
+                doc.Load(replaceListXmlFileName);
+            else
+                doc.LoadXml("<OCRFixReplaceList><WholeWords/><PartialWords/><PartialLines/><BeginLines/><EndLines/><WholeLines/></OCRFixReplaceList>");
+
+            XmlNode wholeWords = doc.DocumentElement.SelectSingleNode(parentName);
+            wholeWords.RemoveAll();
+            foreach (var pair in sortedDictionary)
+            {
+                XmlNode node = doc.CreateElement(elementName);
+
+                XmlAttribute wordFrom = doc.CreateAttribute("from");
+                wordFrom.InnerText = pair.Key;
+                node.Attributes.Append(wordFrom);
+
+                XmlAttribute wordTo = doc.CreateAttribute("to");
+                wordTo.InnerText = pair.Value;
+                node.Attributes.Append(wordTo);
+
+                wholeWords.AppendChild(node);
+            }
+            doc.Save(replaceListXmlFileName);
             DialogResult = DialogResult.OK;
             NewSource = key;
             NewTarget = value;
@@ -83,7 +144,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (hunspellName != null && name.Equals(hunspellName, StringComparison.OrdinalIgnoreCase))
                     comboBoxDictionaries.SelectedIndex = comboBoxDictionaries.Items.Count - 1;
             }
-            _threeLetterIsoLanguageName = languageId;
+            _threeLetterISOLanguageName = languageId;
         }
 
         public string LanguageString
