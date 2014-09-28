@@ -1500,7 +1500,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ManagedDirectX>Gerado pelo DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerado pelo DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
-    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>    
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1874,7 +1874,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Fluxo de transporte da legenda indicado - {0}</Title>
     <PidLine>Transporte identificador do pacote (PID) = {0}, número de legendas = {1}</PidLine>
-    <SubLine>{0}:  {1} -&gt; {2}, {3} imagem(s)</SubLine>
+    <SubLine>{0}: {1} -&gt; {2}, {3} imagem(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de legenda desconhecido</Title>
