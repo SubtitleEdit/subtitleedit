@@ -30,7 +30,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <NumberSymbol>#</NumberSymbol>
     <Number>Número</Number>
     <Text>Texto</Text>
-    <HourMinutesSecondsMilliseconds>Hora:min:seg:mseg</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>Hora:min:seg:ms</HourMinutesSecondsMilliseconds>
     <Bold>Negrito</Bold>
     <Italic>Itálico</Italic>
     <Underline>Sublinhado</Underline>
@@ -60,7 +60,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <SessionKey>Nome de sessão</SessionKey>
     <UserName>Utilizador</UserName>
     <UserNameAlreadyInUse>Utilizador em uso</UserNameAlreadyInUse>
-    <WebServiceUrl>URL</WebServiceUrl>
+    <WebServiceUrl>Serviço web URL</WebServiceUrl>
     <IP>IP</IP>
     <VideoWindowTitle>Vídeo - {0}</VideoWindowTitle>
     <AudioWindowTitle>Áudio - {0}</AudioWindowTitle>
@@ -104,7 +104,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SourceVideoFile>Ficheiro fonte de vídeo:</SourceVideoFile>
     <GenerateWaveformData>Gerar dados em forma de onda</GenerateWaveformData>
     <PleaseWait>Isto pode levar alguns minutos - por favor, aguarde</PleaseWait>
-    <VlcMediaPlayerNotFoundTitle>VLC media player não encontrado</VlcMediaPlayerNotFoundTitle>
+    <VlcMediaPlayerNotFoundTitle>VLC media player não foi encontrado</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>O Subtitle Edit necessita do VLC media player 1.1.x ou superior para extrair áudio.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Deseja visitar a página do VLC media player na Internet?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>A gerar o ficheiro de pico...</GeneratingPeakFile>
@@ -351,13 +351,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Efeito Karaoke</Title>
     <ChooseColor>Seleccione a cor:</ChooseColor>
-    <TotalMilliseconds>Total milisseg.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Atraso final em milisseg.:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Total milissegundos:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Atraso final em milisseg:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Efeito máquina de escrever</Title>
-    <TotalMilliseconds>Total milisseg.:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Atraso final em milisseg.:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Total milissegundos:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Atraso final em milisseg:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exportar formato de texto personalizado</Title>
@@ -437,7 +437,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milissegundos</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Separador código de tempo...</TimeCodeSeperator>
+    <TimeCodeSeperator>Separador código de tempo</TimeCodeSeperator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Criar tempos como texto</Title>
@@ -532,10 +532,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Corrigir tag itálica inválida</FixInvalidItalicTag>
     <FixShortDisplayTime>Corrigir duração curta</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Corrigir tempo sobreposto</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;Quem eu.&lt;i&gt; -&gt; &lt;i&gt;Quem eu.&lt;/i&gt;</FixInvalidItalicTagsExample>
-    <RemoveUnneededSpacesExample>Hei   tu , aí. -&gt; Hei tu, aí.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>Hei tu!. -&gt; Hei tu!</RemoveUnneededPeriodsExample>
-    <FixMissingSpacesExample>Hei.Tu. -&gt; Hei. Tu.</FixMissingSpacesExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;E eu com isso.&lt;i&gt; -&gt; &lt;i&gt;E eu com isso.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <RemoveUnneededSpacesExample>Ei  tu , aí. -&gt; Ei tu, aí.</RemoveUnneededSpacesExample>
+    <RemoveUnneededPeriodsExample>Ei tu!. -&gt; Ei tu!</RemoveUnneededPeriodsExample>
+    <FixMissingSpacesExample>Ei.Tu. -&gt; Ei. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>AIias. -&gt; Alias.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>Letra i pequena. -&gt; Letra I grande.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Número do texto {0}: Tempo inicial é posterior ao tempo final: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
@@ -579,6 +579,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mensagens de log importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigidos e OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>NÃo -&gt; Não</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialoguesOneLineExample>Olá João! - Olá Ida! -&gt; Olá João!&lt;br /&gt;- Olá Ida!</FixDialoguesOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -883,7 +886,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
-        <MergeSelectedLinesASDialogue>Combinar as linhas seleccionadas como dialogo</MergeSelectedLinesASDialogue>
+        <MergeSelectedLinesASDialogue>Combinar as linhas seleccionadas como diálogo</MergeSelectedLinesASDialogue>
         <MergeWithLineBefore>Combinar com a linha anterior</MergeWithLineBefore>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -990,8 +993,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileNotFound>Ficheiro não encontrado: {0}</FileNotFound>
     <SavedSubtitleX>Legenda guardada {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Legenda original guardada {0}</SavedOriginalSubtitleX>
-    <FileOnDiskModified>Ficheiro modificado no disco</FileOnDiskModified>
+    <FileOnDiskModified>Ficheiro foi modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Substituir o ficheiro {0} modificado em {1} {2}{3} pelo ficheiro actual carregado do disco em {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Não é possível guardar {0}
+
+Ficheiro é só de leitura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}
 A legenda parece não ter conteúdo - tente guardar novamente se tiver a trabalhar numa legenda válida!</UnableToSaveSubtitleX>
     <BeforeNew>Antes de novo</BeforeNew>
@@ -1486,14 +1492,15 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AllowEditOfOriginalSubtitle>Permitir a edição da legenda original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar eliminação de linhas</PromptDeleteLines>
     <TimeCodeMode>Modo de código de tempo</TimeCodeMode>
-    <TimeCodeModeHHMMSSMS>HH:MM:SS.Mseg (00:00:01.500)</TimeCodeModeHHMMSSMS>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS.MS (00:00:01.500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Mecanismo de vídeo</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
-    <DirectShowDescription64>quartz.dll na pasta SysWOW64</DirectShowDescription64>
     <ManagedDirectX>Gerado pelo DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerado pelo DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>    
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1507,7 +1514,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CustomSearchTextAndUrl>Procura de texto e URL personalizada</CustomSearchTextAndUrl>
     <WaveformAppearance>Aparência da forma de onda</WaveformAppearance>
     <WaveformGridColor>Cor da grelha</WaveformGridColor>
-    <WaveformShowGridLines>Mostrar linha na grelha</WaveformShowGridLines>
+    <WaveformShowGridLines>Mostrar linhas na grelha</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
     <WaveformFocusMouseEnter>Evidenciar na entrada do cursor do rato</WaveformFocusMouseEnter>
@@ -1706,7 +1713,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CheckOneLetterWords>Solicitar uma letra para uma palavra desconhecida</CheckOneLetterWords>
     <TreatINQuoteAsING>Considerar a palavra final " in' " como " ing " (apenas em Inglês)</TreatINQuoteAsING>
     <ImageText>Imagem de texto</ImageText>
-    <SpellCheckCompleted>Verificação ortográfica terminada.</SpellCheckCompleted>
+    <SpellCheckCompleted>Verificação ortográfica terminada</SpellCheckCompleted>
     <SpellCheckAborted>Verificação ortográfica cancelada</SpellCheckAborted>
     <UndoX>Anular: {0}</UndoX>
   </SpellCheck>
@@ -1867,7 +1874,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
   <TransportStreamSubtitleChooser>
     <Title>Fluxo de transporte da legenda indicado - {0}</Title>
     <PidLine>Transporte identificador do pacote (PID) = {0}, número de legendas = {1}</PidLine>
-    <SubLine>{0}: {1} -&gt; {2}, {3} imagem(s)</SubLine>
+    <SubLine>{0}:  {1} -&gt; {2}, {3} imagem(s)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tipo de legenda desconhecido</Title>
@@ -1949,7 +1956,7 @@ Manter as alterações?</KeepChangesMessage>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas as imagens (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas as imagens com índice HTML...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} imagens guardadas em {1}</XImagesSavedInY>
-    <TryModiForUnknownWords>Tentar Microsoft MODI OCR para palavras desconhecidas</TryModiForUnknownWords>
+    <TryModiForUnknownWords>Tentar o Microsoft MODI OCR para palavras desconhecidas</TryModiForUnknownWords>
     <DictionaryX>Dicionário: {0}</DictionaryX>
     <RightToLeft>Direita para esquerda</RightToLeft>
     <ShowOnlyForcedSubtitles>Mostrar somente legendas forçadas</ShowOnlyForcedSubtitles>
@@ -1987,7 +1994,7 @@ Manter as alterações?</KeepChangesMessage>
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
-    <Seconds>segundos</Seconds>
+    <Seconds>Segundos</Seconds>
     <ZoomIn>Aumentar</ZoomIn>
     <ZoomOut>Diminuir</ZoomOut>
     <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
@@ -1998,7 +2005,7 @@ Manter as alterações?</KeepChangesMessage>
     <SplitAtCursor>Dividir na posição do cursor</SplitAtCursor>
     <MergeWithPrevious>Combinar com anterior</MergeWithPrevious>
     <MergeWithNext>Combinar com a seguinte</MergeWithNext>
-    <PlaySelection>Reporduzir selecção</PlaySelection>
+    <PlaySelection>Reporduzir a selecção</PlaySelection>
     <ShowWaveformAndSpectrogram>Mostrar forma de onda e espectrograma</ShowWaveformAndSpectrogram>
     <ShowWaveformOnly>Mostrar só forma de onda</ShowWaveformOnly>
     <ShowSpectrogramOnly>Mostrar só espectrograma</ShowSpectrogramOnly>
@@ -2007,9 +2014,9 @@ Manter as alterações?</KeepChangesMessage>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Supor códigos de tempo</Title>
-    <StartFrom>Iniciar apartir da...</StartFrom>
+    <StartFrom>Iniciar apartir de:</StartFrom>
     <CurrentVideoPosition>Posição de vídeo actual</CurrentVideoPosition>
-    <Beginning>Princípio</Beginning>
+    <Beginning>Início</Beginning>
     <DeleteLines>Eliminar linhas</DeleteLines>
     <FromCurrentVideoPosition>Da posição actual do vídeo</FromCurrentVideoPosition>
     <DetectOptions>Eliminar opções</DetectOptions>
