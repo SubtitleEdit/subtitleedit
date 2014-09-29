@@ -89,12 +89,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     fs.WriteByte(0);
 
                 // paragraphs
-                foreach (Paragraph p in subtitle.Paragraphs)
+                for (int index = 0; index < subtitle.Paragraphs.Count; index++)
                 {
+                    Paragraph p = subtitle.Paragraphs[index];
+                    Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
                     string text = p.Text;
 
                     //styles + ?
-                    buffer = new byte[] {
+                    buffer = new byte[]
+                    {
                         0x12,
                         1,
                         0,
@@ -103,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         0,
                         3, // justification, 1=left, 2=right, 3=center
                         0xF, //horizontal position, 1=top, F=bottom
-                        0x10, //horizontal position, 3=left, 0x10=center, 0x19=right
+                        0x10 //horizontal position, 3=left, 0x10=center, 0x19=right
                     };
 
                     //Normal        : 12 01 00 00 00 00 03 0F 10
@@ -160,9 +163,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             int idx = LatinLetters.IndexOf(text.Substring(j, 1));
                             if (idx >= 0)
-                                textBytes.Add((byte)LatinCodes[idx]);
+                                textBytes.Add((byte) LatinCodes[idx]);
                             else
-                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(new[] { text[j] })[0]);
+                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(new[] {text[j]})[0]);
 
                             j++;
                         }
@@ -170,9 +173,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     int length = textBytes.Count + 20;
                     long end = fs.Position + length;
-                    fs.WriteByte((byte)(length));
+                    fs.WriteByte((byte) (length));
 
-                    if (Configuration.Settings.SubtitleSettings.CheetahCaptionLessThan5SecondsNoEndTime && p.Duration.TotalMilliseconds < 5000)
+                    if (Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime || (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= 1500))
+                    {
+                        fs.WriteByte(0x62); // ?
+                        WriteTime(fs, p.StartTime);
+                        WriteTime(fs, p.EndTime);
+                    }
+                    else
                     {
                         fs.WriteByte(0x42); // ?
                         WriteTime(fs, p.StartTime);
@@ -180,12 +189,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         fs.WriteByte(1);
                         fs.WriteByte(0);
                         fs.WriteByte(0);
-                    }
-                    else
-                    {
-                        fs.WriteByte(0x62); // ?
-                        WriteTime(fs, p.StartTime);
-                        WriteTime(fs, p.EndTime);
                     }
 
                     fs.Write(buffer, 0, buffer.Length); // styles
@@ -264,7 +267,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 if (textLength > 0 && buffer.Length >= i + textLength)
                 {
-                    byte firstByte = buffer[i + 1];
                     p.StartTime = DecodeTimestamp(buffer, i + 2);
 
                     if (last != null && last.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
