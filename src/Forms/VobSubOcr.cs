@@ -1,4 +1,4 @@
-﻿using System.Net;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Ocr;
@@ -12,6 +12,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -4720,7 +4721,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (allItalic && matches.Count > 0)
             {
-                var temp = HtmlUtils.RemoveOpenCloseTags(paragraph.ToString(), HtmlUtils.TagItalic);
+                var temp = HtmlUtil.RemoveOpenCloseTags(paragraph.ToString(), HtmlUtil.TagItalic);
                 paragraph.Clear();
                 paragraph.Append("<i>");
                 paragraph.Append(temp);
@@ -4742,7 +4743,7 @@ namespace Nikse.SubtitleEdit.Forms
                 && (wordNonItalics == 0 || wordNonItalics < 2 && lineLettersNonItalics < 3 && line.ToString().TrimStart().StartsWith('-')))
             {
                 paragraph.Append("<i>");
-                paragraph.Append(HtmlUtils.RemoveOpenCloseTags(line.ToString(), HtmlUtils.TagItalic));
+                paragraph.Append(HtmlUtil.RemoveOpenCloseTags(line.ToString(), HtmlUtil.TagItalic));
                 paragraph.Append("</i>");
                 paragraph.Append(appendString);
             }
@@ -5713,7 +5714,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (line.Contains('[') && line.Contains(']'))
                 line = line.Replace("[", string.Empty).Replace("]", string.Empty);
 
-            line = HtmlUtils.RemoveOpenCloseTags(line, HtmlUtils.TagItalic);
+            line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic);
 
             int count = 0;
             var arr = line.Replace("a.m", string.Empty).Replace("p.m", string.Empty).Replace("o.r", string.Empty)
@@ -5799,16 +5800,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (!checkBoxTesseractItalicsOn.Checked)
-                textWithOutFixes = HtmlUtils.RemoveOpenCloseTags(textWithOutFixes, HtmlUtils.TagItalic);
+                textWithOutFixes = HtmlUtil.RemoveOpenCloseTags(textWithOutFixes, HtmlUtil.TagItalic);
 
             // Sometimes Tesseract has problems with small fonts - it helps to make the image larger
-            if (HtmlUtils.RemoveOpenCloseTags(textWithOutFixes, HtmlUtils.TagItalic).Replace("@", string.Empty).Replace("%", string.Empty).Replace("|", string.Empty).Trim().Length < 3
+            if (HtmlUtil.RemoveOpenCloseTags(textWithOutFixes, HtmlUtil.TagItalic).Replace("@", string.Empty).Replace("%", string.Empty).Replace("|", string.Empty).Trim().Length < 3
                 || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
             {
                 string rs = TesseractResizeAndRetry(bitmap);
                 textWithOutFixes = rs;
                 if (!checkBoxTesseractItalicsOn.Checked)
-                    textWithOutFixes = HtmlUtils.RemoveOpenCloseTags(textWithOutFixes, HtmlUtils.TagItalic);
+                    textWithOutFixes = HtmlUtil.RemoveOpenCloseTags(textWithOutFixes, HtmlUtil.TagItalic);
             }
 
             // fix italics
@@ -5990,7 +5991,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 wordsNotFound = modiWordsNotFound;
                                 correctWords = modiCorrectWords;
 
-                                line = HtmlUtils.RemoveOpenCloseTags(line, HtmlUtils.TagItalic).Trim();
+                                line = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Trim();
 
                                 if (line.Length > 7 && unItalicText.Length > 7 && unItalicText.StartsWith("I ") &&
                                     line.StartsWith(unItalicText.Remove(0, 2).Substring(0, 4)))
@@ -5998,11 +5999,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 if (checkBoxTesseractMusicOn.Checked)
                                 {
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtils.RemoveOpenCloseTags(unItalicText, HtmlUtils.TagItalic).Substring(1, 2) == "' ")
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic).Substring(1, 2) == "' ")
                                     {
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtils.RemoveOpenCloseTags(unItalicText, HtmlUtils.TagItalic)[1] == ' ')
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[1] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6010,7 +6011,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
                                     }
-                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtils.RemoveOpenCloseTags(unItalicText, HtmlUtils.TagItalic)[2] == ' ')
+                                    if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[2] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
                                         unItalicText = Utilities.RemoveHtmlTags(unItalicText);
@@ -6177,7 +6178,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         unItalicText += "?";
                                 }
 
-                                line = HtmlUtils.RemoveOpenCloseTags(unItalicText, HtmlUtils.TagItalic);
+                                line = HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic);
                                 if (checkBoxAutoFixCommonErrors.Checked)
                                 {
                                     if (line.Contains("'.") && !textWithOutFixes.Contains("'.") && textWithOutFixes.Contains(':') && !line.EndsWith("'.") && Configuration.Settings.Tools.OcrFixUseHardcodedRules)
@@ -6371,7 +6372,7 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else if (badWords > 0 || line.Contains('_') || HasSingleLetters(line))
                     subtitleListView1.SetBackgroundColor(index, Color.Yellow);
-                else if (string.IsNullOrWhiteSpace(HtmlUtils.RemoveOpenCloseTags(line, HtmlUtils.TagItalic)))
+                else if (string.IsNullOrWhiteSpace(HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic)))
                     subtitleListView1.SetBackgroundColor(index, Color.Orange);
                 else
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
@@ -6417,7 +6418,7 @@ namespace Nikse.SubtitleEdit.Forms
                 s = ("<i>I " + s.Remove(0, 5)).Replace("  ", " ");
             else if (italicStartCount == 1 && s.Length > 20 &&
                      s.IndexOf("<i>", StringComparison.Ordinal) > 1 && s.IndexOf("<i>", StringComparison.Ordinal) < 10 && s.EndsWith("</i>"))
-                s = "<i>" + HtmlUtils.RemoveOpenCloseTags(s, HtmlUtils.TagItalic) + "</i>";
+                s = "<i>" + HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic) + "</i>";
             s = s.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
             return Utilities.FixInvalidItalicTags(s);
@@ -7665,7 +7666,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int selectionStart = tb.SelectionStart;
                 if (text.Contains("<i>"))
                 {
-                    text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic);
+                    text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
                 }
                 else
                 {

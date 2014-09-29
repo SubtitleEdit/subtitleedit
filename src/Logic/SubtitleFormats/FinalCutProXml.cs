@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
 
-//  - Mom, when you were my age&#13;what did you want to do?
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
+    //  - Mom, when you were my age&#13;what did you want to do?
     public class FinalCutProXml : SubtitleFormat
     {
         public override string Extension
@@ -404,7 +405,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode generatorItem = xml.CreateElement("generatoritem");
                 string fontStyle = "1"; //1==plain
-                var s = HtmlUtils.RemoveOpenCloseTags(p.Text, HtmlUtils.TagFont).Trim();
+                var s = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont).Trim();
                 if ((s.StartsWith("<i><b>") && s.EndsWith("</b></i>")) || (s.StartsWith("<b><i>") && s.EndsWith("</i></b>")))
                     fontStyle = "4"; //4==bold/italic
                 else if (s.StartsWith("<i>") && s.EndsWith("</i>"))

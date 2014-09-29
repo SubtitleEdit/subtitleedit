@@ -1,16 +1,15 @@
-﻿using Nikse.SubtitleEdit.Forms;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-// The PAC format was developed by Screen Electronics
-// The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
-
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
+    // The PAC format was developed by Screen Electronics
+    // The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
     public class Pac : SubtitleFormat
     {
         public static TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
@@ -848,7 +847,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string MakePacItalicsAndRemoveOtherTags(string text)
         {
-            text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagFont, HtmlUtils.TagUnderline).Trim();
+            text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagFont, HtmlUtil.TagUnderline).Trim();
             if (!text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
                 return text;
 

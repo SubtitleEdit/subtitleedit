@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Enums;
@@ -2259,12 +2260,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (ext == ".sup")
                 {
-                    if (FileUtils.IsBluRaySup(fileName))
+                    if (FileUtil.IsBluRaySup(fileName))
                     {
                         ImportAndOcrBluRaySup(fileName, _loading);
                         return;
                     }
-                    else if (FileUtils.IsSpDvdSup(fileName))
+                    else if (FileUtil.IsSpDvdSup(fileName))
                     {
                         ImportAndOcrSpDvdSup(fileName, _loading);
                         return;
@@ -2297,13 +2298,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                 var fi = new FileInfo(fileName);
 
-                if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && FileUtils.IsTransportStream(fileName))
+                if ((ext == ".ts" || ext == ".rec" || ext == ".mpeg" || ext == ".mpg") && fi.Length > 10000 && FileUtil.IsTransportStream(fileName))
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
                 }
 
-                if ((ext == ".m2ts") && fi.Length > 10000 && FileUtils.IsM2TransportStream(fileName))
+                if ((ext == ".m2ts") && fi.Length > 10000 && FileUtil.IsM2TransportStream(fileName))
                 {
                     ImportSubtitleFromTransportStream(fileName);
                     return;
@@ -2321,7 +2322,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
 
                     // retry Blu-ray sup (file with wrong extension)
-                    if (FileUtils.IsBluRaySup(fileName))
+                    if (FileUtil.IsBluRaySup(fileName))
                     {
                         ImportAndOcrBluRaySup(fileName, _loading);
                         return;
@@ -2770,14 +2771,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // retry Blu-ray (file with wrong extension)
-                if (format == null && fi.Length > 500 && FileUtils.IsBluRaySup(fileName))
+                if (format == null && fi.Length > 500 && FileUtil.IsBluRaySup(fileName))
                 {
                     ImportAndOcrBluRaySup(fileName, _loading);
                     return;
                 }
 
                 // retry SP DVD (file with wrong extension)
-                if (format == null && fi.Length > 500 && FileUtils.IsSpDvdSup(fileName))
+                if (format == null && fi.Length > 500 && FileUtil.IsSpDvdSup(fileName))
                 {
                     ImportAndOcrSpDvdSup(fileName, _loading);
                     return;
@@ -2794,7 +2795,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for .rar file
-                if (format == null && fi.Length > 100 && FileUtils.IsRar(fileName))
+                if (format == null && fi.Length > 100 && FileUtil.IsRar(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadRar))
                         MessageBox.Show("This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.");
@@ -2804,7 +2805,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // check for .zip file
-                if (format == null && fi.Length > 100 && FileUtils.IsZip(fileName))
+                if (format == null && fi.Length > 100 && FileUtil.IsZip(fileName))
                 {
                     if (string.IsNullOrEmpty(_language.ErrorLoadZip))
                         MessageBox.Show("This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.");
@@ -5236,11 +5237,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                             // do not allow blu-ray/vobsub
                             string extension = Path.GetExtension(fileName).ToLower();
-                            if (extension == ".sub" && (IsVobSubFile(fileName, false) || FileUtils.IsSpDvdSup(fileName)))
+                            if (extension == ".sub" && (IsVobSubFile(fileName, false) || FileUtil.IsSpDvdSup(fileName)))
                             {
                                 format = null;
                             }
-                            else if (extension == ".sup" && FileUtils.IsBluRaySup(fileName))
+                            else if (extension == ".sup" && FileUtil.IsBluRaySup(fileName))
                             {
                                 format = null;
                             }
@@ -7131,7 +7132,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewText.Text.Contains("<i>"))
                     {
-                        textBoxListViewText.Text = HtmlUtils.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtils.TagItalic);
+                        textBoxListViewText.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtil.TagItalic);
                     }
                     else
                     {
@@ -8089,7 +8090,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (allLinesStartAndEndsWithItalic)
             {
-                text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic).Trim();
+                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic).Trim();
                 text = "<i>" + text + "</i>";
             }
             return text;
@@ -10149,15 +10150,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     OpenSubtitle(fileName, null);
                 }
-                else if (fi.Length < 250000000 && ext == ".sup" && FileUtils.IsBluRaySup(fileName)) // max 250 mb
+                else if (fi.Length < 250000000 && ext == ".sup" && FileUtil.IsBluRaySup(fileName)) // max 250 mb
                 {
                     OpenSubtitle(fileName, null);
                 }
-                else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && FileUtils.IsTransportStream(fileName))
+                else if ((ext == ".ts" || ext == ".rec" || ext == ".mpg" || ext == ".mpeg") && FileUtil.IsTransportStream(fileName))
                 {
                     OpenSubtitle(fileName, null);
                 }
-                else if (ext == ".m2ts" && FileUtils.IsM2TransportStream(fileName))
+                else if (ext == ".m2ts" && FileUtil.IsM2TransportStream(fileName))
                 {
                     OpenSubtitle(fileName, null);
                 }
@@ -10349,7 +10350,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                bool isHeaderOk = FileUtils.IsVobSub(subFileName);
+                bool isHeaderOk = FileUtil.IsVobSub(subFileName);
                 if (isHeaderOk)
                 {
                     if (!verbose)
@@ -12622,12 +12623,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Path.GetExtension(fileName).Equals(".sup", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (FileUtils.IsBluRaySup(fileName))
+                        if (FileUtil.IsBluRaySup(fileName))
                         {
                             MessageBox.Show("Blu-ray sup files not supported here");
                             return;
                         }
-                        else if (FileUtils.IsSpDvdSup(fileName))
+                        else if (FileUtil.IsSpDvdSup(fileName))
                         {
                             MessageBox.Show("DVD sup files not supported here");
                             return;
@@ -17014,7 +17015,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (textBoxListViewTextAlternate.Text.Contains("<i>"))
                     {
-                        textBoxListViewTextAlternate.Text = HtmlUtils.RemoveOpenCloseTags(textBoxListViewTextAlternate.Text, HtmlUtils.TagItalic);
+                        textBoxListViewTextAlternate.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewTextAlternate.Text, HtmlUtil.TagItalic);
                     }
                     else
                     {

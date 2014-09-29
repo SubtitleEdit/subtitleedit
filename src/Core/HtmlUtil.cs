@@ -3,12 +3,12 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Core
 {
     /// <summary>
     /// HTML specific string manipulations.
     /// </summary>
-    internal static class HtmlUtils
+    internal static class HtmlUtil
     {
         public const string TagItalic = "i";
         public const string TagBold = "b";
