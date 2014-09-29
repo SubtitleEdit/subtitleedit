@@ -84,7 +84,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (match.Success && s.Length == 11)
                 {
                     if (p.StartTime.TotalMilliseconds > 0)
+                    {
                         subtitle.Paragraphs.Add(p);
+                        if (string.IsNullOrEmpty(p.Text))
+                            _errorCount++;
+                    }
 
                     p = new Paragraph();
                     string[] parts = s.Split(':');
