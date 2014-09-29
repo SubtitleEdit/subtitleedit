@@ -4,15 +4,20 @@
 3.4.3 (xth October 2014)
 * NEW:
    * Added Thai translation - thx Bonfelder Straße
+   * Added Turkish translation - thx kipekcioglu
+   * MPC-HC can now be used as video player (64-bit OS requires 64-bit MPC-HC)
    * Choosing of output time code format in Timed Text 1.0 properties
 * IMPROVED:
    * Updated French translation - thx JM GBT
+   * OCR fix replace list now has a user file
+   * NHunspell updated to latest version - thx alfaproject
    * Improved "Fix invalid italic tags"
    * Allows for "hh:mm:ss.ms" input in Timed Text 1.0
    * Better error messages when saving a file fails - thx Andrew
    * Minor performance improvements
 * FIXED:
    * Fixed subtitle drag-n-drop bug - thx Andrew
+   * Fixed crash in TS parser (reading AdaptationField) - thx SimplyTheBOSS
    * Fixed bug in "frame-up-down-box" - thx Markus
    * Fixed font end tag in SSA/ASS - thx Milad
    * Fixed bug in "Add missing dashes" + "remove unneeded spaces" - thx Andrew
