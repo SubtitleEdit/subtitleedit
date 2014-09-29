@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int CurrentCavena890LanguageIdLine1 { get; set; }
         public int CurrentCavena890LanguageIdLine2 { get; set; }
 
-        public bool CheetahCaptionLessThan5SecondsNoEndTime { get; set; }
+        public bool CheetahCaptionAlwayWriteEndTime { get; set; }
 
         public bool SamiDisplayTwoClassesAsTwoSubtitles { get; set; }
         public int SamiHtmlEncodeMode { get; set; }
@@ -1791,9 +1791,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("FcpFontName");
                 if (subNode != null)
                     settings.SubtitleSettings.FcpFontName = subNode.InnerText;
-                subNode = node.SelectSingleNode("CheetahCaptionLessThan5SecondsNoEndTime");
+                subNode = node.SelectSingleNode("CheetahCaptionAlwayWriteEndTime");
                 if (subNode != null)
-                    settings.SubtitleSettings.CheetahCaptionLessThan5SecondsNoEndTime = Convert.ToBoolean(subNode.InnerText);
+                    settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime = Convert.ToBoolean(subNode.InnerText);
                 subNode = node.SelectSingleNode("NuendoCharacterListFile");
                 if (subNode != null)
                     settings.SubtitleSettings.NuendoCharacterListFile = subNode.InnerText;
@@ -2824,7 +2824,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("TimedText10TimeCodeFormat", settings.SubtitleSettings.TimedText10TimeCodeFormat);
                 textWriter.WriteElementString("FcpFontSize", settings.SubtitleSettings.FcpFontSize.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("FcpFontName", settings.SubtitleSettings.FcpFontName);
-                textWriter.WriteElementString("CheetahCaptionLessThan5SecondsNoEndTime", settings.SubtitleSettings.CheetahCaptionLessThan5SecondsNoEndTime.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("CheetahCaptionAlwayWriteEndTime", settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("NuendoCharacterListFile", settings.SubtitleSettings.NuendoCharacterListFile);
                 textWriter.WriteEndElement();
 
