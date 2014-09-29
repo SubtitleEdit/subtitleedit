@@ -2,12 +2,12 @@
 using System.IO;
 using System.Windows.Forms;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Core
 {
     /// <summary>
     /// File related utilities.
     /// </summary>
-    internal static class FileUtils
+    internal static class FileUtil
     {
         /// <summary>
         /// Opens an existing file for reading, and allow the user to retry if it fails.
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var tsp = new TransportStream.TransportStreamParser();
+                var tsp = new Logic.TransportStream.TransportStreamParser();
                 tsp.DetectFormat(fs);
                 return tsp.IsM2TransportStream;
             }
@@ -113,8 +113,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var buffer = new byte[4];
                 fs.Read(buffer, 0, 4);
-                return VobSub.VobSubParser.IsMpeg2PackHeader(buffer)
-                    || VobSub.VobSubParser.IsPrivateStream1(buffer, 0);
+                return Logic.VobSub.VobSubParser.IsMpeg2PackHeader(buffer)
+                    || Logic.VobSub.VobSubParser.IsPrivateStream1(buffer, 0);
             }
         }
 
@@ -122,13 +122,13 @@ namespace Nikse.SubtitleEdit.Logic
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var buffer = new byte[VobSub.SpHeader.SpHeaderLength];
+                var buffer = new byte[Logic.VobSub.SpHeader.SpHeaderLength];
                 if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
                 {
                     return false;
                 }
 
-                var header = new VobSub.SpHeader(buffer);
+                var header = new Logic.VobSub.SpHeader(buffer);
                 if (header.Identifier != "SP" || header.NextBlockPosition < 5)
                 {
                     return false;
@@ -140,13 +140,13 @@ namespace Nikse.SubtitleEdit.Logic
                     return false;
                 }
 
-                buffer = new byte[VobSub.SpHeader.SpHeaderLength];
+                buffer = new byte[Logic.VobSub.SpHeader.SpHeaderLength];
                 if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
                 {
                     return false;
                 }
 
-                header = new VobSub.SpHeader(buffer);
+                header = new Logic.VobSub.SpHeader(buffer);
                 return header.Identifier == "SP";
             }
         }

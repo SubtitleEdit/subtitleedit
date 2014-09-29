@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -65,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 count++;
-                var text = HtmlUtils.RemoveOpenCloseTags(p.Text, HtmlUtils.TagFont);
+                var text = HtmlUtil.RemoveOpenCloseTags(p.Text, HtmlUtil.TagFont);
                 sb.AppendLine(string.Format(paragraphWriteFormat, p.StartFrame, p.EndFrame, text));
             }
             return sb.ToString().Trim();
