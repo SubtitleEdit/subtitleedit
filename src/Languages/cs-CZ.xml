@@ -436,7 +436,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milisekundy</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Oddělovač časového kódu</TimeCodeSeperator>
+    <TimeCodeSeparator>Oddělovač časového kódu</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generovat čas jako text</Title>

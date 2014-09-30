@@ -436,7 +436,7 @@
     <Srt>.srt</Srt>
     <Milliseconds>มิลลิวินาที</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>ตัวคั่นไทม์โค้ด</TimeCodeSeperator>
+    <TimeCodeSeparator>ตัวคั่นไทม์โค้ด</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>สร้างเวลาเป็นข้อความ</Title>

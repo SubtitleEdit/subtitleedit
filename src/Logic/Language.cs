@@ -606,7 +606,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Srt = ".srt",
                 Milliseconds = "Milliseconds",
                 HHMMSSFF = "HH:MM:SS:FF",
-                TimeCodeSeperator = "Time code separator",
+                TimeCodeSeparator = "Time code separator",
             };
 
             ExtractDateTimeInfo = new LanguageStructure.ExtractDateTimeInfo

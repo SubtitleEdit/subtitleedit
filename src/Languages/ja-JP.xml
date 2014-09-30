@@ -338,7 +338,7 @@ C# ソース コードは https://github.com/SubtitleEdit/subtitleedit にあり
     <Srt>.srt</Srt>
     <Milliseconds>ミリ秒</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>タイム コードの区切り</TimeCodeSeperator>
+    <TimeCodeSeparator>タイム コードの区切り</TimeCodeSeparator>
   </ExportText>
   <FindDialog>
     <Title>検索</Title>

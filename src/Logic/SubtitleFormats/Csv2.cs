@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Csv2 : SubtitleFormat
     {
 
-        private const string Seperator = ",";
+        private const string Separator = ",";
 
         //1,01:00:10:03,01:00:15:25,I thought I should let my sister-in-law know.
-        private static readonly Regex CsvLine = new Regex(@"^\d+" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator, RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^\d+" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator, RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -58,10 +58,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             const string format = "{1}{0}{2}{0}{3}{0}\"{4}\"";
             var sb = new StringBuilder();
-            sb.AppendLine(string.Format(format, Seperator, "Number", "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Text"));
+            sb.AppendLine(string.Format(format, Separator, "Number", "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Text"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format(format, Seperator, p.Number, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, "\n")));
+                sb.AppendLine(string.Format(format, Separator, p.Number, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), p.Text.Replace(Environment.NewLine, "\n")));
             }
             return sb.ToString().Trim();
         }
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Match m = CsvLine.Match(line);
                 if (m.Success)
                 {
-                    string[] parts = line.Substring(0, m.Length).Split(Seperator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, m.Length).Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                         try
                         {

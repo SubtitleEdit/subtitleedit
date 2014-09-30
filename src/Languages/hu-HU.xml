@@ -432,7 +432,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milliszekundum</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Időkód elválasztó</TimeCodeSeperator>
+    <TimeCodeSeparator>Időkód elválasztó</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Idő generálása szövegként</Title>

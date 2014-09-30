@@ -438,7 +438,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <Srt>.srt</Srt>
     <Milliseconds>мс</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Разделитель кода</TimeCodeSeperator>
+    <TimeCodeSeparator>Разделитель кода</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Создание времени в виде текста</Title>

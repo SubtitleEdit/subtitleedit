@@ -430,7 +430,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Segundumilaen</Milliseconds>
     <HHMMSSFF>OO:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Denb. kode banant.:</TimeCodeSeperator>
+    <TimeCodeSeparator>Denb. kode banant.:</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Sortu denbora idazki bezala</Title>

@@ -343,7 +343,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt />
     <Milliseconds />
     <HHMMSSFF />
-    <TimeCodeSeperator />
+    <TimeCodeSeparator />
   </ExportText>
   <FindDialog>
     <Title>بحث</Title>

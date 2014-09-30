@@ -38,8 +38,8 @@
             this.checkBoxAddAfterText = new System.Windows.Forms.CheckBox();
             this.checkBoxShowLineNumbers = new System.Windows.Forms.CheckBox();
             this.groupBoxTimeCodeFormat = new System.Windows.Forms.GroupBox();
-            this.comboBoxTimeCodeSeperator = new System.Windows.Forms.ComboBox();
-            this.labelTimeCodeSeperator = new System.Windows.Forms.Label();
+            this.comboBoxTimeCodeSeparator = new System.Windows.Forms.ComboBox();
+            this.labelTimeCodeSeparator = new System.Windows.Forms.Label();
             this.radioButtonTimeCodeHHMMSSFF = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeMs = new System.Windows.Forms.RadioButton();
             this.radioButtonTimeCodeSrt = new System.Windows.Forms.RadioButton();
@@ -175,8 +175,8 @@
             // 
             // groupBoxTimeCodeFormat
             // 
-            this.groupBoxTimeCodeFormat.Controls.Add(this.comboBoxTimeCodeSeperator);
-            this.groupBoxTimeCodeFormat.Controls.Add(this.labelTimeCodeSeperator);
+            this.groupBoxTimeCodeFormat.Controls.Add(this.comboBoxTimeCodeSeparator);
+            this.groupBoxTimeCodeFormat.Controls.Add(this.labelTimeCodeSeparator);
             this.groupBoxTimeCodeFormat.Controls.Add(this.radioButtonTimeCodeHHMMSSFF);
             this.groupBoxTimeCodeFormat.Controls.Add(this.radioButtonTimeCodeMs);
             this.groupBoxTimeCodeFormat.Controls.Add(this.radioButtonTimeCodeSrt);
@@ -187,28 +187,28 @@
             this.groupBoxTimeCodeFormat.TabStop = false;
             this.groupBoxTimeCodeFormat.Text = "Time code format";
             // 
-            // comboBoxTimeCodeSeperator
+            // comboBoxTimeCodeSeparator
             // 
-            this.comboBoxTimeCodeSeperator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTimeCodeSeperator.FormattingEnabled = true;
-            this.comboBoxTimeCodeSeperator.Items.AddRange(new object[] {
+            this.comboBoxTimeCodeSeparator.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTimeCodeSeparator.FormattingEnabled = true;
+            this.comboBoxTimeCodeSeparator.Items.AddRange(new object[] {
             " --> ",
             " - ",
             " "});
-            this.comboBoxTimeCodeSeperator.Location = new System.Drawing.Point(121, 90);
-            this.comboBoxTimeCodeSeperator.Name = "comboBoxTimeCodeSeperator";
-            this.comboBoxTimeCodeSeperator.Size = new System.Drawing.Size(121, 21);
-            this.comboBoxTimeCodeSeperator.TabIndex = 4;
-            this.comboBoxTimeCodeSeperator.SelectedIndexChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
+            this.comboBoxTimeCodeSeparator.Location = new System.Drawing.Point(121, 90);
+            this.comboBoxTimeCodeSeparator.Name = "comboBoxTimeCodeSeparator";
+            this.comboBoxTimeCodeSeparator.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxTimeCodeSeparator.TabIndex = 4;
+            this.comboBoxTimeCodeSeparator.SelectedIndexChanged += new System.EventHandler(this.radioButtonFormatNone_CheckedChanged);
             // 
-            // labelTimeCodeSeperator
+            // labelTimeCodeSeparator
             // 
-            this.labelTimeCodeSeperator.AutoSize = true;
-            this.labelTimeCodeSeperator.Location = new System.Drawing.Point(13, 93);
-            this.labelTimeCodeSeperator.Name = "labelTimeCodeSeperator";
-            this.labelTimeCodeSeperator.Size = new System.Drawing.Size(104, 13);
-            this.labelTimeCodeSeperator.TabIndex = 3;
-            this.labelTimeCodeSeperator.Text = "Time code separator";
+            this.labelTimeCodeSeparator.AutoSize = true;
+            this.labelTimeCodeSeparator.Location = new System.Drawing.Point(13, 93);
+            this.labelTimeCodeSeparator.Name = "labelTimeCodeSeparator";
+            this.labelTimeCodeSeparator.Size = new System.Drawing.Size(104, 13);
+            this.labelTimeCodeSeparator.TabIndex = 3;
+            this.labelTimeCodeSeparator.Text = "Time code separator";
             // 
             // radioButtonTimeCodeHHMMSSFF
             // 
@@ -399,8 +399,8 @@
         private System.Windows.Forms.RadioButton radioButtonTimeCodeHHMMSSFF;
         private System.Windows.Forms.CheckBox checkBoxAddNewlineAfterLineNumber;
         private System.Windows.Forms.CheckBox checkBoxAddNewlineAfterTimeCodes;
-        private System.Windows.Forms.ComboBox comboBoxTimeCodeSeperator;
-        private System.Windows.Forms.Label labelTimeCodeSeperator;
+        private System.Windows.Forms.ComboBox comboBoxTimeCodeSeparator;
+        private System.Windows.Forms.Label labelTimeCodeSeparator;
         private System.Windows.Forms.Label labelPreview;
         private System.Windows.Forms.CheckBox checkBoxRemoveStyling;
         private System.Windows.Forms.Label labelEncoding;

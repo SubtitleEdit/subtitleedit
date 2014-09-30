@@ -338,7 +338,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>. Srt</Srt>
     <Milliseconds>Milisekundi</Milliseconds>
     <HHMMSSFF>HH: MM: SS: FF</HHMMSSFF>
-    <TimeCodeSeperator>Razdvajač vremenskog koda</TimeCodeSeperator>
+    <TimeCodeSeparator>Razdvajač vremenskog koda</TimeCodeSeparator>
   </ExportText>
   <FindDialog>
     <Title>Pretraga</Title>

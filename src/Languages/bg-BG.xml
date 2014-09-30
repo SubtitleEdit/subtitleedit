@@ -431,7 +431,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Милисекунди</Milliseconds>
     <HHMMSSFF>ЧЧ:ММ:СС:ММ</HHMMSSFF>
-    <TimeCodeSeperator>Разделител на времевия код</TimeCodeSeperator>
+    <TimeCodeSeparator>Разделител на времевия код</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Генериране на време като текст</Title>

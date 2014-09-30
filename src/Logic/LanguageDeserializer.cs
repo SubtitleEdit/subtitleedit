@@ -1241,8 +1241,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportText/HHMMSSFF":
                     language.ExportText.HHMMSSFF = reader.Value;
                     break;
-                case "ExportText/TimeCodeSeperator":
-                    language.ExportText.TimeCodeSeperator = reader.Value;
+                case "ExportText/TimeCodeSeparator":
+                    language.ExportText.TimeCodeSeparator = reader.Value;
                     break;
                 case "ExtractDateTimeInfo/Title":
                     language.ExtractDateTimeInfo.Title = reader.Value;
