@@ -163,9 +163,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             int idx = LatinLetters.IndexOf(text.Substring(j, 1));
                             if (idx >= 0)
-                                textBytes.Add((byte) LatinCodes[idx]);
+                                textBytes.Add((byte)LatinCodes[idx]);
                             else
-                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(new[] {text[j]})[0]);
+                                textBytes.Add(Encoding.GetEncoding(1252).GetBytes(new[] { text[j] })[0]);
 
                             j++;
                         }
@@ -173,7 +173,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     int length = textBytes.Count + 20;
                     long end = fs.Position + length;
-                    fs.WriteByte((byte) (length));
+                    fs.WriteByte((byte)(length));
 
                     if (Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime || (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= 1500))
                     {
