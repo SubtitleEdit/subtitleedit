@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -70,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var namesEtc = new List<string>();
             var tmp = new List<string>();
-            Utilities.LoadNamesEtcWordLists(tmp, tmp, language);
+            NamesList.LoadNamesEtcWordLists(tmp, tmp, language);
             foreach (string s in tmp)
             {
                 if (s.Contains('.'))

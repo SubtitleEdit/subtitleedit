@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (string.IsNullOrEmpty(languageName))
                 languageName = "en_US";
-            if (Utilities.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
+            if (Nikse.SubtitleEdit.Logic.Dictionaries.NamesList.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
                 DialogResult = DialogResult.OK;
             else
                 DialogResult = DialogResult.Cancel;

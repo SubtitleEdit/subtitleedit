@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -1803,7 +1804,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 // names etc
                 _wordListNamesEtc.Clear();
-                Utilities.LoadNamesEtcWordLists(_wordListNamesEtc, _wordListNamesEtc, language);
+                NamesList.LoadNamesEtcWordLists(_wordListNamesEtc, _wordListNamesEtc, language);
                 _wordListNamesEtc.Sort();
                 return _wordListNamesEtc;
             });
@@ -1840,7 +1841,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxNameEtc.Text.Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
-                Utilities.AddWordToLocalNamesEtcList(text, language);
+                NamesList.AddWordToLocalNamesEtcList(text, language);
                 LoadNamesEtc(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
@@ -1890,8 +1891,8 @@ namespace Nikse.SubtitleEdit.Forms
                     int removeCount = 0;
                     var namesEtc = new List<string>();
                     var globalNamesEtc = new List<string>();
-                    string localNamesEtcFileName = Utilities.LoadLocalNamesEtc(namesEtc, namesEtc, language);
-                    Utilities.LoadGlobalNamesEtc(globalNamesEtc, globalNamesEtc);
+                    string localNamesEtcFileName = NamesList.LoadLocalNamesEtc(namesEtc, namesEtc, language);
+                    NamesList.LoadGlobalNamesEtc(globalNamesEtc, globalNamesEtc);
                     for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxNamesEtc.SelectedIndices[idx];

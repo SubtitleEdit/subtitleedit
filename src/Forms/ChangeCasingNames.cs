@@ -1,10 +1,11 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -131,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(languageCode))
                 languageCode = "en_US";
 
-            Utilities.LoadNamesEtcWordLists(namesEtcList, namesEtcList, languageCode);
+            NamesList.LoadNamesEtcWordLists(namesEtcList, namesEtcList, languageCode);
             if (languageCode.StartsWith("en"))
             {
                 if (namesEtcList.Contains("Black"))
