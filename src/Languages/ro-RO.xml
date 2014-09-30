@@ -432,7 +432,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milisecunde</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Separator cod de timp</TimeCodeSeperator>
+    <TimeCodeSeparator>Separator cod de timp</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generare timp ca text</Title>

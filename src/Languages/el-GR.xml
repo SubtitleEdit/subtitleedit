@@ -435,7 +435,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Χιλιοστά δευτερολέπτου</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Διαχωρισμός κωδικοποίησης χρόνου</TimeCodeSeperator>
+    <TimeCodeSeparator>Διαχωρισμός κωδικοποίησης χρόνου</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Δημιουργία χρόνου ως κείμενο</Title>

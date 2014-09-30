@@ -431,7 +431,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Millisekunder</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Tidskod separator</TimeCodeSeperator>
+    <TimeCodeSeparator>Tidskod separator</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generera tid som text</Title>

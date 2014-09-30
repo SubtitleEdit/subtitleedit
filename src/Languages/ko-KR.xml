@@ -433,7 +433,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Srt>.SRT</Srt>
     <Milliseconds>밀리초</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>타임코드 구분</TimeCodeSeperator>
+    <TimeCodeSeparator>타임코드 구분</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>텍스트로 시간 생성</Title>

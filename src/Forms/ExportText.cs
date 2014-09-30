@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonTimeCodeSrt.Text = l.Srt;
             radioButtonTimeCodeMs.Text = l.Milliseconds;
             radioButtonTimeCodeHHMMSSFF.Text = l.HHMMSSFF;
-            labelTimeCodeSeperator.Text = l.TimeCodeSeperator;
+            labelTimeCodeSeparator.Text = l.TimeCodeSeparator;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.Main.Menu.File.SaveAs;
@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _fileName = fileName;
             textBoxText.ReadOnly = true;
-            comboBoxTimeCodeSeperator.SelectedIndex = 0;
+            comboBoxTimeCodeSeparator.SelectedIndex = 0;
             GeneratePreview();
 
             comboBoxEncoding.Items.Clear();
@@ -75,13 +75,13 @@ namespace Nikse.SubtitleEdit.Forms
 
             string text = GeneratePlainText(_subtitle, checkBoxShowLineNumbers.Checked, checkBoxAddNewlineAfterLineNumber.Checked, checkBoxShowTimeCodes.Checked,
                                             radioButtonTimeCodeSrt.Checked, radioButtonTimeCodeHHMMSSFF.Checked, checkBoxAddNewlineAfterTimeCodes.Checked,
-                                            comboBoxTimeCodeSeperator.Text, checkBoxRemoveStyling.Checked, radioButtonFormatUnbreak.Checked, checkBoxAddAfterText.Checked,
+                                            comboBoxTimeCodeSeparator.Text, checkBoxRemoveStyling.Checked, radioButtonFormatUnbreak.Checked, checkBoxAddAfterText.Checked,
                                             checkBoxAddNewLine2.Checked, radioButtonFormatMergeAll.Checked);
             textBoxText.Text = text;
         }
 
         public static string GeneratePlainText(Subtitle subtitle, bool showLineNumbers, bool addNewlineAfterLineNumber, bool showTimecodes,
-                                         bool timeCodeSrt, bool timeCodeHHMMSSFF, bool addNewlineAfterTimeCodes, string timeCodeSeperator,
+                                         bool timeCodeSrt, bool timeCodeHHMMSSFF, bool addNewlineAfterTimeCodes, string timeCodeSeparator,
                                          bool removeStyling, bool formatUnbreak, bool addAfterText, bool checkBoxAddNewLine2, bool formatMergeAll)
         {
             var sb = new StringBuilder();
@@ -98,11 +98,11 @@ namespace Nikse.SubtitleEdit.Forms
                 if (showTimecodes)
                 {
                     if (timeCodeSrt)
-                        sb.Append(p.StartTime + timeCodeSeperator + p.EndTime);
+                        sb.Append(p.StartTime + timeCodeSeparator + p.EndTime);
                     else if (timeCodeHHMMSSFF)
-                        sb.Append(p.StartTime.ToHHMMSSFF() + timeCodeSeperator + p.EndTime.ToHHMMSSFF());
+                        sb.Append(p.StartTime.ToHHMMSSFF() + timeCodeSeparator + p.EndTime.ToHHMMSSFF());
                     else
-                        sb.Append(p.StartTime.TotalMilliseconds + timeCodeSeperator + p.EndTime.TotalMilliseconds);
+                        sb.Append(p.StartTime.TotalMilliseconds + timeCodeSeparator + p.EndTime.TotalMilliseconds);
 
                     if (addNewlineAfterTimeCodes)
                         sb.AppendLine();

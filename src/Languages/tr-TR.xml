@@ -435,7 +435,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milisaniye</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Zaman kodu ayırıcı</TimeCodeSeperator>
+    <TimeCodeSeparator>Zaman kodu ayırıcı</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Süreti metin olarak oluştur</Title>

@@ -435,7 +435,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Srt>.srt</Srt>
     <Milliseconds>毫秒</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>时间码分隔符</TimeCodeSeperator>
+    <TimeCodeSeparator>时间码分隔符</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>将时间生成为文本</Title>

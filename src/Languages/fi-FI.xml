@@ -432,7 +432,7 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <Srt>.srt</Srt>
     <Milliseconds>Millisekuntia</Milliseconds>
     <HHMMSSFF>TT:MM:SS:KE</HHMMSSFF>
-    <TimeCodeSeperator>Aikaleiman erotin</TimeCodeSeperator>
+    <TimeCodeSeparator>Aikaleiman erotin</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Luoa aika tekstinä</Title>

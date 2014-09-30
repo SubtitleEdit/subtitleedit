@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             Subtitle subtitle = subTcOnSameSeparateLine;
             if (subtitle.Paragraphs.Count < 2)
-                subtitle = ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeperator(lines);
+                subtitle = ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(lines);
 
             if (subTcAndTextOnSameLine.Paragraphs.Count > subtitle.Paragraphs.Count)
                 subtitle = subTcAndTextOnSameLine;
@@ -410,7 +410,7 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeperator(string[] lines)
+        private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(string[] lines)
         {
             Regex regexTimeCodes1 = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
             Regex regexTimeCodes2 = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);

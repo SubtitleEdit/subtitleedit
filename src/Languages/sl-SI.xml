@@ -410,7 +410,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milisekunde</Milliseconds>
     <HHMMSSFF>UU:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeperator>Ločevanje časovnega zapisa</TimeCodeSeperator>
+    <TimeCodeSeparator>Ločevanje časovnega zapisa</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Naredi čas kot besedilo</Title>

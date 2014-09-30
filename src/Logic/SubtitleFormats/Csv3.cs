@@ -8,10 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Csv3 : SubtitleFormat
     {
 
-        private const string Seperator = ",";
+        private const string Separator = ",";
 
         //01:00:10:03,01:00:15:25,"I thought I should let my sister-in-law know.", ""
-        private static readonly Regex CsvLine = new Regex(@"^\d\d:\d\d:\d\d:\d\d" + Seperator + @"\d\d:\d\d:\d\d:\d\d" + Seperator, RegexOptions.Compiled);
+        private static readonly Regex CsvLine = new Regex(@"^\d\d:\d\d:\d\d:\d\d" + Separator + @"\d\d:\d\d:\d\d:\d\d" + Separator, RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -65,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             const string format = "{1}{0}{2}{0}\"{3}\"{0}\"{4}\"";
             var sb = new StringBuilder();
-            sb.AppendLine(string.Format(format, Seperator, "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Line 1", "Line 2"));
+            sb.AppendLine(string.Format(format, Separator, "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Line 1", "Line 2"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 var arr = p.Text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     line2 = arr[1];
                 line1 = line1.Replace("\"", "\"\"");
                 line2 = line2.Replace("\"", "\"\"");
-                sb.AppendLine(string.Format(format, Seperator, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), line1, line2));
+                sb.AppendLine(string.Format(format, Separator, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), line1, line2));
             }
             return sb.ToString().Trim();
         }
@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Match m = CsvLine.Match(line);
                 if (m.Success)
                 {
-                    string[] parts = line.Substring(0, m.Length).Split(Seperator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = line.Substring(0, m.Length).Split(Separator.ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 2)
                         try
                         {

@@ -356,7 +356,7 @@ Rất hân hạnh được chào đón.
     <Srt>srt</Srt>
     <Milliseconds>Milli giây</Milliseconds>
     <HHMMSSFF>HH:. MM: SS: FF</HHMMSSFF>
-    <TimeCodeSeperator>Thời gian đang chia tách</TimeCodeSeperator>
+    <TimeCodeSeparator>Thời gian đang chia tách</TimeCodeSeparator>
   </ExportText>
   <FindDialog>
     <Title>Tìm</Title>

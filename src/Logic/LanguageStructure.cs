@@ -494,7 +494,7 @@
             public string Srt { get; set; }
             public string Milliseconds { get; set; }
             public string HHMMSSFF { get; set; }
-            public string TimeCodeSeperator { get; set; }
+            public string TimeCodeSeparator { get; set; }
         }
 
         public class ExtractDateTimeInfo
