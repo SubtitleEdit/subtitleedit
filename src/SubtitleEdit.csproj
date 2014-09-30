@@ -783,7 +783,8 @@
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
-    <Compile Include="Logic\OcrFixReplaceList.cs" />
+    <Compile Include="Logic\Dictionaries\NamesList.cs" />
+    <Compile Include="Logic\Dictionaries\OcrFixReplaceList.cs" />
     <Compile Include="Logic\Extensions.cs" />
     <Compile Include="Logic\FileUtils.cs" />
     <Compile Include="Logic\Forms\CheckForUpdatesHelper.cs" />

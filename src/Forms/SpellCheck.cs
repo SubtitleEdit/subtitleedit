@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -498,7 +499,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (!ChangeWord.EndsWith('\''))
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'");
-                        Utilities.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
+                        NamesList.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
                     }
                     break;
                 case SpellCheckAction.ChangeWholeText:
@@ -655,7 +656,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_namesEtcListUppercase.Contains(_currentWord)
                         || _namesEtcListWithApostrophe.Contains(_currentWord)
-                        || Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, _currentParagraph.Text, _currentWord)) //TODO: verify this!
+                        || NamesList.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, _currentParagraph.Text, _currentWord)) //TODO: verify this!
                     {
                         _noOfNamesEtc++;
                     }
@@ -1034,7 +1035,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _languageName = Utilities.AutoDetectLanguageName(_languageName, subtitle);
             string dictionary = Utilities.DictionaryFolder + _languageName;
 
-            Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _languageName);
+            NamesList.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _languageName);
             foreach (string namesItem in _namesEtcList)
                 _namesEtcListUppercase.Add(namesItem.ToUpper());
 
@@ -1269,7 +1270,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!undo.UndoWord.EndsWith('\''))
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
 
-                            Utilities.RemoveFromLocalNamesEtcList(undo.UndoWord, _languageName);
+                            NamesList.RemoveFromLocalNamesEtcList(undo.UndoWord, _languageName);
                         }
                         break;
                     case SpellCheckAction.ChangeWholeText:

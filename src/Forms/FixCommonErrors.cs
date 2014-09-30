@@ -2193,7 +2193,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string languageTwoLetterCode = Utilities.AutoDetectGoogleLanguage(_subtitle);
 
                 // Will contains both one word names and multi names
-                Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcList, languageTwoLetterCode);
+                Nikse.SubtitleEdit.Logic.Dictionaries.NamesList.LoadNamesEtcWordLists(_namesEtcList, _namesEtcList, languageTwoLetterCode);
             }
         }
 

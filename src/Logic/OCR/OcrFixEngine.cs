@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
 using System.Collections.Generic;
@@ -200,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             // Load names etc list (names/noise words)
             _namesEtcList = new HashSet<string>();
             _namesEtcMultiWordList = new HashSet<string>();
-            Utilities.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
+            NamesList.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
 
             _namesEtcListUppercase = new HashSet<string>();
             foreach (string name in _namesEtcList)
@@ -1236,7 +1237,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
 
                         }
-                        Utilities.AddWordToLocalNamesEtcList(s, _fiveLetterWordListLanguageName);
+                        NamesList.AddWordToLocalNamesEtcList(s, _fiveLetterWordListLanguageName);
                     }
                     catch
                     {
@@ -1386,7 +1387,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (word.Length > 2 && _namesEtcListWithApostrophe.Contains(word))
                 return true;
 
-            if (Utilities.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, line, word))
+            if (NamesList.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, line, word))
                 return true;
 
             return false;

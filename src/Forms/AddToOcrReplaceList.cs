@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Globalization;
 using System.Windows.Forms;
