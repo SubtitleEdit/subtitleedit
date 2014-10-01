@@ -11,12 +11,12 @@ namespace Test
     /// Summary description for languageTest
     /// </summary>
     [TestClass]
-    public class languageTest
+    public class LanguageTest
     {
         /// <summary>
         /// Load a list of currently existing languages
         /// </summary>
-        public languageTest()
+        public LanguageTest()
         {
             _list = new List<string>();
             if (Directory.Exists(Path.Combine(Configuration.BaseDirectory, "Languages")))
