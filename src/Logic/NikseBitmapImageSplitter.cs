@@ -431,7 +431,6 @@ namespace Nikse.SubtitleEdit.Logic
                                     if (cleanCount > 2 && !spaceJustAdded)
                                     {
                                         parts.Add(new ImageSplitterItem(" "));
-                                        spaceJustAdded = true;
                                     }
                                 }
 
