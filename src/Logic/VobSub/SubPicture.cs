@@ -92,7 +92,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
                 int command = _data[commandIndex];
                 int numberOfCommands = 0;
-                while (command != 0xFF && numberOfCommands < 1000 && commandIndex < _data.Length)
+                while (command != (int)DisplayControlCommand.End && numberOfCommands < 1000 && commandIndex < _data.Length)
                 {
                     numberOfCommands++;
                     switch (command)
@@ -174,8 +174,6 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             {
                                 commandIndex++;
                             }
-                            break;
-                        case (int)DisplayControlCommand.End: // FF (255) - Stop looping of Display Control Commands
                             break;
                         default:
                             commandIndex++;
