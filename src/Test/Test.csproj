@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FixCommonErrorsTest.cs" />
-    <Compile Include="languageTest.cs" />
+    <Compile Include="LanguageTest.cs" />
     <Compile Include="Logic\HtmlUtilsTest.cs" />
     <Compile Include="Logic\OcrFixReplaceListTest.cs" />
     <Compile Include="RemoveTextForHearImpairedTest.cs" />

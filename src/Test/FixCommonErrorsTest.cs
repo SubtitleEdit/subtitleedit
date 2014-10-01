@@ -368,7 +368,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixHyphensAddDash2italic()
+        public void FixHyphensAddDash2Italic()
         {
             var target = GetFixCommonErrorsLib();
             InitializeFixCommonErrorsLine(target, "<i>- Hi Joe!" + Environment.NewLine + "Hi Pete!</i>");
