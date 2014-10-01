@@ -7011,7 +7011,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
-                            original.Text = Utilities.AutoBreakLine(p.Text, languageOriginal);
+                            original.Text = Utilities.AutoBreakLine(original.Text, languageOriginal);
                             SubtitleListview1.SetAlternateText(index, original.Text);
                         }
                     }
