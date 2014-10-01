@@ -287,7 +287,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Texty si rozdělí čas mezery</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Vytáhnout titulky z souborů ifo/vob (DVD)</Title>
+    <Title>Vytáhnout titulky z souborů IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD soubory/info</DvdGroupTitle>
     <IfoFile>Soubor IFO</IfoFile>
     <IfoFiles>Soubory IFO</IfoFiles>
@@ -533,7 +533,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixOverlappingDisplayTime>Opravit překrývající čas zobrazení</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;Co je mi do toho.&lt;i&gt; -&gt; &lt;i&gt;Co je mi do toho.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Hej , chlape. -&gt; Hej, chlape.</RemoveUnneededSpacesExample>
-    <RemoveUnneededPeriodsExample>Hej, chlapee!. -&gt; Hej, chlape!</RemoveUnneededPeriodsExample>
+    <RemoveUnneededPeriodsExample>Hej, chlape!. -&gt; Hej, chlape!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hej.Chlape. -&gt; Hej. Chlape.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>Země je pIacatá. -&gt; Země je placatá.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
@@ -543,7 +543,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Nelze opravit text číslo {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Opraveno {0} překrývajících se časových kódů</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>Prodlouženo {0} časů zobrazení</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných HTML tagů</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných tagů HTML</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>Zkráceno {0} časů zobrazení</XDisplayTimesShortned>
     <XLinesUnbreaked>Zrušeno zalomení {0} řádků</XLinesUnbreaked>
     <UnneededSpace>Nadbytečná mezera</UnneededSpace>
@@ -578,6 +578,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sladké sny' -&gt; '♫ sladké sny'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} důležitých protokolů chyb!</NumberOfImportantLogMessages>
     <FixedOkXY>Opraveno a v pořádku - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>H0nza -&gt; Honza</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Ahoj, Honzo! - Ahoj, Jano! -&gt; Ahoj, Honzo!&lt;br /&gt;- Ahoj, Jano!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Potřebujete slovníky?</Title>
@@ -697,7 +700,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Porovnat...</Compare>
         <Statistics>&amp;Statistika...</Statistics>
         <Plugins>Doplňky...</Plugins>
-        <ImportOcrFromDvd>Importovat/OCR titulky z vob/ifo (DVD)...</ImportOcrFromDvd>
+        <ImportOcrFromDvd>Importovat/OCR titulky z VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importovat/OCR titulky VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>Importovat/OCR soubor titulků Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importovat/OCR XSub z divx/avi...</ImportXSub>
@@ -989,7 +992,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileNotFound>Soubor nenalezen: {0}</FileNotFound>
     <SavedSubtitleX>Uloženy titulky {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Uloženy původní titulky {0}</SavedOriginalSubtitleX>
-    <FileOnDiskModified>soubor na disku změněn</FileOnDiskModified>
+    <FileOnDiskModified>Soubor na disku změněn</FileOnDiskModified>
     <OverwriteModifiedFile>Přepsat soubor {0} změněný v {1} {2}{3} aktuálním souborem načteným z disku v {4} {5}?</OverwriteModifiedFile>
     <FileXIsReadOnly>Nelze uložit {0}
 
@@ -1488,13 +1491,15 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <AllowEditOfOriginalSubtitle>Povolit úpravu původních titulků</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Dotázat se na odstranění řádků</PromptDeleteLines>
     <TimeCodeMode>Režim časového kódu</TimeCodeMode>
-    <TimeCodeModeHHMMSSMS>HH:MM:SS,ms (00:00:01,500)</TimeCodeModeHHMMSSMS>
+    <TimeCodeModeHHMMSSMS>HH:MM:SS,MS (00:00:01,500)</TimeCodeModeHHMMSSMS>
     <TimeCodeModeHHMMSSFF>HH:MM:SS:FF (00:00:01:12)</TimeCodeModeHHMMSSFF>
     <VideoEngine>Modul videa</VideoEngine>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll ve složce system32</DirectShowDescription>
     <ManagedDirectX>Spravované DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET spravovaný kód z DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
