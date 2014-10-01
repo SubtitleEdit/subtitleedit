@@ -9154,7 +9154,8 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 header.AppendLine(line);
                             }
-                            else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase))
+
+                            if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase))
                             {
                                 eventsStarted = true;
                                 fontsStarted = false;
