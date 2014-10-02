@@ -1238,7 +1238,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                         }
                         if (_namesList != null)
-                            _namesList.Add(s, _fiveLetterWordListLanguageName);
+                            _namesList.Add(s);
                     }
                     catch
                     {

@@ -1842,7 +1842,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
                 var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                namesList.Add(text, language);
+                namesList.Add(text);
                 LoadNamesEtc(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
@@ -1897,7 +1897,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         index = listBoxNamesEtc.SelectedIndices[idx];
                         text = listBoxNamesEtc.Items[index].ToString();
-                        namesList.Remove(text, language);
+                        namesList.Remove(text);
                         removeCount++;
                         listBoxNamesEtc.Items.RemoveAt(index);
                     }

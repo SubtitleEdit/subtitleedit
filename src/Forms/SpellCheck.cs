@@ -502,7 +502,7 @@ namespace Nikse.SubtitleEdit.Forms
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'");
 
                         var namesList = new NamesList(Configuration.DictionariesFolder, _languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-                        namesList.Add(ChangeWord, _languageName);
+                        namesList.Add(ChangeWord);
                     }
                     break;
                 case SpellCheckAction.ChangeWholeText:
@@ -1267,7 +1267,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!undo.UndoWord.EndsWith('\''))
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
 
-                            _namesList.Remove(undo.UndoWord, _languageName);
+                            _namesList.Remove(undo.UndoWord);
                         }
                         break;
                     case SpellCheckAction.ChangeWholeText:

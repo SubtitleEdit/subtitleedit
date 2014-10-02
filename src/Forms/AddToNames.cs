@@ -135,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                 languageName = "en_US";
 
             var namesList = new NamesList(Configuration.DictionariesFolder, languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
-            if (namesList.Add(textBoxAddName.Text, languageName))
+            if (namesList.Add(textBoxAddName.Text))
                 DialogResult = DialogResult.OK;
             else
                 DialogResult = DialogResult.Cancel;

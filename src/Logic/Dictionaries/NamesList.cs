@@ -144,7 +144,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             }
         }
 
-        public bool Remove(string name, string languageName)
+        public bool Remove(string name)
         {
             name = name.Trim();
             if (name.Length > 1 && _namesList.Contains(name) || _namesMultiList.Contains(name))
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             return false;
         }
 
-        public bool Add(string name, string languageName)
+        public bool Add(string name)
         {
             name = name.Trim();
             if (name.Length > 1)
