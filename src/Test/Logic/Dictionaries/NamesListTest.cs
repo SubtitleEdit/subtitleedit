@@ -103,6 +103,6 @@ namespace Test.Logic.Dictionaries
             // Assert
             Assert.IsFalse(namesList.GetNames().Contains("Jones"));
         }
-    
+
     }
 }

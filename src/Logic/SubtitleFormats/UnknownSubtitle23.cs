@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 count++;
             }
 
-            using (var rtBox = new System.Windows.Forms.RichTextBox {Text = sb.ToString().Trim()})
+            using (var rtBox = new System.Windows.Forms.RichTextBox { Text = sb.ToString().Trim() })
             {
                 return rtBox.Rtf;
             }

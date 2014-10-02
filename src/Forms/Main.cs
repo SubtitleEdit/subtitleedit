@@ -11346,7 +11346,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MergeSelectedLinesOnlyFirstText()
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 1)
-            {                
+            {
                 var deleteIndices = new List<int>();
                 bool first = true;
                 int firstIndex = 0;
@@ -12662,7 +12662,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         subtitleChooser.Initialize(subtitleList);
                                         if (_loading)
                                         {
-                                            subtitleChooser.Icon = (Icon) this.Icon.Clone();
+                                            subtitleChooser.Icon = (Icon)this.Icon.Clone();
                                             subtitleChooser.ShowInTaskbar = true;
                                             subtitleChooser.ShowIcon = true;
                                         }
@@ -12713,7 +12713,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (fi.Length > 1024*1024*10 && sub.Paragraphs.Count == 0) // max 10 mb
+                    if (fi.Length > 1024 * 1024 * 10 && sub.Paragraphs.Count == 0) // max 10 mb
                     {
                         if (MessageBox.Show(this, string.Format(_language.FileXIsLargerThan10MB + Environment.NewLine +
                                                                 Environment.NewLine +
@@ -13641,7 +13641,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
         }
-       
+
         private void ButtonSetEndClick(object sender, EventArgs e)
         {
             if (SubtitleListview1.SelectedItems.Count == 1)

@@ -286,8 +286,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     // number
-                    fs.WriteByte((byte) (number/256));
-                    fs.WriteByte((byte) (number%256));
+                    fs.WriteByte((byte)(number / 256));
+                    fs.WriteByte((byte)(number % 256));
 
                     WriteTime(fs, p.StartTime);
                     WriteTime(fs, p.EndTime);
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else
                         fs.WriteByte(0x54); // center
 
-                    buffer = new byte[] {0, 0, 0, 0, 0, 0, 0}; // 0x16 }; -- the last two bytes might be something with vertical alignment...
+                    buffer = new byte[] { 0, 0, 0, 0, 0, 0, 0 }; // 0x16 }; -- the last two bytes might be something with vertical alignment...
                     fs.Write(buffer, 0, buffer.Length);
 
                     WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, _languageIdLine2);
