@@ -2847,7 +2847,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser {Color = panelColor.BackColor, ShowAlpha = false})
+            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = false })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
@@ -2864,7 +2864,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonBorderColor_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser {Color = panelBorderColor.BackColor})
+            using (var colorChooser = new ColorChooser { Color = panelBorderColor.BackColor })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
@@ -3110,7 +3110,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser {Color = panelShadowColor.BackColor})
+            using (var colorChooser = new ColorChooser { Color = panelShadowColor.BackColor })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {

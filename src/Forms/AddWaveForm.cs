@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
-                buttonRipWave.Enabled = true;                
+                buttonRipWave.Enabled = true;
                 return;
             }
 
@@ -326,7 +326,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (mkv.IsValid)
                             {
-                                _delayInMilliseconds = (int) mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
+                                _delayInMilliseconds = (int)mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
                             }
                         }
                     }

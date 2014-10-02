@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Runtime.InteropServices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Ocr;
@@ -963,7 +962,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (ShowInTaskbar)
                     {
-                        chooseLanguage.Icon = (Icon) this.Icon.Clone();
+                        chooseLanguage.Icon = (Icon)this.Icon.Clone();
                         chooseLanguage.ShowInTaskbar = true;
                         chooseLanguage.ShowIcon = true;
                     }
@@ -8047,7 +8046,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
-            { 
+            {
                 exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
             }

@@ -164,7 +164,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     namesDoc.Load(fileName);
                 }
                 else
-                {                   
+                {
                     namesDoc.LoadXml("<ignore_words />");
                 }
 
@@ -184,7 +184,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                         namesDoc.DocumentElement.RemoveChild(nodeToRemove);
                 }
                 else
-                {                    
+                {
                     XmlNode node = namesDoc.CreateElement("removed_name");
                     node.InnerText = name;
                     namesDoc.DocumentElement.AppendChild(node);

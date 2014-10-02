@@ -573,7 +573,7 @@ namespace Nikse.SubtitleEdit.Controls
                             {
                                 using (var tBrush = new SolidBrush(Color.Turquoise))
                                 {
-                                    graphics.DrawString(string.Format("{0:0.###} {1}", ((double) currentRegionWidth/_wavePeaks.Header.SampleRate/_zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                                    graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
                                 }
                             }
                         }

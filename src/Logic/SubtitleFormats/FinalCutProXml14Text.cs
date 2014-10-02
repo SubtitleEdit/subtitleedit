@@ -47,7 +47,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "   <resources>" + Environment.NewLine +
                 "       <format height=\"1080\" width=\"1440\" frameDuration=\"100/2400s\" id=\"r1\"/>" + Environment.NewLine +
                 "       <effect id=\"r2\" uid=\".../Titles.localized/Bumper:Opener.localized/Basic Title.localized/Basic Title.moti\" name=\"Basic Title\"/>" + Environment.NewLine +
-//              "       <effect id=\"r4\" name=\"Basic Subtitles\" uid=\"~/Generators.localized/My FCPeffects - BG/BG Basic Subtitles/Basic Subtitles.motn\"/>" + Environment.NewLine +
+                //"       <effect id=\"r4\" name=\"Basic Subtitles\" uid=\"~/Generators.localized/My FCPeffects - BG/BG Basic Subtitles/Basic Subtitles.motn\"/>" + Environment.NewLine +
                 "   </resources>" + Environment.NewLine +
                 "   <library location=\"\">" + Environment.NewLine +
                 "       <event name=\"Title\" uid=\"15A02C43-1B7A-4CF8-8007-5C266E77A91E\">" + Environment.NewLine +

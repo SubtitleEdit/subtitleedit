@@ -993,7 +993,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FileOnDiskModified>디스크 상의 파일이 변경되었습니다.</FileOnDiskModified>
     <OverwriteModifiedFile>{1} {2}{3}에서 변경된 파일 {0}로 {4} {5} 디스크에 로드된 현재 파일을 덮어쓰시겠습니까?</OverwriteModifiedFile>
     <FileXIsReadOnly>{0}을(를) 저장할 수 없습니다.
-    
+
 이 파일은 읽기 전용입니다!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>자막 파일 {0}을 저장할 수 없습니다.
 빈 자막 같습니다 - 유효한 자막을 만들어 다시 저장해 보십시오!</UnableToSaveSubtitleX>

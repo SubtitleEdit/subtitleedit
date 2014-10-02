@@ -478,28 +478,28 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 header.TotalNumberOfSubtitles = subtitle.Paragraphs.Count.ToString("D5"); // seems to be 1 higher than actual number of subtitles
-            header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
+                header.TotalNumberOfTextAndTimingInformationBlocks = header.TotalNumberOfSubtitles;
 
-            var today = string.Format("{0:yyMMdd}", DateTime.Now);
-            if (today.Length == 6)
-            {
-                header.CreationDate = today;
-                header.RevisionDate = today;
-            }
+                var today = string.Format("{0:yyMMdd}", DateTime.Now);
+                if (today.Length == 6)
+                {
+                    header.CreationDate = today;
+                    header.RevisionDate = today;
+                }
 
-            Paragraph firstParagraph = subtitle.GetParagraphOrDefault(0);
-            if (firstParagraph != null)
-            {
-                TimeCode tc = firstParagraph.StartTime;
-                string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds, header.FrameRate));
-                if (firstTimeCode.Length == 8)
-                    header.TimeCodeFirstInCue = firstTimeCode;
-            }
+                Paragraph firstParagraph = subtitle.GetParagraphOrDefault(0);
+                if (firstParagraph != null)
+                {
+                    TimeCode tc = firstParagraph.StartTime;
+                    string firstTimeCode = string.Format("{0:00}{1:00}{2:00}{3:00}", tc.Hours, tc.Minutes, tc.Seconds, EbuTextTimingInformation.GetFrameFromMilliseconds(tc.Milliseconds, header.FrameRate));
+                    if (firstTimeCode.Length == 8)
+                        header.TimeCodeFirstInCue = firstTimeCode;
+                }
 
-            byte[] buffer = Encoding.Default.GetBytes(header.ToString());
-            fs.Write(buffer, 0, buffer.Length);
+                byte[] buffer = Encoding.Default.GetBytes(header.ToString());
+                fs.Write(buffer, 0, buffer.Length);
 
-            int subtitleNumber = 0;
+                int subtitleNumber = 0;
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     var tti = new EbuTextTimingInformation();
@@ -519,14 +519,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else if (p.Text.StartsWith("{\\an4}") || p.Text.StartsWith("{\\an5}") || p.Text.StartsWith("{\\an6}"))
                     {
-                        tti.VerticalPosition = (byte) (rows/2); // middle (vertical)
+                        tti.VerticalPosition = (byte)(rows / 2); // middle (vertical)
                     }
                     else
                     {
-                        int startRow = (rows - 1) - Utilities.CountTagInText(p.Text, Environment.NewLine)*2;
+                        int startRow = (rows - 1) - Utilities.CountTagInText(p.Text, Environment.NewLine) * 2;
                         if (startRow < 0)
                             startRow = 0;
-                        tti.VerticalPosition = (byte) startRow; // bottom (vertical)
+                        tti.VerticalPosition = (byte)startRow; // bottom (vertical)
                     }
 
                     tti.JustificationCode = saveOptions.JustificationCode;
@@ -543,7 +543,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         tti.JustificationCode = 2; // 02h=centred text
                     }
 
-                    tti.SubtitleNumber = (ushort) subtitleNumber;
+                    tti.SubtitleNumber = (ushort)subtitleNumber;
                     tti.TextField = p.Text;
                     int startTag = tti.TextField.IndexOf('}');
                     if (tti.TextField.StartsWith("{\\") && startTag > 0 && startTag < 10)
@@ -565,7 +565,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
 
-    }
+        }
 
         public override bool IsMine(List<string> lines, string fileName)
         {
