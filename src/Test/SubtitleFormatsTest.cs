@@ -578,70 +578,102 @@ Dialogue: Marked=0,0:00:01.00,0:00:03.00,Default,NTP,0000,0000,0000,!Effect," + 
         [DeploymentItem("SubtitleEdit.exe")]
         public void CheckTimeCodes()
         {
-            var target = new ScenaristClosedCaptions();
             var subtitle = new Subtitle();
             subtitle.Paragraphs.Add(new Paragraph("Line1", 1000, 5000));
             subtitle.Paragraphs.Add(new Paragraph("Line2", 6000, 8000));
             subtitle.Paragraphs.Add(new Paragraph("Line2", 8000, 12000));
 
-            string text = @"Scenarist_SCC V1.0
+            string text = "Scenarist_SCC V1.0\n\n"
+                + "00:00:00:00\t94ae 94ae 9420 9420 9476 9476 2080 4ce9 6ee5 3180\n\n"
+                + "00:00:00:12\t942c 942c\n\n"
+                + "00:00:01:00\t942f 942f\n\n"
+                + "00:00:01:04\t94ae 94ae 9420 9420 9476 9476 2080 4ce9 6ee5 3280\n\n"
+                + "00:00:02:00\t942c 942c\n\n"
+                + "00:00:03:00\t942f 942f\n\n"
+                + "00:00:03:04\t94ae 94ae 9420 9420 9476 9476 2080 4ce9 6ee5 b380\n\n"
+                + "00:00:04:00\t942c 942c\n\n"
+                + "00:00:05:00\t942f 942f\n\n"
+                + "00:00:06:00\t942c 942c";
 
-01:00:00:24 9420 94f8 5bc1 4c45 5254 20d3 4fd5 cec4 49ce c75d 9420 942c 942f 9420 94f2 4f43 544f cec1 d554 d320 544f 20d9 4fd5 5220 d354 c154 494f ced3 a180
+            var expected = new Subtitle();
+            expected.Paragraphs.Add(new Paragraph("Line1",
+                TimeCode.ParseHHMMSSFFToMilliseconds("00:00:01:00"), TimeCode.ParseHHMMSSFFToMilliseconds("00:00:02:00")));
+            expected.Paragraphs.Add(new Paragraph("Line2",
+                TimeCode.ParseHHMMSSFFToMilliseconds("00:00:03:00"), TimeCode.ParseHHMMSSFFToMilliseconds("00:00:04:00")));
+            expected.Paragraphs.Add(new Paragraph("Line3",
+                TimeCode.ParseHHMMSSFFToMilliseconds("00:00:05:00"), TimeCode.ParseHHMMSSFFToMilliseconds("00:00:06:00")));
 
-01:00:02:22 9420 942c 942f
-
-01:00:04:25 9420 94f4 c2c1 52ce c143 4c45 d3a1
-
-01:00:05:10 942c
-
-01:00:06:14 9420 942c 942f
-
-01:00:07:06 9420 9476 cb57 c1da 4949 a180
-
-01:00:08:24 9420 942c 942f 9420 9476 d045 d34f a180
-
-01:00:10:03 9420 942c 942f
-
-01:00:11:29 942c
-
-01:00:37:12 9420 9470 4558 d04c 4f52 45a1
-
-01:00:39:00 9420 942c 942f 9420 9476 5245 d343 d545 a180
-
-01:00:40:00 9420 942c 942f 9420 947a d052 4f54 4543 54a1
-
-01:00:41:00 9420 942c 942f
-
-01:00:41:10 9420 9154 4f43 544f cec1 d554 d3a1
-
-01:00:42:28 9420 942c 942f
-
-01:00:44:26 942c
-
-01:00:47:03 9420 9152 a254 c845 204f 4354 4fce c1d5 54d3 20c1 cec4 91f2 54c8 4520 c749 c1ce 5420 cb45 4cd0 2046 4f52 45d3 54ae a280
-
-01:00:49:00 9420 942c 942f
-
-01:00:52:04 942c";
-
-            var sub2 = new Subtitle();
+            var actual = new Subtitle();
 
             List<string> lines = new List<string>();
             foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                 lines.Add(line);
 
-            target.LoadSubtitle(sub2, lines, null);
+            var target = new ScenaristClosedCaptions();
+            target.LoadSubtitle(actual, lines, null);
 
-            var copy = new Subtitle(sub2);
-            for (int i = 0; i < copy.Paragraphs.Count; i++)
+            Assert.AreEqual(expected.Paragraphs.Count, actual.Paragraphs.Count);
+            for (int i = 0; i < expected.Paragraphs.Count; i++)
             {
-                sub2.Paragraphs[i].StartTime.TotalMilliseconds += 1000;
-                sub2.Paragraphs[i].EndTime.TotalMilliseconds += 1000;
+                var expectedP = expected.Paragraphs[i];
+                var actualP = actual.Paragraphs[i];
+                Assert.AreEqual(expectedP.Text, actualP.Text, "text index: " + i);
+                Assert.AreEqual(expectedP.StartTime.TotalMilliseconds, actualP.StartTime.TotalMilliseconds, 1, "start index: " + i);
+                Assert.AreEqual(expectedP.EndTime.TotalMilliseconds, actualP.EndTime.TotalMilliseconds, 1, "end index: " + i);
             }
-            for (int i = 0; i < copy.Paragraphs.Count; i++)
+        }
+
+        [TestMethod()]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void CheckTimeCodes_RclAndEocOnSameLine()
+        {
+            var subtitle = new Subtitle();
+            subtitle.Paragraphs.Add(new Paragraph("Line1", 1000, 5000));
+            subtitle.Paragraphs.Add(new Paragraph("Line2", 6000, 8000));
+            subtitle.Paragraphs.Add(new Paragraph("Line2", 8000, 12000));
+
+
+            /*
+             * This format is present in the 'Clickers.scc' file:
+             *   [Timecode]\t{RCL}{RCL}{ENM}{ENM}text{EOC}{EOC} \n\n
+             *   
+             * The caption text is displayed when EOC is received.  The previous text
+             * remains on-screen until the next group is shown.
+             * 
+             * For this test, the {EOC} command is the 11th or 7th frame in, so we back up
+             * that number of frames so the display is on a second boundary.
+             */
+            string text = "Scenarist_SCC V1.0\n\n"
+                          + "00:00:00:14\t9420 9420 94ae 94ae 9476 9476 2080 4ce9 6ee5 3180 942f 942f \n\n"
+                          + "00:00:01:14\t94ae 94ae 9420 9420 9476 9476 2080 4ce9 6ee5 3280 942f 942f \n\n"
+                          + "00:00:02:14\t94ae 94ae 9420 9420 9476 9476 2080 4ce9 6ee5 b380 942f 942f \n\n"
+                          + "00:00:03:18\t9420 9420 94ae 94ae 9470 9470 942f 942f \n\n";
+
+            var expected = new Subtitle();
+            expected.Paragraphs.Add(new Paragraph("Line1",
+                TimeCode.ParseHHMMSSFFToMilliseconds("00:00:01:00"), TimeCode.ParseHHMMSSFFToMilliseconds("00:00:02:00")));
+            expected.Paragraphs.Add(new Paragraph("Line2",
+                TimeCode.ParseHHMMSSFFToMilliseconds("00:00:02:00"), TimeCode.ParseHHMMSSFFToMilliseconds("00:00:03:00")));
+            expected.Paragraphs.Add(new Paragraph("Line3",
+                TimeCode.ParseHHMMSSFFToMilliseconds("00:00:03:00"), TimeCode.ParseHHMMSSFFToMilliseconds("00:00:04:00")));
+
+            var actual = new Subtitle();
+
+            List<string> lines = new List<string>();
+            foreach (string line in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                lines.Add(line);
+
+            var target = new ScenaristClosedCaptions();
+            target.LoadSubtitle(actual, lines, null);
+
+            Assert.AreEqual(expected.Paragraphs.Count, actual.Paragraphs.Count);
+            for (int i = 0; i < expected.Paragraphs.Count; i++)
             {
-                Assert.IsTrue(copy.Paragraphs[i].StartTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].StartTime.TotalMilliseconds);
-                Assert.IsTrue(copy.Paragraphs[i].EndTime.TotalMilliseconds + 1000 == sub2.Paragraphs[i].EndTime.TotalMilliseconds);
+                var expectedP = expected.Paragraphs[i];
+                var actualP = actual.Paragraphs[i];
+                Assert.AreEqual(expectedP.Text, actualP.Text, "text index: " + i);
+                Assert.AreEqual(expectedP.StartTime.TotalMilliseconds, actualP.StartTime.TotalMilliseconds, 1, "start index: " + i);
+                Assert.AreEqual(expectedP.EndTime.TotalMilliseconds, actualP.EndTime.TotalMilliseconds, 1, "end index: " + i);
             }
         }
 
