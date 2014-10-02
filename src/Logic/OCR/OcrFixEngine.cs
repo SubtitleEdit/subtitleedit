@@ -26,6 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string _fiveLetterWordListLanguageName;
 
         private readonly OcrFixReplaceList _ocrFixReplaceList;
+        private NamesList _namesList;
         private HashSet<string> _namesEtcList = new HashSet<string>();
         private HashSet<string> _namesEtcListUppercase = new HashSet<string>();
         private HashSet<string> _namesEtcListWithApostrophe = new HashSet<string>();
@@ -89,22 +90,22 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-GB"), "en_GB.dic", true);
                 return;
             }
-            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
+            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_ca", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_CA.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-CA"), "en_CA.dic", true);
                 return;
             }
-            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_au", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
+            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_au", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_AU.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-AU"), "en_AU.dic", true);
                 return;
             }
-            else if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_za", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
+            if (!string.IsNullOrEmpty(hunspellName) && threeLetterIsoLanguageName == "eng" && hunspellName.Equals("en_za", StringComparison.OrdinalIgnoreCase) && File.Exists(Path.Combine(dictionaryFolder, "en_ZA.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-ZA"), "en_ZA.dic", true);
                 return;
             }
-            else if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
+            if (threeLetterIsoLanguageName == "eng" && File.Exists(Path.Combine(dictionaryFolder, "en_US.dic")))
             {
                 LoadSpellingDictionariesViaDictionaryFileName("eng", new CultureInfo("en-US"), "en_US.dic", true);
                 return;
@@ -199,10 +200,9 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             // Load names etc list (names/noise words)
-            _namesEtcList = new HashSet<string>();
-            _namesEtcMultiWordList = new HashSet<string>();
-            NamesList.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _fiveLetterWordListLanguageName);
-
+            _namesList = new NamesList(Configuration.DictionariesFolder, _fiveLetterWordListLanguageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            _namesEtcList = _namesList.GetNames();
+            _namesEtcMultiWordList = _namesList.GetMultiNames();
             _namesEtcListUppercase = new HashSet<string>();
             foreach (string name in _namesEtcList)
                 _namesEtcListUppercase.Add(name.ToUpper());
@@ -1237,7 +1237,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
 
                         }
-                        NamesList.AddWordToLocalNamesEtcList(s, _fiveLetterWordListLanguageName);
+                        if (_namesList != null)
+                            _namesList.Add(s, _fiveLetterWordListLanguageName);
                     }
                     catch
                     {
@@ -1387,7 +1388,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             if (word.Length > 2 && _namesEtcListWithApostrophe.Contains(word))
                 return true;
 
-            if (NamesList.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, line, word))
+            if (_namesList != null && _namesList.IsInNamesEtcMultiWordList(line, word))
                 return true;
 
             return false;

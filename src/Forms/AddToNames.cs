@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -132,7 +133,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (string.IsNullOrEmpty(languageName))
                 languageName = "en_US";
-            if (Nikse.SubtitleEdit.Logic.Dictionaries.NamesList.AddWordToLocalNamesEtcList(textBoxAddName.Text, languageName))
+
+            var namesList = new NamesList(Configuration.DictionariesFolder, languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            if (namesList.Add(textBoxAddName.Text, languageName))
                 DialogResult = DialogResult.OK;
             else
                 DialogResult = DialogResult.Cancel;

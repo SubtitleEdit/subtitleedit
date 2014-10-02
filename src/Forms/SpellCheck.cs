@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SpellCheckAction _action = SpellCheckAction.Skip;
         private List<string> _suggestions;
-        private string _currentAction = null;
+        private string _currentAction;
         public SpellCheckAction Action { get { return _action; } set { _action = value; } }
         public string ChangeWord { get { return textBoxWord.Text; } set { textBoxWord.Text = value; } }
         public string ChangeWholeText { get { return textBoxWholeText.Text; } }
@@ -42,8 +42,9 @@ namespace Nikse.SubtitleEdit.Forms
             get { return _currentIndex; }
         }
 
-        private List<string> _namesEtcList = new List<string>();
-        private List<string> _namesEtcMultiWordList = new List<string>();
+        private NamesList _namesList;
+        private HashSet<string> _namesEtcList = new HashSet<string>();
+        private HashSet<string> _namesEtcMultiWordList = new HashSet<string>();
         private List<string> _namesEtcListUppercase = new List<string>();
         private List<string> _namesEtcListWithApostrophe = new List<string>();
         private List<string> _skipAllList = new List<string>();
@@ -64,16 +65,16 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private string _originalWord;
 
-        private int _noOfSkippedWords = 0;
-        private int _noOfChangedWords = 0;
-        private int _noOfCorrectWords = 0;
-        private int _noOfNamesEtc = 0;
-        private int _noOfAddedWords = 0;
+        private int _noOfSkippedWords;
+        private int _noOfChangedWords;
+        private int _noOfCorrectWords;
+        private int _noOfNamesEtc;
+        private int _noOfAddedWords;
         private bool _firstChange = true;
         private string _languageName;
         private Main _mainWindow;
 
-        private string _currentDictionary = null;
+        private string _currentDictionary;
 
         public class SuggestionParameter
         {
@@ -137,8 +138,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonAbort.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonAbort.Text, Font);
             if (textSize.Height > buttonAbort.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -499,7 +500,9 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (!ChangeWord.EndsWith('\''))
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'");
-                        NamesList.AddWordToLocalNamesEtcList(ChangeWord, _languageName);
+
+                        var namesList = new NamesList(Configuration.DictionariesFolder, _languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                        namesList.Add(ChangeWord, _languageName);
                     }
                     break;
                 case SpellCheckAction.ChangeWholeText:
@@ -507,8 +510,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _currentParagraph.Text = ChangeWholeText;
                     _mainWindow.ChangeWholeTextMainPart(ref _noOfChangedWords, ref _firstChange, _currentIndex, _currentParagraph);
 
-                    break;
-                default:
                     break;
             }
             labelActionInfo.Text = string.Empty;
@@ -656,7 +657,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_namesEtcListUppercase.Contains(_currentWord)
                         || _namesEtcListWithApostrophe.Contains(_currentWord)
-                        || NamesList.IsInNamesEtcMultiWordList(_namesEtcMultiWordList, _currentParagraph.Text, _currentWord)) //TODO: verify this!
+                        || _namesList.IsInNamesEtcMultiWordList(_currentParagraph.Text, _currentWord)) //TODO: verify this!
                     {
                         _noOfNamesEtc++;
                     }
@@ -756,47 +757,44 @@ namespace Nikse.SubtitleEdit.Forms
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
-                            else if (AutoFixNames && _currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpper()))
+                            if (AutoFixNames && _currentWord.Length > 3 && suggestions.Contains(_currentWord.ToUpper()))
                             { // does not work well with two letter words like "da" and "de" which get auto-corrected to "DA" and "DE"
                                 ChangeWord = _currentWord.ToUpper();
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
-                            else if (AutoFixNames && _currentWord.Length > 1 && _namesEtcList.Contains(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
+                            if (AutoFixNames && _currentWord.Length > 1 && _namesEtcList.Contains(char.ToUpper(_currentWord[0]) + _currentWord.Substring(1)))
                             {
                                 ChangeWord = char.ToUpper(_currentWord[0]) + _currentWord.Substring(1);
                                 DoAction(SpellCheckAction.ChangeAll);
                                 return;
                             }
+                            if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''"))
+                            {
+                                _prefix = string.Empty;
+                                _currentSpellCheckWord.Index += 2;
+                                _currentWord = _currentWord.Trim('\'');
+                            }
+                            if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
+                            {
+                                _prefix = string.Empty;
+                                _currentSpellCheckWord.Index++;
+                                _currentWord = _currentWord.Trim('\'');
+                            }
+
+                            if (_postfix != null && _postfix == "'")
+                            {
+                                _currentSpellCheckWord.Text = _currentWord + _postfix;
+                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
+                            }
                             else
                             {
-                                if (_prefix != null && _prefix == "''" && _currentWord.EndsWith("''"))
-                                {
-                                    _prefix = string.Empty;
-                                    _currentSpellCheckWord.Index += 2;
-                                    _currentWord = _currentWord.Trim('\'');
-                                }
-                                if (_prefix != null && _prefix == "'" && _currentWord.EndsWith('\''))
-                                {
-                                    _prefix = string.Empty;
-                                    _currentSpellCheckWord.Index++;
-                                    _currentWord = _currentWord.Trim('\'');
-                                }
-
-                                if (_postfix != null && _postfix == "'")
-                                {
-                                    _currentSpellCheckWord.Text = _currentWord + _postfix;
-                                    Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
-                                }
-                                else
-                                {
-                                    _currentSpellCheckWord.Text = _currentWord;
-                                    Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
-                                }
-                                if (!this.Visible)
-                                    this.ShowDialog(_mainWindow);
-                                return; // wait for user input
+                                _currentSpellCheckWord.Text = _currentWord;
+                                Initialize(_languageName, _currentSpellCheckWord, suggestions, _currentParagraph.Text, string.Format(Configuration.Settings.Language.Main.LineXOfY, (_currentIndex + 1), _subtitle.Paragraphs.Count));
                             }
+                            if (!Visible)
+                                ShowDialog(_mainWindow);
+                            return; // wait for user input
                         }
 
                     }
@@ -806,15 +804,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static List<SpellCheckWord> Split(string s)
         {
-            const string SplitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
+            const string splitChars = " -.,?!:;\"“”()[]{}|<>/+\r\n¿¡…—–♪♫„“";
             var list = new List<SpellCheckWord>();
             var sb = new StringBuilder();
             for (int i = 0; i < s.Length; i++)
             {
-                if (SplitChars.Contains(s[i]))
+                if (splitChars.Contains(s[i]))
                 {
                     if (sb.Length > 0)
-                        list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = i - sb.Length });
+                        list.Add(new SpellCheckWord { Text = sb.ToString(), Index = i - sb.Length });
                     sb = new StringBuilder();
                 }
                 else
@@ -823,7 +821,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (sb.Length > 0)
-                list.Add(new SpellCheckWord() { Text = sb.ToString(), Index = s.Length - 1 - sb.Length });
+                list.Add(new SpellCheckWord { Text = sb.ToString(), Index = s.Length - 1 - sb.Length });
             return list;
         }
 
@@ -901,7 +899,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (text.Contains('.') || text.Contains('-'))
             {
                 int i = 0;
-                string id = string.Format("_@{0}_", i);
                 foreach (string wordWithDashesOrPeriods in _wordsWithDashesOrPeriods)
                 {
                     bool found = true;
@@ -912,7 +909,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (indexStart >= 0)
                         {
-                            found = true;
                             int endIndexPlus = indexStart + wordWithDashesOrPeriods.Length;
                             bool startOk = indexStart == 0 || (@" (['""" + Environment.NewLine).Contains(text[indexStart - 1]);
                             bool endOk = endIndexPlus == text.Length;
@@ -921,7 +917,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (startOk && endOk)
                             {
                                 i++;
-                                id = string.Format("_@{0}_", i);
+                                string id = string.Format("_@{0}_", i);
                                 replaceIds.Add(id);
                                 replaceNames.Add(wordWithDashesOrPeriods);
                                 text = text.Remove(indexStart, wordWithDashesOrPeriods.Length).Insert(indexStart, id);
@@ -946,7 +942,7 @@ namespace Nikse.SubtitleEdit.Forms
             LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
             if (_noOfChangedWords > 0 || _noOfAddedWords > 0 || _noOfSkippedWords > 0 || completedMessage == Configuration.Settings.Language.SpellCheck.SpellCheckCompleted)
             {
-                this.Hide();
+                Hide();
                 if (Configuration.Settings.Tools.SpellCheckShowCompletedMessage)
                 {
                     var form = new DialogDoNotShowAgain(_mainWindow.Title + " - " + mainLanguage.SpellCheck,
@@ -996,8 +992,6 @@ namespace Nikse.SubtitleEdit.Forms
             LanguageStructure.Main mainLanguage = Configuration.Settings.Language.Main;
             _mainWindow = mainWindow;
 
-            _namesEtcList = new List<string>();
-            _namesEtcMultiWordList = new List<string>();
             _namesEtcListUppercase = new List<string>();
             _namesEtcListWithApostrophe = new List<string>();
 
@@ -1035,7 +1029,10 @@ namespace Nikse.SubtitleEdit.Forms
                 _languageName = Utilities.AutoDetectLanguageName(_languageName, subtitle);
             string dictionary = Utilities.DictionaryFolder + _languageName;
 
-            NamesList.LoadNamesEtcWordLists(_namesEtcList, _namesEtcMultiWordList, _languageName);
+            _namesList = new NamesList(Configuration.DictionariesFolder, _languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            _namesEtcList = _namesList.GetNames();
+            _namesEtcMultiWordList = _namesList.GetMultiNames();
+
             foreach (string namesItem in _namesEtcList)
                 _namesEtcListUppercase.Add(namesItem.ToUpper());
 
@@ -1200,7 +1197,7 @@ namespace Nikse.SubtitleEdit.Forms
                 format = "Undo: {0}";
             string undoText = string.Format(format, text);
 
-            _undoList.Add(new UndoObject()
+            _undoList.Add(new UndoObject
             {
                 CurrentIndex = _currentIndex,
                 UndoText = undoText,
@@ -1270,13 +1267,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!undo.UndoWord.EndsWith('\''))
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'");
 
-                            NamesList.RemoveFromLocalNamesEtcList(undo.UndoWord, _languageName);
+                            _namesList.Remove(undo.UndoWord, _languageName);
                         }
                         break;
                     case SpellCheckAction.ChangeWholeText:
                         _subtitle = _mainWindow.UndoFromSpellCheck(undo.Subtitle);
-                        break;
-                    default:
                         break;
                 }
 

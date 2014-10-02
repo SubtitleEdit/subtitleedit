@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Dictionaries;
+using Nikse.SubtitleEdit.Logic.Forms;
+using Nikse.SubtitleEdit.Logic.Ocr;
+using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -6,10 +11,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.Ocr;
-using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -127,7 +128,7 @@ namespace Nikse.SubtitleEdit.Forms
             public bool Descending { get; set; }
         }
 
-        public Subtitle _subtitle;
+        public Subtitle Subtitle;
         private SubtitleFormat _format;
         private Encoding _encoding = Encoding.UTF8;
         private Subtitle _originalSubtitle;
@@ -136,12 +137,12 @@ namespace Nikse.SubtitleEdit.Forms
         private List<FixItem> _fixActions;
         private int _subtitleListViewIndex = -1;
         private bool _onlyListFixes = true;
-        private bool _batchMode = false;
+        private bool _batchMode;
         private string _autoDetectGoogleLanguage;
         private List<string> _namesEtcList;
         private List<string> _abbreviationList;
         private StringBuilder _newLog = new StringBuilder();
-        private StringBuilder _appliedLog = new StringBuilder();
+        private readonly StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages = 0;
         private List<int> _deleteIndices = new List<int>();
 
@@ -154,7 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
 
             comboBoxLanguage.Items.Clear();
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
@@ -170,16 +171,16 @@ namespace Nikse.SubtitleEdit.Forms
                     languageIndex = j;
                     break;
                 }
-                else if (xci.TwoLetterISOLanguageName == "en")
+                if (xci.TwoLetterISOLanguageName == "en")
                 {
                     languageIndex = j;
                 }
                 j++;
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
-            AddFixActions(threeLetterISOLanguageName);
+            AddFixActions(threeLetterIsoLanguageName);
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
-            _subtitle = new Subtitle(subtitle); // copy constructor
+            Subtitle = new Subtitle(subtitle); // copy constructor
             _format = format;
             _encoding = encoding;
             _onlyListFixes = false;
@@ -205,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _autoDetectGoogleLanguage = language;
             var ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
 
             comboBoxLanguage.Items.Clear();
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
@@ -221,7 +222,7 @@ namespace Nikse.SubtitleEdit.Forms
                     languageIndex = j;
                     break;
                 }
-                else if (xci.TwoLetterISOLanguageName == "en")
+                if (xci.TwoLetterISOLanguageName == "en")
                 {
                     languageIndex = j;
                 }
@@ -229,10 +230,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
 
-            AddFixActions(threeLetterISOLanguageName);
+            AddFixActions(threeLetterIsoLanguageName);
 
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
-            _subtitle = new Subtitle(subtitle); // copy constructor
+            Subtitle = new Subtitle(subtitle); // copy constructor
             _format = format;
             _encoding = encoding;
             _onlyListFixes = true;
@@ -243,7 +244,7 @@ namespace Nikse.SubtitleEdit.Forms
             _totalErrors = 0;
             _batchMode = true;
             RunSelectedActions();
-            _originalSubtitle = _subtitle;
+            _originalSubtitle = Subtitle;
         }
 
         public void Initialize(Subtitle subtitle, SubtitleFormat format, Encoding encoding)
@@ -254,7 +255,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_autoDetectGoogleLanguage.Equals("zh", StringComparison.OrdinalIgnoreCase))
                 _autoDetectGoogleLanguage = "zh-CHS"; // Note that "zh-CHS" (Simplified Chinese) and "zh-CHT" (Traditional Chinese) are neutral cultures
             CultureInfo ci = CultureInfo.GetCultureInfo(_autoDetectGoogleLanguage);
-            string threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
+            string threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
 
             comboBoxLanguage.Items.Clear();
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
@@ -270,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
                     languageIndex = j;
                     break;
                 }
-                else if (xci.TwoLetterISOLanguageName == "en")
+                if (xci.TwoLetterISOLanguageName == "en")
                 {
                     languageIndex = j;
                 }
@@ -278,10 +279,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             comboBoxLanguage.SelectedIndex = languageIndex;
 
-            AddFixActions(threeLetterISOLanguageName);
+            AddFixActions(threeLetterIsoLanguageName);
 
             _originalSubtitle = new Subtitle(subtitle); // copy constructor
-            _subtitle = new Subtitle(subtitle); // copy constructor
+            Subtitle = new Subtitle(subtitle); // copy constructor
             _format = format;
             _encoding = encoding;
             InitUI();
@@ -340,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms
             Activate();
         }
 
-        private void AddFixActions(string threeLetterISOLanguageName)
+        private void AddFixActions(string threeLetterIsoLanguageName)
         {
             _turkishAnsiIndex = -1;
             _danishLetterIIndex = -1;
@@ -375,9 +376,9 @@ namespace Nikse.SubtitleEdit.Forms
             _fixActions.Add(new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked));
 
             if (string.IsNullOrEmpty(_language.FixOcrErrorExample))
-                _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
+                _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
             else
-                _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterISOLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
+                _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
 
             _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
             _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
@@ -467,8 +468,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
             if (textSize.Height > buttonCancel.Height - 4)
             {
                 subtitleListView1.InitializeTimestampColumnWidths(this);
@@ -497,7 +498,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var item = new ListViewItem(string.Empty) { Checked = true };
 
-                var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
+                var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
                 item.SubItems.Add(subItem);
                 subItem = new ListViewItem.ListViewSubItem(item, action);
                 item.SubItems.Add(subItem);
@@ -518,7 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_onlyListFixes || _batchMode)
                 return true;
 
-            string ln = p.Number.ToString();
+            string ln = p.Number.ToString(CultureInfo.InvariantCulture);
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (item.SubItems[1].Text == ln && item.SubItems[2].Text == action)
@@ -561,16 +562,16 @@ namespace Nikse.SubtitleEdit.Forms
             string fixAction1 = _language.RemovedEmptyLineAtTop;
             string fixAction2 = _language.RemovedEmptyLineAtBottom;
 
-            if (_subtitle.Paragraphs.Count == 0)
+            if (Subtitle.Paragraphs.Count == 0)
                 return;
 
             int emptyLinesRemoved = 0;
 
-            int firstNumber = _subtitle.Paragraphs[0].Number;
+            int firstNumber = Subtitle.Paragraphs[0].Number;
             listViewFixes.BeginUpdate();
-            for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 if (!string.IsNullOrEmpty(p.Text))
                 {
                     string text = p.Text.Trim(' ');
@@ -596,14 +597,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // this must be the very last action done, or line numbers will be messed up!!!
-            for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 if (string.IsNullOrEmpty(p.Text))
                 {
                     if (AllowFix(p, fixAction0))
                     {
-                        _subtitle.Paragraphs.RemoveAt(i);
+                        Subtitle.Paragraphs.RemoveAt(i);
                         emptyLinesRemoved++;
                         AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", _language.RemovedEmptyLine));
                         _deleteIndices.Add(i);
@@ -616,7 +617,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 LogStatus(_language.RemovedEmptyLinesUnsedLineBreaks, string.Format(_language.EmptyLinesRemovedX, emptyLinesRemoved));
                 _totalFixes += emptyLinesRemoved;
-                _subtitle.Renumber(firstNumber);
+                Subtitle.Renumber(firstNumber);
             }
         }
 
@@ -625,9 +626,9 @@ namespace Nikse.SubtitleEdit.Forms
             // negative display time
             string fixAction = _language.FixOverlappingDisplayTime;
             int noOfOverlappingDisplayTimesFixed = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 Paragraph oldP = new Paragraph(p);
                 if (p.Duration.TotalMilliseconds < 0) // negative display time...
                 {
@@ -635,8 +636,8 @@ namespace Nikse.SubtitleEdit.Forms
                     string status = string.Format(_language.StartTimeLaterThanEndTime,
                                                     i + 1, p.StartTime, p.EndTime, p.Text, Environment.NewLine);
 
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
 
                     double wantedDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 0.9;
 
@@ -684,10 +685,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             // overlapping display time
-            for (int i = 1; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 1; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                Paragraph p = Subtitle.Paragraphs[i];
+                Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
                 Paragraph target = prev;
                 string oldCurrent = p.ToString();
                 string oldPrevious = prev.ToString();
@@ -864,15 +865,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixShortDisplayTime;
             int noOfShortDisplayTimes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 var skip = p.StartTime.IsMaxTime || p.EndTime.IsMaxTime;
                 double displayTime = p.Duration.TotalMilliseconds;
                 if (!skip && displayTime < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 {
-                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
                     if (next == null || (p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds) < next.StartTime.TotalMilliseconds)
                     {
                         Paragraph temp = new Paragraph(p);
@@ -920,9 +921,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         temp.EndTime.TotalMilliseconds++;
                     }
-                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
-                    Paragraph nextNext = _subtitle.GetParagraphOrDefault(i + 2);
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph nextNext = Subtitle.GetParagraphOrDefault(i + 2);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
                     double diffMs = temp.Duration.TotalMilliseconds - p.Duration.TotalMilliseconds;
 
                     // Normal - just make current subtitle duration longer
@@ -1041,9 +1042,9 @@ namespace Nikse.SubtitleEdit.Forms
             string fixAction = _language.FixInvalidItalicTag;
             int noOfInvalidHtmlTags = 0;
             listViewFixes.BeginUpdate();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                var text = _subtitle.Paragraphs[i].Text;
+                var text = Subtitle.Paragraphs[i].Text;
                 if (text.Contains('<'))
                 {
                     text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
@@ -1052,12 +1053,12 @@ namespace Nikse.SubtitleEdit.Forms
                     text = Utilities.FixInvalidItalicTags(text);
                     if (text != oldText)
                     {
-                        if (AllowFix(_subtitle.Paragraphs[i], fixAction))
+                        if (AllowFix(Subtitle.Paragraphs[i], fixAction))
                         {
-                            _subtitle.Paragraphs[i].Text = text;
+                            Subtitle.Paragraphs[i].Text = text;
                             _totalFixes++;
                             noOfInvalidHtmlTags++;
-                            AddFixToListView(_subtitle.Paragraphs[i], fixAction, oldText, text);
+                            AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                         }
                     }
                 }
@@ -1072,9 +1073,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixLongDisplayTime;
             int noOfLongDisplayTimes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 double maxDisplayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text) * 8.0;
                 if (maxDisplayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     maxDisplayTime = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
@@ -1111,9 +1112,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.BreakLongLine;
             int noOfLongLines = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 bool tooLong = false;
                 foreach (string line in lines)
@@ -1151,9 +1152,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.MergeShortLine;
             int noOfShortLines = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 string s = Utilities.RemoveHtmlTags(p.Text);
                 if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
@@ -1190,9 +1191,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.MergeShortLineAll;
             int noOfShortLines = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 string s = Utilities.RemoveHtmlTags(p.Text);
                 if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
@@ -1221,9 +1222,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             string fixAction = _language.UnneededSpace;
             int doubleSpaces = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string oldText = p.Text;
 
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, Language);
@@ -1255,9 +1256,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.UnneededPeriod;
             int unneededPeriods = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 if (p.Text.Contains("!." + Environment.NewLine))
                 {
                     if (AllowFix(p, fixAction))
@@ -1335,9 +1336,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixMissingSpace;
             int missingSpaces = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 // missing space after comma ","
                 Match match = FixMissingSpacesReComma.Match(p.Text);
@@ -1698,13 +1699,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.AddMissingQuote;
             int noOfFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 if (Utilities.CountTagInText(p.Text, "\"") == 1)
                 {
-                    Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                    Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                     if (next != null)
                     {
                         double betweenMilliseconds = next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds;
@@ -1716,7 +1717,7 @@ namespace Nikse.SubtitleEdit.Forms
                             next = null; // seems to have valid quotes, so no spanning
                     }
 
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
                     if (prev != null)
                     {
                         double betweenMilliseconds = p.StartTime.TotalMilliseconds - prev.EndTime.TotalMilliseconds;
@@ -1880,9 +1881,9 @@ namespace Nikse.SubtitleEdit.Forms
             string fixAction = _language.FixUppercaseIInsideLowercaseWord;
             int uppercaseIsInsideLowercaseWords = 0;
             //            bool isLineContinuation = false;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string oldText = p.Text;
 
                 Match match = ReAfterLowercaseLetter.Match(p.Text);
@@ -2006,9 +2007,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleApostrophes;
             int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 if (p.Text.Contains("''"))
                 {
@@ -2030,10 +2031,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixMissingPeriodAtEndOfLine;
             int missigPeriodsAtEndOfLine = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                Paragraph next = _subtitle.GetParagraphOrDefault(i + 1);
+                Paragraph p = Subtitle.Paragraphs[i];
+                Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
                     nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
@@ -2190,10 +2191,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_namesEtcList == null)
             {
                 _namesEtcList = new List<string>();
-                string languageTwoLetterCode = Utilities.AutoDetectGoogleLanguage(_subtitle);
+                string languageTwoLetterCode = Utilities.AutoDetectGoogleLanguage(Subtitle);
 
                 // Will contains both one word names and multi names
-                Nikse.SubtitleEdit.Logic.Dictionaries.NamesList.LoadNamesEtcWordLists(_namesEtcList, _namesEtcList, languageTwoLetterCode);
+                var namesList = new NamesList(Configuration.DictionariesFolder, languageTwoLetterCode, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                _namesEtcList = namesList.GetAllNames();
             }
         }
 
@@ -2217,10 +2219,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             string fixAction = _language.FixFirstLetterToUppercaseAfterParagraph;
             int fixedStartWithUppercaseLetterAfterParagraphTicked = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                Paragraph p = Subtitle.Paragraphs[i];
+                Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
 
                 string oldText = p.Text;
                 string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
@@ -2548,9 +2550,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.StartWithUppercaseLetterAfterPeriodInsideParagraph;
             int noOfFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string oldText = p.Text;
                 StripableText st = new StripableText(p.Text);
                 if (p.Text.Length > 3)
@@ -2606,7 +2608,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (noOfFixes > 0)
-                LogStatus(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, noOfFixes.ToString());
+                LogStatus(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, noOfFixes.ToString(CultureInfo.InvariantCulture));
         }
 
         private void FixStartWithUppercaseLetterAfterColon()
@@ -2614,10 +2616,10 @@ namespace Nikse.SubtitleEdit.Forms
             string fixAction = _language.StartWithUppercaseLetterAfterColon;
             int noOfFixes = 0;
             listViewFixes.BeginUpdate();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                Paragraph last = _subtitle.GetParagraphOrDefault(i - 1);
+                Paragraph p = Subtitle.Paragraphs[i];
+                Paragraph last = Subtitle.GetParagraphOrDefault(i - 1);
                 string oldText = p.Text;
                 int skipCount = 0;
 
@@ -2656,12 +2658,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 skipCount = p.Text.Substring(j).IndexOf('>') - p.Text.Substring(j).IndexOf("<font ", StringComparison.Ordinal);
                             else if (IsTurkishLittleI(s, _encoding, Language))
                             {
-                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s, _encoding).ToString());
+                                p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s, _encoding).ToString(CultureInfo.InvariantCulture));
                                 lastWasColon = false;
                             }
                             else if (char.IsLower(s))
                             {
-                                p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString());
+                                p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString(CultureInfo.InvariantCulture));
                                 lastWasColon = false;
                             }
                             else if (!(" " + Environment.NewLine).Contains(s))
@@ -2679,7 +2681,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             if (noOfFixes > 0)
-                LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString());
+                LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString(CultureInfo.InvariantCulture));
         }
 
         private bool IsAbbreviation(string text, int index)
@@ -2702,15 +2704,15 @@ namespace Nikse.SubtitleEdit.Forms
             return abbreviations.Contains(word + ".");
         }
 
-        public void FixOcrErrorsViaReplaceList(string threeLetterISOLanguageName)
+        public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
         {
-            var ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, null, this);
+            var ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this);
             string fixAction = _language.FixCommonOcrErrors;
             int noOfFixes = 0;
             string lastLine = string.Empty;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                var p = _subtitle.Paragraphs[i];
+                var p = Subtitle.Paragraphs[i];
                 string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                 lastLine = text;
                 if (p.Text != text)
@@ -2734,9 +2736,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.RemoveSpaceBetweenNumber;
             int noOfFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
                 Match match = RemoveSpaceBetweenNumbersRegEx.Match(text);
                 int counter = 0;
@@ -2776,9 +2778,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDialogsOnOneLine;
             int noOfFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
                 string oldText = text;
                 if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
@@ -2858,9 +2860,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixTurkishAnsi;
             int noOfFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
                 string oldText = text;
                 text = text.Replace("Ý", "İ");
@@ -2888,9 +2890,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixLowercaseIToUppercaseI;
             int iFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 string oldText = p.Text;
                 string s = p.Text;
@@ -2976,9 +2978,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixHyphen;
             int iFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
 
                 if (text.TrimStart().StartsWith('-') ||
@@ -2993,7 +2995,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text.Contains(Environment.NewLine + "<I>-") ||
                     text.Contains(Environment.NewLine + "<I> -"))
                 {
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
 
                     if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                     {
@@ -3081,7 +3083,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (text.StartsWith("<font ", StringComparison.Ordinal))
                 {
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
                     if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                     {
                         string oldText = p.Text;
@@ -3111,9 +3113,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixHyphen;
             int iFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
 
                 if (text.TrimStart().StartsWith('-') ||
@@ -3128,7 +3130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     text.Contains(Environment.NewLine + "<I>-") ||
                     text.Contains(Environment.NewLine + "<I> -"))
                 {
-                    Paragraph prev = _subtitle.GetParagraphOrDefault(i - 1);
+                    Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
 
                     if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                     {
@@ -3203,9 +3205,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.Fix3PlusLine;
             int iFixes = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
 
                 if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
@@ -3230,9 +3232,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixMusicNotation;
             int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                 string oldText = p.Text;
@@ -3269,9 +3271,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleDash;
             int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
                 string oldText = p.Text;
 
@@ -3334,9 +3336,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleGreaterThan;
             int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 if (p.Text.StartsWith(">> "))
                 {
@@ -3370,9 +3372,9 @@ namespace Nikse.SubtitleEdit.Forms
             string fixAction = _language.FixEllipsesStart;
             int fixCount = 0;
             listViewFixes.BeginUpdate();
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
                 var text = p.Text;
                 if (text.Contains("..") && AllowFix(p, fixAction))
                 {
@@ -3462,9 +3464,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixMissingOpenBracket;
             int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
+                Paragraph p = Subtitle.Paragraphs[i];
 
                 if (AllowFix(p, fixAction))
                 {
@@ -4116,9 +4118,9 @@ namespace Nikse.SubtitleEdit.Forms
             Regex regExIStand = new Regex(@"\bistand\b", RegexOptions.Compiled);
             Regex regExIOevrigt = new Regex(@"\biøvrigt\b", RegexOptions.Compiled);
 
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                string text = _subtitle.Paragraphs[i].Text;
+                string text = Subtitle.Paragraphs[i].Text;
                 string oldText = text;
 
                 if (littleIRegex.IsMatch(text))
@@ -4167,10 +4169,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (text != oldText)
                 {
-                    _subtitle.Paragraphs[i].Text = text;
+                    Subtitle.Paragraphs[i].Text = text;
                     fixCount++;
                     _totalFixes++;
-                    AddFixToListView(_subtitle.Paragraphs[i], fixAction, oldText, text);
+                    AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                 }
             }
             if (fixCount > 0)
@@ -4186,10 +4188,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixSpanishInvertedQuestionAndExclamationMarks;
             int fixCount = 0;
-            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                Paragraph last = _subtitle.GetParagraphOrDefault(i - 1);
+                Paragraph p = Subtitle.Paragraphs[i];
+                Paragraph last = Subtitle.GetParagraphOrDefault(i - 1);
 
                 bool wasLastLineClosed = last == null || last.Text.EndsWith('?') || last.Text.EndsWith('!') || last.Text.EndsWith('.') ||
                                          last.Text.EndsWith(':') || last.Text.EndsWith(')') || last.Text.EndsWith(']');
@@ -4213,7 +4215,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
             if (fixCount > 0)
-                LogStatus(_language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString());
+                LogStatus(_language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
         }
 
         private void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool wasLastLineClosed, string fixAction, ref int fixCount)
@@ -4358,7 +4360,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (idx < p.Text.Length)
                 {
-                    p.Text = p.Text.Insert(idx, mark.ToString());
+                    p.Text = p.Text.Insert(idx, mark.ToString(CultureInfo.InvariantCulture));
                     if (p.Text.Contains("¡¿") && p.Text.Contains("!?"))
                         p.Text = p.Text.Replace("!?", "?!");
                     if (p.Text.Contains("¿¡") && p.Text.Contains("?!"))
@@ -4456,7 +4458,7 @@ namespace Nikse.SubtitleEdit.Forms
             _newLog = new StringBuilder();
             _deleteIndices = new List<int>();
 
-            _subtitle = new Subtitle(_originalSubtitle);
+            Subtitle = new Subtitle(_originalSubtitle);
             foreach (ListViewItem item in listView1.Items)
             {
                 if (item.Checked && item.Index != IndexRemoveEmptyLines)
@@ -4726,7 +4728,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            return new string[] { sb.ToString(), sb2.ToString() };
+            return new[] { sb.ToString(), sb2.ToString() };
         }
 
         private void SaveConfiguration()
@@ -4881,12 +4883,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _originalSubtitle.Paragraphs[_subtitleListViewIndex].Text = text;
                 subtitleListView1.SetText(_subtitleListViewIndex, text);
 
-                EnableOKButton();
+                EnableOkButton();
                 UpdateListSyntaxColoring();
             }
         }
 
-        private void EnableOKButton()
+        private void EnableOkButton()
         {
             if (!_hasFixesBeenMade)
             {
@@ -4976,13 +4978,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void UpdateListSyntaxColoring()
         {
-            if (_subtitle == null || _subtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= _subtitle.Paragraphs.Count)
+            if (Subtitle == null || Subtitle.Paragraphs.Count == 0 || _subtitleListViewIndex < 0 || _subtitleListViewIndex >= Subtitle.Paragraphs.Count)
                 return;
 
-            subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex, _subtitle.Paragraphs[_subtitleListViewIndex]);
-            Paragraph next = _subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
+            subtitleListView1.SyntaxColorLine(Subtitle.Paragraphs, _subtitleListViewIndex, Subtitle.Paragraphs[_subtitleListViewIndex]);
+            Paragraph next = Subtitle.GetParagraphOrDefault(_subtitleListViewIndex + 1);
             if (next != null)
-                subtitleListView1.SyntaxColorLine(_subtitle.Paragraphs, _subtitleListViewIndex + 1, _subtitle.Paragraphs[_subtitleListViewIndex + 1]);
+                subtitleListView1.SyntaxColorLine(Subtitle.Paragraphs, _subtitleListViewIndex + 1, Subtitle.Paragraphs[_subtitleListViewIndex + 1]);
         }
 
         private void MaskedTextBox_TextChanged(object sender, EventArgs e)
@@ -5062,7 +5064,7 @@ namespace Nikse.SubtitleEdit.Forms
             _totalFixes = 0;
             _totalErrors = 0;
             RunSelectedActions();
-            _originalSubtitle = new Subtitle(_subtitle);
+            _originalSubtitle = new Subtitle(Subtitle);
             subtitleListView1.Fill(_originalSubtitle);
             RefreshFixes();
             if (listViewFixes.Items.Count == 0)
@@ -5142,7 +5144,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = textBoxListViewText.Text;
                 textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text, Language);
                 if (oldText != textBoxListViewText.Text)
-                    EnableOKButton();
+                    EnableOkButton();
             }
         }
 
@@ -5151,7 +5153,7 @@ namespace Nikse.SubtitleEdit.Forms
             string oldText = textBoxListViewText.Text;
             textBoxListViewText.Text = Utilities.UnbreakLine(textBoxListViewText.Text);
             if (oldText != textBoxListViewText.Text)
-                EnableOKButton();
+                EnableOkButton();
         }
 
         private void ToolStripMenuItemDeleteClick(object sender, EventArgs e)
@@ -5424,7 +5426,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_subtitle != null)
+            if (Subtitle != null)
             {
                 var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
                 _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;

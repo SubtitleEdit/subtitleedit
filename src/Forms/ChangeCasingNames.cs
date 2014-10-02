@@ -124,16 +124,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FindAllNames()
         {
-            var namesEtcList = new List<string>();
+            string language = Utilities.AutoDetectLanguageName("en_US", _subtitle);
+            if (string.IsNullOrEmpty(language))
+                language = "en_US";
+
+            var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+
             // Will contains both one word names and multi names
+            var namesEtcList = namesList.GetAllNames();
 
-            //string languageCode = Utilities.AutoDetectGoogleLanguage(_subtitle);
-            string languageCode = Utilities.AutoDetectLanguageName("en_US", _subtitle);
-            if (string.IsNullOrEmpty(languageCode))
-                languageCode = "en_US";
-
-            NamesList.LoadNamesEtcWordLists(namesEtcList, namesEtcList, languageCode);
-            if (languageCode.StartsWith("en"))
+            if (language.StartsWith("en"))
             {
                 if (namesEtcList.Contains("Black"))
                     namesEtcList.Remove("Black");
