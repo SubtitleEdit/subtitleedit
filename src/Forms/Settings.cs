@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _ssaFontColor;
         private string _listBoxSearchString = string.Empty;
         private DateTime _listBoxSearchStringLastUsed = DateTime.Now;
-        private readonly List<string> _wordListNamesEtc = new List<string>();
+        private List<string> _wordListNamesEtc = new List<string>();
         private List<string> _userWordList = new List<string>();
         private OcrFixReplaceList _ocrFixReplaceList;
         private readonly string _oldVlcLocation;
@@ -1803,8 +1803,8 @@ namespace Nikse.SubtitleEdit.Forms
             var task = Task.Factory.StartNew(() =>
             {
                 // names etc
-                _wordListNamesEtc.Clear();
-                NamesList.LoadNamesEtcWordLists(_wordListNamesEtc, _wordListNamesEtc, language);
+                var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                _wordListNamesEtc = namesList.GetAllNames();
                 _wordListNamesEtc.Sort();
                 return _wordListNamesEtc;
             });
@@ -1841,7 +1841,8 @@ namespace Nikse.SubtitleEdit.Forms
             string text = textBoxNameEtc.Text.Trim();
             if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
             {
-                NamesList.AddWordToLocalNamesEtcList(text, language);
+                var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+                namesList.Add(text, language);
                 LoadNamesEtc(language, true);
                 labelStatus.Text = string.Format(Configuration.Settings.Language.Settings.WordAddedX, text);
                 textBoxNameEtc.Text = string.Empty;
@@ -1891,51 +1892,18 @@ namespace Nikse.SubtitleEdit.Forms
                     int removeCount = 0;
                     var namesEtc = new List<string>();
                     var globalNamesEtc = new List<string>();
-                    string localNamesEtcFileName = NamesList.LoadLocalNamesEtc(namesEtc, namesEtc, language);
-                    NamesList.LoadGlobalNamesEtc(globalNamesEtc, globalNamesEtc);
+                    var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                     for (int idx = listBoxNamesEtc.SelectedIndices.Count - 1; idx >= 0; idx--)
                     {
                         index = listBoxNamesEtc.SelectedIndices[idx];
                         text = listBoxNamesEtc.Items[index].ToString();
-                        if (namesEtc.Contains(text))
-                        {
-                            namesEtc.Remove(text);
-                            removeCount++;
-                        }
-                        if (globalNamesEtc.Contains(text))
-                        {
-                            globalNamesEtc.Remove(text);
-                            removeCount++;
-                        }
+                        namesList.Remove(text, language);
+                        removeCount++;
                         listBoxNamesEtc.Items.RemoveAt(index);
                     }
 
                     if (removeCount > 0)
                     {
-                        namesEtc.Sort();
-                        var doc = new XmlDocument();
-                        doc.Load(localNamesEtcFileName);
-                        doc.DocumentElement.RemoveAll();
-                        foreach (string name in namesEtc)
-                        {
-                            XmlNode node = doc.CreateElement("name");
-                            node.InnerText = name;
-                            doc.DocumentElement.AppendChild(node);
-                        }
-                        doc.Save(localNamesEtcFileName);
-                        LoadNamesEtc(language, false); // reload
-
-                        globalNamesEtc.Sort();
-                        doc = new XmlDocument();
-                        doc.Load(Utilities.DictionaryFolder + "names_etc.xml");
-                        doc.DocumentElement.RemoveAll();
-                        foreach (string name in globalNamesEtc)
-                        {
-                            XmlNode node = doc.CreateElement("name");
-                            node.InnerText = name;
-                            doc.DocumentElement.AppendChild(node);
-                        }
-                        doc.Save(Utilities.DictionaryFolder + "names_etc.xml");
                         LoadNamesEtc(language, true); // reload
 
                         if (index < listBoxNamesEtc.Items.Count)
@@ -2498,7 +2466,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
                     return;
                 }
-                else if (sb.ToString() == "[CapsLock]")
+                if (sb.ToString() == "[CapsLock]")
                 {
                     MessageBox.Show(string.Format(Configuration.Settings.Language.Settings.ShortcutIsNotValid, sb));
                     return;

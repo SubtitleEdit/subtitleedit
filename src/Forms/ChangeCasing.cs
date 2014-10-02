@@ -69,14 +69,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void FixCasing(Subtitle subtitle, string language)
         {
-            var namesEtc = new List<string>();
-            var tmp = new List<string>();
-            NamesList.LoadNamesEtcWordLists(tmp, tmp, language);
-            foreach (string s in tmp)
-            {
-                if (s.Contains('.'))
-                    namesEtc.Add(s);
-            }
+            var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
+            var namesEtc = namesList.GetAllNames();
 
             // Longer names must be first
             namesEtc.Sort((s1, s2) => s2.Length.CompareTo(s1.Length));
