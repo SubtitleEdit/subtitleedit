@@ -492,7 +492,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Commencer par une majuscule après un paragraphe</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Mettre une majuscule après un point dans un paragraphe</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <StartWithUppercaseLetterAfterColon>Mettre une majuscule après deux points</StartWithUppercaseLetterAfterColon>
+    <StartWithUppercaseLetterAfterColon>Mettre une majuscule après un deux-points</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Remplacer le i minuscule isolé par un I (Anglais)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Corriger les erreurs OCR fréquentes (d'après la liste des correctifs OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erreurs OCR fréquentes corrigées (d'après le fichier OcrReplaceList): {0}</CommonOcrErrorsFixed>
@@ -1387,7 +1387,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Parentheses>(...)</Parentheses>
     <QuestionMarks>?...?</QuestionMarks>
     <And>et</And>
-    <RemoveTextBeforeColon>Supprimer le texte devant deux points « : »</RemoveTextBeforeColon>
+    <RemoveTextBeforeColon>Supprimer le texte devant un deux-points « : »</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Uniquement le texte en MAJUSCULE</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Uniquement sur une ligne séparée</OnlyIfInSeparateLine>
     <LinesFoundX>Lignes trouvées {0}</LinesFoundX>
