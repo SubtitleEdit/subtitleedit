@@ -1,25 +1,25 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class ExportCustomText : Form
     {
-        private List<string> _templates = new List<string>();
-        private Subtitle _subtitle;
-        private Subtitle _translated;
-        private string _title;
+        private readonly List<string> _templates = new List<string>();
+        private readonly Subtitle _subtitle;
+        private readonly Subtitle _translated;
+        private readonly string _title;
         public string LogMessage { get; set; }
 
         public ExportCustomText(Subtitle subtitle, Subtitle original, string title)
         {
             InitializeComponent();
 
-            if (original == null && original.Paragraphs == null || original.Paragraphs.Count == 0)
+            if (original == null || original.Paragraphs == null || original.Paragraphs.Count == 0)
             {
                 _subtitle = subtitle;
             }
@@ -69,6 +69,12 @@ namespace Nikse.SubtitleEdit.Forms
             deleteToolStripMenuItem.Text = l.Delete;
             editToolStripMenuItem.Text = l.Edit;
             newToolStripMenuItem.Text = l.New;
+        }
+
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
         }
 
         private void ShowTemplates(List<string> templates)
@@ -125,13 +131,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewTemplates.SelectedItems.Count == 1)
             {
                 int idx = listViewTemplates.SelectedItems[0].Index;
-                var form = new ExportCustomTextFormat(_templates[idx]);
-                if (form.ShowDialog(this) == DialogResult.OK)
+                using (var form = new ExportCustomTextFormat(_templates[idx]))
                 {
-                    _templates[idx] = form.FormatOk;
-                    ShowTemplates(_templates);
-                    if (idx < listViewTemplates.Items.Count)
-                        listViewTemplates.Items[idx].Selected = true;
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _templates[idx] = form.FormatOk;
+                        ShowTemplates(_templates);
+                        if (idx < listViewTemplates.Items.Count)
+                            listViewTemplates.Items[idx].Selected = true;
+                    }
                 }
             }
         }
