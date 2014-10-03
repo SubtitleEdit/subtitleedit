@@ -49,17 +49,17 @@
             // labelTotalMilliseconds
             // 
             this.labelTotalMilliseconds.AutoSize = true;
-            this.labelTotalMilliseconds.Location = new System.Drawing.Point(159, 52);
+            this.labelTotalMilliseconds.Location = new System.Drawing.Point(169, 52);
             this.labelTotalMilliseconds.Name = "labelTotalMilliseconds";
-            this.labelTotalMilliseconds.Size = new System.Drawing.Size(90, 13);
+            this.labelTotalMilliseconds.Size = new System.Drawing.Size(108, 13);
             this.labelTotalMilliseconds.TabIndex = 49;
             this.labelTotalMilliseconds.Text = "labelTotalMilliseconds";
             // 
             // labelTM
             // 
-            this.labelTM.Location = new System.Drawing.Point(16, 52);
+            this.labelTM.Location = new System.Drawing.Point(3, 52);
             this.labelTM.Name = "labelTM";
-            this.labelTM.Size = new System.Drawing.Size(140, 13);
+            this.labelTM.Size = new System.Drawing.Size(163, 13);
             this.labelTM.TabIndex = 48;
             this.labelTM.Text = "Total milliseconds:";
             this.labelTM.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -72,7 +72,7 @@
             0,
             0,
             65536});
-            this.numericUpDownDelay.Location = new System.Drawing.Point(159, 72);
+            this.numericUpDownDelay.Location = new System.Drawing.Point(169, 72);
             this.numericUpDownDelay.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -90,7 +90,7 @@
             // labelColor
             // 
             this.labelColor.AutoSize = true;
-            this.labelColor.Location = new System.Drawing.Point(218, 22);
+            this.labelColor.Location = new System.Drawing.Point(228, 22);
             this.labelColor.Name = "labelColor";
             this.labelColor.Size = new System.Drawing.Size(32, 13);
             this.labelColor.TabIndex = 46;
@@ -98,9 +98,9 @@
             // 
             // labelEndDelay
             // 
-            this.labelEndDelay.Location = new System.Drawing.Point(16, 76);
+            this.labelEndDelay.Location = new System.Drawing.Point(3, 76);
             this.labelEndDelay.Name = "labelEndDelay";
-            this.labelEndDelay.Size = new System.Drawing.Size(140, 13);
+            this.labelEndDelay.Size = new System.Drawing.Size(163, 17);
             this.labelEndDelay.TabIndex = 45;
             this.labelEndDelay.Text = "End delay in milliseconds:";
             this.labelEndDelay.TextAlign = System.Drawing.ContentAlignment.TopRight;
@@ -128,7 +128,7 @@
             // 
             // buttonChooseColor
             // 
-            this.buttonChooseColor.Location = new System.Drawing.Point(159, 17);
+            this.buttonChooseColor.Location = new System.Drawing.Point(169, 17);
             this.buttonChooseColor.Name = "buttonChooseColor";
             this.buttonChooseColor.Size = new System.Drawing.Size(27, 23);
             this.buttonChooseColor.TabIndex = 42;
@@ -138,16 +138,16 @@
             // 
             // panelColor
             // 
-            this.panelColor.Location = new System.Drawing.Point(192, 19);
+            this.panelColor.Location = new System.Drawing.Point(202, 19);
             this.panelColor.Name = "panelColor";
             this.panelColor.Size = new System.Drawing.Size(20, 20);
             this.panelColor.TabIndex = 41;
             // 
             // labelChooseColor
             // 
-            this.labelChooseColor.Location = new System.Drawing.Point(16, 22);
+            this.labelChooseColor.Location = new System.Drawing.Point(0, 22);
             this.labelChooseColor.Name = "labelChooseColor";
-            this.labelChooseColor.Size = new System.Drawing.Size(140, 13);
+            this.labelChooseColor.Size = new System.Drawing.Size(166, 13);
             this.labelChooseColor.TabIndex = 40;
             this.labelChooseColor.Text = "Choose color:";
             this.labelChooseColor.TextAlign = System.Drawing.ContentAlignment.TopRight;
