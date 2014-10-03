@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -26,8 +27,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _originalSubtitle;
         private Subtitle _otherSubtitle;
         private SortedDictionary<int, TimeSpan> _synchronizationPoints = new SortedDictionary<int, TimeSpan>();
-        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName
         {
@@ -65,8 +66,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -163,7 +164,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     SubtitleListview1.SetBackgroundColor(i, SubtitleListview1.BackColor);
-                    SubtitleListview1.SetNumber(i, (i + 1).ToString());
+                    SubtitleListview1.SetNumber(i, (i + 1).ToString(CultureInfo.InvariantCulture));
                     SubtitleListview1.SetStartTime(i, _subtitle.Paragraphs[i]);
                 }
             }
@@ -179,20 +180,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (SubtitleListview1.SelectedItems.Count == 1 && _subtitle != null)
                 {
-                    var getTime = new SetSyncPoint();
-                    int index = SubtitleListview1.SelectedItems[0].Index;
-                    getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
-                    if (getTime.ShowDialog(this) == DialogResult.OK)
+                    using (var getTime = new SetSyncPoint())
                     {
-                        if (_synchronizationPoints.ContainsKey(index))
-                            _synchronizationPoints[index] = getTime.SynchronizationPoint;
-                        else
-                            _synchronizationPoints.Add(index, getTime.SynchronizationPoint);
-                        RefreshSynchronizationPointsUI();
+                        int index = SubtitleListview1.SelectedItems[0].Index;
+                        getTime.Initialize(_subtitle, _subtitleFileName, index, _videoFileName, _audioTrackNumber);
+                        if (getTime.ShowDialog(this) == DialogResult.OK)
+                        {
+                            if (_synchronizationPoints.ContainsKey(index))
+                                _synchronizationPoints[index] = getTime.SynchronizationPoint;
+                            else
+                                _synchronizationPoints.Add(index, getTime.SynchronizationPoint);
+                            RefreshSynchronizationPointsUI();
+                            _videoFileName = getTime.VideoFileName;
+                        }
+                        Activate();
                         _videoFileName = getTime.VideoFileName;
                     }
-                    Activate();
-                    _videoFileName = getTime.VideoFileName;
                 }
             }
         }
@@ -311,8 +314,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             int endIndex = -1;
             int minIndex = 0;
-            List<int> syncIndices = new List<int>();
-            foreach (KeyValuePair<int, TimeSpan> kvp in _synchronizationPoints)
+            var syncIndices = new List<int>();
+            foreach (var kvp in _synchronizationPoints)
                 syncIndices.Add(kvp.Key);
             for (int i = 0; i < syncIndices.Count; i++)
             {
@@ -352,7 +355,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listBoxSyncPoints.SelectedIndex >= 0)
             {
-                ListBoxSyncPoint item = (ListBoxSyncPoint)listBoxSyncPoints.Items[listBoxSyncPoints.SelectedIndex];
+                var item = (ListBoxSyncPoint)listBoxSyncPoints.Items[listBoxSyncPoints.SelectedIndex];
                 SubtitleListview1.SelectIndexAndEnsureVisible(item.Index);
             }
         }
@@ -393,20 +396,24 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindTextClick(object sender, EventArgs e)
         {
-            var findSubtitle = new FindSubtitleLine();
-            findSubtitle.Initialize(_subtitle.Paragraphs, string.Empty);
-            findSubtitle.ShowDialog();
-            if (findSubtitle.SelectedIndex >= 0)
-                SubtitleListview1.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+            using (var findSubtitle = new FindSubtitleLine())
+            {
+                findSubtitle.Initialize(_subtitle.Paragraphs, string.Empty);
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                    SubtitleListview1.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+            }
         }
 
         private void ButtonFindTextOtherClick(object sender, EventArgs e)
         {
-            var findSubtitle = new FindSubtitleLine();
-            findSubtitle.Initialize(_otherSubtitle.Paragraphs, string.Empty);
-            findSubtitle.ShowDialog();
-            if (findSubtitle.SelectedIndex >= 0)
-                subtitleListView2.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+            using (var findSubtitle = new FindSubtitleLine())
+            {
+                findSubtitle.Initialize(_otherSubtitle.Paragraphs, string.Empty);
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                    subtitleListView2.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+            }
         }
 
     }

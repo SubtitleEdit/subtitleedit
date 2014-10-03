@@ -2579,8 +2579,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonEditDoNotBreakAfterList_Click(object sender, EventArgs e)
         {
-            var form = new DoNotBreakAfterListEdit();
-            form.ShowDialog(this);
+            using (var form = new DoNotBreakAfterListEdit())
+            {
+                form.ShowDialog(this);
+            }
         }
 
     }

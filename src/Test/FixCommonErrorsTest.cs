@@ -1010,13 +1010,15 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixOcrErrorsViaHardcodedRules1()
         {
-            var form = new GoToLine();
-            Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
-            //string input = "i'I'll see you.";
-            const string input = "l-l'll see you.";
-            var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
-            var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
-            Assert.AreEqual(res, "I-I'll see you.");
+            using (var form = new GoToLine())
+            {
+                Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
+                //string input = "i'I'll see you.";
+                const string input = "l-l'll see you.";
+                var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                Assert.AreEqual(res, "I-I'll see you.");
+            }
         }
 
     }

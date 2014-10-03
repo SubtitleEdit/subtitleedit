@@ -110,9 +110,11 @@ namespace Nikse.SubtitleEdit.Forms
                                                     h2.Timestamp.Hour,
                                                     h2.Timestamp.Minute,
                                                     h2.Timestamp.Second) + " - " + h2.Description;
-                Compare compareForm = new Compare();
-                compareForm.Initialize(_subtitle, Configuration.Settings.Language.General.CurrentSubtitle, h2.Subtitle, descr2);
-                compareForm.Show();
+                using (var compareForm = new Compare())
+                {
+                    compareForm.Initialize(_subtitle, Configuration.Settings.Language.General.CurrentSubtitle, h2.Subtitle, descr2);
+                    compareForm.Show();
+                }
             }
         }
 
@@ -138,9 +140,11 @@ namespace Nikse.SubtitleEdit.Forms
                                                     h2.Timestamp.Hour,
                                                     h2.Timestamp.Minute,
                                                     h2.Timestamp.Second) + " - " + h2.Description;
-                Compare compareForm = new Compare();
-                compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
-                compareForm.Show();
+                using (var compareForm = new Compare())
+                {
+                    compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
+                    compareForm.Show();
+                }
             }
         }
 

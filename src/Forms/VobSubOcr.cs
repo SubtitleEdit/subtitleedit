@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Runtime.InteropServices;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Ocr;
@@ -958,27 +959,29 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (languageStreamIds.Count > 1)
             {
-                var ChooseLanguage = new DvdSubRipChooseLanguage();
-                if (ShowInTaskbar)
+                using (var chooseLanguage = new DvdSubRipChooseLanguage())
                 {
-                    ChooseLanguage.Icon = (Icon)this.Icon.Clone();
-                    ChooseLanguage.ShowInTaskbar = true;
-                    ChooseLanguage.ShowIcon = true;
-                }
-                ChooseLanguage.Initialize(_vobSubMergedPackist, _palette, vobSubParser.IdxLanguages, string.Empty);
-                Form form = _main;
-                if (form == null)
-                    form = this;
-                ChooseLanguage.Activate();
-                if (ChooseLanguage.ShowDialog(form) == DialogResult.OK)
-                {
-                    _vobSubMergedPackist = ChooseLanguage.SelectedVobSubMergedPacks;
-                    SetTesseractLanguageFromLanguageString(ChooseLanguage.SelectedLanguageString);
-                    _importLanguageString = ChooseLanguage.SelectedLanguageString;
-                }
-                else
-                {
-                    return false;
+                    if (ShowInTaskbar)
+                    {
+                        chooseLanguage.Icon = (Icon) this.Icon.Clone();
+                        chooseLanguage.ShowInTaskbar = true;
+                        chooseLanguage.ShowIcon = true;
+                    }
+                    chooseLanguage.Initialize(_vobSubMergedPackist, _palette, vobSubParser.IdxLanguages, string.Empty);
+                    Form form = _main;
+                    if (form == null)
+                        form = this;
+                    chooseLanguage.Activate();
+                    if (chooseLanguage.ShowDialog(form) == DialogResult.OK)
+                    {
+                        _vobSubMergedPackist = chooseLanguage.SelectedVobSubMergedPacks;
+                        SetTesseractLanguageFromLanguageString(chooseLanguage.SelectedLanguageString);
+                        _importLanguageString = chooseLanguage.SelectedLanguageString;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
             }
             return true;
@@ -5603,46 +5606,50 @@ namespace Nikse.SubtitleEdit.Forms
             nbmp.ReplaceYellowWithWhite(); // optimized replace
 
             string tempTiffFileName = Path.GetTempPath() + Guid.NewGuid() + ".png";
-            var b = nbmp.GetBitmap();
-            b.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
-            string tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
-            b.Dispose();
-
-            var process = new Process();
-            process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
-            process.StartInfo.UseShellExecute = true;
-            process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
-
-            if (checkBoxTesseractMusicOn.Checked)
-                process.StartInfo.Arguments += "+music";
-
-            if (!string.IsNullOrEmpty(psmMode))
-                process.StartInfo.Arguments += " " + psmMode.Trim();
-
-            process.StartInfo.Arguments += " hocr";
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
-
-            if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+            string tempTextFileName;
+            using (var b = nbmp.GetBitmap())
             {
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardError = true;
-                process.StartInfo.FileName = "tesseract";
-            }
-            else
-            {
-                process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
+                b.Save(tempTiffFileName, System.Drawing.Imaging.ImageFormat.Png);
+                tempTextFileName = Path.GetTempPath() + Guid.NewGuid();
             }
 
-            try
+            using (var process = new Process())
             {
-                process.Start();
+                process.StartInfo = new ProcessStartInfo(Configuration.TesseractFolder + "tesseract.exe");
+                process.StartInfo.UseShellExecute = true;
+                process.StartInfo.Arguments = "\"" + tempTiffFileName + "\" \"" + tempTextFileName + "\" -l " + language;
+
+                if (checkBoxTesseractMusicOn.Checked)
+                    process.StartInfo.Arguments += "+music";
+
+                if (!string.IsNullOrEmpty(psmMode))
+                    process.StartInfo.Arguments += " " + psmMode.Trim();
+
+                process.StartInfo.Arguments += " hocr";
+                process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+
+                if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
+                {
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.FileName = "tesseract";
+                }
+                else
+                {
+                    process.StartInfo.WorkingDirectory = (Configuration.TesseractFolder);
+                }
+
+                try
+                {
+                    process.Start();
+                }
+                catch
+                {
+                    MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 3.x is installed!");
+                    throw;
+                }
+                process.WaitForExit(5000);
             }
-            catch
-            {
-                MessageBox.Show("Unable to start 'Tesseract' - make sure tesseract-ocr 3.x is installed!");
-                throw;
-            }
-            process.WaitForExit(5000);
 
             string result = string.Empty;
             string outputFileName = tempTextFileName + ".html";
@@ -6709,34 +6716,36 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonNewCharacterDatabaseClick(object sender, EventArgs e)
         {
-            var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1);
-            if (newFolder.ShowDialog(this) == DialogResult.OK)
+            using (var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1))
             {
-                if (comboBoxOcrMethod.SelectedIndex == 4)
+                if (newFolder.ShowDialog(this) == DialogResult.OK)
                 {
-                    try
+                    if (comboBoxOcrMethod.SelectedIndex == 4)
                     {
-                        string fileName = Path.Combine(Configuration.OcrFolder, newFolder.FolderName + ".db");
-                        if (File.Exists(fileName))
+                        try
                         {
-                            MessageBox.Show("OCR db already exists!");
-                            return;
+                            string fileName = Path.Combine(Configuration.OcrFolder, newFolder.FolderName + ".db");
+                            if (File.Exists(fileName))
+                            {
+                                MessageBox.Show("OCR db already exists!");
+                                return;
+                            }
+                            comboBoxCharacterDatabase.Items.Add(newFolder.FolderName);
+                            comboBoxCharacterDatabase.SelectedIndex = comboBoxCharacterDatabase.Items.Count - 1;
+                            _binaryOcrDb = new BinaryOcrDb(fileName);
+                            _binaryOcrDb.Save();
                         }
-                        comboBoxCharacterDatabase.Items.Add(newFolder.FolderName);
-                        comboBoxCharacterDatabase.SelectedIndex = comboBoxCharacterDatabase.Items.Count - 1;
-                        _binaryOcrDb = new BinaryOcrDb(fileName);
-                        _binaryOcrDb.Save();
+                        catch (Exception exception)
+                        {
+                            MessageBox.Show(exception.Message);
+                        }
                     }
-                    catch (Exception exception)
+                    else
                     {
-                        MessageBox.Show(exception.Message);
+                        _vobSubOcrSettings.LastImageCompareFolder = newFolder.FolderName;
+                        LoadImageCompareCharacterDatabaseList();
+                        LoadImageCompareBitmaps();
                     }
-                }
-                else
-                {
-                    _vobSubOcrSettings.LastImageCompareFolder = newFolder.FolderName;
-                    LoadImageCompareCharacterDatabaseList();
-                    LoadImageCompareBitmaps();
                 }
             }
         }
@@ -6822,14 +6831,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G)
             {
-                var goToLine = new GoToLine();
-                goToLine.Initialize(1, subtitleListView1.Items.Count);
-                if (goToLine.ShowDialog(this) == DialogResult.OK)
+                using (var goToLine = new GoToLine())
                 {
-                    subtitleListView1.SelectNone();
-                    subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
-                    subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
-                    subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                    goToLine.Initialize(1, subtitleListView1.Items.Count);
+                    if (goToLine.ShowDialog(this) == DialogResult.OK)
+                    {
+                        subtitleListView1.SelectNone();
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
+                        subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                    }
                 }
             }
             else if (_mainGeneralGoToNextSubtitle == e.KeyData)
@@ -7575,19 +7586,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void inspectLastAdditionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            VobSubEditCharacters formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString(), _lastAdditions, _binaryOcrDb);
-            if (formVobSubEditCharacters.ShowDialog(this) == DialogResult.OK)
+            using (var formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString(), _lastAdditions, _binaryOcrDb))
             {
-                _lastAdditions = formVobSubEditCharacters.Additions;
-                if (_binaryOcrDb != null)
+                if (formVobSubEditCharacters.ShowDialog(this) == DialogResult.OK)
                 {
-                    _binaryOcrDb.Save();
-                }
-                else
-                {
-                    _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
-                    string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
-                    _compareDoc.Save(path + "Images.xml");
+                    _lastAdditions = formVobSubEditCharacters.Additions;
+                    if (_binaryOcrDb != null)
+                    {
+                        _binaryOcrDb.Save();
+                    }
+                    else
+                    {
+                        _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
+                        string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                        _compareDoc.Save(path + "Images.xml");
+                    }
                 }
             }
         }
@@ -7931,6 +7944,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
                     }
+                    form.Dispose();
                 }
             }
         }
@@ -7954,6 +7968,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         MessageBox.Show(string.Format(Configuration.Settings.Language.Main.WordXNotAddedToUserDic, form.NewWord));
                     }
+                    form.Dispose();
                 }
             }
         }
@@ -8064,8 +8079,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonGetTesseractDictionaries_Click(object sender, EventArgs e)
         {
-            var form = new GetTesseractDictionaries();
-            form.ShowDialog(this);
+            using (var form = new GetTesseractDictionaries())
+            {
+                form.ShowDialog(this);
+            }
             InitializeTesseract();
         }
 
@@ -8121,24 +8138,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonLineOcrNewLanguage_Click(object sender, EventArgs e)
         {
-            var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1);
-            if (newFolder.ShowDialog(this) == DialogResult.OK)
+            using (var newFolder = new VobSubOcrNewFolder(comboBoxOcrMethod.SelectedIndex == 1))
             {
-                string s = newFolder.FolderName;
-                if (string.IsNullOrEmpty(s))
-                    return;
-                s = s.Replace("?", string.Empty).Replace("/", string.Empty).Replace("*", string.Empty).Replace("\\", string.Empty);
-                if (string.IsNullOrEmpty(s))
-                    return;
-                if (File.Exists(Configuration.DictionariesFolder + "nOCR_" + newFolder.FolderName + ".xml"))
+                if (newFolder.ShowDialog(this) == DialogResult.OK)
                 {
-                    MessageBox.Show("Line OCR language file already exists!");
-                    return;
-                }
+                    string s = newFolder.FolderName;
+                    if (string.IsNullOrEmpty(s))
+                        return;
+                    s = s.Replace("?", string.Empty).Replace("/", string.Empty).Replace("*", string.Empty).Replace("\\", string.Empty);
+                    if (string.IsNullOrEmpty(s))
+                        return;
+                    if (File.Exists(Configuration.DictionariesFolder + "nOCR_" + newFolder.FolderName + ".xml"))
+                    {
+                        MessageBox.Show("Line OCR language file already exists!");
+                        return;
+                    }
 
-                _nOcrDb = null;
-                comboBoxNOcrLanguage.Items.Add(s);
-                comboBoxNOcrLanguage.SelectedIndex = comboBoxNOcrLanguage.Items.Count - 1;
+                    _nOcrDb = null;
+                    comboBoxNOcrLanguage.Items.Add(s);
+                    comboBoxNOcrLanguage.SelectedIndex = comboBoxNOcrLanguage.Items.Count - 1;
+                }
             }
         }
 

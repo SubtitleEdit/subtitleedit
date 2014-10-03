@@ -104,14 +104,16 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonGoogle.Text = string.Empty;
                 buttonGoogle.Text = Forms.GoogleTranslate.TranslateTextViaApi(textBoxSourceText.Text, languagePair);
 
-                GoogleTranslate gt = new GoogleTranslate();
-                Subtitle subtitle = new Subtitle();
-                subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
-                gt.Initialize(subtitle, string.Empty, false, System.Text.Encoding.UTF8);
-                from = FixMsLocale(from);
-                to = FixMsLocale(to);
-                gt.DoMicrosoftTranslate(from, to);
-                buttonMicrosoft.Text = gt.TranslatedSubtitle.Paragraphs[0].Text;
+                using (var gt = new GoogleTranslate())
+                {
+                    Subtitle subtitle = new Subtitle();
+                    subtitle.Paragraphs.Add(new Paragraph(0, 0, textBoxSourceText.Text));
+                    gt.Initialize(subtitle, string.Empty, false, System.Text.Encoding.UTF8);
+                    from = FixMsLocale(from);
+                    to = FixMsLocale(to);
+                    gt.DoMicrosoftTranslate(from, to);
+                    buttonMicrosoft.Text = gt.TranslatedSubtitle.Paragraphs[0].Text;
+                }
             }
             finally
             {

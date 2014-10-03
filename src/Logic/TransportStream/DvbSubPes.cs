@@ -330,15 +330,17 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
 
             var bmp = new Bitmap(width, height);
-            foreach (ObjectDataSegment ods in ObjectDataList)
+            foreach (var ods in ObjectDataList)
             {
-                Bitmap odsImage = GetImage(ods);
-                if (odsImage != null)
+                using (var odsImage = GetImage(ods))
                 {
-                    Point odsPoint = GetImagePosition(ods);
-                    using (var g = Graphics.FromImage(bmp))
+                    if (odsImage != null)
                     {
-                        g.DrawImageUnscaled(odsImage, odsPoint);
+                        var odsPoint = GetImagePosition(ods);
+                        using (var g = Graphics.FromImage(bmp))
+                        {
+                            g.DrawImageUnscaled(odsImage, odsPoint);
+                        }
                     }
                 }
             }
@@ -383,8 +385,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         {
             if (PresentationTimestamp.HasValue)
                 return (ulong)Math.Round((PresentationTimestamp.Value + 45.0) / 90.0);
-            else
-                return 0;
+            return 0;
         }
 
         public void WriteToStream(Stream stream)

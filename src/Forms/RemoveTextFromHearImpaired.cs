@@ -253,17 +253,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonEditInterjections_Click(object sender, EventArgs e)
         {
-            Interjections editInterjections = new Interjections();
-            editInterjections.Initialize(Configuration.Settings.Tools.Interjections);
-            if (editInterjections.ShowDialog(this) == DialogResult.OK)
+            using (var editInterjections = new Interjections())
             {
-                Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeperatedString();
-                _removeTextForHILib.ResetInterjections();
-                if (checkBoxRemoveInterjections.Checked)
+                editInterjections.Initialize(Configuration.Settings.Tools.Interjections);
+                if (editInterjections.ShowDialog(this) == DialogResult.OK)
                 {
-                    Cursor = Cursors.WaitCursor;
-                    GeneratePreview();
-                    Cursor = Cursors.Default;
+                    Configuration.Settings.Tools.Interjections = editInterjections.GetInterjectionsSemiColonSeperatedString();
+                    _removeTextForHILib.ResetInterjections();
+                    if (checkBoxRemoveInterjections.Checked)
+                    {
+                        Cursor = Cursors.WaitCursor;
+                        GeneratePreview();
+                        Cursor = Cursors.Default;
+                    }
                 }
             }
         }

@@ -955,6 +955,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     string.Format(mainLanguage.NumberOfNameHits, _noOfNamesEtc));
                     form.ShowDialog(_mainWindow);
                     Configuration.Settings.Tools.SpellCheckShowCompletedMessage = !form.DoNoDisplayAgain;
+                    form.Dispose();
                 }
                 else
                 {
@@ -1175,7 +1176,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSpellCheckDownload_Click(object sender, EventArgs e)
         {
-            new GetDictionaries().ShowDialog(this);
+            using (var gd = new GetDictionaries())
+            {
+                gd.ShowDialog(this);
+            }
             FillSpellCheckDictionaries(Utilities.AutoDetectLanguageName(null, _subtitle));
             if (comboBoxDictionaries.Items.Count > 0 && comboBoxDictionaries.SelectedIndex == -1)
                 comboBoxDictionaries.SelectedIndex = 0;

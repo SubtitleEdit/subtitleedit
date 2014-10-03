@@ -549,11 +549,12 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 // mark paragraphs
-                var textBrush = new SolidBrush(TextColor);
-                DrawParagraph(_currentParagraph, e, begin, textBrush);
-                foreach (Paragraph p in _previousAndNextParagraphs)
-                    DrawParagraph(p, e, begin, textBrush);
-                textBrush.Dispose();
+                using (var textBrush = new SolidBrush(TextColor))
+                {
+                    DrawParagraph(_currentParagraph, e, begin, textBrush);
+                    foreach (Paragraph p in _previousAndNextParagraphs)
+                        DrawParagraph(p, e, begin, textBrush);
+                }
 
                 // current selection
                 if (NewSelectionParagraph != null)
@@ -562,21 +563,21 @@ namespace Nikse.SubtitleEdit.Controls
                     int currentRegionRight = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
 
                     int currentRegionWidth = currentRegionRight - currentRegionLeft;
-                    SolidBrush brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255));
-                    if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
+                    using (var brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255)))
                     {
-                        graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
-
-                        if (currentRegionWidth > 40)
+                        if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
                         {
-                            SolidBrush tBrush = new SolidBrush(Color.Turquoise);
-                            graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor),
-                                                                Configuration.Settings.Language.Waveform.Seconds),
-                                                  Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                            tBrush.Dispose();
+                            graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
+
+                            if (currentRegionWidth > 40)
+                            {
+                                using (var tBrush = new SolidBrush(Color.Turquoise))
+                                {
+                                    graphics.DrawString(string.Format("{0:0.###} {1}", ((double) currentRegionWidth/_wavePeaks.Header.SampleRate/_zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                                }
+                            }
                         }
                     }
-                    brush.Dispose();
                 }
                 penNormal.Dispose();
                 penSelected.Dispose();
@@ -585,8 +586,8 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 DrawBackground(e.Graphics);
 
-                SolidBrush textBrush = new SolidBrush(TextColor);
-                Font textFont = new Font(Font.FontFamily, 8);
+                var textBrush = new SolidBrush(TextColor);
+                var textFont = new Font(Font.FontFamily, 8);
 
                 if (Width > 90)
                 {
@@ -594,17 +595,19 @@ namespace Nikse.SubtitleEdit.Controls
                 }
                 else
                 {
-                    StringFormat stringFormat = new StringFormat();
-                    stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
+                    using (var stringFormat = new StringFormat())
+                    {
+                        stringFormat.FormatFlags = StringFormatFlags.DirectionVertical;
+                        e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
+                    }
 
-                    e.Graphics.DrawString(WaveformNotLoadedText, textFont, textBrush, new PointF(1, 10), stringFormat);
                 }
                 textBrush.Dispose();
                 textFont.Dispose();
             }
             if (Focused)
             {
-                using (Pen p = new Pen(SelectedColor))
+                using (var p = new Pen(SelectedColor))
                 {
                     e.Graphics.DrawRectangle(p, new Rectangle(0, 0, Width - 1, Height - 1));
                 }
@@ -1072,7 +1075,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                if (Control.ModifierKeys == Keys.Shift)
+                if (ModifierKeys == Keys.Shift)
                     return AllowOverlap;
                 return !AllowOverlap;
             }
@@ -1082,7 +1085,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             get
             {
-                return _gapAtStart >= 0 && _gapAtStart < 500 && Control.ModifierKeys == Keys.Alt;
+                return _gapAtStart >= 0 && _gapAtStart < 500 && ModifierKeys == Keys.Alt;
             }
         }
 
@@ -1170,7 +1173,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 return; // do not decide which paragraph to move yet
                         }
 
-                        if (Control.ModifierKeys != Keys.Alt)
+                        if (ModifierKeys != Keys.Alt)
                         {
                             if (_firstMove && e.X > oldMouseMoveLastX && _nextParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.End)
                             {
@@ -1302,7 +1305,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 Invalidate();
                                 return;
                             }
-                            else if (PreventOverlap && startTotalSeconds * 1000.0 <= _wholeParagraphMinMilliseconds)
+                            if (PreventOverlap && startTotalSeconds * 1000.0 <= _wholeParagraphMinMilliseconds)
                             {
                                 NewSelectionParagraph.StartTime.TotalMilliseconds = _wholeParagraphMinMilliseconds + 1;
                                 Invalidate();
@@ -1767,7 +1770,6 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 var bmp = _spectrogramBitmaps[i + bitmapIndex];
                 gfx.DrawImageUnscaled(bmp, new Point(bmp.Width * i - subtractValue, 0));
-                i++;
             }
             gfx.Dispose();
 

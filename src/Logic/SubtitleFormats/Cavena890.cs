@@ -198,105 +198,115 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _fontNameLine1 = "HLV23N";
             _fontNameLine2 = "HLV23N";
 
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-
-            foreach (Paragraph p in subtitle.Paragraphs)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                if (p.Text.Contains('的') ||
-                    p.Text.Contains('是') ||
-                    p.Text.Contains('啊') ||
-                    p.Text.Contains('吧') ||
-                    p.Text.Contains('好') ||
-                    p.Text.Contains('吧') ||
-                    p.Text.Contains('亲') ||
-                    p.Text.Contains('爱') ||
-                    p.Text.Contains('的') ||
-                    p.Text.Contains('早') ||
-                    p.Text.Contains('上') ||
-                    p.Text.Contains(""))
+
+                foreach (Paragraph p in subtitle.Paragraphs)
                 {
-                    _languageIdLine1 = LanguageIdChineseSimplified;
-                    _languageIdLine2 = LanguageIdChineseSimplified;
-                    _fontNameLine1 = "CCKM44";
-                    _fontNameLine2 = "CCKM44";
-                    break;
+                    if (p.Text.Contains('的') ||
+                        p.Text.Contains('是') ||
+                        p.Text.Contains('啊') ||
+                        p.Text.Contains('吧') ||
+                        p.Text.Contains('好') ||
+                        p.Text.Contains('吧') ||
+                        p.Text.Contains('亲') ||
+                        p.Text.Contains('爱') ||
+                        p.Text.Contains('的') ||
+                        p.Text.Contains('早') ||
+                        p.Text.Contains('上') ||
+                        p.Text.Contains(""))
+                    {
+                        _languageIdLine1 = LanguageIdChineseSimplified;
+                        _languageIdLine2 = LanguageIdChineseSimplified;
+                        _fontNameLine1 = "CCKM44";
+                        _fontNameLine2 = "CCKM44";
+                        break;
+                    }
                 }
-            }
-            if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 >= 0)
-                _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1;
-            if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
-                _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
+                if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1 >= 0)
+                    _languageIdLine1 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine1;
+                if (Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2 >= 0)
+                    _languageIdLine2 = Configuration.Settings.SubtitleSettings.CurrentCavena890LanguageIdLine2;
 
-            //header
-            for (int i = 0; i < 22; i++)
-                fs.WriteByte(0);
+                //header
+                for (int i = 0; i < 22; i++)
+                    fs.WriteByte(0);
 
-            var buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
-            fs.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < 18 - buffer.Length; i++)
-                fs.WriteByte(0);
+                var buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
+                fs.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 18 - buffer.Length; i++)
+                    fs.WriteByte(0);
 
-            string title = Path.GetFileNameWithoutExtension(fileName);
-            if (title.Length > 25)
-                title = title.Substring(0, 25);
-            buffer = Encoding.ASCII.GetBytes(title);
-            fs.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < 28 - title.Length; i++)
-                fs.WriteByte(0);
+                string title = Path.GetFileNameWithoutExtension(fileName);
+                if (title.Length > 25)
+                    title = title.Substring(0, 25);
+                buffer = Encoding.ASCII.GetBytes(title);
+                fs.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 28 - title.Length; i++)
+                    fs.WriteByte(0);
 
-            buffer = Encoding.ASCII.GetBytes("NV");
-            fs.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < 66 - buffer.Length; i++)
-                fs.WriteByte(0);
+                buffer = Encoding.ASCII.GetBytes("NV");
+                fs.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 66 - buffer.Length; i++)
+                    fs.WriteByte(0);
 
-            buffer = new byte[] { 0xA0, 0x05, 0x04, 0x03, 0x06, 0x06, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, (byte)_languageIdLine1, (byte)_languageIdLine2, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            fs.Write(buffer, 0, buffer.Length);
-
-            buffer = GetFontBytesFromLanguageId(_languageIdLine1);
-            fs.Write(buffer, 0, buffer.Length);
-
-            buffer = new byte[] {  0x2E, 0x56, 0x44, 0x46, 0x4F, 0x4E, 0x54, 0x4C, 0x2E, 0x44,
-            0x01, 0x07, 0x01, 0x08, 0x00, 0xBF, 0x02, 0xBF, 0x02, 0x00, 0x00, 0x0D, 0xBF, 0x62, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
-            fs.Write(buffer, 0, buffer.Length);
-
-            buffer = GetFontBytesFromLanguageId(_languageIdLine2);
-            fs.Write(buffer, 0, buffer.Length);
-
-            buffer = new byte[] { 0x2E, 0x56, 0x14, 0x56, 0x31, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44 };
-            fs.Write(buffer, 0, buffer.Length);
-
-            for (int i = 0; i < 92; i++)
-                fs.WriteByte(0);
-
-            // paragraphs
-            int number = 16;
-            foreach (Paragraph p in subtitle.Paragraphs)
-            {
-                // number
-                fs.WriteByte((byte)(number / 256));
-                fs.WriteByte((byte)(number % 256));
-
-                WriteTime(fs, p.StartTime);
-                WriteTime(fs, p.EndTime);
-
-                if (p.Text.StartsWith("{\\an1}"))
-                    fs.WriteByte(0x50); // left
-                else if (p.Text.StartsWith("{\\an3}"))
-                    fs.WriteByte(0x52); // left
-                else
-                    fs.WriteByte(0x54);  // center
-
-                buffer = new byte[] { 0, 0, 0, 0, 0, 0, 0 }; // 0x16 }; -- the last two bytes might be something with vertical alignment...
+                buffer = new byte[]
+                {
+                    0xA0, 0x05, 0x04, 0x03, 0x06, 0x06, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, (byte) _languageIdLine1, (byte) _languageIdLine2, 0x2A, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x08, 0x90, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+                };
                 fs.Write(buffer, 0, buffer.Length);
 
-                WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, _languageIdLine2);
+                buffer = GetFontBytesFromLanguageId(_languageIdLine1);
+                fs.Write(buffer, 0, buffer.Length);
 
-                number += 16;
+                buffer = new byte[]
+                {
+                    0x2E, 0x56, 0x44, 0x46, 0x4F, 0x4E, 0x54, 0x4C, 0x2E, 0x44,
+                    0x01, 0x07, 0x01, 0x08, 0x00, 0xBF, 0x02, 0xBF, 0x02, 0x00, 0x00, 0x0D, 0xBF, 0x62, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
+                };
+                fs.Write(buffer, 0, buffer.Length);
+
+                buffer = GetFontBytesFromLanguageId(_languageIdLine2);
+                fs.Write(buffer, 0, buffer.Length);
+
+                buffer = new byte[]
+                {
+                    0x2E, 0x56, 0x14, 0x56, 0x31, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x3A, 0x30, 0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+                    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x42, 0x54, 0x44
+                };
+                fs.Write(buffer, 0, buffer.Length);
+
+                for (int i = 0; i < 92; i++)
+                    fs.WriteByte(0);
+
+                // paragraphs
+                int number = 16;
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    // number
+                    fs.WriteByte((byte) (number/256));
+                    fs.WriteByte((byte) (number%256));
+
+                    WriteTime(fs, p.StartTime);
+                    WriteTime(fs, p.EndTime);
+
+                    if (p.Text.StartsWith("{\\an1}"))
+                        fs.WriteByte(0x50); // left
+                    else if (p.Text.StartsWith("{\\an3}"))
+                        fs.WriteByte(0x52); // left
+                    else
+                        fs.WriteByte(0x54); // center
+
+                    buffer = new byte[] {0, 0, 0, 0, 0, 0, 0}; // 0x16 }; -- the last two bytes might be something with vertical alignment...
+                    fs.Write(buffer, 0, buffer.Length);
+
+                    WriteText(fs, p.Text, p == subtitle.Paragraphs[subtitle.Paragraphs.Count - 1], _languageIdLine1, _languageIdLine2);
+
+                    number += 16;
+                }
             }
-            fs.Close();
         }
 
         private static byte[] GetFontBytesFromLanguageId(int languageId)

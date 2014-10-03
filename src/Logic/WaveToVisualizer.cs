@@ -288,9 +288,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void WritePeakSamples(string fileName)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            WritePeakSamples(fs);
-            fs.Close();
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                WritePeakSamples(fs);
+            }
         }
 
         public void WritePeakSamples(Stream stream)
