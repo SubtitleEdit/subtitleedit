@@ -1154,7 +1154,7 @@ Continue?</SubtitleAppendPrompt>
     <NameXAddedToNamesEtcList>The name '{0}' was added to names/etc list</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>The name '{0}' was NOT added to names/etc list</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>The word '{0}' was added to the user dictionary</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>The name '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
+    <WordXNotAddedToUserDic>The word '{0}' was NOT added to the user dictionary</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>The OCR replace list pair '{0} -&gt; {1}' was added to the OCR replace list</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>The OCR replace list pair '{0} -&gt; {1}' was NOT added to the OCR replace list</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lines selected</XLinesSelected>
