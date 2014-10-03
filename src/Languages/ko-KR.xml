@@ -574,7 +574,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FixMissingOpenBracketExample>'총소리] 조심해!' -&gt; '[총소리] 조심해!'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª 평범한 얼굴이 ~' -&gt; '♫ 평범한 얼굴이 ~'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>중요한 로그 메시지! - {0}</NumberOfImportantLogMessages>
-    <FixedOkXY>수정이 완료됐습니다. - '{0}': {1}</FixedOkXY>
+    <FixedOkXY>수정이 완료됐습니다 - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't --&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>3 300 --&gt; 3300</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>안녕 존! - 안녕 리나! --&gt; 안녕 존!&lt;br /&gt;- 안녕 리나!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>* 사전 다운로드</Title>
@@ -989,6 +992,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SavedOriginalSubtitleX>원본 자막 {0}을 저장했습니다.</SavedOriginalSubtitleX>
     <FileOnDiskModified>디스크 상의 파일이 변경되었습니다.</FileOnDiskModified>
     <OverwriteModifiedFile>{1} {2}{3}에서 변경된 파일 {0}로 {4} {5} 디스크에 로드된 현재 파일을 덮어쓰시겠습니까?</OverwriteModifiedFile>
+    <FileXIsReadOnly>{0}을(를) 저장할 수 없습니다.
+    
+이 파일은 읽기 전용입니다!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>자막 파일 {0}을 저장할 수 없습니다.
 빈 자막 같습니다 - 유효한 자막을 만들어 다시 저장해 보십시오!</UnableToSaveSubtitleX>
     <BeforeNew>새 작업 전</BeforeNew>
@@ -1209,7 +1215,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <StatusLog>* 로그 기록</StatusLog>
     <XSceneChangesImported>{0}개의 장면 전환을 가져왔습니다.</XSceneChangesImported>
     <PluginXExecuted>'{0}' 플러그인이 실행됐습니다.</PluginXExecuted>
-    <NotAValidXSubFile>유효한 XSUB 파일이 아닙니다!</NotAValidXSubFile>
+    <NotAValidXSubFile>유효한 XSub 파일이 아닙니다!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>동일한 텍스트 라인 병합하기 전</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>현재 자막과 타임코드 수가 일치하지 않습니다! 그래도 계속하시겠습니까?
 - 타임코드 수: ({0})개 | 현재 자막 줄 수: ({1})개</ImportTimeCodesDifferentNumberOfLinesWarning>
@@ -1492,6 +1498,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <DirectShowDescription>system32\quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - DirectX의 .NET Managed 코드</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>미디어 플레이어 클래식 - 홈 시네마</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 미디어 플레이어</VlcMediaPlayer>
