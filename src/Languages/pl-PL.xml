@@ -699,7 +699,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Plugins>Wtyczki...</Plugins>
         <ImportOcrFromDvd>Importuj/OCR napisy z VOB/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importuj/OCR napisy z VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importuj/OCR napisy z BluRay (.sup)...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importuj/OCR napisy z Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importuj/OCR XSub z divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importuj napisy z pliku Matroska (.mkv)...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importuj napisy z ręcznym wyborem kodowania...</ImportSubtitleWithManualChosenEncoding>
@@ -1126,7 +1126,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <OpenXSubFiles>Otwórz plik XSub...</OpenXSubFiles>
     <XSubFiles>Pliki XSub</XSubFiles>
     <BeforeImportingVobSubFile>Przed importem napisów VobSub</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Przed importem napisów BluRay (.sup)</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Przed importem napisów Blu-ray (.sup)</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Przed importem pliku BDN xml</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Przed wcześniejszym/późniejszym ukazywaniem się zaznaczonych linii</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Pokaż wszystkie linie {0:0.0##} sekund wcześniej</ShowAllLinesXSecondsLinesEarlier>

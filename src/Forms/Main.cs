@@ -2320,7 +2320,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
 
-                    // retry bluray sup (file with wrong extension)
+                    // retry Blu-ray sup (file with wrong extension)
                     if (FileUtils.IsBluRaySup(fileName))
                     {
                         ImportAndOcrBluRaySup(fileName, _loading);
@@ -2769,7 +2769,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                // retry bluray (file with wrong extension)
+                // retry Blu-ray (file with wrong extension)
                 if (format == null && fi.Length > 500 && FileUtils.IsBluRaySup(fileName))
                 {
                     ImportAndOcrBluRaySup(fileName, _loading);
@@ -12623,7 +12623,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (FileUtils.IsBluRaySup(fileName))
                         {
-                            MessageBox.Show("Bluray sup files not supported here");
+                            MessageBox.Show("Blu-ray sup files not supported here");
                             return;
                         }
                         else if (FileUtils.IsSpDvdSup(fileName))

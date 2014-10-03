@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<VobSubMergedPack> _vobSubMergedPackist;
         private List<Color> _palette;
 
-        // BluRay sup
+        // Blu-ray sup
         private List<Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitlesOriginal;
         private List<Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitles;
 

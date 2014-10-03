@@ -693,7 +693,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <Plugins>Plugin-uri...</Plugins>
         <ImportOcrFromDvd>Importare subtitrare/OCR din vob/IFO (DVD)...</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Importare subtitrare/OCR VobSub (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Importare subtitrare/OCR BluRay (.sup)...</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Importare subtitrare/OCR Blu-ray (.sup)...</ImportBluRaySupFile>
         <ImportXSub>Importare subtitrare/OCR (XSub) din fișier divx/avi...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importare subtitrare din fișier Matroska...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importare subtitrare cu alegere manuală a codării...</ImportSubtitleWithManualChosenEncoding>
@@ -1114,12 +1114,12 @@ care ar trebui să fie deja sincronizată cu fișierul video.
     <InvalidVobSubHeader>Antetul fișierului VobSub invalid: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Deschide subtitrare VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Fișiere subtitrare VobSub</VobSubFiles>
-    <OpenBluRaySupFile>Deschide subtitrare BluRay (.sup)...</OpenBluRaySupFile>
-    <BluRaySupFiles>Fișiere subtitrare BluRay</BluRaySupFiles>
+    <OpenBluRaySupFile>Deschide subtitrare Blu-ray (.sup)...</OpenBluRaySupFile>
+    <BluRaySupFiles>Fișiere subtitrare Blu-ray</BluRaySupFiles>
     <OpenXSubFiles>Deschide fișier XSub...</OpenXSubFiles>
     <XSubFiles>fișiere XSub</XSubFiles>
     <BeforeImportingVobSubFile>Înaintea importării subtitrării VobSub</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Înaintea importării subtitrării BluRay (.sup)</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Înaintea importării subtitrării Blu-ray (.sup)</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Înaintea importării fișierului BDN .xml</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Înaintea afișării liniilor selectate mai devreme/mai târziu</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Arată toate liniile cu {0:0.0##} secunde mai devreme</ShowAllLinesXSecondsLinesEarlier>
@@ -1887,7 +1887,7 @@ Păstrezi schimbările?</KeepChangesMessage>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import subtitrare /OCR VobSub (sub/idx)</Title>
-    <TitleBluRay>Import subtitrare/OCR BluRay (.sup)</TitleBluRay>
+    <TitleBluRay>Import subtitrare/OCR Blu-ray (.sup)</TitleBluRay>
     <OcrMethod>Metodă OCR</OcrMethod>
     <OcrViaModi>OCR prin Microsoft Office Document Imaging (MODI). Necesită Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR prin Tesseract</OcrViaTesseract>

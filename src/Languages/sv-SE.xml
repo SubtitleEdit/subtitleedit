@@ -692,7 +692,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
         <Plugins>Plugin</Plugins>
         <ImportOcrFromDvd>Import/OCR text från VOB/IFO (DVD)</ImportOcrFromDvd>
         <ImportOcrVobSubSubtitle>Import/OCR VobSub (sub/idx) text</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Import/OCR BluRay text</ImportBluRaySupFile>
+        <ImportBluRaySupFile>Import/OCR Blu-ray text</ImportBluRaySupFile>
         <ImportXSub>Import/OCR XSub från divx/avi</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Import text från Matroska fil</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Import text med manuell vald kod</ImportSubtitleWithManualChosenEncoding>
@@ -1112,12 +1112,12 @@ Fortsätta?</SubtitleAppendPrompt>
     <InvalidVobSubHeader>Rubrik inte giltigt VobSub fil: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Öppna VobSub (sub/idx) text</OpenVobSubFile>
     <VobSubFiles>VobSub text filer</VobSubFiles>
-    <OpenBluRaySupFile>Öppna BluRay text</OpenBluRaySupFile>
+    <OpenBluRaySupFile>Öppna Blu-ray text</OpenBluRaySupFile>
     <BluRaySupFiles>BluRay text filer</BluRaySupFiles>
     <OpenXSubFiles>Öppna XSub fil</OpenXSubFiles>
     <XSubFiles>XSub filer</XSubFiles>
     <BeforeImportingVobSubFile>Innan du importerar VobSub text</BeforeImportingVobSubFile>
-    <BeforeImportingBluRaySupFile>Innan du importerar BluRay text</BeforeImportingBluRaySupFile>
+    <BeforeImportingBluRaySupFile>Innan du importerar Blu-ray text</BeforeImportingBluRaySupFile>
     <BeforeImportingBdnXml>Innan du importerar BDN xml-fil</BeforeImportingBdnXml>
     <BeforeShowSelectedLinesEarlierLater>Före visa valda rader tidigare/senare</BeforeShowSelectedLinesEarlierLater>
     <ShowAllLinesXSecondsLinesEarlier>Visa alla linjer {0:0.0##} sekunder tidligere</ShowAllLinesXSecondsLinesEarlier>
@@ -1882,7 +1882,7 @@ kan redigera i samma textningsfil (samarbete)</Information>
   </VobSubEditCharacters>
   <VobSubOcr>
     <Title>Import/OCR VobSub (sub/idx) undertext</Title>
-    <TitleBluRay>Import/OCR BluRay text</TitleBluRay>
+    <TitleBluRay>Import/OCR Blu-ray text</TitleBluRay>
     <OcrMethod>OCR-metod</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Kräver Microsoft Office</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
