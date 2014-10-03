@@ -91,9 +91,9 @@
             // 
             // labelEndDelay
             // 
-            this.labelEndDelay.Location = new System.Drawing.Point(16, 45);
+            this.labelEndDelay.Location = new System.Drawing.Point(5, 45);
             this.labelEndDelay.Name = "labelEndDelay";
-            this.labelEndDelay.Size = new System.Drawing.Size(140, 13);
+            this.labelEndDelay.Size = new System.Drawing.Size(161, 19);
             this.labelEndDelay.TabIndex = 32;
             this.labelEndDelay.Text = "End delay in milliseconds:";
             this.labelEndDelay.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -106,7 +106,7 @@
             0,
             0,
             65536});
-            this.numericUpDownDelay.Location = new System.Drawing.Point(159, 43);
+            this.numericUpDownDelay.Location = new System.Drawing.Point(169, 43);
             this.numericUpDownDelay.Maximum = new decimal(new int[] {
             99999,
             0,
@@ -123,9 +123,9 @@
             // 
             // labelTM
             // 
-            this.labelTM.Location = new System.Drawing.Point(16, 23);
+            this.labelTM.Location = new System.Drawing.Point(2, 23);
             this.labelTM.Name = "labelTM";
-            this.labelTM.Size = new System.Drawing.Size(140, 13);
+            this.labelTM.Size = new System.Drawing.Size(164, 13);
             this.labelTM.TabIndex = 36;
             this.labelTM.Text = "Total milliseconds:";
             this.labelTM.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -133,9 +133,9 @@
             // labelTotalMilliseconds
             // 
             this.labelTotalMilliseconds.AutoSize = true;
-            this.labelTotalMilliseconds.Location = new System.Drawing.Point(159, 23);
+            this.labelTotalMilliseconds.Location = new System.Drawing.Point(169, 23);
             this.labelTotalMilliseconds.Name = "labelTotalMilliseconds";
-            this.labelTotalMilliseconds.Size = new System.Drawing.Size(90, 13);
+            this.labelTotalMilliseconds.Size = new System.Drawing.Size(108, 13);
             this.labelTotalMilliseconds.TabIndex = 37;
             this.labelTotalMilliseconds.Text = "labelTotalMilliseconds";
             // 
