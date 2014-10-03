@@ -1062,7 +1062,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NameXAddedToNamesEtcList = "The name '{0}' was added to names/etc list",
                 NameXNotAddedToNamesEtcList = "The name '{0}' was NOT added to names/etc list",
                 WordXAddedToUserDic = "The word '{0}' was added to the user dictionary",
-                WordXNotAddedToUserDic = "The name '{0}' was NOT added to the user dictionary",
+                WordXNotAddedToUserDic = "The word '{0}' was NOT added to the user dictionary",
                 OcrReplacePairXAdded = "The OCR replace list pair '{0} -> {1}' was added to the OCR replace list",
                 OcrReplacePairXNotAdded = "The OCR replace list pair '{0} -> {1}' was NOT added to the OCR replace list",
                 XLinesSelected = "{0} lines selected",
