@@ -346,7 +346,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         private const int HeaderSize = 13;
 
         /// <summary>
-        /// Parses a BluRay sup file
+        /// Parses a Blu-ray sup file
         /// </summary>
         /// <param name="fileName">BluRay sup file name</param>
         /// <param name="log">Parsing info is logged here</param>
