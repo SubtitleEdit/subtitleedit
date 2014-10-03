@@ -46,8 +46,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -108,8 +108,8 @@ namespace Nikse.SubtitleEdit.Forms
                     height = height * 95 / 100;
                 }
 
-                Bitmap temp = new Bitmap((int)width, (int)height);
-                using (Graphics g = Graphics.FromImage((Image)temp))
+                var temp = new Bitmap((int)width, (int)height);
+                using (var g = Graphics.FromImage(temp))
                     g.DrawImage(bmp, 0, 0, (int)width, (int)height);
                 bmp = temp;
             }
@@ -191,9 +191,12 @@ namespace Nikse.SubtitleEdit.Forms
                 var formSubOcr = new VobSubOcr();
                 formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
                 var subtitle = formSubOcr.ReadyVobSubRip();
+                formSubOcr.Dispose();
+
                 var exportBdnXmlPng = new ExportPngXml();
-                exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Nikse.SubtitleEdit.Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
+                exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
                 exportBdnXmlPng.ShowDialog(this);
+                exportBdnXmlPng.Dispose();
             }
 
         }

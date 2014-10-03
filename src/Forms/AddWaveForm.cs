@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Windows.Forms;
 
@@ -12,14 +13,14 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class AddWaveform : Form
     {
         public string SourceVideoFileName { get; private set; }
-        private bool _cancel = false;
-        private string _wavFileName = null;
+        private bool _cancel;
+        private string _wavFileName;
         private string _spectrogramDirectory;
         public List<Bitmap> SpectrogramBitmaps { get; private set; }
         private string _encodeParamters;
         private const string RetryEncodeParameters = "acodec=s16l";
         private int _audioTrackNumber = -1;
-        private int _delayInMilliseconds = 0;
+        private int _delayInMilliseconds;
 
         public AddWaveform()
         {
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Forms
             else // windows
             {
                 runningOnWindows = true;
-                exeFilePath = Nikse.SubtitleEdit.Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
+                exeFilePath = Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
                 if (!File.Exists(exeFilePath))
                 {
                     if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
@@ -104,7 +105,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelPleaseWait.Visible = true;
-            Process process = new Process();
+            var process = new Process();
             process.StartInfo = new ProcessStartInfo(exeFilePath, parameters);
             process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             process.Start();
@@ -128,14 +129,13 @@ namespace Nikse.SubtitleEdit.Forms
                     labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingSeconds, seconds);
                 else
                     labelProgress.Text = string.Format(Configuration.Settings.Language.AddWaveform.ExtractingMinutes, (int)(seconds / 60), (int)(seconds % 60));
-                this.Refresh();
+                Refresh();
                 if (_cancel)
                 {
                     process.Kill();
                     progressBar1.Visible = false;
                     labelPleaseWait.Visible = false;
                     buttonRipWave.Enabled = true;
-                    targetFile = null;
                     buttonCancel.Visible = false;
                     DialogResult = DialogResult.Cancel;
                     return;
@@ -168,6 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Visible = false;
             progressBar1.Visible = false;
             progressBar1.Style = ProgressBarStyle.Blocks;
+            process.Dispose();
 
             if (!File.Exists(targetFile))
             {
@@ -184,11 +185,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
-                buttonRipWave.Enabled = true;
+                buttonRipWave.Enabled = true;                
                 return;
             }
 
-            FileInfo fi = new FileInfo(targetFile);
+            var fi = new FileInfo(targetFile);
             if (fi.Length <= 200)
             {
                 MessageBox.Show("Sorry! VLC/FFmpeg was unable to extract audio to wave file via this command line:" + Environment.NewLine +
@@ -205,8 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
             ReadWaveFile(targetFile, _delayInMilliseconds);
             labelProgress.Text = string.Empty;
             File.Delete(targetFile);
-            this.DialogResult = DialogResult.OK;
-            process.Dispose();
+            DialogResult = DialogResult.OK;
         }
 
         private void ReadWaveFile(string targetFile, int delayInMilliseconds)
@@ -218,13 +218,13 @@ namespace Nikse.SubtitleEdit.Forms
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
 
             labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
-            this.Refresh();
+            Refresh();
             waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
             {
                 labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingSpectrogram;
-                this.Refresh();
+                Refresh();
                 Directory.CreateDirectory(_spectrogramDirectory);
                 SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
             }
@@ -246,24 +246,25 @@ namespace Nikse.SubtitleEdit.Forms
                 { // Choose for number of audio tracks in matroska files
                     try
                     {
-                        var mkv = new Matroska(labelVideoFileName.Text);
-                        if (mkv.IsValid)
+                        using (var mkv = new Matroska(labelVideoFileName.Text))
                         {
-                            var trackInfo = mkv.GetTrackInfo();
-                            foreach (var ti in trackInfo)
+                            if (mkv.IsValid)
                             {
-                                if (ti.IsAudio)
+                                var trackInfo = mkv.GetTrackInfo();
+                                foreach (var ti in trackInfo)
                                 {
-                                    numberOfAudioTracks++;
-                                    if (ti.CodecId != null && ti.Language != null)
-                                        audioTrackNames.Add("#" + ti.TrackNumber + ": " + ti.CodecId.Replace("\0", string.Empty) + " - " + ti.Language.Replace("\0", string.Empty));
-                                    else
-                                        audioTrackNames.Add("#" + ti.TrackNumber);
-                                    mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, ti.TrackNumber);
+                                    if (ti.IsAudio)
+                                    {
+                                        numberOfAudioTracks++;
+                                        if (ti.CodecId != null && ti.Language != null)
+                                            audioTrackNames.Add("#" + ti.TrackNumber + ": " + ti.CodecId.Replace("\0", string.Empty) + " - " + ti.Language.Replace("\0", string.Empty));
+                                        else
+                                            audioTrackNames.Add("#" + ti.TrackNumber);
+                                        mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, ti.TrackNumber);
+                                    }
                                 }
                             }
                         }
-                        mkv.Dispose();
                     }
                     catch
                     {
@@ -273,7 +274,7 @@ namespace Nikse.SubtitleEdit.Forms
                 { // Choose for number of audio tracks in mp4 files
                     try
                     {
-                        var mp4 = new Nikse.SubtitleEdit.Logic.Mp4.MP4Parser(labelVideoFileName.Text);
+                        var mp4 = new Logic.Mp4.MP4Parser(labelVideoFileName.Text);
                         var tracks = mp4.GetAudioTracks();
                         int i = 0;
                         foreach (var track in tracks)
@@ -284,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else if (track.Name != null)
                                 audioTrackNames.Add(i + ":  " + track.Name);
                             else
-                                audioTrackNames.Add(i.ToString());
+                                audioTrackNames.Add(i.ToString(CultureInfo.InvariantCulture));
                         }
                         numberOfAudioTracks = tracks.Count;
                     }
@@ -302,17 +303,18 @@ namespace Nikse.SubtitleEdit.Forms
                 // Choose audio track
                 if (numberOfAudioTracks > 1)
                 {
-                    var form = new ChooseAudioTrack(audioTrackNames, _audioTrackNumber);
-                    if (form.ShowDialog(this) == DialogResult.OK)
+                    using (var form = new ChooseAudioTrack(audioTrackNames, _audioTrackNumber))
                     {
-                        _audioTrackNumber = form.SelectedTrack;
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            _audioTrackNumber = form.SelectedTrack;
+                        }
+                        else
+                        {
+                            DialogResult = DialogResult.Cancel;
+                            return;
+                        }
                     }
-                    else
-                    {
-                        DialogResult = DialogResult.Cancel;
-                        return;
-                    }
-                    form.Dispose();
                 }
 
                 // check for delay in matroska files
@@ -320,12 +322,13 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     try
                     {
-                        var mkv = new Matroska(labelVideoFileName.Text);
-                        if (mkv.IsValid)
+                        using (var mkv = new Matroska(labelVideoFileName.Text))
                         {
-                            _delayInMilliseconds = (int)mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
+                            if (mkv.IsValid)
+                            {
+                                _delayInMilliseconds = (int) mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
+                            }
                         }
-                        mkv.Dispose();
                     }
                     catch
                     {
@@ -377,19 +380,20 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Blocks;
 
             labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
-            this.Refresh();
+            Refresh();
             labelPleaseWait.Visible = false;
             try
             {
                 ReadWaveFile(_wavFileName, _delayInMilliseconds);
                 labelProgress.Text = string.Empty;
-                this.DialogResult = DialogResult.OK;
+                DialogResult = DialogResult.OK;
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message + Environment.NewLine + exception.StackTrace);
-                this.DialogResult = DialogResult.Cancel;
+                DialogResult = DialogResult.Cancel;
             }
         }
+
     }
 }
