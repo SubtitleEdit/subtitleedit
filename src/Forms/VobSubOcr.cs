@@ -8022,23 +8022,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this, _importLanguageString);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "VOBSUB", FileName, this, _importLanguageString);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void bluraySupToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            { 
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BLURAYSUP", FileName, this, _importLanguageString);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void bDNXMLToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this, _importLanguageString);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "BDNXML", FileName, this, _importLanguageString);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void clearToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8163,9 +8169,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void dOSTToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this, _importLanguageString);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.InitializeFromVobSubOcr(_subtitle, new SubRip(), "DOST", FileName, this, _importLanguageString);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         // TODO: Get language from ts file

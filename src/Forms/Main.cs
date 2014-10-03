@@ -17450,9 +17450,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemExportPngXmlClick(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BDNXML", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BDNXML", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void TabControlSubtitleSelecting(object sender, TabControlCancelEventArgs e)
@@ -17839,16 +17841,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BluraySupToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BLURAYSUP", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "BLURAYSUP", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void VobSubsubidxToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "VOBSUB", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "VOBSUB", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void TextBoxListViewTextAlternateKeyUp(object sender, KeyEventArgs e)
@@ -18035,9 +18041,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AdobeEncoreFabImageScriptToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FAB", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FAB", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void ToolStripMenuItemMergeDialogClick(object sender, EventArgs e)
@@ -18160,9 +18168,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemImagePerFrameClick(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "IMAGE/FRAME", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "IMAGE/FRAME", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void toolStripMenuItemApplyDisplayTimeLimits_Click(object sender, EventArgs e)
@@ -18832,16 +18842,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void DvdStudioProStl_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "STL", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "STL", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void toolStripMenuItemPlugins_Click(object sender, EventArgs e)
         {
-            var form = new PluginsGet();
-            form.ShowDialog(this);
-            LoadPlugins();
+            using (var form = new PluginsGet())
+            {
+                form.ShowDialog(this);
+                LoadPlugins();
+            }
         }
 
         private void toolStripMenuItemUndo_Click(object sender, EventArgs e)
@@ -18859,16 +18873,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (audioVisualizer == null)
                 return;
 
-            var form = new SeekSilence();
-            if (form.ShowDialog(this) == DialogResult.OK)
+            using (var form = new SeekSilence())
             {
-                if (form.SeekForward)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    audioVisualizer.FindDataBelowThreshold(form.VolumeBelow, form.SecondsDuration);
-                }
-                else
-                {
-                    audioVisualizer.FindDataBelowThresholdBack(form.VolumeBelow, form.SecondsDuration);
+                    if (form.SeekForward)
+                    {
+                        audioVisualizer.FindDataBelowThreshold(form.VolumeBelow, form.SecondsDuration);
+                    }
+                    else
+                    {
+                        audioVisualizer.FindDataBelowThresholdBack(form.VolumeBelow, form.SecondsDuration);
+                    }
                 }
             }
         }
@@ -19407,9 +19423,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemExportFcpIImage_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FCP", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "FCP", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void ToolStripMenuItemNuendoPropertiesClick(object sender, EventArgs e)
@@ -19426,9 +19444,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemDost_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DOST", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DOST", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
@@ -19676,9 +19696,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemExportDcinemaInteropClick(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DCINEMA_INTEROP", _fileName, _videoInfo);
-            exportBdnXmlPng.ShowDialog(this);
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "DCINEMA_INTEROP", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
         }
 
         internal Subtitle UndoFromSpellCheck(Subtitle subtitle)
