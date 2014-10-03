@@ -93,29 +93,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static void Save(string fileName, Subtitle subtitle)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            byte[] buffer = { 0x38, 0x35, 0x30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x30, 0x30, 0x30, 0x39 };
-            fs.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < 0xde; i++)
-                fs.WriteByte(0);
-            string numberOfLines = subtitle.Paragraphs.Count.ToString("D5");
-
-            buffer = Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
-            fs.Write(buffer, 0, buffer.Length);
-            for (int i = 0; i < 0x15; i++)
-                fs.WriteByte(0);
-            buffer = Encoding.ASCII.GetBytes("11");
-            fs.Write(buffer, 0, buffer.Length);
-            while (fs.Length < 1024)
-                fs.WriteByte(0);
-
-            int subtitleNumber = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                WriteSubtitleBlock(fs, p, subtitleNumber);
-                subtitleNumber++;
+                byte[] buffer = {0x38, 0x35, 0x30, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0x30, 0x30, 0x30, 0x39};
+                fs.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 0xde; i++)
+                    fs.WriteByte(0);
+                string numberOfLines = subtitle.Paragraphs.Count.ToString("D5");
+
+                buffer = Encoding.ASCII.GetBytes(numberOfLines + numberOfLines + "001");
+                fs.Write(buffer, 0, buffer.Length);
+                for (int i = 0; i < 0x15; i++)
+                    fs.WriteByte(0);
+                buffer = Encoding.ASCII.GetBytes("11");
+                fs.Write(buffer, 0, buffer.Length);
+                while (fs.Length < 1024)
+                    fs.WriteByte(0);
+
+                int subtitleNumber = 0;
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    WriteSubtitleBlock(fs, p, subtitleNumber);
+                    subtitleNumber++;
+                }
             }
-            fs.Close();
         }
 
         public override bool IsMine(List<string> lines, string fileName)

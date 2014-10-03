@@ -773,10 +773,12 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (bluRaySubtitles.Count > 0)
                         {
                             item.SubItems[3].Text = "OCR...";
-                            var vobSubOcr = new VobSubOcr();
-                            vobSubOcr.FileName = Path.GetFileName(fileName);
-                            vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName);
-                            sub = vobSubOcr.SubtitleFromOcr;
+                            using (var vobSubOcr = new VobSubOcr())
+                            {
+                                vobSubOcr.FileName = Path.GetFileName(fileName);
+                                vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName);
+                                sub = vobSubOcr.SubtitleFromOcr;
+                            }
                         }
                         else if (isVobSub)
                         {

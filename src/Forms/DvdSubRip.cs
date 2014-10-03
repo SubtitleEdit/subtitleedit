@@ -138,6 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (ifoParser.VideoTitleSetProgramChainTable.ProgramChains.Count > 0)
                 Palette = ifoParser.VideoTitleSetProgramChainTable.ProgramChains[0].ColorLookupTable;
 
+            ifoParser.Dispose();
             buttonStartRipping.Enabled = listBoxVobFiles.Items.Count > 0;
         }
 

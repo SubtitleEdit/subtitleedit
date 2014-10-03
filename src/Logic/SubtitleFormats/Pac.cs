@@ -749,33 +749,33 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public void Save(string fileName, Subtitle subtitle)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            _fileName = fileName;
-
-            // header
-            fs.WriteByte(1);
-            for (int i = 1; i < 23; i++)
-                fs.WriteByte(0);
-            fs.WriteByte(0x60);
-
-            // paragraphs
-            int number = 0;
-            foreach (Paragraph p in subtitle.Paragraphs)
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                WriteParagraph(fs, p, number, number + 1 == subtitle.Paragraphs.Count);
-                number++;
-            }
+                _fileName = fileName;
 
-            // footer
-            fs.WriteByte(0xff);
-            for (int i = 0; i < 11; i++)
+                // header
+                fs.WriteByte(1);
+                for (int i = 1; i < 23; i++)
+                    fs.WriteByte(0);
+                fs.WriteByte(0x60);
+
+                // paragraphs
+                int number = 0;
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    WriteParagraph(fs, p, number, number + 1 == subtitle.Paragraphs.Count);
+                    number++;
+                }
+
+                // footer
+                fs.WriteByte(0xff);
+                for (int i = 0; i < 11; i++)
+                    fs.WriteByte(0);
+                fs.WriteByte(0x11);
                 fs.WriteByte(0);
-            fs.WriteByte(0x11);
-            fs.WriteByte(0);
-            byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
-            fs.Write(footerBuffer, 0, footerBuffer.Length);
-
-            fs.Close();
+                byte[] footerBuffer = Encoding.ASCII.GetBytes("dummy end of file");
+                fs.Write(footerBuffer, 0, footerBuffer.Length);
+            }
         }
 
         private void WriteParagraph(FileStream fs, Paragraph p, int number, bool isLast)

@@ -153,14 +153,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G && subtitleListView1.Items.Count > 1)
             {
-                var goToLine = new GoToLine();
-                goToLine.Initialize(1, subtitleListView1.Items.Count);
-                if (goToLine.ShowDialog(this) == DialogResult.OK)
+                using (var goToLine = new GoToLine())
                 {
-                    subtitleListView1.SelectNone();
-                    subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
-                    subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
-                    subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                    goToLine.Initialize(1, subtitleListView1.Items.Count);
+                    if (goToLine.ShowDialog(this) == DialogResult.OK)
+                    {
+                        subtitleListView1.SelectNone();
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
+                        subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                    }
                 }
             }
         }

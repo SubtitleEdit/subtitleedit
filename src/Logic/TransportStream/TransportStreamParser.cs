@@ -26,9 +26,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
 
         public void ParseTSFile(string fileName)
         {
-            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            ParseTSFile(fs);
-            fs.Close();
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                ParseTSFile(fs);
+            }
         }
 
         /// <summary>

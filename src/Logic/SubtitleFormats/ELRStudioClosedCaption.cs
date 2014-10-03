@@ -24,8 +24,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static void Save(string fileName)
         {
-            var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write);
-            fs.Close();
+            using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
+            {
+                //...
+            }
         }
 
         public override bool IsMine(List<string> lines, string fileName)

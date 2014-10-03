@@ -60,8 +60,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 count++;
             }
 
-            var rtBox = new System.Windows.Forms.RichTextBox { Text = sb.ToString().Trim() };
-            return rtBox.Rtf;
+            using (var rtBox = new System.Windows.Forms.RichTextBox {Text = sb.ToString().Trim()})
+            {
+                return rtBox.Rtf;
+            }
         }
 
         private static string MakeTimeCode(TimeCode timeCode)

@@ -2847,11 +2847,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            ColorChooser colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = false };
-            if (colorChooser.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser {Color = panelColor.BackColor, ShowAlpha = false})
             {
-                panelColor.BackColor = colorChooser.Color;
-                subtitleListView1_SelectedIndexChanged(null, null);
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelColor.BackColor = colorChooser.Color;
+                    subtitleListView1_SelectedIndexChanged(null, null);
+                }
             }
         }
 
@@ -2862,11 +2864,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonBorderColor_Click(object sender, EventArgs e)
         {
-            ColorChooser colorChooser = new ColorChooser { Color = panelBorderColor.BackColor };
-            if (colorChooser.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser {Color = panelBorderColor.BackColor})
             {
-                panelBorderColor.BackColor = colorChooser.Color;
-                subtitleListView1_SelectedIndexChanged(null, null);
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelBorderColor.BackColor = colorChooser.Color;
+                    subtitleListView1_SelectedIndexChanged(null, null);
+                }
             }
         }
 
@@ -2953,11 +2957,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonCustomResolution_Click(object sender, EventArgs e)
         {
-            ChooseResolution cr = new ChooseResolution();
-            if (cr.ShowDialog(this) == DialogResult.OK)
+            using (var cr = new ChooseResolution())
             {
-                comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = cr.VideoWidth + "x" + cr.VideoHeight;
-                comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
+                if (cr.ShowDialog(this) == DialogResult.OK)
+                {
+                    comboBoxResolution.Items[comboBoxResolution.Items.Count - 1] = cr.VideoWidth + "x" + cr.VideoHeight;
+                    comboBoxResolution.SelectedIndex = comboBoxResolution.Items.Count - 1;
+                }
             }
         }
 
@@ -3104,12 +3110,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonShadowColor_Click(object sender, EventArgs e)
         {
-            ColorChooser colorChooser = new ColorChooser { Color = panelShadowColor.BackColor };
-            if (colorChooser.ShowDialog() == DialogResult.OK)
+            using (var colorChooser = new ColorChooser {Color = panelShadowColor.BackColor})
             {
-                panelShadowColor.BackColor = colorChooser.Color;
-                subtitleListView1_SelectedIndexChanged(null, null);
-                numericUpDownShadowTransparency.Value = colorChooser.Color.A;
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelShadowColor.BackColor = colorChooser.Color;
+                    subtitleListView1_SelectedIndexChanged(null, null);
+                    numericUpDownShadowTransparency.Value = colorChooser.Color.A;
+                }
             }
         }
 

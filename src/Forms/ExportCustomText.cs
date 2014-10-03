@@ -101,12 +101,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void New()
         {
-            var form = new ExportCustomTextFormat("NewÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ");
-            if (form.ShowDialog(this) == DialogResult.OK)
+            using (var form = new ExportCustomTextFormat("NewÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]Æ"))
             {
-                _templates.Add(form.FormatOk);
-                ShowTemplates(_templates);
-                listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    _templates.Add(form.FormatOk);
+                    ShowTemplates(_templates);
+                    listViewTemplates.Items[listViewTemplates.Items.Count - 1].Selected = true;
+                }
             }
             SaveTemplates();
         }
