@@ -255,6 +255,8 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     if (fileMatches.Length > 0)
                         dictionary = fileMatches[0].Substring(0, fileMatches[0].Length - 4);
                 }
+                if (_hunspell != null)
+                    _hunspell.Dispose();
                 _hunspell = Hunspell.GetHunspell(dictionary);
                 IsDictionaryLoaded = true;
                 _spellCheckDictionaryName = dictionary;
@@ -264,7 +266,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 IsDictionaryLoaded = false;
             }
-
         }
 
         public string SpellCheckDictionaryName
