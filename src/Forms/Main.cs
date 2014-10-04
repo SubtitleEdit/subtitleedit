@@ -5626,7 +5626,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
+                    if (oldFileName == null || oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
                     comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
