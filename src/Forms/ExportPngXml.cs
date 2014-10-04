@@ -2132,7 +2132,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (string.IsNullOrWhiteSpace(sb.ToString()))
+                            if (sb.Length > 0)
                             {
                                 lastText.Append(sb);
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
@@ -2156,7 +2156,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                         {
-                            if (string.IsNullOrWhiteSpace(sb.ToString()))
+                            if (sb.Length > 0)
                             {
                                 lastText.Append(sb);
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
