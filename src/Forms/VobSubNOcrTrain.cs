@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         foreach (char ch in p.Text)
                         {
-                            if (char.IsWhiteSpace(ch))
+                            if (!char.IsWhiteSpace(ch))
                             {
                                 var s = ch.ToString();
                                 if (!charactersLearned.Contains(s))
