@@ -106,9 +106,11 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
         public MP4Parser(string fileName)
         {
             FileName = fileName;
-            var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            ParseMp4(fs);
-            fs.Close();
+            using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                ParseMp4(fs);
+                fs.Close();
+            }
         }
 
         public MP4Parser(FileStream fs)
@@ -129,8 +131,8 @@ namespace Nikse.SubtitleEdit.Logic.Mp4
                 if (Size < 8)
                     return;
 
-                if (Name == "moov" && Moov != null)
-                    Moov = new Moov(fs, Position);
+                if (Name == "moov" && Moov == null)
+                    Moov = new Moov(fs, Position); // only scan first "moov" element
 
                 count++;
                 if (count > 100)
