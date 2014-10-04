@@ -88,6 +88,7 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Forms\CheckForUpdates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -786,7 +787,6 @@
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
     <Compile Include="Logic\Dictionaries\NamesList.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceList.cs" />
-    <Compile Include="Logic\Extensions.cs" />
     <Compile Include="Core\FileUtil.cs" />
     <Compile Include="Logic\Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Logic\Forms\FixCommonErrorsHelper.cs" />
