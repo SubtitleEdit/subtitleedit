@@ -332,15 +332,13 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             var bmp = new Bitmap(width, height);
             foreach (var ods in ObjectDataList)
             {
-                using (var odsImage = GetImage(ods))
+                var odsImage = GetImage(ods);
+                if (odsImage != null)
                 {
-                    if (odsImage != null)
+                    var odsPoint = GetImagePosition(ods);
+                    using (var g = Graphics.FromImage(bmp))
                     {
-                        var odsPoint = GetImagePosition(ods);
-                        using (var g = Graphics.FromImage(bmp))
-                        {
-                            g.DrawImageUnscaled(odsImage, odsPoint);
-                        }
+                        g.DrawImageUnscaled(odsImage, odsPoint);
                     }
                 }
             }
