@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public class WindowsHunspell : Hunspell, IDisposable
+    public class WindowsHunspell : Hunspell
     {
         private NHunspell.Hunspell _hunspell;
 
@@ -22,7 +22,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             return _hunspell.Suggest(word);
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

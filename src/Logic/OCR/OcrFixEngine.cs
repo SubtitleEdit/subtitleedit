@@ -13,7 +13,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Logic.Ocr
 {
-    public class OcrFixEngine
+    public class OcrFixEngine : IDisposable
     {
         public enum AutoGuessLevel
         {
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private HashSet<string> _userWordList = new HashSet<string>();
         private HashSet<string> _wordSkipList = new HashSet<string>();
         private Hunspell _hunspell;
-        private readonly OcrSpellCheck _spellCheck;
+        private OcrSpellCheck _spellCheck;
         private readonly Form _parentForm;
         private string _spellCheckDictionaryName;
         private readonly string _threeLetterIsoLanguageName;
@@ -1420,6 +1420,20 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                     numberOfCorrectWords++;
             }
             return wordsNotFound;
+        }
+
+        public void Dispose()
+        {
+            if (_hunspell != null)
+            {
+                _hunspell.Dispose();
+                _hunspell = null;
+            }
+            if (_spellCheck != null)
+            {
+                _spellCheck.Dispose();
+                _spellCheck = null;
+            }                       
         }
 
     }

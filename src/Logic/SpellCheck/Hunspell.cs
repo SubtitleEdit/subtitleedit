@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public abstract class Hunspell
+    public abstract class Hunspell : IDisposable
     {
         public static Hunspell GetHunspell(string dictionary)
         {
@@ -21,5 +21,10 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
 
         public abstract bool Spell(string word);
         public abstract List<string> Suggest(string word);
+
+        public virtual void Dispose()
+        {
+        }
+
     }
 }

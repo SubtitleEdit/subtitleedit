@@ -2706,30 +2706,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
         {
-            var ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this);
-            string fixAction = _language.FixCommonOcrErrors;
-            int noOfFixes = 0;
-            string lastLine = string.Empty;
-            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
+            using (var ocrFixEngine = new OcrFixEngine(threeLetterIsoLanguageName, null, this))
             {
-                var p = Subtitle.Paragraphs[i];
-                string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
-                lastLine = text;
-                if (p.Text != text)
+                string fixAction = _language.FixCommonOcrErrors;
+                int noOfFixes = 0;
+                string lastLine = string.Empty;
+                for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
                 {
-                    if (AllowFix(p, fixAction))
+                    var p = Subtitle.Paragraphs[i];
+                    string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
+                    lastLine = text;
+                    if (p.Text != text)
                     {
-                        string oldText = p.Text;
-                        p.Text = text;
-                        noOfFixes++;
-                        _totalFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        if (AllowFix(p, fixAction))
+                        {
+                            string oldText = p.Text;
+                            p.Text = text;
+                            noOfFixes++;
+                            _totalFixes++;
+                            AddFixToListView(p, fixAction, oldText, p.Text);
+                        }
+                        Application.DoEvents();
                     }
-                    Application.DoEvents();
                 }
+                if (noOfFixes > 0)
+                    LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
             }
-            if (noOfFixes > 0)
-                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
         }
 
         private void RemoveSpaceBetweenNumbers()

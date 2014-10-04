@@ -6865,6 +6865,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void ComboBoxTesseractLanguagesSelectedIndexChanged(object sender, EventArgs e)
         {
             Configuration.Settings.VobSubOcr.TesseractLastLanguage = (comboBoxTesseractLanguages.SelectedItem as TesseractLanguage).Id;
+            if (_ocrFixEngine != null)
+                _ocrFixEngine.Dispose();
             _ocrFixEngine = null;
             LoadOcrFixEngine(null, null);
         }
@@ -6877,6 +6879,8 @@ namespace Nikse.SubtitleEdit.Forms
                 threeLetterISOLanguageName = _languageId;
             }
 
+            if (_ocrFixEngine != null)
+                _ocrFixEngine.Dispose();
             _ocrFixEngine = new OcrFixEngine(threeLetterISOLanguageName, hunspellName, this);
             if (_ocrFixEngine.IsDictionaryLoaded)
             {
@@ -7291,11 +7295,15 @@ namespace Nikse.SubtitleEdit.Forms
             string threeLetterISOLanguageName = string.Empty;
             if (LanguageString == null)
             {
+                if (_ocrFixEngine != null)
+                    _ocrFixEngine.Dispose();
                 _ocrFixEngine = new OcrFixEngine(string.Empty, string.Empty, this);
                 return;
             }
             try
             {
+                if (_ocrFixEngine != null)
+                    _ocrFixEngine.Dispose();
                 _ocrFixEngine = null;
                 var ci = new CultureInfo(LanguageString.Replace("_", "-"));
                 threeLetterISOLanguageName = ci.ThreeLetterISOLanguageName;
@@ -8378,6 +8386,24 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 }
             }
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+                if (_ocrFixEngine != null)
+                {
+                    _ocrFixEngine.Dispose();
+                    _ocrFixEngine = null;
+                }
+            }
+            base.Dispose(disposing);
         }
 
     }
