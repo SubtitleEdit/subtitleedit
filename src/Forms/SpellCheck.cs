@@ -320,6 +320,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void LoadHunspell(string dictionary)
         {
             _currentDictionary = dictionary;
+            if (_hunspell != null)
+                _hunspell.Dispose();
             _hunspell = Hunspell.GetHunspell(dictionary);
         }
 
@@ -1290,6 +1292,24 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             PrepareNextWord();
+        }
+
+        /// <summary>
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                if (_hunspell != null)
+                {
+                    _hunspell.Dispose();
+                    _hunspell = null;
+                }
+                components.Dispose();
+            }
+            base.Dispose(disposing);
         }
 
     }
