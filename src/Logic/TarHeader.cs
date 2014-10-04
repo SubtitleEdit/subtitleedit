@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             string sizeInBytes = Encoding.ASCII.GetString(buffer, 124, 11);
             if (!string.IsNullOrEmpty(FileName) && Utilities.IsInteger(sizeInBytes))
-                FileSizeInBytes = Convert.ToInt64(sizeInBytes, 8);
+                FileSizeInBytes = Convert.ToInt64(sizeInBytes.Trim(), 8);
         }
 
         public void WriteData(string fileName)

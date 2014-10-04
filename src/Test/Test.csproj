@@ -50,6 +50,7 @@
     <Compile Include="Core\HtmlUtilTest.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceListTest.cs" />
     <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
+    <Compile Include="Logic\TarFileTest.cs" />
     <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
     <Compile Include="RemoveTextForHearImpairedTest.cs" />
@@ -73,7 +74,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Dictionaries\names_etc.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Files\sample.tar">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Files\sample_MKV_SRT.mkv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
