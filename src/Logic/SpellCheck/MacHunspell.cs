@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public class MacHunspell : Hunspell, IDisposable
+    public class MacHunspell : Hunspell
     {
 
         private IntPtr _hunspellHandle = IntPtr.Zero;
@@ -53,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

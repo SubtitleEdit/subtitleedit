@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SpellCheck
 {
-    public class VoikkoSpellCheck : Hunspell, IDisposable
+    public class VoikkoSpellCheck : Hunspell
     {
 
         // Voikko functions in dll
@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SpellCheck
             }
         }
 
-        public void Dispose()
+        public override void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);
