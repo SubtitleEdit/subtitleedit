@@ -26,6 +26,7 @@
    * Fixed large memory leak in "Fix common errors" - thx XhmikosR
    * Fixed bug in "frame-up-down-box" - thx Markus
    * Fixed sometimes missing color in Blu-ray sup files - thx minhjirachi
+   * Fixed bug in undo when starting with no subtitle - thx Siegwarth
    * Fixed font end tag in SSA/ASS - thx Milad
    * Fixed bug in "Add missing dashes" + "remove unneeded spaces" - thx Andrew
    * Fixed bug in "Fix missing spaces"
