@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    public class TarReader
+    public class TarReader : IDisposable
     {
 
         public List<TarHeader> Files { get; private set; }
@@ -11,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public TarReader(string fileName)
         {
-            FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             OpenTarFile(fs);
         }
 
@@ -29,7 +30,6 @@ namespace Nikse.SubtitleEdit.Logic
             stream.Position = 0;
             while (pos + 512 < length)
             {
-
                 stream.Seek(pos, SeekOrigin.Begin);
                 var th = new TarHeader(stream);
                 if (th.FileSizeInBytes > 0)
@@ -43,6 +43,15 @@ namespace Nikse.SubtitleEdit.Logic
         public void Close()
         {
             _stream.Close();
+        }
+
+        public void Dispose()
+        {
+            if (_stream != null)
+            {
+                _stream.Dispose();
+                _stream = null;
+            }
         }
 
     }
