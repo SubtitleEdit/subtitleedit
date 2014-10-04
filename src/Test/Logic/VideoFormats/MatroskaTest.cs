@@ -56,5 +56,37 @@ namespace Test.Logic.VideoFormats
             parser.Dispose();
         }
 
+        [TestMethod]
+        public void MatroskaTestVobSubPgs()
+        {
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_VobSub_PGS.mkv");
+            var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName);
+
+            bool isValid;
+            var tracks = parser.GetMatroskaSubtitleTracks(fileName, out isValid);
+            Assert.IsTrue(tracks[0].CodecId == "S_VOBSUB");
+            Assert.IsTrue(tracks[1].CodecId == "S_HDMV/PGS");
+            parser.Dispose();
+        }
+
+        [TestMethod]
+        public void MatroskaTestVobSubPgsContent()
+        {
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_VobSub_PGS.mkv");
+            var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName);
+
+            bool isValid;
+            var tracks = parser.GetMatroskaSubtitleTracks(fileName, out isValid);
+            var subtitles = parser.GetMatroskaSubtitle(fileName, Convert.ToInt32(tracks[0].TrackNumber), out isValid, null);
+            Assert.IsTrue(subtitles.Count == 2);
+            //TODO: check bitmaps
+
+            //subtitles = parser.GetMatroskaSubtitle(fileName, Convert.ToInt32(tracks[1].TrackNumber), out isValid, null);
+            //Assert.IsTrue(subtitles.Count == 2);
+            //check bitmaps
+
+            parser.Dispose();
+        }
+
     }
 }
