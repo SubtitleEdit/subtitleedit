@@ -23,6 +23,7 @@
 * FIXED:
    * Fixed subtitle drag-n-drop bug - thx Andrew
    * Fixed crash in TS parser (reading AdaptationField) - thx SimplyTheBOSS
+   * Fixed large memory leak in "Fix common errors" - thx XhmikosR
    * Fixed bug in "frame-up-down-box" - thx Markus
    * Fixed sometimes missing color in Blu-ray sup files - thx minhjirachi
    * Fixed font end tag in SSA/ASS - thx Milad
