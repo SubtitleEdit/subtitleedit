@@ -6278,6 +6278,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RefreshSelectedParagraph();
                 }
             }
+            form.Dispose();
         }
 
         private void WebVTTRemoveVoices(object sender, EventArgs e)
@@ -6336,6 +6337,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            form.Dispose();
         }
 
         private void BoldToolStripMenuItemClick(object sender, EventArgs e)
@@ -10966,12 +10968,14 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    Watermark watermarkForm = new Watermark();
-                    watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
-                    if (watermarkForm.ShowDialog(this) == DialogResult.OK)
+                    using (var watermarkForm = new Watermark())
                     {
-                        watermarkForm.AddOrRemove(_subtitle);
-                        RefreshSelectedParagraph();
+                        watermarkForm.Initialize(_subtitle, FirstSelectedIndex);
+                        if (watermarkForm.ShowDialog(this) == DialogResult.OK)
+                        {
+                            watermarkForm.AddOrRemove(_subtitle);
+                            RefreshSelectedParagraph();
+                        }
                     }
                 }
             }
@@ -11119,12 +11123,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift) && e.KeyCode == Keys.I) // watermak
             {
-                var form = new ImportUnknownFormat(string.Empty);
-                if (form.ShowDialog(this) == DialogResult.OK)
+                using (var form = new ImportUnknownFormat(string.Empty))
                 {
-                    _subtitle = form.ImportedSubitle;
-                    _fileName = null;
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _subtitle = form.ImportedSubitle;
+                        _fileName = null;
+                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    }
                 }
                 e.SuppressKeyPress = true;
             }
@@ -14592,8 +14598,10 @@ namespace Nikse.SubtitleEdit.Forms
             _timerCheckForUpdates.Stop();
             if (_checkForUpdatesHelper.IsUpdateAvailable())
             {
-                var form = new CheckForUpdates(this, _checkForUpdatesHelper);
-                form.ShowDialog(this);
+                using (var form = new CheckForUpdates(this, _checkForUpdatesHelper))
+                {
+                    form.ShowDialog(this);
+                }
             }
             _checkForUpdatesHelper = null;
             _timerCheckForUpdates = null;
@@ -15228,20 +15236,22 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 mediaPlayer.Pause();
-                var addWaveform = new AddWaveform();
-                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-                addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
-                if (addWaveform.ShowDialog() == DialogResult.OK)
+                using (var addWaveform = new AddWaveform())
                 {
-                    addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
-                    var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                    audioPeakWave.GenerateAllSamples();
-                    audioPeakWave.Close();
-                    audioVisualizer.WavePeaks = audioPeakWave;
-                    if (addWaveform.SpectrogramBitmaps != null)
-                        audioVisualizer.InitializeSpectrogram(addWaveform.SpectrogramBitmaps, spectrogramFolder);
-                    timerWaveform.Start();
+                    string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
+                    string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+                    addWaveform.Initialize(_videoFileName, spectrogramFolder, _videoAudioTrackNumber);
+                    if (addWaveform.ShowDialog() == DialogResult.OK)
+                    {
+                        addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
+                        var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
+                        audioPeakWave.GenerateAllSamples();
+                        audioPeakWave.Close();
+                        audioVisualizer.WavePeaks = audioPeakWave;
+                        if (addWaveform.SpectrogramBitmaps != null)
+                            audioVisualizer.InitializeSpectrogram(addWaveform.SpectrogramBitmaps, spectrogramFolder);
+                        timerWaveform.Start();
+                    }
                 }
             }
         }
@@ -15592,17 +15602,19 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var addWaveform = new AddWaveform();
-            string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
-            addWaveform.InitializeViaWaveFile(fileName, spectrogramFolder);
-            if (addWaveform.ShowDialog() == DialogResult.OK)
+            using (var addWaveform = new AddWaveform())
             {
-                string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
-                addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
-                var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
-                audioPeakWave.GenerateAllSamples();
-                audioVisualizer.WavePeaks = audioPeakWave;
-                timerWaveform.Start();
+                string spectrogramFolder = GetSpectrogramFolder(_videoFileName);
+                addWaveform.InitializeViaWaveFile(fileName, spectrogramFolder);
+                if (addWaveform.ShowDialog() == DialogResult.OK)
+                {
+                    string peakWaveFileName = GetPeakWaveFileName(_videoFileName);
+                    addWaveform.WavePeak.WritePeakSamples(peakWaveFileName);
+                    var audioPeakWave = new WavePeakGenerator(peakWaveFileName);
+                    audioPeakWave.GenerateAllSamples();
+                    audioVisualizer.WavePeaks = audioPeakWave;
+                    timerWaveform.Start();
+                }
             }
         }
 
@@ -18819,32 +18831,34 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GuessTimeCodesToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var form = new WaveformGenerateTimeCodes();
-            if (form.ShowDialog(this) == DialogResult.OK)
+            using (var form = new WaveformGenerateTimeCodes())
             {
-                MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
-
-                double startFrom = 0;
-                if (form.StartFromVideoPosition)
-                    startFrom = mediaPlayer.CurrentPosition;
-
-                if (form.DeleteAll)
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    _subtitle.Paragraphs.Clear();
-                }
-                else if (form.DeleteForward)
-                {
-                    for (int i = _subtitle.Paragraphs.Count - 1; i > 0; i--)
+                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.BeforeGuessingTimeCodes));
+
+                    double startFrom = 0;
+                    if (form.StartFromVideoPosition)
+                        startFrom = mediaPlayer.CurrentPosition;
+
+                    if (form.DeleteAll)
                     {
-                        if (_subtitle.Paragraphs[i].EndTime.TotalSeconds + 1 > startFrom)
-                            _subtitle.Paragraphs.RemoveAt(i);
+                        _subtitle.Paragraphs.Clear();
                     }
+                    else if (form.DeleteForward)
+                    {
+                        for (int i = _subtitle.Paragraphs.Count - 1; i > 0; i--)
+                        {
+                            if (_subtitle.Paragraphs[i].EndTime.TotalSeconds + 1 > startFrom)
+                                _subtitle.Paragraphs.RemoveAt(i);
+                        }
+                    }
+                    audioVisualizer.GenerateTimeCodes(form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
+                    if (IsFramesRelevant && CurrentFrameRate > 0)
+                        _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RefreshSelectedParagraph();
                 }
-                audioVisualizer.GenerateTimeCodes(form.BlockSize, form.VolumeMinimum, form.VolumeMaximum, form.DefaultMilliseconds);
-                if (IsFramesRelevant && CurrentFrameRate > 0)
-                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                RefreshSelectedParagraph();
             }
         }
 
@@ -18988,6 +19002,7 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(index, true);
                     RefreshSelectedParagraph();
                 }
+                form.Dispose();
             }
         }
 
@@ -19244,13 +19259,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemBatchConvert_Click(object sender, EventArgs e)
         {
-            this.Visible = false;
+            Visible = false;
             var form = new BatchConvert(this.Icon);
             _formPositionsAndSizes.SetPositionAndSize(form);
             form.ShowDialog(this);
             _formPositionsAndSizes.SavePositionAndSize(form);
             form.Dispose();
-            this.Visible = true;
+            Visible = true;
         }
 
         private void copyOriginalTextToCurrentToolStripMenuItem_Click(object sender, EventArgs e)
@@ -19417,14 +19432,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemImportOcrHardSub_Click(object sender, EventArgs e)
         {
-            var form = new HardSubExtract(_videoFileName);
-            if (form.ShowDialog(this) == DialogResult.OK)
+            using (var form = new HardSubExtract(_videoFileName))
             {
-
-                if (!string.IsNullOrEmpty(form.OcrFileName))
+                if (form.ShowDialog(this) == DialogResult.OK)
                 {
-                    MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
-                    OpenSubtitle(form.OcrFileName, null);
+                    if (!string.IsNullOrEmpty(form.OcrFileName))
+                    {
+                        MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
+                        OpenSubtitle(form.OcrFileName, null);
+                    }
                 }
             }
         }
@@ -19461,10 +19477,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
         {
-            var form = new MeasurementConverter();
-            _formPositionsAndSizes.SetPositionAndSize(form);
-            form.Show(this);
-            //            _formPositionsAndSizes.SavePositionAndSize(form);
+            using (var form = new MeasurementConverter())
+            {
+                _formPositionsAndSizes.SetPositionAndSize(form);
+                form.Show(this);
+                //            _formPositionsAndSizes.SavePositionAndSize(form);
+            }
         }
 
         private void toolStripMenuItemImportSceneChanges_Click(object sender, EventArgs e)
@@ -19741,8 +19759,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
             }
 
-            var form = new CheckForUpdates(this);
-            form.ShowDialog(this);
+            using (var form = new CheckForUpdates(this))
+            {
+                form.ShowDialog(this);
+            }
             Configuration.Settings.General.LastCheckForUpdates = DateTime.Now;
         }
 
