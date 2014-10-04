@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System.Text;
 

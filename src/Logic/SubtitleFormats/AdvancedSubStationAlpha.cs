@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {

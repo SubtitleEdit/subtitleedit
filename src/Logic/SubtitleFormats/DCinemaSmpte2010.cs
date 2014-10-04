@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Text;
 using System.Xml;
 using System.Xml.Schema;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
