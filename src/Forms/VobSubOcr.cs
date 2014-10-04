@@ -225,8 +225,8 @@ namespace Nikse.SubtitleEdit.Forms
         private Timer _mainOcrTimer;
         private int _mainOcrTimerMax;
         private int _mainOcrIndex;
-        private bool _mainOcrRunning = false;
-        private Bitmap _mainOcrBitmap = null;
+        private bool _mainOcrRunning;
+        private Bitmap _mainOcrBitmap;
 
         private Type _modiType;
         private Object _modiDoc;
@@ -238,8 +238,8 @@ namespace Nikse.SubtitleEdit.Forms
         private List<Color> _palette;
 
         // Blu-ray sup
-        private List<Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitlesOriginal;
-        private List<Logic.BluRaySup.BluRaySupParser.PcsData> _bluRaySubtitles;
+        private List<BluRaySupParser.PcsData> _bluRaySubtitlesOriginal;
+        private List<BluRaySupParser.PcsData> _bluRaySubtitles;
 
         // SP list
         private List<SpHeader> _spList;
@@ -265,30 +265,30 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _bdnXmlOriginal;
         private Subtitle _bdnXmlSubtitle;
         private string _bdnFileName;
-        private bool _isSon = false;
+        private bool _isSon;
 
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         private VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
         //        List<NOcrChar> _nocrChars = null;
-        private NOcrDb _nOcrDb = null;
+        private NOcrDb _nOcrDb;
         private VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
         private int _nocrLastLowercaseHeight = -1;
         private int _nocrLastUppercaseHeight = -1;
-        private bool _nocrThreadsStop = false;
-        private string[] _nocrThreadResults = null;
+        private bool _nocrThreadsStop;
+        private string[] _nocrThreadResults;
         public const int NocrMinColor = 300;
 
-        private bool _icThreadsStop = false;
-        private string[] _icThreadResults = null;
+        private bool _icThreadsStop;
+        private string[] _icThreadResults;
 
         private readonly Keys _italicShortcut = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxItalic);
         private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
-        private string[] _tesseractAsyncStrings = null;
-        private int _tesseractAsyncIndex = 0;
-        private BackgroundWorker _tesseractThread = null;
+        private string[] _tesseractAsyncStrings;
+        private int _tesseractAsyncIndex;
+        private BackgroundWorker _tesseractThread;
 
         public static void SetDoubleBuffered(Control c)
         {
@@ -497,8 +497,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
             if (textSize.Height > buttonCancel.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -510,6 +510,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Initialize(vobSubFileName, vobSubOcrSettings, null);
             FormVobSubOcr_Shown(null, null);
+            checkBoxPromptForUnknownWords.Checked = false;
 
             int max = GetSubtitleCount();
             if (comboBoxOcrMethod.SelectedIndex == 0 && _tesseractAsyncStrings == null)
@@ -943,14 +944,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool InitializeSubIdx(string vobSubFileName)
         {
-            VobSubParser vobSubParser = new VobSubParser(true);
+            var vobSubParser = new VobSubParser(true);
             string idxFileName = Path.ChangeExtension(vobSubFileName, ".idx");
             vobSubParser.OpenSubIdx(vobSubFileName, idxFileName);
             _vobSubMergedPackist = vobSubParser.MergeVobSubPacks();
             _palette = vobSubParser.IdxPalette;
             vobSubParser.VobSubPacks.Clear();
 
-            List<int> languageStreamIds = new List<int>();
+            var languageStreamIds = new List<int>();
             foreach (var pack in _vobSubMergedPackist)
             {
                 if (pack.SubPicture.Delay.TotalMilliseconds > 500 && !languageStreamIds.Contains(pack.StreamId))
@@ -962,7 +963,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (ShowInTaskbar)
                     {
-                        chooseLanguage.Icon = (Icon)this.Icon.Clone();
+                        chooseLanguage.Icon = (Icon)Icon.Clone();
                         chooseLanguage.ShowInTaskbar = true;
                         chooseLanguage.ShowIcon = true;
                     }
@@ -2280,7 +2281,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             italic = false;
             var nbmp = targetItem.NikseBitmap;
-            int index = 0;
+            int index;
             foreach (NOcrChar oc in nOcrDb.OcrCharacters)
             {
                 if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 3 && Math.Abs(oc.MarginTop - topMargin) < 3)
@@ -2724,8 +2725,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (checkBoxNOcrCorrect.Checked)
                     return null;
-                else
-                    return new CompareMatch("*", false, 0, null);
+                return new CompareMatch("*", false, 0, null);
             }
 
             // Fix uppercase/lowercase issues (not I/l)
@@ -2791,8 +2791,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (italic)
                 return new CompareMatch(result.Text, true, 0, null, result);
-            else
-                return new CompareMatch(result.Text, result.Italic, 0, null, result);
+            return new CompareMatch(result.Text, result.Italic, 0, null, result);
         }
 
         private CompareMatch GetCompareMatch(ImageSplitterItem targetItem, NikseBitmap parentBitmap, out CompareMatch secondBestGuess, List<ImageSplitterItem> list, int listIndex)
@@ -2804,7 +2803,6 @@ namespace Nikse.SubtitleEdit.Forms
             NikseBitmap target = targetItem.NikseBitmap;
             if (_compareBitmaps == null)
             {
-                secondBestGuess = null;
                 return null;
             }
 
@@ -2845,7 +2843,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var cutBitmap = target.CopyRectangle(new Rectangle(4, 0, target.Width - 4, target.Height));
                     FindBestMatch(ref index, ref smallestDifference, ref smallestIndex, cutBitmap, _compareBitmaps);
-                    double differencePercentage = smallestDifference * 100.0 / (target.Width * target.Height);
                 }
 
                 if (smallestDifference > 2 && target.Width > 12)
@@ -2915,7 +2912,6 @@ namespace Nikse.SubtitleEdit.Forms
             NikseBitmap target = targetItem.NikseBitmap;
             if (_binaryOcrDb == null)
             {
-                secondBestGuess = null;
                 return null;
             }
 
@@ -3708,7 +3704,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (expandCount > 0)
             {
                 XmlAttribute expandSelection = _compareDoc.CreateAttribute("Expand");
-                expandSelection.InnerText = expandCount.ToString();
+                expandSelection.InnerText = expandCount.ToString(CultureInfo.InvariantCulture);
                 element.Attributes.Append(expandSelection);
             }
             if (isItalic)
@@ -4184,7 +4180,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     byte[] data = new byte[175000];
                     zip.Read(data, 0, 175000);
-                    doc.LoadXml(System.Text.Encoding.UTF8.GetString(data));
+                    doc.LoadXml(Encoding.UTF8.GetString(data));
                 }
                 rdr.Close();
 
@@ -4898,7 +4894,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void DoHide()
         {
-            base.SetVisibleCore(false);
+            SetVisibleCore(false);
         }
 
         public Subtitle ReadyVobSubRip()
@@ -5059,7 +5055,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     double differencePercentage = smallestDifference * 100.0 / (item.NikseBitmap.Width * item.NikseBitmap.Height);
-                    double maxDiff = (double)p.MaxErrorPercent;
+                    double maxDiff = p.MaxErrorPercent;
                     if (differencePercentage <= maxDiff && smallestIndex >= 0)
                     {
                         var hit = p.CompareBitmaps[smallestIndex];
@@ -7569,13 +7565,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Cursor = Cursors.Default;
                     return;
                 }
-                else
-                {
-                    _compareDoc = inspect.ImageCompareDocument;
-                    string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
-                    _compareDoc.Save(path + "Images.xml");
-                    LoadImageCompareBitmaps();
-                }
+                _compareDoc = inspect.ImageCompareDocument;
+                string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                _compareDoc.Save(path + "Images.xml");
+                LoadImageCompareBitmaps();
                 Cursor = Cursors.Default;
             }
             if (_binaryOcrDb != null)
