@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -619,7 +620,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
             _languageIdLine1 = buffer[146];
             if (_languageIdLine1 == 0)

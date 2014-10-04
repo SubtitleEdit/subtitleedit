@@ -88,6 +88,7 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Forms\CheckForUpdates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -786,14 +787,13 @@
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
     <Compile Include="Logic\Dictionaries\NamesList.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceList.cs" />
-    <Compile Include="Logic\Extensions.cs" />
-    <Compile Include="Logic\FileUtils.cs" />
+    <Compile Include="Core\FileUtil.cs" />
     <Compile Include="Logic\Forms\CheckForUpdatesHelper.cs" />
     <Compile Include="Logic\Forms\FixCommonErrorsHelper.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHISettings.cs" />
     <Compile Include="Logic\Forms\RemoveTextForHI.cs" />
     <Compile Include="Logic\Forms\SplitLongLinesHelper.cs" />
-    <Compile Include="Logic\HtmlUtils.cs" />
+    <Compile Include="Core\HtmlUtil.cs" />
     <Compile Include="Logic\LanguageDeserializer.cs" />
     <Compile Include="Logic\MurMurHash3.cs" />
     <Compile Include="Logic\NativeMethods.cs" />
@@ -1187,6 +1187,7 @@
     <Compile Include="Forms\SyncPointsSync.Designer.cs">
       <DependentUpon>SyncPointsSync.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\RegistryUtil.cs" />
     <Compile Include="Web References\MicrosoftTranslationService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

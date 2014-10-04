@@ -1,7 +1,8 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
+using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -144,7 +145,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
             int i = 256;
             Paragraph last = null;

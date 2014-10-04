@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
+using System;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -307,7 +308,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 // remove styles for display text (except italic)
                 string text = RemoveSubStationAlphaFormatting(_subtitleText);
-                text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagBold, HtmlUtils.TagUnderline);
+                text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagBold, HtmlUtil.TagUnderline);
 
                 // display italic
                 var sb = new StringBuilder();

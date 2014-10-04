@@ -7,6 +7,7 @@ using System.Xml;
 //http://www.w3.org/TR/ttaf1-dfxp/
 //Timed Text Markup Language (TTML) 1.0
 //W3C Recommendation 18 November 2010
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {

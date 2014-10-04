@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Controls;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoFormats;
@@ -26,29 +27,6 @@ namespace Nikse.SubtitleEdit.Logic
         /// Cached environment new line characters for faster lookup.
         /// </summary>
         internal static readonly char[] NewLineChars = Environment.NewLine.ToCharArray();
-
-        public static byte[] ReadAllBytes(String path)
-        {
-            byte[] bytes;
-            using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-            {
-                int index = 0;
-                long fileLength = fs.Length;
-                if (fileLength > Int32.MaxValue)
-                    throw new IOException("File too long");
-                int count = (int)fileLength;
-                bytes = new byte[count];
-                while (count > 0)
-                {
-                    int n = fs.Read(bytes, index, count);
-                    if (n == 0)
-                        throw new InvalidOperationException("End of file reached before expected");
-                    index += n;
-                    count -= n;
-                }
-            }
-            return bytes;
-        }
 
         public static VideoInfo GetVideoInfo(string fileName)
         {
@@ -828,7 +806,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (s.Contains("< "))
                 s = FixInvalidItalicTags(s);
 
-            return HtmlUtils.RemoveOpenCloseTags(s, HtmlUtils.TagItalic, HtmlUtils.TagBold, HtmlUtils.TagUnderline, HtmlUtils.TagParagraph, HtmlUtils.TagFont, HtmlUtils.TagCyrillicI);
+            return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
         }
 
         public static string RemoveHtmlTags(string s, bool alsoSsaTags)
@@ -2319,7 +2297,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 0 && italicEndTagCount == 1)
                 {
-                    var cleanText = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic, HtmlUtils.TagBold, HtmlUtils.TagUnderline, HtmlUtils.TagCyrillicI);
+                    var cleanText = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagCyrillicI);
                     bool isFixed = false;
 
                     // Foo.</i>
@@ -3196,17 +3174,5 @@ namespace Nikse.SubtitleEdit.Logic
             t.Change(millisecondsDelay, -1);
             return tcs.Task;
         }
-
-        /// <summary>
-        /// Retrieves the specified registry subkey value.
-        /// </summary>
-        /// <param name="keyName">The path of the subkey to open.</param>
-        /// <param name="valueName">The name of the value to retrieve.</param>
-        /// <returns>The value of the subkey requested, or <b>null</b> if the operation failed.</returns>
-        public static string GetRegistryValue(string keyName, string valueName)
-        {
-            return Configuration.GetRegistryValue(keyName, valueName);
-        }
-
     }
 }

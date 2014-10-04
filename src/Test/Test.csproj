@@ -47,7 +47,7 @@
     <Compile Include="LanguageTest.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParserTest.cs" />
     <Compile Include="Logic\Dictionaries\NamesListTest.cs" />
-    <Compile Include="Logic\HtmlUtilsTest.cs" />
+    <Compile Include="Core\HtmlUtilTest.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceListTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
     <Compile Include="RemoveTextForHearImpairedTest.cs" />

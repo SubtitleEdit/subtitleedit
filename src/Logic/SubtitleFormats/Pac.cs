@@ -1,16 +1,15 @@
-﻿using Nikse.SubtitleEdit.Forms;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Text;
 
-// The PAC format was developed by Screen Electronics
-// The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
-
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
-
+    // The PAC format was developed by Screen Electronics
+    // The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
     public class Pac : SubtitleFormat
     {
         public static TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
@@ -848,7 +847,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string MakePacItalicsAndRemoveOtherTags(string text)
         {
-            text = HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagFont, HtmlUtils.TagUnderline).Trim();
+            text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagFont, HtmlUtil.TagUnderline).Trim();
             if (!text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
                 return text;
 
@@ -921,7 +920,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var fi = new FileInfo(fileName);
                     if (fi.Length > 100 && fi.Length < 1024000) // not too small or too big
                     {
-                        byte[] buffer = Utilities.ReadAllBytes(fileName);
+                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
                         if (buffer[00] == 1 && // These bytes seems to be PAC files... TODO: Verify!
                             buffer[01] == 0 &&
@@ -969,7 +968,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _fileName = fileName;
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
             int index = 0;
             while (index < buffer.Length)
@@ -1206,7 +1205,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             try
             {
-                byte[] buffer = Utilities.ReadAllBytes(_fileName);
+                byte[] buffer = FileUtil.ReadAllBytesShared(_fileName);
                 int index = 0;
                 int count = 0;
                 _codePage = 0;

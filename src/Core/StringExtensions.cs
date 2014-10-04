@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Text;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Core
 {
-    public static class Extensions
+    internal static class StringExtensions
     {
-
-        public static bool StartsWith(this String s, char c)
+        public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
         }
@@ -16,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
             return sb.Length > 0 && sb[0] == c;
         }
 
-        public static bool EndsWith(this String s, char c)
+        public static bool EndsWith(this string s, char c)
         {
             return s.Length > 0 && s[s.Length - 1] == c;
         }
@@ -35,6 +34,5 @@ namespace Nikse.SubtitleEdit.Logic
         {
             return source.IndexOf(value, comparisonType) >= 0;
         }
-
     }
 }

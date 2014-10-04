@@ -1,23 +1,23 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Core;
 
-namespace Test.Logic
+namespace Test.Core
 {
     [TestClass]
-    public class HtmlUtilsTest
+    public class HtmlUtilTest
     {
         [TestMethod]
         public void TestRemoveOpenCloseTagCyrillicI()
         {
             const string source = "<\u0456>SubtitleEdit</\u0456>";
-            Assert.AreEqual("SubtitleEdit", HtmlUtils.RemoveOpenCloseTags(source, HtmlUtils.TagCyrillicI));
+            Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveOpenCloseTags(source, HtmlUtil.TagCyrillicI));
         }
 
         [TestMethod]
         public void TestRemoveOpenCloseTagFont()
         {
             const string source = "<font color=\"#000\">SubtitleEdit</font>";
-            Assert.AreEqual("SubtitleEdit", HtmlUtils.RemoveOpenCloseTags(source, HtmlUtils.TagFont));
+            Assert.AreEqual("SubtitleEdit", HtmlUtil.RemoveOpenCloseTags(source, HtmlUtil.TagFont));
         }
     }
 }
