@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -39,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (fileName.EndsWith(".elr", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = Utilities.ReadAllBytes(fileName);
+                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
                         byte[] compareBuffer = { 0x05, 0x01, 0x0D, 0x15, 0x11, 0x00, 0xA9, 0x00, 0x45, 0x00, 0x6C, 0x00, 0x72, 0x00, 0x6F, 0x00, 0x6D, 0x00, 0x20, 0x00, 0x53, 0x00, 0x74, 0x00, 0x75, 0x00, 0x64, 0x00, 0x69, 0x00, 0x6F, 0x00 };
 
                         for (int i = 6; i < compareBuffer.Length; i++)
@@ -65,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
             int i = 128;
             while (i < buffer.Length - 40)

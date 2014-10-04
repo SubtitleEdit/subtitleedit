@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms

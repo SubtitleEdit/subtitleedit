@@ -1,14 +1,45 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Logic.TransportStream;
+using Nikse.SubtitleEdit.Logic.VobSub;
 
-namespace Nikse.SubtitleEdit.Logic
+namespace Nikse.SubtitleEdit.Core
 {
     /// <summary>
     /// File related utilities.
     /// </summary>
-    internal static class FileUtils
+    internal static class FileUtil
     {
+        /// <summary>
+        /// Opens a binary file in read/write shared mode, reads the contents of the file into a
+        /// byte array, and then closes the file.
+        /// </summary>
+        /// <param name="path">The file to open for reading. </param>
+        /// <returns>A byte array containing the contents of the file.</returns>
+        public static byte[] ReadAllBytesShared(string path)
+        {
+            using (var fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var index = 0;
+                var fileLength = fs.Length;
+                if (fileLength > Int32.MaxValue)
+                    throw new IOException("File too long");
+                var count = (int)fileLength;
+                var bytes = new byte[count];
+                while (count > 0)
+                {
+                    var n = fs.Read(bytes, index, count);
+                    if (n == 0)
+                        throw new InvalidOperationException("End of file reached before expected");
+                    index += n;
+                    count -= n;
+                }
+                return bytes;
+            }
+        }
+
         /// <summary>
         /// Opens an existing file for reading, and allow the user to retry if it fails.
         /// </summary>
@@ -85,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.Message);
+                Debug.WriteLine(ex.Message);
                 return false;
             }
             finally
@@ -101,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var tsp = new TransportStream.TransportStreamParser();
+                var tsp = new TransportStreamParser();
                 tsp.DetectFormat(fs);
                 return tsp.IsM2TransportStream;
             }
@@ -113,8 +144,8 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var buffer = new byte[4];
                 fs.Read(buffer, 0, 4);
-                return VobSub.VobSubParser.IsMpeg2PackHeader(buffer)
-                    || VobSub.VobSubParser.IsPrivateStream1(buffer, 0);
+                return VobSubParser.IsMpeg2PackHeader(buffer)
+                    || VobSubParser.IsPrivateStream1(buffer, 0);
             }
         }
 
@@ -122,13 +153,13 @@ namespace Nikse.SubtitleEdit.Logic
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var buffer = new byte[VobSub.SpHeader.SpHeaderLength];
+                var buffer = new byte[SpHeader.SpHeaderLength];
                 if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
                 {
                     return false;
                 }
 
-                var header = new VobSub.SpHeader(buffer);
+                var header = new SpHeader(buffer);
                 if (header.Identifier != "SP" || header.NextBlockPosition < 5)
                 {
                     return false;
@@ -140,13 +171,13 @@ namespace Nikse.SubtitleEdit.Logic
                     return false;
                 }
 
-                buffer = new byte[VobSub.SpHeader.SpHeaderLength];
+                buffer = new byte[SpHeader.SpHeaderLength];
                 if (fs.Read(buffer, 0, buffer.Length) != buffer.Length)
                 {
                     return false;
                 }
 
-                header = new VobSub.SpHeader(buffer);
+                header = new SpHeader(buffer);
                 return header.Identifier == "SP";
             }
         }

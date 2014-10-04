@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -267,7 +268,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeText(string s)
         {
-            s = HtmlUtils.RemoveOpenCloseTags(s, HtmlUtils.TagBold, HtmlUtils.TagUnderline, HtmlUtils.TagFont);
+            s = HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagFont);
             if (s.StartsWith("{\\an3}") || s.StartsWith("{\\an6}"))
                 s = "/STYLE RIGHT" + Environment.NewLine + s.Remove(0, 6).Trim();
             if (s.StartsWith("{\\an1}") || s.StartsWith("{\\an4}"))

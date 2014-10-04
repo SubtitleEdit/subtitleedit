@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections;
 using System.Diagnostics;
 using System.Globalization;
@@ -247,7 +248,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                 }
 
-                path = Utilities.GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1", "InstallLocation");
+                path = RegistryUtil.GetValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2ACBF1FA-F5C3-4B19-A774-B22A31F231B9}_is1", "InstallLocation");
                 if (path != null)
                 {
                     path = Path.Combine(path, "mpc-hc64.exe");
@@ -276,7 +277,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                 }
 
-                path = Utilities.GetRegistryValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1", "InstallLocation");
+                path = RegistryUtil.GetValue(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\{2624B969-7135-4EB1-B0F6-2D8C397B45F7}_is1", "InstallLocation");
                 if (path != null)
                 {
                     path = Path.Combine(path, "mpc-hc.exe");

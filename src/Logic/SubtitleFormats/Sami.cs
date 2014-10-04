@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
@@ -188,9 +189,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
                 return WebUtility.HtmlEncode(text);
             else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
-                return HtmlUtils.EncodeNamed(text);
+                return HtmlUtil.EncodeNamed(text);
             else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
-                return HtmlUtils.EncodeNumeric(text);
+                return HtmlUtil.EncodeNumeric(text);
             return text;
         }
 

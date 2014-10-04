@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoFormats;
@@ -361,11 +362,11 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
-                    if (FileUtils.IsBluRaySup(fileName))
+                    if (FileUtil.IsBluRaySup(fileName))
                     {
                         item.SubItems.Add("Blu-ray");
                     }
-                    else if (FileUtils.IsVobSub(fileName))
+                    else if (FileUtil.IsVobSub(fileName))
                     {
                         item.SubItems.Add("VobSub");
                     }
@@ -680,12 +681,12 @@ namespace Nikse.SubtitleEdit.Forms
                     var bluRaySubtitles = new List<BluRaySupParser.PcsData>();
                     bool isVobSub = false;
                     bool isMatroska = false;
-                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtils.IsBluRaySup(fileName))
+                    if (format == null && fileName.EndsWith(".sup", StringComparison.OrdinalIgnoreCase) && FileUtil.IsBluRaySup(fileName))
                     {
                         var log = new StringBuilder();
                         bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
                     }
-                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtils.IsVobSub(fileName))
+                    else if (format == null && fileName.EndsWith(".sub", StringComparison.OrdinalIgnoreCase) && FileUtil.IsVobSub(fileName))
                     {
                         isVobSub = true;
                     }
@@ -1178,11 +1179,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ext != ".png" && ext != ".jpg" && ext != ".dll" && ext != ".exe" && ext != ".zip")
                     {
                         var fi = new FileInfo(fileName);
-                        if (ext == ".sub" && FileUtils.IsVobSub(fileName))
+                        if (ext == ".sub" && FileUtil.IsVobSub(fileName))
                         {
                             AddFromSearch(fileName, fi, "VobSub");
                         }
-                        else if (ext == ".sup" && FileUtils.IsBluRaySup(fileName))
+                        else if (ext == ".sup" && FileUtil.IsBluRaySup(fileName))
                         {
                             AddFromSearch(fileName, fi, "Blu-ray");
                         }

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -209,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             long firstNavStartPTS = 0;
 
-            using (var fs = FileUtils.RetryOpenRead(vobFileName))
+            using (var fs = FileUtil.RetryOpenRead(vobFileName))
             {
                 byte[] buffer = new byte[0x800];
                 long position = 0;

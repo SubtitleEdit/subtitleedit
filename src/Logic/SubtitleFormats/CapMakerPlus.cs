@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (fileName.EndsWith(".cap", StringComparison.OrdinalIgnoreCase))
                     {
-                        byte[] buffer = Utilities.ReadAllBytes(fileName);
+                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
                         if (buffer[0] == 0x2b) // "+"
                             return true;
                     }
@@ -180,7 +181,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
             int i = 128;
             Paragraph last = null;

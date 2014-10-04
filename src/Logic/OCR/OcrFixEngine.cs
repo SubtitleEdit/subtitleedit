@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Forms;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
 using System;
@@ -985,7 +986,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 string word = words[i].TrimStart('\'');
                 string wordNotEndTrimmed = word;
                 word = word.TrimEnd('\'');
-                string wordNoItalics = HtmlUtils.RemoveOpenCloseTags(word, HtmlUtils.TagItalic);
+                string wordNoItalics = HtmlUtil.RemoveOpenCloseTags(word, HtmlUtil.TagItalic);
                 if (!IsWordKnownOrNumber(wordNoItalics, line) && !localIgnoreWords.Contains(wordNoItalics))
                 {
                     bool correct = DoSpell(word);
@@ -1160,7 +1161,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static string GetDashedWordBefore(string word, string line, string[] words, int index)
         {
             if (index > 0 && line.Contains(words[index - 1] + "-" + word))
-                return HtmlUtils.RemoveOpenCloseTags(words[index - 1] + "-" + word, HtmlUtils.TagItalic);
+                return HtmlUtil.RemoveOpenCloseTags(words[index - 1] + "-" + word, HtmlUtil.TagItalic);
 
             return null;
         }
@@ -1168,7 +1169,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private static string GetDashedWordAfter(string word, string line, string[] words, int index)
         {
             if (index < words.Length - 1 && line.Contains(word + "-" + words[index + 1].Replace("</i>", string.Empty)))
-                return HtmlUtils.RemoveOpenCloseTags(word + "-" + words[index + 1], HtmlUtils.TagItalic);
+                return HtmlUtil.RemoveOpenCloseTags(word + "-" + words[index + 1], HtmlUtil.TagItalic);
 
             return null;
         }
@@ -1402,7 +1403,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 return 0;
 
             int wordsNotFound = 0;
-            var words = HtmlUtils.RemoveOpenCloseTags(line, HtmlUtils.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+            var words = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic).Split((Environment.NewLine + " ¡¿,.!?:;()[]{}+-$£\"#&%…“”").ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
             for (int i = 0; i < words.Length; i++)
             {
                 string word = words[i];

@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -219,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (var line in HtmlUtils.RemoveOpenCloseTags(text, HtmlUtils.TagItalic, HtmlUtils.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 if (subtitleAlignLeft)
                     lefts.Add(5);

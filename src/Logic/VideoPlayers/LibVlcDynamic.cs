@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -529,14 +530,14 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
             }
 
             // XP via registry path
-            path = Utilities.GetRegistryValue(@"SOFTWARE\VideoLAN\VLC", "InstallDir");
+            path = RegistryUtil.GetValue(@"SOFTWARE\VideoLAN\VLC", "InstallDir");
             if (path != null && Directory.Exists(path))
                 path = Path.Combine(path, fileName);
             if (File.Exists(path))
                 return path;
 
             // Winows 7 via registry path
-            path = Utilities.GetRegistryValue(@"SOFTWARE\Wow6432Node\VideoLAN\VLC", "InstallDir");
+            path = RegistryUtil.GetValue(@"SOFTWARE\Wow6432Node\VideoLAN\VLC", "InstallDir");
             if (path != null && Directory.Exists(path))
                 path = Path.Combine(path, fileName);
             if (File.Exists(path))
