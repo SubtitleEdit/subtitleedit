@@ -1291,7 +1291,7 @@ namespace Nikse.SubtitleEdit.Forms
             item.SubItems.Add("-");
             listViewInputFiles.Items.Add(item);
         }
-        
+
         private void BatchConvert_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

@@ -1435,7 +1435,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 _spellCheck.Dispose();
                 _spellCheck = null;
-            }                       
+            }
         }
 
     }
