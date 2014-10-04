@@ -5836,6 +5836,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (result == DialogResult.No)
                         {
+                            _spellCheckForm.Dispose();
                             _spellCheckForm = new SpellCheck();
                             _spellCheckForm.DoSpellCheck(autoDetect, _subtitle, dictionaryFolder, this, startFromLine);
                         }
