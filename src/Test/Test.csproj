@@ -49,7 +49,8 @@
     <Compile Include="Logic\Dictionaries\NamesListTest.cs" />
     <Compile Include="Core\HtmlUtilTest.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceListTest.cs" />
-    <Compile Include="Logic\TransportStream\UnitTest1.cs" />
+    <Compile Include="Logic\TransportStream\TransportStreamTest.cs" />
+    <Compile Include="Logic\VideoFormats\MatroskaTest.cs" />
     <Compile Include="Logic\VobSub\VobSubTest.cs" />
     <Compile Include="RemoveTextForHearImpairedTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -74,6 +75,9 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Content Include="Files\sample_MKV_SRT.mkv">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Files\sample_TS_with_graphics.ts">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

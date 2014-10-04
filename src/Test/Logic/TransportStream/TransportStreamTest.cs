@@ -5,10 +5,10 @@ namespace Test.Logic.TransportStream
 {
     [TestClass]
     [DeploymentItem("Files")]
-    public class UnitTest1
+    public class TransportStreamTest
     {
         [TestMethod]
-        public void TransportStreamTest()
+        public void TransportStreamTest1()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_TS_with_graphics.ts");
             var parser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
