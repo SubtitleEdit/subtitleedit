@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Forms;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -576,7 +577,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-                        byte[] buffer = Utilities.ReadAllBytes(fileName);
+                        byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
                         EbuGeneralSubtitleInformation header = ReadHeader(buffer);
                         if (header.DiskFormatCode.StartsWith("STL23") ||
                             header.DiskFormatCode.StartsWith("STL24") ||
@@ -609,7 +610,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            byte[] buffer = Utilities.ReadAllBytes(fileName);
+            byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
             EbuGeneralSubtitleInformation header = ReadHeader(buffer);
             subtitle.Header = Encoding.UTF8.GetString(buffer);
             Paragraph last = null;

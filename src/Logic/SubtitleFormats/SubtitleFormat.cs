@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -232,7 +233,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(Utilities.ReadAllBytes(pluginFileName));
+                            System.Reflection.Assembly assembly = System.Reflection.Assembly.Load(FileUtil.ReadAllBytesShared(pluginFileName));
                             string objectName = Path.GetFileNameWithoutExtension(pluginFileName);
                             if (assembly != null)
                             {
