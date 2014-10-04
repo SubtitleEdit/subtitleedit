@@ -1650,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         var cp = GetColorAndPosition(part);
                         if (cp != null)
                         {
-                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine) && string.IsNullOrWhiteSpace(sb.ToString()))
+                            if (cp.Y > 0 && y >= 0 && cp.Y > y && !sb.ToString().EndsWith(Environment.NewLine) && !string.IsNullOrWhiteSpace(sb.ToString()))
                                 sb.AppendLine();
                             if (cp.Y > 0)
                                 y = cp.Y;
