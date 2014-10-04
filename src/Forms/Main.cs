@@ -5711,7 +5711,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     _fileName = _subtitle.UndoHistory(showHistory.SelectedIndex, out subtitleFormatFriendlyName, out _fileDateTime, out _subtitleAlternate, out _subtitleAlternateFileName);
 
-                    if (oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
+                    if (oldFileName == null || oldFileName.Equals(_fileName, StringComparison.OrdinalIgnoreCase))
                         _fileDateTime = oldFileDateTime; // undo will not give overwrite-newer-file warning
 
                     SetTitle();
