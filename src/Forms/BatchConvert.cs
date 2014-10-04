@@ -1170,7 +1170,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SearchFolder(string path)
         {
-
             foreach (string fileName in Directory.GetFiles(path))
             {
                 try
@@ -1179,18 +1178,86 @@ namespace Nikse.SubtitleEdit.Forms
                     if (ext != ".png" && ext != ".jpg" && ext != ".dll" && ext != ".exe" && ext != ".zip")
                     {
                         var fi = new FileInfo(fileName);
-                        if (fi.Length < 1024 * 1024) // max 1 mb
+                        if (ext == ".sub" && FileUtils.IsVobSub(fileName))
                         {
-                            Encoding encoding;
-                            var sub = new Subtitle();
-                            SubtitleFormat format = sub.LoadSubtitle(fileName, out encoding, null);
-                            if (format != null)
+                            AddFromSearch(fileName, fi, "VobSub");
+                        }
+                        else if (ext == ".sup" && FileUtils.IsBluRaySup(fileName))
+                        {
+                            AddFromSearch(fileName, fi, "Blu-ray");
+                        }
+                        else
+                        {
+                            if (fi.Length < 1024 * 1024) // max 1 mb
                             {
-                                var item = new ListViewItem(fileName);
-                                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
-                                item.SubItems.Add(format.Name);
-                                item.SubItems.Add("-");
-                                listViewInputFiles.Items.Add(item);
+                                Encoding encoding;
+                                var sub = new Subtitle();
+                                var format = sub.LoadSubtitle(fileName, out encoding, null);
+                                if (format == null)
+                                {
+                                    var ebu = new Ebu();
+                                    if (ebu.IsMine(null, fileName))
+                                        format = ebu;
+                                }
+                                if (format == null)
+                                {
+                                    var pac = new Pac();
+                                    if (pac.IsMine(null, fileName))
+                                        format = pac;
+                                }
+                                if (format == null)
+                                {
+                                    var cavena890 = new Cavena890();
+                                    if (cavena890.IsMine(null, fileName))
+                                        format = cavena890;
+                                }
+                                if (format == null)
+                                {
+                                    var spt = new Spt();
+                                    if (spt.IsMine(null, fileName))
+                                        format = spt;
+                                }
+                                if (format == null)
+                                {
+                                    var cheetahCaption = new CheetahCaption();
+                                    if (cheetahCaption.IsMine(null, fileName))
+                                        format = cheetahCaption;
+                                }
+                                if (format == null)
+                                {
+                                    var capMakerPlus = new CapMakerPlus();
+                                    if (capMakerPlus.IsMine(null, fileName))
+                                        format = capMakerPlus;
+                                }
+                                if (format == null)
+                                {
+                                    var captionate = new Captionate();
+                                    if (captionate.IsMine(null, fileName))
+                                        format = captionate;
+                                }
+                                if (format == null)
+                                {
+                                    var ultech130 = new Ultech130();
+                                    if (ultech130.IsMine(null, fileName))
+                                        format = ultech130;
+                                }
+                                if (format == null)
+                                {
+                                    var nciCaption = new NciCaption();
+                                    if (nciCaption.IsMine(null, fileName))
+                                        format = nciCaption;
+                                }
+                                if (format == null)
+                                {
+                                    var avidStl = new AvidStl();
+                                    if (avidStl.IsMine(null, fileName))
+                                        format = avidStl;
+                                }
+
+                                if (format != null)
+                                {
+                                    AddFromSearch(fileName, fi, format.Name);
+                                }
                             }
                         }
                         progressBar1.Refresh();
@@ -1215,6 +1282,15 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private void AddFromSearch(string fileName, FileInfo fi, string nameOfFormat)
+        {
+            var item = new ListViewItem(fileName);
+            item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+            item.SubItems.Add(nameOfFormat);
+            item.SubItems.Add("-");
+            listViewInputFiles.Items.Add(item);
+        }
+        
         private void BatchConvert_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
