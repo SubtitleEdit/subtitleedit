@@ -578,6 +578,18 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesChange2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "To be,or not to be!");
+                target.FixMissingSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "To be, or not to be!");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixMissingSpacesNoChange2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -612,7 +624,66 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixMissingSpacesNoChange5Greek()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Aφαίρεσαν ό,τι αντρικό είχες.");
+                target.Language = "el"; // Greek
+                target.FixMissingSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Aφαίρεσαν ό,τι αντρικό είχες.");
+            }
+        }
+
         #endregion Fix missing spaces
+
+        #region Fix unneeded spaces
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpaces1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "To be , or not to be!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "To be, or not to be!");
+            }
+        }
+
+        public void FixUnneededSpaces2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, " To be, or not to be!");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, " To be, or not to be!");
+            }
+        }
+
+        public void FixUnneededSpaces3()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "To be , or not to be! ");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "To be, or not to be!");
+            }
+        }
+
+        public void FixUnneededSpaces4()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "To be , or not to be! " + Environment.NewLine + " Line two.");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "To be, or not to be!" + Environment.NewLine + "Line two.");
+            }
+        }
+
+        #endregion Fix unneeded spaces
 
         #region Start with uppercase after paragraph
 
