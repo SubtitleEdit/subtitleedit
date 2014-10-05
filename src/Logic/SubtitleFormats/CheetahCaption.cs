@@ -96,6 +96,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     Paragraph next = subtitle.GetParagraphOrDefault(index + 1);
                     string text = p.Text;
 
+                    var bufferShort = new byte[]
+                    {
+                        0,
+                        0,
+                        3, // justification, 1=left, 2=right, 3=center
+                        0xE, //horizontal position, 1=top, F=bottom
+                        0x10 //horizontal position, 3=left, 0x10=center, 0x19=right
+                    };
+
                     //styles + ?
                     buffer = new byte[]
                     {
@@ -121,19 +130,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an8}") || text.StartsWith("{\\an9}"))
                     {
                         buffer[7] = 1; // align top (vertial)
+                        bufferShort[3] = 1; // align top (vertial)
                     }
                     else if (text.StartsWith("{\\an4}") || text.StartsWith("{\\an5}") || text.StartsWith("{\\an6}"))
                     {
                         buffer[7] = 8; // center (vertical)
+                        bufferShort[3] = 8; // align top (vertial)
                     }
 
                     if (text.StartsWith("{\\an7}") || text.StartsWith("{\\an4}") || text.StartsWith("{\\an1}"))
                     {
                         buffer[8] = 2; // align left (horizontal)
+                        bufferShort[4] = 2; // align left (horizontal)
                     }
                     else if (text.StartsWith("{\\an9}") || text.StartsWith("{\\an6}") || text.StartsWith("{\\an3}"))
                     {
                         buffer[8] = 0x1e; // align right (vertical)
+                        bufferShort[4] = 0x1e; // align right (vertical)
                     }
 
                     int startTag = text.IndexOf('}');
@@ -174,25 +187,36 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     int length = textBytes.Count + 20;
                     long end = fs.Position + length;
-                    fs.WriteByte((byte)(length));
-
                     if (Configuration.Settings.SubtitleSettings.CheetahCaptionAlwayWriteEndTime || (next != null && next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds >= 1500))
                     {
-                        fs.WriteByte(0x62); // ?
+                        fs.WriteByte((byte)(length));
+
+                        if (p.Text.Trim().Contains(Environment.NewLine))
+                            fs.WriteByte(0x62); // two lines?
+                        else
+                            fs.WriteByte(0x61); // one line?
+
                         WriteTime(fs, p.StartTime);
                         WriteTime(fs, p.EndTime);
+                        fs.Write(buffer, 0, buffer.Length); // styles
                     }
                     else
                     {
-                        fs.WriteByte(0x42); // ?
+                        length = textBytes.Count + 20 - (buffer.Length - bufferShort.Length);
+                        end = fs.Position + length;
+                        fs.WriteByte((byte)(length));
+
+                        if (p.Text.Trim().Contains(Environment.NewLine))
+                            fs.WriteByte(0x42); // two lines?
+                        else
+                            fs.WriteByte(0x41); // one line?
                         WriteTime(fs, p.StartTime);
                         fs.WriteByte(2);
                         fs.WriteByte(1);
                         fs.WriteByte(0);
                         fs.WriteByte(0);
+                        fs.Write(bufferShort, 0, bufferShort.Length); // styles
                     }
-
-                    fs.Write(buffer, 0, buffer.Length); // styles
 
                     foreach (byte b in textBytes) // text
                         fs.WriteByte(b);
@@ -309,7 +333,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     if (italics)
                         sb.Append("</i>");
-                    p.Text = sb.ToString();
+                    p.Text = sb.ToString().Trim();
                     p.Text = p.Text.Replace("</i>" + Environment.NewLine + "<i>", Environment.NewLine);
 
                     subtitle.Paragraphs.Add(p);
