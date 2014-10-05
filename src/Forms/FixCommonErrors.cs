@@ -201,6 +201,15 @@ namespace Nikse.SubtitleEdit.Forms
                     return "en";
                 return ci.TwoLetterISOLanguageName;
             }
+            set
+            {
+                for (int index = 0; index < comboBoxLanguage.Items.Count; index++)
+                {
+                    var item = comboBoxLanguage.Items[index];
+                    if (item.ToString() == value)
+                        comboBoxLanguage.SelectedIndex = index;
+                }
+            }
         }
 
         public void RunBatch(Subtitle subtitle, SubtitleFormat format, Encoding encoding, string language)
@@ -1335,6 +1344,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixMissingSpaces()
         {
+            string languageCode = Language;
             string fixAction = _language.FixMissingSpace;
             int missingSpaces = 0;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
@@ -1347,17 +1357,19 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     while (match.Success)
                     {
-                        if (!@"""”<.".Contains(p.Text[match.Index + 2]))
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                _totalFixes++;
-                                missingSpaces++;
+                        bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
 
-                                string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
+                        if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι") || p.Text.Substring(match.Index).StartsWith("ο,τι")))
+                            doFix = false;
+
+                        if (doFix && AllowFix(p, fixAction))
+                        {
+                            _totalFixes++;
+                            missingSpaces++;
+
+                            string oldText = p.Text;
+                            p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
+                            AddFixToListView(p, fixAction, oldText, p.Text);
                         }
                         match = match.NextMatch();
                     }
