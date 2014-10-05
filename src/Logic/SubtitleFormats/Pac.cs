@@ -1217,9 +1217,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         count++;
                     if (count == 2)
                     {
-                        index = start;
                         _codePage = 0;
-                        bool allOK = true;
+                        bool allOk = true;
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < LatinLetters.Count; i++)
                             sb.Append(LatinLetters[i]);
@@ -1227,27 +1226,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!latinLetters.Contains(ch))
-                                allOK = false;
+                                allOk = false;
                         }
-                        if (allOK)
+                        if (allOk)
                             return 0; // Latin
 
                         index = start;
                         _codePage = 1;
                         p = GetPacParagraph(ref index, buffer);
-                        allOK = true;
+                        allOk = true;
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch))
-                                allOK = false;
+                                allOk = false;
                         }
-                        if (allOK)
+                        if (allOk)
                             return 1; // Greek
 
                         index = start;
                         _codePage = 3;
                         p = GetPacParagraph(ref index, buffer);
-                        allOK = true;
+                        allOk = true;
                         sb = new StringBuilder();
                         for (int i = 0; i < ArabicLetters.Count; i++)
                             sb.Append(ArabicLetters[i]);
@@ -1255,15 +1254,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!arabicLetters.Contains(ch))
-                                allOK = false;
+                                allOk = false;
                         }
-                        if (allOK)
+                        if (allOk)
                             return 3; // Arabic
 
                         index = start;
                         _codePage = 4;
                         p = GetPacParagraph(ref index, buffer);
-                        allOK = true;
+                        allOk = true;
                         sb = new StringBuilder();
                         for (int i = 0; i < HebrewLetters.Count; i++)
                             sb.Append(HebrewLetters[i]);
@@ -1271,15 +1270,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!hebrewLetters.Contains(ch))
-                                allOK = false;
+                                allOk = false;
                         }
-                        if (allOK)
+                        if (allOk)
                             return 4; // Hebrew
 
                         index = start;
                         _codePage = 4;
                         p = GetPacParagraph(ref index, buffer);
-                        allOK = true;
+                        allOk = true;
                         sb = new StringBuilder();
                         for (int i = 0; i < CyrillicLetters.Count; i++)
                             sb.Append(CyrillicLetters[i]);
@@ -1287,9 +1286,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
                         {
                             if (!cyrillicLetters.Contains(ch))
-                                allOK = false;
+                                allOk = false;
                         }
-                        if (allOK)
+                        if (allOk)
                             return 6; // Cyrillic
 
                         return 0; // Latin
@@ -1343,22 +1342,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     previewBuffer[i] = textSample[i];
             }
 
-            var pacEncoding = new PacEncoding(previewBuffer, _fileName);
-            if (pacEncoding.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (var pacEncoding = new PacEncoding(previewBuffer, _fileName))
             {
-                _codePage = pacEncoding.CodePageIndex;
-                Configuration.Settings.General.LastPacCodePage = _codePage;
-            }
-            else
-            {
-                _codePage = -2;
+                if (pacEncoding.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    _codePage = pacEncoding.CodePageIndex;
+                    Configuration.Settings.General.LastPacCodePage = _codePage;
+                }
+                else
+                {
+                    _codePage = -2;
+                }
             }
         }
 
         private static byte[] GetLatinBytes(Encoding encoding, string text, byte alignment)
         {
             int i = 0;
-            byte[] buffer = new byte[text.Length * 2];
+            var buffer = new byte[text.Length * 2];
             int extra = 0;
             while (i < text.Length)
             {
@@ -1562,8 +1563,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             if (b > 13)
                 return encoding.GetString(buffer, index, 1);
-            else
-                return string.Empty;
+            return string.Empty;
         }
 
         public static string GetCyrillicString(byte[] buffer, ref int index)
