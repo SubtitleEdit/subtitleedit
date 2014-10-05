@@ -968,7 +968,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
             foreach (string name in _namesEtcMultiWordList)
             {
-                int start = tempLine.IndexOf(name, StringComparison.Ordinal);
+                int start = tempLine.FastIndexOf(name);
                 if (start >= 0)
                 {
                     if (start == 0 || (Environment.NewLine + @" ¡¿,.!?:;()[]{}+-$£""”“#&%…—♪").Contains(tempLine[start - 1]))
