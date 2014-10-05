@@ -128,7 +128,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (string name in namesEtc)
             {
-                int start = lower.IndexOf(name.ToLower(), StringComparison.Ordinal);
+                int start = lower.FastIndexOf(name.ToLower());
                 while (start >= 0 && start < lower.Length)
                 {
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||

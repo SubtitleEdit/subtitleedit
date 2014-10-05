@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -140,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
             string newText = input;
             string pre = string.Empty;
-            if (newText.StartsWith("<i>"))
+            if (newText.StartsWith("<i>", StringComparison.Ordinal))
             {
                 pre += "<i>";
                 newText = newText.Remove(0, 3);
@@ -150,7 +151,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 pre += newText[0];
                 newText = newText.Substring(1);
             }
-            if (newText.StartsWith("<i>"))
+            if (newText.StartsWith("<i>", StringComparison.Ordinal))
             {
                 pre += "<i>";
                 newText = newText.Remove(0, 3);
@@ -190,14 +191,15 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             newText = pre + newText;
 
             string post = string.Empty;
-            if (newText.EndsWith("</i>"))
+            if (newText.EndsWith("</i>", StringComparison.Ordinal))
             {
                 newText = newText.Remove(newText.Length - 4, 4);
                 post = "</i>";
             }
+
             foreach (string from in _endLineReplaceList.Keys)
             {
-                if (newText.EndsWith(from))
+                if (newText.EndsWith(from, StringComparison.Ordinal))
                 {
                     int position = (newText.Length - from.Length);
                     newText = newText.Remove(position).Insert(position, _endLineReplaceList[from]);
@@ -207,13 +209,13 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
 
             foreach (string from in PartialLineWordBoundaryReplaceList.Keys)
             {
-                if (newText.Contains(from))
+                if (newText.FastIndexOf(from) >= 0)
                     newText = ReplaceWord(newText, from, PartialLineWordBoundaryReplaceList[from]);
             }
 
             foreach (string from in _partialLineAlwaysReplaceList.Keys)
             {
-                if (newText.Contains(from))
+                if (newText.FastIndexOf(from) >= 0)
                     newText = newText.Replace(from, _partialLineAlwaysReplaceList[from]);
             }
 
@@ -251,7 +253,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 int i = 0;
                 while (s.Contains(letter) && i < 10)
                 {
-                    int index = s.IndexOf(letter, StringComparison.Ordinal);
+                    int index = s.FastIndexOf(letter);
                     s = AddToGuessList(list, s, index, letter, _partialWordReplaceList[letter]);
                     AddToGuessList(list, word, index, letter, _partialWordReplaceList[letter]);
                     i++;
