@@ -462,6 +462,7 @@
     <Word from="H€Y" to="Hey" />
     <Word from="H0we·ver" to="However" />
     <Word from="halftheir" to="half their" />
+    <Word from="hapPY" to="happy" />
     <Word from="haven'tspokerl" to="haven't spoken" />
     <Word from="hcle" to="hole" />
     <Word from="hcme" to="home" />
@@ -1102,6 +1103,7 @@
     <Word from="pshyco" to="psycho" />
     <Word from="puIIing" to="pulling" />
     <Word from="Putyourhand" to="Put your hand" />
+    <Word from="Qh" to="Oh" />
     <Word from="QkaY" to="Okay" />
     <Word from="Qpen" to="Open" />
     <Word from="QUYS" to="GUYS" />
@@ -1453,6 +1455,7 @@
     <Word from="wr/'2'/ng" to="writing" />
     <Word from="wrcng" to="wrong" />
     <Word from="wuuld" to="would" />
+    <Word from="_Yay" to="Yay" />
     <Word from="Y¤u'II" to="You'll" />
     <Word from="Y¤u'll" to="You'll" />
     <Word from="y¤u're" to="you're" />
