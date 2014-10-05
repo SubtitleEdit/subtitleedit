@@ -923,9 +923,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    var form = new MultipleReplace();
-                    form.Initialize(p.Subtitle);
-                    p.Subtitle = form.FixedSubtitle;
+                    using (var form = new MultipleReplace())
+                    {
+                        form.Initialize(p.Subtitle);
+                        p.Subtitle = form.FixedSubtitle;
+                    }
                 }
                 catch (Exception exception)
                 {
@@ -1030,20 +1032,24 @@ namespace Nikse.SubtitleEdit.Forms
             if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name)
             {
                 var sub = new Subtitle();
-                var form = new SubStationAlphaStyles(sub, new AdvancedSubStationAlpha());
-                form.MakeOnlyOneStyle();
-                if (form.ShowDialog(this) == DialogResult.OK)
+                using (var form = new SubStationAlphaStyles(sub, new AdvancedSubStationAlpha()))
                 {
-                    _assStyle = form.Header;
+                    form.MakeOnlyOneStyle();
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _assStyle = form.Header;
+                    }
                 }
             }
             else if (comboBoxSubtitleFormats.Text == new SubStationAlpha().Name)
             {
                 var sub = new Subtitle();
-                var form = new SubStationAlphaStyles(sub, new SubStationAlpha());
-                if (form.ShowDialog(this) == DialogResult.OK)
+                using (var form = new SubStationAlphaStyles(sub, new SubStationAlpha()))
                 {
-                    _ssaStyle = form.Header;
+                    if (form.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _ssaStyle = form.Header;
+                    }
                 }
             }
         }
@@ -1095,10 +1101,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonFixCommonErrorSettings_Click(object sender, EventArgs e)
         {
-            var form = new FixCommonErrors();
-            form.RunBatchSettings(new Subtitle(), GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
-            form.ShowDialog(this);
-            Configuration.Settings.Tools.BatchConvertLanguage = form.Language;
+            using (var form = new FixCommonErrors())
+            {
+                form.RunBatchSettings(new Subtitle(), GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage);
+                form.ShowDialog(this);
+                Configuration.Settings.Tools.BatchConvertLanguage = form.Language;
+            }
         }
 
         private void BatchConvert_FormClosing(object sender, FormClosingEventArgs e)
@@ -1124,9 +1132,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
         {
-            var form = new MultipleReplace();
-            form.Initialize(new Subtitle());
-            form.ShowDialog(this);
+            using (var form = new MultipleReplace())
+            {
+                form.Initialize(new Subtitle());
+                form.ShowDialog(this);
+            }
         }
 
         private void checkBoxOverwriteOriginalFiles_CheckedChanged(object sender, EventArgs e)
@@ -1300,9 +1310,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
         {
-            var form = new FormRemoveTextForHearImpaired();
-            form.InitializeSettingsOnly();
-            form.ShowDialog(this);
+            using (var form = new FormRemoveTextForHearImpaired())
+            {
+                form.InitializeSettingsOnly();
+                form.ShowDialog(this);
+            }
         }
 
     }

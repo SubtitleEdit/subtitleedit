@@ -6770,32 +6770,35 @@ namespace Nikse.SubtitleEdit.Forms
 
         public DialogResult EditImageCompareCharacters(string name, string text)
         {
-            var formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString(), null, _binaryOcrDb);
-            formVobSubEditCharacters.Initialize(name, text);
-            DialogResult result = formVobSubEditCharacters.ShowDialog();
-            if (result == DialogResult.OK)
+            using (var formVobSubEditCharacters = new VobSubEditCharacters(comboBoxCharacterDatabase.SelectedItem.ToString(), null, _binaryOcrDb))
             {
-                if (_binaryOcrDb != null)
+
+                formVobSubEditCharacters.Initialize(name, text);
+                DialogResult result = formVobSubEditCharacters.ShowDialog();
+                if (result == DialogResult.OK)
                 {
-                    _binaryOcrDb.Save();
+                    if (_binaryOcrDb != null)
+                    {
+                        _binaryOcrDb.Save();
+                    }
+                    else
+                    {
+                        _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
+                        string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                        _compareDoc.Save(path + "Images.xml");
+                        Cursor = Cursors.WaitCursor;
+                        if (formVobSubEditCharacters.ChangesMade)
+                            _binaryOcrDb.LoadCompareImages();
+                        Cursor = Cursors.Default;
+                    }
+                    return result;
                 }
-                else
-                {
-                    _compareDoc = formVobSubEditCharacters.ImageCompareDocument;
-                    string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
-                    _compareDoc.Save(path + "Images.xml");
-                    Cursor = Cursors.WaitCursor;
-                    if (formVobSubEditCharacters.ChangesMade)
-                        _binaryOcrDb.LoadCompareImages();
-                    Cursor = Cursors.Default;
-                }
+                Cursor = Cursors.WaitCursor;
+                if (formVobSubEditCharacters.ChangesMade)
+                    _binaryOcrDb.LoadCompareImages();
+                Cursor = Cursors.Default;
                 return result;
             }
-            Cursor = Cursors.WaitCursor;
-            if (formVobSubEditCharacters.ChangesMade)
-                _binaryOcrDb.LoadCompareImages();
-            Cursor = Cursors.Default;
-            return result;
         }
 
         private void VobSubOcr_KeyDown(object sender, KeyEventArgs e)
@@ -7934,18 +7937,19 @@ namespace Nikse.SubtitleEdit.Forms
                         comboBoxDictionaries_SelectedIndexChanged(null, null);
 
                     text = text.Substring(text.IndexOf(':') + 1).Trim();
-                    var form = new AddToNamesList();
-                    form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
-                    if (form.ShowDialog(this) == DialogResult.OK)
+                    using (var form = new AddToNamesList())
                     {
-                        comboBoxDictionaries_SelectedIndexChanged(null, null);
-                        ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
+                        form.Initialize(_subtitle, comboBoxDictionaries.Text, text);
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            comboBoxDictionaries_SelectedIndexChanged(null, null);
+                            ShowStatus(string.Format(Configuration.Settings.Language.Main.NameXAddedToNamesEtcList, form.NewName));
+                        }
+                        else if (!string.IsNullOrEmpty(form.NewName))
+                        {
+                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
+                        }
                     }
-                    else if (!string.IsNullOrEmpty(form.NewName))
-                    {
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.NameXNotAddedToNamesEtcList, form.NewName));
-                    }
-                    form.Dispose();
                 }
             }
         }
@@ -7958,18 +7962,19 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.Contains(':'))
                 {
                     text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
-                    var form = new AddToUserDic();
-                    form.Initialize(comboBoxDictionaries.Text, text);
-                    if (form.ShowDialog(this) == DialogResult.OK)
+                    using (var form = new AddToUserDic())
                     {
-                        comboBoxDictionaries_SelectedIndexChanged(null, null);
-                        ShowStatus(string.Format(Configuration.Settings.Language.Main.WordXAddedToUserDic, form.NewWord));
+                        form.Initialize(comboBoxDictionaries.Text, text);
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            comboBoxDictionaries_SelectedIndexChanged(null, null);
+                            ShowStatus(string.Format(Configuration.Settings.Language.Main.WordXAddedToUserDic, form.NewWord));
+                        }
+                        else if (!string.IsNullOrEmpty(form.NewWord))
+                        {
+                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.WordXNotAddedToUserDic, form.NewWord));
+                        }
                     }
-                    else if (!string.IsNullOrEmpty(form.NewWord))
-                    {
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.WordXNotAddedToUserDic, form.NewWord));
-                    }
-                    form.Dispose();
                 }
             }
         }
@@ -7982,16 +7987,18 @@ namespace Nikse.SubtitleEdit.Forms
                 if (text.Contains(':'))
                 {
                     text = text.Substring(text.IndexOf(':') + 1).Trim().ToLower();
-                    var form = new AddToOcrReplaceList();
-                    form.Initialize(_languageId, comboBoxDictionaries.Text, text);
-                    if (form.ShowDialog(this) == DialogResult.OK)
+                    using (var form = new AddToOcrReplaceList())
                     {
-                        comboBoxDictionaries_SelectedIndexChanged(null, null);
-                        ShowStatus(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
-                    }
-                    else
-                    {
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXNotAdded, form.NewSource, form.NewTarget));
+                        form.Initialize(_languageId, comboBoxDictionaries.Text, text);
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            comboBoxDictionaries_SelectedIndexChanged(null, null);
+                            ShowStatus(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXAdded, form.NewSource, form.NewTarget));
+                        }
+                        else
+                        {
+                            MessageBox.Show(string.Format(Configuration.Settings.Language.Main.OcrReplacePairXNotAdded, form.NewSource, form.NewTarget));
+                        }
                     }
                 }
             }
@@ -8031,9 +8038,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemSetUnItalicFactor_Click(object sender, EventArgs e)
         {
-            var form = new VobSubOcrSetItalicFactor(GetSubtitleBitmap(_selectedIndex), _unItalicFactor);
-            form.ShowDialog(this);
-            _unItalicFactor = form.GetUnItalicFactor();
+            using (var form = new VobSubOcrSetItalicFactor(GetSubtitleBitmap(_selectedIndex), _unItalicFactor))
+            {
+                form.ShowDialog(this);
+                _unItalicFactor = form.GetUnItalicFactor();
+            }
         }
 
         private void vobSubToolStripMenuItem_Click(object sender, EventArgs e)
@@ -8126,14 +8135,16 @@ namespace Nikse.SubtitleEdit.Forms
                 LoadNOcrWithCurrentLanguage();
             }
 
-            var form = new VobSubNOcrEdit(_nOcrDb.OcrCharacters, null);
-            if (form.ShowDialog(this) == DialogResult.OK)
+            using (var form = new VobSubNOcrEdit(_nOcrDb.OcrCharacters, null))
             {
-                SaveNOcrWithCurrentLanguage();
-            }
-            else
-            {
-                LoadNOcrWithCurrentLanguage();
+                if (form.ShowDialog(this) == DialogResult.OK)
+                {
+                    SaveNOcrWithCurrentLanguage();
+                }
+                else
+                {
+                    LoadNOcrWithCurrentLanguage();
+                }
             }
         }
 
@@ -8334,9 +8345,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void nOcrTrainingToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            VobSubNOcrTrain form = new VobSubNOcrTrain();
-            form.Initialize(_nOcrDb);
-            form.Show(this);
+            using (var form = new VobSubNOcrTrain())
+            {
+                form.Initialize(_nOcrDb);
+                form.Show(this);
+            }
         }
 
         private OcrFixEngine.AutoGuessLevel GetAutoGuessLevel()

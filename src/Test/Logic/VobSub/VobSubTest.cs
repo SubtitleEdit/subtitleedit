@@ -13,12 +13,13 @@ namespace Test.Logic.VobSub
         public void VobSubWriteAndReadTwoBitmaps()
         {
             string fileName = Guid.NewGuid() + ".sub";
-            var writer = new VobSubWriter(fileName, 800, 600, 10, 32, Color.White, Color.Black, true, "English", "en");
-            var p1 = new Paragraph("Line1", 0, 1000);
-            var p2 = new Paragraph("Line2", 2000, 3000);
-            writer.WriteParagraph(p1, new Bitmap(200, 20), ContentAlignment.BottomCenter);
-            writer.WriteParagraph(p2, new Bitmap(200, 20), ContentAlignment.BottomCenter);
-            writer.Dispose();
+            using (var writer = new VobSubWriter(fileName, 800, 600, 10, 32, Color.White, Color.Black, true, "English", "en"))
+            {
+                var p1 = new Paragraph("Line1", 0, 1000);
+                var p2 = new Paragraph("Line2", 2000, 3000);
+                writer.WriteParagraph(p1, new Bitmap(200, 20), ContentAlignment.BottomCenter);
+                writer.WriteParagraph(p2, new Bitmap(200, 20), ContentAlignment.BottomCenter);
+            }
 
             var reader = new VobSubParser(true);
             reader.Open(fileName);

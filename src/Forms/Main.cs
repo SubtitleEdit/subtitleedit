@@ -10225,85 +10225,86 @@ namespace Nikse.SubtitleEdit.Forms
             if (IsSubtitleLoaded)
             {
                 SaveSubtitleListviewIndexes();
-                var changeCasing = new ChangeCasing();
-                _formPositionsAndSizes.SetPositionAndSize(changeCasing);
-                if (onlySelectedLines)
-                    changeCasing.Text += " - " + _language.SelectedLines;
-                ReloadFromSourceView();
-                if (changeCasing.ShowDialog(this) == DialogResult.OK)
+                using (var changeCasing = new ChangeCasing())
                 {
-                    MakeHistoryForUndo(_language.BeforeChangeCasing);
-
-                    Cursor.Current = Cursors.WaitCursor;
-                    var selectedLines = new Subtitle();
-                    selectedLines.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
+                    _formPositionsAndSizes.SetPositionAndSize(changeCasing);
                     if (onlySelectedLines)
+                        changeCasing.Text += " - " + _language.SelectedLines;
+                    ReloadFromSourceView();
+                    if (changeCasing.ShowDialog(this) == DialogResult.OK)
                     {
-                        foreach (int index in SubtitleListview1.SelectedIndices)
-                            selectedLines.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index]));
-                    }
-                    else
-                    {
-                        foreach (Paragraph p in _subtitle.Paragraphs)
-                            selectedLines.Paragraphs.Add(new Paragraph(p));
-                    }
+                        MakeHistoryForUndo(_language.BeforeChangeCasing);
 
-                    bool saveChangeCaseChanges = true;
-                    changeCasing.FixCasing(selectedLines, Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
-                    var changeCasingNames = new ChangeCasingNames();
-                    if (changeCasing.ChangeNamesToo)
-                    {
-                        changeCasingNames.Initialize(selectedLines);
-                        if (changeCasingNames.ShowDialog(this) == DialogResult.OK)
-                        {
-                            changeCasingNames.FixCasing();
-
-                            if (changeCasing.LinesChanged == 0)
-                                ShowStatus(string.Format(_language.CasingCompleteMessageOnlyNames, changeCasingNames.LinesChanged, _subtitle.Paragraphs.Count));
-                            else
-                                ShowStatus(string.Format(_language.CasingCompleteMessage, changeCasing.LinesChanged, _subtitle.Paragraphs.Count, changeCasingNames.LinesChanged));
-                        }
-                        else
-                        {
-                            saveChangeCaseChanges = false;
-                        }
-                    }
-                    else
-                    {
-                        ShowStatus(string.Format(_language.CasingCompleteMessageNoNames, changeCasing.LinesChanged, _subtitle.Paragraphs.Count));
-                    }
-
-                    if (saveChangeCaseChanges)
-                    {
+                        Cursor.Current = Cursors.WaitCursor;
+                        var selectedLines = new Subtitle();
+                        selectedLines.WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers;
                         if (onlySelectedLines)
                         {
-                            int i = 0;
                             foreach (int index in SubtitleListview1.SelectedIndices)
+                                selectedLines.Paragraphs.Add(new Paragraph(_subtitle.Paragraphs[index]));
+                        }
+                        else
+                        {
+                            foreach (Paragraph p in _subtitle.Paragraphs)
+                                selectedLines.Paragraphs.Add(new Paragraph(p));
+                        }
+
+                        bool saveChangeCaseChanges = true;
+                        changeCasing.FixCasing(selectedLines, Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
+                        var changeCasingNames = new ChangeCasingNames();
+                        if (changeCasing.ChangeNamesToo)
+                        {
+                            changeCasingNames.Initialize(selectedLines);
+                            if (changeCasingNames.ShowDialog(this) == DialogResult.OK)
                             {
-                                _subtitle.Paragraphs[index].Text = selectedLines.Paragraphs[i].Text;
-                                i++;
+                                changeCasingNames.FixCasing();
+
+                                if (changeCasing.LinesChanged == 0)
+                                    ShowStatus(string.Format(_language.CasingCompleteMessageOnlyNames, changeCasingNames.LinesChanged, _subtitle.Paragraphs.Count));
+                                else
+                                    ShowStatus(string.Format(_language.CasingCompleteMessage, changeCasing.LinesChanged, _subtitle.Paragraphs.Count, changeCasingNames.LinesChanged));
+                            }
+                            else
+                            {
+                                saveChangeCaseChanges = false;
                             }
                         }
                         else
                         {
-                            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                            ShowStatus(string.Format(_language.CasingCompleteMessageNoNames, changeCasing.LinesChanged, _subtitle.Paragraphs.Count));
+                        }
+
+                        if (saveChangeCaseChanges)
+                        {
+                            if (onlySelectedLines)
                             {
-                                _subtitle.Paragraphs[i].Text = selectedLines.Paragraphs[i].Text;
+                                int i = 0;
+                                foreach (int index in SubtitleListview1.SelectedIndices)
+                                {
+                                    _subtitle.Paragraphs[index].Text = selectedLines.Paragraphs[i].Text;
+                                    i++;
+                                }
+                            }
+                            else
+                            {
+                                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                                {
+                                    _subtitle.Paragraphs[i].Text = selectedLines.Paragraphs[i].Text;
+                                }
+                            }
+                            ShowSource();
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            if (changeCasing.LinesChanged > 0 || changeCasingNames.LinesChanged > 0)
+                            {
+                                _subtitleListViewIndex = -1;
+                                RestoreSubtitleListviewIndexes();
+                                UpdateSourceView();
                             }
                         }
-                        ShowSource();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        if (changeCasing.LinesChanged > 0 || changeCasingNames.LinesChanged > 0)
-                        {
-                            _subtitleListViewIndex = -1;
-                            RestoreSubtitleListviewIndexes();
-                            UpdateSourceView();
-                        }
+                        Cursor.Current = Cursors.Default;
                     }
-                    Cursor.Current = Cursors.Default;
+                    _formPositionsAndSizes.SavePositionAndSize(changeCasing);
                 }
-                _formPositionsAndSizes.SavePositionAndSize(changeCasing);
-                changeCasing.Dispose();
             }
             else
             {
