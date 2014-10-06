@@ -236,8 +236,8 @@
   <Dictionary>
     <EnglishName>Polish</EnglishName>
     <NativeName>polski</NativeName>
-    <DownloadLink>http://sjp.pl/slownik/ort/sjp-myspell-pl-20131125.zip</DownloadLink>
-    <Description>Zestaw polskich słowników do OpenOffice.org 3.0</Description>
+    <DownloadLink>http://sjp.pl/slownik/ort/sjp-myspell-pl-20141006.zip</DownloadLink>
+    <Description>Zestaw polskich słowników do OpenOffice.org 3.0 - 2014-10-06</Description>
   </Dictionary>
   <Dictionary>
     <EnglishName>Portuguese (Brazilian)</EnglishName>
@@ -254,7 +254,7 @@
   <Dictionary>
     <EnglishName>Romanian</EnglishName>
     <NativeName>română</NativeName>
-    <DownloadLink>http://www.i18n.ro/download/ooo/dictionaries-ro.oxt</DownloadLink>
+    <DownloadLink>http://downloads.sourceforge.net/project/aoo-extensions/1392/10/dict-ro.1.7.oxt?r=http%3A%2F%2Fextensions.openoffice.org%2Fen%2Fproject%2Fromanian-dictionary-pack-spell-checker-hyphenation-thesaurus&amp;ts=1412622467&amp;use_mirror=cznic</DownloadLink>
     <Description>Romanian Dictionaries</Description>
   </Dictionary>
   <Dictionary>
