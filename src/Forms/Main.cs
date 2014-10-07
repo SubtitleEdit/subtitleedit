@@ -7523,6 +7523,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string a = oldText.Substring(0, textIndex.Value).Trim();
                     string b = oldText.Substring(textIndex.Value).Trim();
+                    string aTrimmed = a.TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
+                    string bTrimmed = b.TrimEnd('"').TrimEnd().TrimEnd('\'').TrimEnd();
                     if (oldText.TrimStart().StartsWith("<i>") && oldText.TrimEnd().EndsWith("</i>") &&
                         Utilities.CountTagInText(oldText, "<i>") == 1 && Utilities.CountTagInText(oldText, "</i>") == 1)
                     {
@@ -7535,26 +7537,26 @@ namespace Nikse.SubtitleEdit.Forms
                         a = a + "</b>";
                         b = "<b>" + b;
                     }
-                    else if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
-                        b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
+                    else if (a.StartsWith('-') && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?')) &&
+                        b.StartsWith('-') && (bTrimmed.EndsWith('.') || bTrimmed.EndsWith('!') || bTrimmed.EndsWith('?')))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.TrimStart('-').TrimStart();
                     }
-                    else if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
-                        b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
+                    else if (a.StartsWith("<i>-") && (aTrimmed.EndsWith(".</i>") || aTrimmed.EndsWith("!</i>") || aTrimmed.EndsWith("?</i>")) &&
+                        b.StartsWith("<i>-") && (bTrimmed.EndsWith(".</i>") || bTrimmed.EndsWith("!</i>") || bTrimmed.EndsWith("?</i>")))
                     {
                         a = a.Remove(3, 1).Replace("  ", " ");
                         b = b.Remove(3, 1).Replace("  ", " ");
                     }
-                    else if (a.StartsWith('-') && (a.EndsWith('.') || a.EndsWith('!') || a.EndsWith('?')) &&
-                        b.StartsWith("<i>-") && (b.EndsWith(".</i>") || b.EndsWith("!</i>") || b.EndsWith("?</i>")))
+                    else if (a.StartsWith('-') && (aTrimmed.EndsWith('.') || aTrimmed.EndsWith('!') || aTrimmed.EndsWith('?')) &&
+                        b.StartsWith("<i>-") && (bTrimmed.EndsWith(".</i>") || bTrimmed.EndsWith("!</i>") || bTrimmed.EndsWith("?</i>")))
                     {
                         a = a.TrimStart('-').TrimStart();
                         b = b.Remove(3, 1).Replace("  ", " ").Trim();
                     }
-                    else if (a.StartsWith("<i>-") && (a.EndsWith(".</i>") || a.EndsWith("!</i>") || a.EndsWith("?</i>")) &&
-                        b.StartsWith('-') && (b.EndsWith('.') || b.EndsWith('!') || b.EndsWith('?')))
+                    else if (a.StartsWith("<i>-") && (aTrimmed.EndsWith(".</i>") || aTrimmed.EndsWith("!</i>") || aTrimmed.EndsWith("?</i>")) &&
+                        b.StartsWith('-') && (bTrimmed.EndsWith('.') || bTrimmed.EndsWith('!') || bTrimmed.EndsWith('?')))
                     {
                         a = a.Remove(3, 1).Replace("  ", " ").Trim();
                         b = b.TrimStart('-').TrimStart();
@@ -7565,7 +7567,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+                    var l0 = string.Empty;
+                    if (lines.Length > 0)
+                        l0 = lines[0].Trim().TrimEnd('"').TrimEnd('\'').Trim();
+                    if (lines.Length == 2 && (l0.EndsWith('.') || l0.EndsWith('!') || l0.EndsWith('?')))
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], language);
                         newParagraph.Text = Utilities.AutoBreakLine(lines[1], language);
