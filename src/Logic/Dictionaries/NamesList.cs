@@ -36,6 +36,10 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                     System.Diagnostics.Debug.WriteLine(exception.Message);
                 }
             }
+            else
+            {
+                LoadNamesList(Path.Combine(_dictionaryFolder, "names_etc.xml"), _namesList, _namesMultiList);
+            }
 
             LoadNamesList(GetLocalNamesFileName(), _namesList, _namesMultiList);
 
