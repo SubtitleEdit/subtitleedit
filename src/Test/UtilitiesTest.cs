@@ -36,6 +36,28 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLine4()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "- Seriously, though. Are you being bullied? - Nope.";
+            string s2 = Utilities.AutoBreakLine(s1);
+            string target = "- Seriously, though. Are you being bullied?" + Environment.NewLine + "- Nope.";
+            Assert.AreEqual(target, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLine5DoNoBreakAtPeriod()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "Oh, snap, we're still saying the same thing. This is amazing!";
+            string s2 = Utilities.AutoBreakLine(s1);
+            string target = "Oh, snap, we're still saying the" + Environment.NewLine + "same thing. This is amazing!";
+            Assert.AreEqual(target, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLineDialog1()
         {
             string s1 = "- Qu'est ce qui se passe ? - Je veux voir ce qu'ils veulent être.";
