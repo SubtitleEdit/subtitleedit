@@ -616,7 +616,7 @@ namespace Nikse.SubtitleEdit.Logic
             // try to find " - " with uppercase letter after (dialog)
             if (splitPos == -1 && s.Contains(" - "))
             {
-                for (int j = 0; j < (maximumLength / 2) + 5; j++)
+                for (int j = 0; j <= (maximumLength / 2) + 5; j++)
                 {
                     if (mid + j + 4 < s.Length)
                     {
@@ -648,6 +648,9 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
+            if (splitPos == maximumLength + 1 && s[maximumLength] != ' ') // only allow space for last char (as it does not count)
+                splitPos = -1;
+
             if (splitPos == -1)
             {
                 for (int j = 0; j < 15; j++)
@@ -676,9 +679,14 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             if (splitPos > maximumLength) // too long first line
-                splitPos = -1;
+            {
+                if (splitPos != maximumLength + 1 || s[maximumLength] != ' ') // allow for maxlength+1 char to be space (does not count)
+                    splitPos = -1;
+            }
             else if (splitPos >= 0 && s.Length - splitPos > maximumLength) // too long second line
+            {
                 splitPos = -1;
+            }
 
             if (splitPos == -1)
             {
