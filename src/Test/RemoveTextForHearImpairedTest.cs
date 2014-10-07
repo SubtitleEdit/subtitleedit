@@ -9,11 +9,11 @@ namespace Test
     ///This is a test class for FormRemoveTextForHearImpairedTest and is intended
     ///to contain all FormRemoveTextForHearImpairedTest Unit Tests
     ///</summary>
-    [TestClass()]
+    [TestClass]
     public class RemoveTextForHearImpairedTest
     {
 
-        private TestContext testContextInstance;
+        private TestContext _testContextInstance;
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -23,11 +23,11 @@ namespace Test
         {
             get
             {
-                return testContextInstance;
+                return _testContextInstance;
             }
             set
             {
-                testContextInstance = value;
+                _testContextInstance = value;
             }
         }
 
@@ -72,7 +72,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveColon
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonTest()
         {
@@ -89,9 +89,9 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveColonTest2a()
+        public void RemoveColonTest2A()
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -106,9 +106,9 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveColonTest2b()
+        public void RemoveColonTest2B()
         {
             var target = GetRemoveTextForHiLib();
             target.Settings.RemoveIfAllUppercase = false;
@@ -126,7 +126,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveHIInsideLine
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIInsideLine()
         {
@@ -146,7 +146,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveHI
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI1()
         {
@@ -165,7 +165,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveHI
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHI2()
         {
@@ -184,7 +184,7 @@ namespace Test
         /// <summary>
         ///A test for no removal
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHINot()
         {
@@ -202,7 +202,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveHI
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineItalic()
         {
@@ -222,7 +222,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveHI
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIMultilineBold()
         {
@@ -242,7 +242,7 @@ namespace Test
         /// <summary>
         ///A test for RemoveHI
         ///</summary>
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHISecondLineDelay()
         {
@@ -259,7 +259,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIQuotes()
         {
@@ -274,7 +274,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveHIDouble()
         {
@@ -290,7 +290,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveRemoveNameOfFirstLine()
         {
@@ -307,7 +307,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveRemoveNameOfFirstLineBold()
         {
@@ -324,7 +324,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections()
         {
@@ -340,7 +340,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections2()
         {
@@ -356,7 +356,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections3()
         {
@@ -372,7 +372,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections4()
         {
@@ -388,7 +388,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections5()
         {
@@ -404,7 +404,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6a()
         {
@@ -420,7 +420,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6b()
         {
@@ -436,7 +436,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections6bItalic()
         {
@@ -452,7 +452,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections7()
         {
@@ -468,7 +468,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections8()
         {
@@ -484,7 +484,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections9()
         {
@@ -500,7 +500,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections10()
         {
@@ -516,7 +516,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections10Italic()
         {
@@ -532,7 +532,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveInterjections11()
         {
@@ -548,7 +548,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonOnlyOnSeparateLine()
         {
@@ -565,7 +565,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase1()
         {
@@ -582,7 +582,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase2()
         {
@@ -599,7 +599,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfAllUppercase3()
         {
@@ -617,7 +617,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineIfParentheses3()
         {
@@ -635,7 +635,7 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod()]
+        [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextBeforeColonSecondLine()
         {
@@ -648,6 +648,57 @@ namespace Test
             target.Settings.ColonSeparateLine = false;
             string text = "- even if it was one week." + Environment.NewLine + "CANNING: Objection.";
             string expected = "- even if it was one week." + Environment.NewLine + "- Objection.";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextBeforeColonOnlyUpper1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.ColonSeparateLine = false;
+            string text = "RACHEL <i>&</i> ROSS: Hi there!";
+            string expected = "Hi there!";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextBeforeColonOnlyUpper2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.ColonSeparateLine = false;
+            string text = "RACHEL AND ROSS: Hi there!";
+            string expected = "Hi there!";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextBeforeColonOnlyUpper3Negative()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = true;
+            target.Settings.ColonSeparateLine = false;
+            string text = "RACHEL and ROSS: Hi there!";
+            string expected = "RACHEL and ROSS: Hi there!";
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
