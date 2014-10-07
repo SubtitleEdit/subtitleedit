@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Forms
 {
@@ -92,14 +92,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 if (indexOfColon > 0)
                 {
                     string pre = s.Substring(0, indexOfColon);
-                    if (Settings.RemoveTextBeforeColonOnlyUppercase && pre.Replace("<i>", string.Empty) != pre.Replace("<i>", string.Empty).ToUpper())
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase && Utilities.RemoveHtmlTags(pre, true) != Utilities.RemoveHtmlTags(pre, true).ToUpper())
                     {
                         newText = newText + Environment.NewLine + s;
                         newText = newText.Trim();
                     }
                     else
                     {
-                        StripableText st = new StripableText(pre);
+                        var st = new StripableText(pre);
                         if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(s, ":") == 1 &&
                             !newText.EndsWith('.') && !newText.EndsWith('!') && !newText.EndsWith('?') && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
                             s != s.ToUpper())
@@ -282,7 +282,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 {
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 4)
                     {
-                        StripableText st = new StripableText(newText, "", "");
+                        var st = new StripableText(newText, "", "");
                         newText = st.Pre + "- " + st.StrippedText + st.Post;
                     }
 
@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     indexOfDialogChar = second.IndexOf('-');
                     if (indexOfDialogChar < 0 || indexOfDialogChar > 6)
                     {
-                        StripableText st = new StripableText(second, "", "");
+                        var st = new StripableText(second, "", "");
                         second = st.Pre + "- " + st.StrippedText + st.Post;
                         newText = newText.Remove(indexOfNewLine) + Environment.NewLine + second;
                     }
@@ -299,7 +299,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             else if (!newText.Contains(Environment.NewLine) && newText.Contains('-'))
             {
-                StripableText st = new StripableText(newText);
+                var st = new StripableText(newText);
                 if (st.Pre.Contains('-'))
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
             }
@@ -345,7 +345,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             int noOfNamesRemovedNotInLineOne = 0;
             foreach (string s in parts)
             {
-                StripableText stSub = new StripableText(s, pre, post);
+                var stSub = new StripableText(s, pre, post);
                 if (!StartAndEndsWithHearImpariedTags(stSub.StrippedText))
                 {
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 string[] a = Utilities.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(new[] { '!', '?', '.' }, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length == 2)
                 {
-                    StripableText temp = new StripableText(text);
+                    var temp = new StripableText(text);
                     temp.StrippedText = temp.StrippedText.Replace(Environment.NewLine, " ");
                     int splitIndex = temp.StrippedText.LastIndexOf('!');
                     if (splitIndex == -1)
@@ -554,7 +554,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             string oldText = text;
 
-            string[] arr = Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            var arr = Configuration.Settings.Tools.Interjections.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             if (_interjectionList == null)
             {
                 _interjectionList = new List<string>();
