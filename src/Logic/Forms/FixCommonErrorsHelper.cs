@@ -1,4 +1,7 @@
-﻿namespace Nikse.SubtitleEdit.Logic.Forms
+﻿using System;
+using Nikse.SubtitleEdit.Core;
+
+namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class FixCommonErrorsHelper
     {
@@ -95,5 +98,71 @@
             }
             return text;
         }
+
+        public static string FixDialogsOnOneLine(string text, string language)
+        {
+            if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
+            {
+                string[] parts = text.Replace(" - ", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Length == 2)
+                {
+                    string part0 = Utilities.RemoveHtmlTags(parts[0]).Trim();
+                    string part1 = Utilities.RemoveHtmlTags(parts[1]).Trim();
+                    if (part0.Length > 1 && "-—!?.\"".Contains(part0[part0.Length - 1]) &&
+                        part1.Length > 1 && ("'" + Utilities.UppercaseLetters).Contains(part1[0]))
+                    {
+                        text = text.Replace(" - ", Environment.NewLine + "- ");
+                        if (Utilities.AllLettersAndNumbers.Contains(part0[0]))
+                        {
+                            if (text.StartsWith("<i>"))
+                                text = "<i>- " + text;
+                            else
+                                text = "- " + text;
+                        }
+                    }
+                }
+            }
+
+            if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("— -") || text.Contains("-- -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+            {
+                string temp = Utilities.AutoBreakLine(text, 99, 33, language);
+                var arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith('-') && arrTemp[1].TrimStart().StartsWith('-'))
+                    text = temp;
+                else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-") && arrTemp[1].TrimStart().StartsWith("<i>-"))
+                    text = temp;
+            }
+            else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("-- -") || text.Contains("— -")) && !text.Contains(Environment.NewLine))
+            {
+                string temp = Utilities.AutoBreakLine(text, language);
+                var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                if (arrTemp.Length == 2)
+                {
+                    if (arrTemp[1].TrimStart().StartsWith('-') || arrTemp[1].TrimStart().StartsWith("<i>-"))
+                        text = temp;
+                }
+                else
+                {
+                    int index = text.IndexOf(". -", StringComparison.Ordinal);
+                    if (index < 0)
+                        index = text.IndexOf("! -", StringComparison.Ordinal);
+                    if (index < 0)
+                        index = text.IndexOf("? -", StringComparison.Ordinal);
+                    if (index < 0)
+                        index = text.IndexOf("— -", StringComparison.Ordinal);
+                    if (index < 0 && text.IndexOf("-- -", StringComparison.Ordinal) > 0)
+                        index = text.IndexOf("-- -", StringComparison.Ordinal) + 1;
+                    if (index > 0)
+                    {
+                        text = text.Remove(index + 1, 1).Insert(index + 1, Environment.NewLine);
+                        text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                        text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                    }
+                }
+            }
+            return text;
+        }
+
     }
 }

@@ -512,6 +512,33 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixOcrErrorsNoChange()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "Yeah, see, that's not mine.");
+                target.FixOcrErrorsViaReplaceList("eng");
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Yeah, see, that's not mine.");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixOcrErrorsViaHardcodedRules1()
+        {
+            using (var form = new GoToLine())
+            {
+                Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
+                //string input = "i'I'll see you.";
+                const string input = "l-l'll see you.";
+                var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                Assert.AreEqual(res, "I-I'll see you.");
+            }
+        }
+
         #endregion Fix OCR errors
 
         #region Fix missing spaces
@@ -1041,6 +1068,7 @@ namespace Test
 
         #endregion Ellipses start
 
+        #region Fix uppercase I inside words
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUppercaseIInsideWords1()
@@ -1064,33 +1092,39 @@ namespace Test
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
             }
         }
+        #endregion
 
+        #region Fix dialogs on one line
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixOcrErrorsNoChange()
+        public void FixDialogsOnOneLine1()
         {
-            using (var target = GetFixCommonErrorsLib())
-            {
-                InitializeFixCommonErrorsLine(target, "Yeah, see, that's not mine.");
-                target.FixOcrErrorsViaReplaceList("eng");
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Yeah, see, that's not mine.");
-            }
+            const string source = "- I was here, putting our child to sleep-- - Emma.";
+            string target = "- I was here, putting our child to sleep--" + Environment.NewLine + "- Emma.";
+            string result = FixCommonErrorsHelper.FixDialogsOnOneLine(source, "en");
+            Assert.AreEqual(result, target);
         }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void FixOcrErrorsViaHardcodedRules1()
+        public void FixDialogsOnOneLine2()
         {
-            using (var form = new GoToLine())
-            {
-                Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
-                //string input = "i'I'll see you.";
-                const string input = "l-l'll see you.";
-                var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
-                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
-                Assert.AreEqual(res, "I-I'll see you.");
-            }
-        }
+            const string source = "- Seriously, though. Are you being bullied? - Nope.";
+            string target = "- Seriously, though. Are you being bullied?" + Environment.NewLine + "- Nope.";
+            string result = FixCommonErrorsHelper.FixDialogsOnOneLine(source, "en");
+            Assert.AreEqual(result, target);
+        }       
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDialogsOnOneLine3()
+        {
+            string source = "- Having sexual relationships" + Environment.NewLine + "with other women. - A'ight.";
+            string target = "- Having sexual relationships with other women." + Environment.NewLine + "- A'ight.";
+            string result = FixCommonErrorsHelper.FixDialogsOnOneLine(source, "en");
+            Assert.AreEqual(result, target);
+        }               
+        #endregion
 
     }
 }
