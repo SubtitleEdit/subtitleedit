@@ -1069,6 +1069,7 @@ namespace Test
         #endregion Ellipses start
 
         #region Fix uppercase I inside words
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUppercaseIInsideWords1()
@@ -1092,9 +1093,11 @@ namespace Test
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- I'll ring her." + Environment.NewLine + "- ...In a lot of trouble.");
             }
         }
-        #endregion
+
+        #endregion Fix uppercase I inside words
 
         #region Fix dialogs on one line
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixDialogsOnOneLine1()
@@ -1113,7 +1116,7 @@ namespace Test
             string target = "- Seriously, though. Are you being bullied?" + Environment.NewLine + "- Nope.";
             string result = FixCommonErrorsHelper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
-        }       
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -1123,8 +1126,9 @@ namespace Test
             string target = "- Having sexual relationships with other women." + Environment.NewLine + "- A'ight.";
             string result = FixCommonErrorsHelper.FixDialogsOnOneLine(source, "en");
             Assert.AreEqual(result, target);
-        }               
-        #endregion
+        }
+
+        #endregion Fix dialogs on one line
 
     }
 }
