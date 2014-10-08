@@ -1,4 +1,5 @@
 # Subtitle Edit
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/SubtitleEdit/subtitleedit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 *the subtitle editor :)*
 
