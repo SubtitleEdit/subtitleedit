@@ -6889,8 +6889,8 @@ namespace Nikse.SubtitleEdit.Forms
             var splitLines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             if (numberOfLines <= maxLines)
             {
-                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength*Math.Max(numberOfLines, 2) &&
-                    splitLines.Length == 2 && splitLines[0].StartsWith('-') && splitLines[1].StartsWith('-') && 
+                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2) &&
+                    splitLines.Length == 2 && splitLines[0].StartsWith('-') && splitLines[1].StartsWith('-') &&
                     (splitLines[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || splitLines[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     if (buttonUnBreak.Visible)
@@ -6900,7 +6900,7 @@ namespace Nikse.SubtitleEdit.Forms
                         buttonSplitLine.Visible = true;
                     }
                 }
-                else if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength*Math.Max(numberOfLines, 2))
+                else if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
                 {
                     lineTotal.ForeColor = Color.Black;
                     if (!textBoxHasFocus)
