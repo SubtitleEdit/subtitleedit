@@ -2868,7 +2868,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
             if (noOfFixes > 0)
-                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
+                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixDialogsOnOneLine, noOfFixes));
         }
 
         private void TurkishAnsiToUnicode()
