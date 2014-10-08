@@ -2520,8 +2520,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         tsb4.LoadSubtitle(_subtitle, null, fileName);
                         _oldSubtitleFormat = tsb4;
-                        this.SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        this.SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
                         encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
@@ -2563,7 +2563,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var bdnXml = new BdnXml();
-                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                         var list = new List<string>();
                         foreach (string l in arr)
                             list.Add(l);
@@ -2587,7 +2587,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var fcpImage = new FinalCutProImage();
-                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                         var list = new List<string>();
                         foreach (string l in arr)
                             list.Add(l);
@@ -2693,7 +2693,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var satBoxPng = new SatBoxPng();
-                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                         var list = new List<string>();
                         foreach (string l in arr)
                             list.Add(l);
@@ -2717,7 +2717,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var sst = new SonicScenaristBitmaps();
-                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                         var list = new List<string>();
                         foreach (string l in arr)
                             list.Add(l);
@@ -2739,7 +2739,7 @@ namespace Nikse.SubtitleEdit.Forms
                     try
                     {
                         var htmlSamiArray = new HtmlSamiArray();
-                        string[] arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
+                        var arr = File.ReadAllLines(fileName, Utilities.GetEncodingFromFile(fileName));
                         var list = new List<string>();
                         foreach (string l in arr)
                             list.Add(l);
@@ -3113,7 +3113,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAndOcrBdnXml(string fileName, BdnXml bdnXml, List<string> list)
         {
-            Subtitle bdnSubtitle = new Subtitle();
+            var bdnSubtitle = new Subtitle();
             bdnXml.LoadSubtitle(bdnSubtitle, list, fileName);
             bdnSubtitle.FileName = fileName;
             var formSubOcr = new VobSubOcr();
@@ -3148,7 +3148,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAndOcrSon(string fileName, Son format, List<string> list)
         {
-            Subtitle sub = new Subtitle();
+            var sub = new Subtitle();
             format.LoadSubtitle(sub, list, fileName);
             sub.FileName = fileName;
             var formSubOcr = new VobSubOcr();
@@ -3219,7 +3219,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAndOcrSst(string fileName, SonicScenaristBitmaps format, List<string> list)
         {
-            Subtitle sub = new Subtitle();
+            var sub = new Subtitle();
             format.LoadSubtitle(sub, list, fileName);
             sub.FileName = fileName;
             var formSubOcr = new VobSubOcr();
@@ -6870,7 +6870,8 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
-            string s = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+            text = Utilities.RemoveHtmlTags(text, true);
+            string s = text.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
             // remove unicode control characters
             s = s.Replace(Convert.ToChar(8207).ToString(), string.Empty).
@@ -6885,9 +6886,21 @@ namespace Nikse.SubtitleEdit.Forms
             int maxLines = int.MaxValue;
             if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines)
                 maxLines = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
+            var splitLines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             if (numberOfLines <= maxLines)
             {
-                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength * Math.Max(numberOfLines, 2))
+                if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength*Math.Max(numberOfLines, 2) &&
+                    splitLines.Length == 2 && splitLines[0].StartsWith('-') && splitLines[1].StartsWith('-') && 
+                    (splitLines[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || splitLines[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
+                {
+                    if (buttonUnBreak.Visible)
+                    {
+                        if (!textBoxHasFocus)
+                            lineTotal.Text = string.Format(_languageGeneral.TotalLengthX, s.Length);
+                        buttonSplitLine.Visible = true;
+                    }
+                }
+                else if (s.Length <= Configuration.Settings.General.SubtitleLineMaximumLength*Math.Max(numberOfLines, 2))
                 {
                     lineTotal.ForeColor = Color.Black;
                     if (!textBoxHasFocus)
@@ -7966,7 +7979,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_networkSession != null)
                     {
                         _networkSession.TimerStop();
-                        List<int> deleteIndices = new List<int>();
+                        var deleteIndices = new List<int>();
                         deleteIndices.Add(_subtitle.GetIndex(currentParagraph));
                         NetworkGetSendUpdates(deleteIndices, 0, null);
                     }
@@ -8235,7 +8248,7 @@ namespace Nikse.SubtitleEdit.Forms
                     _networkSession.TimerStop();
                     SetDurationInSeconds(currentParagraph.Duration.TotalSeconds);
                     _networkSession.UpdateLine(_subtitle.GetIndex(currentParagraph), currentParagraph);
-                    List<int> deleteIndices = new List<int>();
+                    var deleteIndices = new List<int>();
                     deleteIndices.Add(_subtitle.GetIndex(nextParagraph));
                     NetworkGetSendUpdates(deleteIndices, 0, null);
                 }
@@ -8335,8 +8348,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
-                int seconds = (int)numericUpDownDuration.Value;
-                int frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
+                var seconds = (int)numericUpDownDuration.Value;
+                var frames = (int)Math.Round((Convert.ToDouble(numericUpDownDuration.Value) % 1.0 * 100.0));
                 return seconds * 1000.0 + frames * (1000.0 / Configuration.Settings.General.CurrentFrameRate);
             }
             return ((double)numericUpDownDuration.Value * 1000.0);
@@ -8346,10 +8359,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
             {
-                int wholeSeconds = (int)seconds;
-                int frames = SubtitleFormat.MillisecondsToFrames(seconds % 1.0 * 1000.0);
-                int extraSeconds = (int)(frames / Configuration.Settings.General.CurrentFrameRate);
-                int restFrames = (int)(frames % Configuration.Settings.General.CurrentFrameRate);
+                var wholeSeconds = (int)seconds;
+                var frames = SubtitleFormat.MillisecondsToFrames(seconds % 1.0 * 1000.0);
+                var extraSeconds = (int)(frames / Configuration.Settings.General.CurrentFrameRate);
+                var restFrames = (int)(frames % Configuration.Settings.General.CurrentFrameRate);
                 numericUpDownDuration.Value = (decimal)(wholeSeconds + extraSeconds + restFrames / 100.0);
             }
             else
@@ -8381,8 +8394,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                     {
-                        int seconds = (int)numericUpDownDuration.Value;
-                        int frames = Convert.ToInt32((numericUpDownDuration.Value - seconds) * 100);
+                        var seconds = (int)numericUpDownDuration.Value;
+                        var frames = Convert.ToInt32((numericUpDownDuration.Value - seconds) * 100);
                         if (frames > Math.Round(Configuration.Settings.General.CurrentFrameRate) - 1)
                         {
                             numericUpDownDuration.ValueChanged -= NumericUpDownDurationValueChanged;
@@ -8647,9 +8660,9 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p != null)
                         {
                             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-                            string startTC = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
-                            string endTC = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
-                            string tc = startTC + "," + endTC;
+                            string startTimeCode = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
+                            string endTimeCode = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
+                            string tc = startTimeCode + "," + endTimeCode;
                             int start = textBoxSource.Text.IndexOf(tc, StringComparison.Ordinal);
                             if (start > 0)
                             {
