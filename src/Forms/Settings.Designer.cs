@@ -2051,7 +2051,7 @@
             0});
             this.numericUpDownWaveformBorderHitMs.Name = "numericUpDownWaveformBorderHitMs";
             this.numericUpDownWaveformBorderHitMs.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownWaveformBorderHitMs.TabIndex = 12;
+            this.numericUpDownWaveformBorderHitMs.TabIndex = 17;
             this.numericUpDownWaveformBorderHitMs.Value = new decimal(new int[] {
             18,
             0,
@@ -2603,7 +2603,7 @@
             // 
             this.textBoxNamesEtcOnline.Location = new System.Drawing.Point(6, 45);
             this.textBoxNamesEtcOnline.Name = "textBoxNamesEtcOnline";
-            this.textBoxNamesEtcOnline.Size = new System.Drawing.Size(235, 21);
+            this.textBoxNamesEtcOnline.Size = new System.Drawing.Size(488, 21);
             this.textBoxNamesEtcOnline.TabIndex = 28;
             this.textBoxNamesEtcOnline.Text = "https://raw.githubusercontent.com/SubtitleEdit/subtitleedit/master/Dictionaries/n" +
     "ames_etc.xml";
@@ -2714,7 +2714,7 @@
             this.checkBoxSsaOpaqueBox.Location = new System.Drawing.Point(275, 91);
             this.checkBoxSsaOpaqueBox.Name = "checkBoxSsaOpaqueBox";
             this.checkBoxSsaOpaqueBox.Size = new System.Drawing.Size(85, 17);
-            this.checkBoxSsaOpaqueBox.TabIndex = 0;
+            this.checkBoxSsaOpaqueBox.TabIndex = 8;
             this.checkBoxSsaOpaqueBox.Text = "Opaque box";
             this.checkBoxSsaOpaqueBox.UseVisualStyleBackColor = true;
             this.checkBoxSsaOpaqueBox.CheckedChanged += new System.EventHandler(this.checkBoxSsaOpaqueBox_CheckedChanged);
@@ -2747,7 +2747,7 @@
             this.labelSsaOutline.Location = new System.Drawing.Point(272, 40);
             this.labelSsaOutline.Name = "labelSsaOutline";
             this.labelSsaOutline.Size = new System.Drawing.Size(41, 13);
-            this.labelSsaOutline.TabIndex = 9;
+            this.labelSsaOutline.TabIndex = 4;
             this.labelSsaOutline.Text = "Outline";
             // 
             // numericUpDownSsaShadow
@@ -2760,7 +2760,7 @@
             0});
             this.numericUpDownSsaShadow.Name = "numericUpDownSsaShadow";
             this.numericUpDownSsaShadow.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaShadow.TabIndex = 8;
+            this.numericUpDownSsaShadow.TabIndex = 7;
             this.numericUpDownSsaShadow.ValueChanged += new System.EventHandler(this.numericUpDownSsaShadow_ValueChanged);
             // 
             // numericUpDownSsaOutline
@@ -2773,7 +2773,7 @@
             0});
             this.numericUpDownSsaOutline.Name = "numericUpDownSsaOutline";
             this.numericUpDownSsaOutline.Size = new System.Drawing.Size(44, 21);
-            this.numericUpDownSsaOutline.TabIndex = 6;
+            this.numericUpDownSsaOutline.TabIndex = 5;
             this.numericUpDownSsaOutline.ValueChanged += new System.EventHandler(this.numericUpDownSsaOutline_ValueChanged);
             // 
             // labelSsaShadow
@@ -2782,7 +2782,7 @@
             this.labelSsaShadow.Location = new System.Drawing.Point(272, 65);
             this.labelSsaShadow.Name = "labelSsaShadow";
             this.labelSsaShadow.Size = new System.Drawing.Size(45, 13);
-            this.labelSsaShadow.TabIndex = 7;
+            this.labelSsaShadow.TabIndex = 6;
             this.labelSsaShadow.Text = "Shadow";
             // 
             // labelSSAFont
@@ -2791,7 +2791,7 @@
             this.labelSSAFont.Location = new System.Drawing.Point(146, 38);
             this.labelSSAFont.Name = "labelSSAFont";
             this.labelSSAFont.Size = new System.Drawing.Size(41, 13);
-            this.labelSSAFont.TabIndex = 3;
+            this.labelSSAFont.TabIndex = 1;
             this.labelSSAFont.Text = "label16";
             // 
             // buttonSSAChooseColor
@@ -2799,7 +2799,7 @@
             this.buttonSSAChooseColor.Location = new System.Drawing.Point(26, 73);
             this.buttonSSAChooseColor.Name = "buttonSSAChooseColor";
             this.buttonSSAChooseColor.Size = new System.Drawing.Size(114, 21);
-            this.buttonSSAChooseColor.TabIndex = 1;
+            this.buttonSSAChooseColor.TabIndex = 3;
             this.buttonSSAChooseColor.Text = "Choose font color";
             this.buttonSSAChooseColor.UseVisualStyleBackColor = true;
             this.buttonSSAChooseColor.Click += new System.EventHandler(this.ButtonSsaChooseColorClick);
