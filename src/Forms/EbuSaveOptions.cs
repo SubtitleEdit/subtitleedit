@@ -198,9 +198,9 @@ namespace Nikse.SubtitleEdit.Forms
             _header.CountryOfOrigin = textBoxCountryOfOrigin.Text;
             if (_header.CountryOfOrigin.Length != 3)
                 _header.CountryOfOrigin = "USA";
-            _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString("D2");
-            _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString("D2");
-            _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString("D2");
+            _header.RevisionNumber = numericUpDownRevisionNumber.Value.ToString("00");
+            _header.MaximumNumberOfDisplayableCharactersInAnyTextRow = numericUpDownMaxCharacters.Value.ToString("00");
+            _header.MaximumNumberOfDisplayableRows = numericUpDownMaxRows.Value.ToString("00");
             _header.DiskSequenceNumber = numericUpDownDiskSequenceNumber.Value.ToString();
             _header.TotalNumberOfDisks = numericUpDownTotalNumberOfDiscs.Value.ToString();
             JustificationCode = (byte)comboBoxJustificationCode.SelectedIndex;
