@@ -33,6 +33,9 @@
    * Version number in Romanian translation so now it's possible to use it
    * Removed batch-convert prompt asking for PAC encoding
    * Fixed possible crash when opening a video file
+   * Fixed auto-br issue when split was made at a blank at "max length+1" - thx XhmikosR
+   * Fixed crash when last used spelling dictionary was deleted
+   * Fixed links for French, Polish, and Romanian spell check dictionaries
 
 
 3.4.2 (7th September 2014)
