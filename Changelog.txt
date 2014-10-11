@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.4.3 (xth October 2014)
+3.4.3 (11th October 2014)
 * NEW:
    * Added Thai translation - thx Bonfelder Straße
    * MPC-HC can be now used as video player
@@ -18,8 +18,8 @@
    * Improved "Fix invalid italic tags"
    * Allows for "hh:mm:ss.ms" input in Timed Text 1.0
    * Better error messages when saving a file fails - thx Andrew
-   * Minor performance improvements
-   * Fixed a few typos + a few cases of incorrect casing
+   * Some performance improvements
+   * Fixed some typos + a few cases of incorrect casing
 * FIXED:
    * Fixed subtitle drag-n-drop bug - thx Andrew
    * Fixed crash in TS parser (reading AdaptationField) - thx SimplyTheBOSS
