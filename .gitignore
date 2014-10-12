@@ -1,14 +1,12 @@
 *.csproj.DotSettings
-*.csproj.user
 *.psess
 *.suo
+*.user
 *.vsp
 *.vspx
-bin/
-obj/
-SubtitleEdit-*-setup.exe
 /cov-int/
 /SE*.zip
+/src/Languages/LanguageMaster.xml
 /src/Languages/XmlContentTranslator.exe
 /src/Properties/AssemblyInfo.cs
 /src/TestResults/
@@ -16,10 +14,11 @@ SubtitleEdit-*-setup.exe
 /SubtitleEdit.tar
 /SubtitleEdit.tgz
 /tabspace.exe
-/src/Languages/LanguageMaster.xml
+bin/
+obj/
+SubtitleEdit-*-setup.exe
 
 # NuGet
 /src/.nuget/NuGet.exe
 /src/.nuget/NuGet.Config
-/src/packages
-/src/SubtitleEdit.sln.DotSettings.user
+/src/packages/
