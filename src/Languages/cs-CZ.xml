@@ -1154,7 +1154,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <NameXAddedToNamesEtcList>Jméno '{0}' bylo přidáno do seznamu jmen</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Jméno '{0}' NEBYLO přidáno do seznamu jmen</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Slovo '{0}' bylo přidáno do vlastního slovníku</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>Jméno '{0}' NEBYLO přidáno do vlastního slovníku</WordXNotAddedToUserDic>
+    <WordXNotAddedToUserDic>Slovo '{0}' NEBYLO přidáno do vlastního slovníku</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' byla přidána do seznamu náhrad OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Dvojice seznamu náhrad OCR '{0} -&gt; {1}' NEBYLA přidána do seznamu náhrad OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>Vybráno {0} řádků</XLinesSelected>
