@@ -181,9 +181,6 @@ namespace Test
             }
         }
 
-        /// <summary>
-        ///A test for Merge short lines
-        ///</summary>
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixShortLinesDialogItalicTwo()
@@ -193,6 +190,19 @@ namespace Test
                 InitializeFixCommonErrorsLine(target, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
                 target.FixShortLines();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>- Hallo!</i>" + Environment.NewLine + "<i>- Hi<i>");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixShortLinesDoNotMergeMusicSymbols()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                string source = "♪ La, la, la ♪" + Environment.NewLine + "♪ La, la, la ♪";
+                InitializeFixCommonErrorsLine(target, source);
+                target.FixShortLines();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, source);
             }
         }
 

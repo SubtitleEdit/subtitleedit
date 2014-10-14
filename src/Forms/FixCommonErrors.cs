@@ -1176,6 +1176,8 @@ namespace Nikse.SubtitleEdit.Forms
                         !s.Contains(':') &&
                         !s.Contains(';') &&
                         !s.Contains('-') &&
+                        !s.Contains('♪') &&
+                        !s.Contains('♫') &&
                         p.Text != p.Text.ToUpper())
                     {
                         if (AllowFix(p, fixAction))
