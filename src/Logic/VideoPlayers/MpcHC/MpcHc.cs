@@ -256,7 +256,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                 }
 
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"MPC-HC\mpc-hc64.exe");
+                if (File.Exists(path))
+                    return path;
+
                 path = @"C:\Program Files\MPC-HC\mpc-hc64.exe";
+                if (File.Exists(path))
+                    return path;
+
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC\mpc-hc64.exe");
                 if (File.Exists(path))
                     return path;
 
@@ -285,7 +293,15 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                         return path;
                 }
 
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"MPC-HC\mpc-hc.exe");
+                if (File.Exists(path))
+                    return path;
+
                 path = @"C:\Program Files (x86)\MPC-HC\mpc-hc.exe";
+                if (File.Exists(path))
+                    return path;
+
+                path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), @"K-Lite Codec Pack\MPC-HC\mpc-hc.exe");
                 if (File.Exists(path))
                     return path;
 
