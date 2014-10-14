@@ -138,6 +138,8 @@ namespace Nikse.SubtitleEdit.Forms
                 radioButtonVideoPlayerMPlayer.Enabled = false;
             if (!Utilities.IsQuartsDllInstalled)
                 radioButtonVideoPlayerDirectShow.Enabled = false;
+            if (Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
+                radioButtonVideoPlayerMpcHc.Enabled = false;
 
             textBoxVlcPath.Text = Configuration.Settings.General.VlcLocation;
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
