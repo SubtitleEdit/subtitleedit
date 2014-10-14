@@ -485,7 +485,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FixMissingSpaces>Rajouter les espaces manquants</FixMissingSpaces>
     <BreakLongLines>Couper les lignes longues</BreakLongLines>
     <RemoveLineBreaks>Supprimer les sauts de lignes dans les paragraphes courts avec une seule phrase</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogs)</RemoveLineBreaksAll>
+    <RemoveLineBreaksAll>Retirer les retours à la ligne dans les textes courts (sauf dialogue)</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Corriger le 'i' majuscule à l'intérieur des mots (erreur OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Remplacer les apostrophes doubles ('') par un guillemet (")</FixDoubleApostrophes>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
@@ -496,7 +496,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FixCommonOcrErrors>Corriger les erreurs OCR fréquentes (d'après la liste des correctifs OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erreurs OCR fréquentes corrigées (d'après le fichier OcrReplaceList): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Supprimer les espaces entre les numéros</RemoveSpaceBetweenNumber>
-    <FixDialogsOnOneLine>Corriger les dialogs sur une ligne</FixDialogsOnOneLine>
+    <FixDialogsOnOneLine>Corriger le dialogue d'une ligne</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Suppressions des espaces entre les numéros: {0}</RemoveSpaceBetweenNumbersFixed>
     <FixTurkishAnsi>Corriger le turque ANSI par Unicode</FixTurkishAnsi>
     <FixDanishLetterI>Corriger le 'i' danois</FixDanishLetterI>
@@ -524,7 +524,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <XIsChangedToUppercase>{0} i mis en majuscule</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Mettre la première lettre en majuscule après un paragraphe</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Fusionner ligne courte</MergeShortLine>
-    <MergeShortLineAll>Joindre lignes courtes (sauf dialogs)</MergeShortLineAll>
+    <MergeShortLineAll>Joindre lignes courtes (sauf dialogue)</MergeShortLineAll>
     <XLineBreaksAdded>{0} saut(s) de lignes ajouté(s)</XLineBreaksAdded>
     <BreakLongLine>Couper ligne longue</BreakLongLine>
     <FixLongDisplayTime>Corriger temps long</FixLongDisplayTime>
@@ -578,6 +578,9 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messages traces importants!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigé et bon - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Besoin de dictionnaires ?</Title>
@@ -1495,6 +1498,8 @@ Poursuivre?</SubtitleAppendPrompt>
     <DirectShowDescription>quartz.dll du dossier system32/</DirectShowDescription>
     <ManagedDirectX>DirectX géré</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code de DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
