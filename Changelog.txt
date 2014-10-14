@@ -10,7 +10,7 @@
    * Updated French translation - thx JM GBT
    * Updated Czech translation - thx Trottel
    * Updated Korean translation - the domddol
-   * Updated Turkish translation - thx Çevirmen
+   * Updated Turkish translation - thx Kaan
    * Updated Romanian translation - thx Mircea
    * OCR fix replace list now has a "user" file
    * Names etc list now has a "user" file
