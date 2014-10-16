@@ -1539,7 +1539,7 @@ koji bi trebao biti usklađen s video datotekom.
   </ShowHistory>
   <SpellCheck>
     <Title>Provjera pravopisa</Title>
-    <FullText>Cijli tekst</FullText>
+    <FullText>Cijeli tekst</FullText>
     <WordNotFound>Riječ nije pronađena.</WordNotFound>
     <Language>Jezik:</Language>
     <Change>&amp;Promijeni</Change>
