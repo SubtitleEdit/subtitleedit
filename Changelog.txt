@@ -9,6 +9,7 @@
    * Compare window now works again - thx SimplyTheBOSS
    * Now again shows changed duration via waveform start/end - thx Quetsbeek/Mirko
    * Fixed possible crash when saving as "EBU STL" - thx MartinDelille
+   * Fixed encoding problems in online translate - thx jaroslav
    * Don't merge short lines with music symbols - thx XhmikosR
 
 

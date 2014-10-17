@@ -298,6 +298,16 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
+        public static string DownloadString(string address, Encoding encoding)
+        {
+            using (var wc = new WebClient())
+            {
+                wc.Proxy = GetProxy();
+                wc.Encoding = encoding;
+                return wc.DownloadString(address).Trim();
+            }
+        }
+
         public static WebProxy GetProxy()
         {
             if (!string.IsNullOrEmpty(Configuration.Settings.Proxy.ProxyAddress))
