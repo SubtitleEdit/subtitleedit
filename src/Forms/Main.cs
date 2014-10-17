@@ -12201,14 +12201,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemCompareClick(object sender, EventArgs e)
         {
-            using (var compareForm = new Compare())
-            {
-                if (_subtitleAlternate != null && _subtitleAlternateFileName != null)
-                    compareForm.Initialize(_subtitle, _fileName, _subtitleAlternate, _subtitleAlternateFileName);
-                else
-                    compareForm.Initialize(_subtitle, _fileName, Configuration.Settings.Language.General.CurrentSubtitle);
-                compareForm.Show(this);
-            }
+            var compareForm = new Compare();
+            if (_subtitleAlternate != null && _subtitleAlternateFileName != null)
+                compareForm.Initialize(_subtitle, _fileName, _subtitleAlternate, _subtitleAlternateFileName);
+            else
+                compareForm.Initialize(_subtitle, _fileName, Configuration.Settings.Language.General.CurrentSubtitle);
+            compareForm.Show(this);
         }
 
         private void ToolStripMenuItemAutoBreakLinesClick(object sender, EventArgs e)
