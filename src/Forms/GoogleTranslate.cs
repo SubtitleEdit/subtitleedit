@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -19,12 +18,12 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _translatedSubtitle;
         private bool _breakTranslation;
         private bool _googleTranslate = true;
-        private MicrosoftTranslationService.SoapService _microsoftTranslationService = null;
-        private bool _googleApiNotWorking = false;
-        private const string _splitterString = " == ";
-        private const string _newlineString = " __ ";
+        private MicrosoftTranslationService.SoapService _microsoftTranslationService;
+        private bool _googleApiNotWorking;
+        private const string SplitterString = " == ";
+        private const string NewlineString = " __ ";
 
-        private Encoding _screenScrapingEncoding = null;
+        private Encoding _screenScrapingEncoding;
         public Encoding ScreenScrapingEncoding
         {
             get { return _screenScrapingEncoding; }
@@ -82,8 +81,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 subtitleListViewFrom.InitializeTimestampColumnWidths(this);
@@ -127,8 +126,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             FillComboWithLanguages(comboBoxTo);
             i = 0;
-            string uiCultureTL = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
-            if (uiCultureTL == defaultFromLanguage)
+            string uiCultureTargetLanguage = Configuration.Settings.Tools.GoogleTranslateLastTargetLanguage;
+            if (uiCultureTargetLanguage == defaultFromLanguage)
             {
                 foreach (string s in Utilities.GetDictionaryLanguages())
                 {
@@ -137,9 +136,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         temp = temp.Substring(temp.Length - 5, 2).ToLower();
 
-                        if (temp != uiCultureTL)
+                        if (temp != uiCultureTargetLanguage)
                         {
-                            uiCultureTL = temp;
+                            uiCultureTargetLanguage = temp;
                             break;
                         }
                     }
@@ -148,7 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTo.SelectedIndex = 0;
             foreach (ComboBoxItem item in comboBoxTo.Items)
             {
-                if (item.Value == uiCultureTL)
+                if (item.Value == uiCultureTargetLanguage)
                 {
                     comboBoxTo.SelectedIndex = i;
                     break;
@@ -202,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1} {0} |", p.Text.Replace("|", _newlineString), _splitterString);
+                    string text = string.Format("{1} {0} |", p.Text.Replace("|", NewlineString), SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
@@ -240,8 +239,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillTranslatedText(string translatedText, int start, int end)
         {
-            List<string> lines = new List<string>();
-            foreach (string s in translatedText.Split(new string[] { "|" }, StringSplitOptions.None))
+            var lines = new List<string>();
+            foreach (string s in translatedText.Split(new[] { "|" }, StringSplitOptions.None))
                 lines.Add(s);
 
             int index = start;
@@ -250,14 +249,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
-                    int indexOfP = cleanText.IndexOf(_splitterString.Trim(), StringComparison.Ordinal);
+                    int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
                     if (indexOfP >= 0 && indexOfP < 4)
-                        cleanText = cleanText.Remove(0, cleanText.IndexOf(_splitterString.Trim(), StringComparison.Ordinal));
-                    cleanText = cleanText.Replace(_splitterString.Trim(), string.Empty).Trim();
+                        cleanText = cleanText.Remove(0, cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal));
+                    cleanText = cleanText.Replace(SplitterString.Trim(), string.Empty).Trim();
                     if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
                     cleanText = cleanText.Replace(" ...", "...");
-                    cleanText = cleanText.Replace(_newlineString.Trim(), Environment.NewLine);
+                    cleanText = cleanText.Replace(NewlineString.Trim(), Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
                     cleanText = cleanText.Replace("<br/>", Environment.NewLine);
                     cleanText = cleanText.Replace("<br />", Environment.NewLine);
@@ -321,7 +320,7 @@ namespace Nikse.SubtitleEdit.Forms
             //            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
-            input = input.Replace(Environment.NewLine, _newlineString);
+            input = input.Replace(Environment.NewLine, NewlineString);
             input = input.Replace("'", "&apos;");
             // create the web request to the Google Translate REST interface
 
@@ -334,10 +333,10 @@ namespace Nikse.SubtitleEdit.Forms
             //string to = arr[1];
             //string url = String.Format("https://www.googleapis.com/language/translate/v2?key={3}&q={0}&source={1}&target={2}", HttpUtility.UrlEncode(input), from, to, googleApiKey);
 
-            WebRequest request = WebRequest.Create(uri);
+            var request = WebRequest.Create(uri);
             request.Proxy = Utilities.GetProxy();
-            WebResponse response = request.GetResponse();
-            StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
+            var response = request.GetResponse();
+            var reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8);
             string content = reader.ReadToEnd();
 
             var indexOfTranslatedText = content.IndexOf("{\"translatedText\":", StringComparison.Ordinal);
@@ -401,15 +400,16 @@ namespace Nikse.SubtitleEdit.Forms
         /// <param name="input">Input string</param>
         /// <param name="languagePair">2 letter Language Pair, delimited by "|".
         /// E.g. "ar|en" language pair means to translate from Arabic to English</param>
+        /// <param name="encoding">Encoding to use when downloading text</param>
         /// <returns>Translated to String</returns>
         public static string TranslateTextViaScreenScraping(string input, string languagePair, Encoding encoding)
         {
-            input = input.Replace(Environment.NewLine, _newlineString);
+            input = input.Replace(Environment.NewLine, NewlineString);
             //input = input.Replace("'", "&apos;");
 
             //string url = String.Format("http://www.google.com/translate_t?hl=en&ie=UTF8&text={0}&langpair={1}", HttpUtility.UrlEncode(input), languagePair);
             string url = String.Format("http://translate.google.com/?hl=en&eotf=1&sl={0}&tl={1}&q={2}", languagePair.Substring(0, 2), languagePair.Substring(3), Utilities.UrlEncode(input));
-            var result = Utilities.DownloadString(url);
+            var result = Utilities.DownloadString(url, encoding);
             int startIndex = result.IndexOf("<span id=result_box", StringComparison.Ordinal);
             var sb = new StringBuilder();
             if (startIndex > 0)
@@ -430,7 +430,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             string res = sb.ToString();
-            res = res.Replace(_newlineString, Environment.NewLine);
+            res = res.Replace(NewlineString, Environment.NewLine);
             res = res.Replace("<BR>", Environment.NewLine);
             res = res.Replace("<BR />", Environment.NewLine);
             res = res.Replace("<BR/>", Environment.NewLine);
@@ -840,11 +840,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GoogleTranslate_Resize(object sender, EventArgs e)
         {
-            int width = (this.Width / 2) - (subtitleListViewFrom.Left * 3) + 19;
+            int width = (Width / 2) - (subtitleListViewFrom.Left * 3) + 19;
             subtitleListViewFrom.Width = width;
             subtitleListViewTo.Width = width;
 
-            int height = this.Height - (subtitleListViewFrom.Top + buttonTranslate.Height + 60);
+            int height = Height - (subtitleListViewFrom.Top + buttonTranslate.Height + 60);
             subtitleListViewFrom.Height = height;
             subtitleListViewTo.Height = height;
 
@@ -893,7 +893,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1}{0}|", p.Text, _splitterString);
+                    string text = string.Format("{1}{0}|", p.Text, SplitterString);
                     if (!overQuota)
                     {
                         if ((Utilities.UrlEncode(sb + text)).Length >= textMaxSize)
