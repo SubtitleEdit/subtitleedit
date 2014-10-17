@@ -1,6 +1,16 @@
 ﻿Subtitle Edit Changelog
 
 
+3.4.4 (xth October 2014)
+* NEW:
+* IMPROVED:
+   * Updated French translation - thx JM GBT
+* FIXED:
+   * Compare window now works again - thx SimplyTheBOSS
+   * Now again shows changed duration via waveform start/end - thx Quetsbeek/Mirko
+   * Don't merge short lines with music symbols - thx XhmikosR
+
+
 3.4.3 (11th October 2014)
 * NEW:
    * Added Thai translation - thx Bonfelder Straße
