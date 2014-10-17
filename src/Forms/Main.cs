@@ -18310,15 +18310,19 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemRightToLeftMode.Checked = !toolStripMenuItemRightToLeftMode.Checked;
             if (textBoxListViewText.RightToLeft == RightToLeft.Yes)
             {
+                RightToLeft = RightToLeft.No;
                 textBoxListViewText.RightToLeft = RightToLeft.No;
                 SubtitleListview1.RightToLeft = RightToLeft.No;
+                SubtitleListview1.RightToLeftLayout = false;
                 textBoxSource.RightToLeft = RightToLeft.No;
                 mediaPlayer.TextRightToLeft = RightToLeft.No;
             }
             else
             {
+                //RightToLeft = RightToLeft.Yes; - is this better? TimeUpDown custom control needs to support RTL before enabling this
                 textBoxListViewText.RightToLeft = RightToLeft.Yes;
                 SubtitleListview1.RightToLeft = RightToLeft.Yes;
+                SubtitleListview1.RightToLeftLayout = true;
                 textBoxSource.RightToLeft = RightToLeft.Yes;
                 mediaPlayer.TextRightToLeft = RightToLeft.Yes;
             }
