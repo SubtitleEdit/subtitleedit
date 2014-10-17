@@ -577,6 +577,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} mensagens de log importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigidos e OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Precisa de dicionários?</Title>
@@ -990,6 +993,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Legenda original salva {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>arquivo modificado no disco</FileOnDiskModified>
     <OverwriteModifiedFile>Sobrescrever arquivo {0} modificado em {1} {2}{3} pelo arquivo atual carregado do disco em {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Incapaz de salvar arquivo {0}
+
+O arquivo é somente leitura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Não foi possível salvar arquivo de legenda {0}</UnableToSaveSubtitleX>
     <BeforeNew>Anterior novo</BeforeNew>
     <New>Novo</New>
@@ -1490,6 +1496,8 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <DirectShowDescription>quartz.dll na pasta system32</DirectShowDescription>
     <ManagedDirectX>Gerenc. DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - Código .NET gerenc. pelo DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
