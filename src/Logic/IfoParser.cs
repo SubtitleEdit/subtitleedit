@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Text;
-using Nikse.SubtitleEdit.MicrosoftTranslationService;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -12,9 +10,9 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public struct AudioStream
         {
-            public int LangageTypeSpecified;
-            public string Langage;
-            public string LangageCode;
+            public int LanguageTypeSpecified;
+            public string Language;
+            public string LanguageCode;
             public string CodingMode;
             public int Channels;
             public string Extension;
@@ -201,13 +199,13 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var audioStream = new AudioStream();
                 data = IntToBin(GetEndian(2), 16);
-                audioStream.LangageTypeSpecified = Convert.ToInt32(MidStr(data, 4, 2));
+                audioStream.LanguageTypeSpecified = Convert.ToInt32(MidStr(data, 4, 2));
                 audioStream.CodingMode = _arrayOfAudioMode[(BinToInt(MidStr(data, 0, 3)))];
                 audioStream.Channels = BinToInt(MidStr(data, 13, 3)) + 1;
                 _fs.Read(buffer, 0, 2);
-                audioStream.LangageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
-                if (ArrayOfLanguageCode.Contains(audioStream.LangageCode))
-                    audioStream.Langage = ArrayOfLanguage[ArrayOfLanguageCode.IndexOf(audioStream.LangageCode)];
+                audioStream.LanguageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
+                if (ArrayOfLanguageCode.Contains(audioStream.LanguageCode))
+                    audioStream.Language = ArrayOfLanguage[ArrayOfLanguageCode.IndexOf(audioStream.LanguageCode)];
                 _fs.Seek(1, SeekOrigin.Current);
                 audioStream.Extension = _arrayOfAudioExtension[_fs.ReadByte()];
                 _fs.Seek(2, SeekOrigin.Current);
@@ -222,7 +220,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 _fs.Read(buffer, 0, 2);
                 var languageTwoLetter = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
-                _vtsVobs.Subtitles.Add(InterpretLangageCode(languageTwoLetter));
+                _vtsVobs.Subtitles.Add(InterpretLanguageCode(languageTwoLetter));
 
                 _fs.Read(buffer, 0, 2); // reserved for language code extension + code extension
                 switch (buffer[0])      // 4, 8, 10-12 unused
@@ -287,7 +285,7 @@ namespace Nikse.SubtitleEdit.Logic
             return result;
         }
 
-        private static string InterpretLangageCode(string code)
+        private static string InterpretLanguageCode(string code)
         {
             int i = 0;
             while (ArrayOfLanguageCode[i] != code && i < 143)
