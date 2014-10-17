@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
@@ -16,10 +17,10 @@ namespace Nikse.SubtitleEdit.Forms
         public List<VobSubMergedPack> MergedVobSubPacks;
         public List<Color> Palette;
         public List<string> Languages;
-        private LanguageStructure.DvdSubRip _language;
-        private long _lastPresentationTimestamp = 0;
-        private long _lastVobPresentationTimestamp = 0;
-        private long _lastNavEndPts = 0;
+        private readonly LanguageStructure.DvdSubRip _language;
+        private long _lastPresentationTimestamp;
+        private long _lastVobPresentationTimestamp;
+        private long _lastNavEndPts;
         private long _accumulatedPresentationTimestamp;
 
         public string SelectedLanguage
@@ -64,8 +65,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonAddVobFile.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonAddVobFile.Text, Font);
             if (textSize.Height > buttonAddVobFile.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -96,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBoxVobFiles.Items.Clear();
             for (int i = 1; i < 30; i++)
             {
-                string vobFileName = searchPattern.Replace("?", i.ToString());
+                string vobFileName = searchPattern.Replace("?", i.ToString(CultureInfo.InvariantCulture));
                 if (File.Exists(Path.Combine(path, vobFileName)))
                     listBoxVobFiles.Items.Add(Path.Combine(path, vobFileName));
             }
@@ -106,7 +107,7 @@ namespace Nikse.SubtitleEdit.Forms
                 searchPattern = onlyFileName.Substring(0, onlyFileName.Length - 1) + "PGC_01_?.VOB";
                 for (int i = 1; i < 30; i++)
                 {
-                    string vobFileName = searchPattern.Replace("?", i.ToString());
+                    string vobFileName = searchPattern.Replace("?", i.ToString(CultureInfo.InvariantCulture));
                     if (File.Exists(Path.Combine(path, vobFileName)))
                         listBoxVobFiles.Items.Add(Path.Combine(path, vobFileName));
                 }
@@ -130,7 +131,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // List languages
             comboBoxLanguages.Items.Clear();
-            foreach (string s in ifoParser.VideoTitleSetVobs.Subtitles)
+            foreach (string s in ifoParser.VideoTitleSetVobs.GetAllLanguages())
                 comboBoxLanguages.Items.Add(s);
             if (comboBoxLanguages.Items.Count > 0)
                 comboBoxLanguages.SelectedIndex = 0;
@@ -199,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             Languages = new List<string>();
             for (int k = 0; k < comboBoxLanguages.Items.Count; k++)
-                Languages.Add(string.Format("{0} (0x{1:x})", comboBoxLanguages.Items[k], k + 32));
+                Languages.Add(comboBoxLanguages.Items[k].ToString());
 
             buttonStartRipping.Text = _language.StartRipping;
             buttonStartRipping.Enabled = true;
@@ -208,11 +209,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RipSubtitles(string vobFileName, MemoryStream stream, int vobNumber)
         {
-            long firstNavStartPTS = 0;
+            long firstNavStartPts = 0;
 
             using (var fs = FileUtil.RetryOpenRead(vobFileName))
             {
-                byte[] buffer = new byte[0x800];
+                var buffer = new byte[0x800];
                 long position = 0;
                 progressBarRip.Maximum = 100;
                 progressBarRip.Value = 0;
@@ -249,7 +250,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (VobSubParser.IsMpeg2PackHeader(buffer))
                     {
-                        VobSubPack vsp = new VobSubPack(buffer, null);
+                        var vsp = new VobSubPack(buffer, null);
                         if (IsSubtitlePack(buffer))
                         {
                             if (vsp.PacketizedElementaryStream.PresentationTimestamp.HasValue && _accumulatedPresentationTimestamp != 0)
@@ -268,13 +269,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                                 _lastPresentationTimestamp = vobu_e_ptm;
 
-                                if (firstNavStartPTS == 0)
+                                if (firstNavStartPts == 0)
                                 {
-                                    firstNavStartPTS = vobu_s_ptm;
+                                    firstNavStartPts = vobu_s_ptm;
                                     if (vobNumber == 0)
                                         _accumulatedPresentationTimestamp = -vobu_s_ptm;
                                 }
-                                if (vobu_s_ptm + firstNavStartPTS + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
+                                if (vobu_s_ptm + firstNavStartPts + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
                                 {
                                     _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
                                 }
@@ -305,22 +306,22 @@ namespace Nikse.SubtitleEdit.Forms
             const int presentationTimestampIndex = 23;
             long newPts = addPresentationTimestamp + ((long)vsp.PacketizedElementaryStream.PresentationTimestamp.Value);
 
-            var buffer5b = BitConverter.GetBytes((UInt64)newPts);
+            var buffer5B = BitConverter.GetBytes((UInt64)newPts);
             if (BitConverter.IsLittleEndian)
             {
-                buffer[presentationTimestampIndex + 4] = (byte)(buffer5b[0] << 1 | Helper.B00000001); // last 7 bits + '1'
-                buffer[presentationTimestampIndex + 3] = (byte)((buffer5b[0] >> 7) + (buffer5b[1] << 1)); // the next 8 bits (1 from last byte, 7 from next)
-                buffer[presentationTimestampIndex + 2] = (byte)((buffer5b[1] >> 6 | Helper.B00000001) + (buffer5b[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
-                buffer[presentationTimestampIndex + 1] = (byte)((buffer5b[2] >> 6) + (buffer5b[3] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
-                buffer[presentationTimestampIndex] = (byte)((buffer5b[3] >> 6 | Helper.B00000001) + (buffer5b[4] << 2));
+                buffer[presentationTimestampIndex + 4] = (byte)(buffer5B[0] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimestampIndex + 3] = (byte)((buffer5B[0] >> 7) + (buffer5B[1] << 1)); // the next 8 bits (1 from last byte, 7 from next)
+                buffer[presentationTimestampIndex + 2] = (byte)((buffer5B[1] >> 6 | Helper.B00000001) + (buffer5B[2] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimestampIndex + 1] = (byte)((buffer5B[2] >> 6) + (buffer5B[3] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
+                buffer[presentationTimestampIndex] = (byte)((buffer5B[3] >> 6 | Helper.B00000001) + (buffer5B[4] << 2));
             }
             else
             {
-                buffer[presentationTimestampIndex + 4] = (byte)(buffer5b[7] << 1 | Helper.B00000001); // last 7 bits + '1'
-                buffer[presentationTimestampIndex + 3] = (byte)((buffer5b[7] >> 7) + (buffer5b[6] << 1)); // the next 8 bits (1 from last byte, 7 from next)
-                buffer[presentationTimestampIndex + 2] = (byte)((buffer5b[6] >> 6 | Helper.B00000001) + (buffer5b[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
-                buffer[presentationTimestampIndex + 1] = (byte)((buffer5b[5] >> 6) + (buffer5b[4] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
-                buffer[presentationTimestampIndex] = (byte)((buffer5b[4] >> 6 | Helper.B00000001) + (buffer5b[3] << 2));
+                buffer[presentationTimestampIndex + 4] = (byte)(buffer5B[7] << 1 | Helper.B00000001); // last 7 bits + '1'
+                buffer[presentationTimestampIndex + 3] = (byte)((buffer5B[7] >> 7) + (buffer5B[6] << 1)); // the next 8 bits (1 from last byte, 7 from next)
+                buffer[presentationTimestampIndex + 2] = (byte)((buffer5B[6] >> 6 | Helper.B00000001) + (buffer5B[5] << 2)); // the next 7 bits (1 from 2nd last byte, 6 from 3rd last byte)
+                buffer[presentationTimestampIndex + 1] = (byte)((buffer5B[5] >> 6) + (buffer5B[4] << 2)); // the next 8 bits (2 from 3rd last byte, 6 from 2rd last byte)
+                buffer[presentationTimestampIndex] = (byte)((buffer5B[4] >> 6 | Helper.B00000001) + (buffer5B[3] << 2));
             }
             if (vsp.PacketizedElementaryStream.PresentationTimestampDecodeTimestampFlags == Helper.B00000010)
                 buffer[presentationTimestampIndex] += Helper.B00100000;
@@ -424,7 +425,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxIfoFileNameDragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length >= 1)
             {
                 string fileName = files[0];
@@ -450,7 +451,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
                 e.Effect = DragDropEffects.All;
 
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in files)
             {
                 string ext = Path.GetExtension(fileName).ToLower();
