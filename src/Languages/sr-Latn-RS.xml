@@ -708,8 +708,8 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Auto-trajanje (trenutna linija teksta)</AutoDurationCurrentLine>
         <SelectAll>Iz&amp;aberi sve</SelectAll>
         <InsertFirstLine>Ubaci liniju</InsertFirstLine>
-        <InsertBefore>Ubaci liniju iza</InsertBefore>
-        <InsertAfter>Ubaci liniju ispred</InsertAfter>
+        <InsertBefore>Ubaci liniju ispred</InsertBefore>
+        <InsertAfter>Ubaci liniju iza</InsertAfter>
         <InsertSubtitleAfter>Ubaci prevod iza linije...</InsertSubtitleAfter>
         <CopyToClipboard>Kopiraj (u Clipboard)</CopyToClipboard>
         <Column>Stub teksta</Column>
