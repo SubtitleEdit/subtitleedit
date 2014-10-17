@@ -203,7 +203,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <Language>Jezik:</Language>
   </ChooseLanguage>
   <ColumnPaste>
-    <Title>Zalijepu stupac</Title>
+    <Title>Zalijepi stupac</Title>
     <ChooseColumn>Izaberi stupac</ChooseColumn>
     <OverwriteShiftCellsDown>Prepiši/premjesti stanice dolje</OverwriteShiftCellsDown>
     <Overwrite>Prepiši</Overwrite>
@@ -437,7 +437,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTags>Ispravi pogrešne oznake za kurziv</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Ukloni nepotrebne razmake</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Ukloni nepotrebne točke</RemoveUnneededPeriods>
-    <FixMissingSpaces>Ukloni nepostojuće razmake</FixMissingSpaces>
+    <FixMissingSpaces>Ukloni nepostojeće razmake</FixMissingSpaces>
     <BreakLongLines>Razdvoji duge linije</BreakLongLines>
     <RemoveLineBreaks>Ukloni redove u kratkim tekstovima (samo jedna rečenica)</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ukloni redove u kratkim tekstovima (sve osim dijaloga)</RemoveLineBreaksAll>
@@ -497,9 +497,9 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <XFixedToYZ>{0} je ispravljeno u: {1}{2}.</XFixedToYZ>
     <UnableToFixTextXY>Ne mogu da ispravim tekst pod brojem {0}: {1}.</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Ispravljeno preklapajućih linija: {0}</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>Produženo vrijemena prikaza: {0}</XDisplayTimesProlonged>
+    <XDisplayTimesProlonged>Produženo vrijeme prikaza: {0}</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>Ispravljeno pogrešnih oznaka: {0}</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>Skraćeno vrijemena prikaza: {0}</XDisplayTimesShortned>
+    <XDisplayTimesShortned>Skraćeno vrijeme prikaza: {0}</XDisplayTimesShortned>
     <XLinesUnbreaked>Rastavljeno linija: {0}</XLinesUnbreaked>
     <UnneededSpace>Nepotrebni razmaci</UnneededSpace>
     <XUnneededSpacesRemoved>Uklonjeno nepotrebnih razmaka: {0}</XUnneededSpacesRemoved>
@@ -535,14 +535,14 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <FixedOkXY>Ispravljeno – „{0}“ – {1}</FixedOkXY>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>Preuzimanje riječnika</Title>
+    <Title>Preuzimanje rječnika</Title>
     <DescriptionLine1>Provjera pisanja zasnovana je na dodatku NHunspell</DescriptionLine1>
-    <DescriptionLine2>koji koristi riječnike iz paketa Open office.</DescriptionLine2>
-    <GetDictionariesHere>Preuzmite riječnike ovdje:</GetDictionariesHere>
-    <OpenOpenOfficeWiki>Open office wiki popis riječnika</OpenOpenOfficeWiki>
-    <GetAllDictionaries>Preuzmi sve riječnike</GetAllDictionaries>
+    <DescriptionLine2>koji koristi rječnike iz paketa Open office.</DescriptionLine2>
+    <GetDictionariesHere>Preuzmite rječnike ovdje:</GetDictionariesHere>
+    <OpenOpenOfficeWiki>Open office wiki popis rječnika</OpenOpenOfficeWiki>
+    <GetAllDictionaries>Preuzmi sve rječnike</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>Izaberite jezik i kliknite na gumb za preuzimanje.</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>Otvori mapu sa riječnicima</OpenDictionariesFolder>
+    <OpenDictionariesFolder>Otvori mapu sa rječnicima</OpenDictionariesFolder>
     <Download>&amp;Preuzmi</Download>
     <XDownloaded>{0} je preuzet i instaliran.</XDownloaded>
   </GetDictionaries>
@@ -601,8 +601,8 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <RemoveLinesWithoutLetters>Ukloni &amp;linije bez slova</RemoveLinesWithoutLetters>
     <GenerateTimeCodes>Generiraj vremenski kod</GenerateTimeCodes>
     <GapBetweenSubtitles>Međuprostor između podnaslova:</GapBetweenSubtitles>
-    <Auto>S&amp;amopodešeno</Auto>
-    <Fixed>Po&amp;desi:</Fixed>
+    <Auto>Samopodešeno</Auto>
+    <Fixed>Podesi:</Fixed>
     <Refresh>&amp;Osvježi</Refresh>
     <TextFiles>Tekstualne datoteke</TextFiles>
     <PreviewLinesModifiedX>Pregled – izmjenjeno redova: {0}</PreviewLinesModifiedX>
@@ -634,7 +634,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Vraćanje sigurnosne kopije...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Napredna Sub Station Alpha svojstva...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha svojstva...</SubStationAlphaProperties>
-        <OpenOriginal>O&amp;tvori izvorni podnaslov...</OpenOriginal>
+        <OpenOriginal>Otvori izvorni podnaslov...</OpenOriginal>
         <SaveOriginal>Spremi izvorni podnaslov</SaveOriginal>
         <CloseOriginal>&amp;Zatvori izvorni podnaslov</CloseOriginal>
         <OpenContainingFolder>Otvori &amp;mapu</OpenContainingFolder>
@@ -672,7 +672,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <Title>&amp;Uređivanje</Title>
         <Undo>Poništi</Undo>
         <Redo>Vrati poništeno</Redo>
-        <ShowUndoHistory>P&amp;rikaži povijest</ShowUndoHistory>
+        <ShowUndoHistory>Prikaži povijest</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Unicode simboli</InsertUnicodeSymbol>
         <Find>&amp;Pronađi...</Find>
         <FindNext>Pronađi &amp;slijedeće</FindNext>
@@ -747,7 +747,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
       </SpellCheck>
       <Synchronization>
         <Title>U&amp;sklađivanje</Title>
-        <AdjustAllTimes>&amp;Pomjeri vrijeme linija...</AdjustAllTimes>
+        <AdjustAllTimes>&amp;Pomakni vrijeme linija...</AdjustAllTimes>
         <VisualSync>&amp;Vizualno usklađivanje...</VisualSync>
         <PointSync>&amp;Točka usklađivanja...</PointSync>
         <PointSyncViaOtherSubtitle>T&amp;očka usklađivanja iz drugog podnaslova...</PointSyncViaOtherSubtitle>
@@ -755,7 +755,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
       <AutoTranslate>
         <Title>&amp;Automatsko prevođenje</Title>
         <TranslatePoweredByGoogle>Prevedi s pomoću &amp;Googla...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Prevedi s pomoću &amp;Micrsofta...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByMicrosoft>Prevedi s pomoću &amp;Microsofta...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>&amp;Prevedi iz Švedskog u Danski...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -806,8 +806,8 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Auto trajanje (trenutni redak)</AutoDurationCurrentLine>
         <SelectAll>Iz&amp;aberi sve</SelectAll>
         <InsertFirstLine>Ubaci liniju</InsertFirstLine>
-        <InsertBefore>Ubaci liniju iza</InsertBefore>
-        <InsertAfter>Ubaci liniju ispred</InsertAfter>
+        <InsertBefore>Ubaci liniju ispred</InsertBefore>
+        <InsertAfter>Ubaci liniju iza</InsertAfter>
         <InsertSubtitleAfter>Ubaci podnaslov iza linije...</InsertSubtitleAfter>
         <CopyToClipboard>Kopiraj u međuspremnik</CopyToClipboard>
         <Column>Stup</Column>
@@ -894,7 +894,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
       <SecondsForwardShort>s →</SecondsForwardShort>
       <VideoPosition>Pozicija:</VideoPosition>
       <TranslateTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili slijedeći podnaslov.</TranslateTip>
-      <CreateTip>Koristite ktrl i levu ili desnu strelicu.</CreateTip>
+      <CreateTip>Koristite Ctrl i lijevu ili desnu strelicu.</CreateTip>
       <AdjustTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili slijedeći podnaslov.</AdjustTip>
       <BeforeChangingTimeInWaveformX>Promijenjeno vrijeme u valnom obliku: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Stvorena je nova linija podnaslova ({0}).</NewTextInsertAtX>
@@ -946,7 +946,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <ReplaceContinueNotFound>Traženi predmet nije pronađen.
 Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceContinueNotFound>
     <ReplaceXContinue>Traženi predmet je zamijenjen {0} vrijeme (s).
-Želite li početi od vrha dokumenta i nastaviti pretražvanje i zamjenu?</ReplaceXContinue>
+Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceXContinue>
     <ReplaceContinueTitle>Nastavi 'Zamijeni'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Potraži za '{0}' s linije broj {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>{0} su pronađene na liniji broj {1}.</XFoundAtLineNumberY>
@@ -955,7 +955,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <MatchFoundX>Preklapanja: {0}</MatchFoundX>
     <NoMatchFoundX>Nema preklapanja: {0}</NoMatchFoundX>
     <FoundNothingToReplace>Ništa nije pronađeno za zamjenu.</FoundNothingToReplace>
-    <ReplaceCountX>Broj zamena: {0}</ReplaceCountX>
+    <ReplaceCountX>Broj zamjena: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Preklapanja na liniji {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Napravljena jedna zamjena.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Napravljene izmjene u prikazu izvora</BeforeChangesMadeInSourceView>
@@ -1258,7 +1258,7 @@ koji bi trebao biti usklađen s video datotekom.
     <Remove>&amp;Ukloni</Remove>
     <UnableToDownloadPluginListX>Ne može se preuzeti popis dodataka: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Zahtijeva se novija verzija Subtitle Edit-a!</NewVersionOfSubtitleEditRequired>
-    <UpdateAvailable>[Ažuriranje dostupano!]</UpdateAvailable>
+    <UpdateAvailable>[Ažuriranje dostupno!]</UpdateAvailable>
   </PluginsGet>
   <RemoveTextFromHearImpaired>
     <Title>Uklanjanje teksta za gluhe</Title>
@@ -1474,7 +1474,7 @@ koji bi trebao biti usklađen s video datotekom.
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
     <GoToCurrentSubtitleStart>Idi na trenutni početak linije</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Idi na trenutni završetak linije</GoToCurrentSubtitleEnd>
-    <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova teksnog okvira</ToggleFocus>
+    <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova tekstnog okvira</ToggleFocus>
     <ToggleDialogDashes>Prebacivanje između dijaloga</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
@@ -1503,8 +1503,8 @@ koji bi trebao biti usklađen s video datotekom.
     <SyntaxColorDurationIfTooLarge>Trajanje boje ako je predugo</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Boja teksta ako je predugo</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Boja teksta ako je više linija:</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>Preklapanje boje vremanskog koda</SyntaxColorOverlap>
-    <SyntaxErrorColor>Pogreška boje</SyntaxErrorColor>
+    <SyntaxColorOverlap>Preklapanje boje vremenskog koda</SyntaxColorOverlap>
+    <SyntaxErrorColor>Boja pogreške</SyntaxErrorColor>
     <GoToFirstSelectedLine>Idi na prvu odabranu liniju</GoToFirstSelectedLine>
     <MergeSelectedLines>Spoji odabrane linije</MergeSelectedLines>
     <ToggleTranslationMode>Promijeni način prevođenja</ToggleTranslationMode>
@@ -1539,7 +1539,7 @@ koji bi trebao biti usklađen s video datotekom.
   </ShowHistory>
   <SpellCheck>
     <Title>Provjera pravopisa</Title>
-    <FullText>Cijli tekst</FullText>
+    <FullText>Cijeli tekst</FullText>
     <WordNotFound>Riječ nije pronađena.</WordNotFound>
     <Language>Jezik:</Language>
     <Change>&amp;Promijeni</Change>
@@ -1710,7 +1710,7 @@ koji bi trebao biti usklađen s video datotekom.
     <SetSyncPoint>Postavi točku usklađivanja</SetSyncPoint>
     <RemoveSyncPoint>Ukloni točku usklađivanja</RemoveSyncPoint>
     <SyncPointsX>Ukupno usklađenih točaka: {0}</SyncPointsX>
-    <Info>Jedna točka usklađivanja prilagodiće položaj. Dvije ili više točaka utjecat će na položaj i brzinu.</Info>
+    <Info>Jedna točka usklađivanja prilagodit će položaj. Dvije ili više točaka utjecat će na položaj i brzinu.</Info>
     <ApplySync>&amp;Primjeni</ApplySync>
   </PointSync>
   <UnknownSubtitle>
@@ -1772,7 +1772,7 @@ koji bi trebao biti usklađen s video datotekom.
     <SubtitleImageXofY>Slika podnaslova ({0} od {1})</SubtitleImageXofY>
     <ImagePalette>Paleta slika</ImagePalette>
     <UseCustomColors>Prilagođene &amp;boje</UseCustomColors>
-    <Transparent>Providnost</Transparent>
+    <Transparent>Prozirnost</Transparent>
     <PromptForUnknownWords>&amp;Pitaj me za nepoznate riječi</PromptForUnknownWords>
     <TryToGuessUnkownWords>&amp;Nagađaj nepoznate riječi</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>&amp;Razmakni red ako ima više od dvije linije</AutoBreakSubtitleIfMoreThanTwoLines>
@@ -1792,7 +1792,7 @@ koji bi trebao biti usklađen s video datotekom.
     <ShowOnlyForcedSubtitles>Pr&amp;ikaži samo forsirane podnaslove</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Koristi vremenske odrednice iz IDX datoteke</UseTimeCodesFromIdx>
     <NoMatch>&lt;Nema poklapanja&gt;</NoMatch>
-    <AutoTransparentBackground>P&amp;rovidna pozadina</AutoTransparentBackground>
+    <AutoTransparentBackground>Prozirna pozadina</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Usporedi trenutnu sliku...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Uredi dopune usporedbi za zadnju sliku...</EditLastAdditions>
   </VobSubOcr>
@@ -1840,7 +1840,7 @@ koji bi trebao biti usklađen s video datotekom.
     <ShowWaveformOnly>Prikaži samo valni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Prikaži samo spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
-    <SeekSilence>Tražiti tišinu...</SeekSilence>
+    <SeekSilence>Traži tišinu...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>
