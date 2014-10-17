@@ -194,7 +194,6 @@ namespace Nikse.SubtitleEdit.Logic
             //retrieve audio info
             _fs.Position = 0x202; //useless but here for readability
             _vtsVobs.NumberOfAudioStreams = GetEndian(2);
-            //            _ifo.VtsVobs.AudioStreams = new List<AudioStream>();
             for (int i = 0; i < _vtsVobs.NumberOfAudioStreams; i++)
             {
                 var audioStream = new AudioStream();
@@ -221,37 +220,23 @@ namespace Nikse.SubtitleEdit.Logic
                 _fs.Read(buffer, 0, 2);
                 var languageTwoLetter = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 _vtsVobs.Subtitles.Add(InterpretLanguageCode(languageTwoLetter));
-
                 _fs.Read(buffer, 0, 2); // reserved for language code extension + code extension
-                switch (buffer[0])      // 4, 8, 10-12 unused
-                {
-                    // http://dvd.sourceforge.net/dvdinfo/sprm.html
-                    case 1:
-                        break; //0 = unspecified caption
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 5:
-                        break;
-                    case 6:
-                        break;
-                    case 7:
-                        break;
-                    case 9:
-                        break;
-                    case 13:
-                        break;
-                    case 14:
-                        break;
-                    case 15:
-                        break;
-                }
 
-                ////                int languageId = buffer[1] & Helper.B11111000;
-                //                int languageId1 = buffer[0] & Helper.B11111000;
-                //                int languageId2= buffer[1] & Helper.B11111000;
-                //                System.Diagnostics.Debug.WriteLine(languageTwoLetter + " " + languageId1.ToString() + " " + languageId2.ToString() + "  " + buffer[0].ToString() + " " + buffer[1].ToString());
+                //switch (buffer[0])      // 4, 8, 10-12 unused
+                //{
+                //    // http://dvd.sourceforge.net/dvdinfo/sprm.html
+                //    case 1: subtitleFormat = "(caption/normal size char)"; break; //0 = unspecified caption
+                //    case 2: subtitleFormat = "(caption/large size char)"; break;
+                //    case 3: subtitleFormat = "(caption for children)"; break;
+                //    case 5: subtitleFormat = "(closed caption/normal size char)"; break;
+                //    case 6: subtitleFormat = "(closed caption/large size char)"; break;
+                //    case 7: subtitleFormat = "(closed caption for children)"; break;
+                //    case 9: subtitleFormat = "(forced caption)"; break;
+                //    case 13: subtitleFormat = "(director comments/normal size char)"; break;
+                //    case 14: subtitleFormat = "(director comments/large size char)"; break;
+                //    case 15: subtitleFormat = "(director comments for children)"; break;
+                //}
+
                 _fs.Position += 2;
             }
         }
@@ -545,24 +530,10 @@ namespace Nikse.SubtitleEdit.Logic
                             subType += "pan&scan";
                         }
 
-                        // SubtitleIDs and SubtitleTypes are defined as List<string> inside class VtsVobs
                         _vtsVobs.SubtitleIDs.Add(sub);
                         _vtsVobs.SubtitleTypes.Add(subType);
                     }
                 }
-                // So we get following id's and types
-                /*
-                     sub            subtype
-                     0x20, 0x21     wide, letterboxed
-                     0x22, 0x23     wide, letterboxed
-                     0x24, 0x25     wide, letterboxed
-                     0x26, 0x27     wide, letterboxed
-                     0x28, 0x29     wide, letterboxed
-                     0x2a, 0x2b     wide, letterboxed
-                     0x2c, 0x2d     wide, letterboxed
-                     0x2e, 0x2f     wide, letterboxed
-                     0x30, 0x31     wide, letterboxed
-                    */
             }
         }
 
