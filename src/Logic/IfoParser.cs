@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Text;
+using Nikse.SubtitleEdit.MicrosoftTranslationService;
 
 namespace Nikse.SubtitleEdit.Logic
 {
@@ -33,36 +35,83 @@ namespace Nikse.SubtitleEdit.Logic
             public VideoStream VideoStream;
             public List<AudioStream> AudioStreams;
             public List<string> Subtitles;
+            public List<string> SubtitleIDs;
+            public List<string> SubtitleTypes;
+
+            public List<string> GetAllLanguages()
+            {
+                var list = new List<string>();
+                for (int i = 0; i < Subtitles.Count; i++)
+                {
+                    if (i < SubtitleIDs.Count && i < SubtitleTypes.Count)
+                    {
+                        var ids = SubtitleIDs[i].Split(',');
+                        var types = SubtitleTypes[i].Split(',');
+                        if (ids.Length == 2 && ids[0].Trim() == ids[1].Trim() || ids.Length == 3 && ids[0].Trim() == ids[1].Trim() && ids[1].Trim() == ids[2].Trim())
+                        {
+                            list.Add(Subtitles[i] + " (" + ids[0].Trim() + ")");
+                        }
+                        else
+                        {
+                            if (ids.Length >= 1 && types.Length >= 1)
+                            {
+                                list.Add(Subtitles[i] + ", " + types[0].Trim() + " (" + ids[0].Trim() + ")");
+                            }
+                            if (ids.Length >= 2 && types.Length >= 2)
+                            {
+                                list.Add(Subtitles[i] + ", " + types[1].Trim() + " (" + ids[1].Trim() + ")");
+                            }
+                            if (ids.Length >= 3 && types.Length >= 3)
+                            {
+                                list.Add(Subtitles[i] + ", " + types[2].Trim() + " (" + ids[2].Trim() + ")");
+                            }
+                            if (ids.Length >= 4 && types.Length >= 4)
+                            {
+                                list.Add(Subtitles[i] + ", " + types[3].Trim() + " (" + ids[3].Trim() + ")");
+                            }
+                        }
+                    }
+                }
+                return list;
+            }
 
             public VtsVobs()
             {
                 VideoStream = new VideoStream();
                 AudioStreams = new List<AudioStream>();
                 Subtitles = new List<string>();
+                SubtitleIDs = new List<string>();
+                SubtitleTypes = new List<string>();
             }
         };
 
         public class ProgramChain
         {
-            public int NumberOfPGC;
+            public int NumberOfPgc;
             public int NumberOfCells;
             public string PlaybackTime;
-            public List<byte> PGCEntryCells;
-            public List<string> PGCPlaybackTimes;
-            public List<string> PGCStartTimes;
+            public List<byte> PgcEntryCells;
+            public List<string> PgcPlaybackTimes;
+            public List<string> PgcStartTimes;
             public List<char> AudioStreamsAvailable;
-            public List<char> SubtitlesAvailable;
+            public List<byte[]> SubtitlesAvailable;
             public List<Color> ColorLookupTable;
 
             public ProgramChain()
             {
-                PGCEntryCells = new List<byte>();
-                PGCPlaybackTimes = new List<string>();
-                PGCStartTimes = new List<string>();
+                PgcEntryCells = new List<byte>();
+                PgcPlaybackTimes = new List<string>();
+                PgcStartTimes = new List<string>();
                 AudioStreamsAvailable = new List<char>();
-                SubtitlesAvailable = new List<char>();
+                SubtitlesAvailable = new List<byte[]>();
                 ColorLookupTable = new List<Color>();
             }
+
+            public bool Has43Subs { get; set; }
+            public bool HasWideSubs { get; set; }
+            public bool HasLetterSubs { get; set; }
+            public bool HasPanSubs { get; set; }
+            public bool HasNoSpecificSubs { get; set; }
         };
 
         public class VtsPgci
@@ -76,13 +125,13 @@ namespace Nikse.SubtitleEdit.Logic
             }
         };
 
-        private readonly List<string> ArrayOfAudioMode = new List<string> { "AC3", "...", "MPEG1", "MPEG2", "LPCM", "...", "DTS" };
-        private readonly List<string> ArrayOfAudioExtension = new List<string> { "unspecified", "normal", "for visually impaired", "director's comments", "alternate director's comments" };
-        private readonly List<string> ArrayOfAspect = new List<string> { "4:3", "...", "...", "16:9" };
-        private readonly List<string> ArrayOfStandard = new List<string> { "NTSC", "PAL", "...", "..." };
-        private readonly List<string> ArrayOfCodingMode = new List<string> { "MPEG1", "MPEG2" };
-        private readonly List<string> ArrayOfNTSCResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
-        private readonly List<string> ArrayOfPALResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
+        private readonly List<string> _arrayOfAudioMode = new List<string> { "AC3", "...", "MPEG1", "MPEG2", "LPCM", "...", "DTS" };
+        private readonly List<string> _arrayOfAudioExtension = new List<string> { "unspecified", "normal", "for visually impaired", "director's comments", "alternate director's comments" };
+        private readonly List<string> _arrayOfAspect = new List<string> { "4:3", "...", "...", "16:9" };
+        private readonly List<string> _arrayOfStandard = new List<string> { "NTSC", "PAL", "...", "..." };
+        private readonly List<string> _arrayOfCodingMode = new List<string> { "MPEG1", "MPEG2" };
+        private readonly List<string> _arrayOfNtscResolution = new List<string> { "720x480", "704x480", "352x480", "352x240" };
+        private readonly List<string> _arrayOfPalResolution = new List<string> { "720x576", "704x576", "352x576", "352x288" };
         public static List<string> ArrayOfLanguageCode = new List<string> { "  ", "aa", "ab", "af", "am", "ar", "as", "ay", "az", "ba", "be", "bg", "bh", "bi", "bn", "bo", "br", "ca", "co", "cs", "cy", "da", "de", "dz", "el",
            "en", "eo", "es", "et", "eu", "fa", "fi", "fj", "fo", "fr", "fy", "ga", "gd", "gl", "gn", "gu", "ha", "he", "hi", "hr", "hu", "hy", "ia", "id", "ie", "ik",
            "in", "is", "it", "iu", "iw", "ja", "ji", "jw", "ka", "kk", "kl", "km", "kn", "ko", "ks", "ku", "ky", "la", "ln", "lo", "lt", "lv", "mg", "mi", "mk", "ml",
@@ -100,8 +149,8 @@ namespace Nikse.SubtitleEdit.Logic
         public VtsVobs VideoTitleSetVobs { get { return _vtsVobs; } }
         public string ErrorMessage { get; private set; }
 
-        private VtsVobs _vtsVobs = new VtsVobs();
-        private VtsPgci _vtsPgci = new VtsPgci();
+        private readonly VtsVobs _vtsVobs = new VtsVobs();
+        private readonly VtsPgci _vtsPgci = new VtsPgci();
         private FileStream _fs;
 
         public IfoParser(string fileName)
@@ -110,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 _fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
-                byte[] buffer = new byte[12];
+                var buffer = new byte[12];
                 _fs.Position = 0;
                 _fs.Read(buffer, 0, 12);
                 string id = Encoding.UTF8.GetString(buffer);
@@ -131,18 +180,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         private void ParseVtsVobs()
         {
-            byte[] buffer = new byte[16];
+            var buffer = new byte[16];
 
             //retrieve video info
             _fs.Position = 0x200;
             var data = IntToBin(GetEndian(2), 16);
-            _vtsVobs.VideoStream.CodingMode = ArrayOfCodingMode[BinToInt(MidStr(data, 0, 2))];
-            _vtsVobs.VideoStream.Standard = ArrayOfStandard[BinToInt(MidStr(data, 2, 2))];
-            _vtsVobs.VideoStream.Aspect = ArrayOfAspect[BinToInt(MidStr(data, 4, 2))];
+            _vtsVobs.VideoStream.CodingMode = _arrayOfCodingMode[BinToInt(MidStr(data, 0, 2))];
+            _vtsVobs.VideoStream.Standard = _arrayOfStandard[BinToInt(MidStr(data, 2, 2))];
+            _vtsVobs.VideoStream.Aspect = _arrayOfAspect[BinToInt(MidStr(data, 4, 2))];
             if (_vtsVobs.VideoStream.Standard == "PAL")
-                _vtsVobs.VideoStream.Resolution = ArrayOfPALResolution[BinToInt(MidStr(data, 13, 2))];
+                _vtsVobs.VideoStream.Resolution = _arrayOfPalResolution[BinToInt(MidStr(data, 13, 2))];
             else if (_vtsVobs.VideoStream.Standard == "NTSC")
-                _vtsVobs.VideoStream.Resolution = ArrayOfNTSCResolution[BinToInt(MidStr(data, 13, 2))];
+                _vtsVobs.VideoStream.Resolution = _arrayOfNtscResolution[BinToInt(MidStr(data, 13, 2))];
 
             //retrieve audio info
             _fs.Position = 0x202; //useless but here for readability
@@ -150,17 +199,17 @@ namespace Nikse.SubtitleEdit.Logic
             //            _ifo.VtsVobs.AudioStreams = new List<AudioStream>();
             for (int i = 0; i < _vtsVobs.NumberOfAudioStreams; i++)
             {
-                AudioStream audioStream = new AudioStream();
+                var audioStream = new AudioStream();
                 data = IntToBin(GetEndian(2), 16);
                 audioStream.LangageTypeSpecified = Convert.ToInt32(MidStr(data, 4, 2));
-                audioStream.CodingMode = ArrayOfAudioMode[(BinToInt(MidStr(data, 0, 3)))];
+                audioStream.CodingMode = _arrayOfAudioMode[(BinToInt(MidStr(data, 0, 3)))];
                 audioStream.Channels = BinToInt(MidStr(data, 13, 3)) + 1;
                 _fs.Read(buffer, 0, 2);
                 audioStream.LangageCode = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 if (ArrayOfLanguageCode.Contains(audioStream.LangageCode))
                     audioStream.Langage = ArrayOfLanguage[ArrayOfLanguageCode.IndexOf(audioStream.LangageCode)];
                 _fs.Seek(1, SeekOrigin.Current);
-                audioStream.Extension = ArrayOfAudioExtension[_fs.ReadByte()];
+                audioStream.Extension = _arrayOfAudioExtension[_fs.ReadByte()];
                 _fs.Seek(2, SeekOrigin.Current);
                 _vtsVobs.AudioStreams.Add(audioStream);
             }
@@ -175,21 +224,30 @@ namespace Nikse.SubtitleEdit.Logic
                 var languageTwoLetter = new string(new[] { Convert.ToChar(buffer[0]), Convert.ToChar(buffer[1]) });
                 _vtsVobs.Subtitles.Add(InterpretLangageCode(languageTwoLetter));
 
-                string subtitleFormat = string.Empty;
                 _fs.Read(buffer, 0, 2); // reserved for language code extension + code extension
                 switch (buffer[0])      // 4, 8, 10-12 unused
                 {
                     // http://dvd.sourceforge.net/dvdinfo/sprm.html
-                    case 1: subtitleFormat = "(caption/normal size char)"; break; //0 = unspecified caption
-                    case 2: subtitleFormat = "(caption/large size char)"; break;
-                    case 3: subtitleFormat = "(caption for children)"; break;
-                    case 5: subtitleFormat = "(closed caption/normal size char)"; break;
-                    case 6: subtitleFormat = "(closed caption/large size char)"; break;
-                    case 7: subtitleFormat = "(closed caption for children)"; break;
-                    case 9: subtitleFormat = "(forced caption)"; break;
-                    case 13: subtitleFormat = "(director comments/normal size char)"; break;
-                    case 14: subtitleFormat = "(director comments/large size char)"; break;
-                    case 15: subtitleFormat = "(director comments for children)"; break;
+                    case 1:
+                        break; //0 = unspecified caption
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 9:
+                        break;
+                    case 13:
+                        break;
+                    case 14:
+                        break;
+                    case 15:
+                        break;
                 }
 
                 ////                int languageId = buffer[1] & Helper.B11111000;
@@ -212,8 +270,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string IntToBin(int value, int digits)
         {
-            string result = string.Empty;
-            result = Convert.ToString(value, 2);
+            string result = Convert.ToString(value, 2);
             while (result.Length < digits)
                 result = "0" + result;
             return result;
@@ -242,10 +299,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         private void ParseVtsPgci()
         {
-            const int SectorSize = 2048;
+            const int sectorSize = 2048;
 
             _fs.Position = 0xCC; //Get VTS_PGCI adress
-            int tableStart = SectorSize * GetEndian(4);
+            int tableStart = sectorSize * GetEndian(4);
 
             _fs.Position = tableStart;
             _vtsPgci.NumberOfProgramChains = GetEndian(2);
@@ -254,11 +311,11 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < _vtsPgci.NumberOfProgramChains; i++)
             {
                 //Parse PGC Header
-                ProgramChain programChain = new ProgramChain();
+                var programChain = new ProgramChain();
                 _fs.Position = tableStart + 4 + 8 * (i + 1);  //Get PGC adress
                 int programChainAdress = GetEndian(4);
                 _fs.Position = tableStart + programChainAdress + 2;  //Move to PGC
-                programChain.NumberOfPGC = _fs.ReadByte();
+                programChain.NumberOfPgc = _fs.ReadByte();
                 programChain.NumberOfCells = _fs.ReadByte();
                 programChain.PlaybackTime = InterpretTime(GetEndian(4));
                 _fs.Seek(4, SeekOrigin.Current);
@@ -276,16 +333,19 @@ namespace Nikse.SubtitleEdit.Logic
                 _fs.Position = tableStart + programChainAdress + 0x1C;
                 for (int j = 0; j < _vtsVobs.NumberOfSubtitles; j++)
                 {
-                    string temp = IntToBin(_fs.ReadByte(), 8);
-                    programChain.SubtitlesAvailable.Add(temp[0]);
-                    _fs.Seek(3, SeekOrigin.Current);
+                    // read and save full subpicture stream info inside program chain
+                    var subtitle = new byte[4];
+                    _fs.Read(subtitle, 0, 4);
+                    programChain.SubtitlesAvailable.Add(subtitle);
                 }
+
+                CalculateSubtitleTypes(programChain);
 
                 //Parse Color LookUp Table (CLUT) - offset 00A4, 16*4 (0, Y, Cr, Cb)
                 _fs.Position = tableStart + programChainAdress + 0xA4;
                 for (int colorNumber = 0; colorNumber < 16; colorNumber++)
                 {
-                    byte[] colors = new byte[4];
+                    var colors = new byte[4];
                     _fs.Read(colors, 0, 4);
                     int y = colors[1] - 16;
                     int cr = colors[2] - 128;
@@ -300,30 +360,30 @@ namespace Nikse.SubtitleEdit.Logic
                 //Parse Program Map
                 _fs.Position = tableStart + programChainAdress + 0xE6;
                 _fs.Position = tableStart + programChainAdress + GetEndian(2);
-                for (int j = 0; j < programChain.NumberOfPGC; j++)
+                for (int j = 0; j < programChain.NumberOfPgc; j++)
                 {
-                    programChain.PGCEntryCells.Add((byte)_fs.ReadByte());
+                    programChain.PgcEntryCells.Add((byte)_fs.ReadByte());
                 }
 
                 // Cell Playback Info Table to retrieve duration
                 _fs.Position = tableStart + programChainAdress + 0xE8;
                 _fs.Position = tableStart + programChainAdress + GetEndian(2);
-                List<int> timeArray = new List<int>();
-                for (int k = 0; k < programChain.NumberOfPGC; k++)
+                var timeArray = new List<int>();
+                for (int k = 0; k < programChain.NumberOfPgc; k++)
                 {
                     int time = 0;
                     int max;
-                    if (k == programChain.NumberOfPGC - 1)
+                    if (k == programChain.NumberOfPgc - 1)
                         max = programChain.NumberOfCells;
                     else
-                        max = programChain.PGCEntryCells[k + 1] - 1;
-                    for (int j = programChain.PGCEntryCells[k]; j <= max; j++)
+                        max = programChain.PgcEntryCells[k + 1] - 1;
+                    for (int j = programChain.PgcEntryCells[k]; j <= max; j++)
                     {
                         _fs.Seek(4, SeekOrigin.Current);
                         time += TimeToMs(GetEndian(4));
                         _fs.Seek(16, SeekOrigin.Current);
                     }
-                    programChain.PGCPlaybackTimes.Add(MsToTime(time));
+                    programChain.PgcPlaybackTimes.Add(MsToTime(time));
                     timeArray.Add(time);
 
                     //convert to start time
@@ -333,11 +393,178 @@ namespace Nikse.SubtitleEdit.Logic
                         time += timeArray[l - 1];
                     }
                     if (k == 0)
-                        programChain.PGCStartTimes.Add(MsToTime(0));
+                        programChain.PgcStartTimes.Add(MsToTime(0));
                     if (k > 0)
-                        programChain.PGCStartTimes.Add(MsToTime(time));
+                        programChain.PgcStartTimes.Add(MsToTime(time));
                 }
                 _vtsPgci.ProgramChains.Add(programChain);
+            }
+        }
+
+        private void CalculateSubtitleTypes(ProgramChain programChain)
+        {
+            // Additional Code to analyse stream bytes
+            if (_vtsVobs.NumberOfSubtitles > 0)
+            {
+                // load the 'last' subpicture stream info,
+                // because if we have more than one subtitle stream,
+                // all subtitle positions > 0
+                // lastSubtitle[0] is related to 4:3
+                // lastSubtitle[1] is related to Wide
+                // lastSubtitle[2] is related to letterboxed
+                // lastSubtitle[3] is related to pan&scan
+                byte[] lastSubtitle = programChain.SubtitlesAvailable[programChain.SubtitlesAvailable.Count - 1];
+
+                int countSubs = 0;
+
+                // set defaults for all possible subpicture types and positions
+                programChain.Has43Subs = false;
+                programChain.HasWideSubs = false;
+                programChain.HasLetterSubs = false;
+                programChain.HasPanSubs = false;
+                programChain.HasNoSpecificSubs = true;
+
+                int pos43Subs = -1;
+                int posWideSubs = -1;
+                int posLetterSubs = -1;
+                int posPanSubs = -1;
+
+                // parse different subtitle bytes
+                if (lastSubtitle[0] > 0x80)
+                {
+                    programChain.Has43Subs = true;
+                    countSubs++; // 4:3
+                }
+                if (lastSubtitle[1] > 0)
+                {
+                    programChain.HasWideSubs = true;
+                    countSubs++; // wide
+                }
+                if (lastSubtitle[2] > 0)
+                {
+                    programChain.HasLetterSubs = true;
+                    countSubs++; // letterboxed
+                }
+                if (lastSubtitle[3] > 0)
+                {
+                    programChain.HasPanSubs = true;
+                    countSubs++; // pan&scan
+                }
+
+                if (countSubs == 0)
+                {
+                    // may be, only a 4:3 stream exists
+                    // -> lastSubtitle[0] = 0x80
+                }
+                else
+                {
+                    if (_vtsVobs.NumberOfSubtitles == 1)
+                    {
+                        // only 1 stream exists, may be letterboxed
+                        // if so we cound't find wide id, because lastSubtitle[1] = 0 !!
+                        // corresponding wide stream byte is 0 => wide id = 0x20
+                        // letterboxed = 0x21
+                        if (programChain.HasLetterSubs && !programChain.HasWideSubs)
+                        {
+                            // repair it
+                            programChain.HasWideSubs = true;
+                        }
+                    }
+                    programChain.HasNoSpecificSubs = false;
+                }
+
+                // subpucture streams start with 0x20
+                int subStream = 0x20;
+
+                // Now we know all about available subpicture streams, including position type
+                // And we can create whole complete definitions for all avalable streams
+                foreach (byte[] subtitle in programChain.SubtitlesAvailable)
+                {
+                    if (programChain.HasNoSpecificSubs)
+                    {
+                        // only one unspezified subpicture stream exists
+                        _vtsVobs.SubtitleIDs.Add(string.Format("0x{0:x2}", subStream++));
+                        _vtsVobs.SubtitleTypes.Add("unspecific");
+                    }
+                    else
+                    {
+                        // read stream position for evey subtitle type from subtitle byte
+                        if (programChain.Has43Subs)
+                        {
+                            pos43Subs = subtitle[0] - 0x80;
+                        }
+                        if (programChain.HasWideSubs)
+                        {
+                            posWideSubs = subtitle[1];
+                        }
+                        if (programChain.HasLetterSubs)
+                        {
+                            posLetterSubs = subtitle[2];
+                        }
+                        if (programChain.HasPanSubs)
+                        {
+                            posPanSubs = subtitle[3];
+                        }
+
+                        // Now we can create subpicture id's and types for every stream
+                        // All used subpicture id's and types will beappended to string, separated by colon
+                        // So it's possible to split it later
+                        string sub = string.Empty;
+                        string subType = string.Empty;
+                        if (programChain.Has43Subs)
+                        {
+                            sub = string.Format("0x{0:x2}", subStream + pos43Subs);
+                            subType = "4:3";
+                        }
+                        if (programChain.HasWideSubs)
+                        {
+                            if (sub.Length > 0)
+                            {
+                                sub += ", ";
+                                subType += ", ";
+                            }
+                            sub += string.Format("0x{0:x2}", subStream + posWideSubs);
+                            subType += "wide";
+                        }
+                        if (programChain.HasLetterSubs)
+                        {
+                            if (sub.Length > 0)
+                            {
+                                sub += ", ";
+                                subType += ", ";
+                            }
+                            sub += string.Format("0x{0:x2}", subStream + posLetterSubs);
+                            subType += "letterboxed";
+                        }
+                        if (programChain.HasPanSubs)
+                        {
+                            if (sub.Length > 0)
+                            {
+                                sub += ", ";
+                                subType += ", ";
+                            }
+                            sub += string.Format("0x{0:x2}", subStream + posPanSubs);
+                            subType += "pan&scan";
+                        }
+
+                        // SubtitleIDs and SubtitleTypes are defined as List<string> inside class VtsVobs
+                        _vtsVobs.SubtitleIDs.Add(sub);
+                        _vtsVobs.SubtitleTypes.Add(subType);
+                    }
+                }
+                // So we get following id's and types
+                /*
+                     sub            subtype
+                     0x20, 0x21     wide, letterboxed
+                     0x22, 0x23     wide, letterboxed
+                     0x24, 0x25     wide, letterboxed
+                     0x26, 0x27     wide, letterboxed
+                     0x28, 0x29     wide, letterboxed
+                     0x2a, 0x2b     wide, letterboxed
+                     0x2c, 0x2d     wide, letterboxed
+                     0x2e, 0x2f     wide, letterboxed
+                     0x30, 0x31     wide, letterboxed
+                    */
             }
         }
 
@@ -376,7 +603,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string MsToTime(double milliseconds)
         {
-            TimeSpan ts = TimeSpan.FromMilliseconds(milliseconds);
+            var ts = TimeSpan.FromMilliseconds(milliseconds);
             string s = string.Format("{0:#0}:{1:00}:{2:00}.{3:000}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds);
             return s;
         }
@@ -391,7 +618,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (timeBytes.Substring(24, 2) == "11")
                 fps = 30;
             int milliseconds = (int)Math.Round((1000.0 / fps) * StrToFloat(IntToHex(BinToInt(timeBytes.Substring(26, 6)), 3)));
-            TimeSpan ts = new TimeSpan(0, h, m, s, milliseconds);
+            var ts = new TimeSpan(0, h, m, s, milliseconds);
             return MsToTime(ts.TotalMilliseconds);
         }
 
