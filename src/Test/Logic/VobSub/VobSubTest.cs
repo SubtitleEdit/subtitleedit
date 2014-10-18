@@ -17,8 +17,8 @@ namespace Test.Logic.VobSub
             {
                 var p1 = new Paragraph("Line1", 0, 1000);
                 var p2 = new Paragraph("Line2", 2000, 3000);
-                writer.WriteParagraph(p1, new Bitmap(200, 20), ContentAlignment.BottomCenter);
-                writer.WriteParagraph(p2, new Bitmap(200, 20), ContentAlignment.BottomCenter);
+                writer.WriteParagraph(p1, new Bitmap(200, 20), ContentAlignment.BottomCenter, false);
+                writer.WriteParagraph(p2, new Bitmap(200, 20), ContentAlignment.BottomCenter, false);
             }
 
             var reader = new VobSubParser(true);
