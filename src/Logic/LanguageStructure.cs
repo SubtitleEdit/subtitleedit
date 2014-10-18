@@ -472,6 +472,7 @@
             public string LineHeight { get; set; }
             public string BoxSingleLine { get; set; }
             public string BoxMultiLine { get; set; }
+            public string Forced { get; set; }
         }
 
         public class ExportText

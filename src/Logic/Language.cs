@@ -584,6 +584,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LineHeight = "Line height",
                 BoxSingleLine = "Box - single line",
                 BoxMultiLine = "Box - multi line",
+                Forced = "Forced",
             };
 
             ExportText = new LanguageStructure.ExportText
