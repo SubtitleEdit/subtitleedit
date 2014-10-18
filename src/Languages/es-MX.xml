@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
@@ -160,6 +160,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Explorando {0} y subcarpetas para archivos de subtítulos...</ScanningFolder>
     <Recursive>Incluir subcarpetas</Recursive>
     <SetMinMsBetweenSubtitles>Fijar el min. de milisegundos entre subtítulos</SetMinMsBetweenSubtitles>
+	<PlainText>Texto sin formato</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Videoproyector</Title>
@@ -190,9 +191,21 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FrameRateNotChanged>Tasa de cuadros idéntica - nada que convertir</FrameRateNotChanged>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
-    <Title>Ajuste la velocidad en porcentaje</Title>
-    <Info>Cambiar la velocidad de los subtítulos en porcentaje</Info>
+    <Title>Ajustar la velocidad en porcentaje</Title>
+	<Info>Cambiar la velocidad de los subtítulos en porcentaje</Info>
+    <Custom>Personalizado</Custom>
+    <ToDropFrame>Saltar cuadros hasta</ToDropFrame>
+    <FromDropFrame>Saltar cuadros desde</FromDropFrame>
   </ChangeSpeedInPercent>
+  <CheckForUpdates>
+    <Title>Buscar actualizaciones</Title>
+    <CheckingForUpdates>Buscando actualizaciones...</CheckingForUpdates>
+    <CheckingForUpdatesFailedX>Falló al buscar actualizaciones: {0}</CheckingForUpdatesFailedX>
+    <CheckingForUpdatesNoneAvailable>Estás usando la última versión de Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
+    <CheckingForUpdatesNewVersion>¡Nueva versión disponible!</CheckingForUpdatesNewVersion>
+    <InstallUpdate>Ir a la página de descargas</InstallUpdate>
+    <NoUpdates>No actualizar</NoUpdates>
+  </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Elegir pista de audio</Title>
   </ChooseAudioTrack>
@@ -565,6 +578,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>«âTª eres mi vida, eres mi sol» -&gt; «♫ eres mi vida, eres mi sol»</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ¡Mensajes de registro importantes!</NumberOfImportantLogMessages>
     <FixedOkXY>Corregidos y aceptados - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>Es llegal. -&gt; Es ilegal.</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>¡Hola Juan! - ¡Hola Lucía! -&gt; ¡Hola Juan!&lt;br /&gt;- ¡Hola Lucía!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>¿Necesita diccionarios?</Title>
@@ -675,6 +691,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <RestoreAutoBackup>Restaurar copia de seguridad automática...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Sub Station Alpha propiedades Avanzadas...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub Station Alpha propiedades...</SubStationAlphaProperties>
+        <EbuProperties>EBU STL propiedades...</EbuProperties>
+        <PacProperties>PAC propiedades...</PacProperties>
         <OpenOriginal>Abrir subtítulo original (modo tranductor)...</OpenOriginal>
         <SaveOriginal>Guardar subtítulo original</SaveOriginal>
         <CloseOriginal>Cerrar subtítulo original</CloseOriginal>
@@ -816,6 +834,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>Abandonar sesión</LeaveSession>
       </Networking>
       <Help>
+        <CheckForUpdates>Buscar actualizaciones...</CheckForUpdates>
         <Title>Ayuda</Title>
         <Help>Ayuda</Help>
         <About>Acerca de...</About>
@@ -975,6 +994,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Subtítulo original guardado {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Modificado archivo en disco</FileOnDiskModified>
     <OverwriteModifiedFile>¿Sobreescribir archivo {0} modificado a {1} {2}{3} con archivo actual cargado del disco a {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>No se puede guardar {0}
+
+¡El archivo es de solo lectura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Imposible guardar archivo de subtítulo {0}
 ¡El subtítulo parece estar vacío - intentar volver a guardarlo si estás trabajando con un subtítulo válido!</UnableToSaveSubtitleX>
     <BeforeNew>Anterior nuevo</BeforeNew>
@@ -1051,6 +1073,7 @@ con el archivo de video, al subtítulo actual cargado.
     <NothingToUndo>Nada que deshacer</NothingToUndo>
     <InvalidLanguageNameX>Nombre de idioma no válido: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>¡No se puede cambiar el idioma!</UnableToChangeLanguage>
+    <DoNotDisplayMessageAgain>No mostrar este mensaje otra vez</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Número de palabras corregidas: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Número de palabras omitidas: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Número de palabras correctas: {0}</NumberOfCorrectWords>
@@ -1279,6 +1302,8 @@ con el archivo de video, al subtítulo actual cargado.
     <ImportRulesTitle>Importación regla (s) de reemplazo para...</ImportRulesTitle>
     <ExportRulesTitle>Exportación regla (s) de reemplazo para...</ExportRulesTitle>
     <Rules>Normas de exportación</Rules>
+    <MoveToTop>Mover al inicio</MoveToTop>
+    <MoveToBottom>Mover al final</MoveToBottom>
   </MultipleReplace>
   <NetworkChat>
     <Title>Chat</Title>
@@ -1462,6 +1487,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <AutoBackupEveryMinute>cada minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>cada 5 minutos</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>cada 15 minutos</AutoBackupEveryFifteenMinutes>
+    <CheckForUpdates>Buscar actualizaciones</CheckForUpdates>
     <AllowEditOfOriginalSubtitle>Permitir la edición del subtítulo original</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Confirmar la eliminación de líneas</PromptDeleteLines>
     <TimeCodeMode>Modo de código de tiempo</TimeCodeMode>
@@ -1472,6 +1498,8 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DirectShowDescription>quartz.dll en la carpeta system32</DirectShowDescription>
     <ManagedDirectX>Gestión de DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Código gestionado desde DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1612,7 +1640,9 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <SyntaxColorOverlap>Colorear superposición de código de tiempo</SyntaxColorOverlap>
     <SyntaxErrorColor>Color de errores</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ir a la primera línea seleccionada</GoToFirstSelectedLine>
+    <GoToNextEmptyLine>Ir a la siguiente línea vacía</GoToNextEmptyLine>
     <MergeSelectedLines>Unir las líneas seleccionadas</MergeSelectedLines>
+    <MergeSelectedLinesOnlyFirstText>Fusionar líneas seleccionadas, mantener sólo el primer texto no vacío</MergeSelectedLinesOnlyFirstText>
     <ToggleTranslationMode>Cambiar al modo de traducción</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Alternar original y traducción</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Combinar original y traducción</MergeOriginalAndTranslation>
@@ -1634,6 +1664,11 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <Miscellaneous>Otros</Miscellaneous>
     <UseDoNotBreakAfterList>Utilizar «no saltar después de la lista» (para salto automático)</UseDoNotBreakAfterList>
   </Settings>
+  <SetVideoOffset>
+    <Title>Ajustar desplazamiendo del video</Title>
+    <Description>Ajustar desplazamiento del video (los subtítulos no deben seguir el tiempo real del video, pero por ejemplo, +10 horas)</Description>
+    <RelativeToCurrentVideoPosition>Relativa a la posición actual del video</RelativeToCurrentVideoPosition>
+  </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Mostrar líneas seleccionadas antes/después</Title>
     <TitleAll>Mostrar todas las líneas antes/después</TitleAll>
@@ -1679,6 +1714,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <ImageText>Imagen de texto</ImageText>
     <SpellCheckCompleted>Revisión ortográfica completada</SpellCheckCompleted>
     <SpellCheckAborted>Revisión ortográfica cancelada</SpellCheckAborted>
+    <UndoX>Deshacer: {0}</UndoX>
   </SpellCheck>
   <Split>
     <Title>Separar</Title>
@@ -1752,6 +1788,9 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <DurationMinimum>Duración - mínima: {0:0.000} segundos</DurationMinimum>
     <DurationMaximum>Duración - máxima: {0:0.000} segundos</DurationMaximum>
     <DurationAverage>Duración - promedio: {0:0.000} segundos</DurationAverage>
+    <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Caracteres/seg - promedio: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Sub Station Alpha (Propiedades Avanzadas)</Title>
@@ -1911,6 +1950,7 @@ puedan editar el mismo archivo de subtítulo (colaboración)</Information>
     <OcrAutoCorrectionSpellChecking>OCR autocorrección / revisión ortográfica</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Corregir errores de OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importar texto con código de tiempo coincidente...</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>Importar nuevos códigos de tiempo</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Guardar imagen de subtítulo como...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Guardar todas las imágenes (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Guardar todas las imágenes con índice HTML...</SaveAllSubtitleImagesWithHtml>
