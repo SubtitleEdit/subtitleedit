@@ -234,10 +234,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var brSub = new Logic.BluRaySup.BluRaySupPicture
                 {
-                    StartTime = (long) parameter.P.StartTime.TotalMilliseconds,
-                    EndTime = (long) parameter.P.EndTime.TotalMilliseconds,
+                    StartTime = (long)parameter.P.StartTime.TotalMilliseconds,
+                    EndTime = (long)parameter.P.EndTime.TotalMilliseconds,
                     Width = parameter.ScreenWidth,
-                    Height = parameter.ScreenHeight, 
+                    Height = parameter.ScreenHeight,
                     IsForced = parameter.Forced
                 };
                 parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.Alignment);
@@ -2372,7 +2372,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
-
             if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportVobSubFontName;
             else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
@@ -2726,7 +2725,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                 if (_vobSubOcr != null)
                 {
-                    int i = 0;
                     for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
                     {
                         if (_vobSubOcr.GetIsForced(index))
@@ -3374,7 +3372,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (subtitleListView1.CheckBoxes)
             {
                 item.Text = string.Empty;
-                subItem = new ListViewItem.ListViewSubItem(item, paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph } ;
+                subItem = new ListViewItem.ListViewSubItem(item, paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph };
                 item.SubItems.Add(subItem);
             }
 
@@ -3461,7 +3459,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.Columns[columnIndexStart].Width = 90;
             subtitleListView1.Columns[columnIndexEnd].Width = 90;
             subtitleListView1.Columns[columnIndexDuration].Width = 60;
-            subtitleListView1.Columns[columnIndexText].Width = -2;           
+            subtitleListView1.Columns[columnIndexText].Width = -2;
         }
 
         private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Logic.Settings settings)
