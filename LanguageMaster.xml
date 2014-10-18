@@ -416,6 +416,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Line height</LineHeight>
     <BoxSingleLine>Box - single line</BoxSingleLine>
     <BoxMultiLine>Box - multi line</BoxMultiLine>
+    <Forced>Forced</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>
