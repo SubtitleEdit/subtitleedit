@@ -644,11 +644,11 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <SpellCheck>Proveri &amp;Pravopis...</SpellCheck>
         <FindDoubleWords>Pronađi duple &amp;reči</FindDoubleWords>
         <FindDoubleLines>Pronađi duple &amp;linije</FindDoubleLines>
-        <GetDictionaries>Pr&amp;euzmi rečnike...</GetDictionaries>
+        <GetDictionaries>Preuzmi rečnike...</GetDictionaries>
         <AddToNamesEtcList>&amp;Dodaj reč u popis naziva/izuzetaka...</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
-        <Title>U&amp;sklađivanje</Title>
+        <Title>Usklađivanje</Title>
         <AdjustAllTimes>&amp;Pomeri vreme linija...</AdjustAllTimes>
         <VisualSync>&amp;Vizuelno usklađivanje...</VisualSync>
         <PointSync>&amp;Tačka usklađivanja...</PointSync>
@@ -657,7 +657,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
       <AutoTranslate>
         <Title>&amp;Automatsko prevođenje</Title>
         <TranslatePoweredByGoogle>Prevedi pomoću &amp;Googla...</TranslatePoweredByGoogle>
-        <TranslatePoweredByMicrosoft>Prevedi pomoću &amp;Micrsofta...</TranslatePoweredByMicrosoft>
+        <TranslatePoweredByMicrosoft>Prevedi pomoću &amp;Microsofta...</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>&amp;Prevedi iz Švedskog u Danski...</TranslateFromSwedishToDanish>
       </AutoTranslate>
       <Options>
@@ -708,8 +708,8 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Auto-trajanje (trenutna linija teksta)</AutoDurationCurrentLine>
         <SelectAll>Iz&amp;aberi sve</SelectAll>
         <InsertFirstLine>Ubaci liniju</InsertFirstLine>
-        <InsertBefore>Ubaci liniju iza</InsertBefore>
-        <InsertAfter>Ubaci liniju ispred</InsertAfter>
+        <InsertBefore>Ubaci liniju prije</InsertBefore>
+        <InsertAfter>Ubaci liniju poslije</InsertAfter>
         <InsertSubtitleAfter>Ubaci prevod iza linije...</InsertSubtitleAfter>
         <CopyToClipboard>Kopiraj (u Clipboard)</CopyToClipboard>
         <Column>Stub teksta</Column>
@@ -845,7 +845,7 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
     <ReplaceContinueNotFound>Traženi predmet nije pronađen.
 Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamenu?</ReplaceContinueNotFound>
     <ReplaceXContinue>Traženi predmet je zamenjen {0} vreme (s).
-Želite li početi od vrha dokumenta i nastaviti pretražvanje i zamenu?</ReplaceXContinue>
+Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamenu?</ReplaceXContinue>
     <ReplaceContinueTitle>Nastavi 'Zameni'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Potraži za '{0}' od linije broj {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>{0} su pronađene na liniji broj {1}.</XFoundAtLineNumberY>
@@ -1350,7 +1350,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <ListViewSyntaxColoring>Pregled liste/bojadisanje sintakse</ListViewSyntaxColoring>
     <SyntaxColorDurationIfTooSmall>Trajanje boje ako je prekratko</SyntaxColorDurationIfTooSmall>
     <SyntaxColorDurationIfTooLarge>Trajanje boje ako je predugo</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Boja teksta ako je predugo</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextIfTooLong>Boja teksta ako je predug</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Boja teksta ako je više linija:</SyntaxColorTextMoreThanXLines>
     <SyntaxColorOverlap>Preklapanje boje vremenskog koda</SyntaxColorOverlap>
     <SyntaxErrorColor>Izaberite boju</SyntaxErrorColor>
@@ -1681,7 +1681,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <ShowWaveformOnly>Prikaži samo talasni oblik</ShowWaveformOnly>
     <ShowSpectrogramOnly>Prikaži samo Spektrogram</ShowSpectrogramOnly>
     <GuessTimeCodes>Pogodi vremenske kodove...</GuessTimeCodes>
-    <SeekSilence>Tražiti tišinu...</SeekSilence>
+    <SeekSilence>Traži tišinu...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Pogodi vremenske kodove...</Title>
