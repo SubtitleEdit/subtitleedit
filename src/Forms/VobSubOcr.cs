@@ -1202,6 +1202,44 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public bool GetIsForced(int index)
+        {
+            if (_mp4List != null)
+            {
+                return _mp4List[index].Picture.Forced;
+            }
+            if (_spList != null)
+            {
+                return _spList[index].Picture.Forced;
+            }
+            if (_bdnXmlSubtitle != null)
+            {
+                return false;
+            }
+            if (_xSubList != null)
+            {
+                return false;
+            }
+            if (_dvbSubtitles != null)
+            {
+//                return _dvbSubtitles[index]. ??
+                return false;
+            }
+            if (_bluRaySubtitlesOriginal != null)
+            {
+                return _bluRaySubtitles[index].IsForced;
+            }
+            if (checkBoxCustomFourColors.Checked)
+            {
+                return _vobSubMergedPackist[index].SubPicture.Forced;
+            }
+            if (_vobSubMergedPackist != null && index < _vobSubMergedPackist.Count)
+            {
+                return _vobSubMergedPackist[index].SubPicture.Forced;
+            }
+            return false;
+        }
+
         public Bitmap GetSubtitleBitmap(int index)
         {
             Bitmap returnBmp = null;

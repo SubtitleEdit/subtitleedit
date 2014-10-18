@@ -54,6 +54,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
             public int LineHeight { get; set; }
+            public bool Forced { get; set; }
 
             public MakeBitmapParameter()
             {
@@ -73,7 +74,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _exportType = "BDNXML";
         private string _fileName;
         private VobSubOcr _vobSubOcr;
-        private System.Windows.Forms.Timer previewTimer = new System.Windows.Forms.Timer();
+        private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
 
         private const string BoxMultiLine = "BoxMultiLine";
         private const string BoxSingleLine = "BoxSingleLine";
@@ -84,13 +85,13 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
-            previewTimer.Tick += previewTimer_Tick;
-            previewTimer.Interval = 100;
+            _previewTimer.Tick += previewTimer_Tick;
+            _previewTimer.Interval = 100;
         }
 
         private void previewTimer_Tick(object sender, EventArgs e)
         {
-            previewTimer.Stop();
+            _previewTimer.Stop();
             GeneratePreview();
         }
 
@@ -120,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static ContentAlignment GetAlignmentFromParagraph(Paragraph p, SubtitleFormat format, Subtitle subtitle)
         {
-            ContentAlignment alignment = ContentAlignment.BottomCenter;
+            var alignment = ContentAlignment.BottomCenter;
             if (format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
             {
                 if (format.GetType() == typeof(SubStationAlpha))
@@ -232,12 +233,13 @@ namespace Nikse.SubtitleEdit.Forms
             if (parameter.Type == "BLURAYSUP")
             {
                 var brSub = new Logic.BluRaySup.BluRaySupPicture
-                                {
-                                    StartTime = (long)parameter.P.StartTime.TotalMilliseconds,
-                                    EndTime = (long)parameter.P.EndTime.TotalMilliseconds,
-                                    Width = parameter.ScreenWidth,
-                                    Height = parameter.ScreenHeight
-                                };
+                {
+                    StartTime = (long) parameter.P.StartTime.TotalMilliseconds,
+                    EndTime = (long) parameter.P.EndTime.TotalMilliseconds,
+                    Width = parameter.ScreenWidth,
+                    Height = parameter.ScreenHeight, 
+                    IsForced = parameter.Forced
+                };
                 parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.Alignment);
             }
         }
@@ -277,6 +279,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 parameter.P = _subtitle.Paragraphs[index];
                 parameter.Alignment = GetAlignmentFromParagraph(parameter.P, _format, _subtitle);
+                parameter.Forced = subtitleListView1.Items[index].Checked;
 
                 if (_format.HasStyleSupport && !string.IsNullOrEmpty(parameter.P.Extra))
                 {
@@ -706,7 +709,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         videoFormat = "720p";
                     else if (resW == 848 && resH == 480)
                         videoFormat = "480p";
-                    else
+                    else if (resW > 0 && resH > 0)
                         videoFormat = resW + "x" + resH;
 
                     var doc = new XmlDocument();
@@ -838,8 +841,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             height = int.Parse(arr[1]);
         }
 
-        private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount,
-                                   VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param, int i)
+        private int WriteParagraph(int width, StringBuilder sb, int border, int height, int imagesSavedCount, VobSubWriter vobSubWriter, FileStream binarySubtitleFile, MakeBitmapParameter param, int i)
         {
             if (param.Bitmap != null)
             {
@@ -852,7 +854,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 else if (_exportType == "VOBSUB")
                 {
                     if (!param.Saved)
-                        vobSubWriter.WriteParagraph(param.P, param.Bitmap, param.Alignment);
+                        vobSubWriter.WriteParagraph(param.P, param.Bitmap, param.Alignment, param.Forced);
                     param.Saved = true;
                 }
                 else if (_exportType == "FAB")
@@ -1193,8 +1195,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 x = width - param.Bitmap.Width - border;
                                 y = border;
                                 break;
-                            default: // ContentAlignment.BottomCenter:
-                                break;
                         }
 
                         sb.AppendLine("  <Graphic Width=\"" + param.Bitmap.Width.ToString(CultureInfo.InvariantCulture) + "\" Height=\"" +
@@ -1276,13 +1276,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                             for (i = 0; i < comboBoxSubtitleFontSize.Items.Count; i++)
                             {
-                                if (comboBoxSubtitleFontSize.Items[i].ToString().Equals(style.FontSize.ToString(), StringComparison.OrdinalIgnoreCase))
+                                if (comboBoxSubtitleFontSize.Items[i].ToString().Equals(style.FontSize.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                                     comboBoxSubtitleFontSize.SelectedIndex = i;
                             }
                             checkBoxBold.Checked = style.Bold;
                             for (i = 0; i < comboBoxBorderWidth.Items.Count; i++)
                             {
-                                if (Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()).Equals(style.OutlineWidth.ToString(), StringComparison.OrdinalIgnoreCase))
+                                if (Utilities.RemoveNonNumbers(comboBoxBorderWidth.Items[i].ToString()).Equals(style.OutlineWidth.ToString(CultureInfo.InvariantCulture), StringComparison.OrdinalIgnoreCase))
                                     comboBoxBorderWidth.SelectedIndex = i;
                             }
                         }
@@ -1426,6 +1426,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.ShadowAlpha = (int)numericUpDownShadowTransparency.Value;
             mbp.ShadowColor = panelShadowColor.BackColor;
             mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
+            mbp.Forced = subtitleListView1.Items[_subtitle.GetIndex(p)].Checked;
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
                 mbp.LineJoinRound = true;
@@ -1487,7 +1488,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                     if (path.PointCount > 0)
                     {
-                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                         for (int k = oldPathPointIndex; k < list.Length; k++)
                         {
                             if (list[k].X > addLeft)
@@ -1669,7 +1670,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Bitmap bmp = null;
                 string old = parameter.P.Text;
-                int oldType3d = parameter.Type3D;
+                int oldType3D = parameter.Type3D;
                 if (parameter.Type3D == 2) // Half-Top/Bottom 3D
                 {
                     parameter.Type3D = 0; // fix later
@@ -1752,7 +1753,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     count++;
                 }
                 parameter.P.Text = old;
-                parameter.Type3D = oldType3d;
+                parameter.Type3D = oldType3D;
                 parameter.BackgroundColor = oldBackgroundColor;
 
                 if (parameter.Type3D == 2) // Half-side-by-side 3D - due to per line we need to do this after making lines
@@ -2371,6 +2372,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
+
             if (_exportType == "VOBSUB" && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportVobSubFontName))
                 _subtitleFontName = Configuration.Settings.Tools.ExportVobSubFontName;
             else if ((_exportType == "BLURAYSUP" || _exportType == "DOST") && !string.IsNullOrEmpty(Configuration.Settings.Tools.ExportBluRayFontName))
@@ -2502,9 +2504,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.LineHeight)) //TODO: Remove in 3.4
                 labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
 
-            subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
+            SubtitleListView1InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
-            subtitleListView1.AutoSizeAllColumns(this);
+            SubtitleListView1AutoSizeAllColumns();
 
             _subtitle = new Subtitle(subtitle);
             _subtitle.Header = subtitle.Header;
@@ -2712,8 +2714,28 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
 
-            subtitleListView1.Fill(_subtitle);
-            subtitleListView1.SelectIndexAndEnsureVisible(0);
+            if (exportType == "BLURAYSUP" || exportType == "VOBSUB")
+            {
+                subtitleListView1.CheckBoxes = true;
+                string text = Configuration.Settings.Language.ExportPngXml.Forced;
+                if (string.IsNullOrEmpty(text))
+                    text = "Forced";
+                subtitleListView1.Columns.Insert(0, text);
+
+                SubtitleListView1Fill(_subtitle);
+
+                if (_vobSubOcr != null)
+                {
+                    int i = 0;
+                    for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
+                    {
+                        if (_vobSubOcr.GetIsForced(index))
+                            subtitleListView1.Items[index].Checked = true;
+                    }
+                }
+
+                SubtitleListView1SelectIndexAndEnsureVisible(0);
+            }
         }
 
         private void InitBorderStyle()
@@ -2801,8 +2823,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void subtitleListView1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            previewTimer.Stop();
-            previewTimer.Start();
+            _previewTimer.Stop();
+            _previewTimer.Start();
         }
 
         private void GeneratePreview()
@@ -3140,8 +3162,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void comboBoxSubtitleFont_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Bitmap bmp = new Bitmap(100, 100);
-            using (Graphics g = Graphics.FromImage(bmp))
+            var bmp = new Bitmap(100, 100);
+            using (var g = Graphics.FromImage(bmp))
             {
                 var mbp = new MakeBitmapParameter();
                 mbp.SubtitleFontName = _subtitleFontName;
@@ -3197,7 +3219,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                             _subtitle.Paragraphs[i].Text = string.Format("<{0}>{1}</{0}>", tag, _subtitle.Paragraphs[i].Text);
                     }
-                    subtitleListView1.SetText(i, _subtitle.Paragraphs[i].Text);
+                    SubtitleListView1SetText(i, _subtitle.Paragraphs[i].Text);
                 }
                 subtitleListView1.EndUpdate();
             }
@@ -3242,7 +3264,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         if (isSsa)
                             p.Text = RemoveSsaStyle(p.Text);
-                        subtitleListView1.SetText(item.Index, p.Text);
+                        SubtitleListView1SetText(item.Index, p.Text);
                     }
                 }
             }
@@ -3300,6 +3322,184 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 subtitleListView1.EndUpdate();
                 e.SuppressKeyPress = true;
             }
+        }
+
+        public void SubtitleListView1SelectNone()
+        {
+            foreach (ListViewItem item in subtitleListView1.SelectedItems)
+                item.Selected = false;
+        }
+
+        private void SubtitleListView1SelectIndexAndEnsureVisible(int index)
+        {
+            if (index < 0 || index >= subtitleListView1.Items.Count || subtitleListView1.Items.Count == 0)
+                return;
+            if (subtitleListView1.TopItem == null)
+                return;
+
+            int bottomIndex = subtitleListView1.TopItem.Index + ((Height - 25) / 16);
+            int itemsBeforeAfterCount = ((bottomIndex - subtitleListView1.TopItem.Index) / 2) - 1;
+            if (itemsBeforeAfterCount < 0)
+                itemsBeforeAfterCount = 1;
+
+            int beforeIndex = index - itemsBeforeAfterCount;
+            if (beforeIndex < 0)
+                beforeIndex = 0;
+
+            int afterIndex = index + itemsBeforeAfterCount;
+            if (afterIndex >= subtitleListView1.Items.Count)
+                afterIndex = subtitleListView1.Items.Count - 1;
+
+            SubtitleListView1SelectNone();
+            if (subtitleListView1.TopItem.Index <= beforeIndex && bottomIndex > afterIndex)
+            {
+                subtitleListView1.Items[index].Selected = true;
+                subtitleListView1.Items[index].EnsureVisible();
+                return;
+            }
+
+            subtitleListView1.Items[beforeIndex].EnsureVisible();
+            subtitleListView1.EnsureVisible(beforeIndex);
+            subtitleListView1.Items[afterIndex].EnsureVisible();
+            subtitleListView1.EnsureVisible(afterIndex);
+            subtitleListView1.Items[index].Selected = true;
+            subtitleListView1.Items[index].EnsureVisible();
+        }
+
+        private void SubtitleListView1Add(Paragraph paragraph)
+        {
+            var item = new ListViewItem(paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph };
+            ListViewItem.ListViewSubItem subItem;
+
+            if (subtitleListView1.CheckBoxes)
+            {
+                item.Text = string.Empty;
+                subItem = new ListViewItem.ListViewSubItem(item, paragraph.Number.ToString(CultureInfo.InvariantCulture)) { Tag = paragraph } ;
+                item.SubItems.Add(subItem);
+            }
+
+            if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            {
+                if (paragraph.StartTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToHHMMSSFF());
+                item.SubItems.Add(subItem);
+
+                if (paragraph.EndTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToHHMMSSFF());
+                item.SubItems.Add(subItem);
+
+                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:00}", paragraph.Duration.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(paragraph.Duration.Milliseconds)));
+                item.SubItems.Add(subItem);
+            }
+            else
+            {
+                if (paragraph.StartTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.StartTime.ToString());
+                item.SubItems.Add(subItem);
+
+                if (paragraph.EndTime.IsMaxTime)
+                    subItem = new ListViewItem.ListViewSubItem(item, "-");
+                else
+                    subItem = new ListViewItem.ListViewSubItem(item, paragraph.EndTime.ToString());
+                item.SubItems.Add(subItem);
+
+                subItem = new ListViewItem.ListViewSubItem(item, string.Format("{0},{1:000}", paragraph.Duration.Seconds, paragraph.Duration.Milliseconds));
+                item.SubItems.Add(subItem);
+            }
+
+            subItem = new ListViewItem.ListViewSubItem(item, paragraph.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
+            subItem.Font = new Font(_subtitleFontName, Font.Size);
+
+            item.UseItemStyleForSubItems = false;
+            item.SubItems.Add(subItem);
+
+            subtitleListView1.Items.Add(item);
+        }
+
+        private void SubtitleListView1Fill(Subtitle subtitle)
+        {
+            subtitleListView1.BeginUpdate();
+            subtitleListView1.Items.Clear();
+            int i = 0;
+            foreach (Paragraph paragraph in subtitle.Paragraphs)
+            {
+                SubtitleListView1Add(paragraph);
+                i++;
+            }
+            subtitleListView1.EndUpdate();
+        }
+
+        private void SubtitleListView1AutoSizeAllColumns()
+        {
+            int columnIndexNumber = 0;
+            int columnIndexStart = 1;
+            int columnIndexEnd = 2;
+            int columnIndexDuration = 3;
+            int columnIndexText = 4;
+
+            if (subtitleListView1.CheckBoxes)
+            {
+                subtitleListView1.Columns[0].Width = 60;
+                columnIndexNumber++;
+                columnIndexStart++;
+                columnIndexEnd++;
+                columnIndexDuration++;
+                columnIndexText++;
+            }
+
+            var setings = Configuration.Settings;
+            if (setings != null && setings.General.ListViewColumnsRememberSize && setings.General.ListViewNumberWidth > 1)
+                subtitleListView1.Columns[columnIndexNumber].Width = setings.General.ListViewNumberWidth;
+            else
+                subtitleListView1.Columns[columnIndexNumber].Width = 55;
+            subtitleListView1.Columns[columnIndexStart].Width = 90;
+            subtitleListView1.Columns[columnIndexEnd].Width = 90;
+            subtitleListView1.Columns[columnIndexDuration].Width = 60;
+            subtitleListView1.Columns[columnIndexText].Width = -2;           
+        }
+
+        private void SubtitleListView1InitializeLanguage(LanguageStructure.General general, Logic.Settings settings)
+        {
+            int columnIndexNumber = 0;
+            int columnIndexStart = 1;
+            int columnIndexEnd = 2;
+            int columnIndexDuration = 3;
+            int columnIndexText = 4;
+
+            if (subtitleListView1.CheckBoxes)
+            {
+                columnIndexNumber++;
+                columnIndexStart++;
+                columnIndexEnd++;
+                columnIndexDuration++;
+                columnIndexText++;
+            }
+
+            subtitleListView1.Columns[columnIndexNumber].Text = general.NumberSymbol;
+            subtitleListView1.Columns[columnIndexStart].Text = general.StartTime;
+            subtitleListView1.Columns[columnIndexEnd].Text = general.EndTime;
+            subtitleListView1.Columns[columnIndexDuration].Text = general.Duration;
+            subtitleListView1.Columns[columnIndexText].Text = general.Text;
+            subtitleListView1.ForeColor = settings.General.SubtitleFontColor;
+            subtitleListView1.BackColor = settings.General.SubtitleBackgroundColor;
+        }
+
+        private void SubtitleListView1SetText(int index, string text)
+        {
+            int columnIndexText = 4;
+
+            if (subtitleListView1.CheckBoxes)
+            {
+                columnIndexText++;
+            }
+
+            subtitleListView1.Items[index].SubItems[columnIndexText].Text = text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
         }
 
     }

@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             return ms.ToArray();
         }
 
-        public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment) // inspired by code from SubtitleCreator
+        public void WriteParagraph(Paragraph p, Bitmap bmp, ContentAlignment alignment, bool forced) // inspired by code from SubtitleCreator
         {
             // timestamp: 00:00:33:900, filepos: 000000000
             _idx.AppendLine(string.Format("timestamp: {0:00}:{1:00}:{2:00}:{3:000}, filepos: {4}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds, _subFile.Position.ToString("X").PadLeft(9, '0').ToLower()));

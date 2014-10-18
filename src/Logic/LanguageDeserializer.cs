@@ -1187,6 +1187,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/BoxMultiLine":
                     language.ExportPngXml.BoxMultiLine = reader.Value;
                     break;
+                case "ExportPngXml/Forced":
+                    language.ExportPngXml.Forced = reader.Value;
+                    break;
                 case "ExportText/Title":
                     language.ExportText.Title = reader.Value;
                     break;
