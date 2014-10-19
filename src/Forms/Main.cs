@@ -7652,7 +7652,23 @@ namespace Nikse.SubtitleEdit.Forms
                         string s = currentParagraph.Text;
                         var arr = Utilities.RemoveHtmlTags(s, true).Replace(Environment.NewLine, "\n").Split('\n');
                         if (arr.Length != 2 || arr[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || arr[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength)
-                            s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+                        {
+                            if (arr.Length == 2 && arr[0].StartsWith('-') && arr[1].StartsWith('-'))
+                            {
+                                if (lines[0].StartsWith("<i>-"))
+                                {
+                                    lines[0] = "<i>" + lines[0].Remove(0, 4).TrimStart();
+                                }
+                                lines[0] = lines[0].TrimStart('-').TrimStart();
+                                lines[1] = lines[1].TrimStart('-').TrimStart();
+                                s = lines[0] + Environment.NewLine + lines[1];
+                            }
+                            else
+                            {
+                                s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, language);
+                            }
+                            
+                        }
 
                         lines = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         if (lines.Length == 1)
