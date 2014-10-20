@@ -19514,12 +19514,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemMeasurementConverter_Click(object sender, EventArgs e)
         {
-            using (var form = new MeasurementConverter())
-            {
-                _formPositionsAndSizes.SetPositionAndSize(form);
-                form.Show(this);
-                //            _formPositionsAndSizes.SavePositionAndSize(form);
-            }
+            var form = new MeasurementConverter();
+            form.Show(this);
         }
 
         private void toolStripMenuItemImportSceneChanges_Click(object sender, EventArgs e)
