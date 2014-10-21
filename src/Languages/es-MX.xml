@@ -192,7 +192,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ChangeFrameRate>
   <ChangeSpeedInPercent>
     <Title>Ajustar la velocidad en porcentaje</Title>
-	<Info>Cambiar la velocidad de los subtítulos en porcentaje</Info>
+    <Info>Cambiar la velocidad de los subtítulos en porcentaje</Info>
     <Custom>Personalizado</Custom>
     <ToDropFrame>Saltar cuadros hasta</ToDropFrame>
     <FromDropFrame>Saltar cuadros desde</FromDropFrame>
