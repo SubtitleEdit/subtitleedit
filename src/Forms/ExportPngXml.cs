@@ -1445,7 +1445,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static int CalcWidthViaDraw(string text, MakeBitmapParameter parameter)
         {
-            text = Utilities.RemoveHtmlTags(text, true).Trim();
+            //text = Utilities.RemoveHtmlTags(text, true).Trim();
+            text = text.Trim();
             var path = new GraphicsPath();
             var sb = new StringBuilder();
             int i = 0;
@@ -1462,16 +1463,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
             sf.LineAlignment = StringAlignment.Near;// draw the text to a path
-            Bitmap bmp = new Bitmap(parameter.ScreenWidth, 200);
+            var bmp = new Bitmap(parameter.ScreenWidth, 200);
             var g = Graphics.FromImage(bmp);
 
             g.CompositingQuality = CompositingQuality.HighSpeed;
             g.SmoothingMode = SmoothingMode.HighSpeed;
             g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
-            var fontSize = g.DpiY * parameter.SubtitleFontSize / 72;
             Font font = SetFont(parameter, parameter.SubtitleFontSize);
-            var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
             while (i < text.Length)
             {
                 if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -1572,7 +1571,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         if (path.PointCount > 0)
                         {
-                            PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                            var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                             for (int k = oldPathPointIndex; k < list.Length; k++)
                             {
                                 if (list[k].X > addLeft)
@@ -1656,7 +1655,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             g.Dispose();
 
             var nbmp = new NikseBitmap(bmp);
-            //nbmp.CropSidesAndBottom(0, Color.FromArgb(0, 0, 0, 0), false);
             nbmp.CropTransparentSidesAndBottom(0, true);
             bmp.Dispose();
             font.Dispose();
@@ -2010,6 +2008,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Color c = parameter.SubtitleColor;
                     var colorStack = new Stack<Color>();
                     var lastText = new StringBuilder();
+                    int numberOfCharsOnCurrentLine = 0;
                     for (var i = 0; i < text.Length; i++)
                     {
                         if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
@@ -2026,7 +2025,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                             if (path.PointCount > 0)
                             {
-                                PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                                var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                                 for (int k = oldPathPointIndex; k < list.Length; k++)
                                 {
                                     if (list[k].X > addLeft)
@@ -2194,10 +2193,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 leftMargin = lefts[lineNumber];
                                 left = leftMargin;
                             }
+                            numberOfCharsOnCurrentLine = 0;
                         }
                         else
                         {
-                            sb.Append(text[i]);
+                            if (numberOfCharsOnCurrentLine != 0 || text[i] != ' ')
+                            {
+                                sb.Append(text[i]);
+                                numberOfCharsOnCurrentLine++;
+                            }
                         }
                     }
                     if (sb.Length > 0)
@@ -2313,8 +2317,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private static Bitmap ScaleToHalfWidth(Bitmap bmp)
         {
             int w = bmp.Width / 2;
-            Bitmap newImage = new Bitmap(w, bmp.Height);
-            using (Graphics gr = Graphics.FromImage(newImage))
+            var newImage = new Bitmap(w, bmp.Height);
+            using (var gr = Graphics.FromImage(newImage))
             {
                 gr.SmoothingMode = SmoothingMode.HighQuality;
                 gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
@@ -2327,8 +2331,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private static Bitmap ScaleToHalfHeight(Bitmap bmp)
         {
             int h = bmp.Height / 2;
-            Bitmap newImage = new Bitmap(bmp.Width, h);
-            using (Graphics gr = Graphics.FromImage(newImage))
+            var newImage = new Bitmap(bmp.Width, h);
+            using (var gr = Graphics.FromImage(newImage))
             {
                 gr.SmoothingMode = SmoothingMode.HighQuality;
                 gr.InterpolationMode = InterpolationMode.HighQualityBicubic;
