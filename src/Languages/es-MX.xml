@@ -160,7 +160,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ScanningFolder>Explorando {0} y subcarpetas para archivos de subtítulos...</ScanningFolder>
     <Recursive>Incluir subcarpetas</Recursive>
     <SetMinMsBetweenSubtitles>Fijar el min. de milisegundos entre subtítulos</SetMinMsBetweenSubtitles>
-	<PlainText>Texto sin formato</PlainText>
+    <PlainText>Texto sin formato</PlainText>
   </BatchConvert>
   <Beamer>
     <Title>Videoproyector</Title>
