@@ -842,6 +842,7 @@
             this.subtitleListView1.ContextMenuStrip = this.contextMenuStripListView;
             this.subtitleListView1.FullRowSelect = true;
             this.subtitleListView1.GridLines = true;
+            this.subtitleListView1.HideSelection = false;
             this.subtitleListView1.Location = new System.Drawing.Point(13, 13);
             this.subtitleListView1.Name = "subtitleListView1";
             this.subtitleListView1.Size = new System.Drawing.Size(936, 199);
