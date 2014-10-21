@@ -1157,7 +1157,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         //  <Graphic Width="696" Height="111" X="612" Y="930">subtitle_exp_0001.png</Graphic>
                         //</Event>
                         sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(param.P.StartTime) + "\" OutTC=\"" +
-                                      BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"False\">");
+                                      BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
 
                         int x = (width - param.Bitmap.Width) / 2;
                         int y = height - (param.Bitmap.Height + param.BottomMargin);
@@ -2717,7 +2717,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowTransparency.Visible = shadowVisible;
             numericUpDownShadowTransparency.Visible = shadowVisible;
 
-            if (exportType == "BLURAYSUP" || exportType == "VOBSUB")
+            if (exportType == "BLURAYSUP" || exportType == "VOBSUB" || exportType == "BDNXML")
             {
                 subtitleListView1.CheckBoxes = true;
                 string text = Configuration.Settings.Language.ExportPngXml.Forced;
@@ -2996,6 +2996,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void ExportPngXml_ResizeEnd(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
+            subtitleListView1.Columns[subtitleListView1.Columns.Count - 1].Width = -2;
         }
 
         private void comboBoxBottomMargin_SelectedIndexChanged(object sender, EventArgs e)
