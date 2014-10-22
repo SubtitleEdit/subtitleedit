@@ -549,6 +549,22 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixOcrErrorsViaDoNotFixToUpper()
+        {
+            using (var form = new FixCommonErrors())
+            {
+
+                Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
+                //string input = "i'I'll see you.";
+                const string input = "i.e., your killer.";
+                var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "not there", form);
+                var res = ofe.FixOcrErrors(input, 1, "Ends with comma,", false, Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.AutoGuessLevel.Cautious);
+                Assert.AreEqual(res, "i.e., your killer.");
+            }
+        }
+
         #endregion Fix OCR errors
 
         #region Fix missing spaces
