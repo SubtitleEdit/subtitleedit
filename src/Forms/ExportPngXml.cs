@@ -1187,14 +1187,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     if (!param.Saved)
                     {
                         // 001  7M6C7986 V     C        14:14:55:21 14:15:16:24 01:00:10:18 01:00:31:21
-                        var fileName1 = "IMG" + i.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0') + ".PNG";
+                        var fileName1 = "IMG" + i.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0');
 
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         using (var g = Graphics.FromImage(fullSize))
                         {
                             g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width)/2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
                         }
-                        var fileName2 = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName1);
+                        var fileName2 = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName1 + ".PNG");
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
                         
