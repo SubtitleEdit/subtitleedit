@@ -19845,5 +19845,14 @@ namespace Nikse.SubtitleEdit.Forms
             properties.Dispose();
         }
 
+        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        {
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "EDL", _fileName, _videoInfo);
+                exportBdnXmlPng.ShowDialog(this);
+            }
+        }
+
     }
 }
