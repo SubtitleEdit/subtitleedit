@@ -84,6 +84,7 @@
             this.toolStripMenuItemNuendoProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemFcpProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItemSubStationAlpha = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItemEbuProperties = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
             this.openOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOriginalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -458,7 +459,7 @@
             this.imageListPlayRate = new System.Windows.Forms.ImageList(this.components);
             this.timerTextUndo = new System.Windows.Forms.Timer(this.components);
             this.timerAlternateTextUndo = new System.Windows.Forms.Timer(this.components);
-            this.toolStripMenuItemEbuProperties = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -997,6 +998,13 @@
             this.toolStripMenuItemSubStationAlpha.Text = "Advanced Sub Station Alpha properties...";
             this.toolStripMenuItemSubStationAlpha.Click += new System.EventHandler(this.toolStripMenuItemSubStationAlpha_Click);
             // 
+            // toolStripMenuItemEbuProperties
+            // 
+            this.toolStripMenuItemEbuProperties.Name = "toolStripMenuItemEbuProperties";
+            this.toolStripMenuItemEbuProperties.Size = new System.Drawing.Size(337, 22);
+            this.toolStripMenuItemEbuProperties.Text = "Ebu properties...";
+            this.toolStripMenuItemEbuProperties.Click += new System.EventHandler(this.toolStripMenuItemEbuProperties_Click);
+            // 
             // toolStripSeparator20
             // 
             this.toolStripSeparator20.Name = "toolStripSeparator20";
@@ -1150,14 +1158,15 @@
             this.toolStripMenuItemAvidStl,
             this.toolStripMenuItemExportPngXml,
             this.bluraySupToolStripMenuItem,
-            this.toolStripMenuItemExportDcinemaInterop,
-            this.toolStripMenuItemDost,
-            this.DvdStudioProStl,
             this.toolStripMenuItemExportCapMakerPlus,
             this.toolStripMenuItemExportCaptionInc,
             this.toolStripMenuItemCavena890,
             this.toolStripMenuItemExportCheetahCap,
+            this.toolStripMenuItemExportDcinemaInterop,
+            this.toolStripMenuItemDost,
+            this.DvdStudioProStl,
             this.eBUSTLToolStripMenuItem,
+            this.toolStripMenuItem3,
             this.toolStripMenuItemExportFcpIImage,
             this.toolStripMenuItemImagePerFrame,
             this.toolStripMenuItemTextTimeCodePair,
@@ -1989,7 +1998,7 @@
             this.toolStripMenuItemChangeFrameRate2,
             this.changeSpeedInPercentToolStripMenuItem});
             this.toolStripMenuItemSynchronization.Name = "toolStripMenuItemSynchronization";
-            this.toolStripMenuItemSynchronization.Size = new System.Drawing.Size(97, 20);
+            this.toolStripMenuItemSynchronization.Size = new System.Drawing.Size(104, 20);
             this.toolStripMenuItemSynchronization.Text = "Synchronization";
             // 
             // toolStripMenuItemAdjustAllTimes
@@ -4433,12 +4442,12 @@
             this.timerAlternateTextUndo.Interval = 700;
             this.timerAlternateTextUndo.Tick += new System.EventHandler(this.TimerAlternateTextUndoTick);
             // 
-            // toolStripMenuItemEbuProperties
+            // toolStripMenuItem3
             // 
-            this.toolStripMenuItemEbuProperties.Name = "toolStripMenuItemEbuProperties";
-            this.toolStripMenuItemEbuProperties.Size = new System.Drawing.Size(337, 22);
-            this.toolStripMenuItemEbuProperties.Text = "Ebu properties...";
-            this.toolStripMenuItemEbuProperties.Click += new System.EventHandler(this.toolStripMenuItemEbuProperties_Click);
+            this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+            this.toolStripMenuItem3.Size = new System.Drawing.Size(258, 22);
+            this.toolStripMenuItem3.Text = "EDL...";
+            this.toolStripMenuItem3.Click += new System.EventHandler(this.toolStripMenuItem3_Click);
             // 
             // Main
             // 
@@ -4944,6 +4953,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripMenuItemSplitterCheckForUpdates;
         private System.Windows.Forms.ToolStripMenuItem setVideoOffsetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItemEbuProperties;
+        private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
     }
 }
 

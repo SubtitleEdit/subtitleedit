@@ -392,6 +392,13 @@ namespace Nikse.SubtitleEdit.Forms
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
+            else if (_exportType == "EDL")
+            {
+                saveFileDialog1.Title = "Save EDL file as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.DefaultExt = "*.edl";
+                saveFileDialog1.AddExtension = true;
+                saveFileDialog1.Filter = "EDL files|*.edl";
+            }
 
             if (_exportType == "BLURAYSUP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "VOBSUB" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
@@ -402,7 +409,8 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "SPUMUX" && folderBrowserDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "FCP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "DOST" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
-                _exportType == "DCINEMA_INTEROP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
+                _exportType == "DCINEMA_INTEROP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
+                _exportType == "EDL" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
                 int width = 1920;
                 int height = 1080;
@@ -697,6 +705,36 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
                 }
+
+                else if (_exportType == "EDL")
+                {
+                    string header = "TITLE: ( no title )" + Environment.NewLine + Environment.NewLine;
+                    File.WriteAllText(saveFileDialog1.FileName, header + sb);
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(saveFileDialog1.FileName)));
+                }
+                else if (_exportType == "DCINEMA_INTEROP")
+                {
+                    var doc = new XmlDocument();
+                    string title = "unknown";
+                    if (!string.IsNullOrEmpty(_fileName))
+                        title = Path.GetFileNameWithoutExtension(_fileName);
+
+                    string guid = Guid.NewGuid().ToString().Replace("-", string.Empty).Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
+                    doc.LoadXml("<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + Environment.NewLine +
+                                "<DCSubtitle Version=\"1.1\">" + Environment.NewLine +
+                                "<SubtitleID>" + guid + "</SubtitleID>" + Environment.NewLine +
+                                "<MovieTitle>" + title + "</MovieTitle>" + Environment.NewLine +
+                                "<ReelNumber>1</ReelNumber>" + Environment.NewLine +
+                                "<Language>English</Language>" + Environment.NewLine +
+                                sb +
+                                "</DCSubtitle>");
+                    string fName = saveFileDialog1.FileName;
+                    if (!fName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                        fName += ".xml";
+                    File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
+                }
+
                 else
                 {
                     int resW = 0;
@@ -1142,6 +1180,30 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                             sb.AppendLine("<Image VPosition=\"9.7\" ZPosition=\"" + param.Depth3D + "\" VAlign=\"bottom\" HAlign=\"center\">" + numberString + ".png" + "</Image>");
                         sb.AppendLine("</Subtitle>");
+                    }
+                }
+                else if (_exportType == "EDL")
+                {
+                    if (!param.Saved)
+                    {
+                        // 001  7M6C7986 V     C        14:14:55:21 14:15:16:24 01:00:10:18 01:00:31:21
+                        var fileName1 = "IMG" + i.ToString(CultureInfo.InvariantCulture).PadLeft(5, '0') + ".PNG";
+
+                        var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
+                        using (var g = Graphics.FromImage(fullSize))
+                        {
+                            g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width)/2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
+                        }
+                        var fileName2 = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName1);
+                        fullSize.Save(fileName2, ImageFormat.Png);
+                        fullSize.Dispose();
+                        
+                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode(0).ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(),  param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
+                        sb.AppendLine(line);
+                        sb.AppendLine();
+
+                        imagesSavedCount++;
+                        param.Saved = true;
                     }
                 }
                 else
@@ -2373,6 +2435,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Text = "Final Cut Pro";
             else if (exportType == "DOST")
                 Text = "DOST";
+            else if (exportType == "EDL")
+                Text = "EDL";
             else
                 Text = Configuration.Settings.Language.ExportPngXml.Title;
 
@@ -2624,7 +2688,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
 
-            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB")
+            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" ||_exportType == "EDL")
             {
                 comboBoxBottomMargin.Visible = true;
                 labelBottomMargin.Visible = true;
@@ -2707,7 +2771,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
-            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP";
+            bool shadowVisible = _exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "DOST" || _exportType == "IMAGE/FRAME" || _exportType == "FCP" || _exportType == "DCINEMA_INTEROP" || _exportType == "EDL";
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;
@@ -2736,6 +2800,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
 
+                SubtitleListView1SelectIndexAndEnsureVisible(0);
+            }
+            else
+            {
+                SubtitleListView1Fill(_subtitle);
                 SubtitleListView1SelectIndexAndEnsureVisible(0);
             }
         }
@@ -3110,7 +3179,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                Bitmap bmp = pictureBox1.Image as Bitmap;
+                var bmp = pictureBox1.Image as Bitmap;
                 if (bmp == null)
                 {
                     MessageBox.Show("No image!");
