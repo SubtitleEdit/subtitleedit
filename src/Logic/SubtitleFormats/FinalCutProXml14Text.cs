@@ -84,16 +84,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var trimmedTitle = new StringBuilder();
                 foreach (var ch in Utilities.RemoveHtmlTags(p.Text, true))
                 {
-                    if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(ch.ToString()))
-                        trimmedTitle.Append(ch.ToString());
+                    if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(ch.ToString(CultureInfo.InvariantCulture)))
+                        trimmedTitle.Append(ch.ToString(CultureInfo.InvariantCulture));
                 }
                 string temp = xmlClipStructure.Replace("[NUMBER]", number.ToString(CultureInfo.InvariantCulture)).Replace("[TITLEID]", trimmedTitle.ToString());
                 video.InnerXml = temp;
 
                 XmlNode generatorNode = video.SelectSingleNode("title");
-                generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
-                generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
-                generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
+                if (IsNearleWholeNumber(p.StartTime.TotalSeconds))
+                    generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds) + "s";
+                else
+                    generatorNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
+
+                if (IsNearleWholeNumber(p.Duration.TotalSeconds))
+                    generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds) + "s";
+                else
+                    generatorNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 2400000) + "/2400000s";
+
+                if (IsNearleWholeNumber(p.StartTime.TotalSeconds))
+                    generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds) + "s";
+                else
+                    generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
 
                 XmlNode param = video.SelectSingleNode("title/text/text-style");
                 param.InnerText = Utilities.RemoveHtmlTags(p.Text);
@@ -106,6 +117,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             xmlAsText = xmlAsText.Replace("fcpxml[]", "fcpxml");
             xmlAsText = xmlAsText.Replace("fcpxml []", "fcpxml");
             return xmlAsText;
+        }
+
+        private bool IsNearleWholeNumber(double number)
+        {
+            double rest = number - Convert.ToInt64(number);
+            return rest < 0.001;
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -131,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         try
                         {
                             string text = node.ParentNode.InnerText;
-                            Paragraph p = new Paragraph();
+                            var p = new Paragraph();
                             p.Text = text.Trim();
                             p.StartTime = DecodeTime(node.ParentNode.Attributes["offset"]);
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + DecodeTime(node.ParentNode.Attributes["duration"]).TotalMilliseconds;
@@ -156,7 +173,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             catch
             {
                 _errorCount = 1;
-                return;
             }
         }
 
@@ -170,7 +186,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     return TimeCode.FromSeconds(long.Parse(arr[0]) / double.Parse(arr[1]));
                 }
-                else if (arr.Length == 1)
+                if (arr.Length == 1)
                 {
                     return TimeCode.FromSeconds(float.Parse(arr[0]));
                 }
