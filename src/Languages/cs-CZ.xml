@@ -9,7 +9,7 @@
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Storno</Cancel>
     <Apply>Použít</Apply>
-    <None>Žádná</None>
+    <None>Nic</None>
     <All>Vše</All>
     <Preview>Náhled</Preview>
     <SubtitleFiles>Soubory titulků</SubtitleFiles>
@@ -416,6 +416,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Výška řádku</LineHeight>
     <BoxSingleLine>Pole - jednořádkové</BoxSingleLine>
     <BoxMultiLine>Pole - víceřádkové</BoxMultiLine>
+    <Forced>Vynucený</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
