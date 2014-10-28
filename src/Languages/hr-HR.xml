@@ -411,7 +411,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
   <FindSubtitleLine>
     <Title>Traženje linije podnaslova</Title>
     <Find>&amp;Pronađi</Find>
-    <FindNext>Pronađi slijedeće</FindNext>
+    <FindNext>Pronađi sljedeće</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
     <Title>Ispravljanje čestih pogrešaka</Title>
@@ -675,7 +675,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <ShowUndoHistory>Prikaži povijest</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Unicode simboli</InsertUnicodeSymbol>
         <Find>&amp;Pronađi...</Find>
-        <FindNext>Pronađi &amp;slijedeće</FindNext>
+        <FindNext>Pronađi sljedeće</FindNext>
         <Replace>&amp;Zamijeni...</Replace>
         <MultipleReplace>&amp;Višestruka zamjena...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idi na liniju broj...</GoToSubtitleNumber>
@@ -742,7 +742,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <SpellCheckFromCurrentLine>Provjera pravopisa od trenutne linije</SpellCheckFromCurrentLine>
         <FindDoubleWords>Pronađi duple &amp;riječi</FindDoubleWords>
         <FindDoubleLines>Pronađi duple &amp;linije</FindDoubleLines>
-        <GetDictionaries>Pr&amp;euzmi riječnike...</GetDictionaries>
+        <GetDictionaries>Pr&amp;euzmi rječnike...</GetDictionaries>
         <AddToNamesEtcList>&amp;Dodaj riječ u popis naziva/izuzetaka...</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
@@ -893,9 +893,9 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
       <SecondsBackShort>← s</SecondsBackShort>
       <SecondsForwardShort>s →</SecondsForwardShort>
       <VideoPosition>Pozicija:</VideoPosition>
-      <TranslateTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili slijedeći podnaslov.</TranslateTip>
+      <TranslateTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili sljedeći podnaslov.</TranslateTip>
       <CreateTip>Koristite Ctrl i lijevu ili desnu strelicu.</CreateTip>
-      <AdjustTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili slijedeći podnaslov.</AdjustTip>
+      <AdjustTip>Koristite alt i gornju ili donju strelicu da odete na prethodni ili sljedeći podnaslov.</AdjustTip>
       <BeforeChangingTimeInWaveformX>Promijenjeno vrijeme u valnom obliku: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Stvorena je nova linija podnaslova ({0}).</NewTextInsertAtX>
       <Center>Centriraj</Center>
@@ -1083,8 +1083,8 @@ koji bi trebao biti usklađen s video datotekom.
     <NumberOfLinesReplacedX>Broj linija sa zamijenjenim tekstom: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Riječ „{0}“ je dodana u popis naziva/izuzetaka.</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Ne mogu dodati riječ „{0}“ u popis naziva/izuzetaka.</NameXNotAddedToNamesEtcList>
-    <WordXAddedToUserDic>Riječ '{0}' je dodana u korisnički riječnik</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>Ime '{0}' nije dodano u korisnički riječniki</WordXNotAddedToUserDic>
+    <WordXAddedToUserDic>Riječ '{0}' je dodana u korisnički rječnik</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>Ime '{0}' nije dodano u korisnički rječnik</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' je dodan na popis OCR zamijeniti</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' nije dodan na popis OCR zamijeniti</OcrReplacePairXNotAdded>
     <XLinesSelected>Izabrano linija: {0}</XLinesSelected>
@@ -1156,7 +1156,7 @@ koji bi trebao biti usklađen s video datotekom.
     <ConvertTo>Konvertiraj u</ConvertTo>
     <CopyToClipboard>Kopiraj u međuspremnik</CopyToClipboard>
     <Celsius>Celzijusa</Celsius>
-    <Fahrenheit>Fahreheit</Fahrenheit>
+    <Fahrenheit>Fahrenheit</Fahrenheit>
     <Miles>Milja</Miles>
     <Kilometers>Kilometara</Kilometers>
     <Meters>Metara</Meters>
@@ -1263,7 +1263,7 @@ koji bi trebao biti usklađen s video datotekom.
   <RemoveTextFromHearImpaired>
     <Title>Uklanjanje teksta za gluhe</Title>
     <RemoveTextConditions>Uklanjanje oznaka</RemoveTextConditions>
-    <RemoveTextBetween>Ukloni slijedeće oznake:</RemoveTextBetween>
+    <RemoveTextBetween>Ukloni sljedeće oznake:</RemoveTextBetween>
     <SquareBrackets>&amp;Uglate zagrade</SquareBrackets>
     <Brackets>&amp;Vitičaste zagrade</Brackets>
     <Parentheses>&amp;Oble zagrade</Parentheses>
@@ -1461,7 +1461,7 @@ koji bi trebao biti usklađen s video datotekom.
     <ShortcutIsNotValid>Prečac nije ispravan: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Zakači/otkači video kontrole</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idi na novi</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na slijedeći</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na sljedeći</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje i idi na sljedeći</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i idite na sljedeći</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tipka dolje = Start, Tipka gore = postavi kraj i idi na sljedeći</AdjustStartDownEndUpAndGoToNext>
@@ -1546,7 +1546,7 @@ koji bi trebao biti usklađen s video datotekom.
     <ChangeAll>Promijeni sve</ChangeAll>
     <SkipOnce>Preskoči jednu riječ</SkipOnce>
     <SkipAll>Preskoči sve</SkipAll>
-    <AddToUserDictionary>D&amp;odaj u prilagođeni riječnik</AddToUserDictionary>
+    <AddToUserDictionary>D&amp;odaj u prilagođeni rječnik</AddToUserDictionary>
     <AddToNamesAndIgnoreList>&amp;Dodaj u rječnik naziva/nepoželjnosti</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Dodaj OCR par u zamjenski popis</AddToOcrReplaceList>
     <Abort>Odustani</Abort>
@@ -1620,7 +1620,7 @@ koji bi trebao biti usklađen s video datotekom.
     <NumberOfCharactersInTextOnly>Broj znakova u tekstu samo: {0: #, # # #, # # 0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Ukupno znakova / sekundi: {0:0.0} sekundi</TotalCharsPerSecond>
     <NumberOfItalicTags>Broj kurzivnih oznaka: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Broj podebljanh oznaka: {0}</NumberOfBoldTags>
+    <NumberOfBoldTags>Broj podebljanih oznaka: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Broj podvučenih oznaka: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Broj oznaka fonta: {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
@@ -1697,7 +1697,7 @@ koji bi trebao biti usklađen s video datotekom.
     <Remove>Ukloni</Remove>
     <RemoveAll>Uklonite sve</RemoveAll>
     <ImportStyleFromFile>Uvezi stil iz datoteke...</ImportStyleFromFile>
-    <ExportStyleToFile>Izvezi stil u datoteku (dodaće stil iako već postoji</ExportStyleToFile>
+    <ExportStyleToFile>Izvezi stil u datoteku (dodat će stil iako već postoji</ExportStyleToFile>
     <ChooseStyle>Odaberite stil za uvoz</ChooseStyle>
     <StyleAlreadyExits>Stil već postoji: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Stil '{0}' izvežen u datoteku '{1}'</StyleXExportedToFileY>
@@ -1787,7 +1787,7 @@ koji bi trebao biti usklađen s video datotekom.
     <SaveAllSubtitleImagesWithHtml>Spremi sve slike s HTML popisom...</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} slika je spremljena u {1}</XImagesSavedInY>
     <TryModiForUnknownWords>Microsoft MODI prepoznavanje znakova za nepoznate riječi</TryModiForUnknownWords>
-    <DictionaryX>Riječnik: {0}</DictionaryX>
+    <DictionaryX>Rječnik: {0}</DictionaryX>
     <RightToLeft>&amp;Zdesna nalijevo</RightToLeft>
     <ShowOnlyForcedSubtitles>Prikaži samo forsirane podnaslove</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Koristi vremenske odrednice iz IDX datoteke</UseTimeCodesFromIdx>
