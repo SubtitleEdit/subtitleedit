@@ -688,7 +688,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
       <Tools>
         <Title>&amp;Alati</Title>
         <AdjustDisplayDuration>&amp;Prilagodi trajanje...</AdjustDisplayDuration>
-        <ApplyDurationLimits>Ograničiti trajanje...</ApplyDurationLimits>
+        <ApplyDurationLimits>Ograniči trajanje...</ApplyDurationLimits>
         <DurationsBridgeGap>Ukupno vrijeme premošćivanja</DurationsBridgeGap>
         <FixCommonErrors>&amp;Ispravi česte pogreške...</FixCommonErrors>
         <StartNumberingFrom>Počni &amp;nabrajanje...</StartNumberingFrom>
@@ -703,7 +703,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <SortBy>P&amp;oredaj po</SortBy>
         <Number>Broj</Number>
         <StartTime>Vrijeme početka</StartTime>
-        <EndTime>Vrijeme zavrąetka</EndTime>
+        <EndTime>Vrijeme završetka</EndTime>
         <Duration>Trajanje</Duration>
         <TextAlphabetically>abecednom redu</TextAlphabetically>
         <TextSingleLineMaximumLength>najvećoj dužini linije</TextSingleLineMaximumLength>
@@ -772,7 +772,8 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <LeaveSession>&amp;Napusti sesiju</LeaveSession>
       </Networking>
       <Help>
-        <Title>P&amp;omoć</Title>
+       <CheckForUpdates>Provjeri ažuriranja...</CheckForUpdates>
+        <Title>Pomoć</Title>
         <Help>&amp;Pomoć</Help>
         <About>&amp;O programu</About>
       </Help>
