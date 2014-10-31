@@ -9155,7 +9155,6 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
             List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
-            MessageBox.Show(string.Format("Matroska reading took {0:0.00} seconds", stopwatch.ElapsedMilliseconds / 1000.0));
             Cursor.Current = Cursors.Default;
             if (isValid)
             {
