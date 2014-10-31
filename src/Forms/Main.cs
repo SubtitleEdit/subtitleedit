@@ -2814,6 +2814,16 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                // check for .png file
+                if (format == null && fi.Length > 100 && FileUtil.IsPng(fileName))
+                {
+                    if (string.IsNullOrEmpty(_language.ErrorLoadPng))
+                        MessageBox.Show("This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.");
+                    else
+                        MessageBox.Show(_language.ErrorLoadPng);
+                    return;
+                }                
+
                 if (format == null && fi.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
                     ImportSubtitleFromDvbSupFile(fileName);
@@ -9145,6 +9155,7 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
             List<SubtitleSequence> sub = matroska.GetMatroskaSubtitle(fileName, (int)matroskaSubtitleInfo.TrackNumber, out isValid, MatroskaProgress);
+            MessageBox.Show(string.Format("Matroska reading took {0:0.00} seconds", stopwatch.ElapsedMilliseconds / 1000.0));
             Cursor.Current = Cursors.Default;
             if (isValid)
             {

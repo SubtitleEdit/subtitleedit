@@ -2621,6 +2621,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadZip":
                     language.Main.ErrorLoadZip = reader.Value;
                     break;
+                case "Main/ErrorLoadPng":
+                    language.Main.ErrorLoadPng = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;

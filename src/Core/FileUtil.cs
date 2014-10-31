@@ -71,7 +71,9 @@ namespace Nikse.SubtitleEdit.Core
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, 4);
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
                 return buffer[0] == 0x50  // P
                     && buffer[1] == 0x4B  // K
                     && buffer[2] == 0x03  // (ETX)
@@ -84,13 +86,35 @@ namespace Nikse.SubtitleEdit.Core
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, 4);
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
                 return buffer[0] == 0x52  // R
                     && buffer[1] == 0x61  // a
                     && buffer[2] == 0x72  // r
                     && buffer[3] == 0x21; // !
             }
         }
+
+        public static bool IsPng(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[8];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+                return buffer[0] == 137
+                       && buffer[1] == 80
+                       && buffer[2] == 78
+                       && buffer[3] == 71
+                       && buffer[4] == 13
+                       && buffer[5] == 10
+                       && buffer[6] == 26
+                       && buffer[7] == 10;
+            }
+        }
+        
 
         public static bool IsBluRaySup(string fileName)
         {
@@ -110,7 +134,9 @@ namespace Nikse.SubtitleEdit.Core
             {
                 fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 var buffer = new byte[3761];
-                fs.Read(buffer, 0, 3761);
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
                 return buffer[0] == 0x47 && buffer[188] == 0x47 // 47hex (71 dec or 'G') == TS sync byte
                     || buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
             }
