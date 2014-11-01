@@ -2773,7 +2773,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelShadowWidth.Visible = shadowVisible;
             buttonShadowColor.Visible = shadowVisible;
             comboBoxShadowWidth.Visible = shadowVisible;
-            if (comboBoxShadowWidth.Visible && Configuration.Settings.Tools.ExportBluRayShadow < comboBoxShadowWidth.Items.Count)
+            if (shadowVisible && Configuration.Settings.Tools.ExportBluRayShadow < comboBoxShadowWidth.Items.Count)
                 comboBoxShadowWidth.SelectedIndex = Configuration.Settings.Tools.ExportBluRayShadow;
             panelShadowColor.Visible = shadowVisible;
             labelShadowTransparency.Visible = shadowVisible;
