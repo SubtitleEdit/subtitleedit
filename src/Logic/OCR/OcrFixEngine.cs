@@ -836,7 +836,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
                     {
-                       if (!StartsWithUrl(st.StrippedText))
+                        if (!StartsWithUrl(st.StrippedText))
                         {
                             var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
                             if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
