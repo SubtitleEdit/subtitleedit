@@ -49,10 +49,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //-->> 072247
             const string paragraphWriteFormat = "-->> {0}{3}{2}{3}-->> {1}{3}{3}";
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = p.Text;
+                string text = Utilities.RemoveSsaTags(p.Text);
                 int newLines = Utilities.CountTagInText(text, Environment.NewLine);
                 if (newLines > 1)
                     text = Utilities.AutoBreakLine(text);

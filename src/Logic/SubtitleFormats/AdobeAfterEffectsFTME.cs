@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode paragraph = xml.CreateElement("marker");
                 paragraph.InnerXml = string.Format(CultureInfo.InvariantCulture, innerXml, p.StartTime.TotalSeconds, p.Duration.TotalSeconds);
-                paragraph.SelectSingleNode("comment").Attributes["value"].InnerText = p.Text.Replace(Environment.NewLine, "||");
+                paragraph.SelectSingleNode("comment").Attributes["value"].InnerText = Utilities.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "||");
                 root.AppendChild(paragraph);
             }
 
