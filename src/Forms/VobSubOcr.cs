@@ -8218,7 +8218,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSpellCheckDownload_Click(object sender, EventArgs e)
         {
-            new GetDictionaries().ShowDialog(this);
+            using (var form = new GetDictionaries())
+            {
+                form.ShowDialog(this);
+            }
             FillSpellCheckDictionaries();
             if (comboBoxDictionaries.Items.Count > 0)
                 comboBoxDictionaries.SelectedIndex = 0;

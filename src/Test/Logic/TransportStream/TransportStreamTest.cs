@@ -16,8 +16,11 @@ namespace Test.Logic.TransportStream
             var subtitles = parser.GetDvbSubtitles(41);
 
             Assert.IsTrue(subtitles.Count == 10);
-            Assert.IsTrue(subtitles[0].Pes.GetImageFull().Width == 719);
-            Assert.IsTrue(subtitles[0].Pes.GetImageFull().Height == 575);
+            using (var bmp = subtitles[0].Pes.GetImageFull())
+            {
+                Assert.IsTrue(bmp.Width == 719);
+                Assert.IsTrue(bmp.Height == 575);
+            }
         }
     }
 }

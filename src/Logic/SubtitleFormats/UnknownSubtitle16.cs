@@ -30,8 +30,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override string ToText(Subtitle subtitle, string title)
         {
             var u52 = new UnknownSubtitle52();
-            var rtBox = new System.Windows.Forms.RichTextBox { Text = u52.ToText(subtitle, title) };
-            return rtBox.Rtf;
+            using (var rtBox = new System.Windows.Forms.RichTextBox { Text = u52.ToText(subtitle, title) })
+            {
+                return rtBox.Rtf;
+            }
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

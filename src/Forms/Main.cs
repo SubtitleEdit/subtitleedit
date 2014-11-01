@@ -5961,7 +5961,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowGetDictionaries()
         {
-            new GetDictionaries().ShowDialog(this); // backup plan..
+            using (var form = new GetDictionaries())
+            {
+                form.ShowDialog(this);
+            }
         }
 
         private void ContextMenuStripListviewOpening(object sender, System.ComponentModel.CancelEventArgs e)

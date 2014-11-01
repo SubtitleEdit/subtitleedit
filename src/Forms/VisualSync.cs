@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         private double _endStopPosition = -1.0;
         private readonly LanguageStructure.VisualSync _language;
         private readonly LanguageStructure.General _languageGeneral;
-        private Timer timerHideSyncLabel = new Timer();
+        private readonly Timer _timerHideSyncLabel = new Timer();
 
         public string VideoFileName { get; set; }
         public int AudioTrackNumber { get; set; }
@@ -85,8 +85,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             labelTip.Text = _language.Tip;
             FixLargeFonts();
-            timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
-            timerHideSyncLabel.Interval = 1000;
+            _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
+            _timerHideSyncLabel.Interval = 1000;
         }
 
         private void timerHideSyncLabel_Tick(object sender, EventArgs e)
@@ -96,8 +96,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
             if (textSize.Height > buttonCancel.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 VideoFileName = fileName;
 
-                FileInfo fi = new FileInfo(fileName);
+                var fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
                     return;
 
@@ -272,7 +272,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormVisualSync_FormClosing(object sender, FormClosingEventArgs e)
         {
-            timerHideSyncLabel.Stop();
+            _timerHideSyncLabel.Stop();
             labelSyncDone.Text = string.Empty;
             timer1.Stop();
             timerProgressBarRefresh.Stop();
@@ -324,7 +324,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (bitmap != null)
             {
                 IntPtr Hicon = bitmap.GetHicon();
-                this.Icon = Icon.FromHandle(Hicon);
+                Icon = Icon.FromHandle(Hicon);
             }
 
             _originalSubtitle = subtitle;
@@ -420,15 +420,17 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 // fix overlapping time codes
-                var formFix = new FixCommonErrors();
-                var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
-                foreach (Paragraph p in _paragraphs)
-                    tmpSubtitle.Paragraphs.Add(new Paragraph(p));
-                formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
-                formFix.FixOverlappingDisplayTimes();
-                _paragraphs.Clear();
-                foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
-                    _paragraphs.Add(new Paragraph(p));
+                using (var formFix = new FixCommonErrors())
+                {
+                    var tmpSubtitle = new Subtitle { WasLoadedWithFrameNumbers = _originalSubtitle.WasLoadedWithFrameNumbers };
+                    foreach (Paragraph p in _paragraphs)
+                        tmpSubtitle.Paragraphs.Add(new Paragraph(p));
+                    formFix.Initialize(tmpSubtitle, tmpSubtitle.OriginalFormat, System.Text.Encoding.UTF8);
+                    formFix.FixOverlappingDisplayTimes();
+                    _paragraphs.Clear();
+                    foreach (Paragraph p in formFix.FixedSubtitle.Paragraphs)
+                        _paragraphs.Add(new Paragraph(p));
+                }
 
                 // update comboboxes
                 int startSaveIdx = comboBoxStartTexts.SelectedIndex;
@@ -438,7 +440,7 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxEndTexts.SelectedIndex = endSaveIdx;
 
                 labelSyncDone.Text = _language.SynchronizationDone;
-                timerHideSyncLabel.Start();
+                _timerHideSyncLabel.Start();
             }
             else
             {
@@ -516,14 +518,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindTextStartClick(object sender, EventArgs e)
         {
-            var findSubtitle = new FindSubtitleLine();
-            findSubtitle.Initialize(_paragraphs, " " + "(" + _language.StartScene.ToLower() + ")");
-            findSubtitle.ShowDialog();
-            if (findSubtitle.SelectedIndex >= 0)
+            using (var findSubtitle = new FindSubtitleLine())
             {
-                comboBoxStartTexts.SelectedIndex = findSubtitle.SelectedIndex;
+                findSubtitle.Initialize(_paragraphs, " " + "(" + _language.StartScene.ToLower() + ")");
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                {
+                    comboBoxStartTexts.SelectedIndex = findSubtitle.SelectedIndex;
+                }
             }
-            findSubtitle.Dispose();
         }
 
         private void ButtonFindTextEndClick(object sender, EventArgs e)

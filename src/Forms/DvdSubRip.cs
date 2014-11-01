@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Forms
             var textSize = graphics.MeasureString(buttonAddVobFile.Text, Font);
             if (textSize.Height > buttonAddVobFile.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -113,34 +113,36 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
 
-            var ifoParser = new IfoParser(fileName);
-            if (!string.IsNullOrEmpty(ifoParser.ErrorMessage))
+            using (var ifoParser = new IfoParser(fileName))
             {
-                Clear();
-                MessageBox.Show(ifoParser.ErrorMessage);
-                return;
+                if (!string.IsNullOrEmpty(ifoParser.ErrorMessage))
+                {
+                    Clear();
+                    MessageBox.Show(ifoParser.ErrorMessage);
+                    return;
+                }
+
+                // List info
+                labelIfoFile.Text = _language.IfoFile + ": " + ifoParser.VideoTitleSetVobs.VideoStream.Resolution;
+                bool isPal = ifoParser.VideoTitleSetVobs.VideoStream.Standard.Equals("PAL", StringComparison.OrdinalIgnoreCase);
+                if (isPal)
+                    radioButtonPal.Checked = true;
+                else
+                    radioButtonNtsc.Checked = true;
+
+                // List languages
+                comboBoxLanguages.Items.Clear();
+                foreach (string s in ifoParser.VideoTitleSetVobs.GetAllLanguages())
+                    comboBoxLanguages.Items.Add(s);
+                if (comboBoxLanguages.Items.Count > 0)
+                    comboBoxLanguages.SelectedIndex = 0;
+
+                // Save palette (Color LookUp Table)
+                if (ifoParser.VideoTitleSetProgramChainTable.ProgramChains.Count > 0)
+                    Palette = ifoParser.VideoTitleSetProgramChainTable.ProgramChains[0].ColorLookupTable;
+
+                ifoParser.Dispose();
             }
-
-            // List info
-            labelIfoFile.Text = _language.IfoFile + ": " + ifoParser.VideoTitleSetVobs.VideoStream.Resolution;
-            bool isPal = ifoParser.VideoTitleSetVobs.VideoStream.Standard.Equals("PAL", StringComparison.OrdinalIgnoreCase);
-            if (isPal)
-                radioButtonPal.Checked = true;
-            else
-                radioButtonNtsc.Checked = true;
-
-            // List languages
-            comboBoxLanguages.Items.Clear();
-            foreach (string s in ifoParser.VideoTitleSetVobs.GetAllLanguages())
-                comboBoxLanguages.Items.Add(s);
-            if (comboBoxLanguages.Items.Count > 0)
-                comboBoxLanguages.SelectedIndex = 0;
-
-            // Save palette (Color LookUp Table)
-            if (ifoParser.VideoTitleSetProgramChainTable.ProgramChains.Count > 0)
-                Palette = ifoParser.VideoTitleSetProgramChainTable.ProgramChains[0].ColorLookupTable;
-
-            ifoParser.Dispose();
             buttonStartRipping.Enabled = listBoxVobFiles.Items.Count > 0;
         }
 
@@ -264,26 +266,26 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (Helper.GetEndian(buffer, 0x0026, 4) == 0x1bf && Helper.GetEndian(buffer, 0x400, 4) == 0x1bf)
                             {
-                                uint vobu_s_ptm = Helper.GetEndian(buffer, 0x0039, 4);
-                                uint vobu_e_ptm = Helper.GetEndian(buffer, 0x003d, 4);
+                                uint vobuSPtm = Helper.GetEndian(buffer, 0x0039, 4);
+                                uint vobuEPtm = Helper.GetEndian(buffer, 0x003d, 4);
 
-                                _lastPresentationTimestamp = vobu_e_ptm;
+                                _lastPresentationTimestamp = vobuEPtm;
 
                                 if (firstNavStartPts == 0)
                                 {
-                                    firstNavStartPts = vobu_s_ptm;
+                                    firstNavStartPts = vobuSPtm;
                                     if (vobNumber == 0)
-                                        _accumulatedPresentationTimestamp = -vobu_s_ptm;
+                                        _accumulatedPresentationTimestamp = -vobuSPtm;
                                 }
-                                if (vobu_s_ptm + firstNavStartPts + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
+                                if (vobuSPtm + firstNavStartPts + _accumulatedPresentationTimestamp < _lastVobPresentationTimestamp)
                                 {
-                                    _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
+                                    _accumulatedPresentationTimestamp += _lastNavEndPts - vobuSPtm;
                                 }
-                                else if (_lastNavEndPts > vobu_e_ptm)
+                                else if (_lastNavEndPts > vobuEPtm)
                                 {
-                                    _accumulatedPresentationTimestamp += _lastNavEndPts - vobu_s_ptm;
+                                    _accumulatedPresentationTimestamp += _lastNavEndPts - vobuSPtm;
                                 }
-                                _lastNavEndPts = vobu_e_ptm;
+                                _lastNavEndPts = vobuEPtm;
                             }
                         }
 
