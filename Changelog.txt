@@ -1,16 +1,24 @@
 ﻿Subtitle Edit Changelog
 
 
-3.4.4 (xth October 2014)
+3.4.4 (xth November 2014)
 * NEW:
+   * Added export to format EDL+png (for Adobe Premiere) - thx Demian
+   * Added "forced" option in export for Blu-ray/VobSub/BDN-xml
 * IMPROVED:
    * Updated French translation - thx JM GBT
+   * Updated Brazil translation - thx Igor
+   * Updated Mexican translation - thx paconaranjo
+   * Updated Czech translation - thx Trottel
 * FIXED:
    * Compare window now works again - thx SimplyTheBOSS
    * Now again shows changed duration via waveform start/end - thx Quetsbeek/Mirko
+   * "Measurement converter" now works again - thx Quetsbeek 
    * Fixed possible crash when saving as "EBU STL" - thx MartinDelille
    * Fixed encoding problems in online translate - thx jaroslav
    * Don't merge short lines with music symbols - thx XhmikosR
+   * Bug in "Fix common OCR errors" regarding url/uppercase - thx XhmikosR
+   * Fixed center alignment bug in export to images
 
 
 3.4.3 (11th October 2014)
