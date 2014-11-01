@@ -836,21 +836,24 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
                     {
-                        var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
-                        if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
-                            uppercaseLetter = 'I';
-                        if ((st.StrippedText.StartsWith("lo ") || st.StrippedText == "lo.") && _threeLetterIsoLanguageName == "ita")
-                            uppercaseLetter = 'I';
-                        if ((st.StrippedText.StartsWith("k ") || st.StrippedText.StartsWith("m ") || st.StrippedText.StartsWith("n ") || st.StrippedText.StartsWith("r ") || st.StrippedText.StartsWith("s ") || st.StrippedText.StartsWith("t ")) &&
-                            st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName == "nld")
-                            uppercaseLetter = st.StrippedText[0];
-                        if ((st.StrippedText.StartsWith("l-I'll ") || st.StrippedText.StartsWith("l-l'll ")) && _threeLetterIsoLanguageName == "eng")
+                       if (!StartsWithUrl(st.StrippedText))
                         {
-                            uppercaseLetter = 'I';
-                            st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
+                            var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
+                            if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
+                                uppercaseLetter = 'I';
+                            if ((st.StrippedText.StartsWith("lo ") || st.StrippedText == "lo.") && _threeLetterIsoLanguageName == "ita")
+                                uppercaseLetter = 'I';
+                            if ((st.StrippedText.StartsWith("k ") || st.StrippedText.StartsWith("m ") || st.StrippedText.StartsWith("n ") || st.StrippedText.StartsWith("r ") || st.StrippedText.StartsWith("s ") || st.StrippedText.StartsWith("t ")) &&
+                                st.Pre.EndsWith('\'') && _threeLetterIsoLanguageName == "nld")
+                                uppercaseLetter = st.StrippedText[0];
+                            if ((st.StrippedText.StartsWith("l-I'll ") || st.StrippedText.StartsWith("l-l'll ")) && _threeLetterIsoLanguageName == "eng")
+                            {
+                                uppercaseLetter = 'I';
+                                st.StrippedText = "I-I" + st.StrippedText.Remove(0, 3);
+                            }
+                            st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
+                            input = st.Pre + st.StrippedText + st.Post;
                         }
-                        st.StrippedText = uppercaseLetter + st.StrippedText.Substring(1);
-                        input = st.Pre + st.StrippedText + st.Post;
                     }
                 }
             }
@@ -927,6 +930,33 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return input;
+        }
+
+        private bool IsUrl(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains(".") || text.Contains(" "))
+                return false;
+
+            var allLower = text.ToLower();
+            if (allLower.StartsWith("www.") || allLower.EndsWith(".org") || allLower.EndsWith(".com") || allLower.EndsWith(".net"))
+                return true;
+
+            if (allLower.Contains(".org/") || allLower.Contains(".com/") || allLower.Contains(".net/"))
+                return true;
+
+            return false;
+        }
+
+        private bool StartsWithUrl(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return false;
+
+            var arr = text.Trim().TrimEnd('.').TrimEnd().Split();
+            if (arr.Length == 0)
+                return false;
+
+            return IsUrl(arr[0]);
         }
 
         public string FixOcrErrorViaLineReplaceList(string input)

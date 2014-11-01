@@ -541,7 +541,6 @@ namespace Test
             using (var form = new GoToLine())
             {
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
-                //string input = "i'I'll see you.";
                 const string input = "l-l'll see you.";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
                 var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
@@ -557,13 +556,26 @@ namespace Test
             {
 
                 Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
-                //string input = "i'I'll see you.";
                 const string input = "i.e., your killer.";
                 var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "not there", form);
                 var res = ofe.FixOcrErrors(input, 1, "Ends with comma,", false, Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine.AutoGuessLevel.Cautious);
                 Assert.AreEqual(res, "i.e., your killer.");
             }
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixOcrErrorsUrl()
+        {
+            using (var form = new GoToLine())
+            {
+                Configuration.Settings.Tools.OcrFixUseHardcodedRules = true;
+                const string input = "www.addic7ed.com";
+                var ofe = new Nikse.SubtitleEdit.Logic.Ocr.OcrFixEngine("eng", "us_en", form);
+                var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
+                Assert.AreEqual(res, input);
+            }
+        }        
 
         #endregion Fix OCR errors
 
