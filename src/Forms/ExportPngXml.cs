@@ -705,7 +705,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
                 }
-
                 else if (_exportType == "EDL")
                 {
                     string header = "TITLE: ( no title )" + Environment.NewLine + Environment.NewLine;
@@ -734,7 +733,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     File.WriteAllText(fName, SubtitleFormat.ToUtf8XmlString(doc));
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, Path.GetDirectoryName(fName)));
                 }
-
                 else
                 {
                     int resW = 0;
@@ -1192,13 +1190,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         using (var g = Graphics.FromImage(fullSize))
                         {
-                            g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width)/2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
+                            g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
                         }
                         var fileName2 = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName1 + ".PNG");
                         fullSize.Save(fileName2, ImageFormat.Png);
                         fullSize.Dispose();
-                        
-                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode(0).ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(),  param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
+
+                        string line = string.Format("{0:000}  {1}  V     C        {2} {3} {4} {5}", i, fileName1, new TimeCode(0).ToHHMMSSFF(), param.P.Duration.ToHHMMSSFF(), param.P.StartTime.ToHHMMSSFF(), param.P.EndTime.ToHHMMSSFF());
                         sb.AppendLine(line);
                         sb.AppendLine();
 
@@ -2688,7 +2686,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (exportType == "BLURAYSUP" || exportType == "IMAGE/FRAME" && Configuration.Settings.Tools.ExportBluRayBottomMargin >= 0 && Configuration.Settings.Tools.ExportBluRayBottomMargin < comboBoxBottomMargin.Items.Count)
                 comboBoxBottomMargin.SelectedIndex = Configuration.Settings.Tools.ExportBluRayBottomMargin;
 
-            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" ||_exportType == "EDL")
+            if (_exportType == "BLURAYSUP" || _exportType == "VOBSUB" || _exportType == "IMAGE/FRAME" || _exportType == "BDNXML" || _exportType == "DOST" || _exportType == "FAB" || _exportType == "EDL")
             {
                 comboBoxBottomMargin.Visible = true;
                 labelBottomMargin.Visible = true;
