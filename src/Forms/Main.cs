@@ -2822,7 +2822,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         MessageBox.Show(_language.ErrorLoadPng);
                     return;
-                }                
+                }
 
                 if (format == null && fi.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
@@ -7677,7 +7677,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, language);
                             }
-                            
+
                         }
 
                         lines = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);

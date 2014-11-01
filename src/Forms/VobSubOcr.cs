@@ -1222,7 +1222,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (_dvbSubtitles != null)
             {
-//                return _dvbSubtitles[index]. ??
+                //                return _dvbSubtitles[index]. ??
                 return false;
             }
             if (_bluRaySubtitlesOriginal != null)
