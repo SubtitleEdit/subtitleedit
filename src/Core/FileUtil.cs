@@ -114,7 +114,6 @@ namespace Nikse.SubtitleEdit.Core
                        && buffer[7] == 10;
             }
         }
-        
 
         public static bool IsBluRaySup(string fileName)
         {

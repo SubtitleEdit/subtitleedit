@@ -575,7 +575,7 @@ namespace Test
                 var res = ofe.FixOcrErrorsViaHardcodedRules(input, "Previous line.", new HashSet<string>());
                 Assert.AreEqual(res, input);
             }
-        }        
+        }
 
         #endregion Fix OCR errors
 
