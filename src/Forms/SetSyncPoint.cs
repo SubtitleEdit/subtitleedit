@@ -16,8 +16,8 @@ namespace Nikse.SubtitleEdit.Forms
         private double _stopPosition = -1.0;
         private Subtitle _subtitle;
         private int _audioTrackNumber = -1;
-        private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
-        private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
+        private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
+        private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
 
         public string VideoFileName { get; private set; }
 
@@ -43,8 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonSetSyncPoint.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonSetSyncPoint.Text, Font);
             if (textSize.Height > buttonSetSyncPoint.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (File.Exists(fileName))
             {
-                FileInfo fi = new FileInfo(fileName);
+                var fi = new FileInfo(fileName);
                 if (fi.Length < 1000)
                     return;
 
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (videoPlayerContainer1 != null)
             {
-                double pos = 0;
+                double pos;
 
                 if (_stopPosition >= 0 && videoPlayerContainer1.CurrentPosition > _stopPosition)
                 {
@@ -345,11 +345,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFindTextEndClick(object sender, EventArgs e)
         {
-            var findSubtitle = new FindSubtitleLine();
-            findSubtitle.Initialize(_subtitle.Paragraphs, string.Empty);
-            findSubtitle.ShowDialog();
-            if (findSubtitle.SelectedIndex >= 0)
-                subtitleListView1.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+            using (var findSubtitle = new FindSubtitleLine())
+            {
+                findSubtitle.Initialize(_subtitle.Paragraphs, string.Empty);
+                findSubtitle.ShowDialog();
+                if (findSubtitle.SelectedIndex >= 0)
+                    subtitleListView1.SelectIndexAndEnsureVisible(findSubtitle.SelectedIndex);
+            }
         }
 
     }
