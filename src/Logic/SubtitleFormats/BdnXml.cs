@@ -37,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<Subtitle/>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             xml.LoadXml(xmlStructure);
 
@@ -58,14 +58,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(end);
 
                 XmlNode text = xml.CreateElement("Text");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                text.InnerText = Utilities.RemoveHtmlTags(p.Text, true);
                 paragraph.AppendChild(text);
 
                 xml.DocumentElement.AppendChild(paragraph);
             }
 
-            MemoryStream ms = new MemoryStream();
-            XmlTextWriter writer = new XmlTextWriter(ms, Encoding.UTF8);
+            var ms = new MemoryStream();
+            var writer = new XmlTextWriter(ms, Encoding.UTF8);
             writer.Formatting = Formatting.Indented;
             xml.Save(writer);
             return Encoding.UTF8.GetString(ms.ToArray()).Trim();
@@ -75,14 +75,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<BDN"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             try
             {
@@ -100,10 +100,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     string start = node.Attributes["InTC"].InnerText;
                     string end = node.Attributes["OutTC"].InnerText;
-                    StringBuilder textBuilder = new StringBuilder();
+                    var textBuilder = new StringBuilder();
                     foreach (XmlNode graphic in node.SelectNodes("Graphic"))
                         textBuilder.AppendLine(graphic.InnerText);
-                    Paragraph p = new Paragraph(textBuilder.ToString().Trim(), GetMillisecondsFromTimeCode(start), GetMillisecondsFromTimeCode(end));
+                    var p = new Paragraph(textBuilder.ToString().Trim(), GetMillisecondsFromTimeCode(start), GetMillisecondsFromTimeCode(end));
                     if (node.Attributes["Forced"] != null && node.Attributes["Forced"].Value.Equals("true", StringComparison.OrdinalIgnoreCase))
                         p.Forced = true;
                     subtitle.Paragraphs.Add(p);

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -24,8 +25,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -59,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (last.EndTime.TotalMilliseconds + 500 < p.StartTime.TotalMilliseconds)
                     {
-                        Paragraph blank = new Paragraph();
+                        var blank = new Paragraph();
                         blank.StartTime.TotalMilliseconds = last.EndTime.TotalMilliseconds;
                         AddParagraph(xml, blank);
                     }
@@ -86,7 +87,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(tracks);
 
                 XmlNode track0 = xml.CreateElement("track0");
-                track0.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                track0.InnerText = Utilities.RemoveHtmlTags(p.Text, true);
                 track0.InnerXml = track0.InnerXml.Replace(Environment.NewLine, "<br />");
                 tracks.AppendChild(track0);
             }
@@ -97,14 +98,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<captionate>") || !xmlString.Contains("</caption>"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.XmlResolver = null;
             try
             {
@@ -149,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string EncodeTime(TimeCode time)
         {
-            return time.TotalMilliseconds.ToString();
+            return time.TotalMilliseconds.ToString(CultureInfo.InvariantCulture);
         }
 
     }

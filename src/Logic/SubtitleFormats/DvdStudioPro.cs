@@ -142,6 +142,7 @@ $HorzAlign          =   Center
 
         internal static string EncodeStyles(string text)
         {
+            text = Utilities.RemoveSsaTags(text);
             text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
             bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
 
