@@ -7604,22 +7604,24 @@ namespace Nikse.SubtitleEdit.Forms
                 index++;
             }
             Cursor = Cursors.Default;
-            VobSubOcrCharacterInspect inspect = new VobSubOcrCharacterInspect();
-            inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb);
-            if (inspect.ShowDialog(this) == DialogResult.OK)
+            using (var inspect = new VobSubOcrCharacterInspect())
             {
-                Cursor = Cursors.WaitCursor;
-                if (_binaryOcrDb != null)
+                inspect.Initialize(comboBoxCharacterDatabase.SelectedItem.ToString(), matches, imageSources, _binaryOcrDb);
+                if (inspect.ShowDialog(this) == DialogResult.OK)
                 {
-                    _binaryOcrDb.Save();
+                    Cursor = Cursors.WaitCursor;
+                    if (_binaryOcrDb != null)
+                    {
+                        _binaryOcrDb.Save();
+                        Cursor = Cursors.Default;
+                        return;
+                    }
+                    _compareDoc = inspect.ImageCompareDocument;
+                    string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
+                    _compareDoc.Save(path + "Images.xml");
+                    LoadImageCompareBitmaps();
                     Cursor = Cursors.Default;
-                    return;
                 }
-                _compareDoc = inspect.ImageCompareDocument;
-                string path = Configuration.VobSubCompareFolder + comboBoxCharacterDatabase.SelectedItem + Path.DirectorySeparatorChar;
-                _compareDoc.Save(path + "Images.xml");
-                LoadImageCompareBitmaps();
-                Cursor = Cursors.Default;
             }
             if (_binaryOcrDb != null)
                 _binaryOcrDb.LoadCompareImages();
@@ -8148,17 +8150,19 @@ namespace Nikse.SubtitleEdit.Forms
             string result = OcrViaNOCR(bitmap, subtitleListView1.SelectedItems[0].Index);
             checkBoxPromptForUnknownWords.Checked = oldPrompt;
             Cursor = Cursors.Default;
-            var inspect = new VobSubNOcrCharacterInspect();
-            bool oldCorrect = checkBoxNOcrCorrect.Checked;
-            checkBoxNOcrCorrect.Checked = false;
-            inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this);
-            if (inspect.ShowDialog(this) == DialogResult.OK)
+            using (var inspect = new VobSubNOcrCharacterInspect())
             {
-                Cursor = Cursors.WaitCursor;
-                SaveNOcrWithCurrentLanguage();
-                Cursor = Cursors.Default;
+                bool oldCorrect = checkBoxNOcrCorrect.Checked;
+                checkBoxNOcrCorrect.Checked = false;
+                inspect.Initialize(bitmap, (int) numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this);
+                if (inspect.ShowDialog(this) == DialogResult.OK)
+                {
+                    Cursor = Cursors.WaitCursor;
+                    SaveNOcrWithCurrentLanguage();
+                    Cursor = Cursors.Default;
+                }
+                checkBoxNOcrCorrect.Checked = oldCorrect;
             }
-            checkBoxNOcrCorrect.Checked = oldCorrect;
         }
 
         private void buttonLineOcrEditLanguage_Click(object sender, EventArgs e)

@@ -462,18 +462,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             index++;
                             buffer[index] = 0x6F;
                         }
-                        else if (current == 'å')
-                        {
-                            buffer[index] = 0x8C;
-                            index++;
-                            buffer[index] = 0x61;
-                        }
-                        else if (current == 'Å')
-                        {
-                            buffer[index] = 0x8C;
-                            index++;
-                            buffer[index] = 0x41;
-                        }
+
+                        // different language setting?
+                        //else if (current == 'å')
+                        //{
+                        //    buffer[index] = 0x8C;
+                        //    index++;
+                        //    buffer[index] = 0x61;
+                        //}
+                        //else if (current == 'Å')
+                        //{
+                        //    buffer[index] = 0x8C;
+                        //    index++;
+                        //    buffer[index] = 0x41;
+                        //}
 
                         // ăĂ îÎ şŞ ţŢ âÂ (romanian)
                         else if (current == 'ă')
