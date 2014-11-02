@@ -9700,14 +9700,15 @@ namespace Nikse.SubtitleEdit.Forms
             int packedId = tsParser.SubtitlePacketIds[0];
             if (tsParser.SubtitlePacketIds.Count > 1)
             {
-                var subChooser = new TransportStreamSubtitleChooser();
-                _formPositionsAndSizes.SetPositionAndSize(subChooser);
-                subChooser.Initialize(tsParser, fileName);
-                if (subChooser.ShowDialog(this) == DialogResult.Cancel)
-                    return false;
-                packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
-                _formPositionsAndSizes.SavePositionAndSize(subChooser);
-                subChooser.Dispose();
+                using (var subChooser = new TransportStreamSubtitleChooser())
+                {
+                    _formPositionsAndSizes.SetPositionAndSize(subChooser);
+                    subChooser.Initialize(tsParser, fileName);
+                    if (subChooser.ShowDialog(this) == DialogResult.Cancel)
+                        return false;
+                    packedId = tsParser.SubtitlePacketIds[subChooser.SelectedIndex];
+                    _formPositionsAndSizes.SavePositionAndSize(subChooser);
+                }
             }
             var subtitles = tsParser.GetDvbSubtitles(packedId);
 
@@ -9900,12 +9901,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                var subtitleChooser = new MatroskaSubtitleChooser();
-                subtitleChooser.Initialize(mp4SubtitleTracks);
-                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                using (var subtitleChooser = new MatroskaSubtitleChooser())
                 {
-                    LoadMp4Subtitle(fileName, mp4SubtitleTracks[subtitleChooser.SelectedIndex]);
-                    return true;
+                    subtitleChooser.Initialize(mp4SubtitleTracks);
+                    if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                    {
+                        LoadMp4Subtitle(fileName, mp4SubtitleTracks[subtitleChooser.SelectedIndex]);
+                        return true;
+                    }
                 }
                 return false;
             }
@@ -10189,11 +10192,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (subtitleList.Count > 1)
                         {
-                            MatroskaSubtitleChooser subtitleChooser = new MatroskaSubtitleChooser();
-                            subtitleChooser.Initialize(subtitleList);
-                            if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                            using (var subtitleChooser = new MatroskaSubtitleChooser())
                             {
-                                LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
+                                subtitleChooser.Initialize(subtitleList);
+                                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], fileName, false);
+                                }
                             }
                         }
                         else
@@ -12781,11 +12786,13 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-                            var subtitleChooser = new MatroskaSubtitleChooser();
-                            subtitleChooser.Initialize(mp4SubtitleTracks);
-                            if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                            using (var subtitleChooser = new MatroskaSubtitleChooser())
                             {
-                                sub = LoadMp4SubtitleForSync(mp4SubtitleTracks[0]);
+                                subtitleChooser.Initialize(mp4SubtitleTracks);
+                                if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    sub = LoadMp4SubtitleForSync(mp4SubtitleTracks[0]);
+                                }
                             }
                         }
                     }
@@ -17924,11 +17931,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PlainTextToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var exportText = new ExportText();
-            exportText.Initialize(_subtitle, _fileName);
-            if (exportText.ShowDialog() == DialogResult.OK)
+            using (var exportText = new ExportText())
             {
-                ShowStatus(Configuration.Settings.Language.Main.SubtitleExported);
+                exportText.Initialize(_subtitle, _fileName);
+                if (exportText.ShowDialog() == DialogResult.OK)
+                {
+                    ShowStatus(Configuration.Settings.Language.Main.SubtitleExported);
+                }
             }
         }
 
@@ -18620,132 +18629,134 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAlignment_Click(object sender, EventArgs e)
         {
-            var f = new AlignmentPicker();
-            f.TopMost = true;
-            f.StartPosition = FormStartPosition.Manual;
-            f.Left = Cursor.Position.X - 150;
-            f.Top = Cursor.Position.Y - 75;
-            if (f.ShowDialog(this) == DialogResult.OK)
+            using (var f = new AlignmentPicker())
             {
-                string tag = string.Empty;
-                var format = GetCurrentSubtitleFormat();
-                if (format.GetType() == typeof(SubStationAlpha))
+                f.TopMost = true;
+                f.StartPosition = FormStartPosition.Manual;
+                f.Left = Cursor.Position.X - 150;
+                f.Top = Cursor.Position.Y - 75;
+                if (f.ShowDialog(this) == DialogResult.OK)
                 {
-                    //1: Bottom left
-                    //2: Bottom center
-                    //3: Bottom right
-                    //9: Middle left
-                    //10: Middle center
-                    //11: Middle right
-                    //5: Top left
-                    //6: Top center
-                    //7: Top right
-                    switch (f.Alignment)
+                    string tag = string.Empty;
+                    var format = GetCurrentSubtitleFormat();
+                    if (format.GetType() == typeof (SubStationAlpha))
                     {
-                        case ContentAlignment.BottomLeft:
-                            tag = "{\\a1}";
-                            break;
-                        case ContentAlignment.BottomCenter:
-                            tag = "{\\a2}";
-                            break;
-                        case ContentAlignment.BottomRight:
-                            tag = "{\\a3}";
-                            break;
-                        case ContentAlignment.MiddleLeft:
-                            tag = "{\\a9}";
-                            break;
-                        case ContentAlignment.MiddleCenter:
-                            tag = "{\\a10}";
-                            break;
-                        case ContentAlignment.MiddleRight:
-                            tag = "{\\a11}";
-                            break;
-                        case ContentAlignment.TopLeft:
-                            tag = "{\\a5}";
-                            break;
-                        case ContentAlignment.TopCenter:
-                            tag = "{\\a6}";
-                            break;
-                        case ContentAlignment.TopRight:
-                            tag = "{\\a7}";
-                            break;
-                    }
-                }
-                else
-                {
-                    //1: Bottom left
-                    //2: Bottom center
-                    //3: Bottom right
-                    //4: Middle left
-                    //5: Middle center
-                    //6: Middle right
-                    //7: Top left
-                    //8: Top center
-                    //9: Top right
-                    switch (f.Alignment)
-                    {
-                        case ContentAlignment.BottomLeft:
-                            tag = "{\\an1}";
-                            break;
-                        case ContentAlignment.BottomCenter:
-                            if (format.GetType() == typeof(SubRip))
-                                tag = string.Empty;
-                            else
-                                tag = "{\\an2}";
-                            break;
-                        case ContentAlignment.BottomRight:
-                            tag = "{\\an3}";
-                            break;
-                        case ContentAlignment.MiddleLeft:
-                            tag = "{\\an4}";
-                            break;
-                        case ContentAlignment.MiddleCenter:
-                            tag = "{\\an5}";
-                            break;
-                        case ContentAlignment.MiddleRight:
-                            tag = "{\\an6}";
-                            break;
-                        case ContentAlignment.TopLeft:
-                            tag = "{\\an7}";
-                            break;
-                        case ContentAlignment.TopCenter:
-                            tag = "{\\an8}";
-                            break;
-                        case ContentAlignment.TopRight:
-                            tag = "{\\an9}";
-                            break;
-                    }
-                }
-                if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
-                {
-                    SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
-                    MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
-
-                    var indexes = new List<int>();
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                        indexes.Add(item.Index);
-
-                    SubtitleListview1.BeginUpdate();
-                    foreach (int i in indexes)
-                    {
-                        if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                        //1: Bottom left
+                        //2: Bottom center
+                        //3: Bottom right
+                        //9: Middle left
+                        //10: Middle center
+                        //11: Middle right
+                        //5: Top left
+                        //6: Top center
+                        //7: Top right
+                        switch (f.Alignment)
                         {
-                            Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                            {
-                                SetAlignTag(original, tag);
-                                SubtitleListview1.SetAlternateText(i, original.Text);
-                            }
+                            case ContentAlignment.BottomLeft:
+                                tag = "{\\a1}";
+                                break;
+                            case ContentAlignment.BottomCenter:
+                                tag = "{\\a2}";
+                                break;
+                            case ContentAlignment.BottomRight:
+                                tag = "{\\a3}";
+                                break;
+                            case ContentAlignment.MiddleLeft:
+                                tag = "{\\a9}";
+                                break;
+                            case ContentAlignment.MiddleCenter:
+                                tag = "{\\a10}";
+                                break;
+                            case ContentAlignment.MiddleRight:
+                                tag = "{\\a11}";
+                                break;
+                            case ContentAlignment.TopLeft:
+                                tag = "{\\a5}";
+                                break;
+                            case ContentAlignment.TopCenter:
+                                tag = "{\\a6}";
+                                break;
+                            case ContentAlignment.TopRight:
+                                tag = "{\\a7}";
+                                break;
                         }
-                        SetAlignTag(_subtitle.Paragraphs[i], tag);
-                        SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
                     }
-                    SubtitleListview1.EndUpdate();
+                    else
+                    {
+                        //1: Bottom left
+                        //2: Bottom center
+                        //3: Bottom right
+                        //4: Middle left
+                        //5: Middle center
+                        //6: Middle right
+                        //7: Top left
+                        //8: Top center
+                        //9: Top right
+                        switch (f.Alignment)
+                        {
+                            case ContentAlignment.BottomLeft:
+                                tag = "{\\an1}";
+                                break;
+                            case ContentAlignment.BottomCenter:
+                                if (format.GetType() == typeof (SubRip))
+                                    tag = string.Empty;
+                                else
+                                    tag = "{\\an2}";
+                                break;
+                            case ContentAlignment.BottomRight:
+                                tag = "{\\an3}";
+                                break;
+                            case ContentAlignment.MiddleLeft:
+                                tag = "{\\an4}";
+                                break;
+                            case ContentAlignment.MiddleCenter:
+                                tag = "{\\an5}";
+                                break;
+                            case ContentAlignment.MiddleRight:
+                                tag = "{\\an6}";
+                                break;
+                            case ContentAlignment.TopLeft:
+                                tag = "{\\an7}";
+                                break;
+                            case ContentAlignment.TopCenter:
+                                tag = "{\\an8}";
+                                break;
+                            case ContentAlignment.TopRight:
+                                tag = "{\\an9}";
+                                break;
+                        }
+                    }
+                    if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
+                    {
+                        SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
+                        MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
 
-                    ShowStatus(string.Format(_language.TagXAdded, tag));
-                    ShowSource();
-                    RefreshSelectedParagraph();
-                    SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                        var indexes = new List<int>();
+                        foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                            indexes.Add(item.Index);
+
+                        SubtitleListview1.BeginUpdate();
+                        foreach (int i in indexes)
+                        {
+                            if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
+                            {
+                                Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
+                                if (original != null)
+                                {
+                                    SetAlignTag(original, tag);
+                                    SubtitleListview1.SetAlternateText(i, original.Text);
+                                }
+                            }
+                            SetAlignTag(_subtitle.Paragraphs[i], tag);
+                            SubtitleListview1.SetText(i, _subtitle.Paragraphs[i].Text);
+                        }
+                        SubtitleListview1.EndUpdate();
+
+                        ShowStatus(string.Format(_language.TagXAdded, tag));
+                        ShowSource();
+                        RefreshSelectedParagraph();
+                        SubtitleListview1.SelectedIndexChanged += SubtitleListview1_SelectedIndexChanged;
+                    }
                 }
             }
         }

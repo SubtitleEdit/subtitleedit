@@ -68,8 +68,10 @@ namespace Nikse.SubtitleEdit.Logic
                 double milliseconds = 0;
                 string videoCodec = string.Empty;
 
-                var matroskaParser = new Matroska();
-                matroskaParser.GetMatroskaInfo(fileName, ref success, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
+                using (var matroskaParser = new Matroska())
+                {
+                    matroskaParser.GetMatroskaInfo(fileName, ref success, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
+                }
                 if (success)
                 {
                     info.Width = width;
