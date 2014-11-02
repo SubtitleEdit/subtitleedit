@@ -1292,6 +1292,9 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int marginVIndex = -1;
             int borderStyleIndex = -1;
 
+            if (header == null)
+                header = DefaultHeader;
+
             foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = line.Trim().ToLower();
