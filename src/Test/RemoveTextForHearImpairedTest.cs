@@ -703,5 +703,60 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextAss1()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            string text = "{\\an4\\pos(691,748)}(Chuckles) Yes, ok";
+            string expected = "{\\an4\\pos(691,748)}Yes, ok";
+            string actual = target.RemoveHearImpairedTags(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextAss2()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            string text = "{\\an4\\pos(691,748)}(radio noise)";
+            string expected = string.Empty;
+            string actual = target.RemoveHearImpairedTags(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextAss3Colon()
+        {
+            var target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveTextBeforeColon = true;
+            string text = "{\\an4\\pos(1335,891)}NIC: Shh!";
+            string expected = "{\\an4\\pos(1335,891)}Shh!";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }        
+
     }
 }
