@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Globalization;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -29,11 +30,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -140,9 +141,9 @@ namespace Nikse.SubtitleEdit.Forms
                 i++;
             }
             labelMaxSingleLineLengthIs.Text = string.Format(Configuration.Settings.Language.SplitLongLines.LongestSingleLineIsXAtY, singleLineMaxLength, singleLineMaxLengthIndex + 1);
-            labelMaxSingleLineLengthIs.Tag = singleLineMaxLengthIndex.ToString();
+            labelMaxSingleLineLengthIs.Tag = singleLineMaxLengthIndex.ToString(CultureInfo.InvariantCulture);
             labelMaxLineLengthIs.Text = string.Format(Configuration.Settings.Language.SplitLongLines.LongestLineIsXAtY, maxLength, maxLengthIndex + 1);
-            labelMaxLineLengthIs.Tag = maxLengthIndex.ToString();
+            labelMaxLineLengthIs.Tag = maxLengthIndex.ToString(CultureInfo.InvariantCulture);
         }
 
         private bool IsFixAllowed(Paragraph p)
@@ -162,7 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewFixes.Items.Clear();
             numberOfSplits = 0;
             string language = Utilities.AutoDetectGoogleLanguage(subtitle);
-            Subtitle splittedSubtitle = new Subtitle();
+            var splittedSubtitle = new Subtitle();
             for (int i = 0; i < subtitle.Paragraphs.Count; i++)
             {
                 bool added = false;
@@ -185,10 +186,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (!isDialog && !SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
-                            Paragraph newParagraph = new Paragraph(p);
-                            newParagraph.Text = Utilities.AutoBreakLine(p.Text, language);
+                            var newParagraph = new Paragraph(p) {Text = Utilities.AutoBreakLine(p.Text, language)};
                             if (clearFixes)
-                                AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(), oldText);
+                                AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(CultureInfo.InvariantCulture), oldText);
                             autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                             splittedSubtitle.Paragraphs.Add(newParagraph);
                             added = true;
@@ -209,8 +209,8 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (Configuration.Settings.General.MininumMillisecondsBetweenLines % 2 == 1)
                                         spacing2++;
 
-                                    Paragraph newParagraph1 = new Paragraph(p);
-                                    Paragraph newParagraph2 = new Paragraph(p);
+                                    var newParagraph1 = new Paragraph(p);
+                                    var newParagraph2 = new Paragraph(p);
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
@@ -229,11 +229,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph2.StartTime.TotalMilliseconds = newParagraph1.EndTime.TotalMilliseconds + spacing2;
 
                                     if (clearFixes)
-                                        AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(), oldText);
+                                        AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(CultureInfo.InvariantCulture), oldText);
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
-                                    string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text);
+                                    string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
                                     if (p1.EndsWith('.') || p1.EndsWith('!') || p1.EndsWith('?') || p1.EndsWith(':') || p1.EndsWith(')') || p1.EndsWith(']') || p1.EndsWith('♪'))
                                     {
                                         if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))
