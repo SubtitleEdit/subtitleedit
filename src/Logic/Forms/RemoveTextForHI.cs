@@ -72,8 +72,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!Settings.RemoveTextBeforeColon)
                 return text;
 
+            string preAssTag = string.Empty;
+            if (text.StartsWith("{\\") && text.IndexOf('}') > 0)
+            {
+                int indexOfEndBracket = text.IndexOf('}') + 1;
+                preAssTag = text.Substring(0, indexOfEndBracket);
+                text = text.Remove(0, indexOfEndBracket).TrimStart();
+            }
+
             if (!text.Contains(':'))
-                return text;
+                return preAssTag + text;
 
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
@@ -317,7 +325,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (text.Contains("<i>") && !newText.Contains("<i>") && newText.EndsWith("</i>"))
                 newText = "<i>" + newText;
-            return newText;
+
+            if (string.IsNullOrWhiteSpace(newText))
+                return string.Empty;
+
+            return preAssTag + newText;
         }
 
         public string RemoveTextFromHearImpaired(string text)
@@ -761,6 +773,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveHearImpairedTags(string text)
         {
+            string preAssTag = string.Empty;
+            if (text.StartsWith("{\\") && text.IndexOf('}') > 0)
+            {
+                int indexOfEndBracket = text.IndexOf('}') + 1;
+                preAssTag = text.Substring(0, indexOfEndBracket);
+                text = text.Remove(0, indexOfEndBracket).TrimStart();
+            }
+
             if (Settings.RemoveTextBetweenSquares)
             {
                 text = RemoveTextBetweenTags("[", "]:", text);
@@ -790,7 +810,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = RemoveTextBetweenTags(Settings.CustomStart, Settings.CustomEnd, text);
             }
 
-            return text;
+            if (string.IsNullOrWhiteSpace(text))
+                return string.Empty;
+
+            return preAssTag + text.TrimStart();
         }
 
         private bool HasHearImpairedText(string text)
