@@ -10,6 +10,7 @@
    * Updated Brazil translation - thx Igor
    * Updated Mexican translation - thx paconaranjo
    * Updated Czech translation - thx Trottel
+   * Export to images now remembers shadow width
 * FIXED:
    * Compare window now works again - thx SimplyTheBOSS
    * Now again shows changed duration via waveform start/end - thx Quetsbeek/Mirko
@@ -19,6 +20,8 @@
    * Don't merge short lines with music symbols - thx XhmikosR
    * Bug in "Fix common OCR errors" regarding url/uppercase - thx XhmikosR
    * Fixed center alignment bug in export to images
+   * Some fixes for "Remove text for HI" - thx Thunderbolt8
+   * Fixed possible crash when working with SSA/ASS files
 
 
 3.4.3 (11th October 2014)
