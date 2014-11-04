@@ -462,8 +462,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!string.IsNullOrEmpty(text))
                 text = st.Pre + text + st.Post;
 
-            if (oldText.TrimStart().StartsWith("- ") &&
-                (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ")) && !text.Contains(Environment.NewLine))
+            if (oldText.TrimStart().StartsWith("- ") && text != null && !text.Contains(Environment.NewLine) &&
+                (oldText.Contains(Environment.NewLine + "- ") ||
+                 oldText.Contains(Environment.NewLine + " - ") ||
+                 oldText.Contains(Environment.NewLine + "<i>- ") ||
+                 oldText.Contains(Environment.NewLine + "<i> - ")))
             {
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
@@ -731,6 +734,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     return lines[0].Remove(0, 1).Trim();
                 if (lines[1].StartsWith('-') && lines[1].Length > 1 && lines[0].Trim() == "-")
                     return lines[1].Remove(0, 1).Trim();
+                if (lines[1].StartsWith("<i>-") && lines[1].Length > 4 && lines[0].Trim() == "-")
+                    return "<i>" + lines[1].Remove(0, 4).Trim();
                 if (lines[0].Length > 1 && (lines[1] == "-") || lines[1] == "." || lines[1] == "!" || lines[1] == "?")
                 {
                     if (oldText.Contains(Environment.NewLine + "-") && lines[0].StartsWith('-'))
