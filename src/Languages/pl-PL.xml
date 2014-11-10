@@ -40,7 +40,7 @@
     <FrameRateX>Ilość klatek na sekundę: {0:0.0###}</FrameRateX>
     <TotalFramesX>Ogółem klatek: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Kodowanie wideo: {0}</VideoEncodingX>
-    <SingleLineLengths>Długość pojedynczej linii:</SingleLineLengths>
+    <SingleLineLengths>Długość pojedynczej linii: </SingleLineLengths>
     <TotalLengthX>Długość całkowita: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Długość całkowita: {0} (linia podzielona!)</TotalLengthXSplitLine>
     <SplitLine>Podziel linię!</SplitLine>
@@ -98,7 +98,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Dodaj wyraz do słownika użytkownika (bez uwzględniania wielkości liter)</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Generuj wykres falowy audio</Title>
+    <Title>Generuj dane wykresu falowego</Title>
     <SourceVideoFile>Źródłowy plik wideo:</SourceVideoFile>
     <GenerateWaveformData>Generowanie danych wykresu falowego</GenerateWaveformData>
     <PleaseWait>Proszę czekać... może to potrwać kilka minut</PleaseWait>
@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -416,6 +416,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Wysokość linii</LineHeight>
     <BoxSingleLine>Box - pojedyncza linia</BoxSingleLine>
     <BoxMultiLine>Box - wiele linii</BoxMultiLine>
+    <Forced>Wymuszone</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekstu</Title>
@@ -436,7 +437,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milisekundy</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeparator>Separator kodów czasowych</TimeCodeSeparator>
+    <TimeCodeSeparator>Separator kodu czasowego</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generuj czas jako tekst</Title>
@@ -507,7 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Popraw (dodając myślnik) pary linii z tylko jednym myślnikiem (-)</FixHyphensAdd>
     <FixHyphen>Popraw linie rozpoczynające się myślnikiem (-)</FixHyphen>
     <XHyphensFixed>Usunięto myślników: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Jak się masz? -&gt; "Jak się masz?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Jak się masz?  --&gt; "Jak się masz?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Dodano brakujących cudzysłowów: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Popraw napisy z więcej niż dwiema liniami</Fix3PlusLines>
     <Fix3PlusLine>Popraw napis z więcej niż dwiema liniami</Fix3PlusLine>
@@ -578,6 +579,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>"âTª słodkie są sny" -&gt; "♫ słodkie są sny"</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} ważnych wiadomości znajduje się w Dzienniku!</NumberOfImportantLogMessages>
     <FixedOkXY>Poprawiono i OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Potrzebujesz słowników?</Title>
@@ -991,6 +995,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Zapisano oryginalne napisy {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>zmodyfikowany plik na dysku</FileOnDiskModified>
     <OverwriteModifiedFile>Nadpisać plik {0} zmodyfikowany w {1} {2}{3} aktualnym plikiem {4} {5} wczytanym z dysku?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Nie można zapisać {0}
+
+Plik jest tylko do odczytu!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Nie można zapisać pliku z napisami {0}
 Napisy wydają się być puste - spróbuj zapisać ponownie, jeśli pracujesz na sprawdzonych napisach!</UnableToSaveSubtitleX>
     <BeforeNew>Przed nowym</BeforeNew>
@@ -1217,6 +1224,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Nie można odczytać/edytować plików .idx. Pliki Idx są częścią składową dwóch plików idx/sub (zwane również VobSub), a Subtitle Edit może otworzyć tylko plik .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
+    <ErrorLoadPng>Ten plik wydaje się być plikiem PNG. W Subtitle Edit nie można otworzyć plików PNG.</ErrorLoadPng>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -1491,7 +1499,9 @@ Kontynuować?</SubtitleAppendPrompt>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
     <ManagedDirectX>Zarządzanie DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1508,7 +1518,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <WaveformShowGridLines>Pokaż linie siatki</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Odwróć kierunek obrotu rolki myszki</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Zezwalaj na nakładanie (podczas przenoszenia/zmiany rozmiaru)</WaveformAllowOverlap>
-    <WaveformFocusMouseEnter>Skoncentruj uwagę na wejście myszki</WaveformFocusMouseEnter>
+    <WaveformFocusMouseEnter>Koncentruj uwagę na wejście myszki</WaveformFocusMouseEnter>
     <WaveformListViewFocusMouseEnter>Koncentruj także uwagę na "Widoku listy" po wejściu myszki na jej obszar</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Oznakowanie granic musi być w</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>ms</WaveformBorderHitMs2>
@@ -1566,7 +1576,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-    (z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+	(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
     <Control>Ctrl</Control>
@@ -1701,8 +1711,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <EditWholeText>Edytuj cały tekst</EditWholeText>
     <EditWordOnly>Edytuj tylko słowo</EditWordOnly>
     <AddXToNamesEtc>Dodaj "{0}" do listy nazw własnych</AddXToNamesEtc>
-    <AutoFixNames>Popraw pisownię nazw własnych,
-tylko gdy różnią się budową</AutoFixNames>
+    <AutoFixNames>Popraw pisownię nazw własnych, tylko gdy różnią się budową</AutoFixNames>
     <CheckOneLetterWords>Pytaj o nieznaną pojedynczą literę słowa</CheckOneLetterWords>
     <TreatINQuoteAsING>Traktuj słowo kończące się " in' " jako " ing " (tylko angielski)</TreatINQuoteAsING>
     <ImageText>Obraz tekstu</ImageText>
@@ -1731,8 +1740,8 @@ tylko gdy różnią się budową</AutoFixNames>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
@@ -1867,7 +1876,7 @@ tylko gdy różnią się budową</AutoFixNames>
   <TransportStreamSubtitleChooser>
     <Title>Selektor napisów strumienia transportowego - {0}</Title>
     <PidLine>Identyfikator Pakietu Transportowego (PID) = {0}, ilość dostępnych napisów = {1}</PidLine>
-    <SubLine>{0}: {1} -&gt; {2}, {3} obrazek(i)</SubLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} obrazek(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>
@@ -1991,7 +2000,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <ZoomIn>Powiększ</ZoomIn>
     <ZoomOut>Pomniejsz</ZoomOut>
     <AddParagraphHere>Dodaj tutaj tekst</AddParagraphHere>
-    <AddParagraphHereAndPasteText>Dodaj tutaj tekst ze schowka</AddParagraphHereAndPasteText>
+    <AddParagraphHereAndPasteText>Dodaj tutaj tekst ze schowka systemowego</AddParagraphHereAndPasteText>
     <FocusTextBox>Koncentruj uwagę na polu tekstowym</FocusTextBox>
     <DeleteParagraph>Usuń tekst</DeleteParagraph>
     <Split>Podziel</Split>
