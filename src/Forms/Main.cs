@@ -5030,7 +5030,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (onlySelectedLines)
                     {
-                        var selectedLines = new Subtitle {WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers};
+                        var selectedLines = new Subtitle { WasLoadedWithFrameNumbers = _subtitle.WasLoadedWithFrameNumbers };
                         foreach (int index in SubtitleListview1.SelectedIndices)
                             selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                         fixErrors.Initialize(selectedLines, GetCurrentSubtitleFormat(), GetCurrentEncoding());
@@ -16157,7 +16157,7 @@ namespace Nikse.SubtitleEdit.Forms
                         buttonSplitLine.Visible = false;
 
                         textBoxListViewText.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
-                        textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10))/2;
+                        textBoxListViewText.Width = (groupBoxEdit.Width - (textBoxListViewText.Left + 10)) / 2;
                         textBoxListViewTextAlternate.Anchor = AnchorStyles.Left | AnchorStyles.Top | AnchorStyles.Bottom;
                         textBoxListViewTextAlternate.Left = textBoxListViewText.Left + textBoxListViewText.Width + 3;
                         textBoxListViewTextAlternate.Width = textBoxListViewText.Width;
@@ -18639,7 +18639,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string tag = string.Empty;
                     var format = GetCurrentSubtitleFormat();
-                    if (format.GetType() == typeof (SubStationAlpha))
+                    if (format.GetType() == typeof(SubStationAlpha))
                     {
                         //1: Bottom left
                         //2: Bottom center
@@ -18698,7 +18698,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 tag = "{\\an1}";
                                 break;
                             case ContentAlignment.BottomCenter:
-                                if (format.GetType() == typeof (SubRip))
+                                if (format.GetType() == typeof(SubRip))
                                     tag = string.Empty;
                                 else
                                     tag = "{\\an2}";

@@ -186,7 +186,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (!isDialog && !SplitLongLinesHelper.QualifiesForSplit(Utilities.AutoBreakLine(p.Text, language), singleLineMaxCharacters, totalLineMaxCharacters))
                         {
-                            var newParagraph = new Paragraph(p) {Text = Utilities.AutoBreakLine(p.Text, language)};
+                            var newParagraph = new Paragraph(p) { Text = Utilities.AutoBreakLine(p.Text, language) };
                             if (clearFixes)
                                 AddToListView(p, (splittedSubtitle.Paragraphs.Count + 1).ToString(CultureInfo.InvariantCulture), oldText);
                             autoBreakedIndexes.Add(splittedSubtitle.Paragraphs.Count);

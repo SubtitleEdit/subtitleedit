@@ -8154,7 +8154,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool oldCorrect = checkBoxNOcrCorrect.Checked;
                 checkBoxNOcrCorrect.Checked = false;
-                inspect.Initialize(bitmap, (int) numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this);
+                inspect.Initialize(bitmap, (int)numericUpDownNumberOfPixelsIsSpaceNOCR.Value, checkBoxRightToLeft.Checked, _nOcrDb, this);
                 if (inspect.ShowDialog(this) == DialogResult.OK)
                 {
                     Cursor = Cursors.WaitCursor;
