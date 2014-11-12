@@ -12,13 +12,13 @@
    * Updated Czech translation - thx Trottel
    * Export to images now remembers shadow width
 * FIXED:
-   * Compare window now works again - thx SimplyTheBOSS
-   * Now again shows changed duration via waveform start/end - thx Quetsbeek/Mirko
-   * "Measurement converter" now works again - thx Quetsbeek 
+   * Compare window works again now - thx SimplyTheBOSS
+   * Changed duration via Waveform start/end is shown again - thx Quetsbeek/Mirko
+   * "Measurement converter" works again now - thx Quetsbeek
    * Fixed possible crash when saving as "EBU STL" - thx MartinDelille
    * Fixed encoding problems in online translate - thx jaroslav
    * Don't merge short lines with music symbols - thx XhmikosR
-   * Bug in "Fix common OCR errors" regarding url/uppercase - thx XhmikosR
+   * Bug in "Fix common OCR errors" regarding URL/uppercase - thx XhmikosR
    * Fixed center alignment bug in export to images
    * Some fixes for "Remove text for HI" - thx Thunderbolt8
    * Fixed possible crash when working with SSA/ASS files
