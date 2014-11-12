@@ -4,7 +4,6 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
