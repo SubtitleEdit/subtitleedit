@@ -98,12 +98,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Aggiungi parola al dizionario utente (non sensibile a MAIUSCOLE/minuscole)</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Genera forma d'onda</Title>
+    <Title>Generazione dati forma d'onda</Title>
     <SourceVideoFile>File video sorgente:</SourceVideoFile>
-    <GenerateWaveformData>Genera forma d'onda</GenerateWaveformData>
-    <PleaseWait>Ci potrebbero volere alcuni minuti. Attendere...</PleaseWait>
+    <GenerateWaveformData>Generazione dati forma d'onda</GenerateWaveformData>
+    <PleaseWait>Ci potrebbero volere alcuni minuti - per favore, attendere.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player non trovato</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit richiede VLC media player 1.1.x o successivo per estrarre i dati audio.</VlcMediaPlayerNotFound>
+    <VlcMediaPlayerNotFound>Subtitle Edit richiede di VLC media player 1.1.x o successivo per l'estrazione dei dati audio.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Vuoi andare alla home page di VLC media player?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Generazione file di picco...</GeneratingPeakFile>
     <GeneratingSpectrogram>Generazione spettrogramma...</GeneratingSpectrogram>
@@ -144,10 +144,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Sovrascrivi file esistenti</OverwriteExistingFiles>
     <Style>Stile...</Style>
     <ConvertOptions>Opzioni di conversione</ConvertOptions>
-    <RemoveFormatting>Elimina i tag di formato</RemoveFormatting>
+    <RemoveFormatting>Elimina i tag di formato </RemoveFormatting>
     <RemoveTextForHI>Elimina testo per NU</RemoveTextForHI>
     <OverwriteOriginalFiles>Sovrascrivi i file originali (nuova estensione se il formato è diverso)</OverwriteOriginalFiles>
-    <RedoCasing>Reimposta MAIUSCOLE/minuscole</RedoCasing>
+    <RedoCasing>Annulla maiuscole/minuscole</RedoCasing>
     <Convert>Converti</Convert>
     <NothingToConvert>Niente da convertire!</NothingToConvert>
     <PleaseChooseOutputFolder>Scegli cartella di destinazione</PleaseChooseOutputFolder>
@@ -242,8 +242,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Differenza successiva</NextDifference>
     <SubtitlesNotAlike>I sottotitoli sono differenti</SubtitlesNotAlike>
     <XNumberOfDifference>Numero delle differenze: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0} ({1}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0} ({1}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0}  ({1}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0}  ({1}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra solo le differenze</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora divisioni di linea</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>
@@ -251,7 +251,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Proprietà D-Cinema (interop)</Title>
-    <TitleSmpte>Proprietà D-Cinema (SMPTE)</TitleSmpte>
+    <TitleSmpte>Proprietà D-Cinema (smpte)</TitleSmpte>
     <SubtitleId>ID sottotitolo</SubtitleId>
     <GenerateId>Genera ID</GenerateId>
     <MovieTitle>Titolo film</MovieTitle>
@@ -284,10 +284,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BridgeGapsSmallerThanXPart2>millisecondi</BridgeGapsSmallerThanXPart2>
     <MinMsBetweenLines>Millisec. min. tra le linee</MinMsBetweenLines>
     <ProlongEndTime>Il testo precedente prende tutto il tempo di vuoto</ProlongEndTime>
-    <DivideEven>I testi si suddividono il tempo vuoto</DivideEven>
+    <DivideEven>I testi si suddividono il tempo vuoto        </DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Estrai sottotitoli da IFO/VOB (DVD)</Title>
+    <Title>Estrai sottotitoli da ifo/vob (dvd)</Title>
     <DvdGroupTitle>DVD file/info</DvdGroupTitle>
     <IfoFile>File IFO</IfoFile>
     <IfoFiles>File IFO</IfoFiles>
@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Scegli lingua</Title>
     <ChooseLanguageStreamId>Scegli lingua (ID del flusso)</ChooseLanguageStreamId>
     <UnknownLanguage>Lingua sconosciuta</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Immagine sottotitolo {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Immagine sottotitolo {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Immagine sottotitolo</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -416,6 +416,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Altezza linea</LineHeight>
     <BoxSingleLine>Riquadro, singola linea</BoxSingleLine>
     <BoxMultiLine>Riquardo, miltilinea</BoxMultiLine>
+    <Forced>Forzato</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Esporta testo</Title>
@@ -507,7 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Correggi (aggiungi trattino) coppie di linee con solo un trattino (-)</FixHyphensAdd>
     <FixHyphen>Correggi linee che iniziano con trattino (-)</FixHyphen>
     <XHyphensFixed>Trattini eliminati: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Come stai? -&gt; "Come stai?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Come stai?  -&gt; "Come stai?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Virgolette mancanti aggiunte: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Correggi i sottotitoli con più di due linee</Fix3PlusLines>
     <Fix3PlusLine>Correggi il sottotitolo con più di due linee</Fix3PlusLine>
@@ -531,19 +532,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Correggi i tag corsivo non validi</FixInvalidItalicTag>
     <FixShortDisplayTime>Correggi i tempi di visualizzazione corti</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Correggi i tempi di visualizzazione sovrapposti</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Ehi   tu , laggiù. -&gt; Ehi tu, laggiù.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Ehi tu!. -&gt; Ehi tu!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Ehi.Tu. -&gt; Ehi. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossibile correggere il testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} corretto in: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Impossibile correggere il testo numero {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} sovrapposizione tempi corretta</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} tempi di visualizzazione prolungati</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} tag HTML non validi corretti</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} tag html non validi corretti</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} tempi di visualizzazione ridotti</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} linee divise riunite</XLinesUnbreaked>
     <UnneededSpace>Spazio non necessario</UnneededSpace>
@@ -561,8 +562,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Applica le correzioni selezionate</ApplyFixes>
     <AutoBreak>Auto a&amp;ccapo</AutoBreak>
     <Unbreak>&amp;Riunisci divisioni di linea</Unbreak>
-    <FixDoubleDash>Correggi '--' -&gt; '...'</FixDoubleDash>
-    <FixDoubleGreaterThan>Elimina &gt;&gt;</FixDoubleGreaterThan>
+    <FixDoubleDash>Correggi '--' -&gt; '...' </FixDoubleDash>
+    <FixDoubleGreaterThan>Elimina &gt;&gt; </FixDoubleGreaterThan>
     <FixEllipsesStart>Elimina puntini iniziali '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Correggi [ mancante nella linea</FixMissingOpenBracket>
     <FixMusicNotation>Sostituisci i simboli musicali (esempio âTª) con i simboli preferiti</FixMusicNotation>
@@ -571,13 +572,16 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} '...' eliminati all'inizio</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ eliminate all'inizio della linea</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} correzioni notazione musicale nella linea</XFixMusicNotation>
-    <FixDoubleDashExample>'Wow-- oh sì!' -&gt; 'Wow... oh sì!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Roberto: La zuppa è pronta!' -&gt; 'Roberto: La zuppa è pronta!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Wow-- oh sì!' --&gt; 'Wow... oh sì!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Roberto: La zuppa è pronta!'  --&gt; 'Roberto: La zuppa è pronta!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... e allora noi' -&gt; 'e allora noi'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'rumori] Guarda fuori!' -&gt; '[rumori] Guarda fuori!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'rumori] Guarda fuori!' --&gt; '[rumori] Guarda fuori!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messaggi importanti nel rapporto!</NumberOfImportantLogMessages>
     <FixedOkXY>Corretto e OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Servono dizionari?</Title>
@@ -959,7 +963,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <TranslateTip>Tip: &lt;alt+freccia su/giù&gt; va al precedente/successivo</TranslateTip>
       <CreateTip>Tip: &lt;ctrl+freccia sinistra/destra&gt;</CreateTip>
       <AdjustTip>Tip: &lt;alt+freccia su/giù&gt; va al precedente/successivo</AdjustTip>
-      <BeforeChangingTimeInWaveformX>Prima di cambiare tempo da forma d'onda: {0}</BeforeChangingTimeInWaveformX>
+      <BeforeChangingTimeInWaveformX>Prima di cambiare il tempo nella waveform: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Nuovo testo inserito a {0}</NewTextInsertAtX>
       <Center>Centrale</Center>
       <PlayRate>Velocità di riproduzione</PlayRate>
@@ -992,6 +996,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Sottotitolo originale salvato {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>Modificato il file sul disco</FileOnDiskModified>
     <OverwriteModifiedFile>Sovrascrivere il file {0} modificato a {1} {2}{3} con il file corrente caricato dal disco a {4} {5}?</OverwriteModifiedFile>
+    <FileXIsReadOnly>Impossibile salvare. Il file {0}
+
+è a sola lettura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Impossibile salvare il file di sottotitolo {0}</UnableToSaveSubtitleX>
     <BeforeNew>Prima di nuovo</BeforeNew>
     <New>Nuovo</New>
@@ -1190,7 +1197,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <SpellCheckAbortedXCorrections>Controllo ortografico annullato. {0} linee modificate.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Controllo ortografico completato. {0} linee modificate.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Apri un altro sottotitolo</OpenOtherSubtitle>
-    <BeforeToggleDialogDashes>Prima di alterna trattini di dialogo</BeforeToggleDialogDashes>
+    <BeforeToggleDialogDashes>Prima di alternare i trattini di dialogo</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Esporta testo semplice come</ExportPlainTextAs>
     <TextFiles>File di testo</TextFiles>
     <SubtitleExported>Sottotitolo esportato</SubtitleExported>
@@ -1219,6 +1226,7 @@ la codifica ANSI andranno perse. Salvare comunque?</UnicodeCharactersAnsiWarning
     <ErrorLoadIdx>Impossibile leggere/modificare il file .idx. I file .idx fanno parte di una coppia di file .idx/.sub (chiamati anche VobSub), e Subtitle Edit può aprire il file .sub.</ErrorLoadIdx>
     <ErrorLoadRar>I file sembra essere un file .rar compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadRar>
     <ErrorLoadZip>I file sembra essere un file .zip compresso. Subtitle Edit non può aprire file compressi.</ErrorLoadZip>
+    <ErrorLoadPng>I file sembra essere un'immagine PNG. Subtitle Edit non può aprire file PNG.</ErrorLoadPng>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Scegli sottotitolo da file Matroska</Title>
@@ -1494,6 +1502,8 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <DirectShowDescription>quartz.dll nella cartella system32</DirectShowDescription>
     <ManagedDirectX>Gestito da DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code da DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1507,11 +1517,11 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <CustomSearchTextAndUrl>Ricerca personalizzata testo e URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Apparenza forma d'onda</WaveformAppearance>
     <WaveformGridColor>Colore griglia</WaveformGridColor>
-    <WaveformShowGridLines>Mostra linee nella griglia</WaveformShowGridLines>
+    <WaveformShowGridLines>Mostra linee griglia</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverti la direzione di scorrimento della rotella del mouse</ReverseMouseWheelScrollDirection>
-    <WaveformAllowOverlap>Consenti sovrapposizione (durante muovi/ridimensiona)</WaveformAllowOverlap>
-    <WaveformFocusMouseEnter>Attiva Focus su entrata mouse</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Attiva anche Focus nella listview su entrata mouse nella listview</WaveformListViewFocusMouseEnter>
+    <WaveformAllowOverlap>Permetti sovrapposizione (su muovi/ridimensiona)</WaveformAllowOverlap>
+    <WaveformFocusMouseEnter>Imposta focus su entrata mouse</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Imposta anche focus su listview su entrata mouse nella listview</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Il marcatore del bordo deve essere all'interno</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>millisecondi</WaveformBorderHitMs2>
     <WaveformColor>Colore</WaveformColor>
@@ -1942,7 +1952,7 @@ Mantenere le modifiche?</KeepChangesMessage>
     <AllFixes>Tutte le correzioni</AllFixes>
     <GuessesUsed>Indovinate usate</GuessesUsed>
     <UnknownWords>Parole sconosciute</UnknownWords>
-    <OcrAutoCorrectionSpellChecking>Correzione automatica OCR / Correttore ortografico</OcrAutoCorrectionSpellChecking>
+    <OcrAutoCorrectionSpellChecking>Correzione automatica OCR / ortografia</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Correggi errori OCR</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importa testo con time code corrispondenti...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importa nuovi timecode</ImportNewTimeCodes>
@@ -1986,34 +1996,34 @@ Mantenere le modifiche?</KeepChangesMessage>
     <Message>Nome della cartella database dei nuovi caratteri</Message>
   </VobSubOcrNewFolder>
   <Waveform>
-    <ClickToAddWaveform>Clicca qui per aggiungere la forma d'onda</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Clicca qui per aggiungere la forma d'onda/spettrogramma</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveform>Fare click per aggiungere la forma d'onda</ClickToAddWaveform>
+    <ClickToAddWaveformAndSpectrogram>Fare click per aggiungere la forma d'onda/spettrogramma</ClickToAddWaveformAndSpectrogram>
     <Seconds>secondi</Seconds>
     <ZoomIn>Aumenta Zoom</ZoomIn>
-    <ZoomOut>Riduci Zoom</ZoomOut>
+    <ZoomOut>Diminuisci Zoom</ZoomOut>
     <AddParagraphHere>Aggiungi testo qui</AddParagraphHere>
     <AddParagraphHereAndPasteText>Aggiungi testo qui dagli appunti</AddParagraphHereAndPasteText>
-    <FocusTextBox>Focus su Textbox</FocusTextBox>
+    <FocusTextBox>Focus su textbox</FocusTextBox>
     <DeleteParagraph>Elimina testo</DeleteParagraph>
     <Split>Dividi</Split>
-    <SplitAtCursor>Dividi al cursore</SplitAtCursor>
+    <SplitAtCursor>Dividi alla posizione del cursore</SplitAtCursor>
     <MergeWithPrevious>Unisci con il precedente</MergeWithPrevious>
     <MergeWithNext>Unisci con il successivo</MergeWithNext>
     <PlaySelection>Riproduci selezione</PlaySelection>
     <ShowWaveformAndSpectrogram>Mostra forma d'onda e spettrogramma</ShowWaveformAndSpectrogram>
-    <ShowWaveformOnly>Mostra solo forma d'onda</ShowWaveformOnly>
-    <ShowSpectrogramOnly>Mostra solo spettrogramma</ShowSpectrogramOnly>
+    <ShowWaveformOnly>Mostra solo la forma d'onda</ShowWaveformOnly>
+    <ShowSpectrogramOnly>Mostra solo lo spettrogramma</ShowSpectrogramOnly>
     <GuessTimeCodes>Indovina time code...</GuessTimeCodes>
-    <SeekSilence>Cerca silenzio...</SeekSilence>
+    <SeekSilence>Ricerca silenzio...</SeekSilence>
   </Waveform>
   <WaveformGenerateTimeCodes>
     <Title>Indovina time code</Title>
     <StartFrom>Inizia da</StartFrom>
-    <CurrentVideoPosition>Posizione video attuale</CurrentVideoPosition>
+    <CurrentVideoPosition>Posizione video corrente</CurrentVideoPosition>
     <Beginning>Inizio</Beginning>
-    <DeleteLines>Linee eliminate</DeleteLines>
-    <FromCurrentVideoPosition>Dalla posizione attuale del video</FromCurrentVideoPosition>
-    <DetectOptions>Scopri opzioni</DetectOptions>
+    <DeleteLines>Cancella linee</DeleteLines>
+    <FromCurrentVideoPosition>Dalla posizione corrente del video</FromCurrentVideoPosition>
+    <DetectOptions>Individua opzioni</DetectOptions>
     <ScanBlocksOfMs>Scansiona blocchi di millisecondi</ScanBlocksOfMs>
     <BlockAverageVolMin1>Il volume medio del blocco deve essere superiore</BlockAverageVolMin1>
     <BlockAverageVolMin2>% del volume medio totale</BlockAverageVolMin2>
