@@ -19,6 +19,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using Microsoft.WindowsAPICodePack.Taskbar;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -193,6 +194,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public string Id { get; set; }
             public string Text { get; set; }
+
             public override string ToString()
             {
                 return Text;
@@ -204,6 +206,58 @@ namespace Nikse.SubtitleEdit.Forms
             public Bitmap Bitmap { get; set; }
             public string Text { get; set; }
             public int Language { get; set; }
+        }
+
+        [Serializable]
+        private class ProgressStatusEventArgs : System.EventArgs
+        {
+            public new static readonly ProgressStatusEventArgs Empty = new ProgressStatusEventArgs();
+
+
+            private ProgressStatusEventArgs()
+            {
+            }
+
+            public ProgressStatusEventArgs(int currentValue, int maximumValue, TaskbarProgressBarState state)
+            {
+                if (currentValue > maximumValue)
+                {
+                    throw new ArgumentOutOfRangeException("currentValue", currentValue, String.Format("The current value ({0}) cannot be greater than the maximum value ({1}).", currentValue, maximumValue));
+                }
+
+                if (maximumValue < 0)
+                {
+                    throw new ArgumentOutOfRangeException("maximumValue", maximumValue, String.Format("The maximum value ({0}) cannot be less than 0.", maximumValue));
+                }
+
+                CurrentValue = currentValue;
+                MaximumValue = maximumValue;
+                State = state;
+            }
+
+            /// <summary>
+            /// Gets or sets the current value.
+            /// </summary>
+            /// <value>
+            /// The current value.
+            /// </value>
+            public int CurrentValue { get; set; }
+
+            /// <summary>
+            /// Gets or sets the maximum value.
+            /// </summary>
+            /// <value>
+            /// The maximum value.
+            /// </value>
+            public int MaximumValue { get; set; }
+
+            /// <summary>
+            /// Gets or sets the state.
+            /// </summary>
+            /// <value>
+            /// The state.
+            /// </value>
+            public TaskbarProgressBarState State { get; set; }
         }
 
         private Main _main;
@@ -598,9 +652,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
@@ -626,9 +678,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
@@ -658,9 +708,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
@@ -763,9 +811,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = 11; // vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = 11;
             _vobSubOcrSettings = vobSubOcrSettings;
@@ -1659,7 +1705,8 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (NOcrChar oc in nOcrChars)
             {
                 if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 3 && Math.Abs(oc.MarginTop - topMargin) < 3)
-                { // only very accurate matches
+                {
+                    // only very accurate matches
 
                     bool ok = true;
                     index = 0;
@@ -1727,7 +1774,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int marginTopDiff = Math.Abs(oc.MarginTop - topMargin);
                 if (Math.Abs(oc.Width - nbmp.Width) < 4 && Math.Abs(oc.Height - nbmp.Height) < 4 && marginTopDiff > 4 && marginTopDiff < 9)
-                { // only very accurate matches - but not for margin top
+                {
+                    // only very accurate matches - but not for margin top
 
                     bool ok = true;
                     index = 0;
@@ -2324,7 +2372,8 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (NOcrChar oc in nOcrDb.OcrCharacters)
             {
                 if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 3 && Math.Abs(oc.MarginTop - topMargin) < 3)
-                { // only very accurate matches
+                {
+                    // only very accurate matches
 
                     bool ok = true;
                     index = 0;
@@ -2392,7 +2441,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int marginTopDiff = Math.Abs(oc.MarginTop - topMargin);
                 if (Math.Abs(oc.Width - nbmp.Width) < 4 && Math.Abs(oc.Height - nbmp.Height) < 4 && marginTopDiff > 4 && marginTopDiff < 9)
-                { // only very accurate matches - but not for margin top
+                {
+                    // only very accurate matches - but not for margin top
 
                     bool ok = true;
                     index = 0;
@@ -3021,7 +3071,7 @@ namespace Nikse.SubtitleEdit.Forms
             return null;
         }
 
-        static public Bitmap CopyBitmapSection(Bitmap srcBitmap, Rectangle section)
+        public static Bitmap CopyBitmapSection(Bitmap srcBitmap, Rectangle section)
         {
             Bitmap bmp = new Bitmap(section.Width, section.Height);
             Graphics g = Graphics.FromImage(bmp);
@@ -4832,10 +4882,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public Subtitle SubtitleFromOcr
         {
-            get
-            {
-                return _subtitle;
-            }
+            get { return _subtitle; }
         }
 
         private void FormVobSubOcr_Shown(object sender, EventArgs e)
@@ -4983,7 +5030,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonEditCharacterDatabase.Enabled = true;
             _mainOcrRunning = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             subtitleListView1.MultiSelect = true;
         }
 
@@ -5173,7 +5220,8 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (NOcrChar oc in _nOcrDb.OcrCharacters)
                     {
                         if (Math.Abs(oc.Width - nbmp.Width) < 3 && Math.Abs(oc.Height - nbmp.Height) < 4 && Math.Abs(oc.MarginTop - topMargin) < 4)
-                        { // only very accurate matches
+                        {
+                            // only very accurate matches
 
                             bool ok = true;
                             var index2 = 0;
@@ -5436,9 +5484,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _nOcrDb = new NOcrDb(_binaryOcrDb.FileName.Replace(".db", ".nocr"));
             }
 
-            progressBar1.Maximum = max;
-            progressBar1.Value = 0;
-            progressBar1.Visible = true;
+            updateProgress(new ProgressStatusEventArgs(0, max, TaskbarProgressBarState.Normal));
 
             _mainOcrTimerMax = max;
             _mainOcrIndex = (int)numericUpDownStartNumber.Value - 1;
@@ -5487,7 +5533,7 @@ namespace Nikse.SubtitleEdit.Forms
             var startTime = new TimeCode(GetSubtitleStartTimeMilliseconds(i));
             var endTime = new TimeCode(GetSubtitleEndTimeMilliseconds(i));
             labelStatus.Text = string.Format("{0} / {1}: {2} - {3}", i + 1, max, startTime, endTime);
-            progressBar1.Value = i + 1;
+            updateProgress(new ProgressStatusEventArgs(i + 1, progressBar1.Maximum, TaskbarProgressBarState.Normal));
             labelStatus.Refresh();
             progressBar1.Refresh();
             if (_abort)
@@ -5620,10 +5666,11 @@ namespace Nikse.SubtitleEdit.Forms
             int left = (int)(bmp.Height * factor);
             Bitmap unItaliced = new Bitmap(bmp.Width + left + 4, bmp.Height);
 
-            Point[] destinationPoints = {
-                new Point(0, 0),  // destination for upper-left point of  original
+            Point[] destinationPoints =
+            {
+                new Point(0, 0), // destination for upper-left point of  original
                 new Point(bmp.Width, 0), // destination for upper-right point of original
-                new Point(left, bmp.Height)   // destination for lower-left point of original
+                new Point(left, bmp.Height) // destination for lower-left point of original
             };
 
             using (var g = Graphics.FromImage(unItaliced))
@@ -5756,8 +5803,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             int count = 0;
             var arr = line.Replace("a.m", string.Empty).Replace("p.m", string.Empty).Replace("o.r", string.Empty)
-                          .Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty)
-                          .Split(new[] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
+                .Replace("e.g", string.Empty).Replace("Ph.D", string.Empty).Replace("d.t.s", string.Empty)
+                .Split(new[] { ' ', '.', '?', '!', '(', ')', '\r', '\n', '\t' }, StringSplitOptions.RemoveEmptyEntries);
             foreach (string s in arr)
             {
                 if (s.Length == 1 && !@"♪♫-:'”1234567890&aAI""".Contains(s))
@@ -5813,7 +5860,7 @@ namespace Nikse.SubtitleEdit.Forms
                             textWithOutFixes = psm;
                     }
                     else if (psm.Length == textWithOutFixes.Length &&
-                             (!psm.Contains('0') && textWithOutFixes.Contains('0') ||  // these chars are often mistaken
+                             (!psm.Contains('0') && textWithOutFixes.Contains('0') || // these chars are often mistaken
                               !psm.Contains('9') && textWithOutFixes.Contains('9') ||
                               !psm.Contains('8') && textWithOutFixes.Contains('8') ||
                               !psm.Contains('5') && textWithOutFixes.Contains('5') ||
@@ -5890,10 +5937,10 @@ namespace Nikse.SubtitleEdit.Forms
                             !newText.EndsWith('?') && !newText.EndsWith("</i>"))
                             newText = newText.TrimEnd() + "...";
                         else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith('.') && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
-                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
+                                 !newText.EndsWith('?') && !newText.EndsWith("</i>"))
                             newText = newText.TrimEnd() + ".";
                         else if (textWithOutFixes.Length > 0 && textWithOutFixes.EndsWith('?') && !newText.EndsWith('.') && !newText.EndsWith(',') && !newText.EndsWith('!') &&
-                            !newText.EndsWith('?') && !newText.EndsWith("</i>"))
+                                 !newText.EndsWith('?') && !newText.EndsWith("</i>"))
                             newText = newText.TrimEnd() + "?";
 
                         textWithOutFixes = newUnfixedText;
@@ -6335,7 +6382,8 @@ namespace Nikse.SubtitleEdit.Forms
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                     }
                     else
-                    { // fix some error manually (modi not available)
+                    {
+                        // fix some error manually (modi not available)
                         line = _ocrFixEngine.FixUnknownWordsViaGuessOrPrompt(out wordsNotFound, line, index, bitmap, checkBoxAutoFixCommonErrors.Checked, checkBoxPromptForUnknownWords.Checked, true, GetAutoGuessLevel());
                     }
                 }
@@ -6400,7 +6448,8 @@ namespace Nikse.SubtitleEdit.Forms
                     subtitleListView1.SetBackgroundColor(index, Color.LightGreen);
             }
             else
-            { // no dictionary :(
+            {
+                // no dictionary :(
                 if (checkBoxAutoFixCommonErrors.Checked)
                     line = _ocrFixEngine.FixOcrErrors(line, index, _lastLine, true, GetAutoGuessLevel());
 
@@ -6691,7 +6740,7 @@ namespace Nikse.SubtitleEdit.Forms
             _nocrThreadsStop = true;
             _icThreadsStop = true;
             buttonStop.Enabled = false;
-            progressBar1.Visible = false;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             labelStatus.Text = string.Empty;
             SetButtonsEnabledAfterOcrDone();
         }
@@ -7377,9 +7426,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = 11;
             _vobSubOcrSettings = vobSubOcrSettings;
 
@@ -7458,7 +7505,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       Configuration.Settings.Language.Main.ContinueAnyway,
-                                                      fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return;
                 }
 
@@ -7490,9 +7537,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (folderBrowserDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
-                progressBar1.Value = 0;
-                progressBar1.Visible = true;
+                updateProgress(new ProgressStatusEventArgs(0, _subtitle.Paragraphs.Count - 1, TaskbarProgressBarState.Normal));
+
                 int imagesSavedCount = 0;
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine("<html>");
@@ -7500,7 +7546,8 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine("<body>");
                 for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    progressBar1.Value = i;
+                    updateProgress(new ProgressStatusEventArgs(i, progressBar1.Maximum, TaskbarProgressBarState.Normal));
+
                     Bitmap bmp = GetSubtitleBitmap(i);
                     string numberString = string.Format("{0:0000}", i + 1);
                     if (bmp != null)
@@ -7523,7 +7570,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine("</html>");
                 string htmlFileName = Path.Combine(folderBrowserDialog1.SelectedPath, "index.html");
                 File.WriteAllText(htmlFileName, sb.ToString());
-                progressBar1.Visible = false;
+                updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
                 MessageBox.Show(string.Format("{0} images saved in {1}", imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 Process.Start(htmlFileName);
             }
@@ -7670,9 +7717,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
 
@@ -7733,9 +7778,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
 
@@ -7771,9 +7814,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
 
@@ -8262,9 +8303,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNewCharacterDatabase.Enabled = false;
             buttonEditCharacterDatabase.Enabled = false;
             labelStatus.Text = string.Empty;
-            progressBar1.Visible = false;
-            progressBar1.Maximum = 100;
-            progressBar1.Value = 0;
+            updateProgress(new ProgressStatusEventArgs(0, 100, TaskbarProgressBarState.NoProgress));
             numericUpDownPixelsIsSpace.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             numericUpDownNumberOfPixelsIsSpaceNOCR.Value = vobSubOcrSettings.XOrMorePixelsMakesSpace;
             _vobSubOcrSettings = vobSubOcrSettings;
@@ -8422,7 +8461,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (MessageBox.Show(string.Format(Configuration.Settings.Language.Main.FileXIsLargerThan10MB + Environment.NewLine +
                                                       Environment.NewLine +
                                                       Configuration.Settings.Language.Main.ContinueAnyway,
-                                                      fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
+                        fileName), Text, MessageBoxButtons.YesNoCancel) != DialogResult.Yes)
                         return;
                 }
 
@@ -8445,6 +8484,26 @@ namespace Nikse.SubtitleEdit.Forms
                     index++;
                 }
             }
+        }
+
+        private void updateProgress(ProgressStatusEventArgs args)
+        {
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                if (args.CurrentValue == 0)
+                {
+                    TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.NoProgress);
+                }
+                else
+                {
+                    TaskbarManager.Instance.SetProgressState(args.State);
+                    TaskbarManager.Instance.SetProgressValue(args.CurrentValue, args.MaximumValue);
+                }
+            }
+
+            progressBar1.Maximum = args.MaximumValue;
+            progressBar1.Value = args.CurrentValue;
+            progressBar1.Visible = args.State != TaskbarProgressBarState.NoProgress;
         }
 
         /// <summary>
