@@ -144,7 +144,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Sovrascrivi file esistenti</OverwriteExistingFiles>
     <Style>Stile...</Style>
     <ConvertOptions>Opzioni di conversione</ConvertOptions>
-    <RemoveFormatting>Elimina i tag di formato </RemoveFormatting>
+    <RemoveFormatting>Elimina i tag di formato</RemoveFormatting>
     <RemoveTextForHI>Elimina testo per NU</RemoveTextForHI>
     <OverwriteOriginalFiles>Sovrascrivi i file originali (nuova estensione se il formato è diverso)</OverwriteOriginalFiles>
     <RedoCasing>Annulla maiuscole/minuscole</RedoCasing>
@@ -242,8 +242,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <NextDifference>&amp;Differenza successiva</NextDifference>
     <SubtitlesNotAlike>I sottotitoli sono differenti</SubtitlesNotAlike>
     <XNumberOfDifference>Numero delle differenze: {0}</XNumberOfDifference>
-    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0}  ({1}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
-    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0}  ({1}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
+    <XNumberOfDifferenceAndPercentChanged>Numero delle differenze: {0} ({1}% di parole cambiate)</XNumberOfDifferenceAndPercentChanged>
+    <XNumberOfDifferenceAndPercentLettersChanged>Numero delle differenze: {0} ({1}% di lettere cambiate)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Mostra solo le differenze</ShowOnlyDifferences>
     <IgnoreLineBreaks>Ignora divisioni di linea</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Cerca solo le differenze nel testo</OnlyLookForDifferencesInText>
@@ -251,7 +251,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>Proprietà D-Cinema (interop)</Title>
-    <TitleSmpte>Proprietà D-Cinema (smpte)</TitleSmpte>
+    <TitleSmpte>Proprietà D-Cinema (SMPTE)</TitleSmpte>
     <SubtitleId>ID sottotitolo</SubtitleId>
     <GenerateId>Genera ID</GenerateId>
     <MovieTitle>Titolo film</MovieTitle>
@@ -284,10 +284,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BridgeGapsSmallerThanXPart2>millisecondi</BridgeGapsSmallerThanXPart2>
     <MinMsBetweenLines>Millisec. min. tra le linee</MinMsBetweenLines>
     <ProlongEndTime>Il testo precedente prende tutto il tempo di vuoto</ProlongEndTime>
-    <DivideEven>I testi si suddividono il tempo vuoto        </DivideEven>
+    <DivideEven>I testi si suddividono il tempo vuoto</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Estrai sottotitoli da ifo/vob (dvd)</Title>
+    <Title>Estrai sottotitoli da IFO/VOB (DVD)</Title>
     <DvdGroupTitle>DVD file/info</DvdGroupTitle>
     <IfoFile>File IFO</IfoFile>
     <IfoFiles>File IFO</IfoFiles>
@@ -312,7 +312,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Scegli lingua</Title>
     <ChooseLanguageStreamId>Scegli lingua (ID del flusso)</ChooseLanguageStreamId>
     <UnknownLanguage>Lingua sconosciuta</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Immagine sottotitolo {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Immagine sottotitolo {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Immagine sottotitolo</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -508,7 +508,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Correggi (aggiungi trattino) coppie di linee con solo un trattino (-)</FixHyphensAdd>
     <FixHyphen>Correggi linee che iniziano con trattino (-)</FixHyphen>
     <XHyphensFixed>Trattini eliminati: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Come stai?  -&gt; "Come stai?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Come stai? -&gt; "Come stai?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Virgolette mancanti aggiunte: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Correggi i sottotitoli con più di due linee</Fix3PlusLines>
     <Fix3PlusLine>Correggi il sottotitolo con più di due linee</Fix3PlusLine>
@@ -532,19 +532,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTag>Correggi i tag corsivo non validi</FixInvalidItalicTag>
     <FixShortDisplayTime>Correggi i tempi di visualizzazione corti</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Correggi i tempi di visualizzazione sovrapposti</FixOverlappingDisplayTime>
-    <FixInvalidItalicTagsExample>&lt;i&gt;What do i care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
+    <FixInvalidItalicTagsExample>&lt;i&gt;What do I care.&lt;i&gt; -&gt; &lt;i&gt;What do I care.&lt;/i&gt;</FixInvalidItalicTagsExample>
     <RemoveUnneededSpacesExample>Ehi   tu , laggiù. -&gt; Ehi tu, laggiù.</RemoveUnneededSpacesExample>
     <RemoveUnneededPeriodsExample>Ehi tu!. -&gt; Ehi tu!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Ehi.Tu. -&gt; Ehi. Tu.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
-    <StartTimeLaterThanEndTime>Testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {4}{1} --&gt; {2} {3}</StartTimeLaterThanEndTime>
+    <StartTimeLaterThanEndTime>Testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {4}{1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Impossibile correggere il testo numero {0}: Il tempo iniziale è inferiore al tempo finale: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} corretto in: {1}{2}</XFixedToYZ>
     <UnableToFixTextXY>Impossibile correggere il testo numero {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} sovrapposizione tempi corretta</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>{0} tempi di visualizzazione prolungati</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>{0} tag html non validi corretti</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>{0} tag HTML non validi corretti</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>{0} tempi di visualizzazione ridotti</XDisplayTimesShortned>
     <XLinesUnbreaked>{0} linee divise riunite</XLinesUnbreaked>
     <UnneededSpace>Spazio non necessario</UnneededSpace>
@@ -562,8 +562,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ApplyFixes>Applica le correzioni selezionate</ApplyFixes>
     <AutoBreak>Auto a&amp;ccapo</AutoBreak>
     <Unbreak>&amp;Riunisci divisioni di linea</Unbreak>
-    <FixDoubleDash>Correggi '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>Elimina &gt;&gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>Correggi '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>Elimina &gt;&gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>Elimina puntini iniziali '...'</FixEllipsesStart>
     <FixMissingOpenBracket>Correggi [ mancante nella linea</FixMissingOpenBracket>
     <FixMusicNotation>Sostituisci i simboli musicali (esempio âTª) con i simboli preferiti</FixMusicNotation>
@@ -572,11 +572,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>{0} '...' eliminati all'inizio</XFixEllipsesStart>
     <XFixMissingOpenBracket>{0} [ eliminate all'inizio della linea</XFixMissingOpenBracket>
     <XFixMusicNotation>{0} correzioni notazione musicale nella linea</XFixMusicNotation>
-    <FixDoubleDashExample>'Wow-- oh sì!' --&gt; 'Wow... oh sì!'</FixDoubleDashExample>
-    <FixDoubleGreaterThanExample>'&gt;&gt; Roberto: La zuppa è pronta!'  --&gt; 'Roberto: La zuppa è pronta!'</FixDoubleGreaterThanExample>
+    <FixDoubleDashExample>'Wow-- oh sì!' -&gt; 'Wow... oh sì!'</FixDoubleDashExample>
+    <FixDoubleGreaterThanExample>'&gt;&gt; Roberto: La zuppa è pronta!' -&gt; 'Roberto: La zuppa è pronta!'</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>'... e allora noi' -&gt; 'e allora noi'</FixEllipsesStartExample>
-    <FixMissingOpenBracketExample>'rumori] Guarda fuori!' --&gt; '[rumori] Guarda fuori!'</FixMissingOpenBracketExample>
-    <FixMusicNotationExample>'âTª sweet dreams are' --&gt; '♫ sweet dreams are'</FixMusicNotationExample>
+    <FixMissingOpenBracketExample>'rumori] Guarda fuori!' -&gt; '[rumori] Guarda fuori!'</FixMissingOpenBracketExample>
+    <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} messaggi importanti nel rapporto!</NumberOfImportantLogMessages>
     <FixedOkXY>Corretto e OK - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
