@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private Subtitle ImportTimeCodesInFramesAndTextOnSameLine(string[] lines)
         {
-            Regex regexTimeCodes1 = new Regex(@"\d+", RegexOptions.Compiled);
+            var regexTimeCodes1 = new Regex(@"\d+", RegexOptions.Compiled);
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
@@ -255,7 +255,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (arr.Length == 1)
                     {
                         string[] tc = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (p == null || (p.EndTime.TotalMilliseconds != 0))
+                        if (p == null || p.EndTime.TotalMilliseconds != 0)
                         {
                             if (p != null)
                             {
@@ -263,8 +263,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 subtitle.Paragraphs.Add(p);
                                 sb = new StringBuilder();
                             }
-                            p = new Paragraph();
-                            p.StartTime = DecodeTime(tc);
+                            p = new Paragraph {StartTime = DecodeTime(tc)};
                         }
                         else
                         {
@@ -291,8 +290,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static Subtitle ImportTimeCodesAndTextOnSameLine(string[] lines)
         {
-            Regex regexTimeCodes1 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
-            Regex regexTimeCodes2 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
+            var regexTimeCodes1 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
+            var regexTimeCodes2 = new Regex(@"\d+[:.,;]{1}\d\d[:.,;]{1}\d+", RegexOptions.Compiled);
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
@@ -412,8 +411,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static Subtitle ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(string[] lines)
         {
-            Regex regexTimeCodes1 = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
-            Regex regexTimeCodes2 = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);
+            var regexTimeCodes1 = new Regex(@"\d+ {1}\d\d {1}\d\d {1}\d+", RegexOptions.Compiled);
+            var regexTimeCodes2 = new Regex(@"\d+  {1}\d\d {1}\d+", RegexOptions.Compiled);
             Paragraph p = null;
             var subtitle = new Subtitle();
             var sb = new StringBuilder();
@@ -478,7 +477,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
                 if (allNumbers && lineWithPerhapsOnlyNumbers.Length > 5)
                 {
-                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] arr = line.Replace("-", " ").Replace(">", " ").Replace("{", " ").Replace("}", " ").Replace("[", " ").Replace("]", " ").Trim().Split(new[] { ' ', '\t' }, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2)
                     {
                         string[] start = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
@@ -663,7 +662,7 @@ namespace Nikse.SubtitleEdit.Logic
                 string hour = parts[0];
                 string minutes = parts[1];
                 string seconds = parts[2];
-                string frames = string.Empty;
+                string frames;
                 if (parts.Length < 4)
                 {
                     frames = seconds;
@@ -678,8 +677,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (frames.Length < 3)
                     return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), SubtitleFormat.FramesToMillisecondsMax999(int.Parse(frames)));
-                else
-                    return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(frames));
+                return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(frames));
             }
             catch
             {
