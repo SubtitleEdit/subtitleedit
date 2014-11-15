@@ -115,6 +115,20 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static bool IsSrr(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                var count = fs.Read(buffer, 0, buffer.Length);
+                if (count != buffer.Length)
+                    return false;
+                return buffer[0] == 0x69
+                       && buffer[1] == 0x69
+                       && buffer[2] == 0x69;
+            }
+        }
+
         public static bool IsBluRaySup(string fileName)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))

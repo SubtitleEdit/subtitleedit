@@ -2824,6 +2824,16 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                // check for .srr file
+                if (format == null && fi.Length > 100 && ext == ".srr" && FileUtil.IsSrr(fileName))
+                {
+                    if (string.IsNullOrEmpty(_language.ErrorLoadSrr))
+                        MessageBox.Show("This file seems to be a ReScene .srr file - not a subtitle file.");
+                    else
+                        MessageBox.Show(_language.ErrorLoadSrr);
+                    return;
+                }                
+
                 if (format == null && fi.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
                     ImportSubtitleFromDvbSupFile(fileName);
