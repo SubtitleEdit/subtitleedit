@@ -12,18 +12,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         public Subtitle AutoGuessImport(string[] lines)
         {
-            Subtitle subTcOnSameSeparateLine = ImportTimeCodesOnSameSeperateLine(lines);
-            Subtitle subTcAndTextOnSameLine = ImportTimeCodesAndTextOnSameLine(lines);
-            Subtitle subTcOnAloneLines = ImportTimeCodesOnAloneLines(lines);
-
-            Subtitle subtitle = subTcOnSameSeparateLine;
+            var subtitle = ImportTimeCodesOnSameSeperateLine(lines);
             if (subtitle.Paragraphs.Count < 2)
                 subtitle = ImportTimeCodesAndTextOnSameLineOnlySpaceAsSeparator(lines);
 
+            var subTcAndTextOnSameLine = ImportTimeCodesAndTextOnSameLine(lines);
             if (subTcAndTextOnSameLine.Paragraphs.Count > subtitle.Paragraphs.Count)
                 subtitle = subTcAndTextOnSameLine;
+
+            var subTcOnAloneLines = ImportTimeCodesOnAloneLines(lines);
             if (subTcOnAloneLines.Paragraphs.Count > subtitle.Paragraphs.Count)
                 subtitle = subTcOnAloneLines;
+
             if (subtitle.Paragraphs.Count < 2)
             {
                 subtitle = ImportTimeCodesInFramesOnSameSeperateLine(lines);
@@ -32,8 +32,10 @@ namespace Nikse.SubtitleEdit.Logic
                     subtitle = ImportTimeCodesInFramesAndTextOnSameLine(lines);
                 }
             }
+
             if (subtitle.Paragraphs.Count > 1)
                 CleanUp(subtitle);
+
             return subtitle;
         }
 
@@ -255,7 +257,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (arr.Length == 1)
                     {
                         string[] tc = arr[0].Trim().Split(new[] { '.', ',', ';', ':' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (p == null || p.EndTime.TotalMilliseconds != 0)
+                        if (p == null || Math.Abs(p.EndTime.TotalMilliseconds) > 0.001)
                         {
                             if (p != null)
                             {
