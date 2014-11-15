@@ -751,6 +751,28 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextRemoveSingleDash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBeforeColon = true;
+            string text = "WOMAN: A glass of champagne, please." + Environment.NewLine + "- (Laughter)";
+            const string expected = "A glass of champagne, please.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        
+
         #region Additional test attributes
 
         //
