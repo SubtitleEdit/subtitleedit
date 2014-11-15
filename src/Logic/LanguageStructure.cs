@@ -1018,6 +1018,7 @@
             public string ErrorLoadRar { get; set; }
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
+            public string ErrorLoadSrr { get; set; }
 
             public class MainMenu
             {

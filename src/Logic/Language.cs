@@ -1133,6 +1133,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ErrorLoadRar = "This file seems to be a compressed .rar file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadPng = "This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.",
+                ErrorLoadSrr = "This file seems to be a ReScene .srr file - not a subtitle file.",
 
                 Menu = new LanguageStructure.Main.MainMenu
                 {
