@@ -5,7 +5,7 @@
     <Version>3.4.3</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
-    <HelpFile>帮助文件</HelpFile>
+    <HelpFile />
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
