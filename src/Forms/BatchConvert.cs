@@ -752,7 +752,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                                                 if (isSsa)
                                                 {
-                                                    foreach (Paragraph p in Main.LoadMatroskaSSA(x, fileName, format, mkvSub).Paragraphs)
+                                                    foreach (Paragraph p in Utilities.LoadMatroskaSSA(x, fileName, format, mkvSub).Paragraphs)
                                                     {
                                                         sub.Paragraphs.Add(p);
                                                     }
@@ -990,11 +990,11 @@ namespace Nikse.SubtitleEdit.Forms
                 bool success;
                 if (checkBoxOverwriteOriginalFiles.Checked)
                 {
-                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty);
+                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), Path.GetDirectoryName(p.FileName), _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, true, string.Empty);
                 }
                 else
                 {
-                    success = Main.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, string.Empty);
+                    success = CommandLineConvert.BatchConvertSave(p.ToFormat, null, GetCurrentEncoding(), textBoxOutputFolder.Text, _count, ref _converted, ref _errors, _allFormats, p.FileName, p.Subtitle, p.SourceFormat, checkBoxOverwrite.Checked, string.Empty);
                 }
 
                 if (success)

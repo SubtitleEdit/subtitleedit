@@ -773,6 +773,7 @@
     <Compile Include="Forms\YouTubeAnnotationsImport.Designer.cs">
       <DependentUpon>YouTubeAnnotationsImport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logic\CommandLineConvert.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupPalette.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupParser.cs" />
     <Compile Include="Logic\BluRaySup\BluRaySupPicture.cs" />
