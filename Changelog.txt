@@ -10,6 +10,9 @@
    * Updated Brazil translation - thx Igor
    * Updated Mexican translation - thx paconaranjo
    * Updated Czech translation - thx Trottel
+   * Updated Polish translation - thx Admas
+   * Updated Italian translation - thx SilverDrake
+   * Updated Chinese Simplified translation - thx larsenlouis
    * Export to images now remembers shadow width
 * FIXED:
    * Compare window works again now - thx SimplyTheBOSS
