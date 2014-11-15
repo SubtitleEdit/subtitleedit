@@ -3,9 +3,9 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.3</Version>
-    <TranslatedBy>翻译: FeiXJ | Leon Cheung</TranslatedBy>
+    <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
-    <HelpFile />
+    <HelpFile>帮助文件</HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -415,6 +415,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <LineHeight>行高</LineHeight>
     <BoxSingleLine>边缘 - 单线条</BoxSingleLine>
     <BoxMultiLine>边缘 - 多线条</BoxMultiLine>
+    <Forced>强制</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>导出文本</Title>
@@ -577,6 +578,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} 条重要的记录消息！</NumberOfImportantLogMessages>
     <FixedOkXY>完成 - {0}: {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>是否使用词典？</Title>
@@ -990,6 +994,9 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SavedOriginalSubtitleX>原始字幕 "{0}" 已保存</SavedOriginalSubtitleX>
     <FileOnDiskModified>磁盘上的文件已修改</FileOnDiskModified>
     <OverwriteModifiedFile>您要用当前文件覆盖文件 "{0}" (修改于 {1}{2}{3}) 吗？ (当前文件是从 {4} {5} 处的磁盘加载的)</OverwriteModifiedFile>
+    <FileXIsReadOnly>无法保存 {0}
+
+文件只读!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>无法保存字幕文件 "{0}"</UnableToSaveSubtitleX>
     <BeforeNew>新建之前</BeforeNew>
     <New>新建</New>
@@ -1212,7 +1219,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ParsingTransportStream>正在解析传送流，请稍候...</ParsingTransportStream>
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
-    <ErrorLoadZip>此文件是一个 .zip 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
+    <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
+    <ErrorLoadPng>这个文件是PNG图像文件，Subtitle Edit无法打开PNG文件。</ErrorLoadPng>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
@@ -1486,6 +1494,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <DirectShowDescription>使用 System32 文件夹中的 quartz.dll</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed 代码来自 DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/MPlayer</MPlayerDescription>
     <VlcMediaPlayer>VLC 媒体播放器</VlcMediaPlayer>
