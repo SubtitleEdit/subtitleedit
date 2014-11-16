@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic
             Console.WriteLine();
             Console.WriteLine(title + " - Batch converter");
             Console.WriteLine();
-            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:ms] [/encoding:<encoding name>] [/fps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>] [/pac-codepage:<code page>]");
+            Console.WriteLine("- Syntax: SubtitleEdit /convert <pattern> <name-of-format-without-spaces> [/offset:hh:mm:ss:ms] [/encoding:<encoding name>] [/fps:<frame rate>] [/targetfps:<frame rate>] [/inputfolder:<input folder>] [/outputfolder:<output folder>] [/pac-codepage:<code page>]");
             Console.WriteLine();
             Console.WriteLine("    example: SubtitleEdit /convert *.srt sami");
             Console.WriteLine("    list available formats: SubtitleEdit /convert /list");
@@ -89,11 +89,26 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
+                string targetFps = string.Empty;
+                double? targetFrameRate = null;
+                for (int idx = 4; idx < max; idx++)
+                    if (args.Length > idx && args[idx].StartsWith("/targetfps:", StringComparison.OrdinalIgnoreCase))
+                        targetFps = args[idx].ToLower();
+                if (targetFps.Length > 12)
+                {
+                    targetFps = targetFps.Remove(0, 11).Replace(",", ".").Trim();
+                    double d;
+                    if (double.TryParse(targetFps, System.Globalization.NumberStyles.AllowDecimalPoint, System.Globalization.CultureInfo.InvariantCulture, out d))
+                    {
+                        targetFrameRate = d;
+                    }
+                }
+
                 string targetEncodingName = string.Empty;
                 for (int idx = 4; idx < max; idx++)
                     if (args.Length > idx && args[idx].StartsWith("/encoding:", StringComparison.OrdinalIgnoreCase))
                         targetEncodingName = args[idx].ToLower();
-                Encoding targetEncoding = Encoding.UTF8;
+                var targetEncoding = Encoding.UTF8;
                 try
                 {
                     if (!string.IsNullOrEmpty(targetEncodingName))
@@ -232,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 }
                                             }
 
-                                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage);
+                                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate);
                                             done = true;
                                         }
                                     }
@@ -375,7 +390,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else if (!done)
                         {
-                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage);
+                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate);
                         }
                     }
                     else
@@ -406,172 +421,189 @@ namespace Nikse.SubtitleEdit.Logic
                 Environment.Exit(1);
         }
 
-        internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, string pacCodePage)
+        internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, string pacCodePage, double? targetFrameRate)
         {
-            // adjust offset
-            if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
+            double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
+
+            try
             {
-                string[] parts = offset.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                if (parts.Length == 5)
+
+                // adjust offset
+                if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
                 {
-                    try
+                    string[] parts = offset.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length == 5)
                     {
-                        var ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
-                        if (parts[1].StartsWith('-'))
-                            sub.AddTimeToAllParagraphs(ts.Negate());
-                        else
-                            sub.AddTimeToAllParagraphs(ts);
-                    }
-                    catch
-                    {
-                        Console.Write(" (unable to read offset " + offset + ")");
-                    }
-                }
-            }
-
-            bool targetFormatFound = false;
-            string outputFileName;
-            foreach (SubtitleFormat sf in formats)
-            {
-                if (sf.IsTextBased && (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase)))
-                {
-                    targetFormatFound = true;
-                    sf.BatchMode = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
-                        sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
-                    else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
-                        sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
-
-                    if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
-                    {
-                        Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                        TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
-                        file.Write(sub.ToText(sf));
-                        file.Close(); // save and close it
-                    }
-                    else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
-                    {
-                        Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                        TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
-                        file.Write(sub.ToText(sf));
-                        file.Close(); // save and close it
-                    }
-                    else
-                    {
-                        File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
-                    }
-
-                    if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
-                    {
-                        var sami = (Sami)format;
-                        foreach (string className in Sami.GetStylesFromHeader(sub.Header))
+                        try
                         {
-                            var newSub = new Subtitle();
-                            foreach (Paragraph p in sub.Paragraphs)
-                            {
-                                if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
-                                    newSub.Paragraphs.Add(p);
-                            }
-                            if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
-                            {
-                                string s = fileName;
-                                if (s.LastIndexOf('.') > 0)
-                                    s = s.Insert(s.LastIndexOf('.'), "_" + className);
-                                else
-                                    s += "_" + className + format.Extension;
-                                outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
-                                File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
-                            }
+                            var ts = new TimeSpan(0, int.Parse(parts[1].TrimStart('-')), int.Parse(parts[2]), int.Parse(parts[3]), int.Parse(parts[4]));
+                            if (parts[1].StartsWith('-'))
+                                sub.AddTimeToAllParagraphs(ts.Negate());
+                            else
+                                sub.AddTimeToAllParagraphs(ts);
+                        }
+                        catch
+                        {
+                            Console.Write(" (unable to read offset " + offset + ")");
                         }
                     }
-                    Console.WriteLine(" done.");
                 }
-            }
-            if (!targetFormatFound)
-            {
-                var ebu = new Ebu();
-                if (ebu.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+
+                // adjust frame rate
+                if (targetFrameRate.HasValue)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    Ebu.Save(outputFileName, sub, true);
-                    Console.WriteLine(" done.");
+                    sub.ChangeFrameRate(Configuration.Settings.General.CurrentFrameRate, targetFrameRate.Value);
+                    Configuration.Settings.General.CurrentFrameRate = targetFrameRate.Value;
                 }
-            }
-            if (!targetFormatFound)
-            {
-                var pac = new Pac();
-                if (pac.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || toFormat.Equals("pac", StringComparison.OrdinalIgnoreCase) || toFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase))
+
+                bool targetFormatFound = false;
+                string outputFileName;
+                foreach (SubtitleFormat sf in formats)
                 {
-                    pac.BatchMode = true;
-                    int codePage;
-                    if (!string.IsNullOrEmpty(pacCodePage) && int.TryParse(pacCodePage, out codePage))
-                        pac.CodePage = codePage;
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    pac.Save(outputFileName, sub);
-                    Console.WriteLine(" done.");
+                    if (sf.IsTextBased && (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase)))
+                    {
+                        targetFormatFound = true;
+                        sf.BatchMode = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, sf.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        if (sf.IsFrameBased && !sub.WasLoadedWithFrameNumbers)
+                            sub.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
+                        else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
+                            sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
+
+                        if (sf.GetType() == typeof (ItunesTimedText) || sf.GetType() == typeof (ScenaristClosedCaptions) || sf.GetType() == typeof (ScenaristClosedCaptionsDropFrame))
+                        {
+                            Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                            TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
+                            file.Write(sub.ToText(sf));
+                            file.Close(); // save and close it
+                        }
+                        else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof (TmpegEncAW5) || format.GetType() == typeof (TmpegEncXml)))
+                        {
+                            Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
+                            TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
+                            file.Write(sub.ToText(sf));
+                            file.Close(); // save and close it
+                        }
+                        else
+                        {
+                            File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                        }
+
+                        if (format.GetType() == typeof (Sami) || format.GetType() == typeof (SamiModern))
+                        {
+                            var sami = (Sami) format;
+                            foreach (string className in Sami.GetStylesFromHeader(sub.Header))
+                            {
+                                var newSub = new Subtitle();
+                                foreach (Paragraph p in sub.Paragraphs)
+                                {
+                                    if (p.Extra != null && p.Extra.Trim().Equals(className.Trim(), StringComparison.OrdinalIgnoreCase))
+                                        newSub.Paragraphs.Add(p);
+                                }
+                                if (newSub.Paragraphs.Count > 0 && newSub.Paragraphs.Count < sub.Paragraphs.Count)
+                                {
+                                    string s = fileName;
+                                    if (s.LastIndexOf('.') > 0)
+                                        s = s.Insert(s.LastIndexOf('.'), "_" + className);
+                                    else
+                                        s += "_" + className + format.Extension;
+                                    outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
+                                    File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                }
+                            }
+                        }
+                        Console.WriteLine(" done.");
+                    }
                 }
-            }
-            if (!targetFormatFound)
-            {
-                var cavena890 = new Cavena890();
-                if (cavena890.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    cavena890.Save(outputFileName, sub);
-                    Console.WriteLine(" done.");
+                    var ebu = new Ebu();
+                    if (ebu.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ebu.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        Ebu.Save(outputFileName, sub, true);
+                        Console.WriteLine(" done.");
+                    }
                 }
-            }
-            if (!targetFormatFound)
-            {
-                var cheetahCaption = new CheetahCaption();
-                if (cheetahCaption.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    CheetahCaption.Save(outputFileName, sub);
-                    Console.WriteLine(" done.");
+                    var pac = new Pac();
+                    if (pac.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || toFormat.Equals("pac", StringComparison.OrdinalIgnoreCase) || toFormat.Equals(".pac", StringComparison.OrdinalIgnoreCase))
+                    {
+                        pac.BatchMode = true;
+                        int codePage;
+                        if (!string.IsNullOrEmpty(pacCodePage) && int.TryParse(pacCodePage, out codePage))
+                            pac.CodePage = codePage;
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, pac.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        pac.Save(outputFileName, sub);
+                        Console.WriteLine(" done.");
+                    }
                 }
-            }
-            if (!targetFormatFound)
-            {
-                var capMakerPlus = new CapMakerPlus();
-                if (capMakerPlus.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    CapMakerPlus.Save(outputFileName, sub);
-                    Console.WriteLine(" done.");
+                    var cavena890 = new Cavena890();
+                    if (cavena890.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cavena890.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        cavena890.Save(outputFileName, sub);
+                        Console.WriteLine(" done.");
+                    }
                 }
-            }
-            if (!targetFormatFound)
-            {
-                if (Configuration.Settings.Language.BatchConvert.PlainText == toFormat || Configuration.Settings.Language.BatchConvert.PlainText.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                if (!targetFormatFound)
                 {
-                    targetFormatFound = true;
-                    outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
-                    Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
-                    File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
-                    Console.WriteLine(" done.");
+                    var cheetahCaption = new CheetahCaption();
+                    if (cheetahCaption.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, cheetahCaption.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        CheetahCaption.Save(outputFileName, sub);
+                        Console.WriteLine(" done.");
+                    }
                 }
+                if (!targetFormatFound)
+                {
+                    var capMakerPlus = new CapMakerPlus();
+                    if (capMakerPlus.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, capMakerPlus.Extension, outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        CapMakerPlus.Save(outputFileName, sub);
+                        Console.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    if (Configuration.Settings.Language.BatchConvert.PlainText == toFormat || Configuration.Settings.Language.BatchConvert.PlainText.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                    {
+                        targetFormatFound = true;
+                        outputFileName = FormatOutputFileNameForBatchConvert(fileName, ".txt", outputFolder, overwrite);
+                        Console.Write("{0}: {1} -> {2}...", count, Path.GetFileName(fileName), outputFileName);
+                        File.WriteAllText(outputFileName, ExportText.GeneratePlainText(sub, false, false, false, false, false, false, string.Empty, true, false, true, true, false), targetEncoding);
+                        Console.WriteLine(" done.");
+                    }
+                }
+                if (!targetFormatFound)
+                {
+                    Console.WriteLine("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat);
+                    errors++;
+                    return false;
+                }
+                converted++;
+                return true;
             }
-            if (!targetFormatFound)
+            finally
             {
-                Console.WriteLine("{0}: {1} - target format '{2}' not found!", count, fileName, toFormat);
-                errors++;
-                return false;
+                Configuration.Settings.General.CurrentFrameRate = oldFrameRate;
             }
-            converted++;
-            return true;
         }
 
         private static string FormatOutputFileNameForBatchConvert(string fileName, string extension, string outputFolder, bool overwrite)
