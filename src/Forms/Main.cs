@@ -795,6 +795,8 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs[index] = paragraph;
                         _makeHistoryPaused = true;
 
+                        MovePrevNext(e, beforeParagraph, index);
+
                         var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
                         if (original != null)
                         {
