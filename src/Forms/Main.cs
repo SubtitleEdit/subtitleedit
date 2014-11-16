@@ -817,6 +817,13 @@ namespace Nikse.SubtitleEdit.Forms
                         _makeHistoryPaused = true;
 
                         MovePrevNext(e, beforeParagraph, index);
+
+                        var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                            original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                        }
                     }
 
                     SubtitleListview1.SetStartTimeAndDuration(index, paragraph);
@@ -836,9 +843,18 @@ namespace Nikse.SubtitleEdit.Forms
                     var prev = _subtitle.GetParagraphOrDefault(index - 1);
                     if (prev != null)
                     {
+                        Paragraph originalPrev = null;
+                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                            originalPrev = Utilities.GetOriginalParagraph(index - 1, prev, _subtitleAlternate.Paragraphs);
+
                         prev.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + (e.Paragraph.StartTime.TotalMilliseconds - beforeParagraph.StartTime.TotalMilliseconds);
                         SubtitleListview1.SetStartTimeAndDuration(index - 1, prev);
                         audioVisualizer.Invalidate();
+
+                        if (originalPrev != null)
+                        {
+                            originalPrev.EndTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
+                        }
                     }
                 }
                 else if (e.MouseDownParagraphType == AudioVisualizer.MouseDownParagraphType.End)
@@ -846,9 +862,18 @@ namespace Nikse.SubtitleEdit.Forms
                     var next = _subtitle.GetParagraphOrDefault(index + 1);
                     if (next != null)
                     {
+                        Paragraph originalNext = null;
+                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+                            originalNext = Nikse.SubtitleEdit.Logic.Utilities.GetOriginalParagraph(index + 1, next, _subtitleAlternate.Paragraphs);
+
                         next.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + (e.Paragraph.EndTime.TotalMilliseconds - beforeParagraph.EndTime.TotalMilliseconds);
                         SubtitleListview1.SetStartTimeAndDuration(index + 1, next);
                         audioVisualizer.Invalidate();
+
+                        if (originalNext != null)
+                        {
+                            originalNext.StartTime.TotalMilliseconds = next.StartTime.TotalMilliseconds;
+                        }
                     }
                 }
             }
