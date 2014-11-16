@@ -1,7 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoFormats;
+using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -197,58 +197,52 @@ namespace Nikse.SubtitleEdit.Logic
 
                         if (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase))
                         {
-                            var mkv = new Matroska();
-                            bool isValid = false;
-                            bool hasConstantFrameRate = false;
-                            double frameRate = 0;
-                            int width = 0;
-                            int height = 0;
-                            double milliseconds = 0;
-                            string videoCodec = string.Empty;
-                            mkv.GetMatroskaInfo(fileName, ref isValid, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
-                            if (isValid)
+                            using (var matroska = new MatroskaFile(fileName))
                             {
-                                var subtitleList = mkv.GetMatroskaSubtitleTracks(fileName, out isValid);
-                                if (subtitleList.Count > 0)
+                                if (matroska.IsValid)
                                 {
-                                    foreach (MatroskaSubtitleInfo x in subtitleList)
+                                    var tracks = matroska.GetTracks();
+                                    if (tracks.Count > 0)
                                     {
-                                        if (x.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
+                                        foreach (var track in tracks)
                                         {
-                                            Console.WriteLine("{0}: {1} - Cannot convert from VobSub image based format!", fileName, toFormat);
-                                        }
-                                        else if (x.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
-                                        {
-                                            Console.WriteLine("{0}: {1} - Cannot convert from Blu-ray image based format!", fileName, toFormat);
-                                        }
-                                        else
-                                        {
-                                            List<SubtitleSequence> ss = mkv.GetMatroskaSubtitle(fileName, (int)x.TrackNumber, out isValid, null);
-                                            format = Utilities.LoadMatroskaTextSubtitle(x, fileName, false, ss, sub);
-                                            string newFileName = fileName;
-                                            if (subtitleList.Count > 1)
-                                                newFileName = fileName.Insert(fileName.Length - 4, "_" + x.TrackNumber + "_" + x.Language.Replace("?", string.Empty).Replace("!", string.Empty).Replace("*", string.Empty).Replace(",", string.Empty).Replace("/", string.Empty).Trim());
-
-                                            if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+                                            if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                             {
-                                                if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
-                                                    toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
-                                                {
-
-                                                    foreach (SubtitleFormat sf in formats)
-                                                    {
-                                                        if (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
-                                                        {
-                                                            format.RemoveNativeFormatting(sub, sf);
-                                                            break;
-                                                        }
-                                                    }
-
-                                                }
+                                                Console.WriteLine("{0}: {1} - Cannot convert from VobSub image based format!", fileName, toFormat);
                                             }
+                                            else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                Console.WriteLine("{0}: {1} - Cannot convert from Blu-ray image based format!", fileName, toFormat);
+                                            }
+                                            else
+                                            {
+                                                var ss = matroska.GetSubtitle(track.TrackNumber, null);
+                                                format = Utilities.LoadMatroskaTextSubtitle(track, matroska, ss, sub);
+                                                string newFileName = fileName;
+                                                if (tracks.Count > 1)
+                                                    newFileName = fileName.Insert(fileName.Length - 4, "_" + track.TrackNumber + "_" + track.Language.Replace("?", string.Empty).Replace("!", string.Empty).Replace("*", string.Empty).Replace(",", string.Empty).Replace("/", string.Empty).Trim());
 
-                                            BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate);
-                                            done = true;
+                                                if (format.GetType() == typeof (AdvancedSubStationAlpha) || format.GetType() == typeof (SubStationAlpha))
+                                                {
+                                                    if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
+                                                        toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
+                                                    {
+
+                                                        foreach (SubtitleFormat sf in formats)
+                                                        {
+                                                            if (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase))
+                                                            {
+                                                                format.RemoveNativeFormatting(sub, sf);
+                                                                break;
+                                                            }
+                                                        }
+
+                                                    }
+                                                }
+
+                                                BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, newFileName, sub, format, overwrite, pacCodePage, targetFrameRate);
+                                                done = true;
+                                            }
                                         }
                                     }
                                 }

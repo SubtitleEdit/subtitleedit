@@ -2,7 +2,7 @@
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoFormats;
+using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -58,22 +58,19 @@ namespace Nikse.SubtitleEdit.Logic
         {
             var info = new VideoInfo { Success = false };
 
+            MatroskaFile matroska = null;
             try
             {
-                bool hasConstantFrameRate = false;
-                bool success = false;
-                double frameRate = 0;
-                int width = 0;
-                int height = 0;
-                double milliseconds = 0;
-                string videoCodec = string.Empty;
+                matroska = new MatroskaFile(fileName);
+                if (matroska.IsValid)
+                {
+                    double frameRate;
+                    int width;
+                    int height;
+                    double milliseconds;
+                    string videoCodec;
+                    matroska.GetInfo(out frameRate, out width, out height, out milliseconds, out videoCodec);
 
-                using (var matroskaParser = new Matroska())
-                {
-                    matroskaParser.GetMatroskaInfo(fileName, ref success, ref hasConstantFrameRate, ref frameRate, ref width, ref height, ref milliseconds, ref videoCodec);
-                }
-                if (success)
-                {
                     info.Width = width;
                     info.Height = height;
                     info.FramesPerSecond = frameRate;
@@ -84,10 +81,18 @@ namespace Nikse.SubtitleEdit.Logic
                     info.VideoCodec = videoCodec;
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(exception.Message);
+                MessageBox.Show(ex.Message);
             }
+            finally
+            {
+                if (matroska != null)
+                {
+                    matroska.Dispose();
+                }
+            }
+
             return info;
         }
 
@@ -3190,12 +3195,13 @@ namespace Nikse.SubtitleEdit.Logic
             return tcs.Task;
         }
 
-        public static SubtitleFormat LoadMatroskaTextSubtitle(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, bool isSsa, List<SubtitleSequence> sub, Subtitle subtitle)
+        internal static SubtitleFormat LoadMatroskaTextSubtitle(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, List<MatroskaSubtitle> sub, Subtitle subtitle)
         {
             if (subtitle == null)
                 throw new ArgumentNullException("subtitle");
             subtitle.Paragraphs.Clear();
 
+            var isSsa = false;
             SubtitleFormat format = new SubRip();
             if (matroskaSubtitleInfo.CodecPrivate.Contains("[script info]", StringComparison.OrdinalIgnoreCase))
             {
@@ -3208,7 +3214,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (isSsa)
             {
-                foreach (Paragraph p in LoadMatroskaSsa(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
+                foreach (var p in LoadMatroskaSSA(matroskaSubtitleInfo, matroska.Path, format, sub).Paragraphs)
                 {
                     subtitle.Paragraphs.Add(p);
                 }
@@ -3256,15 +3262,15 @@ namespace Nikse.SubtitleEdit.Logic
             }
             else
             {
-                foreach (SubtitleSequence p in sub)
+                foreach (var p in sub)
                 {
-                    subtitle.Paragraphs.Add(new Paragraph(p.Text, p.StartMilliseconds, p.EndMilliseconds));
+                    subtitle.Paragraphs.Add(new Paragraph(p.Text, p.Start, p.End));
                 }
             }
             return format;
         }
 
-        public static Subtitle LoadMatroskaSsa(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<SubtitleSequence> sub)
+        internal static Subtitle LoadMatroskaSSA(MatroskaTrackInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<MatroskaSubtitle> sub)
         {
             var subtitle = new Subtitle { Header = matroskaSubtitleInfo.CodecPrivate };
             var lines = new List<string>();
@@ -3334,9 +3340,9 @@ namespace Nikse.SubtitleEdit.Logic
                 lines.Add(l);
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
-            foreach (SubtitleSequence mp in sub)
+            foreach (var mp in sub)
             {
-                var p = new Paragraph(string.Empty, mp.StartMilliseconds, mp.EndMilliseconds);
+                var p = new Paragraph(string.Empty, mp.Start, mp.End);
                 string start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
                 string end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
 
