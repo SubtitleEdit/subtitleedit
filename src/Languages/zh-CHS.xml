@@ -1,11 +1,12 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Language Name="简体中文">
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.3</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
-    <HelpFile />
+    <HelpFile>
+    </HelpFile>
     <Ok>确定(&amp;O)</Ok>
     <Cancel>取消(&amp;A)</Cancel>
     <Apply>应用</Apply>
@@ -90,21 +91,21 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>添加到 OCR 替换列表</Title>
-    <Description>添加一对到 OCR 替换列表</Description>
+    <Description>添加配对到 OCR 替换列表</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
-    <Title>添加到用户词典</Title>
-    <Description>添加单词到用户词典</Description>
+    <Title>将单词添加到用户词典</Title>
+    <Description>将单词添加到用户词典</Description>
   </AddToUserDictionary>
   <AddWaveform>
     <Title>生成波形数据</Title>
-    <SourceVideoFile>来源视频文件:</SourceVideoFile>
+    <SourceVideoFile>源视频文件:</SourceVideoFile>
     <GenerateWaveformData>生成波形数据</GenerateWaveformData>
     <PleaseWait>这可能需要几分钟 - 请稍候</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>未找到 VLC 媒体播放器</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit 需要 VLC 媒体播放器 1.1.x 或更新版本来提取音频数据。</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>您要访问 VLC 媒体播放器的主页吗？</GoToVlcMediaPlayerHomePage>
-    <GeneratingPeakFile>正在生成峰值文件...</GeneratingPeakFile>
+    <GeneratingPeakFile>正在生成波形缓冲文件...</GeneratingPeakFile>
     <GeneratingSpectrogram>正在生成频谱图...</GeneratingSpectrogram>
     <ExtractingSeconds>正在提取音频文件: {0:0.0} 秒</ExtractingSeconds>
     <ExtractingMinutes>正在提取音频文件: {0}.{1:00} 分</ExtractingMinutes>
@@ -117,7 +118,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Recalculate>重新计算</Recalculate>
     <AddSeconds>增加秒数</AddSeconds>
     <SetAsPercent>设置为时长百分比</SetAsPercent>
-    <Note>说明: 显示时间不会重叠下一个文本的起始时间</Note>
+    <Note>说明: 显示时间不会与下一个文本的起始时间重叠</Note>
     <PleaseSelectAValueFromTheDropDownList>请从下拉列表中选择一个数值</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose>- 请选择 -</PleaseChoose>
   </AdjustDisplayDuration>
@@ -504,7 +505,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AddMissingQuote>添加丢失的引号 (")</AddMissingQuote>
     <AddMissingQuotes>添加丢失的引号 (")</AddMissingQuotes>
     <FixHyphens>修复以破折号开头的行 (删除破折号)</FixHyphens>
-    <FixHyphensAdd>仅用一个破折号修复一对行 (添加破折号)</FixHyphensAdd>
+    <FixHyphensAdd>修复仅有一个破折号的双行 (添加破折号)</FixHyphensAdd>
     <FixHyphen>修复以破折号开头的行</FixHyphen>
     <XHyphensFixed>已修复破折号: {0}</XHyphensFixed>
     <AddMissingQuotesExample>"How are you? -&gt; "How are you?"</AddMissingQuotesExample>
@@ -618,7 +619,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <From>自:</From>
     <To>至:</To>
     <Translate>翻译</Translate>
-    <SourceText>来源文本</SourceText>
+    <SourceText>源文本</SourceText>
     <GoogleTranslate>谷歌翻译</GoogleTranslate>
     <MicrosoftTranslate>微软翻译</MicrosoftTranslate>
   </GoogleOrMicrosoftTranslate>
@@ -711,11 +712,11 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <ImportTimecodes>导入时间码...</ImportTimecodes>
         <Export>导出</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
-        <ExportBluRaySup>蓝光 sup...</ExportBluRaySup>
+        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU STL...</ExportEbu>
-        <ExportPac>PAC (荧屏电子学)...</ExportPac>
+        <ExportPac>PAC (Screen Electronics)...</ExportPac>
         <ExportPlainText>纯文本...</ExportPlainText>
         <ExportAdobeEncoreFabImageScript>Adobe Encore FAB 图像脚本...</ExportAdobeEncoreFabImageScript>
         <ExportKoreanAtsFilePair>Korean ATS 文件对...</ExportKoreanAtsFilePair>
@@ -776,7 +777,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <Style>样式</Style>
         <Ascending>升序</Ascending>
         <Descending>降序</Descending>
-        <MakeNewEmptyTranslationFromCurrentSubtitle>从当前字幕生成新的空白翻译</MakeNewEmptyTranslationFromCurrentSubtitle>
+        <MakeNewEmptyTranslationFromCurrentSubtitle>根据当前字幕生成新的空白翻译</MakeNewEmptyTranslationFromCurrentSubtitle>
         <BatchConvert>批量转换...</BatchConvert>
         <GenerateTimeAsText>将时间生成为文本...</GenerateTimeAsText>
         <MeasurementConverter>度量转换器...</MeasurementConverter>
@@ -802,17 +803,17 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <Title>拼写检查(&amp;S)</Title>
         <SpellCheck>拼写检查(&amp;S)...</SpellCheck>
         <SpellCheckFromCurrentLine>当前行的拼写检查结果...</SpellCheckFromCurrentLine>
-        <FindDoubleWords>查找双字</FindDoubleWords>
-        <FindDoubleLines>查找双行</FindDoubleLines>
+        <FindDoubleWords>查找重复词</FindDoubleWords>
+        <FindDoubleLines>查找重复行</FindDoubleLines>
         <GetDictionaries>获取字典...</GetDictionaries>
-        <AddToNamesEtcList>添加单词到 名称/其它 列表</AddToNamesEtcList>
+        <AddToNamesEtcList>添加单词到“名称”或“其它”列表</AddToNamesEtcList>
       </SpellCheck>
       <Synchronization>
         <Title>同步(&amp;Y)</Title>
         <AdjustAllTimes>提前/推后 显示...</AdjustAllTimes>
-        <VisualSync>视觉同步(&amp;V)...</VisualSync>
-        <PointSync>点同步(&amp;P)...</PointSync>
-        <PointSyncViaOtherSubtitle>通过其它字幕进行点同步...</PointSyncViaOtherSubtitle>
+        <VisualSync>影音对照同步(&amp;V)...</VisualSync>
+        <PointSync>取点同步(&amp;P)...</PointSync>
+        <PointSyncViaOtherSubtitle>对照取点同步...</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
         <Title>自动翻译(&amp;A)</Title>
@@ -847,7 +848,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <Find>查找</Find>
         <Replace>替换</Replace>
         <FixCommonErrors>修正常规错误</FixCommonErrors>
-        <VisualSync>视觉同步</VisualSync>
+        <VisualSync>影音对照同步</VisualSync>
         <SpellCheck>拼写检查</SpellCheck>
         <Settings>设置</Settings>
         <Help>帮助</Help>
@@ -898,7 +899,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
         <TypewriterEffect>打字机效果...</TypewriterEffect>
         <KaraokeEffect>卡拉 OK 效果...</KaraokeEffect>
         <ShowSelectedLinesEarlierLater>提前/推后 显示所选行...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>视觉同步所选行...</VisualSyncSelectedLines>
+        <VisualSyncSelectedLines>对所选行进行影音对照同步...</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>谷歌/微软 翻译所选行...</GoogleAndMicrosoftTranslateSelectedLine>
         <GoogleTranslateSelectedLines>谷歌翻译所选行...</GoogleTranslateSelectedLines>
         <AdjustDisplayDurationForSelectedLines>调整所选行时长...</AdjustDisplayDurationForSelectedLines>
@@ -913,7 +914,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
       <SubtitleFormat>格式</SubtitleFormat>
       <FileEncoding>编码方式</FileEncoding>
       <ListView>列表视图</ListView>
-      <SourceView>来源视图</SourceView>
+      <SourceView>源视图</SourceView>
       <UndoChangesInEditPanel>撤消编辑框内更改</UndoChangesInEditPanel>
       <Previous>&lt; 上一行</Previous>
       <Next>下一行 &gt;</Next>
@@ -977,11 +978,11 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SaveSubtitleAs>字幕另存为...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>原始字幕另存为...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>尚未加载字幕</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>视觉同步 - 所选行</VisualSyncSelectedLines>
-    <VisualSyncTitle>视觉同步</VisualSyncTitle>
-    <BeforeVisualSync>视觉同步之前</BeforeVisualSync>
-    <VisualSyncPerformedOnSelectedLines>已对所选行执行视觉同步</VisualSyncPerformedOnSelectedLines>
-    <VisualSyncPerformed>视觉同步已执行</VisualSyncPerformed>
+    <VisualSyncSelectedLines>影音对照同步 - 所选行</VisualSyncSelectedLines>
+    <VisualSyncTitle>影音对照同步</VisualSyncTitle>
+    <BeforeVisualSync>影音对照同步之前</BeforeVisualSync>
+    <VisualSyncPerformedOnSelectedLines>已对所选行执行影音对照同步</VisualSyncPerformedOnSelectedLines>
+    <VisualSyncPerformed>影音对照同步已执行</VisualSyncPerformed>
     <ImportThisVobSubSubtitle>导入这个 VobSub 字幕吗？</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>文件大小超过 10 MB: {0}</FileXIsLargerThan10MB>
     <ContinueAnyway>仍要继续吗？</ContinueAnyway>
@@ -1024,8 +1025,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ReplaceCountX>替换数量: {0}</ReplaceCountX>
     <NoXFoundAtLineY>找到匹配在行 {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>已进行一次替换。</OneReplacementMade>
-    <BeforeChangesMadeInSourceView>在来源窗口中进行更改之前</BeforeChangesMadeInSourceView>
-    <UnableToParseSourceView>无法解析来源窗口文本！</UnableToParseSourceView>
+    <BeforeChangesMadeInSourceView>在源视图中进行更改之前</BeforeChangesMadeInSourceView>
+    <UnableToParseSourceView>无法解析源视图文本！</UnableToParseSourceView>
     <GoToLineNumberX>转到行号 {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>已应用 创建/调整 行更改</CreateAdjustChangesApplied>
     <SelectedLines>所选行</SelectedLines>
@@ -1048,7 +1049,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
 您要继续吗？</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>追加字幕</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>打开字幕以追加...</OpenSubtitleToAppend>
-    <AppendViaVisualSyncTitle>视觉同步 - 追加第二部分字幕</AppendViaVisualSyncTitle>
+    <AppendViaVisualSyncTitle>影音对照同步 - 追加第二部分字幕</AppendViaVisualSyncTitle>
     <AppendSynchronizedSubtitlePrompt>追加此已同步的字幕吗？</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>追加之前</BeforeAppend>
     <SubtitleAppendedX>已追加字幕: {0}</SubtitleAppendedX>
@@ -1165,8 +1166,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <XMinimumDisplayTimeBetweenParagraphsChanged>已更改段间最小显示时间的行数: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>导入纯文本之前</BeforeImportText>
     <TextImported>文本已导入</TextImported>
-    <BeforePointSynchronization>点同步之前</BeforePointSynchronization>
-    <PointSynchronizationDone>点同步完成</PointSynchronizationDone>
+    <BeforePointSynchronization>取点同步之前</BeforePointSynchronization>
+    <PointSynchronizationDone>取点同步完成</PointSynchronizationDone>
     <BeforeTimeCodeImport>导入时间码之前</BeforeTimeCodeImport>
     <TimeCodeImportedFromXY>时间码导入自 {0}: {1}</TimeCodeImportedFromXY>
     <BeforeInsertSubtitleAtVideoPosition>在视频位置插入字幕之前</BeforeInsertSubtitleAtVideoPosition>
@@ -1220,7 +1221,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ErrorLoadIdx>无法读取或编辑 .idx 文件。Idx 文件是 idx/sub 文件对中的一部分 (也称为VobSub), Subtitle Edit 无法打开 .sub 文件。</ErrorLoadIdx>
     <ErrorLoadRar>此文件是一个 .rar 压缩文件。Subtitle Edit 无法打开压缩文件。</ErrorLoadRar>
     <ErrorLoadZip>此文件是一个 .zip 压缩文件，Subtitle Edit 无法打开压缩文件。</ErrorLoadZip>
-    <ErrorLoadPng>这个文件是PNG图像文件，Subtitle Edit无法打开PNG文件。</ErrorLoadPng>
+    <ErrorLoadPng>这个文件是 PNG 图像文件，Subtitle Edit 无法打开 PNG 文件。</ErrorLoadPng>
+    <ErrorLoadSrr>此文件是 ReScene .srr 文件，而不是字幕文件。</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
@@ -1264,14 +1266,14 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <MergedText>已合并文本</MergedText>
   </MergeTextWithSameTimeCodes>
   <ModifySelection>
-    <Title>修改选择</Title>
+    <Title>修改选集</Title>
     <Rule>规则</Rule>
     <CaseSensitive>区分大小写</CaseSensitive>
     <DoWithMatches>匹配项的处理方式</DoWithMatches>
-    <MakeNewSelection>生成新的选择</MakeNewSelection>
+    <MakeNewSelection>生成新的选集</MakeNewSelection>
     <AddToCurrentSelection>添加到当前选集</AddToCurrentSelection>
-    <SubtractFromCurrentSelection>从当前选择中移除</SubtractFromCurrentSelection>
-    <IntersectWithCurrentSelection>与当前选择取交集</IntersectWithCurrentSelection>
+    <SubtractFromCurrentSelection>从当前选集中移除</SubtractFromCurrentSelection>
+    <IntersectWithCurrentSelection>与当前选集取交集</IntersectWithCurrentSelection>
     <MatchingLinesX>匹配的行: {0}</MatchingLinesX>
     <Contains>包含</Contains>
     <StartsWith>始于</StartsWith>
@@ -1282,7 +1284,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <EqualLines>匹配行</EqualLines>
   </ModifySelection>
   <MultipleReplace>
-    <Title>多重替换</Title>
+    <Title>多项替换</Title>
     <FindWhat>查找内容</FindWhat>
     <ReplaceWith>替换</ReplaceWith>
     <Normal>正常</Normal>
@@ -1299,7 +1301,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <Export>导出...</Export>
     <ImportRulesTitle>导入替换规则自...</ImportRulesTitle>
     <ExportRulesTitle>导出替换规则到...</ExportRulesTitle>
-    <Rules>到处规则</Rules>
+    <Rules>导出规则</Rules>
     <MoveToTop>移到顶部</MoveToTop>
     <MoveToBottom>移到底部</MoveToBottom>
   </MultipleReplace>
@@ -1442,7 +1444,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SaveAs>另存为</SaveAs>
     <Find>查找</Find>
     <Replace>替换</Replace>
-    <VisualSync>视觉同步</VisualSync>
+    <VisualSync>影音对照同步</VisualSync>
     <SpellCheck>拼写检查</SpellCheck>
     <SettingsName>设置</SettingsName>
     <Help>帮助</Help>
@@ -1467,7 +1469,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <StartWithLastFileLoaded>以上次加载的文件开始</StartWithLastFileLoaded>
     <RememberSelectedLine>记住所选行</RememberSelectedLine>
     <RememberPositionAndSize>记住主窗口的位置和大小</RememberPositionAndSize>
-    <StartInSourceView>在来源视图中开始</StartInSourceView>
+    <StartInSourceView>在源视图中开始</StartInSourceView>
     <RemoveBlankLinesWhenOpening>打开字幕时删除空行</RemoveBlankLinesWhenOpening>
     <ShowLineBreaksAs>列表视图中的换行符显示为</ShowLineBreaksAs>
     <MainListViewDoubleClickAction>双击主窗口中的行时，列表视图将</MainListViewDoubleClickAction>
@@ -1543,7 +1545,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <AddNameEtc>添加名称</AddNameEtc>
     <AddWord>添加单词</AddWord>
     <Remove>删除</Remove>
-    <AddPair>添加一对</AddPair>
+    <AddPair>添加配对</AddPair>
     <UserWordList>用户词汇表</UserWordList>
     <OcrFixList>OCR 修复列表</OcrFixList>
     <Location>位置</Location>
@@ -1859,8 +1861,8 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <StyleXImportedFromFileY>样式 '{0}' 从文件 '{1}' 导入</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
-    <Title>点同步</Title>
-    <TitleViaOtherSubtitle>通过其它字幕进行点同步</TitleViaOtherSubtitle>
+    <Title>取点同步</Title>
+    <TitleViaOtherSubtitle>通过其它字幕进行取点同步</TitleViaOtherSubtitle>
     <SyncHelp>至少要设置两个同步点才能进行粗略同步</SyncHelp>
     <SetSyncPoint>设置同步点</SetSyncPoint>
     <RemoveSyncPoint>删除同步点</RemoveSyncPoint>
@@ -1869,16 +1871,16 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <ApplySync>应用</ApplySync>
   </PointSync>
   <TransportStreamSubtitleChooser>
-    <Title>传送流标识符号 (PID) = {}，字幕行数= {1}</Title>
-    <PidLine>传送流自动选择器 (PID) = {}，字幕行数= {1}</PidLine>
+    <Title>传输流字幕选择器 - {0}</Title>
+    <PidLine>传输包识别符 (PID) = {}，字幕行数= {1}</PidLine>
     <SubLine>{0}: {1} -&gt; {2}, {3} 张图片</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>未知的字幕类型</Title>
-    <Message>如果您要修复这个问题请发送电子邮件到 mailto:niksedk@gmail.com，并请附上该字幕的副本。</Message>
+    <Message>如果您要修复这个问题请发送电子邮件到 mailto:niksedk@gmail.com，并附上该字幕的副本。</Message>
   </UnknownSubtitle>
   <VisualSync>
-    <Title>视觉同步</Title>
+    <Title>影音对照同步</Title>
     <StartScene>起始场景</StartScene>
     <EndScene>末尾场景</EndScene>
     <Synchronize>同步</Synchronize>
@@ -1888,7 +1890,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <FindText>查找文本</FindText>
     <GoToSubPosition>转到字幕位置</GoToSubPosition>
     <KeepChangesTitle>保留更改吗？</KeepChangesTitle>
-    <KeepChangesMessage>“视觉同步”中的字幕已被更改。保留更改吗？</KeepChangesMessage>
+    <KeepChangesMessage>“影音对照同步”中的字幕已被更改。保留更改吗？</KeepChangesMessage>
     <SynchronizationDone>同步完成！</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>起始场景必须在末尾场景之前！</StartSceneMustComeBeforeEndScene>
     <Tip>提示: 使用 &lt;Ctrl + ←/→&gt; 键来 向前/向后 移动 100 毫秒</Tip>
