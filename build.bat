@@ -80,6 +80,7 @@ EXIT /B
 
 :SubZipFile
 TITLE Creating the ZIP file...
+ECHO. & ECHO Creating the ZIP file...
 PUSHD "src\bin\Release"
 IF EXIST "temp_zip"                                RD /S /Q "temp_zip"
 IF NOT EXIST "temp_zip"                            MD "temp_zip"
@@ -105,6 +106,7 @@ START "" /B /WAIT "%SEVENZIP%" a -tzip -mx=9 "SE%VERSION%.zip" * >NUL
 IF %ERRORLEVEL% NEQ 0 GOTO EndWithError
 
 
+ECHO. & ECHO ZIP file created successfully!
 MOVE /Y "SE%VERSION%.zip" "..\..\..\.." >NUL
 POPD
 IF EXIST "temp_zip" RD /S /Q "temp_zip"
