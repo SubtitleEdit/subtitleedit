@@ -770,9 +770,6 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
-        
-
         #region Additional test attributes
 
         //

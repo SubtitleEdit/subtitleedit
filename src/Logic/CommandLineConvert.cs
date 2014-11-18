@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Logic
                 // adjust offset
                 if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
                 {
-                    string[] parts = offset.Split(new[] {':'}, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = offset.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 5)
                     {
                         try
@@ -471,14 +471,14 @@ namespace Nikse.SubtitleEdit.Logic
                         else if (sf.IsTimeBased && sub.WasLoadedWithFrameNumbers)
                             sub.CalculateTimeCodesFromFrameNumbers(Configuration.Settings.General.CurrentFrameRate);
 
-                        if (sf.GetType() == typeof (ItunesTimedText) || sf.GetType() == typeof (ScenaristClosedCaptions) || sf.GetType() == typeof (ScenaristClosedCaptionsDropFrame))
+                        if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
                         {
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                             TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
                             file.Write(sub.ToText(sf));
                             file.Close(); // save and close it
                         }
-                        else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof (TmpegEncAW5) || format.GetType() == typeof (TmpegEncXml)))
+                        else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                         {
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
                             TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
@@ -490,9 +490,9 @@ namespace Nikse.SubtitleEdit.Logic
                             File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
                         }
 
-                        if (format.GetType() == typeof (Sami) || format.GetType() == typeof (SamiModern))
+                        if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         {
-                            var sami = (Sami) format;
+                            var sami = (Sami)format;
                             foreach (string className in Sami.GetStylesFromHeader(sub.Header))
                             {
                                 var newSub = new Subtitle();

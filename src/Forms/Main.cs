@@ -2279,7 +2279,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         MessageBox.Show(_language.ErrorLoadSrr);
                     return;
-                }                
+                }
 
                 if (format == null && fi.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
@@ -8650,7 +8650,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else if (_networkSession == null && SubtitleListview1.IsExtraColumnVisible)
                 {
-                        SubtitleListview1.HideExtraColumn();
+                    SubtitleListview1.HideExtraColumn();
                 }
                 comboBoxSubtitleFormats.SelectedIndexChanged -= ComboBoxSubtitleFormatsSelectedIndexChanged;
                 SetCurrentFormat(format);
@@ -8682,7 +8682,6 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowSource();
             }
         }
-
 
         public static void CopyStream(Stream input, Stream output)
         {
