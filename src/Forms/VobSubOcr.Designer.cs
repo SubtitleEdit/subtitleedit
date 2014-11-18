@@ -970,6 +970,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLog.FormattingEnabled = true;
             this.listBoxLog.Location = new System.Drawing.Point(3, 3);
             this.listBoxLog.Name = "listBoxLog";
+            this.listBoxLog.HorizontalScrollbar = true;
             this.listBoxLog.Size = new System.Drawing.Size(369, 149);
             this.listBoxLog.TabIndex = 0;
             this.listBoxLog.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
@@ -994,6 +995,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxLogSuggestions.FormattingEnabled = true;
             this.listBoxLogSuggestions.Location = new System.Drawing.Point(3, 3);
             this.listBoxLogSuggestions.Name = "listBoxLogSuggestions";
+            this.listBoxLogSuggestions.HorizontalScrollbar = true;
             this.listBoxLogSuggestions.Size = new System.Drawing.Size(369, 149);
             this.listBoxLogSuggestions.TabIndex = 40;
             this.listBoxLogSuggestions.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
@@ -1085,6 +1087,7 @@ namespace Nikse.SubtitleEdit.Forms
             this.listBoxUnknownWords.FormattingEnabled = true;
             this.listBoxUnknownWords.Location = new System.Drawing.Point(3, 3);
             this.listBoxUnknownWords.Name = "listBoxUnknownWords";
+            this.listBoxUnknownWords.HorizontalScrollbar = true;
             this.listBoxUnknownWords.Size = new System.Drawing.Size(143, 147);
             this.listBoxUnknownWords.TabIndex = 40;
             this.listBoxUnknownWords.SelectedIndexChanged += new System.EventHandler(this.ListBoxLogSelectedIndexChanged);
