@@ -265,7 +265,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 subtitle.Paragraphs.Add(p);
                                 sb = new StringBuilder();
                             }
-                            p = new Paragraph {StartTime = DecodeTime(tc)};
+                            p = new Paragraph { StartTime = DecodeTime(tc) };
                         }
                         else
                         {

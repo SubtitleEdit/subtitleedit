@@ -3384,6 +3384,5 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-
     }
 }
