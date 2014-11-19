@@ -413,6 +413,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <LineHeight>줄높이</LineHeight>
     <BoxSingleLine>상자 - 한 줄</BoxSingleLine>
     <BoxMultiLine>상자 - 여러 줄</BoxMultiLine>
+    <Forced>적용됨</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>텍스트로 내보내기</Title>
@@ -1223,6 +1224,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ErrorLoadIdx>Idx 파일은 읽거나 편집할 수 없습니다. Idx 파일은 한 쌍으로 이루어진 VobSub(sub/idx) 파일의 서브 파일일 뿐입니다. .sub 파일로 여시기 바랍니다.</ErrorLoadIdx>
     <ErrorLoadRar>이 파일은 압축된 .rar 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadRar>
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
+    <ErrorLoadPng>이 파일은 PNG 이미지 파일 같습니다. Subtitle Edit는 PNG 파일을 열 수 없습니다.</ErrorLoadPng>
+    <ErrorLoadSrr>이 파일은 ReScene.srr 파일인 것 같습니다 - 자막 파일이 아닙니다.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -1947,9 +1950,9 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GuessesUsed>추측 사용</GuessesUsed>
     <UnknownWords>알 수 없는 단어</UnknownWords>
     <OcrAutoCorrectionSpellChecking>OCR 자동 맞춤법 검사</OcrAutoCorrectionSpellChecking>
-    <ImportNewTimeCodes>새로운 타임코드 가져오기</ImportNewTimeCodes>
     <FixOcrErrors>OCR 오류 수정</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>타임코드가 일치하는 텍스트 가져오기</ImportTextWithMatchingTimeCodes>
+    <ImportNewTimeCodes>새로운 타임코드 가져오기</ImportNewTimeCodes>
     <SaveSubtitleImageAs>다른 이름으로 이미지 자막 저장...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>모든 이미지(png/bdn xml) 저장...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>HTML 인덱스를 사용하여 모든 이미지 저장...</SaveAllSubtitleImagesWithHtml>
