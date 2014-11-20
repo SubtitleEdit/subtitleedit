@@ -222,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic
                                                 if (tracks.Count > 1)
                                                     newFileName = fileName.Insert(fileName.Length - 4, "_" + track.TrackNumber + "_" + track.Language.Replace("?", string.Empty).Replace("!", string.Empty).Replace("*", string.Empty).Replace(",", string.Empty).Replace("/", string.Empty).Trim());
 
-                                                if (format.GetType() == typeof (AdvancedSubStationAlpha) || format.GetType() == typeof (SubStationAlpha))
+                                                if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                                                 {
                                                     if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
                                                         toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
