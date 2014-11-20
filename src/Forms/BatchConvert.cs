@@ -946,7 +946,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (state.SourceFormat == null)
                     state.SourceFormat = new SubRip();
-                
+
                 var success = CommandLineConvert.BatchConvertSave(
                     state.ToFormat,
                     null,
