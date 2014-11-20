@@ -487,72 +487,37 @@ namespace Nikse.SubtitleEdit.Logic
             switch (sortCriteria)
             {
                 case SubtitleSortCriteria.Number:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.Number.CompareTo(p2.Number);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.Number.CompareTo(p2.Number));
                     break;
                 case SubtitleSortCriteria.StartTime:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.StartTime.TotalMilliseconds.CompareTo(p2.StartTime.TotalMilliseconds);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.StartTime.TotalMilliseconds.CompareTo(p2.StartTime.TotalMilliseconds));
                     break;
                 case SubtitleSortCriteria.EndTime:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.EndTime.TotalMilliseconds.CompareTo(p2.EndTime.TotalMilliseconds);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.EndTime.TotalMilliseconds.CompareTo(p2.EndTime.TotalMilliseconds));
                     break;
                 case SubtitleSortCriteria.Duration:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.Duration.TotalMilliseconds.CompareTo(p2.Duration.TotalMilliseconds);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.Duration.TotalMilliseconds.CompareTo(p2.Duration.TotalMilliseconds));
                     break;
                 case SubtitleSortCriteria.Text:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return String.Compare(p1.Text, p2.Text, StringComparison.Ordinal);
-                    });
+                    _paragraphs.Sort((p1, p2) => string.Compare(p1.Text, p2.Text, StringComparison.Ordinal));
                     break;
                 case SubtitleSortCriteria.TextMaxLineLength:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return Utilities.GetMaxLineLength(p1.Text).CompareTo(Utilities.GetMaxLineLength(p2.Text));
-                    });
+                    _paragraphs.Sort((p1, p2) => Utilities.GetMaxLineLength(p1.Text).CompareTo(Utilities.GetMaxLineLength(p2.Text)));
                     break;
                 case SubtitleSortCriteria.TextTotalLength:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.Text.Length.CompareTo(p2.Text.Length);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.Text.Length.CompareTo(p2.Text.Length));
                     break;
                 case SubtitleSortCriteria.TextNumberOfLines:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.NumberOfLines.CompareTo(p2.NumberOfLines);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.NumberOfLines.CompareTo(p2.NumberOfLines));
                     break;
                 case SubtitleSortCriteria.TextCharactersPerSeconds:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return Utilities.GetCharactersPerSecond(p1).CompareTo(Utilities.GetCharactersPerSecond(p2));
-                    });
+                    _paragraphs.Sort((p1, p2) => Utilities.GetCharactersPerSecond(p1).CompareTo(Utilities.GetCharactersPerSecond(p2)));
                     break;
                 case SubtitleSortCriteria.WordsPerMinute:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        return p1.WordsPerMinute.CompareTo(p2.WordsPerMinute);
-                    });
+                    _paragraphs.Sort((p1, p2) => p1.WordsPerMinute.CompareTo(p2.WordsPerMinute));
                     break;
                 case SubtitleSortCriteria.Style:
-                    _paragraphs.Sort(delegate(Paragraph p1, Paragraph p2)
-                    {
-                        if (p1.Extra == null)
-                            return 1;
-                        return String.Compare(p1.Extra, p2.Extra, StringComparison.Ordinal);
-                    });
+                    _paragraphs.Sort((p1, p2) => string.Compare(p1.Extra, p2.Extra, StringComparison.Ordinal));
                     break;
             }
         }
