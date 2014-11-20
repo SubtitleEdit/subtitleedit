@@ -1,5 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoFormats;
+using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -39,9 +39,9 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(List<MatroskaSubtitleInfo> subtitleInfoList)
+        internal void Initialize(List<MatroskaTrackInfo> subtitleInfoList)
         {
-            foreach (MatroskaSubtitleInfo info in subtitleInfoList)
+            foreach (var info in subtitleInfoList)
             {
                 string s = string.Format(Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ, info.TrackNumber, info.Name, info.Language, info.CodecId);
                 listBox1.Items.Add(s);
