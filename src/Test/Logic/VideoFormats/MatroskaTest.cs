@@ -1,4 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.IO;
 
@@ -13,7 +14,7 @@ namespace Test.Logic.VideoFormats
         public void MatroskaTestValid()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_SRT.mkv");
-            using (var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName))
+            using (var parser = new MatroskaFile(fileName))
             {
                 Assert.IsTrue(parser.IsValid);
             }
@@ -23,7 +24,7 @@ namespace Test.Logic.VideoFormats
         public void MatroskaTestInvalid()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_TS_with_graphics.ts");
-            using (var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName))
+            using (var parser = new MatroskaFile(fileName))
             {
                 Assert.IsFalse(parser.IsValid);
             }
@@ -33,10 +34,9 @@ namespace Test.Logic.VideoFormats
         public void MatroskaTestIsSrt()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_SRT.mkv");
-            using (var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName))
+            using (var parser = new MatroskaFile(fileName))
             {
-                bool isValid;
-                var tracks = parser.GetMatroskaSubtitleTracks(fileName, out isValid);
+                var tracks = parser.GetTracks(true);
                 Assert.IsTrue(tracks[0].CodecId == "S_TEXT/UTF8");
             }
         }
@@ -45,11 +45,10 @@ namespace Test.Logic.VideoFormats
         public void MatroskaTestSrtContent()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_SRT.mkv");
-            using (var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName))
+            using (var parser = new MatroskaFile(fileName))
             {
-                bool isValid;
-                var tracks = parser.GetMatroskaSubtitleTracks(fileName, out isValid);
-                var subtitles = parser.GetMatroskaSubtitle(fileName, Convert.ToInt32(tracks[0].TrackNumber), out isValid, null);
+                var tracks = parser.GetTracks(true);
+                var subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[0].TrackNumber), null);
                 Assert.IsTrue(subtitles.Count == 2);
                 Assert.IsTrue(subtitles[0].Text == "Line 1");
                 Assert.IsTrue(subtitles[1].Text == "Line 2");
@@ -60,10 +59,9 @@ namespace Test.Logic.VideoFormats
         public void MatroskaTestVobSubPgs()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_VobSub_PGS.mkv");
-            using (var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName))
+            using (var parser = new MatroskaFile(fileName))
             {
-                bool isValid;
-                var tracks = parser.GetMatroskaSubtitleTracks(fileName, out isValid);
+                var tracks = parser.GetTracks(true);
                 Assert.IsTrue(tracks[0].CodecId == "S_VOBSUB");
                 Assert.IsTrue(tracks[1].CodecId == "S_HDMV/PGS");
             }
@@ -73,15 +71,14 @@ namespace Test.Logic.VideoFormats
         public void MatroskaTestVobSubPgsContent()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_VobSub_PGS.mkv");
-            using (var parser = new Nikse.SubtitleEdit.Logic.VideoFormats.Matroska(fileName))
+            using (var parser = new MatroskaFile(fileName))
             {
-                bool isValid;
-                var tracks = parser.GetMatroskaSubtitleTracks(fileName, out isValid);
-                var subtitles = parser.GetMatroskaSubtitle(fileName, Convert.ToInt32(tracks[0].TrackNumber), out isValid, null);
+                var tracks = parser.GetTracks(true);
+                var subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[0].TrackNumber), null);
                 Assert.IsTrue(subtitles.Count == 2);
                 //TODO: check bitmaps
 
-                //subtitles = parser.GetMatroskaSubtitle(fileName, Convert.ToInt32(tracks[1].TrackNumber), out isValid, null);
+                //subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[1].TrackNumber), null);
                 //Assert.IsTrue(subtitles.Count == 2);
                 //check bitmaps
             }

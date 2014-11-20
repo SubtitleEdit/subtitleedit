@@ -1,5 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoFormats;
+using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -244,30 +244,35 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 { // Choose for number of audio tracks in matroska files
+                    MatroskaFile matroska = null;
                     try
                     {
-                        using (var mkv = new Matroska(labelVideoFileName.Text))
+                        matroska = new MatroskaFile(labelVideoFileName.Text);
+                        if (matroska.IsValid)
                         {
-                            if (mkv.IsValid)
+                            foreach (var track in matroska.GetTracks())
                             {
-                                var trackInfo = mkv.GetTrackInfo();
-                                foreach (var ti in trackInfo)
+                                if (track.IsAudio)
                                 {
-                                    if (ti.IsAudio)
-                                    {
-                                        numberOfAudioTracks++;
-                                        if (ti.CodecId != null && ti.Language != null)
-                                            audioTrackNames.Add("#" + ti.TrackNumber + ": " + ti.CodecId.Replace("\0", string.Empty) + " - " + ti.Language.Replace("\0", string.Empty));
-                                        else
-                                            audioTrackNames.Add("#" + ti.TrackNumber);
-                                        mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, ti.TrackNumber);
-                                    }
+                                    numberOfAudioTracks++;
+                                    if (track.CodecId != null && track.Language != null)
+                                        audioTrackNames.Add("#" + track.TrackNumber + ": " + track.CodecId.Replace("\0", string.Empty) + " - " + track.Language.Replace("\0", string.Empty));
+                                    else
+                                        audioTrackNames.Add("#" + track.TrackNumber);
+                                    mkvAudioTrackNumbers.Add(mkvAudioTrackNumbers.Count, track.TrackNumber);
                                 }
                             }
                         }
                     }
                     catch
                     {
+                    }
+                    finally
+                    {
+                        if (matroska != null)
+                        {
+                            matroska.Dispose();
+                        }
                     }
                 }
                 else if (labelVideoFileName.Text.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase) || labelVideoFileName.Text.EndsWith(".m4v", StringComparison.OrdinalIgnoreCase))
@@ -320,19 +325,25 @@ namespace Nikse.SubtitleEdit.Forms
                 // check for delay in matroska files
                 if (labelVideoFileName.Text.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase))
                 {
+                    MatroskaFile matroska = null;
                     try
                     {
-                        using (var mkv = new Matroska(labelVideoFileName.Text))
+                        matroska = new MatroskaFile(labelVideoFileName.Text);
+                        if (matroska.IsValid)
                         {
-                            if (mkv.IsValid)
-                            {
-                                _delayInMilliseconds = (int)mkv.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
-                            }
+                            _delayInMilliseconds = (int)matroska.GetTrackStartTime(mkvAudioTrackNumbers[_audioTrackNumber]);
                         }
                     }
                     catch
                     {
                         _delayInMilliseconds = 0;
+                    }
+                    finally
+                    {
+                        if (matroska != null)
+                        {
+                            matroska.Dispose();
+                        }
                     }
                 }
 
