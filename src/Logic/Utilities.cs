@@ -263,7 +263,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (p.StartTime.TotalMilliseconds <= positionInMilliseconds &&
                         p.EndTime.TotalMilliseconds > positionInMilliseconds)
                     {
-                        var op = Utilities.GetOriginalParagraph(0, p, original.Paragraphs);
+                        var op = GetOriginalParagraph(0, p, original.Paragraphs);
 
                         string text = p.Text.Replace("|", Environment.NewLine);
                         if (op != null)
@@ -384,7 +384,7 @@ namespace Nikse.SubtitleEdit.Logic
             return true;
         }
 
-        private static string _lastNoBreakAfterListLanguage = null;
+        private static string _lastNoBreakAfterListLanguage;
         private static List<NoBreakAfterItem> _lastNoBreakAfterList = new List<NoBreakAfterItem>();
         private static IEnumerable<NoBreakAfterItem> NoBreakAfterList(string languageName)
         {
@@ -431,7 +431,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             string s = AutoBreakLine(text, 0, 0, language);
 
-            var arr = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var arr = s.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
@@ -546,12 +546,12 @@ namespace Nikse.SubtitleEdit.Logic
             // do not autobreak dialogs
             if (text.Contains('-') && text.Contains(Environment.NewLine))
             {
-                string dialogS = Utilities.RemoveHtmlTags(text);
+                string dialogS = RemoveHtmlTags(text);
                 var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
                 if (arr.Length == 2)
                 {
                     string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith('-') && arr[1].TrimStart().StartsWith('-') && (arr0.EndsWith('.') || arr0.EndsWith('!') || arr0.EndsWith('?')))
+                    if (arr0.StartsWith('-') && arr[1].TrimStart().StartsWith('-') && (arr0.EndsWith('.') || arr0.EndsWith('!') || arr0.EndsWith('?') || arr0.EndsWith("--") || arr0.EndsWith('–')))
                         return text;
                 }
             }
@@ -570,7 +570,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (temp.Length < mergeLinesShorterThan)
             {
-                string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                string[] lines = text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (lines.Length > 1)
                 {
                     bool isDialog = true;
@@ -1622,8 +1622,6 @@ namespace Nikse.SubtitleEdit.Logic
                         if (count > bestCount)
                             languageName = shortName;
                         break;
-                    default:
-                        break;
                 }
             }
             return languageName;
@@ -1638,7 +1636,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
-            foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries))
             {
                 string s = RemoveHtmlTags(line, true);
                 if (s.Length > maxLength)
@@ -1655,7 +1653,7 @@ namespace Nikse.SubtitleEdit.Logic
             const string zeroWhiteSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = Utilities.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -1886,12 +1884,12 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            string cleanText = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
+            string cleanText = RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
             string[] lines = cleanText.Split('|');
 
             const int max = 3;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             for (int i = 0; i < lines.Length; i++)
             {
                 string line = lines[i];
@@ -2483,7 +2481,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            int length = Utilities.RemoveHtmlTags(textBox.Text).Length;
+            int length = RemoveHtmlTags(textBox.Text).Length;
             if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && length > Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
@@ -2491,7 +2489,7 @@ namespace Nikse.SubtitleEdit.Logic
                     string newText;
                     if (length > Configuration.Settings.General.SubtitleLineMaximumLength + 30)
                     {
-                        newText = Utilities.AutoBreakLine(textBox.Text);
+                        newText = AutoBreakLine(textBox.Text);
                     }
                     else
                     {
@@ -2539,7 +2537,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             string[] parts = keysInString.ToLower().Split(new[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
-            Keys resultKeys = Keys.None;
+            var resultKeys = Keys.None;
             foreach (string k in parts)
             {
                 if (AllKeys.ContainsKey(k))
@@ -2551,7 +2549,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
-            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines = text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -2836,10 +2834,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 var arr = s.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
                                 return Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
                             }
-                            else
-                            {
-                                return ColorTranslator.FromHtml(s);
-                            }
+                            return ColorTranslator.FromHtml(s);
                         }
                         catch
                         {
@@ -3139,14 +3134,14 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         string before = string.Empty;
                         int k = idx - 1;
-                        while (k >= 0 && Utilities.AllLettersAndNumbers.Contains(text[k]))
+                        while (k >= 0 && AllLettersAndNumbers.Contains(text[k]))
                         {
                             before = text[k] + before;
                             k--;
                         }
                         string after = string.Empty;
                         k = idx + 2;
-                        while (k < text.Length && Utilities.AllLetters.Contains(text[k]))
+                        while (k < text.Length && AllLetters.Contains(text[k]))
                         {
                             after = after + text[k];
                             k++;
@@ -3213,7 +3208,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (isSsa)
             {
-                foreach (Paragraph p in LoadMatroskaSSA(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
+                foreach (Paragraph p in LoadMatroskaSsa(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
                 {
                     subtitle.Paragraphs.Add(p);
                 }
@@ -3269,10 +3264,9 @@ namespace Nikse.SubtitleEdit.Logic
             return format;
         }
 
-        public static Subtitle LoadMatroskaSSA(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<SubtitleSequence> sub)
+        public static Subtitle LoadMatroskaSsa(MatroskaSubtitleInfo matroskaSubtitleInfo, string fileName, SubtitleFormat format, List<SubtitleSequence> sub)
         {
-            var subtitle = new Subtitle();
-            subtitle.Header = matroskaSubtitleInfo.CodecPrivate;
+            var subtitle = new Subtitle { Header = matroskaSubtitleInfo.CodecPrivate };
             var lines = new List<string>();
             foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
                 lines.Add(l);
@@ -3342,7 +3336,7 @@ namespace Nikse.SubtitleEdit.Logic
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
             foreach (SubtitleSequence mp in sub)
             {
-                Paragraph p = new Paragraph(string.Empty, mp.StartMilliseconds, mp.EndMilliseconds);
+                var p = new Paragraph(string.Empty, mp.StartMilliseconds, mp.EndMilliseconds);
                 string start = string.Format(timeCodeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds / 10);
                 string end = string.Format(timeCodeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, p.EndTime.Milliseconds / 10);
 

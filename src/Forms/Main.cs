@@ -8586,7 +8586,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (isSsa)
                 {
-                    foreach (Paragraph p in Utilities.LoadMatroskaSSA(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
+                    foreach (Paragraph p in Utilities.LoadMatroskaSsa(matroskaSubtitleInfo, fileName, format, sub).Paragraphs)
                     {
                         subtitle.Paragraphs.Add(p);
                     }

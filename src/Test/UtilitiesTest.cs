@@ -58,6 +58,16 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLineDoNotBreakAfterDashDash()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "- That's hilarious, I don't--" + Environment.NewLine + "- Are the cheeks turning nice and pink?";
+            string s2 = Utilities.AutoBreakLine(s1);
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLineDialog1()
         {
             string s1 = "- Qu'est ce qui se passe ? - Je veux voir ce qu'ils veulent être.";
