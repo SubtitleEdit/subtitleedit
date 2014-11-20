@@ -5,6 +5,7 @@
 * NEW:
    * Added export to EDL format + png (for Adobe Premiere) - thx Demian
    * Added "forced" option in export for Blu-ray/VobSub/BDN-xml
+   * Added "/targetfps" parameter to command line conversion
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Updated Brazil translation - thx Igor
@@ -12,7 +13,9 @@
    * Updated Czech translation - thx Trottel
    * Updated Polish translation - thx Admas
    * Updated Italian translation - thx SilverDrake
-   * Updated Chinese Simplified translation - thx larsenlouis
+   * Updated Chinese Simplified translation - thx larsenlouis/Leon
+   * Updated Korean translation - thx domddol
+   * Updated Slovenian translation - thx Hawk
    * Export to images now remembers shadow width
 * FIXED:
    * Compare window works again now - thx SimplyTheBOSS
@@ -25,6 +28,9 @@
    * Fixed center alignment bug in export to images
    * Some fixes for "Remove text for HI" - thx Thunderbolt8
    * Fixed possible crash when working with SSA/ASS files
+   * Fixes for alt+drag in waveform - the Leon
+   * Minor fix for "unknown subtitle importer" (regarding tab)
+   * Fix for dialog in "auto break line" - thx XhmikosR
 
 
 3.4.3 (11th October 2014)
