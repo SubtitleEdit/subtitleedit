@@ -1,3 +1,5 @@
+version: "{build}"
+
 # Variables
 configuration:
 #  - Debug
