@@ -1724,9 +1724,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static Bitmap GenerateImageFromTextWithStyle(MakeBitmapParameter parameter)
         {
+            Bitmap bmp = null;
             if (!parameter.SimpleRendering && parameter.P.Text.Contains(Environment.NewLine) && (parameter.BoxSingleLine || parameter.P.Text.Contains(BoxSingleLine)))
             {
-                Bitmap bmp = null;
                 string old = parameter.P.Text;
                 int oldType3D = parameter.Type3D;
                 if (parameter.Type3D == 2) // Half-Top/Bottom 3D
@@ -1817,10 +1817,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (parameter.Type3D == 2) // Half-side-by-side 3D - due to per line we need to do this after making lines
                 {
                     var newBmp = Make3DTopBottom(parameter, new NikseBitmap(bmp)).GetBitmap();
-                    bmp.Dispose();
+                    if (bmp != null)
+                    {
+                        bmp.Dispose();
+                    }
                     bmp = newBmp;
                 }
-                return bmp;
             }
             else
             {
@@ -1832,11 +1834,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     parameter.P.Text = parameter.P.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
                     parameter.BackgroundColor = parameter.BorderColor;
                 }
-                var bmp = GenerateImageFromTextWithStyleInner(parameter);
+                bmp = GenerateImageFromTextWithStyleInner(parameter);
                 parameter.P.Text = oldText;
                 parameter.BackgroundColor = oldBackgroundColor;
-                return bmp;
             }
+            return bmp;
         }
 
         private static Bitmap GenerateImageFromTextWithStyleInner(MakeBitmapParameter parameter)
