@@ -459,128 +459,128 @@ namespace Nikse.SubtitleEdit.Controls
                         imageHeight -= _nfft / 2;
                 }
 
-                var penNormal = new Pen(Color);
-                var penSelected = new Pen(SelectedColor); // selected paragraph
-                var pen = penNormal;
-                int lastCurrentEnd = -1;
-
-                if (ShowWaveform)
+                using (var penNormal = new Pen(Color))
+                using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                 {
-                    if (_zoomFactor > 0.9999 && ZoomFactor < 1.00001)
-                    {
-                        for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
-                        {
-                            int n = begin + i;
-                            if (n < _wavePeaks.AllSamples.Count)
-                            {
-                                int newY = CalculateHeight(_wavePeaks.AllSamples[n], imageHeight, maxHeight);
-                                graphics.DrawLine(pen, x, y, i, newY);
-                                //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
+                    var pen = penNormal;
+                    int lastCurrentEnd = -1;
 
-                                x = i;
-                                y = newY;
-                                if (n <= end && n >= start)
-                                    pen = penSelected;
-                                else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
-                                    pen = penSelected;
-                                else
-                                    pen = penNormal;
-                            }
-                        }
-                    }
-                    else
+                    if (ShowWaveform)
                     {
-                        // calculate lines with zoom factor
-                        float x2 = 0;
-                        float x3 = 0;
-                        for (int i = 0; i < _wavePeaks.AllSamples.Count && ((int)Math.Round(x3)) < Width; i++)
+                        if (_zoomFactor > 0.9999 && ZoomFactor < 1.00001)
                         {
-                            if (beginNoZoomFactor + i < _wavePeaks.AllSamples.Count)
+                            for (int i = 0; i < _wavePeaks.AllSamples.Count && i < Width; i++)
                             {
-                                int newY = CalculateHeight(_wavePeaks.AllSamples[beginNoZoomFactor + i], imageHeight, maxHeight);
-                                x3 = (float)(_zoomFactor * i);
-                                graphics.DrawLine(pen, x2, y, x3, newY);
-                                x2 = x3;
-                                y = newY;
-                                int n = (int)(begin + x3);
-                                if (n <= end && n >= start)
-                                    pen = penSelected;
-                                else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
-                                    pen = penSelected;
-                                else
-                                    pen = penNormal;
-                            }
-                        }
-                    }
-                }
-                DrawTimeLine(StartPositionSeconds, e, imageHeight);
-
-                // scene changes
-                if (_sceneChanges != null)
-                {
-                    foreach (var d in _sceneChanges)
-                    {
-                        if (d > StartPositionSeconds && d < StartPositionSeconds + 20)
-                        {
-                            int pos = SecondsToXPosition(d) - begin;
-                            if (pos > 0 && pos < Width)
-                            {
-                                using (var p = new Pen(Color.AntiqueWhite))
+                                int n = begin + i;
+                                if (n < _wavePeaks.AllSamples.Count)
                                 {
-                                    graphics.DrawLine(p, pos, 0, pos, Height);
+                                    int newY = CalculateHeight(_wavePeaks.AllSamples[n], imageHeight, maxHeight);
+                                    graphics.DrawLine(pen, x, y, i, newY);
+                                    //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
+
+                                    x = i;
+                                    y = newY;
+                                    if (n <= end && n >= start)
+                                        pen = penSelected;
+                                    else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
+                                        pen = penSelected;
+                                    else
+                                        pen = penNormal;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // calculate lines with zoom factor
+                            float x2 = 0;
+                            float x3 = 0;
+                            for (int i = 0; i < _wavePeaks.AllSamples.Count && ((int)Math.Round(x3)) < Width; i++)
+                            {
+                                if (beginNoZoomFactor + i < _wavePeaks.AllSamples.Count)
+                                {
+                                    int newY = CalculateHeight(_wavePeaks.AllSamples[beginNoZoomFactor + i], imageHeight, maxHeight);
+                                    x3 = (float)(_zoomFactor * i);
+                                    graphics.DrawLine(pen, x2, y, x3, newY);
+                                    x2 = x3;
+                                    y = newY;
+                                    int n = (int)(begin + x3);
+                                    if (n <= end && n >= start)
+                                        pen = penSelected;
+                                    else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
+                                        pen = penSelected;
+                                    else
+                                        pen = penNormal;
+                                }
+                            }
+                        }
+                    }
+                    DrawTimeLine(StartPositionSeconds, e, imageHeight);
+
+                    // scene changes
+                    if (_sceneChanges != null)
+                    {
+                        foreach (var d in _sceneChanges)
+                        {
+                            if (d > StartPositionSeconds && d < StartPositionSeconds + 20)
+                            {
+                                int pos = SecondsToXPosition(d) - begin;
+                                if (pos > 0 && pos < Width)
+                                {
+                                    using (var p = new Pen(Color.AntiqueWhite))
+                                    {
+                                        graphics.DrawLine(p, pos, 0, pos, Height);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // current video position
+                    if (_currentVideoPositionSeconds > 0)
+                    {
+                        int videoPosition = SecondsToXPosition(_currentVideoPositionSeconds);
+                        videoPosition -= begin;
+                        if (videoPosition > 0 && videoPosition < Width)
+                        {
+                            using (var p = new Pen(Color.Turquoise))
+                            {
+                                graphics.DrawLine(p, videoPosition, 0, videoPosition, Height);
+                            }
+                        }
+                    }
+
+                    // mark paragraphs
+                    using (var textBrush = new SolidBrush(TextColor))
+                    {
+                        DrawParagraph(_currentParagraph, e, begin, textBrush);
+                        foreach (Paragraph p in _previousAndNextParagraphs)
+                            DrawParagraph(p, e, begin, textBrush);
+                    }
+
+                    // current selection
+                    if (NewSelectionParagraph != null)
+                    {
+                        int currentRegionLeft = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - StartPositionSeconds);
+                        int currentRegionRight = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
+
+                        int currentRegionWidth = currentRegionRight - currentRegionLeft;
+                        using (var brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255)))
+                        {
+                            if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
+                            {
+                                graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
+
+                                if (currentRegionWidth > 40)
+                                {
+                                    using (var tBrush = new SolidBrush(Color.Turquoise))
+                                    {
+                                        graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                                    }
                                 }
                             }
                         }
                     }
                 }
-
-                // current video position
-                if (_currentVideoPositionSeconds > 0)
-                {
-                    int videoPosition = SecondsToXPosition(_currentVideoPositionSeconds);
-                    videoPosition -= begin;
-                    if (videoPosition > 0 && videoPosition < Width)
-                    {
-                        using (var p = new Pen(Color.Turquoise))
-                        {
-                            graphics.DrawLine(p, videoPosition, 0, videoPosition, Height);
-                        }
-                    }
-                }
-
-                // mark paragraphs
-                using (var textBrush = new SolidBrush(TextColor))
-                {
-                    DrawParagraph(_currentParagraph, e, begin, textBrush);
-                    foreach (Paragraph p in _previousAndNextParagraphs)
-                        DrawParagraph(p, e, begin, textBrush);
-                }
-
-                // current selection
-                if (NewSelectionParagraph != null)
-                {
-                    int currentRegionLeft = SecondsToXPosition(NewSelectionParagraph.StartTime.TotalSeconds - StartPositionSeconds);
-                    int currentRegionRight = SecondsToXPosition(NewSelectionParagraph.EndTime.TotalSeconds - StartPositionSeconds);
-
-                    int currentRegionWidth = currentRegionRight - currentRegionLeft;
-                    using (var brush = new SolidBrush(Color.FromArgb(128, 255, 255, 255)))
-                    {
-                        if (currentRegionLeft >= 0 && currentRegionLeft <= Width)
-                        {
-                            graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, graphics.VisibleClipBounds.Height);
-
-                            if (currentRegionWidth > 40)
-                            {
-                                using (var tBrush = new SolidBrush(Color.Turquoise))
-                                {
-                                    graphics.DrawString(string.Format("{0:0.###} {1}", ((double)currentRegionWidth / _wavePeaks.Header.SampleRate / _zoomFactor), Configuration.Settings.Language.Waveform.Seconds), Font, tBrush, new PointF(currentRegionLeft + 3, Height - 32));
-                                }
-                            }
-                        }
-                    }
-                }
-                penNormal.Dispose();
-                penSelected.Dispose();
             }
             else
             {
