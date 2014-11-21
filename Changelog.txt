@@ -8,7 +8,7 @@
    * Added "/targetfps" parameter to command line conversion
 * IMPROVED:
    * Updated French translation - thx JM GBT
-   * Updated Brazil translation - thx Igor
+   * Updated Brazilian Portuguese translation - thx Igor
    * Updated Mexican translation - thx paconaranjo
    * Updated Czech translation - thx Trottel
    * Updated Polish translation - thx Admas
@@ -28,7 +28,7 @@
    * Fixed center alignment bug in export to images
    * Some fixes for "Remove text for HI" - thx Thunderbolt8
    * Fixed possible crash when working with SSA/ASS files
-   * Fixes for alt+drag in waveform - thx Leon
+   * Fixes for ALT + drag in waveform - thx Leon
    * Minor fix for "unknown subtitle importer" (regarding tab)
    * Fix for dialog in "auto break line" - thx XhmikosR
 
