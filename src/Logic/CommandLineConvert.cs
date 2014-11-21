@@ -468,16 +468,18 @@ namespace Nikse.SubtitleEdit.Logic
                         if (sf.GetType() == typeof(ItunesTimedText) || sf.GetType() == typeof(ScenaristClosedCaptions) || sf.GetType() == typeof(ScenaristClosedCaptionsDropFrame))
                         {
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                            TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
-                            file.Write(sub.ToText(sf));
-                            file.Close(); // save and close it
+                            using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
+                            {
+                                file.Write(sub.ToText(sf));
+                            } // save and close it
                         }
                         else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
                         {
                             Encoding outputEnc = new UTF8Encoding(false); // create encoding with no BOM
-                            TextWriter file = new StreamWriter(outputFileName, false, outputEnc); // open file with encoding
-                            file.Write(sub.ToText(sf));
-                            file.Close(); // save and close it
+                            using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
+                            {
+                                file.Write(sub.ToText(sf));
+                            } // save and close it
                         }
                         else
                         {
