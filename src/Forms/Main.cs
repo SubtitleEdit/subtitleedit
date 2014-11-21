@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.Enums;
@@ -14,6 +15,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -17792,51 +17794,46 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemAssStyles_Click(object sender, EventArgs e)
         {
-            var formatType = GetCurrentSubtitleFormat().GetType();
-            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
+            StylesForm styles = null;
+            try
             {
-                var styles = new SubStationAlphaStyles(_subtitle, GetCurrentSubtitleFormat());
-                if (styles.ShowDialog(this) == DialogResult.OK)
+                var format = GetCurrentSubtitleFormat();
+                var formatType = format.GetType();
+                if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                 {
-                    _subtitle.Header = styles.Header;
-                    var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-                    if (styleList.Count > 0)
+                    styles = new SubStationAlphaStyles(_subtitle, format);
+                    if (styles.ShowDialog(this) == DialogResult.OK)
                     {
-                        for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                        _subtitle.Header = styles.Header;
+                        var styleList = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
+                        if (styleList.Count > 0)
                         {
-                            Paragraph p = _subtitle.Paragraphs[i];
-
-                            if (p.Extra == null)
+                            for (var i = 0; i < _subtitle.Paragraphs.Count; i++)
                             {
-                                p.Extra = styleList[0];
-                                SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
-                            }
-                            else
-                            {
-                                bool found = false;
-                                foreach (string s in styleList)
-                                {
-                                    if (s.Equals(p.Extra, StringComparison.OrdinalIgnoreCase))
-                                        found = true;
-                                }
-                                if (!found)
+                                var p = _subtitle.Paragraphs[i];
+                                if (p.Extra == null || !styleList.Any(s => s.Equals(p.Extra, StringComparison.OrdinalIgnoreCase)))
                                 {
                                     p.Extra = styleList[0];
                                     SubtitleListview1.SetExtraText(i, p.Extra, SubtitleListview1.ForeColor);
                                 }
                             }
                         }
-
                     }
-
+                }
+                else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+                {
+                    styles = new TimedTextStyles(_subtitle);
+                    if (styles.ShowDialog(this) == DialogResult.OK)
+                    {
+                        _subtitle.Header = styles.Header;
+                    }
                 }
             }
-            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
+            finally
             {
-                using (var styles = new TimedTextStyles(_subtitle))
+                if (styles != null)
                 {
-                    if (styles.ShowDialog(this) == DialogResult.OK)
-                        _subtitle.Header = styles.Header;
+                    styles.Dispose();
                 }
             }
         }
