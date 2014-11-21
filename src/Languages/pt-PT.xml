@@ -1226,7 +1226,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
-    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não um ficheiro de legenda.</ErrorLoadSrr>  
+    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não um ficheiro de legenda.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
