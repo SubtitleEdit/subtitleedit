@@ -380,14 +380,16 @@ namespace Nikse.SubtitleEdit.Controls
             }
         }
 
-        internal void Fill(Subtitle subtitle)
+        internal void Fill(Subtitle subtitle, Subtitle subtitleAlternate = null)
         {
-            Fill(subtitle.Paragraphs);
-        }
-
-        internal void Fill(Subtitle subtitle, Subtitle subtitleAlternate)
-        {
-            Fill(subtitle.Paragraphs, subtitleAlternate.Paragraphs);
+            if (subtitleAlternate == null)
+            {
+                Fill(subtitle.Paragraphs);
+            }
+            else
+            {
+                Fill(subtitle.Paragraphs, subtitleAlternate.Paragraphs);
+            }
         }
 
         internal void Fill(List<Paragraph> paragraphs)
