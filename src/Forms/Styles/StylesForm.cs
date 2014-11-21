@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             get;
         }
 
-        protected Subtitle Subtitle 
+        protected Subtitle Subtitle
         {
             get
             {
