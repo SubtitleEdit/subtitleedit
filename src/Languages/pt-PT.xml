@@ -417,6 +417,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Altura da linha</LineHeight>
     <BoxSingleLine>Caixa - linha única</BoxSingleLine>
     <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
+    <Forced>Forçado</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -925,7 +926,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
       <Translate>Traduzir</Translate>
       <Create>Criar</Create>
       <Adjust>Ajustar</Adjust>
-      <SelectCurrentElementWhilePlaying>Seleccionar legenda actual durante reprodução</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Seleccionar linha durante a reprodução</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Repetição automática</AutoRepeat>
       <AutoRepeatOn>Repetição automática activada</AutoRepeatOn>
       <AutoRepeatCount>Contador de repetições (vezes)</AutoRepeatCount>
@@ -1224,6 +1225,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Não foi possível ler/editar o ficheiro idx. Os ficheiros idx são parte de um par de ficheiros idx/sub (também conhecidos como VobSub) e o Subtitle Edit pode abrir o ficheiro sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
+    <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não um ficheiro de legenda.</ErrorLoadSrr>  
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Seleccionar legenda através de um ficheiro Matroska (.mkv)</Title>
