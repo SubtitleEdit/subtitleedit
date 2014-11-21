@@ -88,6 +88,7 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
+    <Compile Include="Core\AbstractControlDescriptionProvider.cs" />
     <Compile Include="Core\FastFileStream.cs" />
     <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Forms\CheckForUpdates.cs">
@@ -618,16 +619,19 @@
     <Compile Include="Forms\StatusLog.Designer.cs">
       <DependentUpon>StatusLog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Styles\StylesForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\SubStationAlphaProperties.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\SubStationAlphaProperties.Designer.cs">
       <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\SubStationAlphaStyles.cs">
+    <Compile Include="Forms\Styles\SubStationAlphaStyles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\SubStationAlphaStyles.Designer.cs">
+    <Compile Include="Forms\Styles\SubStationAlphaStyles.Designer.cs">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TimedTextProperties.cs">
@@ -636,10 +640,10 @@
     <Compile Include="Forms\TimedTextProperties.Designer.cs">
       <DependentUpon>TimedTextProperties.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\TimedTextStyles.cs">
+    <Compile Include="Forms\Styles\TimedTextStyles.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\TimedTextStyles.Designer.cs">
+    <Compile Include="Forms\Styles\TimedTextStyles.Designer.cs">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\TransportStreamSubtitleChooser.cs">
@@ -1475,13 +1479,13 @@
     <EmbeddedResource Include="Forms\SubStationAlphaProperties.resx">
       <DependentUpon>SubStationAlphaProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\SubStationAlphaStyles.resx">
+    <EmbeddedResource Include="Forms\Styles\SubStationAlphaStyles.resx">
       <DependentUpon>SubStationAlphaStyles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TimedTextProperties.resx">
       <DependentUpon>TimedTextProperties.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\TimedTextStyles.resx">
+    <EmbeddedResource Include="Forms\Styles\TimedTextStyles.resx">
       <DependentUpon>TimedTextStyles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\TransportStreamSubtitleChooser.resx">

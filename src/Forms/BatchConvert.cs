@@ -1,4 +1,5 @@
 ﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
@@ -993,27 +994,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonStylesClick(object sender, EventArgs e)
         {
-            if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name)
+            SubStationAlphaStyles form = null;
+            try
             {
-                var sub = new Subtitle();
-                using (var form = new SubStationAlphaStyles(sub, new AdvancedSubStationAlpha()))
+                var assa = new AdvancedSubStationAlpha();
+                if (comboBoxSubtitleFormats.Text == assa.Name)
                 {
+                    form = new SubStationAlphaStyles(new Subtitle(), assa);
                     form.MakeOnlyOneStyle();
                     if (form.ShowDialog(this) == DialogResult.OK)
                     {
                         _assStyle = form.Header;
                     }
                 }
-            }
-            else if (comboBoxSubtitleFormats.Text == new SubStationAlpha().Name)
-            {
-                var sub = new Subtitle();
-                using (var form = new SubStationAlphaStyles(sub, new SubStationAlpha()))
+                else
                 {
-                    if (form.ShowDialog(this) == DialogResult.OK)
+                    var ssa = new SubStationAlpha();
+                    if (comboBoxSubtitleFormats.Text == ssa.Name)
                     {
-                        _ssaStyle = form.Header;
+                        form = new SubStationAlphaStyles(new Subtitle(), ssa);
+                        if (form.ShowDialog(this) == DialogResult.OK)
+                        {
+                            _ssaStyle = form.Header;
+                        }
                     }
+                }
+            }
+            finally
+            {
+                if (form != null)
+                {
+                    form.Dispose();
                 }
             }
         }
