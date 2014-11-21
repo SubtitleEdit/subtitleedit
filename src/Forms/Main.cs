@@ -11587,27 +11587,28 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MultipleReplaceToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var multipleReplace = new MultipleReplace();
-            multipleReplace.Initialize(_subtitle);
-            _formPositionsAndSizes.SetPositionAndSize(multipleReplace);
-            if (multipleReplace.ShowDialog(this) == DialogResult.OK)
+            using (var multipleReplace = new MultipleReplace())
             {
-                MakeHistoryForUndo(_language.BeforeMultipleReplace);
-                SaveSubtitleListviewIndexes();
-
-                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                multipleReplace.Initialize(_subtitle);
+                _formPositionsAndSizes.SetPositionAndSize(multipleReplace);
+                if (multipleReplace.ShowDialog(this) == DialogResult.OK)
                 {
-                    _subtitle.Paragraphs[i].Text = multipleReplace.FixedSubtitle.Paragraphs[i].Text;
-                }
+                    MakeHistoryForUndo(_language.BeforeMultipleReplace);
+                    SaveSubtitleListviewIndexes();
 
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                RestoreSubtitleListviewIndexes();
-                RefreshSelectedParagraph();
-                ShowSource();
-                ShowStatus(string.Format(_language.NumberOfLinesReplacedX, multipleReplace.FixCount));
+                    for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
+                    {
+                        _subtitle.Paragraphs[i].Text = multipleReplace.FixedSubtitle.Paragraphs[i].Text;
+                    }
+
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    RestoreSubtitleListviewIndexes();
+                    RefreshSelectedParagraph();
+                    ShowSource();
+                    ShowStatus(string.Format(_language.NumberOfLinesReplacedX, multipleReplace.FixCount));
+                }
+                _formPositionsAndSizes.SavePositionAndSize(multipleReplace);
             }
-            _formPositionsAndSizes.SavePositionAndSize(multipleReplace);
-            multipleReplace.Dispose();
         }
 
         private void ToolStripMenuItemImportDvdSubtitlesClick(object sender, EventArgs e)
