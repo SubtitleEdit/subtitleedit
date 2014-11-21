@@ -15315,31 +15315,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void startServerToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _networkSession = new NikseWebServiceSession(_subtitle, _subtitleAlternate, TimerWebServiceTick, OnUpdateUserLogEntries);
-            NetworkStart networkNew = new NetworkStart();
-            networkNew.Initialize(_networkSession, _fileName);
-            _formPositionsAndSizes.SetPositionAndSize(networkNew);
-            if (networkNew.ShowDialog(this) == DialogResult.OK)
+            using (var networkNew = new NetworkStart())
             {
-                if (GetCurrentSubtitleFormat().HasStyleSupport)
+                _networkSession = new NikseWebServiceSession(_subtitle, _subtitleAlternate, TimerWebServiceTick, OnUpdateUserLogEntries);
+                networkNew.Initialize(_networkSession, _fileName);
+                _formPositionsAndSizes.SetPositionAndSize(networkNew);
+                if (networkNew.ShowDialog(this) == DialogResult.OK)
                 {
-                    SubtitleListview1.HideExtraColumn();
-                }
+                    if (GetCurrentSubtitleFormat().HasStyleSupport)
+                    {
+                        SubtitleListview1.HideExtraColumn();
+                    }
 
-                _networkSession.AppendToLog(string.Format(_language.XStartedSessionYAtZ, _networkSession.CurrentUser.UserName, _networkSession.SessionId, DateTime.Now.ToLongTimeString()));
-                toolStripStatusNetworking.Visible = true;
-                toolStripStatusNetworking.Text = _language.NetworkMode;
-                EnableDisableControlsNotWorkingInNetworkMode(false);
-                SubtitleListview1.ShowExtraColumn(_language.UserAndAction);
-                SubtitleListview1.AutoSizeAllColumns(this);
-                TimerWebServiceTick(null, null);
+                    _networkSession.AppendToLog(string.Format(_language.XStartedSessionYAtZ, _networkSession.CurrentUser.UserName, _networkSession.SessionId, DateTime.Now.ToLongTimeString()));
+                    toolStripStatusNetworking.Visible = true;
+                    toolStripStatusNetworking.Text = _language.NetworkMode;
+                    EnableDisableControlsNotWorkingInNetworkMode(false);
+                    SubtitleListview1.ShowExtraColumn(_language.UserAndAction);
+                    SubtitleListview1.AutoSizeAllColumns(this);
+                    TimerWebServiceTick(null, null);
+                }
+                else
+                {
+                    _networkSession = null;
+                }
+                _formPositionsAndSizes.SavePositionAndSize(networkNew);
             }
-            else
-            {
-                _networkSession = null;
-            }
-            _formPositionsAndSizes.SavePositionAndSize(networkNew);
-            networkNew.Dispose();
         }
 
         private void joinSessionToolStripMenuItem_Click(object sender, EventArgs e)
