@@ -751,83 +751,83 @@ namespace Nikse.SubtitleEdit.Forms
                     original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
                 }
             }
-            else
+            else if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
             {
-                if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.ShowOriginalAsPreviewIfAvailable)
+                index = _subtitleAlternate.GetIndex(paragraph);
+                if (index >= 0)
                 {
-                    index = _subtitleAlternate.GetIndex(paragraph);
-                    if (index >= 0)
+                    // Make history item for rollback (change paragraph back for history + change again)
+                    _subtitleAlternate.Paragraphs[index] = new Paragraph(beforeParagraph);
+                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                    _subtitleAlternate.Paragraphs[index] = paragraph;
+                    _makeHistoryPaused = true;
+
+                    var current = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitle.Paragraphs);
+                    if (current != null)
                     {
-                        // Make history item for rollback (change paragraph back for history + change again)
-                        _subtitleAlternate.Paragraphs[index] = new Paragraph(beforeParagraph);
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
-                        _subtitleAlternate.Paragraphs[index] = paragraph;
-                        _makeHistoryPaused = true;
+                        current.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                        current.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
 
-                        var current = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitle.Paragraphs);
-                        if (current != null)
-                        {
-                            current.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
-                            current.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                        index = _subtitle.GetIndex(current);
 
-                            index = _subtitle.GetIndex(current);
-
-                            SubtitleListview1.SetStartTimeAndDuration(index, paragraph);
-
-                            if (index == selectedIndex)
-                            {
-                                timeUpDownStartTime.TimeCode = paragraph.StartTime;
-                                decimal durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
-                                if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
-                                    SetDurationInSeconds((double)durationInSeconds);
-                            }
-                        }
-                    }
-                }
-                else if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
-                {
-                    index = _subtitle.GetIndex(paragraph);
-                    if (index >= 0)
-                    {
-                        // Make history item for rollback (change paragraph back for history + change again)
-                        _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
-                        _subtitle.Paragraphs[index] = paragraph;
-                        _makeHistoryPaused = true;
-
-                        MovePrevNext(e, beforeParagraph, index);
-
-                        var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
-                        if (original != null)
-                        {
-                            original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
-                            original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
-                        }
                         SubtitleListview1.SetStartTimeAndDuration(index, paragraph);
-                    }
-                }
-                else
-                {
-                    if (index >= 0)
-                    {
-                        // Make history item for rollback (change paragraph back for history + change again)
-                        _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
-                        MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
-                        _subtitle.Paragraphs[index] = paragraph;
-                        _makeHistoryPaused = true;
 
-                        MovePrevNext(e, beforeParagraph, index);
-
-                        var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
-                        if (original != null)
+                        if (index == selectedIndex)
                         {
-                            original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
-                            original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                            timeUpDownStartTime.TimeCode = paragraph.StartTime;
+                            decimal durationInSeconds = (decimal)(paragraph.Duration.TotalSeconds);
+                            if (durationInSeconds >= numericUpDownDuration.Minimum && durationInSeconds <= numericUpDownDuration.Maximum)
+                                SetDurationInSeconds((double)durationInSeconds);
                         }
                     }
+                }
+            }
+            else if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible)
+            {
+                index = _subtitle.GetIndex(paragraph);
+                if (index >= 0)
+                {
+                    // Make history item for rollback (change paragraph back for history + change again)
+                    _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
+                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                    _subtitle.Paragraphs[index] = paragraph;
+                    _makeHistoryPaused = true;
 
+                    MovePrevNext(e, beforeParagraph, index);
+
+                    var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
+                    if (original != null)
+                    {
+                        original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                        original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                    }
                     SubtitleListview1.SetStartTimeAndDuration(index, paragraph);
                 }
+            }
+            else
+            {
+                if (index >= 0)
+                {
+                    // Make history item for rollback (change paragraph back for history + change again)
+                    _subtitle.Paragraphs[index] = new Paragraph(beforeParagraph);
+                    MakeHistoryForUndoOnlyIfNotResent(string.Format(_language.VideoControls.BeforeChangingTimeInWaveformX, "#" + paragraph.Number + " " + paragraph.Text));
+                    _subtitle.Paragraphs[index] = paragraph;
+                    _makeHistoryPaused = true;
+
+                    MovePrevNext(e, beforeParagraph, index);
+
+                    if (_subtitleAlternate != null)
+                    {
+                        var original = Utilities.GetOriginalParagraph(index, beforeParagraph, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                        {
+                            original.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
+                            original.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
+                        }
+                    }
+                }
+
+                SubtitleListview1.SetStartTimeAndDuration(index, paragraph);
             }
             beforeParagraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds;
             beforeParagraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds;
