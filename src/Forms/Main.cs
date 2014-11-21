@@ -8727,37 +8727,38 @@ namespace Nikse.SubtitleEdit.Forms
                     mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime = TimeSpan.FromMilliseconds(mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime.TotalMilliseconds - 1);
             }
 
-            var formSubOcr = new VobSubOcr();
-            _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
-            formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); //TODO - language???
-            if (_loading)
+            using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Icon = (Icon)Icon.Clone();
-                formSubOcr.ShowInTaskbar = true;
-                formSubOcr.ShowIcon = true;
+                _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
+                formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); //TODO - language???
+                if (_loading)
+                {
+                    formSubOcr.Icon = (Icon)Icon.Clone();
+                    formSubOcr.ShowInTaskbar = true;
+                    formSubOcr.ShowIcon = true;
+                }
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    ResetSubtitle();
+                    _subtitle.Paragraphs.Clear();
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    _fileName = Path.GetFileNameWithoutExtension(matroska.Path);
+                    _converted = true;
+                    Text = Title;
+
+                    Configuration.Settings.Save();
+                }
+                _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             }
-            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
-            {
-                ResetSubtitle();
-                _subtitle.Paragraphs.Clear();
-                _subtitle.WasLoadedWithFrameNumbers = false;
-                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
-                    _subtitle.Paragraphs.Add(p);
-
-                ShowSource();
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                _subtitleListViewIndex = -1;
-                SubtitleListview1.FirstVisibleIndex = -1;
-                SubtitleListview1.SelectIndexAndEnsureVisible(0);
-
-                _fileName = Path.GetFileNameWithoutExtension(matroska.Path);
-                _converted = true;
-                Text = Title;
-
-                Configuration.Settings.Save();
-            }
-            _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
-            formSubOcr.Dispose();
         }
 
         private void LoadBluRaySubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
