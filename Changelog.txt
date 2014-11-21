@@ -28,7 +28,7 @@
    * Fixed center alignment bug in export to images
    * Some fixes for "Remove text for HI" - thx Thunderbolt8
    * Fixed possible crash when working with SSA/ASS files
-   * Fixes for alt+drag in waveform - the Leon
+   * Fixes for alt+drag in waveform - thx Leon
    * Minor fix for "unknown subtitle importer" (regarding tab)
    * Fix for dialog in "auto break line" - thx XhmikosR
 
@@ -41,7 +41,7 @@
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Updated Czech translation - thx Trottel
-   * Updated Korean translation - the domddol
+   * Updated Korean translation - thx domddol
    * Updated Turkish translation - thx Kaan
    * Updated Romanian translation - thx Mircea
    * OCR fix replace list now has a "user" file
