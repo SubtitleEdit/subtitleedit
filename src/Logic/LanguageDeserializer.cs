@@ -2282,6 +2282,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ParsingMatroskaFile":
                     language.Main.ParsingMatroskaFile = reader.Value;
                     break;
+                case "Main/ParsingTransportStreamFile":
+                    language.Main.ParsingTransportStreamFile = reader.Value;
+                    break;
                 case "Main/BeforeImportFromMatroskaFile":
                     language.Main.BeforeImportFromMatroskaFile = reader.Value;
                     break;

@@ -904,6 +904,7 @@
             public string NoSubtitlesFound { get; set; }
             public string NotAValidMatroskaFileX { get; set; }
             public string ParsingMatroskaFile { get; set; }
+            public string ParsingTransportStreamFile { get; set; }
             public string BeforeImportFromMatroskaFile { get; set; }
             public string SubtitleImportedFromMatroskaFile { get; set; }
             public string DropFileXNotAccepted { get; set; }
