@@ -16,6 +16,7 @@
    * Updated Chinese Simplified translation - thx larsenlouis/Leon
    * Updated Korean translation - thx domddol
    * Updated Slovenian translation - thx Hawk
+   * Updated Portuguese translation - thx moob
    * Export to images now remembers shadow width
 * FIXED:
    * Compare window works again now - thx SimplyTheBOSS
