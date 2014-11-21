@@ -858,19 +858,24 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (state.FixCommonErrors)
             {
+                FixCommonErrors fixCommonErrors = null;
                 try
                 {
-                    var fixCommonErrors = new FixCommonErrors();
-                    fixCommonErrors.RunBatch(state.Subtitle, state.Format, state.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
-                    state.Subtitle = fixCommonErrors.FixedSubtitle;
-
                     fixCommonErrors = new FixCommonErrors();
                     fixCommonErrors.RunBatch(state.Subtitle, state.Format, state.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                    fixCommonErrors.RunBatch(fixCommonErrors.FixedSubtitle, state.Format, state.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
                     state.Subtitle = fixCommonErrors.FixedSubtitle;
                 }
                 catch (Exception exception)
                 {
                     state.Error = "FCE ERROR: " + exception.Message;
+                }
+                finally
+                {
+                    if (fixCommonErrors != null)
+                    {
+                        fixCommonErrors.Dispose();
+                    }
                 }
             }
             if (state.MultipleReplaceActive)
