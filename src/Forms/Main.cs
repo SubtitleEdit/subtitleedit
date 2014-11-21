@@ -9556,23 +9556,27 @@ namespace Nikse.SubtitleEdit.Forms
                         }
 
                         bool saveChangeCaseChanges = true;
+                        var casingNamesLinesChanged = 0;
                         changeCasing.FixCasing(selectedLines, Utilities.AutoDetectLanguageName(Configuration.Settings.General.SpellCheckLanguage, _subtitle));
-                        var changeCasingNames = new ChangeCasingNames();
                         if (changeCasing.ChangeNamesToo)
                         {
-                            changeCasingNames.Initialize(selectedLines);
-                            if (changeCasingNames.ShowDialog(this) == DialogResult.OK)
+                            using (var changeCasingNames = new ChangeCasingNames())
                             {
-                                changeCasingNames.FixCasing();
+                                changeCasingNames.Initialize(selectedLines);
+                                if (changeCasingNames.ShowDialog(this) == DialogResult.OK)
+                                {
+                                    changeCasingNames.FixCasing();
+                                    casingNamesLinesChanged = changeCasingNames.LinesChanged;
 
-                                if (changeCasing.LinesChanged == 0)
-                                    ShowStatus(string.Format(_language.CasingCompleteMessageOnlyNames, changeCasingNames.LinesChanged, _subtitle.Paragraphs.Count));
+                                    if (changeCasing.LinesChanged == 0)
+                                        ShowStatus(string.Format(_language.CasingCompleteMessageOnlyNames, casingNamesLinesChanged, _subtitle.Paragraphs.Count));
+                                    else
+                                        ShowStatus(string.Format(_language.CasingCompleteMessage, changeCasing.LinesChanged, _subtitle.Paragraphs.Count, casingNamesLinesChanged));
+                                }
                                 else
-                                    ShowStatus(string.Format(_language.CasingCompleteMessage, changeCasing.LinesChanged, _subtitle.Paragraphs.Count, changeCasingNames.LinesChanged));
-                            }
-                            else
-                            {
-                                saveChangeCaseChanges = false;
+                                {
+                                    saveChangeCaseChanges = false;
+                                }
                             }
                         }
                         else
@@ -9600,7 +9604,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             ShowSource();
                             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                            if (changeCasing.LinesChanged > 0 || changeCasingNames.LinesChanged > 0)
+                            if (changeCasing.LinesChanged > 0 || casingNamesLinesChanged > 0)
                             {
                                 _subtitleListViewIndex = -1;
                                 RestoreSubtitleListviewIndexes();
