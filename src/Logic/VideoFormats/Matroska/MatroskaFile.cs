@@ -604,6 +604,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
         {
             var data = new byte[4];
             _stream.Read(data, 0, 4);
+
             var result = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
             return *(float*)&result;
         }
@@ -617,7 +618,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
         {
             var data = new byte[8];
             _stream.Read(data, 0, 8);
-            var result = (long)(data[0] << 56 | data[1] << 48 | data[2] << 40 | data[3] << 32 | data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7]);
+
+            var lo = data[0] << 24 | data[1] << 16 | data[2] << 8 | data[3];
+            var hi = data[4] << 24 | data[5] << 16 | data[6] << 8 | data[7];
+            var result = (uint)hi | (long)lo << 32;
             return *(double*)&result;
         }
 
