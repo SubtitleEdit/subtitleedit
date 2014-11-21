@@ -18,6 +18,7 @@
    * Updated Slovenian translation - thx Hawk
    * Updated Portuguese translation - thx moob
    * Export to images now remembers shadow width
+   * Display progress when reading Transport Stream files
 * FIXED:
    * Compare window works again now - thx SimplyTheBOSS
    * Changed duration via Waveform start/end is shown again - thx Quetsbeek/Mirko

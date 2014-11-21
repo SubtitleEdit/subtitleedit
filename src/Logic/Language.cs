@@ -1019,6 +1019,7 @@ namespace Nikse.SubtitleEdit.Logic
                 NoSubtitlesFound = "No subtitles found",
                 NotAValidMatroskaFileX = "This is not a valid Matroska file: {0}",
                 ParsingMatroskaFile = "Parsing Matroska file. Please wait...",
+                ParsingTransportStreamFile = "Parsing Transport Stream file. Please wait...",
                 BeforeImportFromMatroskaFile = "Before import subtitle from Matroska file",
                 SubtitleImportedFromMatroskaFile = "Subtitle imported from Matroska file",
                 DropFileXNotAccepted = "Drop file '{0}' not accepted - file is too large",

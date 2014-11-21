@@ -8533,12 +8533,34 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private string _lastProgressMessage = string.Empty;
         private void MatroskaProgress(long position, long total)
         {
-            ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, position * 100 / total));
+            string msg = string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, position * 100 / total);
+            if (_lastProgressMessage == msg)
+                return;
+
+            ShowStatus(msg);
             statusStrip1.Refresh();
             if (DateTime.Now.Ticks % 10 == 0)
                 Application.DoEvents();
+            _lastProgressMessage = msg;
+        }
+
+        private void TransportStreamProgress(long position, long total)
+        {
+            if (string.IsNullOrWhiteSpace(_language.ParsingTransportStreamFile))
+                _language.ParsingTransportStreamFile = "Parsing Transport Stream file. Please wait...";
+
+            string msg = string.Format("{0}, {1:0}%", _language.ParsingTransportStreamFile, position * 100 / total);
+            if (_lastProgressMessage == msg)
+                return;
+
+            ShowStatus(msg);
+            statusStrip1.Refresh();
+            if (DateTime.Now.Ticks % 10 == 0)
+                Application.DoEvents();
+            _lastProgressMessage = msg;
         }
 
         private Subtitle LoadMatroskaSubtitleForSync(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
@@ -8930,7 +8952,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.ParsingTransportStream);
             Refresh();
             var tsParser = new TransportStreamParser();
-            tsParser.ParseTSFile(fileName);
+            tsParser.Parse(fileName, TransportStreamProgress);
             ShowStatus(string.Empty);
 
             if (tsParser.SubtitlePacketIds.Count == 0)

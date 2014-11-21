@@ -12,6 +12,9 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
     /// </summary>
     public class TransportStreamParser
     {
+
+        public delegate void LoadTransportStreamCallback(long position, long total);
+
         public int NumberOfNullPackets { get; private set; }
         public long TotalNumberOfPackets { get; private set; }
         public long TotalNumberOfPrivateStream1 { get; private set; }
@@ -24,11 +27,11 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         public bool IsM2TransportStream { get; private set; }
         public ulong FirstVideoPts { get; private set; }
 
-        public void ParseTSFile(string fileName)
+        public void Parse(string fileName, LoadTransportStreamCallback callback)
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                ParseTSFile(fs);
+                Parse(fs, callback);
             }
         }
 
@@ -36,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
         /// Can be used with e.g. MemoryStream or FileStream
         /// </summary>
         /// <param name="ms">Input stream</param>
-        public void ParseTSFile(Stream ms)
+        public void Parse(Stream ms, LoadTransportStreamCallback callback)
         {
             bool firstVideoPtsFound = false;
             IsM2TransportStream = false;
@@ -60,7 +63,8 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (m2TsTimeCodeBuffer[0] == 0x54 && m2TsTimeCodeBuffer[1] == 0x46 && m2TsTimeCodeBuffer[2] == 0x72)
                 position = 3760;
 
-            while (position < ms.Length)
+            long transportStreamLength = ms.Length;
+            while (position < transportStreamLength)
             {
                 ms.Seek(position, SeekOrigin.Begin);
 
@@ -161,6 +165,10 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                             //{
 
                             //}
+                        }
+                        if (callback != null)
+                        {
+                            callback.Invoke(ms.Position, transportStreamLength);
                         }
                     }
                     TotalNumberOfPackets++;

@@ -12,7 +12,7 @@ namespace Test.Logic.TransportStream
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_TS_with_graphics.ts");
             var parser = new Nikse.SubtitleEdit.Logic.TransportStream.TransportStreamParser();
-            parser.ParseTSFile(fileName);
+            parser.Parse(fileName, null);
             var subtitles = parser.GetDvbSubtitles(41);
 
             Assert.IsTrue(subtitles.Count == 10);
