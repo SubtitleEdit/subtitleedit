@@ -13848,28 +13848,15 @@ namespace Nikse.SubtitleEdit.Forms
             _timerDoSyntaxColoring.Interval = 100;
             _timerDoSyntaxColoring.Tick += _timerDoSyntaxColoring_Tick;
 
-            if (Configuration.Settings.General.ShowBetaStuff)
-            {
-                generateDatetimeInfoFromVideoToolStripMenuItem.Visible = true;
-                toolStripMenuItemExportCaptionInc.Visible = true;
-                toolStripMenuItemExportUltech130.Visible = true;
-                toolStripMenuItemInverseSelection.Visible = true;
-                toolStripMenuItemSpellCheckFromCurrentLine.Visible = true;
-                toolStripMenuItemImportOcrHardSub.Visible = true;
-                toolStripMenuItemMeasurementConverter.Visible = true;
-                toolStripMenuItemOpenDvd.Visible = true;
-            }
-            else
-            {
-                generateDatetimeInfoFromVideoToolStripMenuItem.Visible = false;
-                toolStripMenuItemExportCaptionInc.Visible = false;
-                toolStripMenuItemExportUltech130.Visible = false;
-                toolStripMenuItemInverseSelection.Visible = false;
-                toolStripMenuItemSpellCheckFromCurrentLine.Visible = false;
-                toolStripMenuItemImportOcrHardSub.Visible = false;
-                toolStripMenuItemMeasurementConverter.Visible = false;
-                toolStripMenuItemOpenDvd.Visible = false;
-            }
+            var showBeta = Configuration.Settings.General.ShowBetaStuff;
+            generateDatetimeInfoFromVideoToolStripMenuItem.Visible = showBeta;
+            toolStripMenuItemExportCaptionInc.Visible = showBeta;
+            toolStripMenuItemExportUltech130.Visible = showBeta;
+            toolStripMenuItemInverseSelection.Visible = showBeta;
+            toolStripMenuItemSpellCheckFromCurrentLine.Visible = showBeta;
+            toolStripMenuItemImportOcrHardSub.Visible = showBeta;
+            toolStripMenuItemMeasurementConverter.Visible = showBeta;
+            toolStripMenuItemOpenDvd.Visible = showBeta;
 
             if (Configuration.Settings.General.StartRememberPositionAndSize &&
                 Configuration.Settings.General.SplitContainerMainSplitterDistance > 0 &&
