@@ -8844,41 +8844,42 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format("{0} error(s) occured during extraction of bdsup\r\n\r\n{1}", noOfErrors, lastError));
             }
 
-            var formSubOcr = new VobSubOcr();
-            _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
-            formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, matroska.Path);
-            if (_loading)
+            using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Icon = (Icon)Icon.Clone();
-                formSubOcr.ShowInTaskbar = true;
-                formSubOcr.ShowIcon = true;
-            }
-            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
-            {
-                MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
-
-                _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                _subtitle.WasLoadedWithFrameNumbers = false;
-                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
+                formSubOcr.Initialize(subtitles, Configuration.Settings.VobSubOcr, matroska.Path);
+                if (_loading)
                 {
-                    _subtitle.Paragraphs.Add(p);
+                    formSubOcr.Icon = (Icon)Icon.Clone();
+                    formSubOcr.ShowInTaskbar = true;
+                    formSubOcr.ShowIcon = true;
                 }
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+                {
+                    MakeHistoryForUndo(_language.BeforeImportingDvdSubtitle);
 
-                ShowSource();
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                _subtitleListViewIndex = -1;
-                SubtitleListview1.FirstVisibleIndex = -1;
-                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
 
-                _fileName = string.Empty;
-                Text = Title;
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
-                Configuration.Settings.Save();
+                    _fileName = string.Empty;
+                    Text = Title;
+
+                    Configuration.Settings.Save();
+                }
+                _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             }
-            _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
-            formSubOcr.Dispose();
         }
 
         private bool ImportSubtitleFromDvbSupFile(string fileName)
