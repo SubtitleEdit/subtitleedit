@@ -2605,37 +2605,39 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAndOcrSon(string fileName, Son format, List<string> list)
         {
-            var sub = new Subtitle();
-            format.LoadSubtitle(sub, list, fileName);
-            sub.FileName = fileName;
-            var formSubOcr = new VobSubOcr();
-            _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
-            formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, true);
-            if (formSubOcr.ShowDialog(this) == DialogResult.OK)
+            using (var formSubOcr = new VobSubOcr())
             {
-                MakeHistoryForUndo(_language.BeforeImportingBdnXml);
-                FileNew();
-                _subtitle.Paragraphs.Clear();
-                SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                _subtitle.WasLoadedWithFrameNumbers = false;
-                _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                _formPositionsAndSizes.SetPositionAndSize(formSubOcr);
+
+                var sub = new Subtitle();
+                format.LoadSubtitle(sub, list, fileName);
+                sub.FileName = fileName;
+                formSubOcr.Initialize(sub, Configuration.Settings.VobSubOcr, true);
+                if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
-                    _subtitle.Paragraphs.Add(p);
+                    MakeHistoryForUndo(_language.BeforeImportingBdnXml);
+                    FileNew();
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    foreach (Paragraph p in formSubOcr.SubtitleFromOcr.Paragraphs)
+                    {
+                        _subtitle.Paragraphs.Add(p);
+                    }
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
+                    SetTitle();
+                    _converted = true;
                 }
-
-                ShowSource();
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                _subtitleListViewIndex = -1;
-                SubtitleListview1.FirstVisibleIndex = -1;
-                SubtitleListview1.SelectIndexAndEnsureVisible(0);
-
-                _fileName = Path.ChangeExtension(formSubOcr.FileName, ".srt");
-                SetTitle();
-                _converted = true;
+                _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
             }
-            _formPositionsAndSizes.SavePositionAndSize(formSubOcr);
-            formSubOcr.Dispose();
         }
 
         private void ImportAndOcrDost(string fileName, SubtitleFormat format, List<string> list)
