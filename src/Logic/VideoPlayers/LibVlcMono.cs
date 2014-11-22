@@ -140,7 +140,8 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
                 //  Linux: libvlc_media_player_set_xdrawable (_mediaPlayer, xdrawable);
                 //  Mac: libvlc_media_player_set_nsobject (_mediaPlayer, view);
-                NativeMethods.libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerControl.Handle); // windows
+                var ownerHandle = ownerControl == null ? IntPtr.Zero : ownerControl.Handle;
+                NativeMethods.libvlc_media_player_set_hwnd(newVlc._mediaPlayer, ownerHandle); // windows
 
                 if (onVideoEnded != null)
                 {
