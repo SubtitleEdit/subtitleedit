@@ -8535,34 +8535,31 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private string _lastProgressMessage = string.Empty;
+        private int _lastProgressPercent = -1;
         private void MatroskaProgress(long position, long total)
         {
-            string msg = string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, position * 100 / total);
-            if (_lastProgressMessage == msg)
+            int percent = (int) Math.Round(position * 100.0 / total);
+            if (percent == _lastProgressPercent)
                 return;
 
-            ShowStatus(msg);
+            ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, _lastProgressPercent));
             statusStrip1.Refresh();
             if (DateTime.Now.Ticks % 10 == 0)
                 Application.DoEvents();
-            _lastProgressMessage = msg;
+            _lastProgressPercent = percent;
         }
 
         private void TransportStreamProgress(long position, long total)
         {
-            if (string.IsNullOrWhiteSpace(_language.ParsingTransportStreamFile))
-                _language.ParsingTransportStreamFile = "Parsing Transport Stream file. Please wait...";
-
-            string msg = string.Format("{0}, {1:0}%", _language.ParsingTransportStreamFile, position * 100 / total);
-            if (_lastProgressMessage == msg)
+            int percent = (int)Math.Round(position * 100.0 / total);
+            if (percent == _lastProgressPercent)
                 return;
 
-            ShowStatus(msg);
+            ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingTransportStreamFile, _lastProgressPercent));
             statusStrip1.Refresh();
             if (DateTime.Now.Ticks % 10 == 0)
                 Application.DoEvents();
-            _lastProgressMessage = msg;
+            _lastProgressPercent = percent;
         }
 
         private Subtitle LoadMatroskaSubtitleForSync(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
