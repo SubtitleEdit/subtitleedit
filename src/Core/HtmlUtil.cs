@@ -17,6 +17,8 @@ namespace Nikse.SubtitleEdit.Core
         public const string TagFont = "font";
         public const string TagCyrillicI = "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
+        private static readonly Regex _tagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
+
         /// <summary>
         /// Remove all of the specified opening and closing tags from the source HTML string.
         /// </summary>
@@ -32,11 +34,9 @@ namespace Nikse.SubtitleEdit.Core
             // < /tag*>
             // </ tag*>
             // < / tag*>
-            return Regex.Replace(
+            return _tagOpenRegex.Replace(
                 source,
-                @"<\s*/?\s*([^\s>]+)[^>]*>",
-                m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value,
-                RegexOptions.Compiled);
+                m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value);
         }
 
         /// <summary>
