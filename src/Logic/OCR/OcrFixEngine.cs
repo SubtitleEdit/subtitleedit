@@ -932,7 +932,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return input;
         }
 
-        private bool IsUrl(string text)
+        static private bool IsUrl(string text)
         {
             if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains(".") || text.Contains(" "))
                 return false;
@@ -947,7 +947,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             return false;
         }
 
-        private bool StartsWithUrl(string text)
+        static private bool StartsWithUrl(string text)
         {
             if (string.IsNullOrWhiteSpace(text))
                 return false;

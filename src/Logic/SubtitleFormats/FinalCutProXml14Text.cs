@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return xmlAsText;
         }
 
-        private bool IsNearleWholeNumber(double number)
+        static private bool IsNearleWholeNumber(double number)
         {
             double rest = number - Convert.ToInt64(number);
             return rest < 0.001;
