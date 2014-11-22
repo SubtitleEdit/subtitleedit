@@ -109,6 +109,10 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                             if (createBitmap && Delay.TotalMilliseconds > largestDelay) // in case of more than one images, just use the one with the largest display time
                             {
                                 largestDelay = Delay.TotalMilliseconds;
+                                if (bmp != null)
+                                {
+                                    bmp.Dispose();
+                                }
                                 bmp = GenerateBitmap(ImageDisplayArea, imageTopFieldDataAddress, imageBottomFieldDataAddress, fourColors);
                                 bitmapGenerated = true;
                             }
