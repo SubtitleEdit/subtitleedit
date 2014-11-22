@@ -14301,6 +14301,10 @@ namespace Nikse.SubtitleEdit.Forms
                 decimal version;
                 System.Reflection.MethodInfo mi;
                 object pluginObject = GetPropertiesAndDoAction(item.Tag.ToString(), out name, out text, out version, out description, out actionType, out shortcut, out mi);
+                if (mi == null)
+                {
+                    return;
+                }
 
                 string rawText = null;
                 SubtitleFormat format = GetCurrentSubtitleFormat();
