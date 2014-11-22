@@ -9643,14 +9643,19 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemChangeFrameRateClick(object sender, EventArgs e)
         {
-            if (IsSubtitleLoaded)
+            if (!IsSubtitleLoaded)
             {
-                int lastSelectedIndex = 0;
-                if (SubtitleListview1.SelectedItems.Count > 0)
-                    lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            int lastSelectedIndex = 0;
+            if (SubtitleListview1.SelectedItems.Count > 0)
+                lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
 
-                ReloadFromSourceView();
-                var changeFrameRate = new ChangeFrameRate();
+            ReloadFromSourceView();
+            using (var changeFrameRate = new ChangeFrameRate())
+            {
                 _formPositionsAndSizes.SetPositionAndSize(changeFrameRate);
                 changeFrameRate.Initialize(CurrentFrameRate.ToString());
                 if (changeFrameRate.ShowDialog(this) == DialogResult.OK)
@@ -9670,11 +9675,6 @@ namespace Nikse.SubtitleEdit.Forms
                     SubtitleListview1.SelectIndexAndEnsureVisible(lastSelectedIndex);
                 }
                 _formPositionsAndSizes.SavePositionAndSize(changeFrameRate);
-                changeFrameRate.Dispose();
-            }
-            else
-            {
-                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
