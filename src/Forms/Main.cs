@@ -6502,18 +6502,18 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = Utilities.AutoBreakLine(p.Text, language);
                         SubtitleListview1.SetText(index, p.Text);
-                    }
 
-                    if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
-                    {
-                        var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
-                        if (original != null)
+                        if (_subtitleAlternate != null && SubtitleListview1.IsAlternateTextColumnVisible && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                         {
-                            original.Text = Utilities.AutoBreakLine(original.Text, languageOriginal);
-                            SubtitleListview1.SetAlternateText(index, original.Text);
+                            var original = Utilities.GetOriginalParagraph(index, p, _subtitleAlternate.Paragraphs);
+                            if (original != null)
+                            {
+                                original.Text = Utilities.AutoBreakLine(original.Text, languageOriginal);
+                                SubtitleListview1.SetAlternateText(index, original.Text);
+                            }
                         }
+                        SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                     }
-                    SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                 }
                 SubtitleListview1.EndUpdate();
                 RefreshSelectedParagraph();
