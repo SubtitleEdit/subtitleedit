@@ -34,11 +34,8 @@ namespace Nikse.SubtitleEdit.Forms
                 labelProduct.Text = String.Format("{0} {1}.{2}.{3}, build", _languageGeneral.Title, versionInfo[0], versionInfo[1], versionInfo[2]);
             }
             linkLabelGitBuildHash.Left = labelProduct.Left + labelProduct.Width - 5;
-            linkLabelGitBuildHash.LinkColor = Color.FromArgb(0, 102, 204);
-            linkLabelGitBuildHash.VisitedLinkColor = Color.FromArgb(0, 102, 204);
             linkLabelGitBuildHash.Text = revisionNumber;
-            var toolTip1 = new ToolTip();
-            toolTip1.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
+            tooltip.SetToolTip(linkLabelGitBuildHash, GetGitHubHashLink());
 
             string aboutText = _language.AboutText1.TrimEnd() + Environment.NewLine +
                                Environment.NewLine +

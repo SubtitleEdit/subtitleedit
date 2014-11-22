@@ -27,6 +27,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(About));
             this.okButton = new System.Windows.Forms.Button();
             this.labelProduct = new System.Windows.Forms.Label();
@@ -34,6 +35,7 @@
             this.richTextBoxAbout1 = new System.Windows.Forms.RichTextBox();
             this.buttonDonate = new System.Windows.Forms.Button();
             this.linkLabelGitBuildHash = new System.Windows.Forms.LinkLabel();
+            this.tooltip = new System.Windows.Forms.ToolTip(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -102,7 +104,7 @@
             // 
             this.linkLabelGitBuildHash.AutoSize = true;
             this.linkLabelGitBuildHash.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.linkLabelGitBuildHash.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(128)))), ((int)(((byte)(255)))));
+            this.linkLabelGitBuildHash.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(102)))), ((int)(((byte)(204)))));
             this.linkLabelGitBuildHash.Location = new System.Drawing.Point(148, 15);
             this.linkLabelGitBuildHash.Name = "linkLabelGitBuildHash";
             this.linkLabelGitBuildHash.Size = new System.Drawing.Size(90, 20);
@@ -148,6 +150,7 @@
         private System.Windows.Forms.RichTextBox richTextBoxAbout1;
         private System.Windows.Forms.Button buttonDonate;
         private System.Windows.Forms.LinkLabel linkLabelGitBuildHash;
+        private System.Windows.Forms.ToolTip tooltip;
 
     }
 }
