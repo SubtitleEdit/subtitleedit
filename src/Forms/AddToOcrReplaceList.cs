@@ -38,12 +38,18 @@ namespace Nikse.SubtitleEdit.Forms
             if (key.Length == 0 || value.Length == 0 || key == value)
                 return;
 
+            var languageString = LanguageString;
+            if (languageString == null)
+            {
+                return;
+            }
+
             try
             {
-                var ci = new CultureInfo(LanguageString.Replace("_", "-"));
+                var ci = new CultureInfo(languageString.Replace("_", "-"));
                 _threeLetterIsoLanguageName = ci.ThreeLetterISOLanguageName;
             }
-            catch (Exception exception)
+            catch (CultureNotFoundException exception)
             {
                 MessageBox.Show(exception.Message);
                 return;
