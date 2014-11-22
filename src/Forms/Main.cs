@@ -11930,26 +11930,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemPointSync_Click(object sender, EventArgs e)
         {
-            SyncPointsSync pointSync = new SyncPointsSync();
-            pointSync.Initialize(_subtitle, _fileName, _videoFileName, _videoAudioTrackNumber);
-            _formPositionsAndSizes.SetPositionAndSize(pointSync);
-            mediaPlayer.Pause();
-            if (pointSync.ShowDialog(this) == DialogResult.OK)
+            using (var pointSync = new SyncPointsSync())
             {
-                _subtitleListViewIndex = -1;
-                MakeHistoryForUndo(_language.BeforePointSynchronization);
-                _subtitle.Paragraphs.Clear();
-                foreach (Paragraph p in pointSync.FixedSubtitle.Paragraphs)
-                    _subtitle.Paragraphs.Add(p);
-                _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
-                ShowStatus(_language.PointSynchronizationDone);
-                ShowSource();
-                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                pointSync.Initialize(_subtitle, _fileName, _videoFileName, _videoAudioTrackNumber);
+                _formPositionsAndSizes.SetPositionAndSize(pointSync);
+                mediaPlayer.Pause();
+                if (pointSync.ShowDialog(this) == DialogResult.OK)
+                {
+                    _subtitleListViewIndex = -1;
+                    MakeHistoryForUndo(_language.BeforePointSynchronization);
+                    _subtitle.Paragraphs.Clear();
+                    foreach (Paragraph p in pointSync.FixedSubtitle.Paragraphs)
+                        _subtitle.Paragraphs.Add(p);
+                    _subtitle.CalculateFrameNumbersFromTimeCodesNoCheck(CurrentFrameRate);
+                    ShowStatus(_language.PointSynchronizationDone);
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                }
+                Activate();
+                _videoFileName = pointSync.VideoFileName;
+                _formPositionsAndSizes.SavePositionAndSize(pointSync);
             }
-            Activate();
-            _videoFileName = pointSync.VideoFileName;
-            _formPositionsAndSizes.SavePositionAndSize(pointSync);
-            pointSync.Dispose();
         }
 
         private void pointSyncViaOtherSubtitleToolStripMenuItem_Click(object sender, EventArgs e)
