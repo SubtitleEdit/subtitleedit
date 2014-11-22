@@ -8536,30 +8536,26 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private int _lastProgressPercent = -1;
-        private void MatroskaProgress(long position, long total)
+        private void UpdateProgress(long position, long total, string statusMessage)
         {
-            int percent = (int) Math.Round(position * 100.0 / total);
+            var percent = (int)Math.Round(position * 100.0 / total);
             if (percent == _lastProgressPercent)
+            {
                 return;
+            }
 
-            ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingMatroskaFile, _lastProgressPercent));
+            ShowStatus(string.Format("{0}, {1:0}%", statusMessage, _lastProgressPercent));
             statusStrip1.Refresh();
             if (DateTime.Now.Ticks % 10 == 0)
+            {
                 Application.DoEvents();
+            }
             _lastProgressPercent = percent;
         }
 
-        private void TransportStreamProgress(long position, long total)
+        private void MatroskaProgress(long position, long total)
         {
-            int percent = (int)Math.Round(position * 100.0 / total);
-            if (percent == _lastProgressPercent)
-                return;
-
-            ShowStatus(string.Format("{0}, {1:0}%", _language.ParsingTransportStreamFile, _lastProgressPercent));
-            statusStrip1.Refresh();
-            if (DateTime.Now.Ticks % 10 == 0)
-                Application.DoEvents();
-            _lastProgressPercent = percent;
+            UpdateProgress(position, total, _language.ParsingMatroskaFile);
         }
 
         private Subtitle LoadMatroskaSubtitleForSync(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
@@ -8951,7 +8947,7 @@ namespace Nikse.SubtitleEdit.Forms
                 ShowStatus(_language.ParsingTransportStream);
             Refresh();
             var tsParser = new TransportStreamParser();
-            tsParser.Parse(fileName, TransportStreamProgress);
+            tsParser.Parse(fileName, (pos, total) => UpdateProgress(pos, total, _language.ParsingTransportStreamFile));
             ShowStatus(string.Empty);
 
             if (tsParser.SubtitlePacketIds.Count == 0)
