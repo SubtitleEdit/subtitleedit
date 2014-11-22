@@ -265,22 +265,25 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             {
                 var subtitles = new List<TransportStreamSubtitle>();
                 var list = GetSubtitlePesPackets(pid);
-                for (int i = 0; i < list.Count; i++)
+                if (list != null)
                 {
-                    var pes = list[i];
-                    pes.ParseSegments();
-                    if (pes.ObjectDataList.Count > 0)
+                    for (int i = 0; i < list.Count; i++)
                     {
-                        var sub = new TransportStreamSubtitle();
-                        sub.StartMilliseconds = pes.PresentationTimestampToMilliseconds();
-                        sub.Pes = pes;
-                        if (i + 1 < list.Count && list[i + 1].PresentationTimestampToMilliseconds() > 25)
-                            sub.EndMilliseconds = list[i + 1].PresentationTimestampToMilliseconds() - 25;
-                        if (sub.EndMilliseconds < sub.StartMilliseconds)
-                            sub.EndMilliseconds = sub.StartMilliseconds + 3500;
-                        subtitles.Add(sub);
-                        if (sub.StartMilliseconds < firstVideoMs)
-                            firstVideoMs = sub.StartMilliseconds;
+                        var pes = list[i];
+                        pes.ParseSegments();
+                        if (pes.ObjectDataList.Count > 0)
+                        {
+                            var sub = new TransportStreamSubtitle();
+                            sub.StartMilliseconds = pes.PresentationTimestampToMilliseconds();
+                            sub.Pes = pes;
+                            if (i + 1 < list.Count && list[i + 1].PresentationTimestampToMilliseconds() > 25)
+                                sub.EndMilliseconds = list[i + 1].PresentationTimestampToMilliseconds() - 25;
+                            if (sub.EndMilliseconds < sub.StartMilliseconds)
+                                sub.EndMilliseconds = sub.StartMilliseconds + 3500;
+                            subtitles.Add(sub);
+                            if (sub.StartMilliseconds < firstVideoMs)
+                                firstVideoMs = sub.StartMilliseconds;
+                        }
                     }
                 }
                 foreach (var s in subtitles)
