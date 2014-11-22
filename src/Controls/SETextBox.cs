@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Controls
     /// </summary>
     public class SETextBox : TextBox
     {
-        private string breakChars = "\".!?,)([]<>:;♪{}-/#*| ¿¡" + Environment.NewLine + "\t";
+        private const string BreakChars = " \".!?,)([]<>:;♪{}-/#*|¿¡\r\n\t";
         private string _dragText = string.Empty;
         private int _dragStartFrom = 0;
         private long _dragStartTicks = 0;
@@ -42,13 +42,14 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                         if (s[deleteFrom] == ' ')
                             deleteFrom--;
-                        while (deleteFrom > 0 && !breakChars.Contains(s[deleteFrom]))
+                        while (deleteFrom > 0 && !BreakChars.Contains(s[deleteFrom]))
                         {
                             deleteFrom--;
                         }
                         if (deleteFrom == index - 1)
                         {
-                            while (deleteFrom > 0 && breakChars.Replace(" ", string.Empty).Contains(s[deleteFrom - 1]))
+                            var breakCharsNoSpace = BreakChars.Substring(1);
+                            while (deleteFrom > 0 && breakCharsNoSpace.Contains(s[deleteFrom - 1]))
                             {
                                 deleteFrom--;
                             }
@@ -202,7 +203,7 @@ namespace Nikse.SubtitleEdit.Controls
                 }
 
                 SelectionStart = index + 1;
-                SelectCurrentWord(this);
+                SelectCurrentWord();
             }
 
             _dragRemoveOld = false;
@@ -232,7 +233,7 @@ namespace Nikse.SubtitleEdit.Controls
 
             if (m.Msg == WM_DBLCLICK || m.Msg == WM_LBUTTONDBLCLK)
             {
-                SelectCurrentWord(this);
+                SelectCurrentWord();
                 return;
             }
             if (m.Msg == WM_LBUTTONDOWN)
@@ -244,23 +245,25 @@ namespace Nikse.SubtitleEdit.Controls
             base.WndProc(ref m);
         }
 
-        private void SelectCurrentWord(TextBox tb)
+        private void SelectCurrentWord()
         {
-            int selectionLength = 0;
-            int i = tb.SelectionStart;
-            while (i > 0 && !breakChars.Contains(tb.Text[i - 1]))
-                i--;
-            tb.SelectionStart = i;
-            for (; i < tb.Text.Length; i++)
+            var i = SelectionStart;
+            while (i > 0 && !BreakChars.Contains(Text[i - 1]))
             {
-                if (breakChars.Contains(tb.Text[i]))
+                i--;
+            }
+            SelectionStart = i;
+
+            var selectionLength = 0;
+            for (; i < Text.Length; i++)
+            {
+                if (BreakChars.Contains(Text[i]))
+                {
                     break;
+                }
                 selectionLength++;
             }
-            tb.SelectionLength = selectionLength;
-            if (selectionLength > 0)
-                this.OnMouseMove(null);
+            SelectionLength = selectionLength;
         }
-
     }
 }
