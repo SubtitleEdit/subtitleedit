@@ -15485,8 +15485,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void NetworkGetSendUpdates(List<int> deleteIndices, int insertIndex, Paragraph insertParagraph)
         {
             _networkSession.TimerStop();
-            if (_networkSession == null)
-                return;
 
             bool doReFill = false;
             bool updateListViewStatus = false;
@@ -15525,11 +15523,9 @@ namespace Nikse.SubtitleEdit.Forms
                         _networkChat = null;
                         return;
                     }
-                    else
-                    {
-                        Application.DoEvents();
-                        System.Threading.Thread.Sleep(250);
-                    }
+                    
+                    Application.DoEvents();
+                    System.Threading.Thread.Sleep(250);
                 }
             }
             int currentSelectedIndex = -1;
@@ -15693,7 +15689,7 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int i in deleteIndices)
                     {
                         _subtitle.Paragraphs.RemoveAt(i);
-                        if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
+                        if (_networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
                             _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
                     }
 
@@ -15703,7 +15699,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (insertIndex >= 0 && insertParagraph != null)
                 {
                     _subtitle.Paragraphs.Insert(insertIndex, insertParagraph);
-                    if (_networkSession != null && _networkSession.LastSubtitle != null && insertIndex < _networkSession.LastSubtitle.Paragraphs.Count)
+                    if (_networkSession.LastSubtitle != null && insertIndex < _networkSession.LastSubtitle.Paragraphs.Count)
                         _networkSession.LastSubtitle.Paragraphs.Insert(insertIndex, insertParagraph);
                     _networkSession.InsertLine(insertIndex, insertParagraph);
                     doReFill = true;
