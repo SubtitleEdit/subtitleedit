@@ -1857,24 +1857,25 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             // no support for underline
             text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagUnderline);
 
-            Font font = SetFont(parameter, parameter.SubtitleFontSize);
-            var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
-
-            SizeF textSize;
-            using (var bmpTemp = new Bitmap(1, 1))
-            using (var g = Graphics.FromImage(bmpTemp))
-            {
-                textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
-            }
-            int sizeX = (int)(textSize.Width * 1.8) + 150;
-            int sizeY = (int)(textSize.Height * 0.9) + 50;
-            if (sizeX < 1)
-                sizeX = 1;
-            if (sizeY < 1)
-                sizeY = 1;
+            Font font = null;
             Bitmap bmp = null;
             try
             {
+                font = SetFont(parameter, parameter.SubtitleFontSize);
+                var lineHeight = parameter.LineHeight; // (textSize.Height * 0.64f);
+
+                SizeF textSize;
+                using (var bmpTemp = new Bitmap(1, 1))
+                using (var g = Graphics.FromImage(bmpTemp))
+                {
+                    textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
+                }
+                int sizeX = (int)(textSize.Width * 1.8) + 150;
+                int sizeY = (int)(textSize.Height * 0.9) + 50;
+                if (sizeX < 1)
+                    sizeX = 1;
+                if (sizeY < 1)
+                    sizeY = 1;
                 if (parameter.BackgroundColor != Color.Transparent)
                 {
                     var nbmpTemp = new NikseBitmap(sizeX, sizeY);
@@ -2324,6 +2325,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             finally
             {
+                if (font != null)
+                {
+                    font.Dispose();
+                }
                 if (bmp != null)
                 {
                     bmp.Dispose();
