@@ -2319,6 +2319,11 @@ namespace Nikse.SubtitleEdit.Forms
         private static NOcrChar NOcrFindBestMatchNew(ImageSplitterItem targetItem, int topMargin, out bool italic, NOcrDb nOcrDb, bool tryItalicScaling, bool deepSeek)
         {
             italic = false;
+            if (nOcrDb == null)
+            {
+                return null;
+            }
+
             var nbmp = targetItem.NikseBitmap;
             int index;
             foreach (NOcrChar oc in nOcrDb.OcrCharacters)
