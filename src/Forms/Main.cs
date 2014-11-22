@@ -18006,20 +18006,21 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemRestoreAutoBackup_Click(object sender, EventArgs e)
         {
             _lastDoNotPrompt = string.Empty;
-            var restoreAutoBackup = new RestoreAutoBackup();
-            _formPositionsAndSizes.SetPositionAndSize(restoreAutoBackup);
-            if (restoreAutoBackup.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(restoreAutoBackup.AutoBackupFileName))
+            using (var restoreAutoBackup = new RestoreAutoBackup())
             {
-                if (ContinueNewOrExit())
+                _formPositionsAndSizes.SetPositionAndSize(restoreAutoBackup);
+                if (restoreAutoBackup.ShowDialog(this) == DialogResult.OK && !string.IsNullOrEmpty(restoreAutoBackup.AutoBackupFileName))
                 {
-                    OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
-                    _fileName = _fileName.Remove(0, Configuration.AutoBackupFolder.Length).TrimStart(Path.DirectorySeparatorChar);
-                    _converted = true;
-                    SetTitle();
+                    if (ContinueNewOrExit())
+                    {
+                        OpenSubtitle(restoreAutoBackup.AutoBackupFileName, null);
+                        _fileName = _fileName.Remove(0, Configuration.AutoBackupFolder.Length).TrimStart(Path.DirectorySeparatorChar);
+                        _converted = true;
+                        SetTitle();
+                    }
                 }
+                _formPositionsAndSizes.SavePositionAndSize(restoreAutoBackup);
             }
-            _formPositionsAndSizes.SavePositionAndSize(restoreAutoBackup);
-            restoreAutoBackup.Dispose();
         }
 
         private void labelStatus_Click(object sender, EventArgs e)
