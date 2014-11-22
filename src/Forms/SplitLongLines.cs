@@ -292,9 +292,11 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                     }
+                    if (!added)
+                    {
+                        splittedSubtitle.Paragraphs.Add(new Paragraph(p));
+                    }
                 }
-                if (!added)
-                    splittedSubtitle.Paragraphs.Add(new Paragraph(p));
             }
             listViewFixes.ItemChecked += listViewFixes_ItemChecked;
             splittedSubtitle.Renumber(1);
