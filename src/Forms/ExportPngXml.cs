@@ -1872,281 +1872,342 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 sizeX = 1;
             if (sizeY < 1)
                 sizeY = 1;
-            var bmp = new Bitmap(sizeX, sizeY);
-            if (parameter.BackgroundColor != Color.Transparent)
+            Bitmap bmp = null;
+            try
             {
-                NikseBitmap nbmpTemp = new NikseBitmap(bmp);
-                nbmpTemp.Fill(parameter.BackgroundColor);
-                var temp = nbmpTemp.GetBitmap();
-                bmp.Dispose();
-                bmp = temp;
-            }
-
-            // align lines with gjpqy, a bit lower
-            var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            int baseLinePadding = 13;
-            if (parameter.SubtitleFontSize < 30)
-                baseLinePadding = 12;
-            if (parameter.SubtitleFontSize < 25)
-                baseLinePadding = 9;
-            if (lines.Length > 0)
-            {
-                if (lines[lines.Length - 1].Contains('g') || lines[lines.Length - 1].Contains('j') || lines[lines.Length - 1].Contains('p') || lines[lines.Length - 1].Contains('q') || lines[lines.Length - 1].Contains('y') || lines[lines.Length - 1].Contains(','))
+                if (parameter.BackgroundColor != Color.Transparent)
                 {
-                    string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
-                    baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
+                    var nbmpTemp = new NikseBitmap(sizeX, sizeY);
+                    nbmpTemp.Fill(parameter.BackgroundColor);
+                    bmp = nbmpTemp.GetBitmap();
                 }
                 else
                 {
-                    baseLinePadding += 1;
+                    bmp = new Bitmap(sizeX, sizeY);
                 }
-                if (baseLinePadding < 0)
-                    baseLinePadding = 0;
-            }
 
-            //TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
-            //float baselineOffset=font.SizeInPoints/font.FontFamily.GetEmHeight(font.Style)*font.FontFamily.GetCellAscent(font.Style);
-            //float baselineOffsetPixels = g.DpiY/72f*baselineOffset;
-            //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
-
-            var lefts = new List<float>();
-            if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
-            {
-                foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                // align lines with gjpqy, a bit lower
+                var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                int baseLinePadding = 13;
+                if (parameter.SubtitleFontSize < 30)
+                    baseLinePadding = 12;
+                if (parameter.SubtitleFontSize < 25)
+                    baseLinePadding = 9;
+                if (lines.Length > 0)
                 {
-                    var lineNoHtml = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic, HtmlUtil.TagFont);
-                    if (parameter.AlignLeft)
-                        lefts.Add(5);
-                    else if (parameter.AlignRight)
-                        lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
-                    else
-                        lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5) / 2); // calculate via drawing+crop
-                }
-            }
-            else
-            {
-                foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
-                {
-                    if (parameter.AlignLeft)
-                        lefts.Add(5);
-                    else if (parameter.AlignRight)
-                        lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
-                    else
-                        lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2);
-                }
-            }
-
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near; // draw the text to a path
-
-            using (var g = Graphics.FromImage(bmp))
-            {
-                g.CompositingQuality = CompositingQuality.HighQuality;
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.SmoothingMode = SmoothingMode.HighQuality;
-                g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-
-                if (parameter.SimpleRendering)
-                {
-                    if (text.StartsWith("<font ", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<font") == 1)
+                    if (lines[lines.Length - 1].Contains('g') || lines[lines.Length - 1].Contains('j') || lines[lines.Length - 1].Contains('p') || lines[lines.Length - 1].Contains('q') || lines[lines.Length - 1].Contains('y') || lines[lines.Length - 1].Contains(','))
                     {
-                        parameter.SubtitleColor = Utilities.GetColorFromFontString(text, parameter.SubtitleColor);
-                    }
-
-                    text = Utilities.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
-                    var brush = new SolidBrush(parameter.BorderColor);
-                    int x = 3;
-                    const int y = 3;
-                    sf.Alignment = StringAlignment.Near;
-                    if (parameter.AlignLeft)
-                    {
-                        sf.Alignment = StringAlignment.Near;
-                    }
-                    else if (parameter.AlignRight)
-                    {
-                        sf.Alignment = StringAlignment.Far;
-                        x = parameter.ScreenWidth - 5;
+                        string textNoBelow = lines[lines.Length - 1].Replace("g", "a").Replace("j", "a").Replace("p", "a").Replace("q", "a").Replace("y", "a").Replace(",", "a");
+                        baseLinePadding -= (int)Math.Round((TextDraw.MeasureTextHeight(font, lines[lines.Length - 1], parameter.SubtitleFontBold) - TextDraw.MeasureTextHeight(font, textNoBelow, parameter.SubtitleFontBold)));
                     }
                     else
                     {
-                        sf.Alignment = StringAlignment.Center;
-                        x = parameter.ScreenWidth / 2;
+                        baseLinePadding += 1;
                     }
+                    if (baseLinePadding < 0)
+                        baseLinePadding = 0;
+                }
 
-                    bmp = new Bitmap(parameter.ScreenWidth, sizeY);
+                //TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
+                //float baselineOffset=font.SizeInPoints/font.FontFamily.GetEmHeight(font.Style)*font.FontFamily.GetCellAscent(font.Style);
+                //float baselineOffsetPixels = g.DpiY/72f*baselineOffset;
+                //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
 
-                    Graphics surface = Graphics.FromImage(bmp);
-                    surface.CompositingQuality = CompositingQuality.HighSpeed;
-                    surface.InterpolationMode = InterpolationMode.Default;
-                    surface.SmoothingMode = SmoothingMode.HighSpeed;
-                    surface.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-                    for (int j = 0; j < parameter.BorderWidth; j++)
+                var lefts = new List<float>();
+                if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y + 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y + 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y + 1 + j }, sf);
-
-                        surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y + 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y + 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y + 1 + j }, sf);
-
-                        surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y + 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y + 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y + 1 - j }, sf);
-
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y + 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y + 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y + 1 - j }, sf);
-
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y + 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y + 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 1 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 0 + j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y + 1 + j }, sf);
-
-                        surface.DrawString(text, font, brush, new PointF { X = x, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x, Y = y + 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + 1, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + 1, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x + 1, Y = y + 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y - 1 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y - 0 - j }, sf);
-                        surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y + 1 - j }, sf);
-
+                        var lineNoHtml = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic, HtmlUtil.TagFont);
+                        if (parameter.AlignLeft)
+                            lefts.Add(5);
+                        else if (parameter.AlignRight)
+                            lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
+                        else
+                            lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5) / 2); // calculate via drawing+crop
                     }
-                    brush.Dispose();
-                    brush = new SolidBrush(parameter.SubtitleColor);
-                    surface.CompositingQuality = CompositingQuality.HighQuality;
-                    surface.SmoothingMode = SmoothingMode.HighQuality;
-                    surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                    surface.DrawString(text, font, brush, new PointF { X = x, Y = y }, sf);
-                    surface.Dispose();
-                    brush.Dispose();
                 }
                 else
                 {
-                    var path = new GraphicsPath();
-                    var sb = new StringBuilder();
-                    bool isItalic = false;
-                    bool isBold = parameter.SubtitleFontBold;
-                    float left = 5;
-                    if (lefts.Count > 0)
-                        left = lefts[0];
-                    float top = 5;
-                    bool newLine = false;
-                    int lineNumber = 0;
-                    float leftMargin = left;
-                    int newLinePathPoint = -1;
-                    Color c = parameter.SubtitleColor;
-                    var colorStack = new Stack<Color>();
-                    var lastText = new StringBuilder();
-                    int numberOfCharsOnCurrentLine = 0;
-                    for (var i = 0; i < text.Length; i++)
+                    foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                        if (parameter.AlignLeft)
+                            lefts.Add(5);
+                        else if (parameter.AlignRight)
+                            lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
+                        else
+                            lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2);
+                    }
+                }
+
+                var sf = new StringFormat();
+                sf.Alignment = StringAlignment.Near;
+                sf.LineAlignment = StringAlignment.Near; // draw the text to a path
+
+                using (var g = Graphics.FromImage(bmp))
+                {
+                    g.CompositingQuality = CompositingQuality.HighQuality;
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+                    if (parameter.SimpleRendering)
+                    {
+                        if (text.StartsWith("<font ", StringComparison.Ordinal) && Utilities.CountTagInText(text, "<font") == 1)
                         {
-                            float addLeft = 0;
-                            int oldPathPointIndex = path.PointCount;
-                            if (oldPathPointIndex < 0)
-                                oldPathPointIndex = 0;
+                            parameter.SubtitleColor = Utilities.GetColorFromFontString(text, parameter.SubtitleColor);
+                        }
 
-                            if (sb.Length > 0)
+                        text = Utilities.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
+                        var brush = new SolidBrush(parameter.BorderColor);
+                        int x = 3;
+                        const int y = 3;
+                        sf.Alignment = StringAlignment.Near;
+                        if (parameter.AlignLeft)
+                        {
+                            sf.Alignment = StringAlignment.Near;
+                        }
+                        else if (parameter.AlignRight)
+                        {
+                            sf.Alignment = StringAlignment.Far;
+                            x = parameter.ScreenWidth - 5;
+                        }
+                        else
+                        {
+                            sf.Alignment = StringAlignment.Center;
+                            x = parameter.ScreenWidth / 2;
+                        }
+
+                        bmp = new Bitmap(parameter.ScreenWidth, sizeY);
+
+                        Graphics surface = Graphics.FromImage(bmp);
+                        surface.CompositingQuality = CompositingQuality.HighSpeed;
+                        surface.InterpolationMode = InterpolationMode.Default;
+                        surface.SmoothingMode = SmoothingMode.HighSpeed;
+                        surface.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+                        for (int j = 0; j < parameter.BorderWidth; j++)
+                        {
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y + 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y + 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y + 1 + j }, sf);
+
+                            surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y + 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y + 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y + 1 + j }, sf);
+
+                            surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j, Y = y + 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j + 1, Y = y + 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - j - 1, Y = y + 1 - j }, sf);
+
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y + 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y + 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y + 1 - j }, sf);
+
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j, Y = y + 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j + 1, Y = y + 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 1 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y - 0 + j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + j - 1, Y = y + 1 + j }, sf);
+
+                            surface.DrawString(text, font, brush, new PointF { X = x, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x, Y = y + 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + 1, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + 1, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x + 1, Y = y + 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y - 1 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y - 0 - j }, sf);
+                            surface.DrawString(text, font, brush, new PointF { X = x - 1, Y = y + 1 - j }, sf);
+
+                        }
+                        brush.Dispose();
+                        brush = new SolidBrush(parameter.SubtitleColor);
+                        surface.CompositingQuality = CompositingQuality.HighQuality;
+                        surface.SmoothingMode = SmoothingMode.HighQuality;
+                        surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                        surface.DrawString(text, font, brush, new PointF { X = x, Y = y }, sf);
+                        surface.Dispose();
+                        brush.Dispose();
+                    }
+                    else
+                    {
+                        var path = new GraphicsPath();
+                        var sb = new StringBuilder();
+                        bool isItalic = false;
+                        bool isBold = parameter.SubtitleFontBold;
+                        float left = 5;
+                        if (lefts.Count > 0)
+                            left = lefts[0];
+                        float top = 5;
+                        bool newLine = false;
+                        int lineNumber = 0;
+                        float leftMargin = left;
+                        int newLinePathPoint = -1;
+                        Color c = parameter.SubtitleColor;
+                        var colorStack = new Stack<Color>();
+                        var lastText = new StringBuilder();
+                        int numberOfCharsOnCurrentLine = 0;
+                        for (var i = 0; i < text.Length; i++)
+                        {
+                            if (text.Substring(i).StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                             {
-                                lastText.Append(sb);
-                                TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-                            }
-                            if (path.PointCount > 0)
-                            {
-                                var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                                for (int k = oldPathPointIndex; k < list.Length; k++)
+                                float addLeft = 0;
+                                int oldPathPointIndex = path.PointCount;
+                                if (oldPathPointIndex < 0)
+                                    oldPathPointIndex = 0;
+
+                                if (sb.Length > 0)
                                 {
-                                    if (list[k].X > addLeft)
-                                        addLeft = list[k].X;
+                                    lastText.Append(sb);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
                                 }
-                            }
-                            if (path.PointCount == 0)
-                                addLeft = left;
-                            else if (addLeft < 0.01)
-                                addLeft = left + 2;
-                            left = addLeft;
-
-                            DrawShadowAndPAth(parameter, g, path);
-                            var p2 = new SolidBrush(c);
-                            g.FillPath(p2, path);
-                            p2.Dispose();
-                            path.Reset();
-                            path = new GraphicsPath();
-                            sb = new StringBuilder();
-
-                            int endIndex = text.Substring(i).IndexOf('>');
-                            if (endIndex == -1)
-                            {
-                                i += 9999;
-                            }
-                            else
-                            {
-                                string fontContent = text.Substring(i, endIndex);
-                                if (fontContent.Contains(" color="))
+                                if (path.PointCount > 0)
                                 {
-                                    string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                                    if (arr.Length > 0)
+                                    var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                                    for (int k = oldPathPointIndex; k < list.Length; k++)
                                     {
-                                        string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
-                                        try
-                                        {
-                                            colorStack.Push(c); // save old color
-                                            if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
-                                            {
-                                                arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                                c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-                                            }
-                                            else
-                                            {
-                                                c = ColorTranslator.FromHtml(fontColor);
-                                            }
-                                        }
-                                        catch
-                                        {
-                                            c = parameter.SubtitleColor;
-                                        }
+                                        if (list[k].X > addLeft)
+                                            addLeft = list[k].X;
                                     }
                                 }
-                                i += endIndex;
+                                if (path.PointCount == 0)
+                                    addLeft = left;
+                                else if (addLeft < 0.01)
+                                    addLeft = left + 2;
+                                left = addLeft;
+
+                                DrawShadowAndPAth(parameter, g, path);
+                                var p2 = new SolidBrush(c);
+                                g.FillPath(p2, path);
+                                p2.Dispose();
+                                path.Reset();
+                                path = new GraphicsPath();
+                                sb = new StringBuilder();
+
+                                int endIndex = text.Substring(i).IndexOf('>');
+                                if (endIndex == -1)
+                                {
+                                    i += 9999;
+                                }
+                                else
+                                {
+                                    string fontContent = text.Substring(i, endIndex);
+                                    if (fontContent.Contains(" color="))
+                                    {
+                                        string[] arr = fontContent.Substring(fontContent.IndexOf(" color=", StringComparison.Ordinal) + 7).Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                        if (arr.Length > 0)
+                                        {
+                                            string fontColor = arr[0].Trim('\'').Trim('"').Trim('\'');
+                                            try
+                                            {
+                                                colorStack.Push(c); // save old color
+                                                if (fontColor.StartsWith("rgb(", StringComparison.Ordinal))
+                                                {
+                                                    arr = fontColor.Remove(0, 4).TrimEnd(')').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                                    c = Color.FromArgb(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
+                                                }
+                                                else
+                                                {
+                                                    c = ColorTranslator.FromHtml(fontColor);
+                                                }
+                                            }
+                                            catch
+                                            {
+                                                c = parameter.SubtitleColor;
+                                            }
+                                        }
+                                    }
+                                    i += endIndex;
+                                }
                             }
-                        }
-                        else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                            else if (text.Substring(i).StartsWith("</font>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (text.Substring(i).ToLower().Replace("</font>", string.Empty).Length > 0)
+                                {
+                                    if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
+                                    {
+                                        string t = sb.ToString();
+                                        sb.Clear();
+                                        sb.Append(' ');
+                                        sb.Append(t);
+                                    }
+
+                                    float addLeft = 0;
+                                    int oldPathPointIndex = path.PointCount - 1;
+                                    if (oldPathPointIndex < 0)
+                                        oldPathPointIndex = 0;
+                                    if (sb.Length > 0)
+                                    {
+                                        if (lastText.Length > 0 && left > 2)
+                                            left -= 1.5f;
+
+                                        lastText.Append(sb);
+
+                                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                    }
+                                    if (path.PointCount > 0)
+                                    {
+                                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                                        for (int k = oldPathPointIndex; k < list.Length; k++)
+                                        {
+                                            if (list[k].X > addLeft)
+                                                addLeft = list[k].X;
+                                        }
+                                    }
+                                    if (addLeft < 0.01)
+                                        addLeft = left + 2;
+                                    left = addLeft;
+
+                                    DrawShadowAndPAth(parameter, g, path);
+                                    g.FillPath(new SolidBrush(c), path);
+                                    path.Reset();
+                                    sb = new StringBuilder();
+                                    if (colorStack.Count > 0)
+                                        c = colorStack.Pop();
+                                    if (left >= 3)
+                                        left -= 2.5f;
+                                }
+                                i += 6;
+                            }
+                            else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                            {
+                                if (sb.Length > 0)
+                                {
+                                    lastText.Append(sb);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                }
+                                isItalic = true;
+                                i += 2;
+                            }
+                            else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
                             {
                                 if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
                                 {
@@ -2155,168 +2216,119 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     sb.Append(' ');
                                     sb.Append(t);
                                 }
-
-                                float addLeft = 0;
-                                int oldPathPointIndex = path.PointCount - 1;
-                                if (oldPathPointIndex < 0)
-                                    oldPathPointIndex = 0;
-                                if (sb.Length > 0)
-                                {
-                                    if (lastText.Length > 0 && left > 2)
-                                        left -= 1.5f;
-
-                                    lastText.Append(sb);
-
-                                    TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-                                }
-                                if (path.PointCount > 0)
-                                {
-                                    PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
-                                    for (int k = oldPathPointIndex; k < list.Length; k++)
-                                    {
-                                        if (list[k].X > addLeft)
-                                            addLeft = list[k].X;
-                                    }
-                                }
-                                if (addLeft < 0.01)
-                                    addLeft = left + 2;
-                                left = addLeft;
-
-                                DrawShadowAndPAth(parameter, g, path);
-                                g.FillPath(new SolidBrush(c), path);
-                                path.Reset();
-                                sb = new StringBuilder();
-                                if (colorStack.Count > 0)
-                                    c = colorStack.Pop();
-                                if (left >= 3)
-                                    left -= 2.5f;
-                            }
-                            i += 6;
-                        }
-                        else if (text.Substring(i).StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (sb.Length > 0)
-                            {
                                 lastText.Append(sb);
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                isItalic = false;
+                                i += 3;
                             }
-                            isItalic = true;
-                            i += 2;
-                        }
-                        else if (text.Substring(i).StartsWith("</i>", StringComparison.OrdinalIgnoreCase) && isItalic)
-                        {
-                            if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
+                            else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                             {
-                                string t = sb.ToString();
-                                sb.Clear();
-                                sb.Append(' ');
-                                sb.Append(t);
+                                if (sb.Length > 0)
+                                {
+                                    lastText.Append(sb);
+                                    TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                }
+                                isBold = true;
+                                i += 2;
                             }
-                            lastText.Append(sb);
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-                            isItalic = false;
-                            i += 3;
-                        }
-                        else if (text.Substring(i).StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
-                        {
-                            if (sb.Length > 0)
+                            else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
+                            {
+                                if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
+                                {
+                                    string t = sb.ToString();
+                                    sb.Clear();
+                                    sb.Append(' ');
+                                    sb.Append(t);
+                                }
+                                lastText.Append(sb);
+                                TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+                                isBold = false;
+                                i += 3;
+                            }
+                            else if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                             {
                                 lastText.Append(sb);
                                 TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-                            }
-                            isBold = true;
-                            i += 2;
-                        }
-                        else if (text.Substring(i).StartsWith("</b>", StringComparison.OrdinalIgnoreCase) && isBold)
-                        {
-                            if (lastText.EndsWith(' ') && !sb.StartsWith(' '))
-                            {
-                                string t = sb.ToString();
-                                sb.Clear();
-                                sb.Append(' ');
-                                sb.Append(t);
-                            }
-                            lastText.Append(sb);
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-                            isBold = false;
-                            i += 3;
-                        }
-                        else if (text.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
-                        {
-                            lastText.Append(sb);
-                            TextDraw.DrawText(font, sf, path, sb, isItalic, isBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
-                            top += lineHeight;
-                            newLine = true;
-                            i += Environment.NewLine.Length - 1;
-                            lineNumber++;
-                            if (lineNumber < lefts.Count)
-                            {
-                                leftMargin = lefts[lineNumber];
-                                left = leftMargin;
+                                top += lineHeight;
+                                newLine = true;
+                                i += Environment.NewLine.Length - 1;
+                                lineNumber++;
+                                if (lineNumber < lefts.Count)
+                                {
+                                    leftMargin = lefts[lineNumber];
+                                    left = leftMargin;
+                                }
+                                numberOfCharsOnCurrentLine = 0;
                             }
-                            numberOfCharsOnCurrentLine = 0;
-                        }
-                        else
-                        {
-                            if (numberOfCharsOnCurrentLine != 0 || text[i] != ' ')
+                            else
                             {
-                                sb.Append(text[i]);
-                                numberOfCharsOnCurrentLine++;
+                                if (numberOfCharsOnCurrentLine != 0 || text[i] != ' ')
+                                {
+                                    sb.Append(text[i]);
+                                    numberOfCharsOnCurrentLine++;
+                                }
                             }
                         }
+                        if (sb.Length > 0)
+                            TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
+
+                        DrawShadowAndPAth(parameter, g, path);
+                        g.FillPath(new SolidBrush(c), path);
                     }
-                    if (sb.Length > 0)
-                        TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
-
-                    DrawShadowAndPAth(parameter, g, path);
-                    g.FillPath(new SolidBrush(c), path);
                 }
-            }
-            sf.Dispose();
+                sf.Dispose();
 
-            var nbmp = new NikseBitmap(bmp);
-            if (parameter.BackgroundColor == Color.Transparent)
-            {
-                nbmp.CropTransparentSidesAndBottom(baseLinePadding, true);
-                nbmp.CropTransparentSidesAndBottom(2, false);
-            }
-            else
-            {
-                nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
-                nbmp.CropTop(4, parameter.BackgroundColor);
-            }
-
-            if (nbmp.Width > parameter.ScreenWidth)
-            {
-                parameter.Error = "#" + parameter.P.Number.ToString(CultureInfo.InvariantCulture) + ": " + nbmp.Width.ToString(CultureInfo.InvariantCulture) + " > " + parameter.ScreenWidth.ToString(CultureInfo.InvariantCulture);
-            }
-
-            if (parameter.Type3D == 1) // Half-side-by-side 3D
-            {
-                Bitmap singleBmp = nbmp.GetBitmap();
-                Bitmap singleHalfBmp = ScaleToHalfWidth(singleBmp);
-                singleBmp.Dispose();
-                Bitmap sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleHalfBmp.Height);
-                int singleWidth = parameter.ScreenWidth / 2;
-                int singleLeftMargin = (singleWidth - singleHalfBmp.Width) / 2;
-
-                using (Graphics gSideBySide = Graphics.FromImage(sideBySideBmp))
-                {
-                    gSideBySide.DrawImage(singleHalfBmp, singleLeftMargin + parameter.Depth3D, 0);
-                    gSideBySide.DrawImage(singleHalfBmp, singleWidth + singleLeftMargin - parameter.Depth3D, 0);
-                }
-                nbmp = new NikseBitmap(sideBySideBmp);
+                var nbmp = new NikseBitmap(bmp);
                 if (parameter.BackgroundColor == Color.Transparent)
-                    nbmp.CropTransparentSidesAndBottom(2, true);
+                {
+                    nbmp.CropTransparentSidesAndBottom(baseLinePadding, true);
+                    nbmp.CropTransparentSidesAndBottom(2, false);
+                }
                 else
+                {
                     nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
+                    nbmp.CropTop(4, parameter.BackgroundColor);
+                }
+
+                if (nbmp.Width > parameter.ScreenWidth)
+                {
+                    parameter.Error = "#" + parameter.P.Number.ToString(CultureInfo.InvariantCulture) + ": " + nbmp.Width.ToString(CultureInfo.InvariantCulture) + " > " + parameter.ScreenWidth.ToString(CultureInfo.InvariantCulture);
+                }
+
+                if (parameter.Type3D == 1) // Half-side-by-side 3D
+                {
+                    Bitmap singleBmp = nbmp.GetBitmap();
+                    Bitmap singleHalfBmp = ScaleToHalfWidth(singleBmp);
+                    singleBmp.Dispose();
+                    Bitmap sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleHalfBmp.Height);
+                    int singleWidth = parameter.ScreenWidth / 2;
+                    int singleLeftMargin = (singleWidth - singleHalfBmp.Width) / 2;
+
+                    using (Graphics gSideBySide = Graphics.FromImage(sideBySideBmp))
+                    {
+                        gSideBySide.DrawImage(singleHalfBmp, singleLeftMargin + parameter.Depth3D, 0);
+                        gSideBySide.DrawImage(singleHalfBmp, singleWidth + singleLeftMargin - parameter.Depth3D, 0);
+                    }
+                    nbmp = new NikseBitmap(sideBySideBmp);
+                    if (parameter.BackgroundColor == Color.Transparent)
+                        nbmp.CropTransparentSidesAndBottom(2, true);
+                    else
+                        nbmp.CropSidesAndBottom(4, parameter.BackgroundColor, true);
+                }
+                else if (parameter.Type3D == 2) // Half-Top/Bottom 3D
+                {
+                    nbmp = Make3DTopBottom(parameter, nbmp);
+                }
+                return nbmp.GetBitmap();
             }
-            else if (parameter.Type3D == 2) // Half-Top/Bottom 3D
+            finally
             {
-                nbmp = Make3DTopBottom(parameter, nbmp);
+                if (bmp != null)
+                {
+                    bmp.Dispose();
+                }
             }
-            return nbmp.GetBitmap();
         }
 
         private static NikseBitmap Make3DTopBottom(MakeBitmapParameter parameter, NikseBitmap nbmp)
