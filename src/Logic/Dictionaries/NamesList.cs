@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             return Path.Combine(_dictionaryFolder, _languageName + "_names_etc_user.xml");
         }
 
-        private void LoadNamesList(string fileName, HashSet<string> namesList, HashSet<string> namesMultiList)
+        static private void LoadNamesList(string fileName, HashSet<string> namesList, HashSet<string> namesMultiList)
         {
             if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
                 return;
