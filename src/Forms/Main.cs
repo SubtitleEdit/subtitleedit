@@ -5223,7 +5223,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SpellCheckViaWord()
         {
-            if (_subtitle == null | _subtitle.Paragraphs.Count == 0)
+            if (_subtitle == null || _subtitle.Paragraphs.Count == 0)
                 return;
 
             WordSpellChecker wordSpellChecker = null;
