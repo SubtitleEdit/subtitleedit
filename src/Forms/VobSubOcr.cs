@@ -2754,11 +2754,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal CompareMatch GetNOcrCompareMatchNew(ImageSplitterItem targetItem, NikseBitmap parentBitmap, NOcrDb nOcrDb, bool tryItalicScaling, bool deepSeek)
         {
-            bool italic;
-            var expandedResult = NOcrFindExpandedMatch(parentBitmap, targetItem, nOcrDb.OcrCharactersExpanded);
-            if (expandedResult != null)
-                return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult);
+            if (nOcrDb != null)
+            {
+                var expandedResult = NOcrFindExpandedMatch(parentBitmap, targetItem, nOcrDb.OcrCharactersExpanded);
+                if (expandedResult != null)
+                {
+                    return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult);
+                }
+            }
 
+            bool italic;
             var result = NOcrFindBestMatchNew(targetItem, targetItem.Y - targetItem.ParentY, out italic, nOcrDb, tryItalicScaling, deepSeek);
             if (result == null)
             {
