@@ -4633,17 +4633,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (i == 0 && i > 4 &&
-                        before[before.Length - (i + 1)] == after[after.Length - (i + 1)] &&
-                        before[before.Length - (i + 2)] == after[after.Length - (i + 2)] &&
-                        before[before.Length - (i + 3)] == after[after.Length - (i + 3)] &&
-                        before[before.Length - (i + 4)] == after[after.Length - (i + 4)])
-                    {
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
 
