@@ -18591,11 +18591,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void toolStripMenuItemBatchConvert_Click(object sender, EventArgs e)
         {
             Visible = false;
-            var form = new BatchConvert(this.Icon);
-            _formPositionsAndSizes.SetPositionAndSize(form);
-            form.ShowDialog(this);
-            _formPositionsAndSizes.SavePositionAndSize(form);
-            form.Dispose();
+            using (var form = new BatchConvert(Icon))
+            {
+                _formPositionsAndSizes.SetPositionAndSize(form);
+                form.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(form);
+            }
             Visible = true;
         }
 
