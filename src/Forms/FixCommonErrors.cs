@@ -2958,7 +2958,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph prev = Subtitle.GetParagraphOrDefault(i - 1);
 
-                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
+                    if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
                     {
                         var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         int startHyphenCount = 0;
