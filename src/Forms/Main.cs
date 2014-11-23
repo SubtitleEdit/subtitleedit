@@ -4599,10 +4599,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void RemoveTextForHearImparedToolStripMenuItemClick(object sender, EventArgs e)
         {
-            if (IsSubtitleLoaded)
+            if (!IsSubtitleLoaded)
             {
-                ReloadFromSourceView();
-                var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired();
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            ReloadFromSourceView();
+            using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired())
+            {
                 _formPositionsAndSizes.SetPositionAndSize(removeTextFromHearImpaired);
                 removeTextFromHearImpaired.Initialize(_subtitle);
                 if (removeTextFromHearImpaired.ShowDialog(this) == DialogResult.OK)
@@ -4624,11 +4629,6 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
                 _formPositionsAndSizes.SavePositionAndSize(removeTextFromHearImpaired);
-                removeTextFromHearImpaired.Dispose();
-            }
-            else
-            {
-                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
