@@ -4409,7 +4409,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             ReloadFromSourceView();
             using (var adjustDisplayTime = new AdjustDisplayDuration())
             {
@@ -4605,7 +4605,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             ReloadFromSourceView();
             using (var removeTextFromHearImpaired = new FormRemoveTextForHearImpaired())
             {
@@ -8996,6 +8996,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         #region Teletext
+
         /*
         private readonly static String[] colors = {
         "{\\c&HC0C0C0&}",   // black /gray
@@ -9135,7 +9136,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return text;
         }
         */
-        #endregion
+
+        #endregion Teletext
 
         private bool ImportSubtitleFromMp4(string fileName)
         {
