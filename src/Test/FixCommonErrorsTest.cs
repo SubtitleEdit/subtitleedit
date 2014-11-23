@@ -469,6 +469,7 @@ namespace Test
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
             }
         }
+
         #endregion Fix Hyphens (add dash)
 
         #region Fix OCR errors
@@ -1051,7 +1052,7 @@ namespace Test
             }
         }
 
-        #endregion FixHyphens
+        #endregion FixHyphens (remove dash)
 
         #region Ellipses start
 

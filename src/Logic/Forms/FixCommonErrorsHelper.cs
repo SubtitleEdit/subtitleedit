@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Net.Mime;
 using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Forms
@@ -187,7 +186,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return isPrevEndOfLine;
         }
 
-
         public static string FixHyphensRemove(Subtitle subtitle, int i)
         {
             Paragraph p = subtitle.Paragraphs[i];
@@ -353,7 +351,6 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             return text;
         }
-
 
     }
 }

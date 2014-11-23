@@ -360,30 +360,30 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, delegate { FixEmptyLines(); }, ce.EmptyLinesTicked), 
-                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, delegate { FixOverlappingDisplayTimes(); }, ce.OverlappingDisplayTimeTicked), 
-                new FixItem(_language.FixShortDisplayTimes, string.Empty, delegate { FixShortDisplayTimes(); }, ce.TooShortDisplayTimeTicked), 
-                new FixItem(_language.FixLongDisplayTimes, string.Empty, delegate { FixLongDisplayTimes(); }, ce.TooLongDisplayTimeTicked), 
-                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, delegate { FixInvalidItalicTags(); }, ce.InvalidItalicTagsTicked), 
-                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, delegate { FixUnneededSpaces(); }, ce.UnneededSpacesTicked), 
-                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, delegate { FixUnneededPeriods(); }, ce.UnneededPeriodsTicked), 
-                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, delegate { FixMissingSpaces(); }, ce.MissingSpacesTicked), 
-                new FixItem(_language.BreakLongLines, string.Empty, delegate { FixLongLines(); }, ce.BreakLongLinesTicked), 
-                new FixItem(_language.RemoveLineBreaks, string.Empty, delegate { FixShortLines(); }, ce.MergeShortLinesTicked), 
-                new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked), 
-                new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked), 
-                new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked), 
-                new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked), 
-                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked), 
-                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked), 
-                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked), 
-                new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked), 
-                new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked), 
-                new FixItem(_language.FixHyphensAdd, string.Empty, delegate { FixHyphensAdd(); }, ce.FixHyphensAddTicked), 
-                new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked), 
-                new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked), 
-                new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked), 
-                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked), 
+                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, delegate { FixEmptyLines(); }, ce.EmptyLinesTicked),
+                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, delegate { FixOverlappingDisplayTimes(); }, ce.OverlappingDisplayTimeTicked),
+                new FixItem(_language.FixShortDisplayTimes, string.Empty, delegate { FixShortDisplayTimes(); }, ce.TooShortDisplayTimeTicked),
+                new FixItem(_language.FixLongDisplayTimes, string.Empty, delegate { FixLongDisplayTimes(); }, ce.TooLongDisplayTimeTicked),
+                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, delegate { FixInvalidItalicTags(); }, ce.InvalidItalicTagsTicked),
+                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, delegate { FixUnneededSpaces(); }, ce.UnneededSpacesTicked),
+                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, delegate { FixUnneededPeriods(); }, ce.UnneededPeriodsTicked),
+                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, delegate { FixMissingSpaces(); }, ce.MissingSpacesTicked),
+                new FixItem(_language.BreakLongLines, string.Empty, delegate { FixLongLines(); }, ce.BreakLongLinesTicked),
+                new FixItem(_language.RemoveLineBreaks, string.Empty, delegate { FixShortLines(); }, ce.MergeShortLinesTicked),
+                new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked),
+                new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked),
+                new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked),
+                new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked),
+                new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked),
+                new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked),
+                new FixItem(_language.FixHyphensAdd, string.Empty, delegate { FixHyphensAdd(); }, ce.FixHyphensAddTicked),
+                new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked),
+                new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked),
+                new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked),
+                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked),
                 new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked)
             };
 
@@ -2536,7 +2536,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return 'I';
             }
             return letter;
-        }       
+        }
 
         private void FixStartWithUppercaseLetterAfterPeriodInsideParagraph()
         {
