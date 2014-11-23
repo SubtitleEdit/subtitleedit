@@ -9648,7 +9648,7 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            
+
             int lastSelectedIndex = 0;
             if (SubtitleListview1.SelectedItems.Count > 0)
                 lastSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
@@ -15523,7 +15523,7 @@ namespace Nikse.SubtitleEdit.Forms
                         _networkChat = null;
                         return;
                     }
-                    
+
                     Application.DoEvents();
                     System.Threading.Thread.Sleep(250);
                 }
