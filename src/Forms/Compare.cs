@@ -612,18 +612,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    if (i == 0 && i > 4 &&
-                        richTextBox1.Text[richTextBox1.Text.Length - (i + 1)] == richTextBox2.Text[richTextBox2.Text.Length - (i + 1)] &&
-                        richTextBox1.Text[richTextBox1.Text.Length - (i + 2)] == richTextBox2.Text[richTextBox2.Text.Length - (i + 2)] &&
-                        richTextBox1.Text[richTextBox1.Text.Length - (i + 3)] == richTextBox2.Text[richTextBox2.Text.Length - (i + 3)] &&
-                        richTextBox1.Text[richTextBox1.Text.Length - (i + 4)] == richTextBox2.Text[richTextBox2.Text.Length - (i + 4)])
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        break;
-                    }
+                    break;
                 }
             }
 
