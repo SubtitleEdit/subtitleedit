@@ -278,18 +278,19 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     else
                         r = Rectangle.Union(r, ioRect);
                 }
-                var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb);
-                for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
+                using (var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb))
                 {
-                    Point offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
-                    var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos);
-                    using (Graphics gSideBySide = Graphics.FromImage(mergedBmp))
+                    for (var ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                     {
-                        gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
+                        var offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
+                        using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
+                        using (var gSideBySide = Graphics.FromImage(mergedBmp))
+                        {
+                            gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
+                        }
                     }
-                    singleBmp.Dispose();
+                    return mergedBmp;
                 }
-                return mergedBmp;
             }
 
         }
