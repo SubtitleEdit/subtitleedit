@@ -18698,12 +18698,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItem2_Click(object sender, EventArgs e)
         {
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "SPUMUX", _fileName, _videoInfo);
-            _formPositionsAndSizes.SetPositionAndSize(exportBdnXmlPng);
-            exportBdnXmlPng.ShowDialog(this);
-            _formPositionsAndSizes.SavePositionAndSize(exportBdnXmlPng);
-            exportBdnXmlPng.Dispose();
+            using (var exportBdnXmlPng = new ExportPngXml())
+            {
+                exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "SPUMUX", _fileName, _videoInfo);
+                _formPositionsAndSizes.SetPositionAndSize(exportBdnXmlPng);
+                exportBdnXmlPng.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(exportBdnXmlPng);
+            }
         }
 
         private void toolStripMenuItemModifySelection_Click(object sender, EventArgs e)
