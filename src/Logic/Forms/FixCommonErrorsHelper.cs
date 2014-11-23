@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net.Mime;
 using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Forms
@@ -163,6 +165,195 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             return text;
         }
+
+        public static bool IsPrevoiusTextEndOfParagraph(string prevText)
+        {
+            if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
+                return true;
+
+            prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
+            bool isPrevEndOfLine = prevText.Length > 1 &&
+                                   !prevText.EndsWith("...", StringComparison.Ordinal) &&
+                                   (prevText.EndsWith('.') ||
+                                    prevText.EndsWith('!') ||
+                                    prevText.EndsWith('?') ||
+                                    prevText.EndsWith('—') || // em dash, unicode character
+                                    prevText.EndsWith("--"));
+
+            if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith('.') &&
+                prevText[prevText.Length - 3] == '.' &&
+                Utilities.AllLetters.Contains(prevText[prevText.Length - 2]))
+                isPrevEndOfLine = false;
+            return isPrevEndOfLine;
+        }
+
+
+        public static string FixHyphensRemove(Subtitle subtitle, int i)
+        {
+            Paragraph p = subtitle.Paragraphs[i];
+            string text = p.Text;
+
+            if (text.TrimStart().StartsWith('-') ||
+                text.TrimStart().StartsWith("<i>-") ||
+                text.TrimStart().StartsWith("<i> -") ||
+                text.TrimStart().StartsWith("<I>-") ||
+                text.TrimStart().StartsWith("<I> -") ||
+                text.Contains(Environment.NewLine + '-') ||
+                text.Contains(Environment.NewLine + " -") ||
+                text.Contains(Environment.NewLine + "<i>-") ||
+                text.Contains(Environment.NewLine + "<i> -") ||
+                text.Contains(Environment.NewLine + "<I>-") ||
+                text.Contains(Environment.NewLine + "<I> -"))
+            {
+                var prev = subtitle.GetParagraphOrDefault(i - 1);
+
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
+                {
+                    var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
+                    if (startHyphenCount == 1)
+                    {
+                        bool remove = true;
+                        var parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 2)
+                        {
+                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(": "))
+                                remove = false;
+                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(": "))
+                                remove = false;
+                        }
+
+                        if (remove)
+                        {
+                            int idx = text.IndexOf('-');
+                            var st = new StripableText(text);
+                            if (idx < 5 && st.Pre.Length >= idx)
+                            {
+                                text = text.Remove(idx, 1).TrimStart();
+                                idx = text.IndexOf('-');
+                                st = new StripableText(text);
+                                if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
+                                {
+                                    text = text.Remove(idx, 1).TrimStart();
+                                    st = new StripableText(text);
+                                }
+                                idx = text.IndexOf('-');
+                                if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
+                                    text = text.Remove(idx, 1).TrimStart();
+
+                                text = text.Replace("  ", " ");
+                                text = text.Replace("> ", ">");
+                                text = text.Replace(" <", "<");
+                            }
+                            else
+                            {
+                                int indexOfNewLine = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                                if (indexOfNewLine > 0)
+                                {
+                                    idx = text.IndexOf('-', indexOfNewLine);
+                                    if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                    {
+                                        text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
+
+                                        idx = text.IndexOf('-', indexOfNewLine);
+                                        if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                        {
+                                            text = text.Remove(idx, 1).TrimStart();
+
+                                            text = text.Replace("  ", " ");
+                                            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                                            text = text.Replace("> ", ">");
+                                            text = text.Replace(" <", "<");
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if (text.StartsWith("<font ", StringComparison.Ordinal))
+            {
+                var prev = subtitle.GetParagraphOrDefault(i - 1);
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
+                {
+                    var st = new StripableText(text);
+                    if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
+                    {
+                        text = st.Pre.TrimEnd().TrimEnd('-').TrimEnd() + st.StrippedText + st.Post;
+                    }
+                }
+            }
+            return text;
+        }
+
+        public static string FixHyphensAdd(Subtitle subtitle, int i, string language)
+        {
+            Paragraph p = subtitle.Paragraphs[i];
+            string text = p.Text;
+
+            if (text.TrimStart().StartsWith('-') ||
+                text.TrimStart().StartsWith("<i>-") ||
+                text.TrimStart().StartsWith("<i> -") ||
+                text.TrimStart().StartsWith("<I>-") ||
+                text.TrimStart().StartsWith("<I> -") ||
+                text.Contains(Environment.NewLine + "-") ||
+                text.Contains(Environment.NewLine + " -") ||
+                text.Contains(Environment.NewLine + "<i>-") ||
+                text.Contains(Environment.NewLine + "<i> -") ||
+                text.Contains(Environment.NewLine + "<I>-") ||
+                text.Contains(Environment.NewLine + "<I> -"))
+            {
+                Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
+
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
+                {
+                    var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
+                    if (startHyphenCount == 1)
+                    {
+                        var parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        if (parts.Length == 2)
+                        {
+                            bool doAdd = parts[0].TrimEnd().EndsWith('.') || parts[0].TrimEnd().EndsWith('!') || parts[0].TrimEnd().EndsWith('?') || language == "ko";
+
+                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':'))
+                                doAdd = false;
+                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':'))
+                                doAdd = false;
+
+                            if (doAdd)
+                            {
+                                int idx = text.IndexOf('-');
+                                bool addFirstLine = idx < 5;
+                                if (addFirstLine && idx > 0 && Utilities.AllLetters.Contains(text[idx - 1]))
+                                    addFirstLine = false;
+                                if (addFirstLine)
+                                {
+                                    // add dash in second line.
+                                    if (text.Contains(Environment.NewLine + "<i>"))
+                                        text = text.Replace(Environment.NewLine + "<i>", Environment.NewLine + "<i>- ");
+                                    else
+                                        text = text.Replace(Environment.NewLine, Environment.NewLine + "- ").Replace(Environment.NewLine + "-  ", Environment.NewLine + "- ");
+                                }
+                                else
+                                {
+                                    // add dash in first line.
+                                    if (text.StartsWith("<i>"))
+                                        text = "<i>- " + text.Remove(0, 3).Trim();
+                                    else if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
+                                        text = text.Insert(6, "- ");
+                                    else
+                                        text = "- " + text.Trim();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return text;
+        }
+
 
     }
 }

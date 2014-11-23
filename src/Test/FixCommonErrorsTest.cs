@@ -469,7 +469,6 @@ namespace Test
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
             }
         }
-
         #endregion Fix Hyphens (add dash)
 
         #region Fix OCR errors
@@ -974,7 +973,7 @@ namespace Test
 
         #endregion Fix Spanish question and exclamation marks
 
-        #region FixHyphens
+        #region FixHyphens (remove dash)
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -1033,6 +1032,22 @@ namespace Test
                 InitializeFixCommonErrorsLine(target, "- Uh-huh.");
                 target.FixHyphens();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Uh-huh.");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDashWithPreviousEndsWithDashDash()
+        {
+            var subtitle = new Subtitle();
+            string t1 = "Hey--";
+            string t2 = "- oh, no, no, no, you're gonna" + Environment.NewLine + "need to add the mattress,";
+            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
+            {
+                var result = FixCommonErrorsHelper.FixHyphensRemove(subtitle, 1);
+                string target = "oh, no, no, no, you're gonna" + Environment.NewLine + "need to add the mattress,";
+                Assert.AreEqual(target, result);
             }
         }
 
