@@ -936,7 +936,7 @@ namespace Nikse.SubtitleEdit.Forms
                 state.Item.SubItems[3].Text = state.Error;
                 return;
             }
-            
+
             var success = CommandLineConvert.BatchConvertSave(
                 state.ToFormat,
                 null,
