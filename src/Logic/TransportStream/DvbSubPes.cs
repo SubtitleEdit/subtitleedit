@@ -329,20 +329,22 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
 
-            var bmp = new Bitmap(width, height);
-            foreach (var ods in ObjectDataList)
+            using (var bmp = new Bitmap(width, height))
             {
-                var odsImage = GetImage(ods);
-                if (odsImage != null)
+                foreach (var ods in ObjectDataList)
                 {
-                    var odsPoint = GetImagePosition(ods);
-                    using (var g = Graphics.FromImage(bmp))
+                    var odsImage = GetImage(ods);
+                    if (odsImage != null)
                     {
-                        g.DrawImageUnscaled(odsImage, odsPoint);
+                        var odsPoint = GetImagePosition(ods);
+                        using (var g = Graphics.FromImage(bmp))
+                        {
+                            g.DrawImageUnscaled(odsImage, odsPoint);
+                        }
                     }
                 }
+                return bmp;
             }
-            return bmp;
         }
 
         public static string GetStreamIdDescription(int streamId)
