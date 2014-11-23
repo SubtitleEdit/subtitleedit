@@ -2759,13 +2759,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal CompareMatch GetNOcrCompareMatchNew(ImageSplitterItem targetItem, NikseBitmap parentBitmap, NOcrDb nOcrDb, bool tryItalicScaling, bool deepSeek)
         {
-            if (nOcrDb != null)
+            var expandedResult = NOcrFindExpandedMatch(parentBitmap, targetItem, nOcrDb.OcrCharactersExpanded);
+            if (expandedResult != null)
             {
-                var expandedResult = NOcrFindExpandedMatch(parentBitmap, targetItem, nOcrDb.OcrCharactersExpanded);
-                if (expandedResult != null)
-                {
-                    return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult);
-                }
+                return new CompareMatch(expandedResult.Text, expandedResult.Italic, expandedResult.ExpandCount, null, expandedResult);
             }
 
             bool italic;
@@ -8152,7 +8149,14 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
 
             if (_nOcrDb == null)
+            {
                 LoadNOcrWithCurrentLanguage();
+                if (_nOcrDb == null)
+                {
+                    MessageBox.Show("Unable to load OCR database.", string.Empty, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
 
             Cursor = Cursors.WaitCursor;
             Bitmap bitmap = GetSubtitleBitmap(subtitleListView1.SelectedItems[0].Index);
