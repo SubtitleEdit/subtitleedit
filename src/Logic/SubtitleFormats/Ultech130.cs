@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             using (var fs = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
-                byte[] buffer = buffer = Encoding.ASCII.GetBytes(UltechId);
+                byte[] buffer = Encoding.ASCII.GetBytes(UltechId);
                 fs.Write(buffer, 0, buffer.Length);
 
                 buffer = new byte[] { 0, 0, 2, 0x1D, 0 }; // ?
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 buffer = new byte[] { 0, 0, 0, 0, 0x1, 0, 0xF, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xE, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xD, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0xC, 0x15, 0, 0, 0, 0, 0, 0, 0, 0x1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }; // ?
                 fs.Write(buffer, 0, buffer.Length);
 
-                buffer = buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
+                buffer = Encoding.ASCII.GetBytes("Subtitle Edit");
                 fs.Write(buffer, 0, buffer.Length);
 
                 while (fs.Length < 512)
@@ -235,7 +235,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     var sb = new StringBuilder();
                     int skipCount = 0;
                     bool italics = false;
-                    bool font = false;
+                    //bool font = false;
                     for (int k = start; k < length + i; k++)
                     {
                         byte b = buffer[k];
@@ -249,12 +249,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             skipCount = 1;
                             if (sb.Length > 0 && !sb.ToString().EndsWith(Environment.NewLine) && !sb.EndsWith('>'))
                             {
-                                if (font)
-                                    sb.Append("</font>");
+                                //if (font)
+                                //    sb.Append("</font>");
                                 if (italics)
                                     sb.Append("</i>");
                                 sb.AppendLine();
-                                font = false;
+                                //font = false;
                                 italics = false;
                             }
                             //string code = VobSub.Helper.IntToBin(buffer[k] * 256 + buffer[k+1], 16);
@@ -426,8 +426,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                     }
                     p.Text = sb.ToString().Trim();
-                    if (font)
-                        p.Text += "</font>";
+                    //if (font)
+                    //    p.Text += "</font>";
                     if (italics)
                         p.Text += "</i>";
                     p.Text = p.Text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
