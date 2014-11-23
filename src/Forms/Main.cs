@@ -4975,12 +4975,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void UndoLastAction()
-        {
-            if (_subtitle != null && _subtitle.CanUndo && _undoIndex >= 0)
-                UndoToIndex(true);
-        }
-
         /// <summary>
         /// Undo or Redo
         /// </summary>
@@ -4994,7 +4988,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (!undo && _undoIndex >= _subtitle.HistoryItems.Count - 1)
                     return;
-                if (undo && !_subtitle.CanUndo && _undoIndex < 0)
+                if (undo && (_subtitle == null || !_subtitle.CanUndo || _undoIndex < 0))
                     return;
 
                 // Add latest changes if any (also stop changes from being added while redoing/undoing)
@@ -5153,12 +5147,6 @@ namespace Nikse.SubtitleEdit.Forms
                 timerAlternateTextUndo.Start();
                 SetTitle();
             }
-        }
-
-        private void RedoLastAction()
-        {
-            if (_undoIndex < _subtitle.HistoryItems.Count - 1)
-                UndoToIndex(false);
         }
 
         private void ShowHistoryforUndoToolStripMenuItemClick(object sender, EventArgs e)
@@ -10021,12 +10009,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (toolStripMenuItemUndo.ShortcutKeys == e.KeyData) // undo
             {
-                UndoLastAction();
+                toolStripMenuItemUndo_Click(sender, e);
                 e.SuppressKeyPress = true;
             }
             else if (toolStripMenuItemRedo.ShortcutKeys == e.KeyData) // redo
             {
-                RedoLastAction();
+                toolStripMenuItemRedo_Click(sender, e);
                 e.SuppressKeyPress = true;
             }
             else if (e.KeyCode == Keys.Down && e.Modifiers == Keys.Alt)
@@ -11790,8 +11778,11 @@ namespace Nikse.SubtitleEdit.Forms
                 toolStripMenuItemInsertUnicodeCharacter.Visible = toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count > 0;
                 toolStripSeparatorInsertUnicodeCharacter.Visible = toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count > 0;
             }
-            toolStripMenuItemUndo.Enabled = _subtitle != null && _subtitle.CanUndo && _undoIndex >= 0;
-            toolStripMenuItemRedo.Enabled = _subtitle != null && _subtitle.CanUndo && _undoIndex < _subtitle.HistoryItems.Count - 1;
+            lock (_syncUndo)
+            {
+                toolStripMenuItemUndo.Enabled = _subtitle != null && _subtitle.CanUndo && _undoIndex >= 0;
+                toolStripMenuItemRedo.Enabled = _subtitle != null && _subtitle.CanUndo && _undoIndex < _subtitle.HistoryItems.Count - 1;
+            }
             showHistoryforUndoToolStripMenuItem.Enabled = _subtitle != null && _subtitle.CanUndo;
             toolStripMenuItemShowOriginalInPreview.Visible = SubtitleListview1.IsAlternateTextColumnVisible;
 
@@ -13853,8 +13844,11 @@ namespace Nikse.SubtitleEdit.Forms
             MainResize();
             _loading = false;
             OpenVideo(_videoFileName);
-            timerTextUndo.Start();
-            timerAlternateTextUndo.Start();
+            lock (_syncUndo)
+            {
+                timerTextUndo.Start();
+                timerAlternateTextUndo.Start();
+            }
             if (Configuration.IsRunningOnLinux())
             {
                 numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 10;
@@ -18211,12 +18205,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemUndo_Click(object sender, EventArgs e)
         {
-            UndoLastAction();
+            UndoToIndex(true);
         }
 
         private void toolStripMenuItemRedo_Click(object sender, EventArgs e)
         {
-            RedoLastAction();
+            UndoToIndex(false);
         }
 
         private void seekSilenceToolStripMenuItem_Click(object sender, EventArgs e)
