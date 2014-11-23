@@ -9758,9 +9758,13 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportAndOcrVobSubSubtitleNew(string fileName, bool showInTaskbar)
         {
-            if (IsVobSubFile(fileName, true))
+            if (!IsVobSubFile(fileName, true))
             {
-                var vobSubOcr = new VobSubOcr();
+                return;
+            }
+
+            using (var vobSubOcr = new VobSubOcr())
+            {
                 if (showInTaskbar)
                 {
                     vobSubOcr.Icon = (Icon)this.Icon.Clone();
@@ -9768,36 +9772,33 @@ namespace Nikse.SubtitleEdit.Forms
                     vobSubOcr.ShowIcon = true;
                 }
                 _formPositionsAndSizes.SetPositionAndSize(vobSubOcr);
-                if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, this))
+                if (vobSubOcr.Initialize(fileName, Configuration.Settings.VobSubOcr, this)
+                    && vobSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
-                    if (vobSubOcr.ShowDialog(this) == DialogResult.OK)
+                    MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
+                    FileNew();
+                    _subtitle.Paragraphs.Clear();
+                    SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                    _subtitle.WasLoadedWithFrameNumbers = false;
+                    _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
+                    foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
                     {
-                        MakeHistoryForUndo(_language.BeforeImportingVobSubFile);
-                        FileNew();
-                        _subtitle.Paragraphs.Clear();
-                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
-                        _subtitle.WasLoadedWithFrameNumbers = false;
-                        _subtitle.CalculateFrameNumbersFromTimeCodes(CurrentFrameRate);
-                        foreach (Paragraph p in vobSubOcr.SubtitleFromOcr.Paragraphs)
-                        {
-                            _subtitle.Paragraphs.Add(p);
-                        }
-
-                        ShowSource();
-                        SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                        _subtitleListViewIndex = -1;
-                        SubtitleListview1.FirstVisibleIndex = -1;
-                        SubtitleListview1.SelectIndexAndEnsureVisible(0);
-
-                        _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
-                        SetTitle();
-                        _converted = true;
-
-                        Configuration.Settings.Save();
+                        _subtitle.Paragraphs.Add(p);
                     }
+
+                    ShowSource();
+                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                    _subtitleListViewIndex = -1;
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                    SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
+                    _fileName = Path.ChangeExtension(vobSubOcr.FileName, ".srt");
+                    SetTitle();
+                    _converted = true;
+
+                    Configuration.Settings.Save();
                 }
                 _formPositionsAndSizes.SavePositionAndSize(vobSubOcr);
-                vobSubOcr.Dispose();
             }
         }
 
