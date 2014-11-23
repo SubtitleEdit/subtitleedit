@@ -1484,12 +1484,13 @@ namespace Nikse.SubtitleEdit.Forms
         private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
             ReloadFromSourceView();
-            var about = new About();
-            _formPositionsAndSizes.SetPositionAndSize(about);
-            about.Initialize();
-            about.ShowDialog(this);
-            _formPositionsAndSizes.SavePositionAndSize(about);
-            about.Dispose();
+            using (var about = new About())
+            {
+                _formPositionsAndSizes.SetPositionAndSize(about);
+                about.Initialize();
+                about.ShowDialog(this);
+                _formPositionsAndSizes.SavePositionAndSize(about);
+            }
         }
 
         private void VisualSyncToolStripMenuItemClick(object sender, EventArgs e)
