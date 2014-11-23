@@ -11457,15 +11457,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ChangeLanguageToolStripMenuItemClick(object sender, EventArgs e)
         {
-            var cl = new ChooseLanguage();
-            _formPositionsAndSizes.SetPositionAndSize(cl);
-            if (cl.ShowDialog(this) == DialogResult.OK)
+            using (var cl = new ChooseLanguage())
             {
-                SetLanguage(cl.CultureName);
-                Configuration.Settings.Save();
+                _formPositionsAndSizes.SetPositionAndSize(cl);
+                if (cl.ShowDialog(this) == DialogResult.OK)
+                {
+                    SetLanguage(cl.CultureName);
+                    Configuration.Settings.Save();
+                }
+                _formPositionsAndSizes.SavePositionAndSize(cl);
             }
-            _formPositionsAndSizes.SavePositionAndSize(cl);
-            cl.Dispose();
         }
 
         private void SetLanguage(string cultureName)
