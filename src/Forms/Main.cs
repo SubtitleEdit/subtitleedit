@@ -4403,10 +4403,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AdjustDisplayTime(bool onlySelectedLines)
         {
-            if (IsSubtitleLoaded)
+            if (!IsSubtitleLoaded)
             {
-                ReloadFromSourceView();
-                var adjustDisplayTime = new AdjustDisplayDuration();
+                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            
+            ReloadFromSourceView();
+            using (var adjustDisplayTime = new AdjustDisplayDuration())
+            {
                 _formPositionsAndSizes.SetPositionAndSize(adjustDisplayTime);
 
                 ListView.SelectedIndexCollection selectedIndexes = null;
@@ -4447,11 +4452,6 @@ namespace Nikse.SubtitleEdit.Forms
                     RestoreSubtitleListviewIndexes();
                 }
                 _formPositionsAndSizes.SavePositionAndSize(adjustDisplayTime);
-                adjustDisplayTime.Dispose();
-            }
-            else
-            {
-                MessageBox.Show(_language.NoSubtitleLoaded, Title, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
