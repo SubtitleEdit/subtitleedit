@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                 }
             }
 
-            if (AdaptationFieldExtensionFlag)
+            if (AdaptationFieldExtensionFlag && index < packetBuffer.Length)
             {
                 AdaptationFieldExtensionLength = packetBuffer[index];
             }
