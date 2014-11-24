@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=511A5B59_002D1C35_002D4719_002D8536_002D23B19AF9B21A_002Fd_003ADLLs/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=511A5B59_002D1C35_002D4719_002D8536_002D23B19AF9B21A_002Fd_003AIcons/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=511A5B59_002D1C35_002D4719_002D8536_002D23B19AF9B21A_002Fd_003ALanguages/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=511A5B59_002D1C35_002D4719_002D8536_002D23B19AF9B21A_002Fd_003AResources/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7BE5B8E8_002D9469_002D4C7C_002D89D7_002DE8C884DEFC0E_002Fd_003ADictionaries/@EntryIndexedValue">ExplicitlyExcluded</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7BE5B8E8_002D9469_002D4C7C_002D89D7_002DE8C884DEFC0E_002Fd_003AFiles/@EntryIndexedValue">ExplicitlyExcluded</s:String></wpf:ResourceDictionary>
