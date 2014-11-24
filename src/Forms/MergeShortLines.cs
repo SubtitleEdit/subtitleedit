@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class MergeShortLines : Form
+    public partial class MergeShortLines : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;

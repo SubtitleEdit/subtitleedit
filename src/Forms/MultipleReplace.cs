@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class MultipleReplace : Form
+    public sealed partial class MultipleReplace : PositionAndSizeForm
     {
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";

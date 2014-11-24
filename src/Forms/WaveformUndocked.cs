@@ -4,10 +4,9 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class WaveformUndocked : Form
+    public partial class WaveformUndocked : PositionAndSizeForm
     {
         private Main _mainForm = null;
-        private PositionsAndSizes _positionsAndSizes = null;
         private Keys _redockKeys;
 
         public Panel PanelContainer
@@ -18,12 +17,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public WaveformUndocked(Main mainForm, PositionsAndSizes positionsAndSizes)
+        public WaveformUndocked(Main mainForm)
         {
             InitializeComponent();
             _mainForm = mainForm;
             this.Icon = (Icon)mainForm.Icon.Clone();
-            _positionsAndSizes = positionsAndSizes;
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
@@ -42,7 +40,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _mainForm.ReDockWaveform(controlWaveform, controlButtons, controlTrackBar);
                 _mainForm.SetWaveformToggleOff();
             }
-            _positionsAndSizes.SavePositionAndSize(this);
         }
 
         private void WaveformUndocked_KeyDown(object sender, KeyEventArgs e)

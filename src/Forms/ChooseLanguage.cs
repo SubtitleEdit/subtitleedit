@@ -9,7 +9,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class ChooseLanguage : Form
+    public sealed partial class ChooseLanguage : PositionAndSizeForm
     {
         public class CultureListItem
         {

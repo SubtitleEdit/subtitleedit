@@ -5,10 +5,9 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class VideoPlayerUndocked : Form
+    public partial class VideoPlayerUndocked : PositionAndSizeForm
     {
         private Main _mainForm = null;
-        private PositionsAndSizes _positionsAndSizes = null;
         private Controls.VideoPlayerContainer _videoPlayerContainer;
         private Keys _redockKeys;
 
@@ -22,12 +21,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public VideoPlayerUndocked(Main main, PositionsAndSizes positionsAndSizes, Controls.VideoPlayerContainer videoPlayerContainer)
+        public VideoPlayerUndocked(Main main, Controls.VideoPlayerContainer videoPlayerContainer)
         {
             InitializeComponent();
             _mainForm = main;
             this.Icon = (Icon)_mainForm.Icon.Clone();
-            _positionsAndSizes = positionsAndSizes;
             _videoPlayerContainer = videoPlayerContainer;
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
             RedockOnFullscreenEnd = false;
@@ -54,7 +52,6 @@ namespace Nikse.SubtitleEdit.Forms
                     _mainForm.SetVideoPlayerToggleOff();
                 }
             }
-            _positionsAndSizes.SavePositionAndSize(this);
         }
 
         private void VideoPlayerUndocked_KeyDown(object sender, KeyEventArgs e)

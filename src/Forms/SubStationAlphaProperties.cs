@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class SubStationAlphaProperties : Form
+    public sealed partial class SubStationAlphaProperties : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private bool _isSubStationAlpha;

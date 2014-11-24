@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class NuendoProperties : Form
+    public partial class NuendoProperties : PositionAndSizeForm
     {
 
         public string CharacterListFile { get; set; }

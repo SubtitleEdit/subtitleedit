@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ImportSceneChanges : Form
+    public partial class ImportSceneChanges : PositionAndSizeForm
     {
 
         public List<double> SceneChangesInSeconds = new List<double>();

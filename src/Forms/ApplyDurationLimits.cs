@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ApplyDurationLimits : Form
+    public partial class ApplyDurationLimits : PositionAndSizeForm
     {
         private int _totalFixes;
         private int _totalErrors;

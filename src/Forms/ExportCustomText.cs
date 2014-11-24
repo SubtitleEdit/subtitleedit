@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ExportCustomText : Form
+    public partial class ExportCustomText : PositionAndSizeForm
     {
         private readonly List<string> _templates = new List<string>();
         private readonly Subtitle _subtitle;

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class FormRemoveTextForHearImpaired : Form
+    public sealed partial class FormRemoveTextForHearImpaired : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;

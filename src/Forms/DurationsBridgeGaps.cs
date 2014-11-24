@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class DurationsBridgeGaps : Form
+    public partial class DurationsBridgeGaps : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private Subtitle _fixedSubtitle;

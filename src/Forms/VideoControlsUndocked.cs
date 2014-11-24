@@ -4,10 +4,9 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class VideoControlsUndocked : Form
+    public partial class VideoControlsUndocked : PositionAndSizeForm
     {
         private Main _mainForm = null;
-        private PositionsAndSizes _positionsAndSizes = null;
         private Keys _redockKeys;
 
         public Panel PanelContainer
@@ -18,12 +17,11 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public VideoControlsUndocked(Main mainForm, PositionsAndSizes positionsAndSizes)
+        public VideoControlsUndocked(Main mainForm)
         {
             InitializeComponent();
             _mainForm = mainForm;
             this.Icon = (Icon)mainForm.Icon.Clone();
-            _positionsAndSizes = positionsAndSizes;
             _redockKeys = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls);
         }
 
@@ -38,7 +36,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 ReDock();
             }
-            _positionsAndSizes.SavePositionAndSize(this);
         }
 
         private void ReDock()

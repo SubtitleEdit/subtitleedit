@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class SyncPointsSync : Form
+    public sealed partial class SyncPointsSync : PositionAndSizeForm
     {
         public class ListBoxSyncPoint
         {

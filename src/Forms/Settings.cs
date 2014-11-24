@@ -16,7 +16,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class Settings : Form
+    public sealed partial class Settings : PositionAndSizeForm
     {
         private string _ssaFontName;
         private double _ssaFontSize;

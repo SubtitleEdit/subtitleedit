@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class EbuSaveOptions : Form
+    public sealed partial class EbuSaveOptions : PositionAndSizeForm
     {
         private Ebu.EbuGeneralSubtitleInformation _header;
         private Subtitle _subtitle;

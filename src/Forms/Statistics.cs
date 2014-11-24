@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class Statistics : Form
+    public partial class Statistics : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private SubtitleFormat _format;

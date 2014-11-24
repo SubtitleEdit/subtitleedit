@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic.Dictionaries;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class AddToNamesList : Form
+    public sealed partial class AddToNamesList : PositionAndSizeForm
     {
         private LanguageStructure.Main _language;
         private Subtitle _subtitle;

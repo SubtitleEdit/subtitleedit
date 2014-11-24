@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    partial class About : Form
+    partial class About : PositionAndSizeForm
     {
         private readonly LanguageStructure.About _language = Configuration.Settings.Language.About;
         private readonly LanguageStructure.General _languageGeneral = Configuration.Settings.Language.General;

@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ExtractDateTimeInfo : Form
+    public partial class ExtractDateTimeInfo : PositionAndSizeForm
     {
         public Subtitle DateTimeSubtitle { get; private set; }
         public string VideoFileName { get; private set; }

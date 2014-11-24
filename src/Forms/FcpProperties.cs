@@ -4,7 +4,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class FcpProperties : Form
+    public partial class FcpProperties : PositionAndSizeForm
     {
 
         public int FcpFontSize { get; set; }
