@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ImportImages : Form
+    public partial class ImportImages : PositionAndSizeForm
     {
 
         public Subtitle Subtitle { get; private set; }

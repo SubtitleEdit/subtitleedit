@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class SetVideoOffset : Form
+    public partial class SetVideoOffset : PositionAndSizeForm
     {
         public bool FromCurrentVideoPosition { get; set; }
 

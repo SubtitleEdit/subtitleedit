@@ -17,7 +17,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class BatchConvert : Form
+    public sealed partial class BatchConvert : PositionAndSizeForm
     {
         private class BatchState
         {

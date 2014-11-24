@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class TimedTextProperties : Form
+    public partial class TimedTextProperties : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private XmlDocument _xml;

@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class MergeDoubleLines : Form
+    public partial class MergeDoubleLines : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;

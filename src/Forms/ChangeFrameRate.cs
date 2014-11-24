@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class ChangeFrameRate : Form
+    public sealed partial class ChangeFrameRate : PositionAndSizeForm
     {
         public ChangeFrameRate()
         {

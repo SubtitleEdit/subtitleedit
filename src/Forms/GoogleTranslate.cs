@@ -12,7 +12,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Forms
 {
 
-    public sealed partial class GoogleTranslate : Form
+    public sealed partial class GoogleTranslate : PositionAndSizeForm
     {
         private Subtitle _subtitle;
         private Subtitle _translatedSubtitle;

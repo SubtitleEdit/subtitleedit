@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 namespace Nikse.SubtitleEdit.Forms.DCinema
 {
     [TypeDescriptionProvider(typeof(AbstractControlDescriptionProvider<DCinemaPropertiesForm, Form>))]
-    public abstract class DCinemaPropertiesForm : Form
+    public abstract class DCinemaPropertiesForm : PositionAndSizeForm
     {
         protected void FixLargeFonts(Button referenceButton)
         {

@@ -22,7 +22,7 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class VobSubOcr : Form
+    public sealed partial class VobSubOcr : PositionAndSizeForm
     {
         internal class CompareItem
         {

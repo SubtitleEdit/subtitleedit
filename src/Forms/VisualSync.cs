@@ -10,7 +10,7 @@ using Nikse.SubtitleEdit.Logic.VideoPlayers;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class VisualSync : Form
+    public sealed partial class VisualSync : PositionAndSizeForm
     {
         private List<Paragraph> _paragraphs;
         private VideoInfo _videoInfo;

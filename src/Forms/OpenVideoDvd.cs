@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class OpenVideoDvd : Form
+    public partial class OpenVideoDvd : PositionAndSizeForm
     {
 
         public string DvdPath { get; set; }

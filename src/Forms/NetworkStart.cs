@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class NetworkStart : Form
+    public sealed partial class NetworkStart : PositionAndSizeForm
     {
 
         private Logic.Networking.NikseWebServiceSession _networkSession;

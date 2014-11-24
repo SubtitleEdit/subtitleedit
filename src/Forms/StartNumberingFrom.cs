@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class StartNumberingFrom : Form
+    public sealed partial class StartNumberingFrom : PositionAndSizeForm
     {
         private int _startFromNumber;
 

@@ -3,7 +3,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class StatusLog : Form
+    public partial class StatusLog : PositionAndSizeForm
     {
         public StatusLog(string logText)
         {

@@ -6,7 +6,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class AdjustDisplayDuration : Form
+    public sealed partial class AdjustDisplayDuration : PositionAndSizeForm
     {
         public string AdjustValue
         {

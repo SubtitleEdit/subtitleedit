@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class SplitLongLines : Form
+    public sealed partial class SplitLongLines : PositionAndSizeForm
     {
 
         private Subtitle _subtitle;

@@ -8,7 +8,7 @@ using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class JoinSubtitles : Form
+    public partial class JoinSubtitles : PositionAndSizeForm
     {
         private List<string> _fileNamesToJoin = new List<string>();
         public Subtitle JoinedSubtitle { get; set; }

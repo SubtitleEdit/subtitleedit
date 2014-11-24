@@ -19,7 +19,7 @@ using System.Xml;
 namespace Nikse.SubtitleEdit.Forms
 {
 
-    public sealed partial class ExportPngXml : Form
+    public sealed partial class ExportPngXml : PositionAndSizeForm
     {
         private class MakeBitmapParameter
         {

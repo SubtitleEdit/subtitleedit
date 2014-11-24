@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class SetMinimumDisplayTimeBetweenParagraphs : Form
+    public partial class SetMinimumDisplayTimeBetweenParagraphs : PositionAndSizeForm
     {
 
         private Subtitle _subtitle;

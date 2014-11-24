@@ -6,13 +6,12 @@ using Nikse.SubtitleEdit.Logic.Enums;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class ShowEarlierLater : Form
+    public sealed partial class ShowEarlierLater : PositionAndSizeForm
     {
         public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
 
         private TimeSpan _totalAdjustment = TimeSpan.FromMilliseconds(0);
         private AdjustEventHandler _adjustCallback;
-        private PositionsAndSizes _formPositionsAndSizes;
 
         public ShowEarlierLater()
         {
@@ -54,9 +53,8 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        internal void Initialize(AdjustEventHandler adjustCallback, PositionsAndSizes formPositionsAndSizes, bool onlySelected)
+        internal void Initialize(AdjustEventHandler adjustCallback, bool onlySelected)
         {
-            _formPositionsAndSizes = formPositionsAndSizes;
             if (onlySelected)
                 radioButtonSelectedLinesOnly.Checked = true;
             else if (Configuration.Settings.Tools.LastShowEarlierOrLaterSelection == SelectionChoice.SelectionAndForward.ToString())
@@ -119,7 +117,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ShowEarlierLater_FormClosing(object sender, FormClosingEventArgs e)
         {
-            _formPositionsAndSizes.SavePositionAndSize(this);
             Configuration.Settings.Tools.LastShowEarlierOrLaterSelection = GetSelectionChoice().ToString();
         }
 

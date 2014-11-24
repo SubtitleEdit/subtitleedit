@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class AutoBreakUnbreakLines : Form
+    public partial class AutoBreakUnbreakLines : PositionAndSizeForm
     {
         private List<Paragraph> _paragraphs;
         private int _changes;

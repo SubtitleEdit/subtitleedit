@@ -5,7 +5,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class TransportStreamSubtitleChooser : Form
+    public partial class TransportStreamSubtitleChooser : PositionAndSizeForm
     {
         private Logic.TransportStream.TransportStreamParser _tsParser;
 

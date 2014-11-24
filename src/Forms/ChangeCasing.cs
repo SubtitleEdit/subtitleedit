@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class ChangeCasing : Form
+    public sealed partial class ChangeCasing : PositionAndSizeForm
     {
         private static readonly Regex AloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
         private int _noOfLinesChanged;

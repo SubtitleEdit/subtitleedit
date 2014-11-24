@@ -7,7 +7,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class RestoreAutoBackup : Form
+    public partial class RestoreAutoBackup : PositionAndSizeForm
     {
 
         private string[] _files;

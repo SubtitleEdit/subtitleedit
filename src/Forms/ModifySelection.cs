@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class ModifySelection : Form
+    public partial class ModifySelection : PositionAndSizeForm
     {
         private SubtitleListView _subtitleListView;
         private Subtitle _subtitle;

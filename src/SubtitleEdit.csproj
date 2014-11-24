@@ -341,7 +341,7 @@
       <DependentUpon>ExportText.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.cs">
-      <SubType>Form</SubType>
+      <SubType>form</SubType>
     </Compile>
     <Compile Include="Forms\ExtractDateTimeInfo.Designer.cs">
       <DependentUpon>ExtractDateTimeInfo.cs</DependentUpon>
@@ -466,6 +466,7 @@
     <Compile Include="Forms\PluginsGet.Designer.cs">
       <DependentUpon>PluginsGet.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\PositionAndSizeForm.cs" />
     <Compile Include="Forms\RestoreAutoBackup.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -680,7 +681,7 @@
       <DependentUpon>VideoPlayerUndocked.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VisualSync.cs">
-      <SubType>Form</SubType>
+      <SubType>form</SubType>
     </Compile>
     <Compile Include="Forms\VisualSync.Designer.cs">
       <DependentUpon>VisualSync.cs</DependentUpon>
@@ -710,7 +711,7 @@
       <DependentUpon>VobSubNOcrTrain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\VobSubOcr.cs">
-      <SubType>Form</SubType>
+      <SubType>form</SubType>
     </Compile>
     <Compile Include="Forms\VobSubOcr.Designer.cs">
       <DependentUpon>VobSubOcr.cs</DependentUpon>
@@ -884,8 +885,6 @@
     <Compile Include="Logic\OCR\OcrImage.cs" />
     <Compile Include="Logic\OCR\NOcrPoint.cs" />
     <Compile Include="Logic\OCR\SpellCheckOcrTextResult.cs" />
-    <Compile Include="Logic\PositionAndSize.cs" />
-    <Compile Include="Logic\PositionsAndSizes.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Enums\SubtitleSortCriteria.cs" />
     <Compile Include="Logic\ImageSplitterItem.cs" />
