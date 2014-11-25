@@ -100,6 +100,21 @@
     <Compile Include="Forms\ColorChooser.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\DCinema\DCinemaPropertiesForm.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Forms\DCinema\DCinemaPropertiesInterop.Designer.cs">
+      <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.cs">
+      <SubType>form</SubType>
+    </Compile>
+    <Compile Include="Forms\DCinema\DCinemaPropertiesSmpte.Designer.cs">
+      <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DoNotBreakAfterListEdit.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -294,18 +309,6 @@
     </Compile>
     <Compile Include="Forms\NuendoProperties.Designer.cs">
       <DependentUpon>NuendoProperties.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\DCinemaPropertiesInterop.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DCinemaPropertiesInterop.Designer.cs">
-      <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\DCinemaPropertiesSmpte.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\DCinemaPropertiesSmpte.Designer.cs">
-      <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\EbuSaveOptions.cs">
       <SubType>Form</SubType>
@@ -1221,6 +1224,12 @@
     <EmbeddedResource Include="Forms\ColorChooser.resx">
       <DependentUpon>ColorChooser.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DCinema\DCinemaPropertiesInterop.resx">
+      <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DCinema\DCinemaPropertiesSmpte.resx">
+      <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DoNotBreakAfterListEdit.resx">
       <DependentUpon>DoNotBreakAfterListEdit.cs</DependentUpon>
     </EmbeddedResource>
@@ -1309,12 +1318,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\NuendoProperties.resx">
       <DependentUpon>NuendoProperties.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DCinemaPropertiesInterop.resx">
-      <DependentUpon>DCinemaPropertiesInterop.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DCinemaPropertiesSmpte.resx">
-      <DependentUpon>DCinemaPropertiesSmpte.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\EbuSaveOptions.resx">
       <DependentUpon>EbuSaveOptions.cs</DependentUpon>

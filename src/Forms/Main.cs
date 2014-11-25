@@ -18045,21 +18045,27 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void toolStripMenuItemDCinemaProperties_Click(object sender, EventArgs e)
         {
-            if (GetCurrentSubtitleFormat().GetType() == typeof(DCSubtitle))
+            DCinema.DCinemaPropertiesForm properties = null;
+            try
             {
-                var properties = new DCinemaPropertiesInterop();
+                if (GetCurrentSubtitleFormat().GetType() == typeof(DCSubtitle))
+                {
+                    properties = new DCinema.DCinemaPropertiesInterop();
+                }
+                else
+                {
+                    properties = new DCinema.DCinemaPropertiesSmpte();
+                }
                 _formPositionsAndSizes.SetPositionAndSize(properties, true);
                 properties.ShowDialog(this);
                 _formPositionsAndSizes.SavePositionAndSize(properties);
-                properties.Dispose();
             }
-            else
+            finally
             {
-                var properties = new DCinemaPropertiesSmpte();
-                _formPositionsAndSizes.SetPositionAndSize(properties, true);
-                properties.ShowDialog(this);
-                _formPositionsAndSizes.SavePositionAndSize(properties);
-                properties.Dispose();
+                if (properties != null)
+                {
+                    properties.Dispose();
+                }
             }
         }
 
