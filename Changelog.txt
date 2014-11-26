@@ -33,6 +33,9 @@
    * Fixes for ALT + drag in waveform - thx Leon
    * Minor fix for "unknown subtitle importer" (regarding tab)
    * Fix for dialog in "auto break line" - thx XhmikosR
+   * Fixed crash in ts parser - thx Marilson
+   * Fix for 'remove dash' in 'Fix common errors' - thx XhmikosR
+   * Fixed bug when loading "multiple replace lists" - thx Ivandrofly
 
 
 3.4.3 (11th October 2014)
