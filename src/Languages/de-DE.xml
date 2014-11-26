@@ -104,7 +104,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseWait>Das könnte ein paar Minuten dauern - bitte warten</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player nicht gefunden</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit benötigt VLC media player 1.1.x oder höher um Audiodaten zu extrahieren.</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Zur Webseite vom VLC media player wechseln?</GoToVlcMediaPlayerHomePage>
+    <GoToVlcMediaPlayerHomePage>Zur VLC media player Webseite wechseln?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Wellenformdatei wird erzeugt...</GeneratingPeakFile>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
@@ -300,7 +300,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Languages>Sprachen</Languages>
     <PalNtsc>PAL/NTSC</PalNtsc>
     <Pal>PAL (25 fps)</Pal>
-    <Ntsc>NTSC (29,97 f/s)</Ntsc>
+    <Ntsc>NTSC (29.97 fps)</Ntsc>
     <StartRipping>Export starten</StartRipping>
     <Abort>Abbrechen</Abort>
     <AbortedByUser>Abgebrochen durch Benutzer</AbortedByUser>
@@ -415,6 +415,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Zeilenhöhe</LineHeight>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
     <BoxMultiLine>Box - Mehrzeilig</BoxMultiLine>
+    <Forced>Erzwungen</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Text exportieren</Title>
@@ -1109,6 +1110,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <NoSubtitlesFound>Keine Untertitel gefunden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ungültige Matroska Datei: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Untersuche Matroska Datei. Bitte warten...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Untersuche Transport Stream Datei. Bitte warten...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vor Import der Untertitel aus Matroska Datei</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Untertitel importiert aus Matroska Datei</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ablegen der Datei '{0}' nicht möglich - Datei ist zu groß</DropFileXNotAccepted>
@@ -1222,6 +1224,8 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kann keine .idx Dateien lesen. Sie sind Teile von idx/sub Dateipaaren (VobSub). Die .sub Dateien können geöffnet werden.</ErrorLoadIdx>
     <ErrorLoadRar>Diese Datei ist ein .rar Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadRar>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
+    <ErrorLoadPng>Diese Datei ist ein PNG Bild. Subtitle Edit kann keine PNG Dateien öffnen.</ErrorLoadPng>
+    <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -1258,10 +1262,10 @@ Fortfahren?</SubtitleAppendPrompt>
     <OnlyMergeContinuationLines>Nur zusammengehörende Texte verbinden</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
-    <Title>Merge lines with same time codes</Title>
-    <MaxDifferenceMilliseconds>Max. milliseconds difference</MaxDifferenceMilliseconds>
-    <ReBreakLines>Re-break lines</ReBreakLines>
-    <NumberOfMergesX>Number of merges: {0}</NumberOfMergesX>
+    <Title>Zeilen mit gleichen Zeitstempel verbinden</Title>
+    <MaxDifferenceMilliseconds>Max. Millisekunden Abstand</MaxDifferenceMilliseconds>
+    <ReBreakLines>Neu Umbrechen</ReBreakLines>
+    <NumberOfMergesX>Verbunden: {0}</NumberOfMergesX>
     <MergedText>Verbundener Text</MergedText>
   </MergeTextWithSameTimeCodes>
   <ModifySelection>
