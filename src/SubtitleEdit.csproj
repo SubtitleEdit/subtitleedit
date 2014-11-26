@@ -88,7 +88,6 @@
     <Compile Include="Controls\AudioVisualizer.Designer.cs">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="Core\AbstractControlDescriptionProvider.cs" />
     <Compile Include="Core\FastFileStream.cs" />
     <Compile Include="Core\StringExtensions.cs" />
     <Compile Include="Forms\CheckForUpdates.cs">
@@ -466,7 +465,9 @@
     <Compile Include="Forms\PluginsGet.Designer.cs">
       <DependentUpon>PluginsGet.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\PositionAndSizeForm.cs" />
+    <Compile Include="Forms\PositionAndSizeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Forms\RestoreAutoBackup.cs">
       <SubType>Form</SubType>
     </Compile>
