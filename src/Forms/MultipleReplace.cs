@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
-using System.Drawing;
 using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -13,11 +13,11 @@ namespace Nikse.SubtitleEdit.Forms
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
         public const string SearchTypeRegularExpression = "RegularExpression";
-        private Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
+        private readonly Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         private Subtitle _subtitle;
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
-        private List<MultipleSearchAndReplaceSetting> oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
+        private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
 
         public MultipleReplace()
         {
@@ -69,11 +69,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -87,7 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
             {
                 AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
-                oldMultipleSearchAndReplaceList.Add(item);
+                _oldMultipleSearchAndReplaceList.Add(item);
             }
 
             GeneratePreview();
@@ -206,7 +206,6 @@ namespace Nikse.SubtitleEdit.Forms
                     FixCount++;
                     AddToPreviewListView(p, newText);
                     FixedSubtitle.Paragraphs[_subtitle.GetIndex(p)].Text = newText;
-                    hit = false;
                 }
             }
             listViewFixes.EndUpdate();
@@ -216,8 +215,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToReplaceListView(bool enabled, string findWhat, string replaceWith, string searchType)
         {
-            var item = new ListViewItem("");
-            item.Checked = enabled;
+            var item = new ListViewItem("") { Checked = enabled };
 
             var subItem = new ListViewItem.ListViewSubItem(item, findWhat);
             item.SubItems.Add(subItem);
@@ -231,11 +229,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AddToPreviewListView(Paragraph p, string newText)
         {
-            var item = new ListViewItem("");
-            item.Tag = p;
-            item.Checked = true;
+            var item = new ListViewItem("") { Tag = p, Checked = true };
 
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
+            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
@@ -539,8 +535,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                 foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
                 {
-                    MultipleSearchAndReplaceSetting item = new MultipleSearchAndReplaceSetting();
-                    XmlNode subNode = listNode.SelectSingleNode("Enabled");
+                    var item = new MultipleSearchAndReplaceSetting();
+                    var subNode = listNode.SelectSingleNode("Enabled");
                     if (subNode != null)
                         item.Enabled = Convert.ToBoolean(subNode.InnerText);
                     subNode = listNode.SelectSingleNode("FindWhat");
@@ -555,11 +551,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
                 }
 
+                listViewReplaceList.ItemChecked -= ListViewReplaceListItemChecked;
                 listViewReplaceList.BeginUpdate();
                 listViewReplaceList.Items.Clear();
                 foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
                     AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
                 GeneratePreview();
+                listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
                 listViewReplaceList.EndUpdate();
             }
         }
@@ -579,7 +577,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonCancel_Click(object sender, EventArgs e)
         {
             Configuration.Settings.MultipleSearchAndReplaceList.Clear();
-            foreach (var item in oldMultipleSearchAndReplaceList)
+            foreach (var item in _oldMultipleSearchAndReplaceList)
             {
                 Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
             }
