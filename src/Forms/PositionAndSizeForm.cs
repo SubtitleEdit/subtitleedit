@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    [TypeDescriptionProvider(typeof(AbstractControlDescriptionProvider<PositionAndSizeForm, Form>))]
-    public abstract class PositionAndSizeForm : Form
+    public /* abstract */ class PositionAndSizeForm : Form
     {
         private static readonly Dictionary<string, Rectangle> _positionsAndSizes = new Dictionary<string, Rectangle>();
 
@@ -40,7 +37,6 @@ namespace Nikse.SubtitleEdit.Forms
                 StartPosition = FormStartPosition.Manual;
                 Bounds = ps;
             }
-
             base.OnLoad(e);
         }
 

@@ -149,5 +149,10 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
 
             DialogResult = DialogResult.OK;
         }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
     }
 }

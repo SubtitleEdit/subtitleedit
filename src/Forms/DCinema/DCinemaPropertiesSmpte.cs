@@ -147,5 +147,10 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             string hex = Guid.NewGuid().ToString().Replace("-", string.Empty);
             textBoxFontUri.Text = "urn:uuid:" + hex.Insert(8, "-").Insert(13, "-").Insert(18, "-").Insert(23, "-");
         }
+
+        private void buttonCancel_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.Cancel;
+        }
     }
 }

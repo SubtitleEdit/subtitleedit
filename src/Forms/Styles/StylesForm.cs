@@ -1,16 +1,18 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.Styles
 {
-    [TypeDescriptionProvider(typeof(AbstractControlDescriptionProvider<StylesForm, Form>))]
-    public abstract class StylesForm : Form
+    public /* abstract */ class StylesForm : Form
     {
         private readonly Subtitle _subtitle;
         private readonly Timer _previewTimer = new Timer();
+
+        private StylesForm()
+        {
+            // Only used by the Visual Studio designer.
+        }
 
         protected StylesForm(Subtitle subtitle)
         {
@@ -20,17 +22,17 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             _previewTimer.Tick += PreviewTimerTick;
         }
 
-        public abstract string Header
+        public virtual string Header
         {
-            get;
+            get
+            {
+                throw new NotImplementedException("This property getter has to be overridden.");
+            }
         }
 
         protected Subtitle Subtitle
         {
-            get
-            {
-                return _subtitle;
-            }
+            get { return _subtitle; }
         }
 
         protected void GeneratePreview()
@@ -46,7 +48,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             }
         }
 
-        protected abstract void GeneratePreviewReal();
+        protected virtual void GeneratePreviewReal()
+        {
+            throw new NotImplementedException("This method has to be overridden.");
+        }
 
         private void PreviewTimerTick(object sender, EventArgs e)
         {

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms.DCinema
 {
-    [TypeDescriptionProvider(typeof(AbstractControlDescriptionProvider<DCinemaPropertiesForm, Form>))]
-    public abstract class DCinemaPropertiesForm : PositionAndSizeForm
+    public /* abstract */ class DCinemaPropertiesForm : PositionAndSizeForm
     {
         protected void FixLargeFonts(Button referenceButton)
         {
@@ -20,11 +17,6 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     Utilities.SetButtonHeight(this, newButtonHeight, 1);
                 }
             }
-        }
-
-        protected void buttonCancel_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.Cancel;
         }
     }
 }
