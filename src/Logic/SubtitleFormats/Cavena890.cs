@@ -357,7 +357,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static byte[] GetTextAsBytes(string text, int languageId)
         {
-            byte[] buffer = new byte[51];
+            var buffer = new byte[51];
             int skipCount = 0;
             for (int i = 0; i < buffer.Length; i++)
                 buffer[i] = 0x7F;
@@ -600,7 +600,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 var fi = new FileInfo(fileName);
                 if (fi.Length >= 640 && fi.Length < 1024000) // not too small or too big
                 {
-                    if (!fileName.EndsWith(".890"))
+                    if (!fileName.EndsWith(".890", StringComparison.Ordinal))
                         return false;
 
                     var sub = new Subtitle();
@@ -618,7 +618,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            const int TextLength = 51;
+            const int textLength = 51;
 
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
@@ -683,7 +683,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int lastNumber = -1;
             while (i < buffer.Length - 20)
             {
-                int start = i - TextLength;
+                int start = i - textLength;
 
                 int number = buffer[start - 16] * 256 + buffer[start - 15];
 
@@ -691,8 +691,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 double startFrame = buffer[start - 14] * 256 * 256 + buffer[start - 13] * 256 + buffer[start - 12];
                 double endFrame = buffer[start - 11] * 256 * 256 + buffer[start - 10] * 256 + buffer[start - 9];
 
-                string line1 = FixText(buffer, start, TextLength, _languageIdLine1);
-                string line2 = FixText(buffer, start + TextLength + 6, TextLength, _languageIdLine2);
+                string line1 = FixText(buffer, start, textLength, _languageIdLine1);
+                string line2 = FixText(buffer, start + textLength + 6, textLength, _languageIdLine2);
 
                 if (lastNumber == number)
                 {

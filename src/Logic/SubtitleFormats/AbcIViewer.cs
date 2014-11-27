@@ -38,8 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "</reel>" + Environment.NewLine +
                 "</root>";
 
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(xmlStructure);
             XmlNode reel = xml.DocumentElement.SelectSingleNode("reel");
             foreach (Paragraph p in subtitle.Paragraphs)
@@ -72,15 +71,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string xmlString = sb.ToString();
             if (!xmlString.Contains("<reel"))
                 return;
 
-            XmlDocument xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(xmlString);
@@ -113,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static double ParseTimeCode(string start)
         {
             string[] arr = start.Split(':');
-            TimeSpan ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
+            var ts = new TimeSpan(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
             return ts.TotalMilliseconds;
         }
 

@@ -35,8 +35,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (xmlAsString.Contains("http://www.w3.org/") &&
                 xmlAsString.Contains("/ttaf1"))
             {
-                var xml = new XmlDocument();
-                xml.XmlResolver = null;
+                var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -135,8 +134,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             xml.LoadXml(sb.ToString().Trim());
 
             var nsmgr = new XmlNamespaceManager(xml.NameTable);
@@ -224,11 +222,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string dur = null; // = node.Attributes["begin"].InnerText;
                     foreach (XmlAttribute attr in node.Attributes)
                     {
-                        if (attr.Name.EndsWith("begin"))
+                        if (attr.Name.EndsWith("begin", StringComparison.Ordinal))
                             start = attr.InnerText;
-                        else if (attr.Name.EndsWith("end"))
+                        else if (attr.Name.EndsWith("end", StringComparison.Ordinal))
                             end = attr.InnerText;
-                        else if (attr.Name.EndsWith("duration"))
+                        else if (attr.Name.EndsWith("duration", StringComparison.Ordinal))
                             dur = attr.InnerText;
                     }
                     //string start = node.Attributes["begin"].InnerText;
@@ -249,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             if (start.Length == 8 && start[2] == ':' && start[5] == ':' &&
                                 end.Length == 8 && end[2] == ':' && end[5] == ':')
                             {
-                                Paragraph p = new Paragraph();
+                                var p = new Paragraph();
                                 string[] parts = start.Split(new[] { ':' });
                                 p.StartTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
                                 parts = end.Split(new[] { ':' });
@@ -267,7 +265,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         TimeCode duration = TimedText10.GetTimeCode(dur, false);
                         TimeCode startTime = TimedText10.GetTimeCode(start, false);
-                        TimeCode endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
+                        var endTime = new TimeCode(startTime.TotalMilliseconds + duration.TotalMilliseconds);
                         subtitle.Paragraphs.Add(new Paragraph(startTime, endTime, text));
                     }
                 }
@@ -285,7 +283,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                return new List<string>() { ".tt" };
+                return new List<string> { ".tt" };
             }
         }
 

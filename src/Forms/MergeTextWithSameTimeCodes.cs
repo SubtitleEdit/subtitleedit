@@ -19,8 +19,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -154,7 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle MergeLinesWithSameTimeCodes(Subtitle subtitle, List<int> mergedIndexes, out int numberOfMerges, bool clearFixes, bool reBreak, int maxMsBetween)
         {
             listViewFixes.BeginUpdate();
-            List<int> removed = new List<int>();
+            var removed = new List<int>();
             if (!_loading)
                 listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
             if (clearFixes)
@@ -175,12 +175,11 @@ namespace Nikse.SubtitleEdit.Forms
                     mergedSubtitle.Paragraphs.Add(p);
                 }
                 Paragraph next = subtitle.GetParagraphOrDefault(i);
-                Paragraph afterNext = subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null)
                 {
                     if (QualifiesForMerge(p, next, maxMsBetween) && IsFixAllowed(p))
                     {
-                        if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>") && next.Text.StartsWith("<i>") && next.Text.EndsWith("</i>"))
+                        if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && next.Text.StartsWith("<i>", StringComparison.Ordinal) && next.Text.EndsWith("</i>", StringComparison.Ordinal))
                         {
                             p.Text = p.Text.Remove(p.Text.Length - 4) + Environment.NewLine + next.Text.Remove(0, 3);
                         }

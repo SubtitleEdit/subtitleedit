@@ -344,12 +344,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     startSeconds = endCode.TotalSeconds;
                     if (mustHaveLineBreakAsEnd)
                     {
-                        if (!pText.ToString().EndsWith("\\n"))
+                        if (!pText.ToString().EndsWith("\\n", StringComparison.Ordinal))
                             _errorCount++;
                     }
                     else
                     {
-                        if (pText.ToString().EndsWith("\\n"))
+                        if (pText.ToString().EndsWith("\\n", StringComparison.Ordinal))
                             _errorCount++;
                     }
 
@@ -381,11 +381,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s));
             }
-            else
-            {
-                string[] parts = s.Split(new char[] { ':', '.', ',' });
-                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-            }
+            string[] parts = s.Split(new[] { ':', '.', ',' });
+            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
         }
     }
 }
