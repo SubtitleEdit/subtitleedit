@@ -17,6 +17,7 @@
    * Updated Korean translation - thx domddol
    * Updated Slovenian translation - thx Hawk
    * Updated Portuguese translation - thx moob
+   * Updated German translation - thx Siegwarth
    * Export to images now remembers shadow width
    * Display progress when reading Transport Stream files
 * FIXED:
@@ -34,7 +35,7 @@
    * Minor fix for "unknown subtitle importer" (regarding tab)
    * Fix for dialog in "auto break line" - thx XhmikosR
    * Fixed crash in ts parser - thx Marilson
-   * Fix for 'remove dash' in 'Fix common errors' - thx XhmikosR
+   * Fix for "remove dash" in "Fix common errors" - thx XhmikosR
    * Fixed bug when loading "multiple replace lists" - thx Ivandrofly
 
 
