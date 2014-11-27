@@ -7,9 +7,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class StructuredTitles : SubtitleFormat
     {
-        private static Regex regexTimeCodes = new Regex(@"^\d\d\d\d : \d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,\d\d", RegexOptions.Compiled);
-        private static Regex regexSomeCodes = new Regex(@"^\d\d \d\d \d\d", RegexOptions.Compiled);
-        private static Regex regexText = new Regex(@"^[A-Z]\d[A-Z]\d\d ", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodes = new Regex(@"^\d\d\d\d : \d\d:\d\d:\d\d:\d\d,\d\d:\d\d:\d\d:\d\d,\d\d", RegexOptions.Compiled);
+        private static readonly Regex RegexSomeCodes = new Regex(@"^\d\d \d\d \d\d", RegexOptions.Compiled);
+        private static readonly Regex RegexText = new Regex(@"^[A-Z]\d[A-Z]\d\d ", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             var subtitle = new Subtitle();
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (string line in lines)
                 sb.AppendLine(line);
 
@@ -40,7 +40,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             int index = 0;
             sb.AppendLine(@"Structured titles
 0000 : --:--:--:--,--:--:--:--,10
@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             foreach (string line in lines)
             {
-                if (line.IndexOf(':') == 5 && regexTimeCodes.IsMatch(line))
+                if (line.IndexOf(':') == 5 && RegexTimeCodes.IsMatch(line))
                 {
                     if (p != null)
                         subtitle.Paragraphs.Add(p);
@@ -94,14 +94,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         p = new Paragraph(DecodeTimeCode(startParts), DecodeTimeCode(endParts), string.Empty);
                     }
                 }
-                else if (p != null && regexText.IsMatch(line))
+                else if (p != null && RegexText.IsMatch(line))
                 {
                     if (string.IsNullOrEmpty(p.Text))
                         p.Text = line.Substring(5).Trim();
                     else
                         p.Text += Environment.NewLine + line.Substring(5).Trim();
                 }
-                else if (line.Length < 10 && regexSomeCodes.IsMatch(line))
+                else if (line.Length < 10 && RegexSomeCodes.IsMatch(line))
                 {
                 }
                 else if (string.IsNullOrWhiteSpace(line))
@@ -116,7 +116,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        if (!line.TrimEnd().EndsWith(": --:--:--:--,--:--:--:--,-1"))
+                        if (!line.TrimEnd().EndsWith(": --:--:--:--,--:--:--:--,-1", StringComparison.Ordinal))
                         {
                             if (string.IsNullOrEmpty(p.Text))
                                 p.Text = line.Trim();
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            var tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
             return tc;
         }
 

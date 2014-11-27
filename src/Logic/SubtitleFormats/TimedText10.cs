@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static TimeCode GetTimeCode(string s, bool frames)
         {
-            if (s.EndsWith("ms"))
+            if (s.EndsWith("ms", StringComparison.Ordinal))
             {
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "milliseconds";
                 s = s.TrimEnd('s');

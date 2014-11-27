@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         //SUB[0 I 01:00:09:10>01:00:12:10]
         //SUB[0 N 01:00:09:10>01:00:12:10]
-        private static Regex regexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
-        private static Regex regexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesI = new Regex(@"^SUB\[\d I \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
+        private static readonly Regex RegexTimeCodesN = new Regex(@"^SUB\[\d N \d\d:\d\d:\d\d:\d\d\>\d\d:\d\d:\d\d:\d\d\]$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -37,16 +37,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
-            int index = 0;
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string style = "N";
-                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>"))
+                if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal))
                     style = "I";
                 sb.AppendLine(string.Format("SUB[0 {0} {1}>{2}]{3}{4}", style, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text)));
                 sb.AppendLine();
-                index++;
             }
             return sb.ToString().Trim();
         }
@@ -70,7 +68,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool italic = false;
             foreach (string line in lines)
             {
-                if (regexTimeCodesI.IsMatch(line) || regexTimeCodesN.IsMatch(line))
+                if (RegexTimeCodesI.IsMatch(line) || RegexTimeCodesN.IsMatch(line))
                 {
                     if (p != null && italic)
                         p.Text = "<i>" + p.Text.Trim() + "</i>";
@@ -111,7 +109,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string seconds = parts[2];
             string frames = parts[3];
 
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            var tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
             return tc;
         }
 

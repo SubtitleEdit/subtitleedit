@@ -1693,7 +1693,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (isdef)
                 {
                     Console.WriteLine(assyName);
-                    AssemblyDescriptionAttribute adAttr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assy, typeof(AssemblyDescriptionAttribute));
+                    var adAttr = (AssemblyDescriptionAttribute)Attribute.GetCustomAttribute(assy, typeof(AssemblyDescriptionAttribute));
                     if (adAttr != null)
                         return adAttr.Description;
                 }
@@ -1713,7 +1713,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string GetOpenDialogFilter()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(Configuration.Settings.Language.General.SubtitleFiles + "|");
             foreach (SubtitleFormat s in SubtitleFormat.AllSubtitleFormats)
             {
@@ -2380,7 +2380,7 @@ namespace Nikse.SubtitleEdit.Logic
                         var firstLine = text.Substring(0, index).Trim();
                         var secondLine = text.Substring(index + 2).Trim();
 
-                        if (firstLine.Length > 10 && firstLine.StartsWith("- <i>") && firstLine.EndsWith(endTag))
+                        if (firstLine.Length > 10 && firstLine.StartsWith("- <i>", StringComparison.Ordinal ) && firstLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
                             text = "<i>- " + firstLine.Remove(0, 5) + Environment.NewLine + secondLine;
                             text = text.Replace("<i>-  ", "<i>- ");
@@ -2388,7 +2388,7 @@ namespace Nikse.SubtitleEdit.Logic
                             firstLine = text.Substring(0, index).Trim();
                             secondLine = text.Substring(index + 2).Trim();
                         }
-                        if (secondLine.Length > 10 && secondLine.StartsWith("- <i>") && secondLine.EndsWith(endTag))
+                        if (secondLine.Length > 10 && secondLine.StartsWith("- <i>", StringComparison.Ordinal) && secondLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
                             text = firstLine + Environment.NewLine + "<i>- " + secondLine.Remove(0, 5);
                             text = text.Replace("<i>-  ", "<i>- ");
@@ -2590,7 +2590,6 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     int i = s.Length;
                     s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers);
-                    numbers = string.Empty;
                 }
 
                 sb.AppendLine(s);
@@ -3297,7 +3296,7 @@ namespace Nikse.SubtitleEdit.Logic
                         footer.AppendLine();
                         footer.AppendLine(line);
                     }
-                    else if (line.StartsWith("Comment:"))
+                    else if (line.StartsWith("Comment:", StringComparison.Ordinal))
                     {
                         var arr = line.Split(',');
                         if (arr.Length > 3)

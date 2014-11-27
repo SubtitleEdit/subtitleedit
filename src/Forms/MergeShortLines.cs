@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Core;
@@ -23,8 +24,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -112,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string numbers = item.SubItems[1].Text;
                 foreach (string number in numbers.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    if (number == p.Number.ToString())
+                    if (number == p.Number.ToString(CultureInfo.InvariantCulture))
                         return item.Checked;
                 }
             }
@@ -126,10 +127,10 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewFixes.Items.Clear();
             numberOfMerges = 0;
             string language = Utilities.AutoDetectGoogleLanguage(subtitle);
-            Subtitle mergedSubtitle = new Subtitle();
+            var mergedSubtitle = new Subtitle();
             bool lastMerged = false;
             Paragraph p = null;
-            StringBuilder lineNumbers = new StringBuilder();
+            var lineNumbers = new StringBuilder();
             for (int i = 1; i < subtitle.Paragraphs.Count; i++)
             {
                 if (!lastMerged)
@@ -243,7 +244,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrEmpty(s))
                         return true;
-                    bool isLineContinuation = s.EndsWith(',') || s.EndsWith('-') || s.EndsWith("...") || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
+                    bool isLineContinuation = s.EndsWith(',') || s.EndsWith('-') || s.EndsWith("...", StringComparison.Ordinal) || Utilities.AllLettersAndNumbers.Contains(s.Substring(s.Length - 1));
 
                     if (!checkBoxOnlyContinuationLines.Checked)
                         return true;
@@ -290,7 +291,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (Paragraph p in _subtitle.Paragraphs)
                     {
-                        if (p.Number.ToString() == number)
+                        if (p.Number.ToString(CultureInfo.InvariantCulture) == number)
                         {
                             index = _subtitle.GetIndex(p);
                             SubtitleListview1.EnsureVisible(index);

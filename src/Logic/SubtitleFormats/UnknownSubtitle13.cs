@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Xml;
 
@@ -24,8 +25,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override bool IsMine(List<string> lines, string fileName)
         {
-            Subtitle subtitle = new Subtitle();
-            this.LoadSubtitle(subtitle, lines, fileName);
+            var subtitle = new Subtitle();
+            LoadSubtitle(subtitle, lines, fileName);
             return subtitle.Paragraphs.Count > 0;
         }
 
@@ -35,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 "<?xml version=\"1.0\" encoding=\"utf-8\" ?>" + Environment.NewLine +
                 "<subtitle><config bgAlpha=\"0.5\" bgColor=\"0x000000\" defaultColor=\"0xCCffff\" fontSize=\"16\"/></subtitle>";
 
-            XmlDocument xml = new XmlDocument();
+            var xml = new XmlDocument();
             xml.LoadXml(xmlStructure);
 
             int id = 1;
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(start);
 
                 XmlAttribute idAttr = xml.CreateAttribute("id");
-                idAttr.InnerText = id.ToString();
+                idAttr.InnerText = id.ToString(CultureInfo.InvariantCulture);
                 paragraph.Attributes.Append(idAttr);
 
                 paragraph.InnerText = "<![CDATA[" + p.Text + "]]";
@@ -68,15 +69,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             _errorCount = 0;
 
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
 
             string allText = sb.ToString();
             if (!allText.Contains("<subtitle>") || !allText.Contains("timeIn="))
                 return;
 
-            XmlDocument xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(allText);
@@ -95,11 +95,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string start = node.Attributes["timeIn"].InnerText;
                     string end = node.Attributes["timeOut"].InnerText;
                     string text = node.InnerText;
-                    if (text.StartsWith("![CDATA["))
+                    if (text.StartsWith("![CDATA[", StringComparison.Ordinal))
                         text = text.Remove(0, 8);
-                    if (text.StartsWith("<![CDATA["))
+                    if (text.StartsWith("<![CDATA[", StringComparison.Ordinal))
                         text = text.Remove(0, 9);
-                    if (text.EndsWith("]]"))
+                    if (text.EndsWith("]]", StringComparison.Ordinal))
                         text = text.Remove(text.Length - 2, 2);
 
                     subtitle.Paragraphs.Add(new Paragraph(DecodeTimeCode(start), DecodeTimeCode(end), text));

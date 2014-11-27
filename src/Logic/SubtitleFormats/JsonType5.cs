@@ -117,8 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var times = Json.ReadArray(allText, "text_tees");
             var texts = Json.ReadArray(allText, "text_content");
-            var targets = Json.ReadArray(allText, "text_target");
-
+            
             for (int i = 0; i < Math.Min(times.Count, texts.Count); i++)
             {
                 try
@@ -132,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         foreach (string line in textLines)
                         {
                             string t = Json.DecodeJsonText(line);
-                            if (t.StartsWith("[\"") && t.EndsWith("\"]"))
+                            if (t.StartsWith("[\"", StringComparison.Ordinal) && t.EndsWith("\"]", StringComparison.Ordinal))
                             {
                                 var innerSb = new StringBuilder();
                                 var innerTextLines = Json.ReadArray("{\"text\":" + t + "}", "text");
@@ -151,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         text = textSb.ToString().Trim();
                         text = text.Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                     }
-                    Paragraph p = new Paragraph(text, int.Parse(times[i]), 0);
+                    var p = new Paragraph(text, int.Parse(times[i]), 0);
                     if (i + 1 < times.Count)
                         p.EndTime.TotalMilliseconds = int.Parse(times[i + 1]);
                     subtitle.Paragraphs.Add(p);
