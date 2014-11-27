@@ -1489,7 +1489,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (!p.Text.StartsWith("--"))
+                if (!p.Text.StartsWith("--", StringComparison.Ordinal))
                 {
                     string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
@@ -2418,8 +2418,8 @@ namespace Nikse.SubtitleEdit.Forms
                     arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                     if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) &&
                         (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")) &&
-                        !arr[0].StartsWith("--") && !arr[0].StartsWith("<i>--") &&
-                        !arr[1].StartsWith("--") && !arr[1].StartsWith("<i>--"))
+                        !arr[0].StartsWith("--", StringComparison.Ordinal) && !arr[0].StartsWith("<i>--", StringComparison.Ordinal) &&
+                        !arr[1].StartsWith("--", StringComparison.Ordinal) && !arr[1].StartsWith("<i>--", StringComparison.Ordinal))
                     {
                         if (isPrevEndOfLine && arr[1].StartsWith("<i>- ") && arr[1].Length > 6)
                         {
