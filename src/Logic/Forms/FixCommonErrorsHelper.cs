@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Linq;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.Forms
 {
@@ -192,10 +192,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             string text = p.Text;
 
             if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.Ordinal) ||
-                text.TrimStart().StartsWith("<I>-", StringComparison.Ordinal) ||
-                text.TrimStart().StartsWith("<I> -", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
+                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
                 text.Contains(Environment.NewLine + '-') ||
                 text.Contains(Environment.NewLine + " -") ||
                 text.Contains(Environment.NewLine + "<i>-") ||
@@ -291,10 +289,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             string text = p.Text;
 
             if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.Ordinal) ||
-                text.TrimStart().StartsWith("<I>-", StringComparison.Ordinal) ||
-                text.TrimStart().StartsWith("<I> -", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
+                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
                 text.Contains(Environment.NewLine + "-") ||
                 text.Contains(Environment.NewLine + " -") ||
                 text.Contains(Environment.NewLine + "<i>-") ||
