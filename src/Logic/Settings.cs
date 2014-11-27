@@ -270,6 +270,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SamiHtmlEncodeMode { get; set; }
 
         public string TimedText10TimeCodeFormat { get; set; }
+        public string TimedText10TimeCodeFormatSource { get; set; }
 
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
@@ -296,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic
             SamiDisplayTwoClassesAsTwoSubtitles = true;
             SamiHtmlEncodeMode = 0;
 
-            TimedText10TimeCodeFormat = "Default";
+            TimedText10TimeCodeFormat = "Source";
 
             FcpFontSize = 18;
             FcpFontName = "Lucida Grande";
@@ -1071,7 +1072,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Settings GetSettings()
         {
-            Settings settings = new Settings();
+            var settings = new Settings();
             string settingsFileName = Configuration.SettingsFileName;
             if (File.Exists(settingsFileName))
             {
@@ -1141,8 +1142,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>Newly loaded settings</returns>
         private static Settings CustomDeserialize(string fileName)
         {
-            var doc = new XmlDocument();
-            doc.PreserveWhitespace = true;
+            var doc = new XmlDocument { PreserveWhitespace = true };
 
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             doc.Load(stream);
@@ -1170,7 +1170,7 @@ namespace Nikse.SubtitleEdit.Logic
                 if (listNode.Attributes["OriginalFileName"] != null)
                     originalFileName = listNode.Attributes["OriginalFileName"].Value;
 
-                settings.RecentFiles.Files.Add(new RecentFileEntry() { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName });
+                settings.RecentFiles.Files.Add(new RecentFileEntry { FileName = listNode.InnerText, FirstVisibleIndex = int.Parse(firstVisibleIndex), FirstSelectedIndex = int.Parse(firstSelectedIndex), VideoFileName = videoFileName, OriginalFileName = originalFileName });
             }
 
             settings.General = new GeneralSettings();
@@ -2128,7 +2128,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
             {
-                MultipleSearchAndReplaceSetting item = new MultipleSearchAndReplaceSetting();
+                var item = new MultipleSearchAndReplaceSetting();
                 subNode = listNode.SelectSingleNode("Enabled");
                 if (subNode != null)
                     item.Enabled = Convert.ToBoolean(subNode.InnerText);

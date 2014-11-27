@@ -14,10 +14,10 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
     public sealed partial class TimedTextStyles : StylesForm
     {
-        private XmlDocument _xml;
-        private XmlNode _xmlHead;
-        private XmlNamespaceManager _nsmgr;
-        private bool _doUpdate = false;
+        private readonly XmlDocument _xml;
+        private readonly XmlNode _xmlHead;
+        private readonly XmlNamespaceManager _nsmgr;
+        private bool _doUpdate;
 
         public TimedTextStyles(Subtitle subtitle)
             : base(subtitle)

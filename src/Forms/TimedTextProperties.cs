@@ -17,6 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         public TimedTextProperties(Subtitle subtitle)
         {
             InitializeComponent();
+            Application.DoEvents();
 
             this._subtitle = subtitle;
             _NA = "[" + Configuration.Settings.Language.General.NotAvailable + "]";
@@ -104,6 +105,9 @@ namespace Nikse.SubtitleEdit.Forms
                     break;
                 case "hh:mm:ss.ms":
                     comboBoxTimeCodeFormat.SelectedIndex = 1;
+                    break;
+                case "default":
+                    comboBoxTimeCodeFormat.SelectedIndex = 5;
                     break;
                 default: // hh:mm:ss:ff
                     comboBoxTimeCodeFormat.SelectedIndex = 0;
