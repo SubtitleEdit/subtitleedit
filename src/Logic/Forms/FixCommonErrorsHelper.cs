@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!text.Contains(".."))
                 return text;
 
-            if (text.StartsWith("..."))
+            if (text.StartsWith("...", StringComparison.Ordinal))
             {
                 text = text.TrimStart('.').TrimStart();
             }
@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (text.StartsWith(tag))
             {
                 text = "- " + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("- ."))
+                while (text.StartsWith("- .", StringComparison.Ordinal))
                 {
                     text = "- " + text.Substring(3, text.Length - 3);
                     text = text.Replace("  ", " ");
@@ -34,18 +34,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (text.StartsWith(tag))
             {
                 text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>."))
+                while (text.StartsWith("<i>.", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4, text.Length - 4);
-                while (text.StartsWith("<i> "))
+                while (text.StartsWith("<i> ", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4, text.Length - 4);
             }
             tag = "<i> ...";
             if (text.StartsWith(tag))
             {
                 text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>."))
+                while (text.StartsWith("<i>.", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4, text.Length - 4);
-                while (text.StartsWith("<i> "))
+                while (text.StartsWith("<i> ", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4, text.Length - 4);
             }
 
@@ -53,14 +53,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (text.StartsWith(tag))
             {
                 text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("- <i>."))
+                while (text.StartsWith("- <i>.", StringComparison.Ordinal))
                     text = "- <i>" + text.Substring(6, text.Length - 6);
             }
             tag = "- <i> ...";
             if (text.StartsWith(tag))
             {
                 text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("- <i>."))
+                while (text.StartsWith("- <i>.", StringComparison.Ordinal))
                     text = "- <i>" + text.Substring(6, text.Length - 6);
             }
 
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         text = text.Replace(" - ", Environment.NewLine + "- ");
                         if (Utilities.AllLettersAndNumbers.Contains(part0[0]))
                         {
-                            if (text.StartsWith("<i>"))
+                            if (text.StartsWith("<i>", StringComparison.Ordinal))
                                 text = "<i>- " + text;
                             else
                                 text = "- " + text;
@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith('-') && arrTemp[1].TrimStart().StartsWith('-'))
                     text = temp;
-                else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-") && arrTemp[1].TrimStart().StartsWith("<i>-"))
+                else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal) && arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
                     text = temp;
             }
             else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("-- -") || text.Contains("— -")) && !text.Contains(Environment.NewLine))
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                 if (arrTemp.Length == 2)
                 {
-                    if (arrTemp[1].TrimStart().StartsWith('-') || arrTemp[1].TrimStart().StartsWith("<i>-"))
+                    if (arrTemp[1].TrimStart().StartsWith('-') || arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
                         text = temp;
                 }
                 else
@@ -177,7 +177,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     prevText.EndsWith('!') ||
                                     prevText.EndsWith('?') ||
                                     prevText.EndsWith('—') || // em dash, unicode character
-                                    prevText.EndsWith("--"));
+                                    prevText.EndsWith("--", StringComparison.Ordinal));
 
             if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith('.') &&
                 prevText[prevText.Length - 3] == '.' &&
@@ -192,10 +192,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             string text = p.Text;
 
             if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-") ||
-                text.TrimStart().StartsWith("<i> -") ||
-                text.TrimStart().StartsWith("<I>-") ||
-                text.TrimStart().StartsWith("<I> -") ||
+                text.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<i> -", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<I>-", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<I> -", StringComparison.Ordinal) ||
                 text.Contains(Environment.NewLine + '-') ||
                 text.Contains(Environment.NewLine + " -") ||
                 text.Contains(Environment.NewLine + "<i>-") ||
@@ -205,7 +205,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
                     var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             else if (text.StartsWith("<font ", StringComparison.Ordinal))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
                     var st = new StripableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
@@ -291,10 +291,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             string text = p.Text;
 
             if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-") ||
-                text.TrimStart().StartsWith("<i> -") ||
-                text.TrimStart().StartsWith("<I>-") ||
-                text.TrimStart().StartsWith("<I> -") ||
+                text.TrimStart().StartsWith("<i>-", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<i> -", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<I>-", StringComparison.Ordinal) ||
+                text.TrimStart().StartsWith("<I> -", StringComparison.Ordinal) ||
                 text.Contains(Environment.NewLine + "-") ||
                 text.Contains(Environment.NewLine + " -") ||
                 text.Contains(Environment.NewLine + "<i>-") ||
@@ -304,7 +304,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--"))
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
                     var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
@@ -337,9 +337,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 else
                                 {
                                     // add dash in first line.
-                                    if (text.StartsWith("<i>"))
+                                    if (text.StartsWith("<i>", StringComparison.Ordinal))
                                         text = "<i>- " + text.Remove(0, 3).Trim();
-                                    else if (text.StartsWith("{\\an") && text.Length > 6 && text[5] == '}')
+                                    else if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
                                         text = text.Insert(6, "- ");
                                     else
                                         text = "- " + text.Trim();
