@@ -39,8 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             if (xmlAsString.Contains("http://www.w3.org/ns/ttml"))
             {
-                var xml = new XmlDocument();
-                xml.XmlResolver = null;
+                var xml = new XmlDocument { XmlResolver = null };
                 try
                 {
                     xml.LoadXml(xmlAsString);
@@ -73,6 +72,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         internal static string ConvertToTimeString(TimeCode time)
         {
             var timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormat.Trim().ToLowerInvariant();
+            if (timeCodeFormat == "source" && !string.IsNullOrWhiteSpace(Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource))
+            {
+                timeCodeFormat = Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource.Trim().ToLowerInvariant();
+            }
             switch (timeCodeFormat)
             {
                 case "seconds":
@@ -163,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 string fontWeight = "normal";
                                 if (ssaStyle.Bold)
                                     fontWeight = "bold";
-                                AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString());
+                                AddStyleToXml(x, styleHead, xnsmgr, ssaStyle.Name, ssaStyle.FontName, fontWeight, fontStyle, Utilities.ColorToHex(ssaStyle.Primary), ssaStyle.FontSize.ToString(CultureInfo.InvariantCulture));
                             }
                         }
                         catch
@@ -290,7 +293,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     paragraph.AppendChild(br);
                 }
 
-                Stack<XmlNode> styles = new Stack<XmlNode>();
+                var styles = new Stack<XmlNode>();
                 XmlNode currentStyle = xml.CreateTextNode(string.Empty);
                 paragraph.AppendChild(currentStyle);
                 int skipCount = 0;
@@ -398,8 +401,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var sb = new StringBuilder();
             lines.ForEach(line => sb.AppendLine(line));
-            var xml = new XmlDocument();
-            xml.XmlResolver = null;
+            var xml = new XmlDocument { XmlResolver = null };
             try
             {
                 xml.LoadXml(sb.ToString().Trim());
@@ -424,6 +426,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     Configuration.Settings.General.CurrentFrameRate = fr;
             }
 
+            Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
             subtitle.Header = sb.ToString();
             string defaultStyle = null;
             if (body.Attributes["style"] != null)
@@ -501,8 +504,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     startSeconds = endCode.TotalSeconds;
 
-                    var p = new Paragraph(startCode, endCode, pText.ToString().Replace("   ", " ").Replace("  ", " "));
-                    p.Style = defaultStyle;
+                    var p = new Paragraph(startCode, endCode, pText.ToString().Replace("   ", " ").Replace("  ", " ")) { Style = defaultStyle };
                     if (node.Attributes["style"] != null)
                         p.Style = node.Attributes["style"].InnerText;
 
@@ -619,22 +621,30 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (s.EndsWith("ms"))
             {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "milliseconds";
                 s = s.TrimEnd('s');
                 s = s.TrimEnd('m');
                 return new TimeCode(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
-            else if (s.EndsWith('s'))
+            if (s.EndsWith('s'))
             {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "seconds";
                 s = s.TrimEnd('s');
                 return TimeCode.FromSeconds(double.Parse(s.Replace(",", "."), CultureInfo.InvariantCulture));
             }
-            else if (s.EndsWith('t'))
+            if (s.EndsWith('t'))
             {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "ticks";
                 s = s.TrimEnd('t');
-                TimeSpan ts = TimeSpan.FromTicks(long.Parse(s, CultureInfo.InvariantCulture));
+                var ts = TimeSpan.FromTicks(long.Parse(s, CultureInfo.InvariantCulture));
                 return new TimeCode(ts.TotalMilliseconds);
             }
-            string[] parts = s.Split(new[] { ':', '.', ',' });
+            if (s.Length == 12 && s[2] == ':' && s[5] == ':' && s[8] == '.') // 00:01:39.946
+            {
+                Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms";
+            }
+
+            var parts = s.Split(new[] { ':', '.', ',' });
             if (frames)
                 return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
             return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
@@ -644,7 +654,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             get
             {
-                return new List<string>() { ".itt", ".dfxp" }; // iTunes Timed Text + ...
+                return new List<string> { ".itt", ".dfxp" }; // iTunes Timed Text + ...
             }
         }
 

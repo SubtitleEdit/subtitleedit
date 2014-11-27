@@ -31,6 +31,8 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxOptions = new System.Windows.Forms.GroupBox();
+            this.comboBoxTimeCodeFormat = new System.Windows.Forms.ComboBox();
+            this.labelTimeCode = new System.Windows.Forms.Label();
             this.comboBoxFrameRateMultiplier = new System.Windows.Forms.ComboBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -49,8 +51,6 @@
             this.labelCollision = new System.Windows.Forms.Label();
             this.comboBoxDefaultStyle = new System.Windows.Forms.ComboBox();
             this.labelWrapStyle = new System.Windows.Forms.Label();
-            this.comboBoxTimeCodeFormat = new System.Windows.Forms.ComboBox();
-            this.labelTimeCode = new System.Windows.Forms.Label();
             this.groupBoxOptions.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -107,6 +107,31 @@
             this.groupBoxOptions.Size = new System.Drawing.Size(479, 346);
             this.groupBoxOptions.TabIndex = 0;
             this.groupBoxOptions.TabStop = false;
+            // 
+            // comboBoxTimeCodeFormat
+            // 
+            this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxTimeCodeFormat.FormattingEnabled = true;
+            this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
+            "hh:mm:ss:ff",
+            "hh:mm:ss.ms",
+            "Seconds",
+            "Milliseconds",
+            "Ticks",
+            "Default"});
+            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
+            this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
+            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);
+            this.comboBoxTimeCodeFormat.TabIndex = 19;
+            // 
+            // labelTimeCode
+            // 
+            this.labelTimeCode.AutoSize = true;
+            this.labelTimeCode.Location = new System.Drawing.Point(6, 312);
+            this.labelTimeCode.Name = "labelTimeCode";
+            this.labelTimeCode.Size = new System.Drawing.Size(89, 13);
+            this.labelTimeCode.TabIndex = 20;
+            this.labelTimeCode.Text = "Time code format";
             // 
             // comboBoxFrameRateMultiplier
             // 
@@ -276,30 +301,6 @@
             this.labelWrapStyle.Size = new System.Drawing.Size(65, 13);
             this.labelWrapStyle.TabIndex = 1;
             this.labelWrapStyle.Text = "Default style";
-            // 
-            // comboBoxTimeCodeFormat
-            // 
-            this.comboBoxTimeCodeFormat.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxTimeCodeFormat.FormattingEnabled = true;
-            this.comboBoxTimeCodeFormat.Items.AddRange(new object[] {
-            "hh:mm:ss:ff",
-            "hh:mm:ss.ms",
-            "Seconds",
-            "Milliseconds",
-            "Ticks"});
-            this.comboBoxTimeCodeFormat.Location = new System.Drawing.Point(191, 309);
-            this.comboBoxTimeCodeFormat.Name = "comboBoxTimeCodeFormat";
-            this.comboBoxTimeCodeFormat.Size = new System.Drawing.Size(263, 21);
-            this.comboBoxTimeCodeFormat.TabIndex = 19;
-            // 
-            // labelTimeCode
-            // 
-            this.labelTimeCode.AutoSize = true;
-            this.labelTimeCode.Location = new System.Drawing.Point(6, 312);
-            this.labelTimeCode.Name = "labelTimeCode";
-            this.labelTimeCode.Size = new System.Drawing.Size(89, 13);
-            this.labelTimeCode.TabIndex = 20;
-            this.labelTimeCode.Text = "Time code format";
             // 
             // TimedTextProperties
             // 
