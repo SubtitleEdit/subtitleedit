@@ -1,7 +1,7 @@
 ﻿Subtitle Edit Changelog
 
 
-3.4.4 (xth November 2014)
+3.4.4 (28th November 2014)
 * NEW:
    * Added export to EDL format + png (for Adobe Premiere) - thx Demian
    * Added "forced" option in export for Blu-ray/VobSub/BDN-xml
