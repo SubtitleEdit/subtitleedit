@@ -1110,7 +1110,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <MatroskaFiles>Soubory Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nenalezeny žádné titulky</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Toto není platný soubor Matroska: {0}</NotAValidMatroskaFileX>
-    <ParsingMatroskaFile>Analýza souboru Matroska, čekejte...</ParsingMatroskaFile>
+    <ParsingMatroskaFile>Analýza souboru Matroska. Čekejte...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Analýza souboru datového proudu přenosu. Čekejte...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Před importováním titulků ze souboru Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Importovány titulky ze souboru Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Přetažený soubor '{0}' nebyl přijat - soubor je příliš velký</DropFileXNotAccepted>
@@ -1222,8 +1223,10 @@ Pokračovat?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analýza datového proudu přenosu - čekejte...</ParsingTransportStream>
     <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a Subtitle Edit může otevřít soubor .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Soubor se zdá být komprimovaný soubor .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
-    <ErrorLoadZip>Soubor se zdá být komprimovaný soubor .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
+    <ErrorLoadRar>Soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
+    <ErrorLoadZip>Soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
+    <ErrorLoadPng>Soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
