@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Forms
             public Color BackgroundColor { get; set; }
             public string SavDialogFileName { get; set; }
             public string Error { get; set; }
-            public bool LineJoinRound { get; set; }
+            public string LineJoin { get; set; }
             public Color ShadowColor { get; set; }
             public int ShadowWidth { get; set; }
             public int ShadowAlpha { get; set; }
@@ -225,10 +225,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var parameter = (MakeBitmapParameter)data;
 
-            if (parameter.Type == "VOBSUB" || parameter.Type == "STL" || parameter.Type == "SPUMUX")
-            {
-                parameter.LineJoinRound = true;
-            }
+            parameter.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
             parameter.Bitmap = GenerateImageFromTextWithStyle(parameter);
             if (parameter.Type == "BLURAYSUP")
             {
@@ -412,9 +409,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _exportType == "DCINEMA_INTEROP" && saveFileDialog1.ShowDialog(this) == DialogResult.OK ||
                 _exportType == "EDL" && saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
-                int width = 1920;
-                int height = 1080;
-                GetResolution(ref width, ref height);
+                int width;
+                int height;
+                GetResolution(out width, out height);
 
                 FileStream binarySubtitleFile = null;
                 VobSubWriter vobSubWriter = null;
@@ -735,9 +732,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    int resW = 0;
-                    int resH = 0;
-                    GetResolution(ref resW, ref resH);
+                    int resW;
+                    int resH;
+                    GetResolution(out resW, out resH);
                     string videoFormat = "1080p";
                     if (resW == 1920 && resH == 1080)
                         videoFormat = "1080p";
@@ -803,7 +800,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
         }
 
-        private void GetResolution(ref int width, ref int height)
+        private void GetResolution(out int width, out int height)
         {
             width = 1920;
             height = 1080;
@@ -1473,9 +1470,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 mbp.BackgroundColor = panelBorderColor.BackColor;
             }
 
-            int width = 0;
-            int height = 0;
-            GetResolution(ref width, ref height);
+            int width;
+            int height;
+            GetResolution(out width, out height);
             mbp.ScreenWidth = width;
             mbp.ScreenHeight = height;
             mbp.VideoResolution = comboBoxResolution.Text;
@@ -1487,10 +1484,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             mbp.ShadowColor = panelShadowColor.BackColor;
             mbp.LineHeight = (int)numericUpDownLineSpacing.Value;
             mbp.Forced = subtitleListView1.Items[_subtitle.GetIndex(p)].Checked;
-            if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
-            {
-                mbp.LineJoinRound = true;
-            }
+            mbp.LineJoin = Configuration.Settings.Tools.ExportPenLineJoin;
             var bmp = GenerateImageFromTextWithStyle(mbp);
             if (_exportType == "VOBSUB" || _exportType == "STL" || _exportType == "SPUMUX")
             {
@@ -1560,7 +1554,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         addLeft = left + 2;
                     left = addLeft;
 
-                    DrawShadowAndPAth(parameter, g, path);
+                    DrawShadowAndPath(parameter, g, path);
                     var p2 = new SolidBrush(c);
                     g.FillPath(p2, path);
                     p2.Dispose();
@@ -1642,7 +1636,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             addLeft = left + 2;
                         left = addLeft;
 
-                        DrawShadowAndPAth(parameter, g, path);
+                        DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
                         path.Reset();
                         sb = new StringBuilder();
@@ -1710,7 +1704,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (sb.Length > 0)
                 TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
-            DrawShadowAndPAth(parameter, g, path);
+            DrawShadowAndPath(parameter, g, path);
             g.FillPath(new SolidBrush(c), path);
             g.Dispose();
 
@@ -1789,8 +1783,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (parameter.LineHeight > lineImage.Height)
                         {
                             h += parameter.LineHeight - lineImage.Height;
-                            Bitmap largeImage = new Bitmap(w, h);
-                            Graphics g = Graphics.FromImage(largeImage);
+                            var largeImage = new Bitmap(w, h);
+                            var g = Graphics.FromImage(largeImage);
                             g.DrawImageUnscaled(bmp, new Point(l1, 0));
                             g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height + parameter.LineHeight - lineImage.Height));
                             bmp.Dispose();
@@ -1799,8 +1793,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else
                         {
-                            Bitmap largeImage = new Bitmap(w, h);
-                            Graphics g = Graphics.FromImage(largeImage);
+                            var largeImage = new Bitmap(w, h);
+                            var g = Graphics.FromImage(largeImage);
                             g.DrawImageUnscaled(bmp, new Point(l1, 0));
                             g.DrawImageUnscaled(lineImage, new Point(l2, bmp.Height));
                             bmp.Dispose();
@@ -2105,7 +2099,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     addLeft = left + 2;
                                 left = addLeft;
 
-                                DrawShadowAndPAth(parameter, g, path);
+                                DrawShadowAndPath(parameter, g, path);
                                 var p2 = new SolidBrush(c);
                                 g.FillPath(p2, path);
                                 p2.Dispose();
@@ -2176,7 +2170,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     }
                                     if (path.PointCount > 0)
                                     {
-                                        PointF[] list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
+                                        var list = (PointF[])path.PathPoints.Clone(); // avoid using very slow path.PathPoints indexer!!!
                                         for (int k = oldPathPointIndex; k < list.Length; k++)
                                         {
                                             if (list[k].X > addLeft)
@@ -2187,7 +2181,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         addLeft = left + 2;
                                     left = addLeft;
 
-                                    DrawShadowAndPAth(parameter, g, path);
+                                    DrawShadowAndPath(parameter, g, path);
                                     g.FillPath(new SolidBrush(c), path);
                                     path.Reset();
                                     sb = new StringBuilder();
@@ -2274,7 +2268,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (sb.Length > 0)
                             TextDraw.DrawText(font, sf, path, sb, isItalic, parameter.SubtitleFontBold, false, left, top, ref newLine, leftMargin, ref newLinePathPoint);
 
-                        DrawShadowAndPAth(parameter, g, path);
+                        DrawShadowAndPath(parameter, g, path);
                         g.FillPath(new SolidBrush(c), path);
                     }
                 }
@@ -2302,7 +2296,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Bitmap singleBmp = nbmp.GetBitmap();
                     Bitmap singleHalfBmp = ScaleToHalfWidth(singleBmp);
                     singleBmp.Dispose();
-                    Bitmap sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleHalfBmp.Height);
+                    var sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleHalfBmp.Height);
                     int singleWidth = parameter.ScreenWidth / 2;
                     int singleLeftMargin = (singleWidth - singleHalfBmp.Width) / 2;
 
@@ -2341,7 +2335,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Bitmap singleBmp = nbmp.GetBitmap();
             Bitmap singleHalfBmp = ScaleToHalfHeight(singleBmp);
             singleBmp.Dispose();
-            Bitmap topBottomBmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight - parameter.BottomMargin);
+            var topBottomBmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight - parameter.BottomMargin);
             int singleHeight = parameter.ScreenHeight / 2;
             int leftM = (parameter.ScreenWidth / 2) - (singleHalfBmp.Width / 2);
 
@@ -2364,7 +2358,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return nbmp;
         }
 
-        private static void DrawShadowAndPAth(MakeBitmapParameter parameter, Graphics g, GraphicsPath path)
+        private static void DrawShadowAndPath(MakeBitmapParameter parameter, Graphics g, GraphicsPath path)
         {
             if (parameter.ShadowWidth > 0)
             {
@@ -2376,8 +2370,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     shadowPath.Transform(translateMatrix);
 
                     var p1 = new Pen(Color.FromArgb(parameter.ShadowAlpha, parameter.ShadowColor), parameter.BorderWidth);
-                    if (parameter.LineJoinRound)
-                        p1.LineJoin = LineJoin.Round;
+                    SetLineJoin(parameter.LineJoin, p1);
                     g.DrawPath(p1, shadowPath);
                     p1.Dispose();
                 }
@@ -2386,10 +2379,32 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (parameter.BorderWidth > 0)
             {
                 var p1 = new Pen(parameter.BorderColor, parameter.BorderWidth);
-                if (parameter.LineJoinRound)
-                    p1.LineJoin = LineJoin.Round;
+                SetLineJoin(parameter.LineJoin, p1);
                 g.DrawPath(p1, path);
                 p1.Dispose();
+            }
+        }
+
+        private static void SetLineJoin(string lineJoin, Pen pen)
+        {
+            if (!string.IsNullOrWhiteSpace(lineJoin))
+            {
+                if (string.Compare(lineJoin, "Round", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    pen.LineJoin = LineJoin.Round;
+                }
+                else if (string.Compare(lineJoin, "Bevel", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    pen.LineJoin = LineJoin.Bevel;
+                }
+                else if (string.Compare(lineJoin, "Miter", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    pen.LineJoin = LineJoin.Miter;
+                }
+                else if (string.Compare(lineJoin, "MiterClipped", StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    pen.LineJoin = LineJoin.MiterClipped;
+                }
             }
         }
 
@@ -3102,9 +3117,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void ExportPngXml_FormClosing(object sender, FormClosingEventArgs e)
         {
-            int width = 1920;
-            int height = 1080;
-            GetResolution(ref width, ref height);
+            int width;
+            int height;
+            GetResolution(out width, out height);
             string res = string.Format("{0}x{1}", width, height);
 
             if (_exportType == "VOBSUB")
@@ -3515,11 +3530,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1.BeginUpdate();
             subtitleListView1.Items.Clear();
-            int i = 0;
             foreach (Paragraph paragraph in subtitle.Paragraphs)
             {
                 SubtitleListView1Add(paragraph);
-                i++;
             }
             subtitleListView1.EndUpdate();
         }
