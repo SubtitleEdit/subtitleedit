@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
             var times = Json.ReadArray(allText, "text_tees");
             var texts = Json.ReadArray(allText, "text_content");
-            
+
             for (int i = 0; i < Math.Min(times.Count, texts.Count); i++)
             {
                 try

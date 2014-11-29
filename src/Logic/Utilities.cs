@@ -2380,7 +2380,7 @@ namespace Nikse.SubtitleEdit.Logic
                         var firstLine = text.Substring(0, index).Trim();
                         var secondLine = text.Substring(index + 2).Trim();
 
-                        if (firstLine.Length > 10 && firstLine.StartsWith("- <i>", StringComparison.Ordinal ) && firstLine.EndsWith(endTag, StringComparison.Ordinal))
+                        if (firstLine.Length > 10 && firstLine.StartsWith("- <i>", StringComparison.Ordinal) && firstLine.EndsWith(endTag, StringComparison.Ordinal))
                         {
                             text = "<i>- " + firstLine.Remove(0, 5) + Environment.NewLine + secondLine;
                             text = text.Replace("<i>-  ", "<i>- ");
