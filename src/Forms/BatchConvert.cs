@@ -829,12 +829,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-                    var fixCommonErrors = new FixCommonErrors();
-                    fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
-                    p.Subtitle = fixCommonErrors.FixedSubtitle;
-                    fixCommonErrors = new FixCommonErrors();
-                    fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
-                    p.Subtitle = fixCommonErrors.FixedSubtitle;
+                    using (var fixCommonErrors = new FixCommonErrors())
+                    {
+                        fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                        p.Subtitle = fixCommonErrors.FixedSubtitle;
+                    }
+                    using (var fixCommonErrors = new FixCommonErrors())
+                    {
+                        fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                        p.Subtitle = fixCommonErrors.FixedSubtitle;
+                    }
                 }
                 catch (Exception exception)
                 {
