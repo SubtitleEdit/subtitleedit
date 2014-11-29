@@ -146,6 +146,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int Export3DDepth { get; set; }
         public int ExportLastShadowTransparency { get; set; }
         public double ExportLastFrameRate { get; set; }
+        public string ExportPenLineJoin { get; set; }
         public bool FixCommonErrorsFixOverlapAllowEqualEndStart { get; set; }
         public string ImportTextSplitting { get; set; }
         public bool ImportTextMergeShortLines { get; set; }
@@ -207,6 +208,7 @@ namespace Nikse.SubtitleEdit.Logic
             Export3DDepth = 0;
             ExportLastShadowTransparency = 200;
             ExportLastFrameRate = 24.0d;
+            ExportPenLineJoin = "Round";
             ExportFcpImageType = "Bmp";
             ExportLastBorderWidth = 2;
             BridgeGapMilliseconds = 100;
@@ -1705,6 +1707,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("ExportLastFrameRate");
             if (subNode != null)
                 settings.Tools.ExportLastFrameRate = double.Parse(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("ExportPenLineJoin");
+            if (subNode != null)
+                settings.Tools.ExportPenLineJoin = subNode.InnerText;
             subNode = node.SelectSingleNode("FixCommonErrorsFixOverlapAllowEqualEndStart");
             if (subNode != null)
                 settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart = Convert.ToBoolean(subNode.InnerText);
@@ -2793,6 +2798,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("Export3DDepth", settings.Tools.Export3DDepth.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastShadowTransparency", settings.Tools.ExportLastShadowTransparency.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("ExportLastFrameRate", settings.Tools.ExportLastFrameRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("ExportPenLineJoin", settings.Tools.ExportPenLineJoin);
                 textWriter.WriteElementString("FixCommonErrorsFixOverlapAllowEqualEndStart", settings.Tools.FixCommonErrorsFixOverlapAllowEqualEndStart.ToString());
                 textWriter.WriteElementString("ImportTextSplitting", settings.Tools.ImportTextSplitting);
                 textWriter.WriteElementString("ImportTextMergeShortLines", settings.Tools.ImportTextMergeShortLines.ToString());
