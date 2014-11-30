@@ -468,7 +468,7 @@ namespace Test
                 target.FixHyphensAdd();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
             }
-        }
+        }      
 
         #endregion Fix Hyphens (add dash)
 
@@ -1041,7 +1041,7 @@ namespace Test
         public void FixDashWithPreviousEndsWithDashDash()
         {
             var subtitle = new Subtitle();
-            string t1 = "Hey--";
+            const string t1 = "Hey--";
             string t2 = "- oh, no, no, no, you're gonna" + Environment.NewLine + "need to add the mattress,";
             subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
             subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
@@ -1051,6 +1051,24 @@ namespace Test
                 Assert.AreEqual(target, result);
             }
         }
+
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDashDontRemoveWhiteSpaceWithItalic()
+        {
+            var subtitle = new Subtitle();
+            const string t1 = "Hey!";
+            const string t2 = "- PREVIOUSLY ON<I> HAVEN...</I>";
+            subtitle.Paragraphs.Add(new Paragraph(t1, 0, 1000));
+            subtitle.Paragraphs.Add(new Paragraph(t2, 1000, 4000));
+            {
+                var result = FixCommonErrorsHelper.FixHyphensRemove(subtitle, 1);
+                const string target = "PREVIOUSLY ON<I> HAVEN...</I>";
+                Assert.AreEqual(target, result);
+            }
+        }
+
 
         #endregion FixHyphens (remove dash)
 
