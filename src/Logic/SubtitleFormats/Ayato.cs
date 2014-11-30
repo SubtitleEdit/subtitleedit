@@ -64,11 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             while (index + textPosition < buffer.Length)
             {
                 int textLength = buffer[index + 16];
-                if (textLength == 0)
-                {
-                    return;
-                }
-                if (index + textPosition + textLength < buffer.Length)
+                if (textLength > 0 && index + textPosition + textLength < buffer.Length)
                 {
                     string text = GetText(index + textPosition, textLength, buffer);
                     if (!string.IsNullOrWhiteSpace(text))
