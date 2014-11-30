@@ -1735,6 +1735,8 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".mks");
             AddExtension(sb, ".sup");
             AddExtension(sb, ".dost");
+            AddExtension(sb, new Ayato().Extension);
+            AddExtension(sb, new PacUnicode().Extension);
 
             if (!string.IsNullOrEmpty(Configuration.Settings.General.OpenSubtitleExtraExtensions))
             {

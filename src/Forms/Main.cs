@@ -2007,6 +2007,21 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var pacUnicode = new PacUnicode();
+                    if (pacUnicode.IsMine(null, fileName))
+                    {
+                        pacUnicode.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = pacUnicode;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+                if (format == null)
+                {
                     try
                     {
                         var bdnXml = new BdnXml();

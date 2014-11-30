@@ -886,6 +886,7 @@
     <Compile Include="Logic\OCR\OcrImage.cs" />
     <Compile Include="Logic\OCR\NOcrPoint.cs" />
     <Compile Include="Logic\OCR\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\SubtitleFormats\PacUnicode.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Enums\SubtitleSortCriteria.cs" />
     <Compile Include="Logic\ImageSplitterItem.cs" />
