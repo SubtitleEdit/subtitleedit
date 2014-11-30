@@ -1990,6 +1990,21 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
+                if (format == null && fileName.EndsWith(".aya", StringComparison.OrdinalIgnoreCase))
+                {
+                    var ayato = new Ayato();
+                    if (ayato.IsMine(null, fileName))
+                    {
+                        ayato.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = ayato;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
                 if (format == null)
                 {
                     try

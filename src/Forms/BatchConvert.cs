@@ -315,6 +315,14 @@ namespace Nikse.SubtitleEdit.Forms
                             format = chk;
                         }
                     }
+                    if (format == null && fileName.EndsWith(".aya", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var ayato = new Ayato();
+                        if (ayato.IsMine(null, fileName))
+                        {
+                            format = ayato;
+                        }
+                    }
                     if (format == null)
                     {
                         var capMakerPlus = new CapMakerPlus();
