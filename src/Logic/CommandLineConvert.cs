@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Logic
                                     format = chk;
                                 }
                             }
-                            if (format == null && fileName.EndsWith(".aya", StringComparison.OrdinalIgnoreCase))
+                            if (format == null)
                             {
                                 var ayato = new Ayato();
                                 if (ayato.IsMine(null, fileName))
