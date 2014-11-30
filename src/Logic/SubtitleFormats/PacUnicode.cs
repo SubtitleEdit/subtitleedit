@@ -39,7 +39,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         byte[] buffer = FileUtil.ReadAllBytesShared(fileName);
 
-                        if (buffer[00] == 1 && 
+                        if (buffer[00] == 1 &&
                             buffer[01] == 0 &&
                             buffer[02] == 0 &&
                             buffer[03] == 0 &&
@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index + 20 >= buffer.Length)
                     return null;
 
-                if (buffer[index] == 0xFE && buffer[index-1] == 0x80)
+                if (buffer[index] == 0xFE && buffer[index - 1] == 0x80)
                     con = false;
             }
 
@@ -211,7 +211,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             p.Text = p.Text.Replace(Convert.ToChar(12).ToString(CultureInfo.InvariantCulture), string.Empty);
 
             return p;
-        }      
+        }
 
     }
 }

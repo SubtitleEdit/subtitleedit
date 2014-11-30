@@ -468,7 +468,7 @@ namespace Test
                 target.FixHyphensAdd();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "- Five-Both?" + Environment.NewLine + "- T... T... Ten...");
             }
-        }      
+        }
 
         #endregion Fix Hyphens (add dash)
 
@@ -1052,7 +1052,6 @@ namespace Test
             }
         }
 
-
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixDashDontRemoveWhiteSpaceWithItalic()
@@ -1068,7 +1067,6 @@ namespace Test
                 Assert.AreEqual(target, result);
             }
         }
-
 
         #endregion FixHyphens (remove dash)
 
