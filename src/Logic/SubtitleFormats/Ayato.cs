@@ -54,27 +54,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             _errorCount = 0;
             subtitle.Paragraphs.Clear();
             subtitle.Header = null;
-            var bytes = FileUtil.ReadAllBytesShared(fileName);
+            var buffer = FileUtil.ReadAllBytesShared(fileName);
             int index = startPosition;
-            if (bytes[index] != 1)
+            if (buffer[index] != 1)
             {
                 return;
             }
 
-            while (index + textPosition < bytes.Length)
+            while (index + textPosition < buffer.Length)
             {
-                int textLength = bytes[index + 16];
+                int textLength = buffer[index + 16];
                 if (textLength == 0)
                 {
                     return;
                 }
-                if (index + textPosition + textLength < bytes.Length)
+                if (index + textPosition + textLength < buffer.Length)
                 {
-                    string text = GetText(index + textPosition, textLength, bytes);
+                    string text = GetText(index + textPosition, textLength, buffer);
                     if (!string.IsNullOrWhiteSpace(text))
                     {
-                        int startFrames = GetFrames(index + 4, bytes);
-                        int endFrames = GetFrames(index + 8, bytes);
+                        int startFrames = GetFrames(index + 4, buffer);
+                        int endFrames = GetFrames(index + 8, buffer);
                         subtitle.Paragraphs.Add(new Paragraph(text, FramesToMilliseconds(startFrames), FramesToMilliseconds(endFrames)));
                     }
                 }
@@ -83,19 +83,43 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetText(int index, int length, byte[] bytes)
+        private string GetText(int index, int length, byte[] buffer)
         {
+            if (length < 1)
+            {
+                return string.Empty;
+            }
+
+            int offset = 0;
+            if (buffer[index] == 7)
+            {
+                offset = 1;
+            }
+            else if (buffer[index + 1] == 7)
+            {
+                offset = 2;
+            }
+            else if (buffer[index + 2] == 7)
+            {
+                offset = 3;
+            }
+
+            if (length - offset < 1)
+            {
+                return string.Empty;
+            }
+
             const string newline1 = ""; // unicode chars
-            const string newline2 = ""; // unicode chars
-            var s = Encoding.UTF8.GetString(bytes, index + 2, length - 2);
+            const string newline2 = ""; // unicode char
+            var s = Encoding.UTF8.GetString(buffer, index + offset, length - offset);
             s = s.Replace(newline1, Environment.NewLine);
             s = s.Replace(newline2, Environment.NewLine);
             return s;
         }
 
-        private int GetFrames(int index, byte[] bytes)
+        private int GetFrames(int index, byte[] buffer)
         {
-            return (bytes[index + 2] << 16) + (bytes[index + 1] << 8) + bytes[index + 0];
+            return (buffer[index + 2] << 16) + (buffer[index + 1] << 8) + buffer[index];
         }
 
     }
