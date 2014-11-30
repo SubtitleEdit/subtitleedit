@@ -237,9 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 if (idx < 5 && idx >= 0 && st.Pre.Length >= idx)
                                     text = text.Remove(idx, 1).TrimStart();
 
-                                text = text.Replace("  ", " ");
-                                text = text.Replace("> ", ">");
-                                text = text.Replace(" <", "<");
+                                text = RemoveSpacesBeginLine(text);
                             }
                             else
                             {
@@ -256,10 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                         {
                                             text = text.Remove(idx, 1).TrimStart();
 
-                                            text = text.Replace("  ", " ");
-                                            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                                            text = text.Replace("> ", ">");
-                                            text = text.Replace(" <", "<");
+                                            text = RemoveSpacesBeginLine(text);
                                         }
                                     }
                                 }
@@ -280,6 +275,20 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     }
                 }
             }
+            return text;
+        }
+
+        private static string RemoveSpacesBeginLine(string text)
+        {
+            text = text.TrimStart();
+            text = text.Replace("  ", " ");
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
+            text = text.Replace(Environment.NewLine + "<b> ", Environment.NewLine + "<b>");
+            if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                text = text.Remove(3, 1);
+            if (text.StartsWith("<b> ", StringComparison.OrdinalIgnoreCase))
+                text = text.Remove(3, 1);
             return text;
         }
 
