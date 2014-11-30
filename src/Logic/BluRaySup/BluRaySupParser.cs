@@ -272,25 +272,23 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 var r = Rectangle.Empty;
                 for (int ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
-                    Rectangle ioRect = new Rectangle(PcsObjects[ioIndex].Origin, BitmapObjects[ioIndex][0].Size);
+                    var ioRect = new Rectangle(PcsObjects[ioIndex].Origin, BitmapObjects[ioIndex][0].Size);
                     if (r.IsEmpty)
                         r = ioRect;
                     else
                         r = Rectangle.Union(r, ioRect);
                 }
-                using (var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb))
+                var mergedBmp = new Bitmap(r.Width, r.Height, PixelFormat.Format32bppArgb);
+                for (var ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
                 {
-                    for (var ioIndex = 0; ioIndex < PcsObjects.Count; ioIndex++)
+                    var offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
+                    using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
+                    using (var gSideBySide = Graphics.FromImage(mergedBmp))
                     {
-                        var offset = PcsObjects[ioIndex].Origin - new Size(r.Location);
-                        using (var singleBmp = SupDecoder.DecodeImage(PcsObjects[ioIndex], BitmapObjects[ioIndex], PaletteInfos))
-                        using (var gSideBySide = Graphics.FromImage(mergedBmp))
-                        {
-                            gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
-                        }
+                        gSideBySide.DrawImage(singleBmp, offset.X, offset.Y);
                     }
-                    return mergedBmp;
                 }
+                return mergedBmp;
             }
 
         }
