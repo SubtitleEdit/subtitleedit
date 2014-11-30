@@ -1590,7 +1590,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("({0})", b);
         }
 
-        private static TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)
+        internal static TimeCode GetTimeCode(int timeCodeIndex, byte[] buffer)
         {
             if (timeCodeIndex > 0)
             {
