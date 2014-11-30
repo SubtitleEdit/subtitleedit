@@ -13068,14 +13068,15 @@ namespace Nikse.SubtitleEdit.Forms
             if (SubtitleListview1.SelectedItems.Count > 0)
             {
                 int index = SubtitleListview1.SelectedItems[0].Index;
-                if (index == -1)
+                if (index == -1 || index >= _subtitle.Paragraphs.Count)
                     return;
 
+                var p = _subtitle.Paragraphs[index];
                 mediaPlayer.Pause();
-                if (_subtitle.Paragraphs[index].StartTime.IsMaxTime)
+                if (p.StartTime.IsMaxTime)
                     return;
 
-                double newPos = _subtitle.Paragraphs[index].StartTime.TotalSeconds + adjustSeconds;
+                double newPos = p.StartTime.TotalSeconds + adjustSeconds;
                 if (newPos < 0)
                     newPos = 0;
                 mediaPlayer.CurrentPosition = newPos;
