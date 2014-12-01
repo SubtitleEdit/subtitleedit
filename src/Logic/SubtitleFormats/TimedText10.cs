@@ -204,11 +204,24 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             else
             {
                 xml.LoadXml(subtitle.Header);
-                XmlNode divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).SelectSingleNode("ttml:div", nsmgr);
+                XmlNode bodyNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr);
+                XmlNode divNode = bodyNode.SelectSingleNode("ttml:div", nsmgr);
                 if (divNode == null)
                     divNode = xml.DocumentElement.SelectSingleNode("//ttml:body", nsmgr).FirstChild;
                 if (divNode != null)
                 {
+                    // Remove all but first div
+                    int innerNodeCount = 0;
+                    var innerNodeList = new List<XmlNode>();
+                    foreach (XmlNode innerNode in bodyNode.SelectNodes("ttml:div", nsmgr))
+                    {
+                        if (innerNodeCount > 0)
+                            innerNodeList.Add(innerNode);
+                        innerNodeCount++;
+                    }
+                    foreach (XmlNode child in innerNodeList)
+                        bodyNode.RemoveChild(child);
+
                     var lst = new List<XmlNode>();
                     foreach (XmlNode child in divNode.ChildNodes)
                         lst.Add(child);
