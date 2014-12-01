@@ -327,6 +327,8 @@
     <Word from="doesnt" to="doesn't" />
     <Word from="doesn'T" to="doesn't" />
     <Word from="doesri't" to="doesnt't" />
+    <Word from="doesrt" to="doesn't" />
+    <Word from="Doesrt" to="Doesn't" />
     <Word from="doit" to="do it" />
     <Word from="dojust" to="do just" />
     <Word from="don*t" to="don't" />
@@ -464,6 +466,8 @@
     <Word from="H0we·ver" to="However" />
     <Word from="halftheir" to="half their" />
     <Word from="hapPY" to="happy" />
+    <Word from="hasrt" to="hasn't" />
+    <Word from="Hasrt" to="Hasn't" />
     <Word from="haven'tspokerl" to="haven't spoken" />
     <Word from="hcle" to="hole" />
     <Word from="hcme" to="home" />
@@ -1393,6 +1397,8 @@
     <Word from="Warcontinues" to="War continues" />
     <Word from="wasjennifer" to="was Jennifer" />
     <Word from="wasjust" to="was just" />
+    <Word from="wasrt" to="wasn't" />
+    <Word from="Wasrt" to="Wasn't" />
     <Word from="wayl" to="way I" />
     <Word from="wayround" to="way round" />
     <Word from="wclf" to="wolf" />
@@ -1407,6 +1413,8 @@
     <Word from="We/come" to="Welcome" />
     <Word from="We/I" to="Well" />
     <Word from="weekendjust" to="weekend just" />
+    <Word from="werert" to="weren't" />
+    <Word from="Werert" to="Weren't" />
     <Word from="we'II" to="we'll" />
     <Word from="We'II" to="We'll" />
     <Word from="we'Il" to="we'll" />
