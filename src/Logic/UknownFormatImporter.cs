@@ -661,25 +661,28 @@ namespace Nikse.SubtitleEdit.Logic
         {
             try
             {
-                string hour = parts[0];
-                string minutes = parts[1];
-                string seconds = parts[2];
+                string hour;
+                string minutes;
+                string seconds;
                 string frames;
                 if (parts.Length < 4)
                 {
-                    frames = seconds;
-                    seconds = minutes;
-                    minutes = hour;
                     hour = "0";
+                    minutes = parts[0];
+                    seconds = parts[1];
+                    frames = parts[2];
                 }
                 else
                 {
+                    hour = parts[0];
+                    minutes = parts[1];
+                    seconds = parts[2];
                     frames = parts[3];
                 }
 
-                if (frames.Length < 3)
-                    return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), SubtitleFormat.FramesToMillisecondsMax999(int.Parse(frames)));
-                return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(frames));
+                return frames.Length < 3
+                    ? new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), SubtitleFormat.FramesToMillisecondsMax999(int.Parse(frames)))
+                    : TimeCode.FromTimestampTokens(hour, minutes, seconds, frames);
             }
             catch
             {

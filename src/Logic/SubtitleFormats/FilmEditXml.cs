@@ -166,11 +166,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode DecodeTime(string s)
         {
             var arr = s.Split(':');
-            if (arr.Length == 4)
-            {
-                return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
-            }
-            return new TimeCode(0, 0, 0, 0);
+            return arr.Length == 4
+                ? new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])))
+                : new TimeCode(0);
         }
 
     }

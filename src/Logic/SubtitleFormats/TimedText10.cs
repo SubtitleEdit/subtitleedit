@@ -657,10 +657,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = "hh:mm:ss.ms";
             }
 
-            var parts = s.Split(new[] { ':', '.', ',' });
-            if (frames)
-                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+            var parts = s.Split(':', '.', ',');
+            return frames
+                ? new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])))
+                : TimeCode.FromTimestampTokens(parts);
         }
 
         public override List<string> AlternateExtensions

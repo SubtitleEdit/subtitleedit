@@ -230,10 +230,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string time)
         {
-            string[] arr = time.Split(new[] { '.', ':' }, StringSplitOptions.RemoveEmptyEntries);
-            if (arr.Length == 3)
-                return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]));
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
+            var tokens = time.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+            return tokens.Length == 3
+                ? TimeCode.FromTimestampTokens("0", tokens[0], tokens[1], tokens[2]) //   mm:ss:f
+                : TimeCode.FromTimestampTokens(tokens);                              // h:mm:ss:f
         }
 
         private static string EncodeTime(TimeCode timeCode)

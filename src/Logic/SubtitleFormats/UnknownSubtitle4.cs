@@ -88,24 +88,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string[] parts = line.Split(new[] { ':', ',', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 8)
                     {
-                        try
-                        {
-                            int startHours = int.Parse(parts[0]);
-                            int startMinutes = int.Parse(parts[1]);
-                            int startSeconds = int.Parse(parts[2]);
-                            int startMilliseconds = int.Parse(parts[3]);
-                            int endHours = int.Parse(parts[4]);
-                            int endMinutes = int.Parse(parts[5]);
-                            int endSeconds = int.Parse(parts[6]);
-                            int endMilliseconds = int.Parse(parts[7]);
-                            paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                            paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                            expecting = ExpectingLine.Text;
-                        }
-                        catch
-                        {
-                            expecting = ExpectingLine.TimeCodes;
-                        }
+                        paragraph.StartTime = TimeCode.FromTimestampTokens(parts);
+                        paragraph.EndTime = TimeCode.FromTimestampTokens(parts[4], parts[5], parts[6], parts[7]);
+                        expecting = ExpectingLine.Text;
                     }
                 }
                 else

@@ -85,9 +85,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string[] parts = s.Split(':');
                         if (parts.Length > 3)
                         {
-                            int hours = int.Parse(parts[0]);
-                            int minutes = int.Parse(parts[1]);
-                            int seconds = int.Parse(parts[2]);
+                            var start = TimeCode.FromTimestampTokens(parts);
+
                             string text = string.Empty;
                             for (int i = 3; i < parts.Length; i++)
                             {
@@ -97,12 +96,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     text += ":" + parts[i];
                             }
                             text = text.Replace("|", Environment.NewLine);
-                            var start = new TimeCode(hours, minutes, seconds, 0);
                             double duration = Utilities.GetOptimalDisplayMilliseconds(text);
                             var end = new TimeCode(start.TotalMilliseconds + duration);
 
-                            var p = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(p);
+                            subtitle.Paragraphs.Add(new Paragraph(start, end, text));
                             success = true;
                         }
                     }

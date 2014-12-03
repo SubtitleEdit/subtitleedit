@@ -245,31 +245,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (_regexTimeCodes.IsMatch(line) || _regexTimeCodes2.IsMatch(line))
             {
                 string[] parts = line.Replace("-->", ":").Replace(" ", string.Empty).Split(':', ',');
-                try
-                {
-                    int startHours = int.Parse(parts[0]);
-                    int startMinutes = int.Parse(parts[1]);
-                    int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = int.Parse(parts[3]);
-                    int endHours = int.Parse(parts[4]);
-                    int endMinutes = int.Parse(parts[5]);
-                    int endSeconds = int.Parse(parts[6]);
-                    int endMilliseconds = int.Parse(parts[7]);
 
-                    paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                    if (parts[0].StartsWith('-') && paragraph.StartTime.TotalMilliseconds > 0)
-                        paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
+                paragraph.StartTime = TimeCode.FromTimestampTokens(parts);
+                if (parts[0][0] == '-' && paragraph.StartTime.TotalMilliseconds > 0)
+                    paragraph.StartTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds * -1;
 
-                    paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                    if (parts[4].StartsWith('-') && paragraph.EndTime.TotalMilliseconds > 0)
-                        paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
+                paragraph.EndTime = TimeCode.FromTimestampTokens(parts[4], parts[5], parts[6], parts[7]);
+                if (parts[4][0] == '-' && paragraph.EndTime.TotalMilliseconds > 0)
+                    paragraph.EndTime.TotalMilliseconds = paragraph.EndTime.TotalMilliseconds * -1;
 
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                return true;
             }
             return false;
         }

@@ -1608,7 +1608,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 return new TimeCode(hours, minutes, second, milliseconds);
             }
-            return new TimeCode(0, 0, 0, 0);
+            return new TimeCode(0);
         }
 
     }

@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0), s.Remove(0, 37).Trim());
                     }
                     catch
                     {
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), string.Empty);
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0), string.Empty);
                     }
                     catch
                     {

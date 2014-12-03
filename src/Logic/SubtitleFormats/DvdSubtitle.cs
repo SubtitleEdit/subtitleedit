@@ -108,17 +108,7 @@ LICENSE=
                         try
                         {
                             textOn = true;
-                            string[] arr = line.Substring(3).Trim().Split(':');
-                            if (arr.Length == 4)
-                            {
-                                int hours = int.Parse(arr[0]);
-                                int minutes = int.Parse(arr[1]);
-                                int seconds = int.Parse(arr[2]);
-                                int milliseconds = int.Parse(arr[3]);
-                                if (arr[3].Length == 2)
-                                    milliseconds *= 10;
-                                start = new TimeCode(hours, minutes, seconds, milliseconds);
-                            }
+                            start = TimeCode.FromTimestampTokens(line.Substring(3).Trim().Split(':'));
                         }
                         catch
                         {

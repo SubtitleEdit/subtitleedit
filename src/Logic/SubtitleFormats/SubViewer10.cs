@@ -97,30 +97,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string[] parts = line.Split(new[] { ':', ']', '[', ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {
-                        try
+                        var tc = TimeCode.FromTimestampTokens(parts);
+                        if (expecting == ExpectingLine.TimeStart)
                         {
-                            int startHours = int.Parse(parts[0]);
-                            int startMinutes = int.Parse(parts[1]);
-                            int startSeconds = int.Parse(parts[2]);
-                            var tc = new TimeCode(startHours, startMinutes, startSeconds, 0);
-                            if (expecting == ExpectingLine.TimeStart)
-                            {
-                                paragraph = new Paragraph();
-                                paragraph.StartTime = tc;
-                                expecting = ExpectingLine.Text;
-                            }
-                            else if (expecting == ExpectingLine.TimeEnd)
-                            {
-                                paragraph.EndTime = tc;
-                                expecting = ExpectingLine.TimeStart;
-                                subtitle.Paragraphs.Add(paragraph);
-                                paragraph = new Paragraph();
-                            }
+                            paragraph = new Paragraph();
+                            paragraph.StartTime = tc;
+                            expecting = ExpectingLine.Text;
                         }
-                        catch
+                        else if (expecting == ExpectingLine.TimeEnd)
                         {
-                            _errorCount++;
+                            paragraph.EndTime = tc;
                             expecting = ExpectingLine.TimeStart;
+                            subtitle.Paragraphs.Add(paragraph);
+                            paragraph = new Paragraph();
                         }
                     }
                 }

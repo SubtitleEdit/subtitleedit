@@ -137,13 +137,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(XmlNode node)
         {
-            var tc = new TimeCode(0, 0, 0, 0);
-            if (node != null)
-            {
-                string[] arr = node.InnerText.Split(new[] { ':', '.', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-                tc = new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), int.Parse(arr[3]));
-            }
-            return tc;
+            return node == null
+                ? new TimeCode(0)
+                : TimeCode.FromTimestampTokens(node.InnerText.Split(new[] { ':', '.', ',', ';' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
     }

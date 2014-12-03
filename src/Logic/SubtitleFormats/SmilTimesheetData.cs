@@ -90,9 +90,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] s)
         {
-            if (s.Length == 3)
-                return new TimeCode(0, int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]) * 10);
-            return new TimeCode(int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]), int.Parse(s[3]) * 10);
+            return s.Length == 3
+                ? TimeCode.FromTimestampTokens("0", s[0], s[1], s[2])
+                : TimeCode.FromTimestampTokens(s);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

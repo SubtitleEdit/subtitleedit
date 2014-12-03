@@ -83,19 +83,20 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool GetTimeCode(TimeCode timeCode, string timeString)
         {
-            try
+            var timeParts = timeString.Split(':', '.');
+            int h, m, s, ms;
+            if (int.TryParse(timeParts[0], out h)
+                && int.TryParse(timeParts[1], out m)
+                && int.TryParse(timeParts[2], out s)
+                && int.TryParse(timeParts[3], out ms))
             {
-                string[] timeParts = timeString.Split(new[] { ':', '.' });
-                timeCode.Hours = int.Parse(timeParts[0]);
-                timeCode.Minutes = int.Parse(timeParts[1]);
-                timeCode.Seconds = int.Parse(timeParts[2]);
-                timeCode.Milliseconds = int.Parse(timeParts[3]);
+                timeCode.Hours = h;
+                timeCode.Minutes = m;
+                timeCode.Seconds = s;
+                timeCode.Milliseconds = ms;
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

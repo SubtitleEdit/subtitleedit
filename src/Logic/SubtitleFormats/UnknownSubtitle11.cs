@@ -155,8 +155,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string timeCode)
         {
-            string[] arr = timeCode.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
+            return TimeCode.FromTimestampTokens(timeCode.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries));
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

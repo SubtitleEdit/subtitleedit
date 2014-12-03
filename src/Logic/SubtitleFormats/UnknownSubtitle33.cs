@@ -103,12 +103,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string[] arr = s.Substring(0, 8).Split(':');
                         if (arr.Length == 3)
                         {
-                            int hours = int.Parse(arr[0]);
-                            int minutes = int.Parse(arr[1]);
-                            int seconds = int.Parse(arr[2]);
-                            p.StartTime = new TimeCode(hours, minutes, seconds, 0);
-                            string text = s.Remove(0, 12).Trim();
-                            p.Text = text;
+                            p.StartTime = TimeCode.FromTimestampTokens(arr);
+                            p.Text = s.Remove(0, 12).Trim();
                         }
                     }
                     catch

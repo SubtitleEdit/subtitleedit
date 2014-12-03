@@ -178,16 +178,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode GetTimeCode(string s)
         {
-            if (s.EndsWith('s'))
-            {
-                s = s.TrimEnd('s');
-                return TimeCode.FromSeconds(double.Parse(s));
-            }
-            else
-            {
-                string[] parts = s.Split(new char[] { ':', '.', ',' });
-                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-            }
+            return s.EndsWith('s')
+                ? TimeCode.FromSeconds(double.Parse(s.Substring(0, s.Length - 1)))
+                : TimeCode.FromTimestampTokens(s.Split(':', '.', ','));
         }
     }
 }

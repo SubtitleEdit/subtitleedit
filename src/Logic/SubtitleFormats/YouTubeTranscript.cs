@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    p = new Paragraph(DecodeTimeCode(line), new TimeCode(0, 0, 0, 0), string.Empty);
+                    p = new Paragraph(DecodeTimeCode(line), new TimeCode(0), string.Empty);
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (string.IsNullOrWhiteSpace(line))
@@ -93,12 +93,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string s)
         {
-            string[] parts = s.Split(':');
-
-            string minutes = parts[0];
-            string seconds = parts[1];
-
-            return new TimeCode(0, int.Parse(minutes), int.Parse(seconds), 0);
+            var tokens = s.Split(':');
+            return TimeCode.FromTimestampTokens("0", tokens[0], tokens[1]);
         }
 
     }

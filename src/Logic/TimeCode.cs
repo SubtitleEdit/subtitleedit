@@ -22,6 +22,48 @@ namespace Nikse.SubtitleEdit.Logic
             return new TimeCode(seconds * 1000.0);
         }
 
+        public static TimeCode FromTimestampTokens(params string[] tokens)
+        {
+            int milliseconds;
+            if (tokens.Length > 3 && int.TryParse(tokens[3], out milliseconds))
+            {
+                if (tokens[3].Length == 2)
+                {
+                    // 0.01s = 1cs (centisecond)
+                    milliseconds *= 10;
+                }
+                else if (tokens[3].Length == 1)
+                {
+                    // 0.1s = 1ds (decisecond)
+                    milliseconds *= 100;
+                }
+            }
+            else
+            {
+                milliseconds = 0;
+            }
+
+            int seconds;
+            if (tokens.Length > 2 && int.TryParse(tokens[2], out seconds))
+            {
+                milliseconds += seconds * 1000;
+            }
+
+            int minutes;
+            if (tokens.Length > 1 && int.TryParse(tokens[1], out minutes))
+            {
+                milliseconds += minutes * 60000;
+            }
+
+            int hours;
+            if (tokens.Length > 0 && int.TryParse(tokens[0], out hours))
+            {
+                milliseconds += hours * 3600000;
+            }
+
+            return new TimeCode(milliseconds);
+        }
+
         public static double ParseToMilliseconds(string text)
         {
             string[] parts = text.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);

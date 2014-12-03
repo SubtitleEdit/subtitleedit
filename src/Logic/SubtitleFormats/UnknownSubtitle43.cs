@@ -166,13 +166,27 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public static TimeCode GetTimeCode(string s)
         {
-            string[] arr = s.Split(':');
-            if (arr.Length == 2)
-                return new TimeCode(0, int.Parse(arr[0]), int.Parse(arr[1]), 0);
-            if (arr.Length == 3)
-                return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), 0);
-
-            return new TimeCode(0, 0, int.Parse(s), 0);
+            var tokens = s.Split(':');
+            string hours, minutes, seconds;
+            switch (tokens.Length)
+            {
+                case 2: // mm:ss
+                    hours = "0";
+                    minutes = tokens[0];
+                    seconds = tokens[1];
+                    break;
+                case 3: // hh:mm:ss
+                    hours = tokens[0];
+                    minutes = tokens[1];
+                    seconds = tokens[2];
+                    break;
+                default: // ss
+                    hours = "0";
+                    minutes = "0";
+                    seconds = s;
+                    break;
+            }
+            return TimeCode.FromTimestampTokens(hours, minutes, seconds);
         }
 
     }

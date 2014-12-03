@@ -98,14 +98,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 case ExpectingLine.StartTime:
                     if (line.StartsWith("Start time (or frames): "))
                     {
-                        TryReadTimeCodesLine(line.Substring(23), _paragraph, true);
+                        _paragraph.StartTime = ReadTimeCodesLine(line.Substring(23));
                         _expecting = ExpectingLine.EndTime;
                     }
                     break;
                 case ExpectingLine.EndTime:
                     if (line.StartsWith("End time (or frames): "))
                     {
-                        TryReadTimeCodesLine(line.Substring(21), _paragraph, false);
+                        _paragraph.EndTime = ReadTimeCodesLine(line.Substring(21));
                         _expecting = ExpectingLine.Text;
                     }
                     break;
@@ -124,30 +124,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph, bool start)
+        private static TimeCode ReadTimeCodesLine(string line)
         {
-            line = line.Trim();
-
             //00:00:48,862:0000001222
-            line = line.Replace(",", ":");
-            string[] parts = line.Split(':');
-            try
-            {
-                int startHours = int.Parse(parts[0]);
-                int startMinutes = int.Parse(parts[1]);
-                int startSeconds = int.Parse(parts[2]);
-                int startMilliseconds = int.Parse(parts[3]);
-
-                if (start)
-                    paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                else
-                    paragraph.EndTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            return TimeCode.FromTimestampTokens(line.Trim().Split(':', ','));
         }
     }
 

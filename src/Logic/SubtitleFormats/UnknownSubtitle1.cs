@@ -112,7 +112,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             //68:20  (minutes:seconds)
             var parts = code.Trim().Split(':');
-            return new TimeCode(0, int.Parse(parts[0]), int.Parse(parts[1]), 0);
+            return TimeCode.FromTimestampTokens("0", parts[0], parts[1]);
         }
     }
 }

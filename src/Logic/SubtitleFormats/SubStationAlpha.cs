@@ -447,11 +447,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         private static TimeCode GetTimeCodeFromString(string time)
         {
             // h:mm:ss.cc
-            string[] timeCode = time.Split(':', '.');
-            return new TimeCode(int.Parse(timeCode[0]),
-                                int.Parse(timeCode[1]),
-                                int.Parse(timeCode[2]),
-                                int.Parse(timeCode[3]) * 10);
+            return TimeCode.FromTimestampTokens(time.Split(':', '.'));
         }
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)

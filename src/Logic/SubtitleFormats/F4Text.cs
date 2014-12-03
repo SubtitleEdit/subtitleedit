@@ -140,7 +140,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private TimeCode DecodeTimeCode(string[] parts)
         {
-            var tc = new TimeCode(0, 0, 0, 0);
             try
             {
                 string hour = parts[0];
@@ -152,15 +151,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (milliseconds > 999)
                     milliseconds = 999;
 
-                tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+                return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
             }
             catch (Exception exception)
             {
                 System.Diagnostics.Debug.WriteLine(exception.Message);
                 _errorCount++;
+                return new TimeCode(0);
             }
-            return tc;
         }
-
     }
 }

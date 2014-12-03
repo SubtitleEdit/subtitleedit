@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int splitter = line.IndexOf(':') + 3;
                     string text = line.Remove(0, splitter);
-                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
+                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0), text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim('–', '.', ';', ':').Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))
@@ -84,12 +84,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string s)
         {
-            string[] parts = s.Split(':');
-
-            string minutes = parts[0];
-            string seconds = parts[1];
-
-            return new TimeCode(0, int.Parse(minutes), int.Parse(seconds), 0);
+            var tokens = s.Split(':');
+            return TimeCode.FromTimestampTokens("0", tokens[0], tokens[1]);
         }
 
     }

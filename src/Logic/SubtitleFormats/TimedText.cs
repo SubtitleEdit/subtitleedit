@@ -244,21 +244,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         else
                         {
+                            TimeCode paragraphStart, paragraphEnd;
                             if (start.Length == 8 && start[2] == ':' && start[5] == ':' &&
                                 end.Length == 8 && end[2] == ':' && end[5] == ':')
                             {
-                                var p = new Paragraph();
-                                string[] parts = start.Split(new[] { ':' });
-                                p.StartTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
-                                parts = end.Split(new[] { ':' });
-                                p.EndTime = new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), 0);
-                                p.Text = text;
-                                subtitle.Paragraphs.Add(p);
+                                paragraphStart = TimeCode.FromTimestampTokens(start.Split(':'));
+                                paragraphEnd = TimeCode.FromTimestampTokens(end.Split(':'));
                             }
                             else
                             {
-                                subtitle.Paragraphs.Add(new Paragraph(TimedText10.GetTimeCode(start, false), TimedText10.GetTimeCode(end, false), text));
+                                paragraphStart = TimedText10.GetTimeCode(start, false);
+                                paragraphEnd = TimedText10.GetTimeCode(end, false);
                             }
+                            subtitle.Paragraphs.Add(new Paragraph(paragraphStart, paragraphEnd, text));
                         }
                     }
                     else if (dur != null)

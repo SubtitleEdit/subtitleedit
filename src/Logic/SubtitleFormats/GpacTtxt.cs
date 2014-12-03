@@ -126,8 +126,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode GetTimeCode(string timeString)
         {
-            string[] timeParts = timeString.Split(new[] { ':', '.' });
-            return new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), int.Parse(timeParts[3]));
+            return TimeCode.FromTimestampTokens(timeString.Split(':', '.'));
         }
 
     }
