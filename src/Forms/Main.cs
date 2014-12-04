@@ -6334,7 +6334,7 @@ namespace Nikse.SubtitleEdit.Forms
             string text = paragraph.Text;
             lineLengths.Text = _languageGeneral.SingleLineLengths.Trim();
             singleLine.Left = lineLengths.Left + lineLengths.Width - 3;
-            Utilities.GetLineLengths(singleLine, text);
+            Utilities.GetLineLengths(singleLine, text, _subtitle.OriginalFormat);
 
             buttonSplitLine.Visible = false;
             text = Utilities.RemoveHtmlTags(text, true);
