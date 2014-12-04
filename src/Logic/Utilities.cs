@@ -1891,8 +1891,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            string cleanText = RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
-            string[] lines = cleanText.Split('|');
+            var lines = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
 
             const int max = 3;
 
