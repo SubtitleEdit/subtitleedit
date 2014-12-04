@@ -86,26 +86,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    string[] parts = line.Split(new[] { ':', ',', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 6)
-                    {
-                        try
-                        {
-                            int startHours = int.Parse(parts[0]);
-                            int startMinutes = int.Parse(parts[1]);
-                            int startSeconds = int.Parse(parts[2]);
-                            int endHours = int.Parse(parts[3]);
-                            int endMinutes = int.Parse(parts[4]);
-                            int endSeconds = int.Parse(parts[5]);
-                            paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, 0);
-                            paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, 0);
-                            expecting = ExpectingLine.Text;
-                        }
-                        catch
-                        {
-                            expecting = ExpectingLine.TimeCodes;
-                        }
-                    }
+                    var parts = line.Split(new[] { ':', ',', '.', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    paragraph.StartTime = TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], null);
+                    paragraph.EndTime = TimeCode.FromTimestampTokens(parts[3], parts[4], parts[5], null);
+                    expecting = ExpectingLine.Text;
                 }
                 else
                 {

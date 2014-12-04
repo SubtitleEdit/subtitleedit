@@ -155,25 +155,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            string[] parts = line.Replace("-", ".").Split('.');
-            try
+            var parts = line.Split('-', '.');
+            if (parts.Length == 8)
             {
-                int startHours = int.Parse(parts[0]);
-                int startMinutes = int.Parse(parts[1]);
-                int startSeconds = int.Parse(parts[2]);
-                int startMilliseconds = int.Parse(parts[3]);
-                int endHours = int.Parse(parts[4]);
-                int endMinutes = int.Parse(parts[5]);
-                int endSeconds = int.Parse(parts[6]);
-                int endMilliseconds = int.Parse(parts[7]);
-                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
+                paragraph.StartTime = TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
+                paragraph.EndTime = TimeCode.FromTimestampTokens(parts[4], parts[5], parts[6], parts[7]);
                 return true;
             }
-            catch
-            {
-                return false;
-            }
+            return false;
         }
     }
 }

@@ -8305,17 +8305,8 @@ namespace Nikse.SubtitleEdit.Forms
                             if (tc.Length > 12)
                             {
                                 tc = tc.Substring(0, 13);
-                                string[] timeCode = tc.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
-                                TimeCode realTC = new TimeCode(0, 0, 0, 0);
-                                try
-                                {
-                                    realTC = new TimeCode(int.Parse(timeCode[1]), int.Parse(timeCode[2]), int.Parse(timeCode[3]), int.Parse(timeCode[4]) * 10);
-                                }
-                                catch
-                                {
-                                    SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
-                                    return;
-                                }
+                                var tokens = tc.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                var realTC = TimeCode.FromTimestampTokens(tokens[1], tokens[2], tokens[3], tokens[4]);
 
                                 int index = 0;
                                 foreach (Paragraph p in _subtitle.Paragraphs)

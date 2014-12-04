@@ -101,15 +101,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode DecodeTimeCode(string[] parts)
         {
-            //[00:06:51.48]
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string millisesonds = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(millisesonds) * 10);
-            return tc;
+            // [hh:mm:ss.ff]
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
-
     }
 }

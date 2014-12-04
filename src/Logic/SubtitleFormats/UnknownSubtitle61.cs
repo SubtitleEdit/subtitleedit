@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 string s = line.Trim();
                 var match = regexTimeCodes1.Match(s);
-                if (match.Success && s.Length == 11)
+                if (match.Success)
                 {
                     if (!expectStartTime)
                         _errorCount++;
@@ -85,21 +85,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
                     p = new Paragraph();
-                    string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
-                    {
-                        try
-                        {
-                            p.StartTime = DecodeTimeCode(parts);
-                            expectStartTime = false;
-                        }
-                        catch (Exception exception)
-                        {
-                            _errorCount++;
-                            System.Diagnostics.Debug.WriteLine(exception.Message);
-                            expectStartTime = true;
-                        }
-                    }
+                    p.StartTime = DecodeTimeCode(s);
+                    expectStartTime = false;
                 }
                 else if (string.IsNullOrWhiteSpace(line))
                 {
@@ -140,15 +127,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string msDiv10 = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), int.Parse(msDiv10) * 10);
+            // hh:mm:ss:ff
+            var parts = timestamp.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
 
     }

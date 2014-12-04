@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class DvdSubtitle : SubtitleFormat
     {
 
-        private static Regex regexTimeCodes = new Regex(@"^\{T\ \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
+        private static Regex regexTimeCodes = new Regex(@"^\{T \d+:\d+:\d+:\d+$", RegexOptions.Compiled);
 
         public override string Extension
         {
@@ -105,26 +105,10 @@ LICENSE=
                 {
                     if (regexTimeCodes.Match(line).Success)
                     {
-                        try
-                        {
-                            textOn = true;
-                            string[] arr = line.Substring(3).Trim().Split(':');
-                            if (arr.Length == 4)
-                            {
-                                int hours = int.Parse(arr[0]);
-                                int minutes = int.Parse(arr[1]);
-                                int seconds = int.Parse(arr[2]);
-                                int milliseconds = int.Parse(arr[3]);
-                                if (arr[3].Length == 2)
-                                    milliseconds *= 10;
-                                start = new TimeCode(hours, minutes, seconds, milliseconds);
-                            }
-                        }
-                        catch
-                        {
-                            textOn = false;
-                            _errorCount++;
-                        }
+                        // {T hh:mm:ss:ff
+                        textOn = true;
+                        var parts = line.Substring(3).Split(':');
+                        start = TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
                     }
                 }
             }

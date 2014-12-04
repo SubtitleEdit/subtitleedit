@@ -99,11 +99,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     if (p.StartTime.TotalMilliseconds == 0 || currentText.Length == 0)
                     {
-                        p.StartTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
+                        p.StartTime = DecodeTimeCode(line);
                     }
                     else
                     {
-                        p.EndTime = DecodeTimeCode(line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries));
+                        p.EndTime = DecodeTimeCode(line);
                         p.Text = currentText.ToString().Trim().Replace(Environment.NewLine + Environment.NewLine, Environment.NewLine);
                         p.Text = p.Text.Trim('\n');
                         p.Text = p.Text.Trim('\r');
@@ -138,29 +138,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string line)
         {
-            var tc = new TimeCode(0, 0, 0, 0);
-            try
-            {
-                string hour = parts[0];
-                string minutes = parts[1];
-                string seconds = parts[2];
-                string millisecond = parts[3];
-
-                int milliseconds = (int)(int.Parse(millisecond) * 100.0);
-                if (milliseconds > 999)
-                    milliseconds = 999;
-
-                tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                _errorCount++;
-            }
-            return tc;
+            // hh:mm:ss-f
+            var parts = line.Split(new[] { ':', '-' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
-
     }
 }

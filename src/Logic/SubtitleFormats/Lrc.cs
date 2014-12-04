@@ -95,20 +95,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Length == 3)
                     {
-                        try
-                        {
-                            int minutes = int.Parse(parts[0]);
-                            int seconds = int.Parse(parts[1]);
-                            int milliseconds = int.Parse(parts[2]) * 10;
-                            string text = line.Remove(0, 9).Trim().TrimStart(']').Trim();
-                            var start = new TimeCode(0, minutes, seconds, milliseconds);
-                            var p = new Paragraph(start, new TimeCode(0, 0, 0, 0), text);
-                            subtitle.Paragraphs.Add(p);
-                        }
-                        catch
-                        {
-                            _errorCount++;
-                        }
+                        var start = TimeCode.FromTimestampTokens(null, parts[0], parts[1], parts[2]);
+                        var text = line.Substring(10).Trim();
+                        subtitle.Paragraphs.Add(new Paragraph(start, new TimeCode(0), text));
                     }
                     else
                     {
@@ -167,20 +156,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     string s = p.Text.Substring(1, 8);
                     p.Text = p.Text.Remove(0, 10).Trim();
                     string[] parts = s.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-                    try
-                    {
-                        int minutes = int.Parse(parts[0]);
-                        int seconds = int.Parse(parts[1]);
-                        int milliseconds = int.Parse(parts[2]) * 10;
-                        string text = GetTextAfterTimeCodes(p.Text);
-                        var start = new TimeCode(0, minutes, seconds, milliseconds);
-                        var newParagraph = new Paragraph(start, new TimeCode(0, 0, 0, 0), text);
-                        subtitle.Paragraphs.Add(newParagraph);
-                    }
-                    catch
-                    {
-                        _errorCount++;
-                    }
+                    var start = TimeCode.FromTimestampTokens(null, parts[0], parts[1], parts[2]);
+                    var text = GetTextAfterTimeCodes(p.Text);
+                    subtitle.Paragraphs.Add(new Paragraph(start, new TimeCode(0), text));
                 }
             }
 

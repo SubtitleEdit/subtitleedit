@@ -75,14 +75,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _errorCount++;
 
                     paragraph = new Paragraph();
-                    if (TryReadTimeCodesLine(line, paragraph))
-                    {
-                        subtitle.Paragraphs.Add(paragraph);
-                    }
-                    else
-                    {
-                        _errorCount++;
-                    }
+                    paragraph.StartTime = ReadTimeCodesLine(line);
+                    subtitle.Paragraphs.Add(paragraph);
                 }
                 else if (paragraph != null && paragraph.Text.Length < 1000)
                 {
@@ -109,27 +103,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private TimeCode ReadTimeCodesLine(string timestamp)
         {
-            string[] parts = line.Split(':', '.');
-            try
+            var parts = timestamp.Split(':', '.');
+            if (parts[3].Length < 3)
             {
-                int startHours = int.Parse(parts[0]);
-                int startMinutes = int.Parse(parts[1]);
-                int startSeconds = int.Parse(parts[2]);
-                int startMilliseconds = int.Parse(parts[3]);
-
-                if (parts[3].Length == 2)
-                    _errorCount++;
-
-                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                return true;
+                _errorCount++;
             }
-            catch
-            {
-                return false;
-            }
+
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
-
     }
 }

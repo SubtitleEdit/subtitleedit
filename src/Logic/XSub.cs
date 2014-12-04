@@ -27,7 +27,7 @@ namespace Nikse.SubtitleEdit.Logic
         private static TimeCode DecodeTimeCode(string timeCode)
         {
             var parts = timeCode.Split(new[] { ':', ';', '.', ',', '-' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
 
         private static int GenerateBitmap(FastBitmap bmp, byte[] buf, List<Color> fourColors)

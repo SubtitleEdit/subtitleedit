@@ -82,12 +82,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         string s = line;
                         if (line.Length > 9 && line[8] == ' ')
                             s = line.Substring(0, 8) + ":" + line.Substring(9);
-                        string[] parts = s.Split(':');
+                        var parts = s.Split(':');
                         if (parts.Length > 3)
                         {
-                            int hours = int.Parse(parts[0]);
-                            int minutes = int.Parse(parts[1]);
-                            int seconds = int.Parse(parts[2]);
+                            var start = TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], null);
+
                             string text = string.Empty;
                             for (int i = 3; i < parts.Length; i++)
                             {
@@ -97,12 +96,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     text += ":" + parts[i];
                             }
                             text = text.Replace("|", Environment.NewLine);
-                            var start = new TimeCode(hours, minutes, seconds, 0);
                             double duration = Utilities.GetOptimalDisplayMilliseconds(text);
                             var end = new TimeCode(start.TotalMilliseconds + duration);
 
-                            var p = new Paragraph(start, end, text);
-                            subtitle.Paragraphs.Add(p);
+                            subtitle.Paragraphs.Add(new Paragraph(start, end, text));
                             success = true;
                         }
                     }

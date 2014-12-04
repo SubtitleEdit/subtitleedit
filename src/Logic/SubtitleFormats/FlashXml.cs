@@ -180,14 +180,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (s.EndsWith('s'))
             {
-                s = s.TrimEnd('s');
-                return TimeCode.FromSeconds(double.Parse(s));
+                return TimeCode.FromSeconds(int.Parse(s.Substring(0, s.Length - 1)));
             }
-            else
-            {
-                string[] parts = s.Split(new char[] { ':', '.', ',' });
-                return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), int.Parse(parts[3]));
-            }
+
+            var parts = s.Split(':', '.', ',');
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
     }
 }

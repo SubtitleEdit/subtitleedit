@@ -95,12 +95,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static TimeCode GetTimeCode(string code)
         {
             code = code.Trim().Trim('"');
-            var arr = code.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            int h = int.Parse(arr[0]);
-            int m = int.Parse(arr[1]);
-            int s = int.Parse(arr[2]);
-            int ms = int.Parse(arr[3]);
-            return new TimeCode(h, m, s, ms);
+            var parts = code.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
 
     }

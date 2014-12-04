@@ -3265,21 +3265,13 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else if (line.StartsWith("Comment:", StringComparison.Ordinal))
                     {
-                        var arr = line.Split(',');
-                        if (arr.Length > 3)
+                        var tokens = line.Split(',');
+                        if (tokens.Length > 3)
                         {
-                            arr = arr[1].Split(new[] { ':', '.' });
-                            if (arr.Length == 4)
+                            tokens = tokens[1].Split(':', '.');
+                            if (tokens.Length == 4)
                             {
-                                int hour;
-                                int min;
-                                int sec;
-                                int ms;
-                                if (int.TryParse(arr[0], out hour) && int.TryParse(arr[1], out min) &&
-                                    int.TryParse(arr[2], out sec) && int.TryParse(arr[3], out ms))
-                                {
-                                    comments.Paragraphs.Add(new Paragraph(new TimeCode(hour, min, sec, ms * 10), new TimeCode(0, 0, 0, 0), line));
-                                }
+                                comments.Paragraphs.Add(new Paragraph(TimeCode.FromTimestampTokens(tokens[0], tokens[1], tokens[2], tokens[3]), new TimeCode(0), line));
                             }
                         }
                     }

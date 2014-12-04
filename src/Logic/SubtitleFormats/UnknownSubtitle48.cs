@@ -63,14 +63,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (RegexTimeCodes.Match(line).Success)
                 {
-                    string[] parts = line.Split(new[] { ' ' }, StringSplitOptions.None);
-                    var p = new Paragraph();
-                    if (parts.Length > 2 &&
-                        GetTimeCode(p.StartTime, parts[0].Trim()) &&
-                        GetTimeCode(p.EndTime, parts[1].Trim()))
+                    var parts = line.Split(' ');
+                    if (parts.Length > 2)
                     {
-                        p.Text = line.Remove(0, 25).Trim();
-                        subtitle.Paragraphs.Add(p);
+                        subtitle.Paragraphs.Add(new Paragraph(GetTimeCode(parts[0]), GetTimeCode(parts[1]), line.Substring(26).Trim()));
                     }
                 }
                 else
@@ -81,21 +77,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static bool GetTimeCode(TimeCode timeCode, string timeString)
+        private static TimeCode GetTimeCode(string timestamp)
         {
-            try
-            {
-                string[] timeParts = timeString.Split(new[] { ':', '.' });
-                timeCode.Hours = int.Parse(timeParts[0]);
-                timeCode.Minutes = int.Parse(timeParts[1]);
-                timeCode.Seconds = int.Parse(timeParts[2]);
-                timeCode.Milliseconds = int.Parse(timeParts[3]);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var parts = timestamp.Split(':', '.');
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
     }
 }

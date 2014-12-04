@@ -88,11 +88,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0}:{1:00}.{2:00}", time.Minutes, time.Seconds, time.Milliseconds / 10);
         }
 
-        private static TimeCode DecodeTimeCode(string[] s)
+        private static TimeCode DecodeTimeCode(string[] parts)
         {
-            if (s.Length == 3)
-                return new TimeCode(0, int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]) * 10);
-            return new TimeCode(int.Parse(s[0]), int.Parse(s[1]), int.Parse(s[2]), int.Parse(s[3]) * 10);
+            return parts.Length == 3
+                ? TimeCode.FromTimestampTokens(null, parts[0], parts[1], parts[2])
+                : TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

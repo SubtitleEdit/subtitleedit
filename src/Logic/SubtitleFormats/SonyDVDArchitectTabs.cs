@@ -72,20 +72,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         s = s.Replace("\t", ":");
                         s = s.Replace(" ", string.Empty);
                         s = s.Trim().TrimEnd(':').TrimEnd();
-                        string[] parts = s.Split(':');
+                        var parts = s.Split(':');
                         if (parts.Length == 8)
                         {
-                            int hours = int.Parse(parts[0]);
-                            int minutes = int.Parse(parts[1]);
-                            int seconds = int.Parse(parts[2]);
-                            int milliseconds = int.Parse(parts[3]) * 10;
-                            var start = new TimeCode(hours, minutes, seconds, milliseconds);
-
-                            hours = int.Parse(parts[4]);
-                            minutes = int.Parse(parts[5]);
-                            seconds = int.Parse(parts[6]);
-                            milliseconds = int.Parse(parts[7]) * 10;
-                            var end = new TimeCode(hours, minutes, seconds, milliseconds);
+                            var start = TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
+                            var end = TimeCode.FromTimestampTokens(parts[4], parts[5], parts[6], parts[7]);
 
                             string text = line.Substring(match.Length).TrimStart();
                             text = text.Replace("|", Environment.NewLine);

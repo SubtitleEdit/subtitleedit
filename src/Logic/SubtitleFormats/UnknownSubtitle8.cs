@@ -61,16 +61,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (line.Contains(':') && !next.Contains(':') && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
                 {
-                    paragraph = new Paragraph();
-                    if (TryReadTimeCodesLine(line, paragraph))
+                    if (!string.IsNullOrWhiteSpace(next))
                     {
+                        paragraph = new Paragraph();
+                        paragraph.StartTime = ReadTimeCodesLine(line);
                         paragraph.Text = next;
-                        if (!string.IsNullOrWhiteSpace(paragraph.Text))
-                            subtitle.Paragraphs.Add(paragraph);
-                    }
-                    else if (!string.IsNullOrWhiteSpace(line))
-                    {
-                        _errorCount++;
+                        subtitle.Paragraphs.Add(paragraph);
                     }
                 }
                 else
@@ -97,22 +93,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
+        private static TimeCode ReadTimeCodesLine(string timestamp)
         {
-            string[] parts = line.Split(':', '.');
-            try
-            {
-                int startHours = int.Parse(parts[0]);
-                int startMinutes = int.Parse(parts[1]);
-                int startSeconds = int.Parse(parts[2]);
-                int startMilliseconds = int.Parse(parts[3]);
-                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            var parts = timestamp.Split(':', '.');
+            return TimeCode.FromTimestampTokens(parts[0], parts[1], parts[2], parts[3]);
         }
     }
 }
