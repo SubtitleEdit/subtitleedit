@@ -1888,14 +1888,20 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static void GetLineLengths(Label label, string text)
+        public static void GetLineLengths(Label label, string text, SubtitleFormat subFormat)
         {
             label.ForeColor = Color.Black;
-            string cleanText = RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
-            string[] lines = cleanText.Split('|');
+            string[] lines;
+            if(subFormat is SubRip)
+            {
+                lines = RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
+            }
+            else
+            {
+                lines = RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|").Split('|');
+            }
 
             const int max = 3;
-
             var sb = new StringBuilder();
             for (int i = 0; i < lines.Length; i++)
             {
