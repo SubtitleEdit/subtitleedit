@@ -1,5 +1,18 @@
 ﻿Subtitle Edit Changelog
 
+3.4.5 (xth December 2014)
+* NEW:
+   * Some read support for Ayato + Unipac
+* IMPROVED:
+   * Updated Czech translation - thx Trottel
+* FIXED:
+   * Waveform/spectrogram out of sync for mkv files
+   * Crash when reading multi-image Bluray sup files
+   * Export to images made weird "tails" for some letters/fonts - thx rebawest
+   * Possible bug when saving TTML - thx Krystian
+   * Bug regarding "Remove dash in beginning of lines" - thx Robert
+   * Correct version number in Slovenian translation
+
 
 3.4.4 (28th November 2014)
 * NEW:
