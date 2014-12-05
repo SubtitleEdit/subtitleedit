@@ -3,6 +3,7 @@ using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat;
 using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.Networking;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
@@ -2083,7 +2084,19 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (fileName.EndsWith(".dost", StringComparison.OrdinalIgnoreCase))
+                if (format == null && ext == ".mxf")
+                {
+                    if (FileUtil.IsMaterialExchangeFormat(fileName))
+                    {
+                        var parser = new MxfParser(fileName);
+                        if (parser.IsValid)
+                        {
+                            MessageBox.Show("This is a valid MxfFile...");
+                        }
+                    }                    
+                }
+
+                if (ext == ".dost")
                 {
                     try
                     {

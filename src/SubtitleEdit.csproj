@@ -796,6 +796,7 @@
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
+    <Compile Include="Logic\ContainerFormats\MaterialExchangeFormat\MxfParser.cs" />
     <Compile Include="Logic\Dictionaries\NamesList.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceList.cs" />
     <Compile Include="Core\FileUtil.cs" />
