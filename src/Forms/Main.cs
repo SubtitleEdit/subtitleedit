@@ -2093,7 +2093,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             MessageBox.Show("This is a valid MxfFile...");
                         }
-                    }                    
+                    }
                 }
 
                 if (ext == ".dost")
