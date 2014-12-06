@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 {
@@ -67,7 +65,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
                 }
             }
         }
-
 
     }
 }

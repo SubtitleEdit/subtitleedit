@@ -238,7 +238,7 @@ namespace Nikse.SubtitleEdit.Core
                     return false;
 
                 for (int i = 0; i < count - 11; i++)
-                { 
+                {
                     //Header Partition PackId = 06 0E 2B 34 02 05 01 01 0D 01 02
                     if (buffer[i + 00] == 0x06 &&
                         buffer[i + 01] == 0x0E &&
