@@ -994,6 +994,7 @@ namespace Nikse.SubtitleEdit.Logic
             RemoveTextBetweenCustomBefore = "¶";
             RemoveTextBetweenCustomAfter = "¶";
             RemoveTextBeforeColon = true;
+            RemoveTextBeforeColonOnlyIfUppercase = true;
             RemoveIfContainsText = "¶";
         }
     }
