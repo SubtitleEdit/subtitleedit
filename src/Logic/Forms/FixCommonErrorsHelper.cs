@@ -22,10 +22,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var tag = "- ...";
             if (text.StartsWith(tag))
             {
-                text = "- " + text.Substring(tag.Length, text.Length - tag.Length);
+                text = "- " + text.Substring(tag.Length);
                 while (text.StartsWith("- .", StringComparison.Ordinal))
                 {
-                    text = "- " + text.Substring(3, text.Length - 3);
+                    text = "- " + text.Substring(3);
                     text = text.Replace("  ", " ");
                 }
             }
@@ -33,35 +33,31 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             tag = "<i>...";
             if (text.StartsWith(tag))
             {
-                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-                while (text.StartsWith("<i> ", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
+                text = "<i>" + text.Substring(tag.Length);
+                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
+                    text = "<i>" + text.Substring(4);
             }
             tag = "<i> ...";
             if (text.StartsWith(tag))
             {
-                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-                while (text.StartsWith("<i> ", StringComparison.Ordinal))
+                text = "<i>" + text.Substring(tag.Length);
+                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4, text.Length - 4);
             }
 
             tag = "- <i>...";
             if (text.StartsWith(tag))
             {
-                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                text = "- <i>" + text.Substring(tag.Length);
                 while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                    text = "- <i>" + text.Substring(6, text.Length - 6);
+                    text = "- <i>" + text.Substring(6);
             }
             tag = "- <i> ...";
             if (text.StartsWith(tag))
             {
-                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                text = "- <i>" + text.Substring(tag.Length);
                 while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                    text = "- <i>" + text.Substring(6, text.Length - 6);
+                    text = "- <i>" + text.Substring(6);
             }
 
             // Narrator:... Hello foo!
@@ -78,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             tag = "<i>- ...";
             if (text.StartsWith(tag))
             {
-                text = text.Substring(tag.Length, text.Length - tag.Length);
+                text = text.Substring(tag.Length);
                 text = text.TrimStart('.', ' ');
                 text = "<i>- " + text;
             }
