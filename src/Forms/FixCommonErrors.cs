@@ -3045,13 +3045,17 @@ namespace Nikse.SubtitleEdit.Forms
                     text = text.Replace(" ...", "...");
                     text = text.TrimEnd();
                     text = text.Replace("... " + Environment.NewLine, "..." + Environment.NewLine);
-                    text = text.Replace("... </i>", "...</i>");
+                    text = text.Replace("... </", "...</"); // </i>, </font>...
                     text = text.Replace("... ?", "...?");
                     text = text.Replace("... !", "...!");
                     if (text.StartsWith("... "))
                         text = text.Remove(3, 1);
                     if (text.StartsWith("<i>... "))
                         text = text.Remove(6, 1);
+                    if (text.StartsWith("<font>... "))
+                        text = text.Remove("<font>... ".Length - 1, 1);
+                    if (text.StartsWith("<b>... "))
+                        text = text.Remove("<b>... ".Length - 1, 1);
                 }
                 //if (text.EndsWith('-'))
                 //{
