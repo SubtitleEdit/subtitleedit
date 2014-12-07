@@ -145,7 +145,7 @@ SelectDirLabel3=Instalacija æe instalirati [name] u sljedeæu mapu
 SelectDirBrowseLabel=Za nastavak kliknite na Nastavak. Ako želite odabrati drugu mapu kliknite na Odaberi.
 DiskSpaceMBLabel=Ovaj program zahtjeva minimalno [mb] MB slobodnog prostora na disku.
 CannotInstallToNetworkDrive=Instalacija ne može instalirati na mrežnu jedinicu.
-CannotInstallToUNCPathname=Instalacija ne može instalirati na UNC putanju.
+CannotInstallToUNCPath=Instalacija ne može instalirati na UNC putanju.
 InvalidPath=Morate unijeti punu stazu zajedno sa slovom diska (npr.%n%nC:\APP%n%nili stazu u obliku%n%n\\server\share)
 InvalidDrive=Disk koji ste odabrali ne postoji. Odaberite neki drugi.
 DiskSpaceWarningTitle=Nedovoljno prostora na disku
@@ -325,6 +325,7 @@ ShutdownBlockReasonUninstallingApp=Deinstaliram %1.
 ; use of them in your scripts, you'll want to translate them.
 
 [CustomMessages]
+
 NameAndVersion=%1 verzija %2
 AdditionalIcons=Dodatne ikone:
 CreateDesktopIcon=Kreiraj ikonu na &Desktopu
