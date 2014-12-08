@@ -1261,7 +1261,7 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "el", "bien", "Vamos", "Hola", "casa", "con");
             if (count > bestCount)
             {
-                int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis"); // not spanish words
                 if (frenchWords < 2)
                     return "es";
             }
@@ -1293,7 +1293,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (count > bestCount)
             {
-                int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis"); // not spanish words
                 int spanishWords = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                 if (frenchWords < 2 && spanishWords < 2)
                     return "it";
@@ -1539,7 +1539,7 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, "el", "bien", "Vamos", "Hola", "casa", "con");
                         if (count > bestCount)
                         {
-                            int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                            int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis"); // not spanish words
                             if (frenchWords < 2)
                                 languageName = shortName;
                         }
@@ -1558,7 +1558,7 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo");
                         if (count > bestCount)
                         {
-                            int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                            int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis"); // not spanish words
                             int spanishWords = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                             if (frenchWords < 2 && spanishWords < 2)
                                 languageName = shortName;
