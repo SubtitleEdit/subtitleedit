@@ -115,6 +115,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool BatchConvertAutoBalance { get; set; }
         public bool BatchConvertSetMinDisplayTimeBetweenSubtitles { get; set; }
         public string BatchConvertLanguage { get; set; }
+        public string BatchConvertFormat { get; set; }
         public string ModifySelectionText { get; set; }
         public string ModifySelectionRule { get; set; }
         public bool ModifySelectionCaseSensitive { get; set; }
@@ -1615,6 +1616,9 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("BatchConvertLanguage");
             if (subNode != null)
                 settings.Tools.BatchConvertLanguage = subNode.InnerText;
+            subNode = node.SelectSingleNode("BatchConvertFormat");
+            if (subNode != null)
+                settings.Tools.BatchConvertFormat = subNode.InnerText;
             subNode = node.SelectSingleNode("ModifySelectionRule");
             if (subNode != null)
                 settings.Tools.ModifySelectionRule = subNode.InnerText;
@@ -2768,6 +2772,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("BatchConvertAutoBalance", settings.Tools.BatchConvertAutoBalance.ToString());
                 textWriter.WriteElementString("BatchConvertSetMinDisplayTimeBetweenSubtitles", settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles.ToString());
                 textWriter.WriteElementString("BatchConvertLanguage", settings.Tools.BatchConvertLanguage);
+                textWriter.WriteElementString("BatchConvertFormat", settings.Tools.BatchConvertFormat);                
                 textWriter.WriteElementString("ModifySelectionRule", settings.Tools.ModifySelectionRule);
                 textWriter.WriteElementString("ModifySelectionText", settings.Tools.ModifySelectionText);
                 textWriter.WriteElementString("ModifySelectionCaseSensitive", settings.Tools.ModifySelectionCaseSensitive.ToString());

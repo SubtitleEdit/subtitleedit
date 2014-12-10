@@ -137,16 +137,21 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
 
             _allFormats = new List<SubtitleFormat> { new Pac() };
-            foreach (var f in SubtitleFormat.AllSubtitleFormats)
+            int selectedFormatIndex = 0;
+            for (int index = 0; index < SubtitleFormat.AllSubtitleFormats.Count; index++)
             {
+                var f = SubtitleFormat.AllSubtitleFormats[index];
                 if (!f.IsVobSubIndexFile)
                 {
                     comboBoxSubtitleFormats.Items.Add(f.Name);
                     _allFormats.Add(f);
+                    if (Configuration.Settings.Tools.BatchConvertFormat == f.Name)
+                    {
+                        selectedFormatIndex = index;
+                    }
                 }
-
             }
-            comboBoxSubtitleFormats.SelectedIndex = 0;
+            comboBoxSubtitleFormats.SelectedIndex = selectedFormatIndex;
             if (!string.IsNullOrEmpty(l.PlainText))
                 comboBoxSubtitleFormats.Items.Add(l.PlainText);
 
@@ -1070,6 +1075,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Tools.BatchConvertOutputFolder = textBoxOutputFolder.Text;
             Configuration.Settings.Tools.BatchConvertOverwriteExisting = checkBoxOverwrite.Checked;
             Configuration.Settings.Tools.BatchConvertOverwriteOriginal = checkBoxOverwriteOriginalFiles.Checked;
+            Configuration.Settings.Tools.BatchConvertFormat = comboBoxSubtitleFormats.SelectedItem.ToString();
         }
 
         private void buttonMultipleReplaceSettings_Click(object sender, EventArgs e)
