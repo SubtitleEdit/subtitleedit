@@ -18848,16 +18848,22 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripComboBoxFrameRate.Text = string.Format("{0:0.###}", _videoInfo.FramesPerSecond);
 
                     string oldVideoPlayer = Configuration.Settings.General.VideoPlayer;
-                    Configuration.Settings.General.VideoPlayer = "VLC";
-                    Utilities.InitializeVideoPlayerAndContainer(VideoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
-                    mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
-                    mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
-                    mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
-                    mediaPlayer.Volume = 0;
-                    labelVideoInfo.Text = "DVD" + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();
-                    if (_videoInfo.FramesPerSecond > 0)
-                        labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
-                    Configuration.Settings.General.VideoPlayer = oldVideoPlayer;
+                    try
+                    {
+                        Configuration.Settings.General.VideoPlayer = "VLC";
+                        Utilities.InitializeVideoPlayerAndContainer(VideoFileName, _videoInfo, mediaPlayer, VideoLoaded, VideoEnded);
+                        mediaPlayer.ShowFullscreenButton = Configuration.Settings.General.VideoPlayerShowFullscreenButton;
+                        mediaPlayer.OnButtonClicked -= MediaPlayer_OnButtonClicked;
+                        mediaPlayer.OnButtonClicked += MediaPlayer_OnButtonClicked;
+                        mediaPlayer.Volume = 0;
+                        labelVideoInfo.Text = "DVD" + " " + _videoInfo.Width + "x" + _videoInfo.Height + " " + _videoInfo.VideoCodec.Trim();
+                        if (_videoInfo.FramesPerSecond > 0)
+                            labelVideoInfo.Text = labelVideoInfo.Text + " " + string.Format("{0:0.0##}", _videoInfo.FramesPerSecond);
+                    }
+                    finally
+                    {
+                        Configuration.Settings.General.VideoPlayer = oldVideoPlayer;
+                    }
                 }
             }
         }
