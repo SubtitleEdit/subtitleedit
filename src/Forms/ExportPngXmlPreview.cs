@@ -65,8 +65,8 @@ namespace Nikse.SubtitleEdit.Forms
                 pictureBox1.SizeMode = PictureBoxSizeMode.Zoom;
             }
 
-            pictureBox1.Width = (int)(_bmp.Width*_zoomFactor/100.0);
-            pictureBox1.Height = (int)(_bmp.Height*_zoomFactor/100.0);
+            pictureBox1.Width = (int)(_bmp.Width * _zoomFactor / 100.0);
+            pictureBox1.Height = (int)(_bmp.Height * _zoomFactor / 100.0);
 
             Text = string.Format("{0}  {1}x{2}  {3}%", Configuration.Settings.Language.General.Preview, _bmp.Width, _bmp.Height, (int)_zoomFactor);
 
@@ -99,6 +99,6 @@ namespace Nikse.SubtitleEdit.Forms
                 Zoom(0);
             }
         }
-        
+
     }
 }

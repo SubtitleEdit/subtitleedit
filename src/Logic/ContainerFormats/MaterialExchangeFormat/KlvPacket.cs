@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Nikse.SubtitleEdit.Logic.VobSub;
 
 namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
@@ -16,7 +13,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 
         public byte[] Key;
         public long Length;
-
 
         public KlvPacket(Stream stream)
         {
@@ -53,8 +49,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             }
             return first;
         }
-
-
 
     }
 }
