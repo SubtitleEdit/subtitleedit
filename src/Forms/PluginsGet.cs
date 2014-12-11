@@ -281,9 +281,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 zip.ExtractFile(entry, fullPath);
             }
-            //            zip.Close();
+            // zip.Close();
             zip.Dispose();
-            //            ms.Close();
+            // ms.Close();
             Cursor = Cursors.Default;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Enabled = true;
