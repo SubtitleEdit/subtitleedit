@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonFixClick(object sender, EventArgs e)
         {
-            TimeSpan splitTime = GetSplitTime();
+            var splitTime = GetSplitTime();
             if (splitTime.TotalSeconds > 0)
             {
                 var part1 = new Subtitle();
@@ -91,7 +91,8 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.EndTime.TotalMilliseconds > splitTime.TotalMilliseconds)
                     {
-                        p.StartTime = new TimeCode(0, 0, 0, 1);
+                        part1.Paragraphs.Add(new Paragraph(p) { EndTime = new TimeCode(splitTime.TotalMilliseconds) });
+                        part2.Paragraphs.Add(new Paragraph(p) { StartTime = new TimeCode(splitTime.TotalMilliseconds) });
                     }
                 }
                 if (part1.Paragraphs.Count > 0 && part2.Paragraphs.Count > 0)
