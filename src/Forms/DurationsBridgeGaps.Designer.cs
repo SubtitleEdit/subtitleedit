@@ -30,6 +30,7 @@
         {
             this.labelMilliseconds = new System.Windows.Forms.Label();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
+            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.numericUpDownMaxMs = new System.Windows.Forms.NumericUpDown();
             this.labelBridgePart1 = new System.Windows.Forms.Label();
             this.buttonOK = new System.Windows.Forms.Button();
@@ -38,7 +39,6 @@
             this.radioButtonDivideEven = new System.Windows.Forms.RadioButton();
             this.labelMinMsBetweenLines = new System.Windows.Forms.Label();
             this.numericUpDownMinMsBetweenLines = new System.Windows.Forms.NumericUpDown();
-            this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxLinesFound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMaxMs)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMinMsBetweenLines)).BeginInit();
@@ -65,6 +65,28 @@
             this.groupBoxLinesFound.TabIndex = 7;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be bridged";
+            // 
+            // SubtitleListview1
+            // 
+            this.SubtitleListview1.AllowDrop = true;
+            this.SubtitleListview1.DisplayExtraFromExtra = false;
+            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.SubtitleListview1.FirstVisibleIndex = -1;
+            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SubtitleListview1.FullRowSelect = true;
+            this.SubtitleListview1.GridLines = true;
+            this.SubtitleListview1.HideSelection = false;
+            this.SubtitleListview1.Location = new System.Drawing.Point(3, 16);
+            this.SubtitleListview1.Name = "SubtitleListview1";
+            this.SubtitleListview1.OwnerDraw = true;
+            this.SubtitleListview1.Size = new System.Drawing.Size(826, 465);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
+            this.SubtitleListview1.TabIndex = 0;
+            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
+            this.SubtitleListview1.UseSyntaxColoring = true;
+            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
             // numericUpDownMaxMs
             // 
@@ -188,25 +210,6 @@
             0,
             0});
             // 
-            // SubtitleListview1
-            // 
-            this.SubtitleListview1.AllowDrop = true;
-            this.SubtitleListview1.DisplayExtraFromExtra = false;
-            this.SubtitleListview1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.SubtitleListview1.FirstVisibleIndex = -1;
-            this.SubtitleListview1.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.SubtitleListview1.FullRowSelect = true;
-            this.SubtitleListview1.GridLines = true;
-            this.SubtitleListview1.HideSelection = false;
-            this.SubtitleListview1.Location = new System.Drawing.Point(3, 16);
-            this.SubtitleListview1.Name = "SubtitleListview1";
-            this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(826, 465);
-            this.SubtitleListview1.TabIndex = 0;
-            this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
-            this.SubtitleListview1.UseSyntaxColoring = true;
-            this.SubtitleListview1.View = System.Windows.Forms.View.Details;
-            // 
             // DurationsBridgeGaps
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,10 +226,12 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(850, 400);
             this.Name = "DurationsBridgeGaps";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "DurationsBridgeGaps";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.DurationsBridgeGaps_KeyDown);
             this.groupBoxLinesFound.ResumeLayout(false);

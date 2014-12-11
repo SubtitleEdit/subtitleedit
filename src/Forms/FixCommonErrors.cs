@@ -2030,14 +2030,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string oldText = p.Text;
                         p.Text = p.Text.Replace("''", "\"");
-                        fixCount++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
+                        fixCount++;
                     }
                 }
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixDoubleApostrophes, string.Format(_language.XDoubleApostrophesFixed, fixCount));
+            }
         }
 
         public void FixMissingPeriodsAtEndOfLine()
