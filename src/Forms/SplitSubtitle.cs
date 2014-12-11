@@ -91,7 +91,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.EndTime.TotalMilliseconds > splitTime.TotalMilliseconds)
                     {
-                        p.StartTime = new TimeCode(0, 0, 0, 1);
+                        Paragraph p2 = new Paragraph(p);
+                        p2.StartTime = new TimeCode(splitTime.TotalMilliseconds);
+                        part2.Paragraphs.Add(p2);
                     }
                 }
                 if (part1.Paragraphs.Count > 0 && part2.Paragraphs.Count > 0)
