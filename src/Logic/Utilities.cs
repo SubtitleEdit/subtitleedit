@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (!s.Contains('<'))
                 return s;
 
-            if (s.Contains("< "))
+            if (s.Contains("< ", StringComparison.Ordinal))
                 s = FixInvalidItalicTags(s);
 
             return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
@@ -2105,12 +2105,11 @@ namespace Nikse.SubtitleEdit.Logic
             int start = regEx.IndexOf("(?<", StringComparison.Ordinal);
             if (start >= 0 && regEx.IndexOf(')') > start)
             {
-                int end = regEx.IndexOf('>');
+                int end = regEx.IndexOf('>', start);
                 if (end > start)
                 {
                     start += 3;
-                    string group = regEx.Substring(start, end - start);
-                    return group;
+                    return regEx.Substring(start, end - start);
                 }
             }
             return null;
@@ -2150,7 +2149,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if (index == text.Length)
+                if ((index + 1) == text.Length)
                     return count;
                 index = text.IndexOf(tag, index + 1, StringComparison.Ordinal);
             }
@@ -2164,7 +2163,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if (index == text.Length)
+                if ((index + 1) == text.Length)
                     return count;
                 index = text.IndexOf(tag, index + 1);
             }
@@ -2319,7 +2318,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 secondLine = beginTag + secondLine;
                                 isFixed = true;
                             }
-                            text = firstLine + Environment.NewLine + secondLine;
+                            text = string.Format("{0}\r\n{1}", firstLine, secondLine);
                         }
                     }
                     if (!isFixed)
@@ -2986,8 +2985,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-            if (text.Contains(" " + Environment.NewLine))
+            if (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            if (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
