@@ -560,8 +560,8 @@
         <SplitLineAtCursorPosition>Раздвоји линију према положају показивача</SplitLineAtCursorPosition>
         <SelectAll>Из&amp;абери све</SelectAll>
         <InsertFirstLine>Убаци линију</InsertFirstLine>
-        <InsertBefore>Убаци линију иза</InsertBefore>
-        <InsertAfter>Убаци линију испред</InsertAfter>
+        <InsertBefore>Убаци линију испред</InsertBefore>
+        <InsertAfter>Убаци линију иза</InsertAfter>
         <InsertSubtitleAfter>Убаци титл иза линије...</InsertSubtitleAfter>
         <CopyToClipboard>Умножи као текст</CopyToClipboard>
         <Split>Раздвоји</Split>
