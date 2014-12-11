@@ -78,7 +78,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             var klv = new KlvPacket(stream);
             MessageBox.Show("Key: " + klv.Key[0] + ", Length: " + klv.Length);
 
-
         }
 
     }

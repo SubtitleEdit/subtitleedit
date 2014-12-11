@@ -1130,7 +1130,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 var regEx = new Regex("\\b" + words[i] + "\\b");
                 count += regEx.Matches(text).Count;
-            }            
+            }
             return count;
         }
 
@@ -1143,7 +1143,7 @@ namespace Nikse.SubtitleEdit.Logic
                 count += regEx.Matches(text).Count;
             }
             return count;
-        }      
+        }
 
         public static string AutoDetectGoogleLanguage(Encoding encoding)
         {
@@ -1264,7 +1264,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "pl";
 
-            count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio", 
+            count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio",
                                    "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");
 
             if (count > bestCount)
