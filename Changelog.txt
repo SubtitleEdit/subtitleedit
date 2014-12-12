@@ -3,6 +3,7 @@
 3.4.5 (xth December 2014)
 * NEW:
    * Basic read support for Ayato + Unipac format
+   * Preview with background image for image export - thx Christophe
 * IMPROVED:
    * Updated Czech translation - thx Trottel
    * Batch convert now remembers format - thx MM
@@ -16,6 +17,7 @@
    * Correct version number in Slovenian translation
    * Fix for missed char after new line in PAC w16 - thx Max
    * Fixed minor bug in split subtitle - thx kempniu
+   * Fix mkv/mks support in "Batch convert" - thx Juan
 
 
 3.4.4 (28th November 2014)
