@@ -4,7 +4,6 @@ using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using System.Drawing;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -38,8 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (label1.Left + label1.Width + 5 > Width)
                 Width = label1.Left + label1.Width + 5;
 
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonSplit.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonSplit.Text, Font);
             if (textSize.Height > buttonSplit.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
@@ -91,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (p.EndTime.TotalMilliseconds > splitTime.TotalMilliseconds)
                     {
-                        part1.Paragraphs.Add(new Paragraph(p) { EndTime = new TimeCode(splitTime.TotalMilliseconds) });
+                        part1.Paragraphs[part1.Paragraphs.Count - 1].EndTime = new TimeCode(splitTime.TotalMilliseconds);
                         part2.Paragraphs.Add(new Paragraph(p) { StartTime = new TimeCode(splitTime.TotalMilliseconds) });
                     }
                 }
