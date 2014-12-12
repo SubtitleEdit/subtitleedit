@@ -125,12 +125,10 @@ SW_VER: 2.25";
             subtitle.Renumber(1);
         }
 
-        private static TimeCode GetTimeCode(string timeString)
+        private static TimeCode GetTimeCode(string timestamp)
         {
-            string[] timeParts = timeString.Split(new[] { ':', ',', '.' });
-            int milliseconds = FramesToMillisecondsMax999(int.Parse(timeParts[3]));
-            var timeCode = new TimeCode(int.Parse(timeParts[0]), int.Parse(timeParts[1]), int.Parse(timeParts[2]), milliseconds);
-            return timeCode;
+            var tokens = timestamp.Split(':', ',', '.');
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
     }
 }

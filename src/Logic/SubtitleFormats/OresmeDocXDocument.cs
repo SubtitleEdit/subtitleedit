@@ -279,10 +279,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode GetTimeCode(string s)
+        private static TimeCode GetTimeCode(string timestamp)
         {
-            var parts = s.Trim().Split(':');
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+            var tokens = timestamp.Trim().Split(':');
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

@@ -135,13 +135,10 @@ ST 0 EB 3.10
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] tokens)
         {
-            //00119.12
-            string seconds = parts[0];
-            string frames = parts[1];
-            TimeCode tc = new TimeCode(0, 0, int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            // 00119.12
+            return TimeCode.FromFrameTokens(null, null, tokens[0], tokens[1]);
         }
 
     }

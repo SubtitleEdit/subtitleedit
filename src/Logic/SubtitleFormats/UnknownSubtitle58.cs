@@ -144,17 +144,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTimeCode(string part)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            string[] parts = part.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            // hh:mm:ss:ff
+            var tokens = timestamp.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

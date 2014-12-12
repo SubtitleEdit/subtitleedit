@@ -56,21 +56,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                string[] arr = line.Split();
-                var timeCode = arr[arr.Length - 1];
+                string[] tokens = line.Split();
+                var timeCode = tokens[tokens.Length - 1];
                 if (regexTimeCodesAM.Match(timeCode).Success || regexTimeCodesPM.Match(timeCode).Success)
                 {
                     try
                     {
-                        arr = timeCode.Substring(0, 10).Split(':');
-                        if (arr.Length == 4)
+                        tokens = timeCode.Substring(0, 10).Split(':');
+                        if (tokens.Length == 4)
                         {
-                            int hours = int.Parse(arr[0]);
-                            int minutes = int.Parse(arr[1]);
-                            int seconds = int.Parse(arr[2]);
-                            int frames = int.Parse(arr[3]);
                             p = new Paragraph();
-                            p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
+                            p.StartTime = TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
                             p.Text = s.Substring(0, s.IndexOf(timeCode, StringComparison.Ordinal)).Trim();
                             subtitle.Paragraphs.Add(p);
                         }

@@ -80,10 +80,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            string[] arr = timeCode.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
+            var tokens = timestamp.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), s.Remove(0, 37).Trim());
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0), s.Remove(0, 37).Trim());
                     }
                     catch
                     {
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         if (p != null)
                             subtitle.Paragraphs.Add(p);
-                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0, 0, 0, 0), string.Empty);
+                        p = new Paragraph(DecodeTimeCode(s.Substring(5, 11)), new TimeCode(0), string.Empty);
                     }
                     catch
                     {

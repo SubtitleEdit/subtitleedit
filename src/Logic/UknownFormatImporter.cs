@@ -657,35 +657,32 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
-        private static TimeCode DecodeTime(string[] parts)
+        private static TimeCode DecodeTime(string[] tokens)
         {
-            try
+            if (tokens.Length < 3)
             {
-                string hour, minutes, seconds, frames;
-                if (parts.Length < 4)
-                {
-                    hour = "0";
-                    minutes = parts[0];
-                    seconds = parts[1];
-                    frames = parts[2];
-                }
-                else
-                {
-                    hour = parts[0];
-                    minutes = parts[1];
-                    seconds = parts[2];
-                    frames = parts[3];
-                }
+                return new TimeCode(0);
+            }
 
-                return frames.Length < 3
-                    ? new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), SubtitleFormat.FramesToMillisecondsMax999(int.Parse(frames)))
-                    : TimeCode.FromTimestampTokens(hour, minutes, seconds, frames);
-            }
-            catch
+            string hour, minutes, seconds, frames;
+            if (tokens.Length < 4)
             {
-                return new TimeCode(0, 0, 0, 0);
+                hour = null;
+                minutes = tokens[0];
+                seconds = tokens[1];
+                frames = tokens[2];
             }
+            else
+            {
+                hour = tokens[0];
+                minutes = tokens[1];
+                seconds = tokens[2];
+                frames = tokens[3];
+            }
+
+            return frames.Length < 3
+                ? TimeCode.FromFrameTokens(hour, minutes, seconds, frames)
+                : TimeCode.FromTimestampTokens(hour, minutes, seconds, frames);
         }
-
     }
 }

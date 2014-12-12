@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (regexTimeCodes.IsMatch(line))
                 {
-                    p = new Paragraph(DecodeTimeCode(line), new TimeCode(0, 0, 0, 0), string.Empty);
+                    p = new Paragraph(DecodeTimeCode(line), new TimeCode(0), string.Empty);
                     subtitle.Paragraphs.Add(p);
                 }
                 else if (string.IsNullOrWhiteSpace(line))

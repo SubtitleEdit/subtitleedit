@@ -128,17 +128,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return "Not supported!";
         }
 
-        private static TimeCode DecodeTimestamp(string timeCode)
+        private static TimeCode DecodeTimestamp(string timestamp)
         {
-            try
-            {
-                return new TimeCode(int.Parse(timeCode.Substring(0, 2)), int.Parse(timeCode.Substring(2, 2)), int.Parse(timeCode.Substring(4, 2)), FramesToMillisecondsMax999(int.Parse(timeCode.Substring(6, 2))));
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debug.WriteLine(exception.Message);
-                return new TimeCode(0, 0, 0, 0);
-            }
+            return timestamp.Length == 8
+                ? TimeCode.FromFrameTokens(timestamp.Substring(0, 2), timestamp.Substring(2, 2), timestamp.Substring(4, 2), timestamp.Substring(6, 2))
+                : new TimeCode(0);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

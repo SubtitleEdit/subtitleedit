@@ -67,14 +67,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     try
                     {
-                        string[] arr = s.Substring(0, 11).Split(':');
-                        if (arr.Length == 4)
+                        var tokens = s.Substring(0, 11).Split(':');
+                        if (tokens.Length == 4)
                         {
-                            int hours = int.Parse(arr[0]);
-                            int minutes = int.Parse(arr[1]);
-                            int seconds = int.Parse(arr[2]);
-                            int frames = int.Parse(arr[3]);
-                            p.StartTime = new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
+                            p.StartTime = TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
                             string text = s.Remove(0, 11).Trim();
                             p.Text = text;
                             if (text.Length > 1 && Utilities.IsInteger(text.Substring(0, 2)))

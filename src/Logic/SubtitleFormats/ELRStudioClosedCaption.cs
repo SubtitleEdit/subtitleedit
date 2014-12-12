@@ -133,15 +133,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             try
             {
-                int frames = int.Parse(buffer[idx].ToString("X4"));
-                int seconds = int.Parse(buffer[idx + 1].ToString("X4"));
-                int minutes = int.Parse(buffer[idx + 2].ToString("X4"));
-                int hours = int.Parse(buffer[idx + 3].ToString("X4"));
+                var frames = buffer[idx];
+                var seconds = buffer[idx + 1];
+                var minutes = buffer[idx + 2];
+                var hours = buffer[idx + 3];
                 return new TimeCode(hours, minutes, seconds, FramesToMillisecondsMax999(frames));
             }
             catch
             {
-                return new TimeCode(0, 0, 0, 0);
+                return new TimeCode(0);
             }
         }
 

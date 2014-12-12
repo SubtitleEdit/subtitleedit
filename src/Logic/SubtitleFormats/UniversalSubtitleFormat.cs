@@ -90,17 +90,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return ToUtf8XmlString(xml);
         }
 
-        private static TimeCode DecodeTimeCode(string code)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            string[] parts = code.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            // hh:mm:ss:ff
+            var tokens = timestamp.Split(new[] { ':', '.', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

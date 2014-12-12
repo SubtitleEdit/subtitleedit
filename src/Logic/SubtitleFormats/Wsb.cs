@@ -98,16 +98,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTimeCode(string time)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            //00:00:07:12
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(2, 2);
-            string seconds = time.Substring(4, 2);
-            string frames = time.Substring(6, 2);
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            // hh:mm:ss:ff
+            var hours = timestamp.Substring(0, 2);
+            var minutes = timestamp.Substring(2, 2);
+            var seconds = timestamp.Substring(4, 2);
+            var frames = timestamp.Substring(6, 2);
+            return TimeCode.FromFrameTokens(hours, minutes, seconds, frames);
         }
 
     }

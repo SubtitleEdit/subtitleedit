@@ -34,19 +34,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private static TimeCode DecodeTimeCode(string s)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            var parts = s.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            int milliseconds = (int)Math.Round(((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(frames)));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
+            var tokens = timestamp.Split(new[] { ':', ';' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
         public override string ToText(Subtitle subtitle, string title)

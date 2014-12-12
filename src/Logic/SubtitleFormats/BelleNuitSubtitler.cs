@@ -223,27 +223,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 if (RegexTimeCode.IsMatch(line))
                 {
-                    string[] parts = line.Substring(4, 11).Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length == 4)
+                    try
                     {
-                        try
+                        if (paragraph != null && !string.IsNullOrWhiteSpace(sb.ToString()))
                         {
-                            if (paragraph != null && !string.IsNullOrWhiteSpace(sb.ToString()))
-                            {
-                                paragraph.Text = DecodeText(sb);
-                            }
+                            paragraph.Text = DecodeText(sb);
+                        }
 
-                            var start = DecodeTimeCode(parts);
-                            parts = line.Substring(16, 11).Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                            var end = DecodeTimeCode(parts);
-                            paragraph = new Paragraph { StartTime = start, EndTime = end };
-                            subtitle.Paragraphs.Add(paragraph);
-                            sb = new StringBuilder();
-                        }
-                        catch
-                        {
-                            _errorCount++;
-                        }
+                        var tokens = line.Substring(4).Split(':', ' ');
+                        var start = TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
+                        var end = TimeCode.FromFrameTokens(tokens[4], tokens[5], tokens[6], tokens[7]);
+                        paragraph = new Paragraph { StartTime = start, EndTime = end };
+                        subtitle.Paragraphs.Add(paragraph);
+                        sb = new StringBuilder();
+                    }
+                    catch
+                    {
+                        _errorCount++;
                     }
                 }
                 else if (RegexFileNum.IsMatch(line))
@@ -330,16 +326,5 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
-
-        private static TimeCode DecodeTimeCode(string[] parts)
-        {
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-        }
-
     }
 }

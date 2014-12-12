@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         try
                         {
-                            p = new Paragraph(DecodeTimeCode(startParts), new TimeCode(0, 0, 0, 0), text);
+                            p = new Paragraph(DecodeTimeCode(startParts), new TimeCode(0), text);
                             subtitle.Paragraphs.Add(p);
                         }
                         catch (Exception exception)
@@ -137,16 +137,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] tokens)
         {
-            //00:00:07:12
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            // hh:mm:ss:ff
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

@@ -163,14 +163,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTime(string s)
+        private static TimeCode DecodeTime(string timestamp)
         {
-            var arr = s.Split(':');
-            if (arr.Length == 4)
-            {
-                return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), FramesToMillisecondsMax999(int.Parse(arr[3])));
-            }
-            return new TimeCode(0, 0, 0, 0);
+            var tokens = timestamp.Split(':');
+            return tokens.Length == 4
+                ? TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3])
+                : new TimeCode(0);
         }
 
     }

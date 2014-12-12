@@ -120,15 +120,12 @@ $TapeOffset         =   FALSE
 
         private static TimeCode DecodeTimeCode(string time)
         {
-            //00:01:54:19
-
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
-            return tc;
+            // hh:mm:ss:ff
+            var hours = time.Substring(0, 2);
+            var minutes = time.Substring(3, 2);
+            var seconds = time.Substring(6, 2);
+            var frames = time.Substring(9, 2);
+            return TimeCode.FromFrameTokens(hours, minutes, seconds, frames);
         }
 
         private static string DecodeText(string text)

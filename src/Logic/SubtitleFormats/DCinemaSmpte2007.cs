@@ -760,15 +760,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
         }
 
-        private TimeCode GetTimeCode(string s)
+        private TimeCode GetTimeCode(string timestamp)
         {
-            string[] parts = s.Split(new char[] { ':', '.', ',' });
-
-            int milliseconds = (int)Math.Round(int.Parse(parts[3]) * (1000.0 / frameRate));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), milliseconds);
+            var tokens = timestamp.Split(':', '.', ',');
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3], frameRate);
         }
 
         private string ConvertToTimeString(TimeCode time)

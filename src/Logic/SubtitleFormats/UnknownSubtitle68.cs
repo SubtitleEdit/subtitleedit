@@ -121,7 +121,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             TimeCode start = DecodeTimeCode(timeParts[0]);
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
                                 p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
-                            TimeCode end = new TimeCode(0, 0, 0, 0);
+                            var end = new TimeCode(0);
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
                             text = new StringBuilder();
@@ -181,11 +181,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0:00}:{1:00}:{2:00}F{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private static TimeCode DecodeTimeCode(string timePart)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            string s = timePart.Substring(0, 11);
-            var parts = s.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+            timestamp = timestamp.Substring(0, 11);
+            var tokens = timestamp.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

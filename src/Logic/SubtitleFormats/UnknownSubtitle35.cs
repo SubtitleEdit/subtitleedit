@@ -56,10 +56,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return sb.ToString();
         }
 
-        private static TimeCode DecodeTimeCode(string timeCode)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            string[] arr = timeCode.Split(new[] { ':', ';', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(0, 0, int.Parse(arr[0]), FramesToMillisecondsMax999(int.Parse(arr[1])));
+            var tokens = timestamp.Split(new[] { ':', ';', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(null, null, tokens[0], tokens[1]);
         }
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)

@@ -137,33 +137,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             line = line.Trim();
             if (RegexTimeCodes.IsMatch(line))
             {
-
-                //0001 01:00:15:08 01:00:18:05
-                try
-                {
-                    string start = line.Substring(5, 11);
-                    var parts = start.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    int startHours = int.Parse(parts[0]);
-                    int startMinutes = int.Parse(parts[1]);
-                    int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
-
-                    string end = line.Substring(17, 11);
-                    parts = end.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-                    int endHours = int.Parse(parts[0]);
-                    int endMinutes = int.Parse(parts[1]);
-                    int endSeconds = int.Parse(parts[2]);
-                    int endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
-
-                    paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-                    paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                // 0001 01:00:15:08 01:00:18:05
+                var tokens = line.Substring(5).Split(':', ' ');
+                paragraph.StartTime = TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
+                paragraph.EndTime = TimeCode.FromFrameTokens(tokens[4], tokens[5], tokens[6], tokens[7]);
+                return true;
             }
             return false;
         }

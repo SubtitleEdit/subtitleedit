@@ -1597,18 +1597,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string highPart = string.Format("{0:000000}", buffer[timeCodeIndex] + buffer[timeCodeIndex + 1] * 256);
                 string lowPart = string.Format("{0:000000}", buffer[timeCodeIndex + 2] + buffer[timeCodeIndex + 3] * 256);
 
-                int hours = int.Parse(highPart.Substring(0, 4));
-                int minutes = int.Parse(highPart.Substring(4, 2));
-                int second = int.Parse(lowPart.Substring(2, 2));
-                int frames = int.Parse(lowPart.Substring(4, 2));
+                var hours = highPart.Substring(0, 4);
+                var minutes = highPart.Substring(4, 2);
+                var seconds = lowPart.Substring(2, 2);
+                var frames = lowPart.Substring(4, 2);
 
-                int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * frames);
-                if (milliseconds > 999)
-                    milliseconds = 999;
-
-                return new TimeCode(hours, minutes, second, milliseconds);
+                return TimeCode.FromFrameTokens(hours, minutes, seconds, frames);
             }
-            return new TimeCode(0, 0, 0, 0);
+            return new TimeCode(0);
         }
 
     }

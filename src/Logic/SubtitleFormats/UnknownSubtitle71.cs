@@ -205,14 +205,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return AddSpaces(s);
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] tokens)
         {
-            string hour = parts[0];
-            string minutes = parts[1];
-            string seconds = parts[2];
-            string frames = parts[3];
-
-            return new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

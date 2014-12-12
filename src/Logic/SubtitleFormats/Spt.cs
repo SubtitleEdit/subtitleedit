@@ -164,16 +164,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static TimeCode GetTimeCode(string timeCode)
         {
-            int hour = int.Parse(timeCode.Substring(0, 2));
-            int minute = int.Parse(timeCode.Substring(2, 2));
-            int second = int.Parse(timeCode.Substring(4, 2));
-            int frames = int.Parse(timeCode.Substring(6, 2));
-
-            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * frames);
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(hour, minute, second, milliseconds);
+            var hours = timeCode.Substring(0, 2);
+            var minutes = timeCode.Substring(2, 2);
+            var seconds = timeCode.Substring(4, 2);
+            var frames = timeCode.Substring(6, 2);
+            return TimeCode.FromFrameTokens(hours, minutes, seconds, frames);
         }
 
     }

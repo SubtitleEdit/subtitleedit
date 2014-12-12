@@ -63,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     int splitter = line.IndexOf(':') + 3;
                     string text = line.Remove(0, splitter);
-                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0, 0, 0, 0), text);
+                    var p = new Paragraph(DecodeTimeCode(line.Substring(0, splitter)), new TimeCode(0), text);
                     subtitle.Paragraphs.Add(p);
                     text = text.Trim().Trim('–', '.', ';', ':').Trim();
                     if (text.Length > 0 && char.IsDigit(text[0]))

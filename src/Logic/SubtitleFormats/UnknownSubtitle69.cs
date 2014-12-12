@@ -106,11 +106,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private static TimeCode DecodeTimeCode(string timePart)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            string s = timePart.Substring(0, 11);
-            var parts = s.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
-            return new TimeCode(int.Parse(parts[0]), int.Parse(parts[1]), int.Parse(parts[2]), FramesToMillisecondsMax999(int.Parse(parts[3])));
+            timestamp = timestamp.Substring(0, 11);
+            var tokens = timestamp.Split(new[] { ':', 'F' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

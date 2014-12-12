@@ -127,49 +127,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             line = line.Trim();
             if (RegexTimeCodes.IsMatch(line))
             {
-
-                //TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
-                string s = line.Replace("TIMEIN:", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty);
-                string[] parts = s.Split(':');
-                try
-                {
-                    int startHours = int.Parse(parts[0]);
-                    int startMinutes = int.Parse(parts[1]);
-                    int startSeconds = int.Parse(parts[2]);
-                    int startMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[3]));
-
-                    int durationSeconds = 0;
-                    if (parts[4] != "-")
-                        durationSeconds = int.Parse(parts[4]);
-                    int durationMilliseconds = 0;
-                    if (parts[5] != "--")
-                        durationMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[5]));
-
-                    int endHours = 0;
-                    if (parts[6] != "--")
-                        endHours = int.Parse(parts[6]);
-                    int endMinutes = 0;
-                    if (parts[7] != "--")
-                        endMinutes = int.Parse(parts[7]);
-                    int endSeconds = 0;
-                    if (parts[8] != "--")
-                        endSeconds = int.Parse(parts[8]);
-                    int endMilliseconds = 0;
-                    if (parts[9] != "--")
-                        endMilliseconds = FramesToMillisecondsMax999(int.Parse(parts[9]));
-
-                    paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, startMilliseconds);
-
-                    if (durationSeconds > 0 || durationMilliseconds > 0)
-                        paragraph.EndTime.TotalMilliseconds = paragraph.StartTime.TotalMilliseconds + (durationSeconds * 1000 + durationMilliseconds);
-                    else
-                        paragraph.EndTime = new TimeCode(endHours, endMinutes, endSeconds, endMilliseconds);
-                    return true;
-                }
-                catch
-                {
-                    return false;
-                }
+                // TIMEIN: 01:00:04:12   DURATION: 04:25 TIMEOUT: 01:00:09:07
+                var timestamp = line.Replace("TIMEIN:", string.Empty).Replace("DURATION", string.Empty).Replace("TIMEOUT", string.Empty).Replace(" ", string.Empty).Replace("\t", string.Empty);
+                var tokens = timestamp.Split(':');
+                paragraph.StartTime = TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
+                paragraph.EndTime = TimeCode.FromFrameTokens(tokens[6], tokens[7], tokens[8], tokens[9]);
+                return true;
             }
             return false;
         }

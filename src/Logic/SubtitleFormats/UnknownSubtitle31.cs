@@ -150,12 +150,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0:00}.{1:00}", (int)time.TotalSeconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private static TimeCode DecodeTimeCode(string[] parts)
+        private static TimeCode DecodeTimeCode(string[] tokens)
         {
-            string seconds = parts[0];
-            string frames = parts[1];
-
-            return new TimeCode(0, 0, int.Parse(seconds), FramesToMillisecondsMax999(int.Parse(frames)));
+            return TimeCode.FromFrameTokens(null, null, tokens[0], tokens[1]);
         }
 
     }

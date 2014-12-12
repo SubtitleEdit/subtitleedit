@@ -137,19 +137,12 @@ $ColorIndex4    = 3
 
         private static TimeCode DecodeTimeCode(string time)
         {
-            //00:01:54:19
-
-            string hour = time.Substring(0, 2);
-            string minutes = time.Substring(3, 2);
-            string seconds = time.Substring(6, 2);
-            string frames = time.Substring(9, 2);
-
-            int milliseconds = (int)((1000 / 25.0) * int.Parse(frames));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            TimeCode tc = new TimeCode(int.Parse(hour), int.Parse(minutes), int.Parse(seconds), milliseconds);
-            return tc;
+            // hh:mm:ss:ff
+            var hours = time.Substring(0, 2);
+            var minutes = time.Substring(3, 2);
+            var seconds = time.Substring(6, 2);
+            var frames = time.Substring(9, 2);
+            return TimeCode.FromFrameTokens(hours, minutes, seconds, frames, 25.0);
         }
 
         private static string DecodeText(string text)

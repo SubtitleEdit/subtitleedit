@@ -96,16 +96,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return string.Format("{0}:{1:00}:{2:00}.{3:00}", time.Hours, time.Minutes, time.Seconds, MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
-        private static TimeCode DecodeTimeCode(string timePart)
+        private static TimeCode DecodeTimeCode(string timestamp)
         {
-            //0:03:02.15
-            var parts = timePart.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int hours = int.Parse(parts[0]);
-            int minutes = int.Parse(parts[1]);
-            int seconds = int.Parse(parts[2]);
-            int milliseconds = (int)((1000.0 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(parts[3]));
-            return new TimeCode(hours, minutes, seconds, milliseconds);
+            // h:mm:ss.ff
+            var tokens = timestamp.Split(new[] { ':', '.' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

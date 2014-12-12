@@ -213,15 +213,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return list;
         }
 
-        private static TimeCode ParseTimeCode(string start)
+        private static TimeCode ParseTimeCode(string timestamp)
         {
-            string[] arr = start.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
-
-            int milliseconds = (int)((1000 / Configuration.Settings.General.CurrentFrameRate) * int.Parse(arr[3]));
-            if (milliseconds > 999)
-                milliseconds = 999;
-
-            return new TimeCode(int.Parse(arr[0]), int.Parse(arr[1]), int.Parse(arr[2]), milliseconds);
+            var tokens = timestamp.Split(new[] { ':', ';', ',' }, StringSplitOptions.RemoveEmptyEntries);
+            return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
         }
 
     }

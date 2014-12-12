@@ -165,26 +165,10 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator) || startTime.EndsWith(':'))
                         startTime += "00";
 
-                    string[] times = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (times.Length == 4)
+                    var tokens = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (tokens.Length == 4)
                     {
-                        int hours;
-                        int.TryParse(times[0], out hours);
-
-                        int minutes;
-                        int.TryParse(times[1], out minutes);
-
-                        int seconds;
-                        int.TryParse(times[2], out seconds);
-
-                        int milliSeconds;
-                        if (int.TryParse(times[3], out milliSeconds))
-                        {
-                            milliSeconds = Logic.SubtitleFormats.SubtitleFormat.FramesToMillisecondsMax999(milliSeconds);
-                        }
-
-                        return new TimeCode(hours, minutes, seconds, milliSeconds);
+                        return TimeCode.FromFrameTokens(tokens[0], tokens[1], tokens[2], tokens[3]);
                     }
                 }
                 return null;
