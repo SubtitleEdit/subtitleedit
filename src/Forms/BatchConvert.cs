@@ -695,7 +695,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (isMatroska && (Path.GetExtension(fileName).Equals(".mkv", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".mks", StringComparison.OrdinalIgnoreCase)))
                         {
-                            int mkvCount = 0;
                             using (var matroska = new MatroskaFile(fileName))
                             {
                                 if (matroska.IsValid)
@@ -712,20 +711,12 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            mkvCount++;
+                                            var mkvSub = matroska.GetSubtitle(track.TrackNumber, null);
+                                            Utilities.LoadMatroskaTextSubtitle(track, matroska, mkvSub, sub);
+                                            break;
                                         }
-
                                     }
                                 }
-                                if (mkvCount > 0)
-                                {
-                                    item.SubItems.Add("Matroska - " + mkvCount);
-                                }
-                                else
-                                {
-                                    item.SubItems.Add(Configuration.Settings.Language.UnknownSubtitle.Title);
-                                }
-
                             }
                         }
                         else if (bluRaySubtitles.Count > 0)
