@@ -91,6 +91,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.panelVlcTemp = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -780,6 +781,7 @@
             this.groupBoxExportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxExportImage.Controls.Add(this.panelVlcTemp);
             this.groupBoxExportImage.Controls.Add(this.linkLabelPreview);
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
@@ -865,6 +867,14 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
+            // 
+            // panelVlcTemp
+            // 
+            this.panelVlcTemp.Location = new System.Drawing.Point(644, 19);
+            this.panelVlcTemp.Name = "panelVlcTemp";
+            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
+            this.panelVlcTemp.TabIndex = 10;
+            this.panelVlcTemp.Visible = false;
             // 
             // ExportPngXml
             // 
@@ -968,5 +978,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.LinkLabel linkLabelPreview;
+        private System.Windows.Forms.Panel panelVlcTemp;
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
@@ -78,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _fileName;
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
+        private string _videoFileName;
 
         private const string BoxMultiLine = "BoxMultiLine";
         private const string BoxSingleLine = "BoxSingleLine";
@@ -2451,11 +2453,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return s;
         }
 
-        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo)
+        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo, string videoFileName)
         {
             _exportType = exportType;
             _fileName = fileName;
             _format = format;
+            _videoFileName = videoFileName;
             if (exportType == "BLURAYSUP")
                 Text = "Blu-ray SUP";
             else if (exportType == "VOBSUB")
@@ -2888,7 +2891,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
         {
             _vobSubOcr = vobSubOcr;
-            Initialize(subtitle, format, exportType, fileName, null);
+            Initialize(subtitle, format, exportType, fileName, null, _videoFileName);
 
             //set language
             if (!string.IsNullOrEmpty(languageString))
@@ -3623,68 +3626,116 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             subtitleListView1.Items[index].SubItems[columnIndexText].Text = text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
         }
 
+        private void FillPreviewBackground(Bitmap bmp, Graphics g, Paragraph p)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(_videoFileName) && LibVlcDynamic.IsInstalled)
+                {
+                    using (var vlc = new LibVlcDynamic())
+                    {
+                        vlc.Initialize(panelVlcTemp, _videoFileName, null, null);
+                        Application.DoEvents();
+                        vlc.Volume = 0;
+                        vlc.Pause();
+                        vlc.CurrentPosition = p.StartTime.TotalSeconds;
+                        Application.DoEvents();
+                        var fileName = Path.GetTempFileName() + ".bmp";
+                        vlc.TakeSnapshot(fileName, (uint)bmp.Width, (uint)bmp.Height);
+                        Application.DoEvents();
+                        Thread.Sleep(200);
+                        using (var tempBmp = new Bitmap(fileName))
+                        {
+                            g.DrawImageUnscaled(tempBmp, new Point(0, 0));
+                        }
+                    }
+                    return;
+                }
+
+            }
+            catch
+            {
+                // Was unable to grap screenshot via vlc
+            }
+
+            // Draw background with generated image            
+            var rect = new Rectangle(0, 0, bmp.Width - 1, bmp.Height - 1);
+            using (var br = new LinearGradientBrush(rect, Color.Black, Color.Black, 0, false))
+            {
+                var cb = new ColorBlend
+                {
+                    Positions = new[] { 0, 1 / 6f, 2 / 6f, 3 / 6f, 4 / 6f, 5 / 6f, 1 },
+                    Colors = new[] { Color.Black, Color.Black, Color.White, Color.Black, Color.Black, Color.White, Color.Black }
+                };
+                br.InterpolationColors = cb;
+                br.RotateTransform(0);
+                g.FillRectangle(br, rect);
+            }
+
+        }
+
         private void linkLabelPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            int width;
-            int height;
-            GetResolution(out width, out height);
-            using (var bmp = new Bitmap(width, height))
+            linkLabelPreview.Enabled = false;
+            Cursor = Cursors.WaitCursor;
+            try
             {
-                using (var g = Graphics.FromImage(bmp))
+                int width;
+                int height;
+                GetResolution(out width, out height);
+                using (var bmp = new Bitmap(width, height))
                 {
-                    // Draw background                
-                    var rect = new Rectangle(0, 0, bmp.Width - 1, bmp.Height - 1);
-                    using (var br = new LinearGradientBrush(rect, Color.Black, Color.Black, 0, false))
+                    using (var g = Graphics.FromImage(bmp))
                     {
-                        var cb = new ColorBlend
+                        var p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
+                        FillPreviewBackground(bmp, g, p);
+
+                        var textBmp = pictureBox1.Image;
+
+                        var alignment = GetAlignmentFromParagraph(p, _format, _subtitle);
+                        if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
                         {
-                            Positions = new[] { 0, 1 / 6f, 2 / 6f, 3 / 6f, 4 / 6f, 5 / 6f, 1 },
-                            Colors = new[] { Color.Black, Color.Black, Color.White, Color.Black, Color.Black, Color.White, Color.Black }
-                        };
-                        br.InterpolationColors = cb;
-                        br.RotateTransform(0);
-                        g.FillRectangle(br, rect);
+                            if (comboBoxHAlign.SelectedIndex == 0)
+                            {
+                                alignment = ContentAlignment.BottomLeft;
+                            }
+                            else if (comboBoxHAlign.SelectedIndex == 2)
+                            {
+                                alignment = ContentAlignment.BottomRight;
+                            }
+                        }
+
+                        int x = (bmp.Width - textBmp.Width) / 2;
+                        if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                            x = 10;
+                        else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                            x = bmp.Width - textBmp.Width - 10;
+
+                        int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
+                        if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                            x = int.Parse(comboBoxBottomMargin.Text);
+                        else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                            x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                        if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+                            y = (groupBoxExportImage.Height - 4 - textBmp.Height) / 2;
+                        else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                            y = int.Parse(comboBoxBottomMargin.Text);
+
+                        g.DrawImageUnscaled(textBmp, new Point(x, y));
+
                     }
 
-                    var textBmp = pictureBox1.Image;
-
-                    var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
-                    if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
+                    using (var form = new ExportPngXmlPreview(bmp))
                     {
-                        if (comboBoxHAlign.SelectedIndex == 0)
-                        {
-                            alignment = ContentAlignment.BottomLeft;
-                        }
-                        else if (comboBoxHAlign.SelectedIndex == 2)
-                        {
-                            alignment = ContentAlignment.BottomRight;
-                        }
+                        Cursor = Cursors.Default;
+                        form.ShowDialog(this);
                     }
-
-                    int x = (bmp.Width - textBmp.Width) / 2;
-                    if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                        x = 10;
-                    else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                        x = bmp.Width - textBmp.Width - 10;
-
-                    int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
-                    if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                        x = int.Parse(comboBoxBottomMargin.Text);
-                    else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                        x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
-                    if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
-                        y = (groupBoxExportImage.Height - 4 - textBmp.Height) / 2;
-                    else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
-                        y = int.Parse(comboBoxBottomMargin.Text);
-
-                    g.DrawImageUnscaled(textBmp, new Point(x, y));
-
                 }
-
-                using (var form = new ExportPngXmlPreview(bmp))
-                {
-                    form.ShowDialog(this);
-                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+                linkLabelPreview.Enabled = true;    
             }
         }
 
