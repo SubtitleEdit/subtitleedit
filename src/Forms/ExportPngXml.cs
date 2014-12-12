@@ -3086,6 +3086,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Utilities.ShowHelp("#export");
                 e.SuppressKeyPress = true;
             }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G && subtitleListView1.Items.Count > 1)
+            {
+                using (var goToLine = new GoToLine())
+                {
+                    goToLine.Initialize(1, subtitleListView1.Items.Count);
+                    if (goToLine.ShowDialog(this) == DialogResult.OK)
+                    {
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
+                        subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                    }
+                }
+            }
         }
 
         private void ExportPngXml_Shown(object sender, EventArgs e)
@@ -3690,7 +3703,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
                         FillPreviewBackground(bmp, g, p);
 
-                        var textBmp = pictureBox1.Image;
+                        var nBmp = new NikseBitmap(pictureBox1.Image as Bitmap);
+                        nBmp.CropSidesAndBottom(100, Color.Transparent, true);
+                        var textBmp = nBmp.GetBitmap();
 
                         var alignment = GetAlignmentFromParagraph(p, _format, _subtitle);
                         if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
@@ -3707,9 +3722,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         int x = (bmp.Width - textBmp.Width) / 2;
                         if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                            x = 10;
+                            x = int.Parse(comboBoxBottomMargin.Text);
                         else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                            x = bmp.Width - textBmp.Width - 10;
+                            x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
 
                         int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
                         if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
