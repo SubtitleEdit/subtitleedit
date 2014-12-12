@@ -3705,39 +3705,40 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                         var nBmp = new NikseBitmap(pictureBox1.Image as Bitmap);
                         nBmp.CropSidesAndBottom(100, Color.Transparent, true);
-                        var textBmp = nBmp.GetBitmap();
-
-                        var alignment = GetAlignmentFromParagraph(p, _format, _subtitle);
-                        if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
+                        using (var textBmp = nBmp.GetBitmap())
                         {
-                            if (comboBoxHAlign.SelectedIndex == 0)
+
+                            var alignment = GetAlignmentFromParagraph(p, _format, _subtitle);
+                            if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
                             {
-                                alignment = ContentAlignment.BottomLeft;
+                                if (comboBoxHAlign.SelectedIndex == 0)
+                                {
+                                    alignment = ContentAlignment.BottomLeft;
+                                }
+                                else if (comboBoxHAlign.SelectedIndex == 2)
+                                {
+                                    alignment = ContentAlignment.BottomRight;
+                                }
                             }
-                            else if (comboBoxHAlign.SelectedIndex == 2)
-                            {
-                                alignment = ContentAlignment.BottomRight;
-                            }
+
+                            int x = (bmp.Width - textBmp.Width)/2;
+                            if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                                x = int.Parse(comboBoxBottomMargin.Text);
+                            else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                                x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+
+                            int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
+                            if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                                x = int.Parse(comboBoxBottomMargin.Text);
+                            else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                                x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                            if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+                                y = (groupBoxExportImage.Height - 4 - textBmp.Height)/2;
+                            else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                                y = int.Parse(comboBoxBottomMargin.Text);
+
+                            g.DrawImageUnscaled(textBmp, new Point(x, y));
                         }
-
-                        int x = (bmp.Width - textBmp.Width) / 2;
-                        if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                            x = int.Parse(comboBoxBottomMargin.Text);
-                        else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                            x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
-
-                        int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
-                        if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                            x = int.Parse(comboBoxBottomMargin.Text);
-                        else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                            x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
-                        if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
-                            y = (groupBoxExportImage.Height - 4 - textBmp.Height) / 2;
-                        else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
-                            y = int.Parse(comboBoxBottomMargin.Text);
-
-                        g.DrawImageUnscaled(textBmp, new Point(x, y));
-
                     }
 
                     using (var form = new ExportPngXmlPreview(bmp))
