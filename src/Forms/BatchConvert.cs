@@ -681,7 +681,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         isVobSub = true;
                     }
-                    else if (format == null && fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) && item.SubItems[2].Text.StartsWith("Matroska"))
+                    else if (format == null && (fileName.EndsWith(".mkv", StringComparison.OrdinalIgnoreCase) || fileName.EndsWith(".mks", StringComparison.OrdinalIgnoreCase)) && item.SubItems[2].Text.StartsWith("Matroska"))
                     {
                         isMatroska = true;
                     }
