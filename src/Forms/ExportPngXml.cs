@@ -21,8 +21,10 @@ namespace Nikse.SubtitleEdit.Forms
 
     public sealed partial class ExportPngXml : PositionAndSizeForm
     {
+
         private class MakeBitmapParameter
         {
+
             public Bitmap Bitmap { get; set; }
             public Paragraph P { get; set; }
             public string Type { get; set; }
@@ -60,6 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 BackgroundColor = Color.Transparent;
             }
+
         }
 
         private Subtitle _subtitle;
@@ -114,7 +117,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string BdnXmlTimeCode(TimeCode timecode)
         {
             var fr = FrameRate;
-            var tc = new TimeCode(timecode.TotalMilliseconds * (Math.Ceiling(fr) / fr));
+            var tc = new TimeCode(timecode.TotalMilliseconds*(Math.Ceiling(fr)/fr));
             int frames = SubtitleFormat.MillisecondsToFramesMaxFrameRate(tc.Milliseconds);
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
         }
@@ -244,34 +247,34 @@ namespace Nikse.SubtitleEdit.Forms
         private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
         {
             var parameter = new MakeBitmapParameter
-                                {
-                                    Type = _exportType,
-                                    SubtitleColor = _subtitleColor,
-                                    SubtitleFontName = _subtitleFontName,
-                                    SubtitleFontSize = _subtitleFontSize,
-                                    SubtitleFontBold = _subtitleFontBold,
-                                    BorderColor = _borderColor,
-                                    BorderWidth = _borderWidth,
-                                    SimpleRendering = checkBoxSimpleRender.Checked,
-                                    AlignLeft = comboBoxHAlign.SelectedIndex == 0,
-                                    AlignRight = comboBoxHAlign.SelectedIndex == 2,
-                                    ScreenWidth = screenWidth,
-                                    ScreenHeight = screenHeight,
-                                    VideoResolution = comboBoxResolution.Text,
-                                    Bitmap = null,
-                                    FramesPerSeconds = FrameRate,
-                                    BottomMargin = comboBoxBottomMargin.SelectedIndex,
-                                    Saved = false,
-                                    Alignment = ContentAlignment.BottomCenter,
-                                    Type3D = comboBox3D.SelectedIndex,
-                                    Depth3D = (int)numericUpDownDepth3D.Value,
-                                    BackgroundColor = Color.Transparent,
-                                    SavDialogFileName = saveFileDialog1.FileName,
-                                    ShadowColor = panelShadowColor.BackColor,
-                                    ShadowWidth = comboBoxShadowWidth.SelectedIndex,
-                                    ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
-                                    LineHeight = (int)numericUpDownLineSpacing.Value,
-                                };
+            {
+                Type = _exportType,
+                SubtitleColor = _subtitleColor,
+                SubtitleFontName = _subtitleFontName,
+                SubtitleFontSize = _subtitleFontSize,
+                SubtitleFontBold = _subtitleFontBold,
+                BorderColor = _borderColor,
+                BorderWidth = _borderWidth,
+                SimpleRendering = checkBoxSimpleRender.Checked,
+                AlignLeft = comboBoxHAlign.SelectedIndex == 0,
+                AlignRight = comboBoxHAlign.SelectedIndex == 2,
+                ScreenWidth = screenWidth,
+                ScreenHeight = screenHeight,
+                VideoResolution = comboBoxResolution.Text,
+                Bitmap = null,
+                FramesPerSeconds = FrameRate,
+                BottomMargin = comboBoxBottomMargin.SelectedIndex,
+                Saved = false,
+                Alignment = ContentAlignment.BottomCenter,
+                Type3D = comboBox3D.SelectedIndex,
+                Depth3D = (int)numericUpDownDepth3D.Value,
+                BackgroundColor = Color.Transparent,
+                SavDialogFileName = saveFileDialog1.FileName,
+                ShadowColor = panelShadowColor.BackColor,
+                ShadowWidth = comboBoxShadowWidth.SelectedIndex,
+                ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
+                LineHeight = (int)numericUpDownLineSpacing.Value,
+            };
             if (index < _subtitle.Paragraphs.Count)
             {
                 parameter.P = _subtitle.Paragraphs[index];
@@ -473,7 +476,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int i = 1;
                     for (; i < _subtitle.Paragraphs.Count; i++)
                     {
-                        if (i % 2 == 0)
+                        if (i%2 == 0)
                         {
                             paramEqual = MakeMakeBitmapParameter(i, width, height);
                             threadEqual = new Thread(DoWork);
@@ -506,7 +509,7 @@ namespace Nikse.SubtitleEdit.Forms
                         progressBar1.Value = i;
                     }
 
-                    if (i % 2 == 0)
+                    if (i%2 == 0)
                     {
                         if (threadEqual.ThreadState == ThreadState.Running)
                             threadEqual.Join();
@@ -589,13 +592,13 @@ namespace Nikse.SubtitleEdit.Forms
 
                     int duration = 0;
                     if (_subtitle.Paragraphs.Count > 0)
-                        duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
+                        duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds*25.0);
                     string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-"<!DOCTYPE xmeml[]>" + Environment.NewLine +
-"<xmeml version=\"4\">" + Environment.NewLine +
-"  <sequence id=\"" + fileNameNoExt + "\">" + Environment.NewLine +
-"    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
-"    <name>" + fileNameNoExt + @"</name>
+                               "<!DOCTYPE xmeml[]>" + Environment.NewLine +
+                               "<xmeml version=\"4\">" + Environment.NewLine +
+                               "  <sequence id=\"" + fileNameNoExt + "\">" + Environment.NewLine +
+                               "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
+                               "    <name>" + fileNameNoExt + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -621,7 +624,7 @@ namespace Nikse.SubtitleEdit.Forms
         </track>
         <track>
 " + sb +
-@"   <enabled>TRUE</enabled>
+                               @"   <enabled>TRUE</enabled>
           <locked>FALSE</locked>
         </track>
       </video>
@@ -660,7 +663,7 @@ namespace Nikse.SubtitleEdit.Forms
 $VERSION=1.2
 $ULEAD=TRUE
 $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
-                    "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
+                                    "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
                     string dropValue = "30000";
                     if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
@@ -902,7 +905,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
                         //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
                         int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+                        int left = (param.ScreenWidth - param.Bitmap.Width)/2;
 
                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
                             left = param.BottomMargin;
@@ -911,7 +914,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                             top = param.BottomMargin;
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                            top = param.ScreenHeight - (param.Bitmap.Height/2);
 
                         sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
                         param.Saved = true;
@@ -929,9 +932,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
                         const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
 
-                        double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
-                        string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
-                        string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
+                        double factor = (1000.0/Configuration.Settings.General.CurrentFrameRate);
+                        string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds/factor));
+                        string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds/factor));
                         sb.AppendFormat(paragraphWriteFormat, startTime, endTime, fileName);
 
                         param.Saved = true;
@@ -964,9 +967,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         const string paragraphWriteFormat = "\t\t<spu start=\"{0}\" end=\"{1}\" image=\"{2}\"  />";
                         const string timeFormat = "{0:00}:{1:00}:{2:00}:{3:00}";
 
-                        double factor = (1000.0 / Configuration.Settings.General.CurrentFrameRate);
-                        string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds / factor));
-                        string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds / factor));
+                        double factor = (1000.0/Configuration.Settings.General.CurrentFrameRate);
+                        string startTime = string.Format(timeFormat, param.P.StartTime.Hours, param.P.StartTime.Minutes, param.P.StartTime.Seconds, (int)Math.Round(param.P.StartTime.Milliseconds/factor));
+                        string endTime = string.Format(timeFormat, param.P.EndTime.Hours, param.P.EndTime.Minutes, param.P.EndTime.Seconds, (int)Math.Round(param.P.EndTime.Milliseconds/factor));
                         sb.AppendLine(string.Format(paragraphWriteFormat, startTime, endTime, fileName));
 
                         param.Saved = true;
@@ -985,7 +988,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
 //              <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
 
-@"            <name>" + fileNameNoPath + @"</name>
+                                          @"            <name>" + fileNameNoPath + @"</name>
             <duration>[DURATION]</duration>
             <rate>
               <ntsc>FALSE</ntsc>
@@ -1000,7 +1003,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
             <masterclipid>" + fileNameNoPath + @"1</masterclipid>" + Environment.NewLine +
-"           <file id=\"" + fileNameNoExt + "\">" + @"
+                                          "           <file id=\"" + fileNameNoExt + "\">" + @"
               <name>" + fileNameNoPath + @"</name>
               <pathurl>" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
               <rate>
@@ -1052,9 +1055,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         imagesSavedCount++;
 
-                        int duration = (int)Math.Round(param.P.Duration.TotalSeconds * 25.0);
-                        int start = (int)Math.Round(param.P.StartTime.TotalSeconds * 25.0);
-                        int end = (int)Math.Round(param.P.EndTime.TotalSeconds * 25.0);
+                        int duration = (int)Math.Round(param.P.Duration.TotalSeconds*25.0);
+                        int start = (int)Math.Round(param.P.StartTime.TotalSeconds*25.0);
+                        int end = (int)Math.Round(param.P.EndTime.TotalSeconds*25.0);
 
                         if (param.VideoResolution.StartsWith("NTSC"))
                         {
@@ -1097,7 +1100,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         const string paragraphWriteFormat = "{0}\t{1}\t{2}\t{4}\t{5}\t{3}\t0\t0";
 
                         int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+                        int left = (param.ScreenWidth - param.Bitmap.Width)/2;
                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
                             left = param.BottomMargin;
                         else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
@@ -1105,7 +1108,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                             top = param.BottomMargin;
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                            top = param.ScreenHeight - (param.Bitmap.Height/2);
 
                         string startTime = BdnXmlTimeCode(param.P.StartTime);
                         string endTime = BdnXmlTimeCode(param.P.EndTime);
@@ -1121,7 +1124,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var imageFormat = ImageFormat;
 
                         int lastFrame = imagesSavedCount;
-                        int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
+                        int startFrame = (int)Math.Round(param.P.StartTime.TotalMilliseconds/(1000.0/param.FramesPerSeconds));
                         var empty = new Bitmap(param.ScreenWidth, param.ScreenHeight);
 
                         if (imagesSavedCount == 0 && checkBoxSkipEmptyFrameAtStart.Checked)
@@ -1139,10 +1142,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             }
                         }
 
-                        int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds / (1000.0 / param.FramesPerSeconds));
+                        int endFrame = (int)Math.Round(param.P.EndTime.TotalMilliseconds/(1000.0/param.FramesPerSeconds));
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         Graphics g = Graphics.FromImage(fullSize);
-                        g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
+                        g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width)/2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
                         g.Dispose();
 
                         if (imagesSavedCount > startFrame)
@@ -1187,7 +1190,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         var fullSize = new Bitmap(param.ScreenWidth, param.ScreenHeight);
                         using (var g = Graphics.FromImage(fullSize))
                         {
-                            g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width) / 2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
+                            g.DrawImage(param.Bitmap, (param.ScreenWidth - param.Bitmap.Width)/2, param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin));
                         }
                         var fileName2 = Path.Combine(Path.GetDirectoryName(param.SavDialogFileName), fileName1 + ".PNG");
                         fullSize.Save(fileName2, ImageFormat.Png);
@@ -1216,7 +1219,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         sb.AppendLine("<Event InTC=\"" + BdnXmlTimeCode(param.P.StartTime) + "\" OutTC=\"" +
                                       BdnXmlTimeCode(param.P.EndTime) + "\" Forced=\"" + param.Forced.ToString().ToLower() + "\">");
 
-                        int x = (width - param.Bitmap.Width) / 2;
+                        int x = (width - param.Bitmap.Width)/2;
                         int y = height - (param.Bitmap.Height + param.BottomMargin);
                         switch (param.Alignment)
                         {
@@ -1229,19 +1232,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 y = height - (param.Bitmap.Height + param.BottomMargin);
                                 break;
                             case ContentAlignment.MiddleCenter:
-                                x = (width - param.Bitmap.Width) / 2;
-                                y = (height - param.Bitmap.Height) / 2;
+                                x = (width - param.Bitmap.Width)/2;
+                                y = (height - param.Bitmap.Height)/2;
                                 break;
                             case ContentAlignment.MiddleLeft:
                                 x = border;
-                                y = (height - param.Bitmap.Height) / 2;
+                                y = (height - param.Bitmap.Height)/2;
                                 break;
                             case ContentAlignment.MiddleRight:
                                 x = width - param.Bitmap.Width - border;
-                                y = (height - param.Bitmap.Height) / 2;
+                                y = (height - param.Bitmap.Height)/2;
                                 break;
                             case ContentAlignment.TopCenter:
-                                x = (width - param.Bitmap.Width) / 2;
+                                x = (width - param.Bitmap.Width)/2;
                                 y = border;
                                 break;
                             case ContentAlignment.TopLeft:
@@ -1516,7 +1519,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var lastText = new StringBuilder();
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+            sf.LineAlignment = StringAlignment.Near; // draw the text to a path
             var bmp = new Bitmap(parameter.ScreenWidth, 200);
             var g = Graphics.FromImage(bmp);
 
@@ -1770,7 +1773,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (parameter.AlignRight)
                             l1 = w - bmp.Width;
                         else
-                            l1 = (int)Math.Round(((w - bmp.Width) / 2.0));
+                            l1 = (int)Math.Round(((w - bmp.Width)/2.0));
 
                         int l2 = 0;
                         if (parameter.AlignLeft)
@@ -1778,7 +1781,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (parameter.AlignRight)
                             l2 = w - lineImage.Width;
                         else
-                            l2 = (int)Math.Round(((w - lineImage.Width) / 2.0));
+                            l2 = (int)Math.Round(((w - lineImage.Width)/2.0));
 
                         if (parameter.LineHeight > lineImage.Height)
                         {
@@ -1864,8 +1867,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
                 }
-                int sizeX = (int)(textSize.Width * 1.8) + 150;
-                int sizeY = (int)(textSize.Height * 0.9) + 50;
+                int sizeX = (int)(textSize.Width*1.8) + 150;
+                int sizeY = (int)(textSize.Height*0.9) + 50;
                 if (sizeX < 1)
                     sizeX = 1;
                 if (sizeY < 1)
@@ -1919,7 +1922,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (parameter.AlignRight)
                             lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
                         else
-                            lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5) / 2); // calculate via drawing+crop
+                            lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5)/2); // calculate via drawing+crop
                     }
                 }
                 else
@@ -1931,7 +1934,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (parameter.AlignRight)
                             lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                         else
-                            lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2);
+                            lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15)/2);
                     }
                 }
 
@@ -1970,7 +1973,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                         {
                             sf.Alignment = StringAlignment.Center;
-                            x = parameter.ScreenWidth / 2;
+                            x = parameter.ScreenWidth/2;
                         }
 
                         bmp = new Bitmap(parameter.ScreenWidth, sizeY);
@@ -2297,8 +2300,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     Bitmap singleHalfBmp = ScaleToHalfWidth(singleBmp);
                     singleBmp.Dispose();
                     var sideBySideBmp = new Bitmap(parameter.ScreenWidth, singleHalfBmp.Height);
-                    int singleWidth = parameter.ScreenWidth / 2;
-                    int singleLeftMargin = (singleWidth - singleHalfBmp.Width) / 2;
+                    int singleWidth = parameter.ScreenWidth/2;
+                    int singleLeftMargin = (singleWidth - singleHalfBmp.Width)/2;
 
                     using (Graphics gSideBySide = Graphics.FromImage(sideBySideBmp))
                     {
@@ -2336,8 +2339,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Bitmap singleHalfBmp = ScaleToHalfHeight(singleBmp);
             singleBmp.Dispose();
             var topBottomBmp = new Bitmap(parameter.ScreenWidth, parameter.ScreenHeight - parameter.BottomMargin);
-            int singleHeight = parameter.ScreenHeight / 2;
-            int leftM = (parameter.ScreenWidth / 2) - (singleHalfBmp.Width / 2);
+            int singleHeight = parameter.ScreenHeight/2;
+            int leftM = (parameter.ScreenWidth/2) - (singleHalfBmp.Width/2);
 
             using (Graphics gTopBottom = Graphics.FromImage(topBottomBmp))
             {
@@ -2410,7 +2413,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static Bitmap ScaleToHalfWidth(Bitmap bmp)
         {
-            int w = bmp.Width / 2;
+            int w = bmp.Width/2;
             var newImage = new Bitmap(w, bmp.Height);
             using (var gr = Graphics.FromImage(newImage))
             {
@@ -2424,7 +2427,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static Bitmap ScaleToHalfHeight(Bitmap bmp)
         {
-            int h = bmp.Height / 2;
+            int h = bmp.Height/2;
             var newImage = new Bitmap(bmp.Width, h);
             using (var gr = Graphics.FromImage(newImage))
             {
@@ -2602,6 +2605,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.LineHeight)) //TODO: Remove in 3.4
                 labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
+
+            linkLabelPreview.Text = Configuration.Settings.Language.General.Preview;
 
             SubtitleListView1InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
@@ -2943,8 +2948,22 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 pictureBox1.Width = bmp.Width;
                 pictureBox1.Height = bmp.Height;
                 pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text);
-                pictureBox1.Left = (w - bmp.Width) / 2;
+                pictureBox1.Left = (w - bmp.Width)/2;
                 var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
+
+                // fix alignment from UI
+                if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
+                {
+                    if (comboBoxHAlign.SelectedIndex == 0)
+                    {
+                        alignment = ContentAlignment.BottomLeft;
+                    }
+                    else if (comboBoxHAlign.SelectedIndex == 2)
+                    {
+                        alignment = ContentAlignment.BottomRight;
+                    }
+                }
+
                 if (_exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "VOBSUB")
                 {
                     if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
@@ -2953,7 +2972,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxBottomMargin.Text);
 
                     if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
-                        pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height) / 2;
+                        pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height)/2;
                     else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
                         pictureBox1.Top = int.Parse(comboBoxBottomMargin.Text);
                 }
@@ -3030,11 +3049,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 mbp.SubtitleFontName = _subtitleFontName;
                 mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
                 mbp.SubtitleFontBold = _subtitleFontBold;
-                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
+                var fontSize = g.DpiY*mbp.SubtitleFontSize/72;
                 Font font = SetFont(mbp, fontSize);
 
                 SizeF textSize = g.MeasureString("Hj!", font);
-                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                int lineHeight = (int)Math.Round(textSize.Height*0.64f);
                 if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
                 else if (lineHeight > numericUpDownLineSpacing.Maximum)
@@ -3273,11 +3292,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 mbp.SubtitleFontName = _subtitleFontName;
                 mbp.SubtitleFontSize = float.Parse(comboBoxSubtitleFontSize.SelectedItem.ToString());
                 mbp.SubtitleFontBold = _subtitleFontBold;
-                var fontSize = g.DpiY * mbp.SubtitleFontSize / 72;
+                var fontSize = g.DpiY*mbp.SubtitleFontSize/72;
                 Font font = SetFont(mbp, fontSize);
 
                 SizeF textSize = g.MeasureString("Hj!", font);
-                int lineHeight = (int)Math.Round(textSize.Height * 0.64f);
+                int lineHeight = (int)Math.Round(textSize.Height*0.64f);
                 if (lineHeight >= numericUpDownLineSpacing.Minimum && lineHeight <= numericUpDownLineSpacing.Maximum && lineHeight != numericUpDownLineSpacing.Value)
                     numericUpDownLineSpacing.Value = lineHeight;
             }
@@ -3441,8 +3460,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (subtitleListView1.TopItem == null)
                 return;
 
-            int bottomIndex = subtitleListView1.TopItem.Index + ((Height - 25) / 16);
-            int itemsBeforeAfterCount = ((bottomIndex - subtitleListView1.TopItem.Index) / 2) - 1;
+            int bottomIndex = subtitleListView1.TopItem.Index + ((Height - 25)/16);
+            int itemsBeforeAfterCount = ((bottomIndex - subtitleListView1.TopItem.Index)/2) - 1;
             if (itemsBeforeAfterCount < 0)
                 itemsBeforeAfterCount = 1;
 
@@ -3602,6 +3621,71 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             subtitleListView1.Items[index].SubItems[columnIndexText].Text = text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+        }
+
+        private void linkLabelPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            int width;
+            int height;
+            GetResolution(out width, out height);
+            using (var bmp = new Bitmap(width, height))
+            {
+                using (var g = Graphics.FromImage(bmp))
+                {
+                    // Draw background                
+                    var rect = new Rectangle(0, 0, bmp.Width - 1, bmp.Height - 1);
+                    using (var br = new LinearGradientBrush(rect, Color.Black, Color.Black, 0, false))
+                    {
+                        var cb = new ColorBlend
+                        {
+                            Positions = new[] { 0, 1 / 6f, 2 / 6f, 3 / 6f, 4 / 6f, 5 / 6f, 1 },
+                            Colors = new[] { Color.Black, Color.Black, Color.White, Color.Black, Color.Black, Color.White, Color.Black }
+                        };
+                        br.InterpolationColors = cb;
+                        br.RotateTransform(0);
+                        g.FillRectangle(br, rect);
+                    }
+
+                    var textBmp = pictureBox1.Image;
+
+                    var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
+                    if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
+                    {
+                        if (comboBoxHAlign.SelectedIndex == 0)
+                        {
+                            alignment = ContentAlignment.BottomLeft;
+                        }
+                        else if (comboBoxHAlign.SelectedIndex == 2)
+                        {
+                            alignment = ContentAlignment.BottomRight;
+                        }
+                    }
+
+                    int x = (bmp.Width - textBmp.Width) / 2;
+                    if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                        x = 10;
+                    else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                        x = bmp.Width - textBmp.Width - 10;
+
+                    int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
+                    if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                        x = int.Parse(comboBoxBottomMargin.Text);
+                    else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                        x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                    if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+                        y = (groupBoxExportImage.Height - 4 - textBmp.Height) / 2;
+                    else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                        y = int.Parse(comboBoxBottomMargin.Text);
+
+                    g.DrawImageUnscaled(textBmp, new Point(x, y));
+
+                }
+
+                using (var form = new ExportPngXmlPreview(bmp))
+                {
+                    form.ShowDialog(this);
+                }
+            }
         }
 
     }

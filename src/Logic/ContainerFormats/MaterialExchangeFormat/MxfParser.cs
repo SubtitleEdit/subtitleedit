@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 {
@@ -45,13 +46,14 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             {
                 return;
             }
+            long start = 0;
 
             for (int i = 0; i < count - 11; i++)
             {
                 //Header Partition PackId = 06 0E 2B 34 02 05 01 01 0D 01 02
-                if (buffer[i + 00] == 0x06 &&
-                    buffer[i + 01] == 0x0E &&
-                    buffer[i + 02] == 0x2B &&
+                if (buffer[i + 00] == 0x06 && // OID
+                    buffer[i + 01] == 0x0E && // payload is 14 bytes
+                    buffer[i + 02] == 0x2B && // 0x2B+34 lookup bytes
                     buffer[i + 03] == 0x34 &&
                     buffer[i + 04] == 0x02 &&
                     buffer[i + 05] == 0x05 &&
@@ -61,9 +63,22 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
                     buffer[i + 09] == 0x01 &&
                     buffer[i + 10] == 0x02)
                 {
+                    start = i;
                     IsValid = true;
+                    break;
                 }
             }
+
+            if (!IsValid)
+            {
+                return;
+            }
+
+            stream.Seek(start, SeekOrigin.Begin);
+            var klv = new KlvPacket(stream);
+            MessageBox.Show("Key: " + klv.Key[0] + ", Length: " + klv.Length);
+
+
         }
 
     }

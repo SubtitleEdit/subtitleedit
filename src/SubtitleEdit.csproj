@@ -267,6 +267,12 @@
     <Compile Include="Forms\ExportCustomTextFormat.Designer.cs">
       <DependentUpon>ExportCustomTextFormat.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ExportPngXmlPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ExportPngXmlPreview.Designer.cs">
+      <DependentUpon>ExportPngXmlPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FcpProperties.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -796,6 +802,7 @@
     <Compile Include="Logic\ColorChooser\ColorChangedEventArgs.cs" />
     <Compile Include="Logic\ColorChooser\ColorHandler.cs" />
     <Compile Include="Logic\ColorChooser\ColorWheel.cs" />
+    <Compile Include="Logic\ContainerFormats\MaterialExchangeFormat\KlvPacket.cs" />
     <Compile Include="Logic\ContainerFormats\MaterialExchangeFormat\MxfParser.cs" />
     <Compile Include="Logic\Dictionaries\NamesList.cs" />
     <Compile Include="Logic\Dictionaries\OcrFixReplaceList.cs" />
@@ -1300,6 +1307,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ExportCustomTextFormat.resx">
       <DependentUpon>ExportCustomTextFormat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ExportPngXmlPreview.resx">
+      <DependentUpon>ExportPngXmlPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\FcpProperties.resx">
       <DependentUpon>FcpProperties.cs</DependentUpon>

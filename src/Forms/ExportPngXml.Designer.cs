@@ -78,6 +78,7 @@
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
+            this.linkLabelPreview = new System.Windows.Forms.LinkLabel();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -779,12 +780,25 @@
             this.groupBoxExportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxExportImage.Controls.Add(this.linkLabelPreview);
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
             this.groupBoxExportImage.Size = new System.Drawing.Size(936, 174);
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
+            // 
+            // linkLabelPreview
+            // 
+            this.linkLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelPreview.AutoSize = true;
+            this.linkLabelPreview.Location = new System.Drawing.Point(880, 16);
+            this.linkLabelPreview.Name = "linkLabelPreview";
+            this.linkLabelPreview.Size = new System.Drawing.Size(45, 13);
+            this.linkLabelPreview.TabIndex = 9;
+            this.linkLabelPreview.TabStop = true;
+            this.linkLabelPreview.Text = "Preview";
+            this.linkLabelPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPreview_LinkClicked);
             // 
             // timerPreview
             // 
@@ -884,6 +898,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
+            this.groupBoxExportImage.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -952,5 +967,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.LinkLabel linkLabelPreview;
     }
 }
