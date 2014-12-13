@@ -19,7 +19,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
         private static readonly Regex StartEndEndsWithNumber = new Regex(@"^\d+.+\d$", RegexOptions.Compiled);
 
         public Dictionary<string, string> WordReplaceList;
-        public readonly Dictionary<string, string> PartialLineWordBoundaryReplaceList;
+        public Dictionary<string, string> PartialLineWordBoundaryReplaceList;
         private readonly Dictionary<string, string> _partialLineAlwaysReplaceList;
         private readonly Dictionary<string, string> _beginLineReplaceList;
         private readonly Dictionary<string, string> _endLineReplaceList;
