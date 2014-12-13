@@ -97,7 +97,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private Paragraph GetPacParagraph(ref int index, byte[] buffer)
+        private static Paragraph GetPacParagraph(ref int index, byte[] buffer)
         {
             while (index < 15)
             {

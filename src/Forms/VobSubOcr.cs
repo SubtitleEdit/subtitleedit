@@ -3028,7 +3028,7 @@ namespace Nikse.SubtitleEdit.Forms
             return null;
         }
 
-        static public Bitmap CopyBitmapSection(Bitmap srcBitmap, Rectangle section)
+        public static Bitmap CopyBitmapSection(Bitmap srcBitmap, Rectangle section)
         {
             Bitmap bmp = new Bitmap(section.Width, section.Height);
             Graphics g = Graphics.FromImage(bmp);
