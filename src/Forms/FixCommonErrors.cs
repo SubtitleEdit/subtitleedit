@@ -1364,9 +1364,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (doFix && AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             missingSpaces++;
-
                             string oldText = p.Text;
                             p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
                             AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1385,9 +1383,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1407,9 +1403,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1439,9 +1433,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1477,9 +1469,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (!isMatchAbbreviation && AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1505,9 +1495,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string newText = arr[0] + Environment.NewLine + arr[1];
                         if (newText != p.Text && AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             missingSpaces++;
-
                             string oldText = p.Text;
                             p.Text = newText;
                             AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1542,9 +1530,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (newText != p.Text && AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             missingSpaces++;
-
                             string oldText = p.Text;
                             p.Text = newText;
                             AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1565,9 +1551,7 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1591,9 +1575,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1617,9 +1599,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1643,9 +1623,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1670,9 +1648,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1681,7 +1657,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
             if (missingSpaces > 0)
+            {
+                _totalFixes += missingSpaces;
                 LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));
+            }
         }
 
         private static string GetWordFromIndex(string text, int index)
