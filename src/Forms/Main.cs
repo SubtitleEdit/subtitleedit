@@ -13919,7 +13919,7 @@ namespace Nikse.SubtitleEdit.Forms
             _timerDoSyntaxColoring.Stop();
         }
 
-        private void SetPositionFromXYString(string positionAndSize, string name)
+        private static void SetPositionFromXYString(string positionAndSize, string name)
         {
             string[] parts = positionAndSize.Split(';');
             if (parts.Length == 4)
