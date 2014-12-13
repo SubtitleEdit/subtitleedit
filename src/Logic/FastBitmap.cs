@@ -5,7 +5,7 @@ using System.Drawing.Imaging;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-    unsafe public class FastBitmap
+    public unsafe class FastBitmap
     {
         private struct PixelData
         {
