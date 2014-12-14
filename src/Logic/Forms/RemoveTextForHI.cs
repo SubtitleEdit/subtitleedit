@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
 
             string preAssTag = string.Empty;
-            if (text.StartsWith("{\\") && text.IndexOf('}') > 0)
+            if (text.StartsWith("{\\", StringComparison.Ordinal) && text.IndexOf('}') > 0)
             {
                 int indexOfEndBracket = text.IndexOf('}') + 1;
                 preAssTag = text.Substring(0, indexOfEndBracket);
