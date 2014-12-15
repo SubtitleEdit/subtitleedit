@@ -3097,7 +3097,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(3, p.Text.Length - 3);
+                        p.Text = p.Text.Substring(3);
                         fixCount++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -3107,7 +3107,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(2, p.Text.Length - 2);
+                        p.Text = p.Text.Substring(2);
                         fixCount++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
