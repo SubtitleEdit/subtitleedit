@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
     {
         public static string FixEllipsesStartHelper(string text)
         {
-            if (text == null || text.Trim().Length < 4)
+            if (string.IsNullOrEmpty(text) || text.Trim().Length < 4)
                 return text;
             if (!text.Contains(".."))
                 return text;
@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
             var index = text.IndexOf(':');
-            if (index > 0 && text.Length > index + 1 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
+            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
             {
                 var post = text.Substring(0, index + 1);
                 if (post.Length < 2)
@@ -169,10 +169,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
             bool isPrevEndOfLine = prevText.Length > 1 &&
                                    !prevText.EndsWith("...", StringComparison.Ordinal) &&
-                                   (prevText.EndsWith('.') ||
-                                    prevText.EndsWith('!') ||
-                                    prevText.EndsWith('?') ||
-                                    prevText.EndsWith('—') || // em dash, unicode character
+                                   (".!?—".Contains(prevText[prevText.Length - 1]) || // em dash, unicode character
                                     prevText.EndsWith("--", StringComparison.Ordinal));
 
             if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith('.') &&
@@ -267,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     var st = new StripableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
                     {
-                        text = st.Pre.TrimEnd().TrimEnd('-').TrimEnd() + st.StrippedText + st.Post;
+                        text = st.Pre.TrimEnd('-', ' ') + st.StrippedText + st.Post;
                     }
                 }
             }
