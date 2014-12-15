@@ -3795,20 +3795,29 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_findHelper != null)
             {
+
+                TextBox tb;
+                if (_findHelper.MatchInOriginal)
+                    tb = textBoxListViewTextAlternate;
+                else
+                    tb = textBoxListViewText;
+
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
                     int selectedIndex = -1;
                     if (SubtitleListview1.SelectedItems.Count > 0)
                         selectedIndex = SubtitleListview1.SelectedItems[0].Index;
-                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, _findHelper.SelectedPosition, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
+
+                    int textBoxStart = tb.SelectionStart;
+                    if (_findHelper.SelectedPosition - 1 == tb.SelectionStart && tb.SelectionLength > 0)
+                    {
+                        textBoxStart = tb.SelectionStart + 1;
+                    }
+
+                    if (_findHelper.FindNext(_subtitle, _subtitleAlternate, selectedIndex, textBoxStart, Configuration.Settings.General.AllowEditOfOriginalSubtitle))
                     {
                         SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
                         ShowStatus(string.Format(_language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
-                        TextBox tb;
-                        if (_findHelper.MatchInOriginal)
-                            tb = textBoxListViewTextAlternate;
-                        else
-                            tb = textBoxListViewText;
                         tb.Focus();
                         tb.SelectionStart = _findHelper.SelectedPosition;
                         tb.SelectionLength = _findHelper.FindTextLength;
@@ -3824,11 +3833,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (_findHelper.Find(_subtitle, _subtitleAlternate, 0))
                                 {
                                     SubtitleListview1.SelectIndexAndEnsureVisible(_findHelper.SelectedIndex);
-                                    TextBox tb;
-                                    if (_findHelper.MatchInOriginal)
-                                        tb = textBoxListViewTextAlternate;
-                                    else
-                                        tb = textBoxListViewText;
                                     tb.Focus();
                                     tb.SelectionStart = _findHelper.SelectedPosition;
                                     tb.SelectionLength = _findHelper.FindTextLength;
@@ -3914,6 +3918,12 @@ namespace Nikse.SubtitleEdit.Forms
                         if (start >= 0)
                             start--;
                     }
+                    else
+                    {
+                        if (textBoxSource.SelectionLength > 0 && start > 0 && !replaceDialog.FindOnly)
+                            start--;
+                    }
+
                     if (_findHelper.FindNext(textBoxSource, start))
                     {
                         textBoxSource.SelectionStart = _findHelper.SelectedIndex;
@@ -3924,6 +3934,19 @@ namespace Nikse.SubtitleEdit.Forms
 
                         replaceCount++;
                         searchStringFound = true;
+
+                        if (!replaceDialog.ReplaceAll && !replaceDialog.FindOnly)
+                        {
+                            if (_findHelper.FindNext(textBoxSource, start))
+                            {
+                                textBoxSource.SelectionStart = _findHelper.SelectedIndex;
+                                textBoxSource.SelectionLength = _findHelper.FindTextLength;
+                                textBoxSource.ScrollToCaret();
+                            }
+                            Replace(replaceDialog);
+                            return;
+                        }
+
                     }
                     if (replaceDialog.FindOnly)
                     {
@@ -3935,6 +3958,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Replace(replaceDialog);
                         return;
                     }
+
                     if (!replaceDialog.ReplaceAll)
                     {
                         break; // out of while loop
