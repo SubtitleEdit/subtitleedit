@@ -17,7 +17,9 @@
    * Correct version number in Slovenian translation
    * Fix for missed char after new line in PAC w16 - thx Max
    * Fixed minor bug in split subtitle - thx kempniu
-   * Fix mkv/mks support in "Batch convert" - thx Juan
+   * Fixed mkv/mks support in "Batch convert" - thx Juan
+   * Fixed minor bug in Find-next - thx amerzone
+   * Fixed minor bug in Replace in source view
 
 
 3.4.4 (28th November 2014)
