@@ -3085,28 +3085,48 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleGreaterThan;
             int fixCount = 0;
+            string post = string.Empty;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
+                if (!p.Text.Contains(">>", StringComparison.Ordinal))
+                    continue;
 
-                if (p.Text.StartsWith(">> "))
+                var text = p.Text;
+                if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
+                {
+                    post = "<i>";
+                    text = text.Remove(0, 3);
+                }
+                if (text.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                {
+                    post += "<b>";
+                    text = text.Remove(0, 3);
+                }
+
+                text = text.TrimStart();
+                if (text.StartsWith(">> ", StringComparison.Ordinal))
                 {
                     if (AllowFix(p, fixAction))
                     {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(3);
+                        string oldText = text;
+                        p.Text = text.Substring(3);
+                        if (!string.IsNullOrEmpty(post))
+                            text = post + text;
                         fixCount++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
-                if (p.Text.StartsWith(">>"))
+                if (text.StartsWith(">>", StringComparison.Ordinal))
                 {
                     if (AllowFix(p, fixAction))
                     {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(2);
+                        string oldText = text;
+                        p.Text = text.Substring(2);
+                        if (!string.IsNullOrEmpty(post))
+                            text = post + text;
                         fixCount++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
             }
