@@ -2984,18 +2984,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
 
                 string newText = p.Text;
-                string noTagsText = Utilities.RemoveHtmlTags(newText);
                 foreach (string musicSymbol in musicSymbols)
                 {
                     newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
                     newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                 }
 
                 if (!newText.Equals(oldText))
                 {
-                    if (!noTagsText.Equals(Utilities.RemoveHtmlTags(oldText)))
+                    if (!Utilities.RemoveHtmlTags(newText).Equals(Utilities.RemoveHtmlTags(oldText)))
                     {
                         if (AllowFix(p, fixAction))
                         {
