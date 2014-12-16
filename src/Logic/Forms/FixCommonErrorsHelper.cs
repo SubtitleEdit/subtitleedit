@@ -344,5 +344,34 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return text;
         }
 
+        public static string FixDoubleGreaterThanHelper(string text)
+        {
+            string post = string.Empty;
+            if (text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'b' || text[1] == 'u'))
+            {
+                post += "<" + text[1] + ">";
+                text = text.Remove(0, 3).TrimStart();
+            }
+            if (text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+            {
+                int endIndex = text.IndexOf("\">", StringComparison.Ordinal);
+                if (endIndex > 19)
+                {
+                    post += text.Substring(0, endIndex + 2);
+                    text = text.Remove(0, endIndex + 2).TrimStart();
+                }
+            }
+            if (text.StartsWith(">>", StringComparison.Ordinal) && text.Length > 3)
+            {
+                if (text[2] == ' ')
+                    text = text.Substring(3);
+                else
+                    text = text.Substring(2);
+                text = text.TrimStart();
+                if (!string.IsNullOrEmpty(post))
+                    text = post + text;
+            }
+            return text;
+        }
     }
 }
