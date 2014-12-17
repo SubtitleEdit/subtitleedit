@@ -3093,6 +3093,7 @@ namespace Nikse.SubtitleEdit.Forms
                     continue;
 
                 var text = p.Text;
+                var oldText = text;
                 if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     post = "<i>";
@@ -3103,31 +3104,34 @@ namespace Nikse.SubtitleEdit.Forms
                     post += "<b>";
                     text = text.Remove(0, 3);
                 }
-
-                text = text.TrimStart();
-                if (text.StartsWith(">> ", StringComparison.Ordinal))
+                // <font color="#004000">
+                if(text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (AllowFix(p, fixAction))
+                    int endIndex = text.IndexOf("\">", StringComparison.Ordinal);
+                    if(endIndex > 19)
                     {
-                        string oldText = text;
-                        p.Text = text.Substring(3);
-                        if (!string.IsNullOrEmpty(post))
-                            text = post + text;
-                        fixCount++;
-                        AddFixToListView(p, fixAction, oldText, text);
+                        post += text.Substring(0, endIndex + 2);
+                        text = text.Remove(0, endIndex + 2);
                     }
                 }
-                if (text.StartsWith(">>", StringComparison.Ordinal))
+                text = text.TrimStart();
+                if (text.StartsWith(">> ", StringComparison.Ordinal) && AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldText = text;
-                        p.Text = text.Substring(2);
-                        if (!string.IsNullOrEmpty(post))
-                            text = post + text;
-                        fixCount++;
-                        AddFixToListView(p, fixAction, oldText, text);
-                    }
+                    text = text.Substring(3).TrimStart();
+                    if (!string.IsNullOrEmpty(post))
+                        text = post + text;
+                    p.Text = text;
+                    fixCount++;
+                    AddFixToListView(p, fixAction, oldText, text);
+                }
+                if (text.StartsWith(">>", StringComparison.Ordinal) && AllowFix(p, fixAction))
+                {
+                    text = text.Substring(2).TrimStart();
+                    if (!string.IsNullOrEmpty(post))
+                        text = post + text;
+                    p.Text = text;
+                    fixCount++;
+                    AddFixToListView(p, fixAction, oldText, text);
                 }
             }
             if (fixCount > 0)
