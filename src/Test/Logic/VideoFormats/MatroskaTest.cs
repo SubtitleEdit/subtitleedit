@@ -85,7 +85,7 @@ namespace Test.Logic.VideoFormats
         }
 
         [TestMethod]
-        public void MatroskaTestDelayed500ms()
+        public void MatroskaTestDelayed500Ms()
         {
             string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_MKV_delayed.mkv");
             using (var parser = new MatroskaFile(fileName))
@@ -94,7 +94,6 @@ namespace Test.Logic.VideoFormats
                 Assert.IsTrue(delay == 500);
             }
         }
-
 
     }
 }
