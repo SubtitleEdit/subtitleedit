@@ -8,6 +8,7 @@ using System.IO;
 namespace Test.Logic.BluRaySup
 {
     [TestClass]
+    [DeploymentItem("Files")]
     public class BluRaySupParserTest
     {
         [TestMethod]
@@ -35,6 +36,21 @@ namespace Test.Logic.BluRaySup
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
 
             Assert.AreEqual(2, subtitles.Count);
+        }
+
+        [TestMethod]
+        public void BluRaySupReadMultiImagePic()
+        {
+            string fileName = Path.Combine(Directory.GetCurrentDirectory(), "sample_BDSUP_multi_image.sup");
+            var log = new StringBuilder();
+            var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+            Assert.AreEqual(2, subtitles.Count);
+            Assert.AreEqual(2, subtitles[0].PcsObjects.Count);
+            using (var bmp = subtitles[0].GetBitmap())
+            {
+                Assert.AreEqual(784, bmp.Width);
+                Assert.AreEqual(911, bmp.Height);
+            }
         }
 
     }

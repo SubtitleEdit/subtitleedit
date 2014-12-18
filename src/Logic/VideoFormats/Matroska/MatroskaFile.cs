@@ -103,14 +103,18 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
 
         private long FindTrackStartInCluster(Element cluster, int targetTrackNumber)
         {
-            var clusterTimeCode = 0L;
-            var trackStartTime = -1L;
+            long clusterTimeCode = 0L;
+            long trackStartTime = -1L;
+            bool done = false;
 
             Element element;
-            while (_stream.Position < cluster.EndPosition && (element = ReadElement()) != null)
+            while (_stream.Position < cluster.EndPosition && (element = ReadElement()) != null && !done)
             {
                 switch (element.Id)
                 {
+                    case ElementId.None:
+                        done = true;
+                        break;
                     case ElementId.Timecode:
                         // Absolute timestamp of the cluster (based on TimecodeScale)
                         clusterTimeCode = (long)ReadUInt((int)element.DataSize);
@@ -124,6 +128,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
                         {
                             // Timecode (relative to Cluster timecode, signed int16)
                             trackStartTime = ReadInt16();
+                            done = true;
                         }
                         break;
                 }

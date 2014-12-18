@@ -1094,6 +1094,7 @@
     <Word from="Perrut_" to="Perrut." />
     <Word from="Persona/4/" to="Personally" />
     <Word from="Persona/y" to="Personally" />
+    <Word from="persors" to="person's" />
     <Word from="PIain" to="Plain" />
     <Word from="PIease" to="Please" />
     <Word from="PIeasure" to="Pleasure" />
@@ -1173,6 +1174,8 @@
     <Word from="shouﬁng" to="shouting" />
     <Word from="Shouﬂng" to="Shouting" />
     <Word from="shouldnt" to="shouldn't" />
+    <Word from="Shouldrt" to="Shouldn't" />
+    <Word from="shouldrt" to="shouldn't" />
     <Word from="Shs's" to="She's" />
     <Word from="SHUDDERWG" to="SHUDDERING" />
     <Word from="Shutup" to="Shut up" />
@@ -1462,9 +1465,12 @@
     <Word from="won'tletitbring" to="won't let it bring" />
     <Word from="Wo're" to="We're" />
     <Word from="worfd" to="world" />
+    <Word from="won'th" to="worth" />
+    <Word from="won'thwhile" to="worthwhile" />
     <Word from="workyou" to="work you" />
     <Word from="wouIdn't" to="wouldn't" />
     <Word from="wouldn'!" to="wouldn't" />
+    <Word from="Wouldrt" to="Wouldn't" />
     <Word from="wr/'2'/ng" to="writing" />
     <Word from="wrcng" to="wrong" />
     <Word from="wuuld" to="would" />

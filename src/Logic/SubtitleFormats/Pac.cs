@@ -1050,7 +1050,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb.AppendLine();
                         w16 = buffer[index + 3] == 0x1f && Encoding.ASCII.GetString(buffer, index + 4, 3) == "W16";
                         if (w16)
-                            index += 7;
+                            index += 5;
                         index += 2;
                     }
                     else

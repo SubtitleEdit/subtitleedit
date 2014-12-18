@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (!s.Contains('<'))
                 return s;
 
-            if (s.Contains("< "))
+            if (s.Contains("< ", StringComparison.Ordinal))
                 s = FixInvalidItalicTags(s);
 
             return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
@@ -1123,49 +1123,25 @@ namespace Nikse.SubtitleEdit.Logic
             return duration;
         }
 
-        private static int GetCount(string text,
-                            string word1,
-                            string word2,
-                            string word3,
-                            string word4,
-                            string word5,
-                            string word6)
+        private static int GetCount(string text, params string[] words)
         {
-            var regEx1 = new Regex("\\b" + word1 + "\\b");
-            var regEx2 = new Regex("\\b" + word2 + "\\b");
-            var regEx3 = new Regex("\\b" + word3 + "\\b");
-            var regEx4 = new Regex("\\b" + word4 + "\\b");
-            var regEx5 = new Regex("\\b" + word5 + "\\b");
-            var regEx6 = new Regex("\\b" + word6 + "\\b");
-            int count = regEx1.Matches(text).Count;
-            count += regEx2.Matches(text).Count;
-            count += regEx3.Matches(text).Count;
-            count += regEx4.Matches(text).Count;
-            count += regEx5.Matches(text).Count;
-            count += regEx6.Matches(text).Count;
+            int count = 0;
+            for (int i = 0; i < words.Length; i++)
+            {
+                var regEx = new Regex("\\b" + words[i] + "\\b");
+                count += regEx.Matches(text).Count;
+            }
             return count;
         }
 
-        private static int GetCountContains(string text,
-                            string word1,
-                            string word2,
-                            string word3,
-                            string word4,
-                            string word5,
-                            string word6)
+        private static int GetCountContains(string text, params string[] words)
         {
-            var regEx1 = new Regex(word1);
-            var regEx2 = new Regex(word2);
-            var regEx3 = new Regex(word3);
-            var regEx4 = new Regex(word4);
-            var regEx5 = new Regex(word5);
-            var regEx6 = new Regex(word6);
-            int count = regEx1.Matches(text).Count;
-            count += regEx2.Matches(text).Count;
-            count += regEx3.Matches(text).Count;
-            count += regEx4.Matches(text).Count;
-            count += regEx5.Matches(text).Count;
-            count += regEx6.Matches(text).Count;
+            int count = 0;
+            for (int i = 0; i < words.Length; i++)
+            {
+                var regEx = new Regex(words[i]);
+                count += regEx.Matches(text).Count;
+            }
             return count;
         }
 
@@ -1236,7 +1212,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "en";
 
-            count = GetCount(text, "vi", "han", "og", "jeg", "var", "men") + GetCount(text, "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej");
+            count = GetCount(text, "vi", "han", "og", "jeg", "var", "men", "gider", "bliver", "virkelig", "kommer", "tilbage", "Hej");
             if (count > bestCount)
             {
                 int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
@@ -1261,7 +1237,7 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "el", "bien", "Vamos", "Hola", "casa", "con");
             if (count > bestCount)
             {
-                int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
                 if (frenchWords < 2)
                     return "es";
             }
@@ -1288,12 +1264,12 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "pl";
 
-            count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo") + GetCount(text, "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio") +
-                    GetCount(text, "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");
+            count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo", "ragazzi", "propriamente", "numero", "hanno", "giorno", "faccio",
+                                   "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");
 
             if (count > bestCount)
             {
-                int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
                 int spanishWords = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                 if (frenchWords < 2 && spanishWords < 2)
                     return "it";
@@ -1303,8 +1279,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "pt"; // Portuguese
 
-            count = GetCount(text, "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά") +
-                    GetCount(text, "Ενταξει", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις");
+            count = GetCount(text, "μου", "είναι", "Είναι", "αυτό", "Τόμπυ", "καλά", "Ενταξει", "Ενταξει", "πρεπει", "Λοιπον", "τιποτα", "ξερεις");
             if (count > bestCount)
                 return "el"; // Greek
 
@@ -1326,15 +1301,13 @@ namespace Nikse.SubtitleEdit.Logic
                 if (GetCount(text, "אולי", "אולי", "אולי", "אולי", "טוב", "טוב") > 10)
                     return "he";
 
-                int countRo = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
-                                   GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
-                                   GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
+                int countRo = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã",
+                                             "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
                 if (countRo > count)
                     return "ro"; // Romanian
 
-                count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie") +
-                        GetCount(text, "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului") +
-                        GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
+                count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie", "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului",
+                                       "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
                 if (countRo > count)
                     return "ro"; // Romanian
 
@@ -1357,15 +1330,15 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "hu"; // Hungarian
 
-            count = GetCount(text, "için", "Tamam", "Hayır", "benim", "daha", "deðil") + GetCount(text, "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim");
+            count = GetCount(text, "için", "Tamam", "Hayır", "benim", "daha", "deðil", "önce", "lazým", "benim", "çalýþýyor", "burada", "efendim");
             if (count > bestCount)
                 return "tr"; // Turkish
 
-            count = GetCount(text, "yang", "tahu", "bisa", "akan", "tahun", "tapi") + GetCount(text, "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu");
+            count = GetCount(text, "yang", "tahu", "bisa", "akan", "tahun", "tapi", "dengan", "untuk", "rumah", "dalam", "sudah", "bertemu");
             if (count > bestCount)
                 return "id"; // Indonesian
 
-            count = GetCount(text, "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล") + GetCount(text, "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์");
+            count = GetCount(text, "โอ", "โรเบิร์ต", "วิตตอเรีย", "ดร", "คุณตำรวจ", "ราเชล", "ไม่", "เลดดิส", "พระเจ้า", "เท็ดดี้", "หัวหน้า", "แอนดรูว์");
             if (count > 10 || count > bestCount)
                 return "th"; // Thai
 
@@ -1373,19 +1346,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > 10 || count > bestCount)
                 return "ko"; // Korean
 
-            count = GetCount(text, "että", "kuin", "minä", "mitään", "Mutta", "siitä") + GetCount(text, "täällä", "poika", "Kiitos", "enää", "vielä", "tässä");
+            count = GetCount(text, "että", "kuin", "minä", "mitään", "Mutta", "siitä", "täällä", "poika", "Kiitos", "enää", "vielä", "tässä");
             if (count > bestCount)
                 return "fi"; // Finnish
 
-            count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
-                    GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
-                    GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
+            count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã",
+                                   "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
             if (count > bestCount)
                 return "ro"; // Romanian
 
-            count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie") +
-                    GetCount(text, "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului") +
-                    GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
+            count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie", "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului",
+                                   "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
             if (count > bestCount)
                 return "ro"; // Romanian
 
@@ -1408,14 +1379,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectGoogleLanguage(Subtitle subtitle)
         {
-            int bestCount = subtitle.Paragraphs.Count / 14;
-
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
-            string text = sb.ToString();
-
-            string languageId = AutoDetectGoogleLanguage(text, bestCount);
+            string languageId = AutoDetectGoogleLanguage(sb.ToString(), subtitle.Paragraphs.Count / 14);
 
             if (string.IsNullOrEmpty(languageId))
                 return "en";
@@ -1478,7 +1445,7 @@ namespace Nikse.SubtitleEdit.Logic
                 switch (shortName)
                 {
                     case "da_DK":
-                        count = GetCount(text, "vi", "hun", "og", "jeg", "var", "men") + GetCount(text, "bliver", "meget", "spørger", "Hej", "utrolig", "dejligt");
+                        count = GetCount(text, "vi", "hun", "og", "jeg", "var", "men", "bliver", "meget", "spørger", "Hej", "utrolig", "dejligt");
                         if (count > bestCount)
                         {
                             int norweigianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
@@ -1539,7 +1506,7 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, "el", "bien", "Vamos", "Hola", "casa", "con");
                         if (count > bestCount)
                         {
-                            int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                            int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
                             if (frenchWords < 2)
                                 languageName = shortName;
                         }
@@ -1558,7 +1525,7 @@ namespace Nikse.SubtitleEdit.Logic
                         count = GetCount(text, "Cosa", "sono", "Grazie", "Buongiorno", "bene", "questo");
                         if (count > bestCount)
                         {
-                            int frenchWords = GetCount(text, "Cest", "cest", "pas", "vous", "pour", "suis"); // not spanish words
+                            int frenchWords = GetCount(text, "C'est", "c'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
                             int spanishWords = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                             if (frenchWords < 2 && spanishWords < 2)
                                 languageName = shortName;
@@ -1590,18 +1557,16 @@ namespace Nikse.SubtitleEdit.Logic
                             languageName = shortName;
                         break;
                     case "ro_RO":
-                        count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau") +
-                                GetCount(text, "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã") +
-                                GetCount(text, "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
+                        count = GetCount(text, "sînt", "aici", "Sînt", "domnule", "pentru", "Vreau", "trãiascã", "niciodatã", "înseamnã", "vorbesti", "oamenii", "Asteaptã",
+                                               "fãcut", "Fãrã", "spune", "decât", "pentru", "vreau");
                         if (count > bestCount)
                         {
                             languageName = shortName;
                         }
                         else
                         {
-                            count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie") +
-                                    GetCount(text, "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului") +
-                                    GetCount(text, "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
+                            count = GetCount(text, "daca", "pentru", "acum", "soare", "trebuie", "Trebuie", "nevoie", "decat", "echilibrul", "vorbesti", "oamenii", "zeului",
+                                                   "vrea", "atunci", "Poate", "Acum", "memoria", "soarele");
 
                             if (count > bestCount)
                                 languageName = shortName;
@@ -1634,8 +1599,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string ColorToHex(Color c)
         {
-            string result = string.Format("#{0:x2}{1:x2}{2:x2}", c.R, c.G, c.B);
-            return result;
+            return string.Format("#{0:x2}{1:x2}{2:x2}", c.R, c.G, c.B);
         }
 
         public static int GetMaxLineLength(string text)
@@ -1891,8 +1855,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            string cleanText = RemoveHtmlTags(text, true).Replace(Environment.NewLine, "|");
-            string[] lines = cleanText.Split('|');
+            var lines = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
 
             const int max = 3;
 
@@ -2137,12 +2100,11 @@ namespace Nikse.SubtitleEdit.Logic
             int start = regEx.IndexOf("(?<", StringComparison.Ordinal);
             if (start >= 0 && regEx.IndexOf(')') > start)
             {
-                int end = regEx.IndexOf('>');
+                int end = regEx.IndexOf('>', start);
                 if (end > start)
                 {
                     start += 3;
-                    string group = regEx.Substring(start, end - start);
-                    return group;
+                    return regEx.Substring(start, end - start);
                 }
             }
             return null;
@@ -2182,7 +2144,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if (index == text.Length)
+                if ((index + 1) == text.Length)
                     return count;
                 index = text.IndexOf(tag, index + 1, StringComparison.Ordinal);
             }
@@ -2196,7 +2158,7 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if (index == text.Length)
+                if ((index + 1) == text.Length)
                     return count;
                 index = text.IndexOf(tag, index + 1);
             }
@@ -3018,8 +2980,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-            if (text.Contains(" " + Environment.NewLine))
+            if (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
                 text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            if (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
+                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
@@ -3268,6 +3232,7 @@ namespace Nikse.SubtitleEdit.Logic
                     subtitle.Paragraphs.Add(new Paragraph(p.Text, p.Start, p.End));
                 }
             }
+            subtitle.Renumber(1);
             return format;
         }
 
