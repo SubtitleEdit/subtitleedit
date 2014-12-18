@@ -130,8 +130,11 @@ namespace Nikse.SubtitleEdit.Forms
                     int index = 0;
                     foreach (SubtitleFormat format in SubtitleFormat.AllSubtitleFormats)
                     {
-                        if (saveFileDialog1.FilterIndex == index + 1)
+                        if (saveFileDialog1.FilterIndex == index + 1) {
+                            if (format.IsFrameBased)
+                                part.CalculateFrameNumbersFromTimeCodesNoCheck(Configuration.Settings.General.CurrentFrameRate);
                             File.WriteAllText(fileName, part.ToText(format), _encoding);
+                        }
                         index++;
                     }
                 }
