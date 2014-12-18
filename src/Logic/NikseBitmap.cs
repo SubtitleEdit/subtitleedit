@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int Height { get; private set; }
 
         private byte[] _bitmapData;
-        private int _pixelAddress = 0;
+        private int _pixelAddress;
 
         public NikseBitmap(int width, int height)
         {
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void ReplaceNotDarkWithWhite()
         {
-            byte[] buffer = new byte[3];
+            var buffer = new byte[3];
             buffer[0] = 255;
             buffer[1] = 255;
             buffer[2] = 255;
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void ReplaceYellowWithWhite()
         {
-            byte[] buffer = new byte[3];
+            var buffer = new byte[3];
             buffer[0] = 255;
             buffer[1] = 255;
             buffer[2] = 255;
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void ReplaceNonWhiteWithTransparent()
         {
-            byte[] buffer = new byte[4];
+            var buffer = new byte[4];
             buffer[0] = 0; // B
             buffer[1] = 0; // G
             buffer[2] = 0; // R
@@ -115,7 +115,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void ReplaceTransparentWith(Color c)
         {
-            byte[] buffer = new byte[4];
+            var buffer = new byte[4];
             buffer[0] = c.B;
             buffer[1] = c.G;
             buffer[2] = c.R;
@@ -129,13 +129,13 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void MakeOneColor(Color c)
         {
-            byte[] buffer = new byte[4];
+            var buffer = new byte[4];
             buffer[0] = c.B;
             buffer[1] = c.G;
             buffer[2] = c.R;
             buffer[3] = c.A;
 
-            byte[] bufferTransparent = new byte[4];
+            var bufferTransparent = new byte[4];
             bufferTransparent[0] = 0;
             bufferTransparent[1] = 0;
             bufferTransparent[2] = 0;
@@ -151,19 +151,19 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int MakeOneColorRemoverOthers(Color c1, Color c2, int maxDif)
         {
-            byte[] buffer1 = new byte[4];
+            var buffer1 = new byte[4];
             buffer1[0] = c1.B;
             buffer1[1] = c1.G;
             buffer1[2] = c1.R;
             buffer1[3] = c1.A;
 
-            byte[] buffer2 = new byte[4];
+            var buffer2 = new byte[4];
             buffer2[0] = c2.B;
             buffer2[1] = c2.G;
             buffer2[2] = c2.R;
             buffer2[3] = c2.A;
 
-            byte[] bufferTransparent = new byte[4];
+            var bufferTransparent = new byte[4];
             bufferTransparent[0] = 0;
             bufferTransparent[1] = 0;
             bufferTransparent[2] = 0;
@@ -208,34 +208,35 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="background">Background color</param>
         /// <param name="pattern">Pattern color, normally white or yellow</param>
         /// <param name="emphasis1">Emphasis 1, normally black or near black (border)</param>
+        /// <param name="useInnerAntialize"></param>
         public Color ConverToFourColors(Color background, Color pattern, Color emphasis1, bool useInnerAntialize)
         {
-            byte[] backgroundBuffer = new byte[4];
-            backgroundBuffer[0] = (byte)background.B;
-            backgroundBuffer[1] = (byte)background.G;
-            backgroundBuffer[2] = (byte)background.R;
-            backgroundBuffer[3] = (byte)background.A;
+            var backgroundBuffer = new byte[4];
+            backgroundBuffer[0] = background.B;
+            backgroundBuffer[1] = background.G;
+            backgroundBuffer[2] = background.R;
+            backgroundBuffer[3] = background.A;
 
-            byte[] patternBuffer = new byte[4];
-            patternBuffer[0] = (byte)pattern.B;
-            patternBuffer[1] = (byte)pattern.G;
-            patternBuffer[2] = (byte)pattern.R;
-            patternBuffer[3] = (byte)pattern.A;
+            var patternBuffer = new byte[4];
+            patternBuffer[0] = pattern.B;
+            patternBuffer[1] = pattern.G;
+            patternBuffer[2] = pattern.R;
+            patternBuffer[3] = pattern.A;
 
-            byte[] emphasis1Buffer = new byte[4];
-            emphasis1Buffer[0] = (byte)emphasis1.B;
-            emphasis1Buffer[1] = (byte)emphasis1.G;
-            emphasis1Buffer[2] = (byte)emphasis1.R;
-            emphasis1Buffer[3] = (byte)emphasis1.A;
+            var emphasis1Buffer = new byte[4];
+            emphasis1Buffer[0] = emphasis1.B;
+            emphasis1Buffer[1] = emphasis1.G;
+            emphasis1Buffer[2] = emphasis1.R;
+            emphasis1Buffer[3] = emphasis1.A;
 
-            byte[] emphasis2Buffer = new byte[4];
+            var emphasis2Buffer = new byte[4];
             var emphasis2 = GetOutlineColor(emphasis1);
             if (!useInnerAntialize)
             {
-                emphasis2Buffer[0] = (byte)emphasis2.B;
-                emphasis2Buffer[1] = (byte)emphasis2.G;
-                emphasis2Buffer[2] = (byte)emphasis2.R;
-                emphasis2Buffer[3] = (byte)emphasis2.A;
+                emphasis2Buffer[0] = emphasis2.B;
+                emphasis2Buffer[1] = emphasis2.G;
+                emphasis2Buffer[2] = emphasis2.R;
+                emphasis2Buffer[3] = emphasis2.A;
             }
 
             for (int i = 0; i < _bitmapData.Length; i += 4)
@@ -244,7 +245,6 @@ namespace Nikse.SubtitleEdit.Logic
                 byte[] buffer = backgroundBuffer;
                 if (backgroundBuffer[3] == 0 && _bitmapData[i + 3] < 10) // transparent
                 {
-                    smallestDiff = 0;
                 }
                 else
                 {
@@ -260,7 +260,6 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (emphasis1Diff - 20 < smallestDiff)
                         {
-                            smallestDiff = emphasis1Diff;
                             buffer = emphasis1Buffer;
                         }
                     }
@@ -275,12 +274,10 @@ namespace Nikse.SubtitleEdit.Logic
                         int emphasis2Diff = Math.Abs(emphasis2Buffer[0] - _bitmapData[i]) + Math.Abs(emphasis2Buffer[1] - _bitmapData[i + 1]) + Math.Abs(emphasis2Buffer[2] - _bitmapData[i + 2]) + Math.Abs(emphasis2Buffer[3] - _bitmapData[i + 3]);
                         if (emphasis2Diff < smallestDiff)
                         {
-                            smallestDiff = emphasis2Diff;
                             buffer = emphasis2Buffer;
                         }
                         else if (_bitmapData[i + 3] >= 10 && _bitmapData[i + 3] < 90) // anti-alias
                         {
-                            smallestDiff = emphasis2Diff;
                             buffer = emphasis2Buffer;
                         }
                     }
@@ -323,32 +320,32 @@ namespace Nikse.SubtitleEdit.Logic
 
         public RunLengthTwoParts RunLengthEncodeForDvd(Color background, Color pattern, Color emphasis1, Color emphasis2)
         {
-            byte[] backgroundBuffer = new byte[4];
-            backgroundBuffer[0] = (byte)background.B;
-            backgroundBuffer[1] = (byte)background.G;
-            backgroundBuffer[2] = (byte)background.R;
-            backgroundBuffer[3] = (byte)background.A;
+            var backgroundBuffer = new byte[4];
+            backgroundBuffer[0] = background.B;
+            backgroundBuffer[1] = background.G;
+            backgroundBuffer[2] = background.R;
+            backgroundBuffer[3] = background.A;
 
-            byte[] patternBuffer = new byte[4];
-            patternBuffer[0] = (byte)pattern.B;
-            patternBuffer[1] = (byte)pattern.G;
-            patternBuffer[2] = (byte)pattern.R;
-            patternBuffer[3] = (byte)pattern.A;
+            var patternBuffer = new byte[4];
+            patternBuffer[0] = pattern.B;
+            patternBuffer[1] = pattern.G;
+            patternBuffer[2] = pattern.R;
+            patternBuffer[3] = pattern.A;
 
-            byte[] emphasis1Buffer = new byte[4];
-            emphasis1Buffer[0] = (byte)emphasis1.B;
-            emphasis1Buffer[1] = (byte)emphasis1.G;
-            emphasis1Buffer[2] = (byte)emphasis1.R;
-            emphasis1Buffer[3] = (byte)emphasis1.A;
+            var emphasis1Buffer = new byte[4];
+            emphasis1Buffer[0] = emphasis1.B;
+            emphasis1Buffer[1] = emphasis1.G;
+            emphasis1Buffer[2] = emphasis1.R;
+            emphasis1Buffer[3] = emphasis1.A;
 
-            byte[] emphasis2Buffer = new byte[4];
-            emphasis2Buffer[0] = (byte)emphasis2.B;
-            emphasis2Buffer[1] = (byte)emphasis2.G;
-            emphasis2Buffer[2] = (byte)emphasis2.R;
-            emphasis2Buffer[3] = (byte)emphasis2.A;
+            var emphasis2Buffer = new byte[4];
+            emphasis2Buffer[0] = emphasis2.B;
+            emphasis2Buffer[1] = emphasis2.G;
+            emphasis2Buffer[2] = emphasis2.R;
+            emphasis2Buffer[3] = emphasis2.A;
 
-            byte[] bufferEqual = new byte[Width * Height];
-            byte[] bufferUnEqual = new byte[Width * Height];
+            var bufferEqual = new byte[Width * Height];
+            var bufferUnEqual = new byte[Width * Height];
             int indexBufferEqual = 0;
             int indexBufferUnEqual = 0;
 
@@ -386,13 +383,13 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     else
                     {
-                        WriteRLE(ref indexHalfNibble, lastColor, count, ref index, buffer);
+                        WriteRle(ref indexHalfNibble, lastColor, count, ref index, buffer);
                         lastColor = color;
                         count = 1;
                     }
                 }
                 if (count > 0)
-                    WriteRLE(ref indexHalfNibble, lastColor, count, ref index, buffer);
+                    WriteRle(ref indexHalfNibble, lastColor, count, ref index, buffer);
 
                 if (indexHalfNibble)
                     index++;
@@ -409,15 +406,14 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            var twoParts = new RunLengthTwoParts();
-            twoParts.Buffer1 = new byte[indexBufferEqual];
+            var twoParts = new RunLengthTwoParts { Buffer1 = new byte[indexBufferEqual] };
             Buffer.BlockCopy(bufferEqual, 0, twoParts.Buffer1, 0, indexBufferEqual);
             twoParts.Buffer2 = new byte[indexBufferUnEqual + 2];
             Buffer.BlockCopy(bufferUnEqual, 0, twoParts.Buffer2, 0, indexBufferUnEqual);
             return twoParts;
         }
 
-        private static void WriteRLE(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
+        private static void WriteRle(ref bool indexHalfNibble, int lastColor, int count, ref int index, byte[] buffer)
         {
             if (count <= Helper.B00000011) // 1-3 repetitions
             {
@@ -449,19 +445,19 @@ namespace Nikse.SubtitleEdit.Logic
             if (indexHalfNibble)
             {
                 index++;
-                byte firstNibble = (byte)(n >> 4);
+                var firstNibble = (byte)(n >> 4);
                 buffer[index] = firstNibble;
                 index++;
-                byte secondNibble = (byte)((n & Helper.B00001111) << 4);
-                buffer[index] = (byte)secondNibble;
+                var secondNibble = (byte)((n & Helper.B00001111) << 4);
+                buffer[index] = secondNibble;
             }
             else
             {
-                byte firstNibble = (byte)(n >> 8);
+                var firstNibble = (byte)(n >> 8);
                 buffer[index] = firstNibble;
                 index++;
-                byte secondNibble = (byte)(n & Helper.B11111111);
-                buffer[index] = (byte)secondNibble;
+                var secondNibble = (byte)(n & Helper.B11111111);
+                buffer[index] = secondNibble;
                 index++;
             }
         }
@@ -470,7 +466,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             //Value     Bits   n=length, c=color
             //16-63     12     0 0 0 0 n n n n n n c c           (one and a half byte)
-            ushort n = (ushort)((count << 2) + color);
+            var n = (ushort)((count << 2) + color);
             if (indexHalfNibble)
             {
                 index++; // there should already zeroes in last nibble
@@ -490,12 +486,12 @@ namespace Nikse.SubtitleEdit.Logic
         {
             //Value      Bits   n=length, c=color
             //4-15       8      0 0 n n n n c c                   (one byte)
-            byte n = (byte)((count << 2) + color);
+            var n = (byte)((count << 2) + color);
             if (indexHalfNibble)
             {
-                byte firstNibble = (byte)(n >> 4);
+                var firstNibble = (byte)(n >> 4);
                 buffer[index] = (byte)(buffer[index] | firstNibble);
-                byte secondNibble = (byte)((n & Helper.B00001111) << 4);
+                var secondNibble = (byte)((n & Helper.B00001111) << 4);
                 index++;
                 buffer[index] = secondNibble;
             }
@@ -508,7 +504,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static void WriteOneNibble(byte[] buffer, int count, int color, ref int index, ref bool indexHalfNibble)
         {
-            byte n = (byte)((count << 2) + color);
+            var n = (byte)((count << 2) + color);
             if (indexHalfNibble)
             {
                 buffer[index] = (byte)(buffer[index] | n);
@@ -529,11 +525,11 @@ namespace Nikse.SubtitleEdit.Logic
             int g = _bitmapData[_pixelAddress + 1];
             int b = _bitmapData[_pixelAddress];
 
-            if (pattern[0] == _bitmapData[_pixelAddress] && pattern[1] == _bitmapData[_pixelAddress + 1] && pattern[2] == _bitmapData[_pixelAddress + 2] && pattern[3] == _bitmapData[_pixelAddress + 3])
+            if (pattern[0] == b && pattern[1] == g && pattern[2] == r && pattern[3] == a)
                 return 1;
-            if (emphasis1[0] == _bitmapData[_pixelAddress] && emphasis1[1] == _bitmapData[_pixelAddress + 1] && emphasis1[2] == _bitmapData[_pixelAddress + 2] && emphasis1[3] == _bitmapData[_pixelAddress + 3])
+            if (emphasis1[0] == b && emphasis1[1] == g && emphasis1[2] == r && emphasis1[3] == a)
                 return 2;
-            if (emphasis2[0] == _bitmapData[_pixelAddress] && emphasis2[1] == _bitmapData[_pixelAddress + 1] && emphasis2[2] == _bitmapData[_pixelAddress + 2] && emphasis2[3] == _bitmapData[_pixelAddress + 3])
+            if (emphasis2[0] == b && emphasis2[1] == g && emphasis2[2] == r && emphasis2[3] == a)
                 return 3;
             return 0;
         }
@@ -543,7 +539,7 @@ namespace Nikse.SubtitleEdit.Logic
             int leftStart = 0;
             bool done = false;
             int x = 0;
-            int y = 0;
+            int y;
             while (!done && x < Width)
             {
                 y = 0;
@@ -635,7 +631,7 @@ namespace Nikse.SubtitleEdit.Logic
             int leftStart = 0;
             bool done = false;
             int x = 0;
-            int y = 0;
+            int y;
             while (!done && x < Width)
             {
                 y = 0;
@@ -803,11 +799,11 @@ namespace Nikse.SubtitleEdit.Logic
 
         public void Fill(Color color)
         {
-            byte[] buffer = new byte[4];
-            buffer[0] = (byte)color.B;
-            buffer[1] = (byte)color.G;
-            buffer[2] = (byte)color.R;
-            buffer[3] = (byte)color.A;
+            var buffer = new byte[4];
+            buffer[0] = color.B;
+            buffer[1] = color.G;
+            buffer[2] = color.R;
+            buffer[3] = color.A;
             for (int i = 0; i < _bitmapData.Length; i += 4)
                 Buffer.BlockCopy(buffer, 0, _bitmapData, i, 4);
         }
@@ -826,7 +822,7 @@ namespace Nikse.SubtitleEdit.Logic
         public byte[] GetPixelColors(int x, int y)
         {
             _pixelAddress = (x * 4) + (y * 4 * Width);
-            return new byte[4] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
+            return new[] { _bitmapData[_pixelAddress + 3], _bitmapData[_pixelAddress + 2], _bitmapData[_pixelAddress + 1], _bitmapData[_pixelAddress] };
         }
 
         public Color GetPixelNext()
@@ -838,24 +834,24 @@ namespace Nikse.SubtitleEdit.Logic
         public void SetPixel(int x, int y, Color color)
         {
             _pixelAddress = (x * 4) + (y * 4 * Width);
-            _bitmapData[_pixelAddress] = (byte)color.B;
-            _bitmapData[_pixelAddress + 1] = (byte)color.G;
-            _bitmapData[_pixelAddress + 2] = (byte)color.R;
-            _bitmapData[_pixelAddress + 3] = (byte)color.A;
+            _bitmapData[_pixelAddress] = color.B;
+            _bitmapData[_pixelAddress + 1] = color.G;
+            _bitmapData[_pixelAddress + 2] = color.R;
+            _bitmapData[_pixelAddress + 3] = color.A;
         }
 
         public void SetPixelNext(Color color)
         {
             _pixelAddress += 4;
-            _bitmapData[_pixelAddress] = (byte)color.B;
-            _bitmapData[_pixelAddress + 1] = (byte)color.G;
-            _bitmapData[_pixelAddress + 2] = (byte)color.R;
-            _bitmapData[_pixelAddress + 3] = (byte)color.A;
+            _bitmapData[_pixelAddress] = color.B;
+            _bitmapData[_pixelAddress + 1] = color.G;
+            _bitmapData[_pixelAddress + 2] = color.R;
+            _bitmapData[_pixelAddress + 3] = color.A;
         }
 
         public Bitmap GetBitmap()
         {
-            Bitmap bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
+            var bitmap = new Bitmap(Width, Height, PixelFormat.Format32bppArgb);
             BitmapData bitmapdata = bitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format32bppArgb);
             IntPtr destination = bitmapdata.Scan0;
             Marshal.Copy(_bitmapData, 0, destination, _bitmapData.Length);
@@ -889,16 +885,15 @@ namespace Nikse.SubtitleEdit.Logic
 
         public Bitmap ConverTo8BitsPerPixel()
         {
-            Bitmap newBitmap = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed);
-            List<Color> palette = new List<Color>();
-            palette.Add(Color.Transparent);
+            var newBitmap = new Bitmap(Width, Height, PixelFormat.Format8bppIndexed);
+            var palette = new List<Color> { Color.Transparent };
             ColorPalette bPalette = newBitmap.Palette;
             var entries = bPalette.Entries;
             for (int i = 0; i < newBitmap.Palette.Entries.Length; i++)
                 entries[i] = Color.Transparent;
 
             BitmapData data = newBitmap.LockBits(new Rectangle(0, 0, Width, Height), ImageLockMode.WriteOnly, PixelFormat.Format8bppIndexed);
-            byte[] bytes = new byte[data.Height * data.Stride];
+            var bytes = new byte[data.Height * data.Stride];
             Marshal.Copy(data.Scan0, bytes, 0, bytes.Length);
 
             for (int y = 0; y < Height; y++)
@@ -974,10 +969,9 @@ namespace Nikse.SubtitleEdit.Logic
         {
             int max = Width * Height - 4;
             Color brightest = Color.Black;
-            Color c = GetPixel(0, 0);
             for (int i = 0; i < max; i++)
             {
-                c = GetPixelNext();
+                Color c = GetPixelNext();
                 if (c.A > 220 && c.R + c.G + c.B > 200 && c.R + c.G + c.B > brightest.R + brightest.G + brightest.B)
                     brightest = c;
             }
@@ -1012,7 +1006,7 @@ namespace Nikse.SubtitleEdit.Logic
         /// <param name="minAlpha">Min alpha value, 0=transparent, 255=fully visible</param>
         internal void MakeBackgroundTransparent(int minAlpha)
         {
-            byte[] buffer = new byte[4];
+            var buffer = new byte[4];
             buffer[0] = 0; // B
             buffer[1] = 0; // G
             buffer[2] = 0; // R
@@ -1026,12 +1020,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal void MakeTwoColor(int minRgb)
         {
-            byte[] buffer = new byte[4];
+            var buffer = new byte[4];
             buffer[0] = 0; // B
             buffer[1] = 0; // G
             buffer[2] = 0; // R
             buffer[3] = 0; // A
-            byte[] bufferWhite = new byte[4];
+            var bufferWhite = new byte[4];
             bufferWhite[0] = 255; // B
             bufferWhite[1] = 255; // G
             bufferWhite[2] = 255; // R

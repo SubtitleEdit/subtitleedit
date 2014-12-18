@@ -1,6 +1,7 @@
 ﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
 using System.Collections.Generic;
@@ -21,8 +22,10 @@ namespace Nikse.SubtitleEdit.Forms
 
     public sealed partial class ExportPngXml : PositionAndSizeForm
     {
+
         private class MakeBitmapParameter
         {
+
             public Bitmap Bitmap { get; set; }
             public Paragraph P { get; set; }
             public string Type { get; set; }
@@ -60,6 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 BackgroundColor = Color.Transparent;
             }
+
         }
 
         private Subtitle _subtitle;
@@ -75,6 +79,7 @@ namespace Nikse.SubtitleEdit.Forms
         private string _fileName;
         private VobSubOcr _vobSubOcr;
         private readonly System.Windows.Forms.Timer _previewTimer = new System.Windows.Forms.Timer();
+        private string _videoFileName;
 
         private const string BoxMultiLine = "BoxMultiLine";
         private const string BoxSingleLine = "BoxSingleLine";
@@ -244,34 +249,34 @@ namespace Nikse.SubtitleEdit.Forms
         private MakeBitmapParameter MakeMakeBitmapParameter(int index, int screenWidth, int screenHeight)
         {
             var parameter = new MakeBitmapParameter
-                                {
-                                    Type = _exportType,
-                                    SubtitleColor = _subtitleColor,
-                                    SubtitleFontName = _subtitleFontName,
-                                    SubtitleFontSize = _subtitleFontSize,
-                                    SubtitleFontBold = _subtitleFontBold,
-                                    BorderColor = _borderColor,
-                                    BorderWidth = _borderWidth,
-                                    SimpleRendering = checkBoxSimpleRender.Checked,
-                                    AlignLeft = comboBoxHAlign.SelectedIndex == 0,
-                                    AlignRight = comboBoxHAlign.SelectedIndex == 2,
-                                    ScreenWidth = screenWidth,
-                                    ScreenHeight = screenHeight,
-                                    VideoResolution = comboBoxResolution.Text,
-                                    Bitmap = null,
-                                    FramesPerSeconds = FrameRate,
-                                    BottomMargin = comboBoxBottomMargin.SelectedIndex,
-                                    Saved = false,
-                                    Alignment = ContentAlignment.BottomCenter,
-                                    Type3D = comboBox3D.SelectedIndex,
-                                    Depth3D = (int)numericUpDownDepth3D.Value,
-                                    BackgroundColor = Color.Transparent,
-                                    SavDialogFileName = saveFileDialog1.FileName,
-                                    ShadowColor = panelShadowColor.BackColor,
-                                    ShadowWidth = comboBoxShadowWidth.SelectedIndex,
-                                    ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
-                                    LineHeight = (int)numericUpDownLineSpacing.Value,
-                                };
+            {
+                Type = _exportType,
+                SubtitleColor = _subtitleColor,
+                SubtitleFontName = _subtitleFontName,
+                SubtitleFontSize = _subtitleFontSize,
+                SubtitleFontBold = _subtitleFontBold,
+                BorderColor = _borderColor,
+                BorderWidth = _borderWidth,
+                SimpleRendering = checkBoxSimpleRender.Checked,
+                AlignLeft = comboBoxHAlign.SelectedIndex == 0,
+                AlignRight = comboBoxHAlign.SelectedIndex == 2,
+                ScreenWidth = screenWidth,
+                ScreenHeight = screenHeight,
+                VideoResolution = comboBoxResolution.Text,
+                Bitmap = null,
+                FramesPerSeconds = FrameRate,
+                BottomMargin = comboBoxBottomMargin.SelectedIndex,
+                Saved = false,
+                Alignment = ContentAlignment.BottomCenter,
+                Type3D = comboBox3D.SelectedIndex,
+                Depth3D = (int)numericUpDownDepth3D.Value,
+                BackgroundColor = Color.Transparent,
+                SavDialogFileName = saveFileDialog1.FileName,
+                ShadowColor = panelShadowColor.BackColor,
+                ShadowWidth = comboBoxShadowWidth.SelectedIndex,
+                ShadowAlpha = (int)numericUpDownShadowTransparency.Value,
+                LineHeight = (int)numericUpDownLineSpacing.Value,
+            };
             if (index < _subtitle.Paragraphs.Count)
             {
                 parameter.P = _subtitle.Paragraphs[index];
@@ -591,11 +596,11 @@ namespace Nikse.SubtitleEdit.Forms
                     if (_subtitle.Paragraphs.Count > 0)
                         duration = (int)Math.Round(_subtitle.Paragraphs[_subtitle.Paragraphs.Count - 1].EndTime.TotalSeconds * 25.0);
                     string s = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" + Environment.NewLine +
-"<!DOCTYPE xmeml[]>" + Environment.NewLine +
-"<xmeml version=\"4\">" + Environment.NewLine +
-"  <sequence id=\"" + fileNameNoExt + "\">" + Environment.NewLine +
-"    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
-"    <name>" + fileNameNoExt + @"</name>
+                               "<!DOCTYPE xmeml[]>" + Environment.NewLine +
+                               "<xmeml version=\"4\">" + Environment.NewLine +
+                               "  <sequence id=\"" + fileNameNoExt + "\">" + Environment.NewLine +
+                               "    <updatebehavior>add</updatebehavior>" + Environment.NewLine +
+                               "    <name>" + fileNameNoExt + @"</name>
     <duration>" + duration.ToString(CultureInfo.InvariantCulture) + @"</duration>
     <rate>
       <ntsc>FALSE</ntsc>
@@ -621,7 +626,7 @@ namespace Nikse.SubtitleEdit.Forms
         </track>
         <track>
 " + sb +
-@"   <enabled>TRUE</enabled>
+                               @"   <enabled>TRUE</enabled>
           <locked>FALSE</locked>
         </track>
       </video>
@@ -660,7 +665,7 @@ namespace Nikse.SubtitleEdit.Forms
 $VERSION=1.2
 $ULEAD=TRUE
 $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
-                    "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
+                                    "NO\tINTIME\t\tOUTTIME\t\tXPOS\tYPOS\tFILENAME\tFADEIN\tFADEOUT";
 
                     string dropValue = "30000";
                     if (comboBoxFrameRate.Items[comboBoxFrameRate.SelectedIndex].ToString() == "23.98")
@@ -985,7 +990,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
 //              <pathurl>file://localhost/" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
 
-@"            <name>" + fileNameNoPath + @"</name>
+                                          @"            <name>" + fileNameNoPath + @"</name>
             <duration>[DURATION]</duration>
             <rate>
               <ntsc>FALSE</ntsc>
@@ -1000,7 +1005,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             <anamorphic>FALSE</anamorphic>
             <alphatype>straight</alphatype>
             <masterclipid>" + fileNameNoPath + @"1</masterclipid>" + Environment.NewLine +
-"           <file id=\"" + fileNameNoExt + "\">" + @"
+                                          "           <file id=\"" + fileNameNoExt + "\">" + @"
               <name>" + fileNameNoPath + @"</name>
               <pathurl>" + fileNameNoPath.Replace(" ", "%20") + @"</pathurl>
               <rate>
@@ -1516,7 +1521,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             var lastText = new StringBuilder();
             var sf = new StringFormat();
             sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near;// draw the text to a path
+            sf.LineAlignment = StringAlignment.Near; // draw the text to a path
             var bmp = new Bitmap(parameter.ScreenWidth, 200);
             var g = Graphics.FromImage(bmp);
 
@@ -2448,11 +2453,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             return s;
         }
 
-        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo)
+        internal void Initialize(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VideoInfo videoInfo, string videoFileName)
         {
             _exportType = exportType;
             _fileName = fileName;
             _format = format;
+            _videoFileName = videoFileName;
             if (exportType == "BLURAYSUP")
                 Text = "Blu-ray SUP";
             else if (exportType == "VOBSUB")
@@ -2602,6 +2608,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.LineHeight)) //TODO: Remove in 3.4
                 labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
+
+            linkLabelPreview.Text = Configuration.Settings.Language.General.Preview;
 
             SubtitleListView1InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
@@ -2883,7 +2891,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         internal void InitializeFromVobSubOcr(Subtitle subtitle, SubtitleFormat format, string exportType, string fileName, VobSubOcr vobSubOcr, string languageString)
         {
             _vobSubOcr = vobSubOcr;
-            Initialize(subtitle, format, exportType, fileName, null);
+            Initialize(subtitle, format, exportType, fileName, null, _videoFileName);
 
             //set language
             if (!string.IsNullOrEmpty(languageString))
@@ -2945,6 +2953,20 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text);
                 pictureBox1.Left = (w - bmp.Width) / 2;
                 var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
+
+                // fix alignment from UI
+                if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
+                {
+                    if (comboBoxHAlign.SelectedIndex == 0)
+                    {
+                        alignment = ContentAlignment.BottomLeft;
+                    }
+                    else if (comboBoxHAlign.SelectedIndex == 2)
+                    {
+                        alignment = ContentAlignment.BottomRight;
+                    }
+                }
+
                 if (_exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "VOBSUB")
                 {
                     if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
@@ -3063,6 +3085,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Utilities.ShowHelp("#export");
                 e.SuppressKeyPress = true;
+            }
+            else if (e.Modifiers == Keys.Control && e.KeyCode == Keys.G && subtitleListView1.Items.Count > 1)
+            {
+                using (var goToLine = new GoToLine())
+                {
+                    goToLine.Initialize(1, subtitleListView1.Items.Count);
+                    if (goToLine.ShowDialog(this) == DialogResult.OK)
+                    {
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Selected = true;
+                        subtitleListView1.Items[goToLine.LineNumber - 1].EnsureVisible();
+                        subtitleListView1.Items[goToLine.LineNumber - 1].Focused = true;
+                    }
+                }
             }
         }
 
@@ -3602,6 +3637,122 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             subtitleListView1.Items[index].SubItems[columnIndexText].Text = text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString);
+        }
+
+        private void FillPreviewBackground(Bitmap bmp, Graphics g, Paragraph p)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(_videoFileName) && LibVlcDynamic.IsInstalled)
+                {
+                    using (var vlc = new LibVlcDynamic())
+                    {
+                        vlc.Initialize(panelVlcTemp, _videoFileName, null, null);
+                        Application.DoEvents();
+                        vlc.Volume = 0;
+                        vlc.Pause();
+                        vlc.CurrentPosition = p.StartTime.TotalSeconds;
+                        Application.DoEvents();
+                        var fileName = Path.GetTempFileName() + ".bmp";
+                        vlc.TakeSnapshot(fileName, (uint)bmp.Width, (uint)bmp.Height);
+                        Application.DoEvents();
+                        Thread.Sleep(200);
+                        using (var tempBmp = new Bitmap(fileName))
+                        {
+                            g.DrawImageUnscaled(tempBmp, new Point(0, 0));
+                        }
+                    }
+                    return;
+                }
+
+            }
+            catch
+            {
+                // Was unable to grap screenshot via vlc
+            }
+
+            // Draw background with generated image
+            var rect = new Rectangle(0, 0, bmp.Width - 1, bmp.Height - 1);
+            using (var br = new LinearGradientBrush(rect, Color.Black, Color.Black, 0, false))
+            {
+                var cb = new ColorBlend
+                {
+                    Positions = new[] { 0, 1 / 6f, 2 / 6f, 3 / 6f, 4 / 6f, 5 / 6f, 1 },
+                    Colors = new[] { Color.Black, Color.Black, Color.White, Color.Black, Color.Black, Color.White, Color.Black }
+                };
+                br.InterpolationColors = cb;
+                br.RotateTransform(0);
+                g.FillRectangle(br, rect);
+            }
+
+        }
+
+        private void linkLabelPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            linkLabelPreview.Enabled = false;
+            Cursor = Cursors.WaitCursor;
+            try
+            {
+                int width;
+                int height;
+                GetResolution(out width, out height);
+                using (var bmp = new Bitmap(width, height))
+                {
+                    using (var g = Graphics.FromImage(bmp))
+                    {
+                        var p = _subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index];
+                        FillPreviewBackground(bmp, g, p);
+
+                        var nBmp = new NikseBitmap(pictureBox1.Image as Bitmap);
+                        nBmp.CropSidesAndBottom(100, Color.Transparent, true);
+                        using (var textBmp = nBmp.GetBitmap())
+                        {
+
+                            var alignment = GetAlignmentFromParagraph(p, _format, _subtitle);
+                            if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
+                            {
+                                if (comboBoxHAlign.SelectedIndex == 0)
+                                {
+                                    alignment = ContentAlignment.BottomLeft;
+                                }
+                                else if (comboBoxHAlign.SelectedIndex == 2)
+                                {
+                                    alignment = ContentAlignment.BottomRight;
+                                }
+                            }
+
+                            int x = (bmp.Width - textBmp.Width)/2;
+                            if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                                x = int.Parse(comboBoxBottomMargin.Text);
+                            else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                                x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+
+                            int y = bmp.Height - textBmp.Height - int.Parse(comboBoxBottomMargin.Text);
+                            if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
+                                x = int.Parse(comboBoxBottomMargin.Text);
+                            else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
+                                x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                            if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
+                                y = (groupBoxExportImage.Height - 4 - textBmp.Height)/2;
+                            else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
+                                y = int.Parse(comboBoxBottomMargin.Text);
+
+                            g.DrawImageUnscaled(textBmp, new Point(x, y));
+                        }
+                    }
+
+                    using (var form = new ExportPngXmlPreview(bmp))
+                    {
+                        Cursor = Cursors.Default;
+                        form.ShowDialog(this);
+                    }
+                }
+            }
+            finally
+            {
+                Cursor = Cursors.Default;
+                linkLabelPreview.Enabled = true;
+            }
         }
 
     }

@@ -685,7 +685,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (isFixed)
                     {
-                        _totalFixes++;
                         noOfOverlappingDisplayTimesFixed++;
                         status = string.Format(_language.XFixedToYZ, status, Environment.NewLine, p);
                         LogStatus(_language.FixOverlappingDisplayTimes, status);
@@ -731,7 +730,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     okEqual = false;
                                 if (okEqual)
                                 {
-                                    _totalFixes++;
                                     noOfOverlappingDisplayTimesFixed++;
                                     AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                                 }
@@ -746,7 +744,6 @@ namespace Nikse.SubtitleEdit.Forms
                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
                             if (canBeEqual)
                                 prev.EndTime.TotalMilliseconds++;
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                         }
@@ -758,7 +755,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             prev.EndTime.TotalMilliseconds -= diffHalf;
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -770,8 +766,6 @@ namespace Nikse.SubtitleEdit.Forms
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             if (canBeEqual)
                                 p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -783,7 +777,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             prev.EndTime.TotalMilliseconds -= diffHalf;
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -795,7 +788,6 @@ namespace Nikse.SubtitleEdit.Forms
                             prev.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - 1;
                             if (canBeEqual)
                                 prev.EndTime.TotalMilliseconds++;
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(target, fixAction, oldPrevious, prev.ToString());
                         }
@@ -807,8 +799,6 @@ namespace Nikse.SubtitleEdit.Forms
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             if (canBeEqual)
                                 p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -821,7 +811,6 @@ namespace Nikse.SubtitleEdit.Forms
                             p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds + 1;
                             if (canBeEqual)
                                 p.StartTime.TotalMilliseconds = prev.EndTime.TotalMilliseconds;
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -843,7 +832,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                             prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
                             p.Text = string.Empty;
-                            _totalFixes++;
                             noOfOverlappingDisplayTimesFixed++;
                             AddFixToListView(target, fixAction, oldCurrent, p.ToString());
 
@@ -868,7 +856,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (noOfOverlappingDisplayTimesFixed > 0)
+            {
+                _totalFixes += noOfOverlappingDisplayTimesFixed;
                 LogStatus(fixAction, string.Format(_language.XOverlappingTimestampsFixed, noOfOverlappingDisplayTimesFixed));
+            }
         }
 
         public void FixShortDisplayTimes()
@@ -893,7 +884,6 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 string oldCurrent = p.ToString();
                                 p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-                                _totalFixes++;
                                 noOfShortDisplayTimes++;
                                 AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                             }
@@ -908,8 +898,6 @@ namespace Nikse.SubtitleEdit.Forms
                             if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
                                 p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-
-                            _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -942,7 +930,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string oldCurrent = p.ToString();
                             p.EndTime.TotalMilliseconds = temp.EndTime.TotalMilliseconds;
-                            _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -968,8 +955,6 @@ namespace Nikse.SubtitleEdit.Forms
                             var nextDurationMs = next.Duration.TotalMilliseconds;
                             next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + nextDurationMs;
-
-                            _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -984,8 +969,6 @@ namespace Nikse.SubtitleEdit.Forms
                             string oldCurrent = p.ToString();
                             next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
                             p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
-
-                            _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -1003,8 +986,6 @@ namespace Nikse.SubtitleEdit.Forms
                             next.StartTime.TotalMilliseconds += diffMs;
                             next.EndTime.TotalMilliseconds += diffMs;
                             nextNext.StartTime.TotalMilliseconds += diffMs;
-
-                            _totalFixes++;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
@@ -1024,7 +1005,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (noOfShortDisplayTimes > 0)
+            {
+                _totalFixes += noOfShortDisplayTimes;
                 LogStatus(fixAction, string.Format(_language.XDisplayTimesProlonged, noOfShortDisplayTimes));
+            }
         }
 
         private int MoveStartTime(string fixAction, int noOfShortDisplayTimes, Paragraph p, Paragraph temp, Paragraph next)
@@ -1035,8 +1019,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
                     p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
-
-                _totalFixes++;
                 noOfShortDisplayTimes++;
                 AddFixToListView(p, fixAction, oldCurrent, p.ToString());
             }
@@ -1064,7 +1046,6 @@ namespace Nikse.SubtitleEdit.Forms
                         if (AllowFix(Subtitle.Paragraphs[i], fixAction))
                         {
                             Subtitle.Paragraphs[i].Text = text;
-                            _totalFixes++;
                             noOfInvalidHtmlTags++;
                             AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                         }
@@ -1074,7 +1055,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
             listViewFixes.Refresh();
             if (noOfInvalidHtmlTags > 0)
+            {
+                _totalFixes += noOfInvalidHtmlTags;
                 LogStatus(_language.FixInvalidItalicTags, string.Format(_language.XInvalidHtmlTagsFixed, noOfInvalidHtmlTags));
+            }
         }
 
         public void FixLongDisplayTimes()
@@ -1094,7 +1078,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string oldCurrent = p.ToString();
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                        _totalFixes++;
                         noOfLongDisplayTimes++;
                         AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                     }
@@ -1106,14 +1089,16 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldCurrent = p.ToString();
                         displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + displayTime;
-                        _totalFixes++;
                         noOfLongDisplayTimes++;
                         AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                     }
                 }
             }
             if (noOfLongDisplayTimes > 0)
+            {
+                _totalFixes += noOfLongDisplayTimes;
                 LogStatus(_language.FixLongDisplayTimes, string.Format(_language.XDisplayTimesShortned, noOfLongDisplayTimes));
+            }
         }
 
         public void FixLongLines()
@@ -1140,7 +1125,6 @@ namespace Nikse.SubtitleEdit.Forms
                         p.Text = Utilities.AutoBreakLine(p.Text, Language);
                         if (oldText != p.Text)
                         {
-                            _totalFixes++;
                             noOfLongLines++;
                             AddFixToListView(p, fixAction, oldText, p.Text);
                         }
@@ -1186,7 +1170,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                             string oldCurrent = p.Text;
                             p.Text = s;
-                            _totalFixes++;
                             noOfShortLines++;
                             AddFixToListView(p, fixAction, oldCurrent, p.Text);
                         }
@@ -1194,7 +1177,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (noOfShortLines > 0)
+            {
+                _totalFixes += noOfShortLines;
                 LogStatus(_language.RemoveLineBreaks, string.Format(_language.XLinesUnbreaked, noOfShortLines));
+            }
         }
 
         public void FixShortLinesAll()
@@ -1215,7 +1201,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             string oldCurrent = p.Text;
                             p.Text = s;
-                            _totalFixes++;
                             noOfShortLines++;
                             AddFixToListView(p, fixAction, oldCurrent, p.Text);
                         }
@@ -1223,7 +1208,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (noOfShortLines > 0)
+            {
+                _totalFixes += noOfShortLines;
                 LogStatus(_language.RemoveLineBreaks, string.Format(_language.XLinesUnbreaked, noOfShortLines));
+            }
         }
 
         public void FixUnneededSpaces()
@@ -1244,7 +1232,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         doubleSpaces++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                     else
@@ -1259,7 +1246,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
             if (doubleSpaces > 0)
+            {
+                _totalFixes += doubleSpaces;
                 LogStatus(_language.RemoveUnneededSpaces, string.Format(_language.XUnneededSpacesRemoved, doubleSpaces));
+            }
         }
 
         public void FixUnneededPeriods()
@@ -1276,7 +1266,6 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = p.Text.Replace("!." + Environment.NewLine, "!" + Environment.NewLine);
                         unneededPeriods++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
@@ -1287,7 +1276,6 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = p.Text.Replace("?." + Environment.NewLine, "?" + Environment.NewLine);
                         unneededPeriods++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
@@ -1298,7 +1286,6 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = p.Text.TrimEnd('.');
                         unneededPeriods++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
@@ -1309,7 +1296,6 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = p.Text.TrimEnd('.');
                         unneededPeriods++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
@@ -1321,7 +1307,6 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = p.Text.Replace("!. ", "! ");
                         unneededPeriods++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
@@ -1332,14 +1317,16 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = p.Text.Replace("?. ", "? ");
                         unneededPeriods++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
 
             }
             if (unneededPeriods > 0)
+            {
+                _totalFixes += unneededPeriods;
                 LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriods));
+            }
         }
 
         public void FixMissingSpaces()
@@ -1364,9 +1351,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         if (doFix && AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             missingSpaces++;
-
                             string oldText = p.Text;
                             p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
                             AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1385,9 +1370,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1407,9 +1390,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1439,9 +1420,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1477,9 +1456,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                             if (!isMatchAbbreviation && AllowFix(p, fixAction))
                             {
-                                _totalFixes++;
                                 missingSpaces++;
-
                                 string oldText = p.Text;
                                 p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1505,9 +1482,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string newText = arr[0] + Environment.NewLine + arr[1];
                         if (newText != p.Text && AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             missingSpaces++;
-
                             string oldText = p.Text;
                             p.Text = newText;
                             AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1542,9 +1517,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (newText != p.Text && AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             missingSpaces++;
-
                             string oldText = p.Text;
                             p.Text = newText;
                             AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1565,9 +1538,7 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = newText.Insert(newText.Length - 1, " ");
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1591,9 +1562,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1617,9 +1586,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1643,9 +1610,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1670,9 +1635,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         missingSpaces++;
-
                         string oldText = p.Text;
                         p.Text = newText;
                         AddFixToListView(p, fixAction, oldText, p.Text);
@@ -1681,7 +1644,10 @@ namespace Nikse.SubtitleEdit.Forms
 
             }
             if (missingSpaces > 0)
+            {
+                _totalFixes += missingSpaces;
                 LogStatus(_language.FixMissingSpaces, string.Format(_language.XMissingSpacesAdded, missingSpaces));
+            }
         }
 
         private static string GetWordFromIndex(string text, int index)
@@ -1860,7 +1826,6 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (AllowFix(p, fixAction))
                         {
-                            _totalFixes++;
                             noOfFixes++;
                             AddFixToListView(p, fixAction, oldText, p.Text);
                         }
@@ -1873,7 +1838,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
                 LogStatus(fixAction, string.Format(_language.XMissingQuotesAdded, noOfFixes));
+            }
         }
 
         private static string GetWholeWord(string text, int index)
@@ -1911,7 +1879,6 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text += oldText.Substring(match.Index + 2);
 
                         uppercaseIsInsideLowercaseWords++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                     match = match.NextMatch();
@@ -1940,7 +1907,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 //    st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                 //    p.Text = st.MergedString;
                                 //    uppercaseIsInsideLowercaseWords++;
-                                //    _totalFixes++;
                                 //    AddFixToListView(p, fixAction, oldText, p.Text);
                                 //}
                             }
@@ -1954,7 +1920,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                         p.Text = st.MergedString;
                                         uppercaseIsInsideLowercaseWords++;
-                                        _totalFixes++;
                                         AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
                                 }
@@ -1966,7 +1931,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                         p.Text = st.MergedString;
                                         uppercaseIsInsideLowercaseWords++;
-                                        _totalFixes++;
                                         AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
                                 }
@@ -1988,7 +1952,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "i");
                                         p.Text = st.MergedString;
                                         uppercaseIsInsideLowercaseWords++;
-                                        _totalFixes++;
                                         AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
                                     else if (@"‘’¡¿„“()[]♪'. ".Contains(before) && !Utilities.LowercaseVowels.Contains(char.ToLower(after)))
@@ -1999,7 +1962,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         st.StrippedText = st.StrippedText.Remove(match.Index, 1).Insert(match.Index, "l");
                                         p.Text = st.MergedString;
                                         uppercaseIsInsideLowercaseWords++;
-                                        _totalFixes++;
                                         AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
                                 }
@@ -2013,7 +1975,10 @@ namespace Nikse.SubtitleEdit.Forms
                 //isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
             }
             if (uppercaseIsInsideLowercaseWords > 0)
+            {
+                _totalFixes += uppercaseIsInsideLowercaseWords;
                 LogStatus(_language.FixUppercaseIInsindeLowercaseWords, string.Format(_language.XUppercaseIsFoundInsideLowercaseWords, uppercaseIsInsideLowercaseWords));
+            }
         }
 
         public void FixDoubleApostrophes()
@@ -2030,14 +1995,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string oldText = p.Text;
                         p.Text = p.Text.Replace("''", "\"");
-                        fixCount++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
+                        fixCount++;
                     }
                 }
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixDoubleApostrophes, string.Format(_language.XDoubleApostrophesFixed, fixCount));
+            }
         }
 
         public void FixMissingPeriodsAtEndOfLine()
@@ -2094,7 +2061,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         }
                                         if (p.Text != oldText)
                                         {
-                                            _totalFixes++;
                                             missigPeriodsAtEndOfLine++;
                                             AddFixToListView(p, fixAction, oldText, p.Text);
                                         }
@@ -2124,7 +2090,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     endSign = "!";
 
                                 string oldText = p.Text;
-                                _totalFixes++;
                                 missigPeriodsAtEndOfLine++;
                                 p.Text += endSign;
                                 AddFixToListView(p, fixAction, oldText, p.Text);
@@ -2159,7 +2124,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 else
                                     p.Text = p.Text.Insert(indexOfNewLine, ".");
 
-                                _totalFixes++;
                                 missigPeriodsAtEndOfLine++;
                                 AddFixToListView(p, fixAction, oldText, p.Text);
                             }
@@ -2169,7 +2133,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (missigPeriodsAtEndOfLine > 0)
+            {
+                _totalFixes += missigPeriodsAtEndOfLine;
                 LogStatus(_language.AddPeriods, string.Format(_language.XPeriodsAdded, missigPeriodsAtEndOfLine));
+            }
         }
 
         private static bool IsOneLineUrl(string s)
@@ -2245,7 +2212,6 @@ namespace Nikse.SubtitleEdit.Forms
                     p.Text = fixedText;
                     if (AllowFix(p, fixAction))
                     {
-                        _totalFixes++;
                         fixedStartWithUppercaseLetterAfterParagraphTicked++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
@@ -2257,7 +2223,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
+            {
+                _totalFixes += fixedStartWithUppercaseLetterAfterParagraphTicked;
                 LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         public static string FixStartWithUppercaseLetterAfterParagraph(Paragraph p, Paragraph prev, Encoding encoding, string language)
@@ -2595,12 +2564,14 @@ namespace Nikse.SubtitleEdit.Forms
                 if (oldText != p.Text)
                 {
                     noOfFixes++;
-                    _totalFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
                 LogStatus(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, noOfFixes.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         private void FixStartWithUppercaseLetterAfterColon()
@@ -2667,13 +2638,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (oldText != p.Text)
                 {
                     noOfFixes++;
-                    _totalFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             listViewFixes.EndUpdate();
             if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
                 LogStatus(_language.StartWithUppercaseLetterAfterColon, noOfFixes.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         private bool IsAbbreviation(string text, int index)
@@ -2692,8 +2665,7 @@ namespace Nikse.SubtitleEdit.Forms
                 i--;
             }
 
-            List<string> abbreviations = GetAbbreviations();
-            return abbreviations.Contains(word + ".");
+            return GetAbbreviations().Contains(word + ".");
         }
 
         public void FixOcrErrorsViaReplaceList(string threeLetterIsoLanguageName)
@@ -2715,14 +2687,16 @@ namespace Nikse.SubtitleEdit.Forms
                             string oldText = p.Text;
                             p.Text = text;
                             noOfFixes++;
-                            _totalFixes++;
                             AddFixToListView(p, fixAction, oldText, p.Text);
                         }
                         Application.DoEvents();
                     }
                 }
                 if (noOfFixes > 0)
+                {
+                    _totalFixes += noOfFixes;
                     LogStatus(_language.FixCommonOcrErrors, string.Format(_language.CommonOcrErrorsFixed, noOfFixes));
+                }
             }
         }
 
@@ -2759,13 +2733,15 @@ namespace Nikse.SubtitleEdit.Forms
                         string oldText = p.Text;
                         p.Text = text;
                         noOfFixes++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
             if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.RemoveSpaceBetweenNumbersFixed, noOfFixes));
+            }
         }
 
         private void DialogsOnOneLine()
@@ -2784,14 +2760,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = text;
                         noOfFixes++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
 
             }
             if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixDialogsOnOneLine, noOfFixes));
+            }
         }
 
         private void TurkishAnsiToUnicode()
@@ -2815,13 +2793,15 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = text;
                         noOfFixes++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
             if (noOfFixes > 0)
+            {
+                _totalFixes += noOfFixes;
                 LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixTurkishAnsi, noOfFixes));
+            }
         }
 
         private void FixAloneLowercaseIToUppercaseI()
@@ -2842,14 +2822,16 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = s;
                         iFixes++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
 
                 }
             }
             if (iFixes > 0)
+            {
+                _totalFixes += iFixes;
                 LogStatus(_language.FixLowercaseIToUppercaseI, string.Format(_language.XIsChangedToUppercase, iFixes));
+            }
         }
 
         public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
@@ -2926,12 +2908,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = text;
                     iFixes++;
-                    _totalFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             if (iFixes > 0)
-                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
+            {
+                _totalFixes += iFixes;
+                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes)); 
+            }
         }
 
         public void FixHyphensAdd()
@@ -2948,13 +2932,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = text;
                     iFixes++;
-                    _totalFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
 
             }
             if (iFixes > 0)
+            {
+                _totalFixes += iFixes;
                 LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
+            }
         }
 
         private void Fix3PlusLines()
@@ -2975,13 +2961,15 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         p.Text = text;
                         iFixes++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
             if (iFixes > 0)
+            {
+                _totalFixes += iFixes;
                 LogStatus(_language.Fix3PlusLines, string.Format(_language.X3PlusLinesFixed, iFixes));
+            }
         }
 
         public void FixMusicNotation()
@@ -3013,14 +3001,16 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = newText;
                             fixCount++;
-                            _totalFixes++;
                             AddFixToListView(p, fixAction, oldText, p.Text);
                         }
                     }
                 }
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixMusicNotation, string.Format(_language.XFixMusicNotation, fixCount));
+            }
         }
 
         public void FixDoubleDash()
@@ -3045,13 +3035,17 @@ namespace Nikse.SubtitleEdit.Forms
                     text = text.Replace(" ...", "...");
                     text = text.TrimEnd();
                     text = text.Replace("... " + Environment.NewLine, "..." + Environment.NewLine);
-                    text = text.Replace("... </i>", "...</i>");
+                    text = text.Replace("... </", "...</"); // </i>, </font>...
                     text = text.Replace("... ?", "...?");
                     text = text.Replace("... !", "...!");
                     if (text.StartsWith("... "))
                         text = text.Remove(3, 1);
                     if (text.StartsWith("<i>... "))
                         text = text.Remove(6, 1);
+                    if (text.StartsWith("<font>... "))
+                        text = text.Remove("<font>... ".Length - 1, 1);
+                    if (text.StartsWith("<b>... "))
+                        text = text.Remove("<b>... ".Length - 1, 1);
                 }
                 //if (text.EndsWith('-'))
                 //{
@@ -3079,13 +3073,15 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Text = text;
                     fixCount++;
-                    _totalFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
 
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixDoubleDash, string.Format(_language.XFixDoubleDash, fixCount));
+            }
         }
 
         public void FixDoubleGreaterThan()
@@ -3101,9 +3097,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(3, p.Text.Length - 3);
+                        p.Text = p.Text.Substring(3);
                         fixCount++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
@@ -3112,15 +3107,17 @@ namespace Nikse.SubtitleEdit.Forms
                     if (AllowFix(p, fixAction))
                     {
                         string oldText = p.Text;
-                        p.Text = p.Text.Substring(2, p.Text.Length - 2);
+                        p.Text = p.Text.Substring(2);
                         fixCount++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixDoubleGreaterThan, string.Format(_language.XFixDoubleGreaterThan, fixCount));
+            }
         }
 
         public void FixEllipsesStart()
@@ -3142,7 +3139,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = text;
                             fixCount++;
-                            _totalErrors++;
                             AddFixToListView(p, fixAction, oldText, text);
                         }
                     }
@@ -3161,7 +3157,6 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = fixedParagraph;
                             fixCount++;
-                            _totalErrors++;
                             AddFixToListView(p, fixAction, oldText, fixedParagraph);
                         }
                     }
@@ -3170,7 +3165,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.EndUpdate();
             listViewFixes.Refresh();
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
+            }
         }
 
         private static string FixMissingOpenBracket(string text, string openB)
@@ -3247,14 +3245,16 @@ namespace Nikse.SubtitleEdit.Forms
                     if (hit)
                     {
                         fixCount++;
-                        _totalFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
 
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixMissingOpenBracket, string.Format(_language.XFixMissingOpenBracket, fixCount));
+            }
         }
 
         private static Regex MyRegEx(string inputRegex)
@@ -3927,12 +3927,14 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Subtitle.Paragraphs[i].Text = text;
                     fixCount++;
-                    _totalFixes++;
                     AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                 }
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixDanishLetterI, string.Format(_language.XIsChangedToUppercase, fixCount));
+            }
         }
 
         /// <summary>
@@ -3965,13 +3967,15 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text != oldText)
                 {
                     fixCount++;
-                    _totalFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
 
             }
             if (fixCount > 0)
+            {
+                _totalFixes += fixCount;
                 LogStatus(_language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         private void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool wasLastLineClosed, string fixAction, ref int fixCount)
@@ -4090,7 +4094,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                             last.Text = last.Text.Insert(idx, inverseMark);
                             fixCount++;
-                            _totalFixes++;
                             AddFixToListView(last, fixAction, lastOldtext, last.Text);
                         }
 

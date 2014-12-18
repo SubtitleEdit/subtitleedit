@@ -107,7 +107,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private double _wholeParagraphMinMilliseconds;
         private double _wholeParagraphMaxMilliseconds = double.MaxValue;
-
+        private System.ComponentModel.BackgroundWorker _spectrogramBackgroundWorker;
         public Keys InsertAtVideoPositionShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
         public const double ZoomMininum = 0.1;
@@ -622,7 +622,7 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 if (_wavePeaks == null)
                 {
-                    using (Pen pen = new Pen(new SolidBrush(GridColor)))
+                    using (var pen = new Pen(new SolidBrush(GridColor)))
                     {
                         for (int i = 0; i < Width; i += 10)
                         {
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (ZoomFactor < 0.4)
                         interval = 1.0 * _wavePeaks.Header.SampleRate * _zoomFactor; // pixels that is 1 second
                     int start = SecondsToXPosition(StartPositionSeconds) % ((int)Math.Round(interval));
-                    using (Pen pen = new Pen(new SolidBrush(GridColor)))
+                    using (var pen = new Pen(new SolidBrush(GridColor)))
                     {
                         for (double i = start; i < Width; i += interval)
                         {
@@ -656,8 +656,8 @@ namespace Nikse.SubtitleEdit.Controls
             double seconds = start - StartPositionSeconds;
             float position = SecondsToXPosition(seconds);
             Pen pen = new Pen(TextColor);
-            SolidBrush textBrush = new SolidBrush(TextColor);
-            Font textFont = new Font(Font.FontFamily, 7);
+            var textBrush = new SolidBrush(TextColor);
+            var textFont = new Font(Font.FontFamily, 7);
             while (position < Width)
             {
                 var n = _zoomFactor * _wavePeaks.Header.SampleRate;
@@ -704,12 +704,10 @@ namespace Nikse.SubtitleEdit.Controls
             {
                 e.Graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, e.Graphics.VisibleClipBounds.Height);
 
-                Pen pen = new Pen(new SolidBrush(Color.FromArgb(128, 150, 150, 150)));
-                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                var pen = new Pen(new SolidBrush(Color.FromArgb(128, 150, 150, 150))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
                 e.Graphics.DrawLine(pen, currentRegionLeft, 0, currentRegionLeft, e.Graphics.VisibleClipBounds.Height);
                 pen.Dispose();
-                pen = new Pen(new SolidBrush(Color.FromArgb(135, 0, 100, 0)));
-                pen.DashStyle = System.Drawing.Drawing2D.DashStyle.Dash;
+                pen = new Pen(new SolidBrush(Color.FromArgb(135, 0, 100, 0))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
                 e.Graphics.DrawLine(pen, currentRegionRight, 0, currentRegionRight, e.Graphics.VisibleClipBounds.Height);
 
                 var n = _zoomFactor * _wavePeaks.Header.SampleRate;
@@ -890,9 +888,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             if (currentRegionRight - currentRegionLeft > 0.1) // not too small subtitles
                             {
-                                Paragraph paragraph = new Paragraph();
-                                paragraph.StartTime = TimeCode.FromSeconds(currentRegionLeft);
-                                paragraph.EndTime = TimeCode.FromSeconds(currentRegionRight);
+                                var paragraph = new Paragraph { StartTime = TimeCode.FromSeconds(currentRegionLeft), EndTime = TimeCode.FromSeconds(currentRegionRight) };
                                 if (PreventOverlap)
                                 {
                                     if (paragraph.StartTime.TotalMilliseconds <= _wholeParagraphMinMilliseconds)
@@ -1686,10 +1682,10 @@ namespace Nikse.SubtitleEdit.Controls
             if (Directory.Exists(spectrogramDirectory))
             {
                 _spectrogramDirectory = spectrogramDirectory;
-                var bw = new System.ComponentModel.BackgroundWorker();
-                bw.DoWork += LoadSpectrogramBitmapsAsync;
-                bw.RunWorkerCompleted += LoadSpectrogramBitmapsCompleted;
-                bw.RunWorkerAsync();
+                _spectrogramBackgroundWorker = new System.ComponentModel.BackgroundWorker();
+                _spectrogramBackgroundWorker.DoWork += LoadSpectrogramBitmapsAsync;
+                _spectrogramBackgroundWorker.RunWorkerCompleted += LoadSpectrogramBitmapsCompleted;
+                _spectrogramBackgroundWorker.RunWorkerAsync();
             }
         }
 
@@ -1697,6 +1693,8 @@ namespace Nikse.SubtitleEdit.Controls
         {
             LoadSpectrogramInfo(_spectrogramDirectory);
             ShowSpectrogram = _tempShowSpectrogram;
+            if (_spectrogramBackgroundWorker != null)
+                _spectrogramBackgroundWorker.Dispose();
         }
 
         private void LoadSpectrogramBitmapsAsync(object sender, System.ComponentModel.DoWorkEventArgs e)
@@ -1730,10 +1728,10 @@ namespace Nikse.SubtitleEdit.Controls
                 if (File.Exists(xmlInfoFileName))
                 {
                     doc.Load(xmlInfoFileName);
-                    _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-                    _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-                    _nfft = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, System.Globalization.CultureInfo.InvariantCulture);
-                    _imageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, System.Globalization.CultureInfo.InvariantCulture);
+                    _sampleDuration = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SampleDuration").InnerText, CultureInfo.InvariantCulture);
+                    _secondsPerImage = Convert.ToDouble(doc.DocumentElement.SelectSingleNode("SecondsPerImage").InnerText, CultureInfo.InvariantCulture);
+                    _nfft = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("NFFT").InnerText, CultureInfo.InvariantCulture);
+                    _imageWidth = Convert.ToInt32(doc.DocumentElement.SelectSingleNode("ImageWidth").InnerText, CultureInfo.InvariantCulture);
                     ShowSpectrogram = true;
                 }
                 else
@@ -1752,8 +1750,8 @@ namespace Nikse.SubtitleEdit.Controls
             double duration = EndPositionSeconds - StartPositionSeconds;
             int width = (int)(duration / _sampleDuration);
 
-            Bitmap bmpDestination = new Bitmap(width, 128); //calculate width
-            Graphics gfx = Graphics.FromImage(bmpDestination);
+            var bmpDestination = new Bitmap(width, 128); //calculate width
+            var gfx = Graphics.FromImage(bmpDestination);
 
             double startRow = seconds / _secondsPerImage;
             int bitmapIndex = (int)startRow;

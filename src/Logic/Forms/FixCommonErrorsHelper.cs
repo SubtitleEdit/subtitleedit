@@ -8,7 +8,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
     {
         public static string FixEllipsesStartHelper(string text)
         {
-            if (text == null || text.Trim().Length < 4)
+            if (string.IsNullOrEmpty(text) || text.Trim().Length < 4)
                 return text;
             if (!text.Contains(".."))
                 return text;
@@ -22,10 +22,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var tag = "- ...";
             if (text.StartsWith(tag))
             {
-                text = "- " + text.Substring(tag.Length, text.Length - tag.Length);
+                text = "- " + text.Substring(tag.Length);
                 while (text.StartsWith("- .", StringComparison.Ordinal))
                 {
-                    text = "- " + text.Substring(3, text.Length - 3);
+                    text = "- " + text.Substring(3);
                     text = text.Replace("  ", " ");
                 }
             }
@@ -33,35 +33,31 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             tag = "<i>...";
             if (text.StartsWith(tag))
             {
-                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-                while (text.StartsWith("<i> ", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
+                text = "<i>" + text.Substring(tag.Length);
+                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
+                    text = "<i>" + text.Substring(4);
             }
             tag = "<i> ...";
             if (text.StartsWith(tag))
             {
-                text = "<i>" + text.Substring(tag.Length, text.Length - tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-                while (text.StartsWith("<i> ", StringComparison.Ordinal))
+                text = "<i>" + text.Substring(tag.Length);
+                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4, text.Length - 4);
             }
 
             tag = "- <i>...";
             if (text.StartsWith(tag))
             {
-                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                text = "- <i>" + text.Substring(tag.Length);
                 while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                    text = "- <i>" + text.Substring(6, text.Length - 6);
+                    text = "- <i>" + text.Substring(6);
             }
             tag = "- <i> ...";
             if (text.StartsWith(tag))
             {
-                text = "- <i>" + text.Substring(tag.Length, text.Length - tag.Length);
+                text = "- <i>" + text.Substring(tag.Length);
                 while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                    text = "- <i>" + text.Substring(6, text.Length - 6);
+                    text = "- <i>" + text.Substring(6);
             }
 
             // Narrator:... Hello foo!
@@ -78,7 +74,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             tag = "<i>- ...";
             if (text.StartsWith(tag))
             {
-                text = text.Substring(tag.Length, text.Length - tag.Length);
+                text = text.Substring(tag.Length);
                 text = text.TrimStart('.', ' ');
                 text = "<i>- " + text;
             }
@@ -86,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
             var index = text.IndexOf(':');
-            if (index > 0 && text.Length > index + 1 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
+            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
             {
                 var post = text.Substring(0, index + 1);
                 if (post.Length < 2)
@@ -173,10 +169,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
             bool isPrevEndOfLine = prevText.Length > 1 &&
                                    !prevText.EndsWith("...", StringComparison.Ordinal) &&
-                                   (prevText.EndsWith('.') ||
-                                    prevText.EndsWith('!') ||
-                                    prevText.EndsWith('?') ||
-                                    prevText.EndsWith('—') || // em dash, unicode character
+                                   (".!?—".Contains(prevText[prevText.Length - 1]) || // em dash, unicode character
                                     prevText.EndsWith("--", StringComparison.Ordinal));
 
             if (isPrevEndOfLine && prevText.Length > 5 && prevText.EndsWith('.') &&
@@ -271,7 +264,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     var st = new StripableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
                     {
-                        text = st.Pre.TrimEnd().TrimEnd('-').TrimEnd() + st.StrippedText + st.Post;
+                        text = st.Pre.TrimEnd('-', ' ') + st.StrippedText + st.Post;
                     }
                 }
             }

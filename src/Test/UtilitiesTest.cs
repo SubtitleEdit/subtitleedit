@@ -244,5 +244,37 @@ namespace Test
             Assert.AreEqual(s, "- Hi!" + Environment.NewLine + "- ...Careful");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void CountTagInTextStringOneLetterString()
+        {
+            int count = Utilities.CountTagInText("HHH", "H");
+            Assert.AreEqual(count, 3);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void CountTagInTextStringNotThere()
+        {
+            int count = Utilities.CountTagInText("HHH", "B");
+            Assert.AreEqual(count, 0);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void CountTagInTextCharNormal()
+        {
+            int count = Utilities.CountTagInText("HHH", 'H');
+            Assert.AreEqual(count, 3);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void CountTagInTextCharNotThere()
+        {
+            int count = Utilities.CountTagInText("HHH", 'B');
+            Assert.AreEqual(count, 0);
+        }
+
     }
 }

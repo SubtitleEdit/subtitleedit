@@ -78,6 +78,7 @@
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
+            this.linkLabelPreview = new System.Windows.Forms.LinkLabel();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.normalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +91,7 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.panelVlcTemp = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -779,12 +781,26 @@
             this.groupBoxExportImage.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxExportImage.Controls.Add(this.panelVlcTemp);
+            this.groupBoxExportImage.Controls.Add(this.linkLabelPreview);
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
             this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
             this.groupBoxExportImage.Size = new System.Drawing.Size(936, 174);
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
+            // 
+            // linkLabelPreview
+            // 
+            this.linkLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.linkLabelPreview.AutoSize = true;
+            this.linkLabelPreview.Location = new System.Drawing.Point(880, 16);
+            this.linkLabelPreview.Name = "linkLabelPreview";
+            this.linkLabelPreview.Size = new System.Drawing.Size(45, 13);
+            this.linkLabelPreview.TabIndex = 9;
+            this.linkLabelPreview.TabStop = true;
+            this.linkLabelPreview.Text = "Preview";
+            this.linkLabelPreview.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelPreview_LinkClicked);
             // 
             // timerPreview
             // 
@@ -852,6 +868,14 @@
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
             // 
+            // panelVlcTemp
+            // 
+            this.panelVlcTemp.Location = new System.Drawing.Point(644, 19);
+            this.panelVlcTemp.Name = "panelVlcTemp";
+            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
+            this.panelVlcTemp.TabIndex = 10;
+            this.panelVlcTemp.Visible = false;
+            // 
             // ExportPngXml
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -884,6 +908,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownShadowTransparency)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDepth3D)).EndInit();
             this.groupBoxExportImage.ResumeLayout(false);
+            this.groupBoxExportImage.PerformLayout();
             this.contextMenuStripListView.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -952,5 +977,7 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.ColumnHeader columnHeader4;
         private System.Windows.Forms.ColumnHeader columnHeader5;
+        private System.Windows.Forms.LinkLabel linkLabelPreview;
+        private System.Windows.Forms.Panel panelVlcTemp;
     }
 }

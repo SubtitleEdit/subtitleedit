@@ -79,7 +79,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Renumber(1);
         }
 
-        private string GetText(int index, int length, byte[] buffer)
+        private static string GetText(int index, int length, byte[] buffer)
         {
             if (length < 1)
             {
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             return s;
         }
 
-        private int GetFrames(int index, byte[] buffer)
+        private static int GetFrames(int index, byte[] buffer)
         {
             return (buffer[index + 2] << 16) + (buffer[index + 1] << 8) + buffer[index];
         }
