@@ -2195,9 +2195,14 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace("_@_", " ");
 
             if (text.Contains(beginTag))
+            {
                 text = text.Replace("<i/>", endTag);
+            }
             else
+            {
                 text = text.Replace("<i/>", string.Empty);
+                return text;
+            }
 
             text = text.Replace(beginTag + beginTag, beginTag);
             text = text.Replace(endTag + endTag, endTag);
