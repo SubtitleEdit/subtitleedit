@@ -2984,18 +2984,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
 
                 string newText = p.Text;
-                string noTagsText = Utilities.RemoveHtmlTags(newText);
                 foreach (string musicSymbol in musicSymbols)
                 {
                     newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
                     newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                 }
 
                 if (!newText.Equals(oldText))
                 {
-                    if (!noTagsText.Equals(Utilities.RemoveHtmlTags(oldText)))
+                    if (!Utilities.RemoveHtmlTags(newText).Equals(Utilities.RemoveHtmlTags(oldText)))
                     {
                         if (AllowFix(p, fixAction))
                         {
@@ -3088,29 +3085,53 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleGreaterThan;
             int fixCount = 0;
+            string post = string.Empty;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
+                if (!p.Text.Contains(">>", StringComparison.Ordinal))
+                    continue;
 
-                if (p.Text.StartsWith(">> "))
+                var text = p.Text;
+                var oldText = text;
+                if (text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
-                    if (AllowFix(p, fixAction))
+                    post = "<i>";
+                    text = text.Remove(0, 3);
+                }
+                if (text.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
+                {
+                    post += "<b>";
+                    text = text.Remove(0, 3);
+                }
+                // <font color="#004000">
+                if(text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+                {
+                    int endIndex = text.IndexOf("\">", StringComparison.Ordinal);
+                    if(endIndex > 19)
                     {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(3);
-                        fixCount++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        post += text.Substring(0, endIndex + 2);
+                        text = text.Remove(0, endIndex + 2);
                     }
                 }
-                if (p.Text.StartsWith(">>"))
+                text = text.TrimStart();
+                if (text.StartsWith(">> ", StringComparison.Ordinal) && AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(2);
-                        fixCount++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    text = text.Substring(3).TrimStart();
+                    if (!string.IsNullOrEmpty(post))
+                        text = post + text;
+                    p.Text = text;
+                    fixCount++;
+                    AddFixToListView(p, fixAction, oldText, text);
+                }
+                if (text.StartsWith(">>", StringComparison.Ordinal) && AllowFix(p, fixAction))
+                {
+                    text = text.Substring(2).TrimStart();
+                    if (!string.IsNullOrEmpty(post))
+                        text = post + text;
+                    p.Text = text;
+                    fixCount++;
+                    AddFixToListView(p, fixAction, oldText, text);
                 }
             }
             if (fixCount > 0)

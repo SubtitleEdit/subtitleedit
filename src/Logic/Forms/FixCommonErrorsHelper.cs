@@ -196,7 +196,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal) || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                 {
                     var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
@@ -259,12 +259,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             else if (text.StartsWith("<font ", StringComparison.Ordinal))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal) || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                 {
                     var st = new StripableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
                     {
-                        text = st.Pre.TrimEnd('-', ' ') + st.StrippedText + st.Post;
+                        text = st.Pre.TrimEnd('-', ' ', '\r', '\n') + st.StrippedText + st.Post;
                     }
                 }
             }
@@ -302,7 +302,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal) || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                 {
                     var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
