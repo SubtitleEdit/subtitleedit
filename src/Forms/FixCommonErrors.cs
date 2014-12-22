@@ -1499,7 +1499,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!quote.Contains(Environment.NewLine))
                     {
                         string newText = p.Text;
-                        int indexOfFontTag = newText.ToLower().IndexOf("<font ", StringComparison.Ordinal);
+                        int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
                         if (start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
                         {
                             if (indexOfFontTag == -1 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
@@ -1570,7 +1570,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //fix missing spaces in "The<i>Bombshell</i> will gone." to "The <i>Bombshell</i> will gone."
-                index = p.Text.IndexOf("<i>", StringComparison.Ordinal);
+                index = p.Text.IndexOf("<i>", StringComparison.OrdinalIgnoreCase);
                 if (index >= 0 && p.Text.Length > 5)
                 {
                     string newText = p.Text;
@@ -1582,7 +1582,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
                                 newText = newText.Insert(index, " ");
                         }
-                        index = newText.IndexOf("<i>", index + 3, StringComparison.Ordinal);
+                        index = newText.IndexOf("<i>", index + 3, StringComparison.OrdinalIgnoreCase);
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
@@ -1594,8 +1594,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //fix missing spaces in "The <i>Bombshell</i>will gone." to "The <i>Bombshell</i> will gone."
-                index = p.Text.IndexOf("</i>", StringComparison.Ordinal);
-                if (index >= 0 && p.Text.Length > 5)
+                index = p.Text.IndexOf("</i>", StringComparison.OrdinalIgnoreCase);
+                if (index > 3 && p.Text.Length > 5)
                 {
                     string newText = p.Text;
                     while (index != -1)
@@ -1606,7 +1606,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Utilities.AllLettersAndNumbers.Contains(newText[index - 1]))
                                 newText = newText.Insert(index + 4, " ");
                         }
-                        index = newText.IndexOf("</i>", index + 4, StringComparison.Ordinal);
+                        index = newText.IndexOf("</i>", index + 4, StringComparison.OrdinalIgnoreCase);
                     }
                     if (newText != p.Text && AllowFix(p, fixAction))
                     {
