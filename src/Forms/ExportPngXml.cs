@@ -820,55 +820,64 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 {
                     width = 720;
                     height = 480;
+                    return;
                 }
+
                 if (text == "PAL-601")
                 {
                     width = 720;
                     height = 576;
+                    return;
                 }
 
                 if (text == "square")
                 {
                     width = 640;
                     height = 480;
+                    return;
                 }
 
                 if (text == "DVCPROHD-720P")
                 {
                     width = 1280;
                     height = 720;
+                    return;
                 }
 
                 if (text == "HD-(960x720)")
                 {
                     width = 960;
                     height = 720;
+                    return;
                 }
 
                 if (text == "DVCPROHD-1080i60")
                 {
                     width = 1920;
                     height = 1080;
+                    return;
                 }
 
                 if (text == "HD-(1280x1080)")
                 {
                     width = 1280;
                     height = 1080;
+                    return;
                 }
 
                 if (text == "DVCPROHD-1080i50")
                 {
                     width = 1920;
                     height = 1080;
+                    return;
                 }
 
                 if (text == "HD-(1440x1080)")
                 {
                     width = 1440;
                     height = 1080;
+                    return;
                 }
-                return;
             }
 
             if (text.Contains('('))
@@ -2807,7 +2816,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxResolution.Items.Add("DVCPROHD-1080i50");
                 comboBoxResolution.Items.Add("HD-(1440x1080)");
                 comboBoxResolution.SelectedIndex = 3; // 720p
-                buttonCustomResolution.Visible = false;
+                buttonCustomResolution.Visible = true; // we still allow for custom resolutions
             }
 
             comboBoxShadowWidth.SelectedIndex = 0;
