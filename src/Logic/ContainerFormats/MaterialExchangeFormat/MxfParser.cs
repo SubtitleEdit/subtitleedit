@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 {
@@ -10,13 +9,11 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
         public string FileName { get; private set; }
         public bool IsValid { get; private set; }
 
-        internal byte[] Buffer;
-        internal ulong Position;
-        internal string Name;
-        internal UInt64 Size;
+        private long _startPosition;
 
         public MxfParser(string fileName)
         {
+           
             FileName = fileName;
             using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -32,9 +29,29 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 
         private void ParseMxf(Stream stream)
         {
-            Position = 0;
             stream.Seek(0, SeekOrigin.Begin);
             ReadHeaderPartitionPack(stream);
+            if (IsValid)
+            {
+                //TODO: where are the subtitles? (pos 16.544 in Recium_sub.mxf - in "ContentStorage")            
+
+                var length = stream.Length;
+                long next = _startPosition;
+                while (next + 20 < length)
+                {
+                    stream.Seek(next, SeekOrigin.Begin);
+                    var klv = new KlvPacket(stream);
+
+                    Console.WriteLine();
+                    Console.WriteLine("Key: " + klv.DisplayKey);
+                    Console.WriteLine("Type: " + klv.IdentifyerType);
+                    Console.WriteLine("Total size: " + klv.TotalSize);
+                    Console.WriteLine("Data position: " + klv.DataPosition);
+                    Console.WriteLine("Partition status: " + klv.PartionStatus);
+
+                    next += klv.TotalSize;
+                }
+            }
         }
 
         private void ReadHeaderPartitionPack(Stream stream)
@@ -46,7 +63,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             {
                 return;
             }
-            long start = 0;
+            _startPosition = 0;
 
             for (int i = 0; i < count - 11; i++)
             {
@@ -63,21 +80,11 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
                     buffer[i + 09] == 0x01 &&
                     buffer[i + 10] == 0x02)
                 {
-                    start = i;
+                    _startPosition = i;
                     IsValid = true;
                     break;
                 }
             }
-
-            if (!IsValid)
-            {
-                return;
-            }
-
-            stream.Seek(start, SeekOrigin.Begin);
-            var klv = new KlvPacket(stream);
-            MessageBox.Show("Key: " + klv.Key[0] + ", Length: " + klv.Length);
-
         }
 
     }
