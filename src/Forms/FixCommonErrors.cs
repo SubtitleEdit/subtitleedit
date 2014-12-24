@@ -2626,7 +2626,15 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (char.IsLower(s))
                             {
-                                p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString(CultureInfo.InvariantCulture));
+                                // iPhone
+                                bool change = true;
+                                if (s == 'i' && p.Text.Length > j + 1)
+                                {
+                                    if (p.Text[j + 1] == char.ToUpper(p.Text[j + 1]))
+                                        change = false;
+                                }
+                                if(change)
+                                    p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString(CultureInfo.InvariantCulture));
                                 lastWasColon = false;
                             }
                             else if (!(" " + Environment.NewLine).Contains(s))
