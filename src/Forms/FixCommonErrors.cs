@@ -2519,7 +2519,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.Length > 3)
                 {
                     string text = st.StrippedText.Replace("  ", " ");
-                    int start = text.IndexOfAny(new[] { '.', '!', '?' });
+                    int start = text.IndexOfAny(new[] { '.', '!', '?', '¿', '¡' });
                     while (start != -1 && start < text.Length)
                     {
                         if (start > 0 && char.IsDigit(text[start - 1]))
@@ -2557,7 +2557,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         start += 4;
                         if (start < text.Length)
-                            start = text.IndexOfAny(new[] { '.', '!', '?' }, start);
+                            start = text.IndexOfAny(new[] { '.', '!', '?', '¿', '¡' }, start);
                     }
                 }
 
@@ -2659,7 +2659,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsAbbreviation(string text, int index)
         {
-            if (text[index] != '.' && text[index] != '!' && text[index] != '?')
+            if (text[index] != '.' && text[index] != '!' && text[index] != '?' && text[index] != '¿' && text[index] != '¡')
                 return false;
 
             if (index - 3 > 0 && Utilities.AllLettersAndNumbers.Contains(text[index - 1]) && text[index - 2] == '.') // e.g: O.R.
