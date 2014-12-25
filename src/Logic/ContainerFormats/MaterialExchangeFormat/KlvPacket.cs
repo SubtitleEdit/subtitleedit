@@ -27,7 +27,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
         public long TotalSize;
         public long DataPosition;
         public PartitionStatus PartionStatus = PartitionStatus.Unknown;
-     
 
         public KlvPacket(Stream stream)
         {
@@ -114,7 +113,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
                     return KeyIdentifier.DataDefinitionAudio;
                 }
 
-                return KeyIdentifier.Unknown;            
+                return KeyIdentifier.Unknown;
             }
         }
 

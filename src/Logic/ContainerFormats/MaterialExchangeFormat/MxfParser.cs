@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 
         public MxfParser(string fileName)
         {
-           
+
             FileName = fileName;
             using (var fs = new FileStream(FileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
@@ -33,7 +33,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             ReadHeaderPartitionPack(stream);
             if (IsValid)
             {
-                //TODO: where are the subtitles? (pos 16.544 in Recium_sub.mxf - in "ContentStorage")            
+                //TODO: where are the subtitles? (pos 16.544 in Recium_sub.mxf - in "ContentStorage")
 
                 var length = stream.Length;
                 long next = _startPosition;

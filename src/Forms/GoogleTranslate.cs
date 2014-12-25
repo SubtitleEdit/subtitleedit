@@ -561,7 +561,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("LITHUANIAN", "lt"));
             comboBox.Items.Add(new ComboBoxItem("MACEDONIAN", "mk"));
             comboBox.Items.Add(new ComboBoxItem("MALAY", "ms"));
-            comboBox.Items.Add(new ComboBoxItem("MALAYALAM" , "ml"));
+            comboBox.Items.Add(new ComboBoxItem("MALAYALAM", "ml"));
             comboBox.Items.Add(new ComboBoxItem("MALTESE", "mt"));
             comboBox.Items.Add(new ComboBoxItem("MAORI", "mi"));
             comboBox.Items.Add(new ComboBoxItem("MARATHI", "mr"));
