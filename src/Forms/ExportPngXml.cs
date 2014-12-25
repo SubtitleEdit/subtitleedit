@@ -3730,7 +3730,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 }
                             }
 
-                            int x = (bmp.Width - textBmp.Width)/2;
+                            int x = (bmp.Width - textBmp.Width) / 2;
                             if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
                                 x = int.Parse(comboBoxBottomMargin.Text);
                             else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
@@ -3742,7 +3742,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
                                 x = bmp.Width - textBmp.Width - int.Parse(comboBoxBottomMargin.Text);
                             if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
-                                y = (groupBoxExportImage.Height - 4 - textBmp.Height)/2;
+                                y = (groupBoxExportImage.Height - 4 - textBmp.Height) / 2;
                             else if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.TopCenter || alignment == ContentAlignment.TopRight)
                                 y = int.Parse(comboBoxBottomMargin.Text);
 

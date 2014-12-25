@@ -2633,7 +2633,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (p.Text[j + 1] == char.ToUpper(p.Text[j + 1]))
                                         change = false;
                                 }
-                                if(change)
+                                if (change)
                                     p.Text = p.Text.Remove(j, 1).Insert(j, char.ToUpper(s).ToString(CultureInfo.InvariantCulture));
                                 lastWasColon = false;
                             }
@@ -2922,7 +2922,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (iFixes > 0)
             {
                 _totalFixes += iFixes;
-                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes)); 
+                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
             }
         }
 
