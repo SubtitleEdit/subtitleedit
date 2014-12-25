@@ -826,6 +826,42 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjectionsMDash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveInterjections = true;
+            const string text = "I'm sorry. I, mm-hmm—";
+            const string expected = "I'm sorry. I—";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveFirstDashItalics()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenBrackets = true;
+            string text = "<i>- A man who wants to make his mark..." + Environment.NewLine + "- [ Coughing]</i>";
+            const string expected = "<i>A man who wants to make his mark...</i>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextIfUppercaseNotEmdash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = true;
+            string text = "- And you?" + Environment.NewLine + "- I—";
+            string expected = "- And you?" + Environment.NewLine + "- I—";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //

@@ -474,6 +474,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
+            if (oldText.TrimStart().StartsWith("<i>- ") && text != null && !text.Contains(Environment.NewLine) &&
+                (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ") || oldText.Contains(Environment.NewLine + "<i>- ") || oldText.Contains(Environment.NewLine + "<i> - ")))
+            {
+                text = text.Remove(3, 2);
+            }
+
             if (text != null && !text.Contains(Environment.NewLine) &&
                 (oldText.Contains(":") && !text.Contains(":") || oldText.Contains("[") && !text.Contains("[") || oldText.Contains("(") && !text.Contains("(") || oldText.Contains("{") && !text.Contains("{")) &&
                 (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ") || oldText.Contains(Environment.NewLine + "<i>- ") || oldText.Contains(Environment.NewLine + "<i> - ")))
@@ -658,6 +664,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     removeAfter = false;
                                 }
                                 else if (temp.Substring(index - s.Length, 3) == ", .")
+                                {
+                                    temp = temp.Remove(index - s.Length, 2);
+                                    removeAfter = false;
+                                }
+                                else if (index > 0 && temp.Substring(index - s.Length).StartsWith(", -—"))
+                                {
+                                    temp = temp.Remove(index - s.Length, 3);
+                                    removeAfter = false;
+                                }
+                                else if (index > 0 && temp.Substring(index - s.Length).StartsWith(", --"))
                                 {
                                     temp = temp.Remove(index - s.Length, 2);
                                     removeAfter = false;
@@ -927,6 +943,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 string tmp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim();
                 if (lineNoHtml != lineNoHtml.ToLower() && lineNoHtml == lineNoHtml.ToUpper())
                 {
+                    tmp = tmp.Trim(' ', '-', '—');
                     if (tmp == "YES" || tmp == "NO" || tmp == "WHY" || tmp == "HI" || tmp.Length == 1)
                     {
                         sb.AppendLine(line);
