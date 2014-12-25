@@ -770,6 +770,62 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextBetweenQuestionMarks()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBetweenQuestionMarks = true;
+            string text = "? My Paul ?" + Environment.NewLine + "? I give you all ?";
+            string expected = string.Empty;
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjectionsItalicFirstLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveInterjections = true;
+            string text = "<i>- Mm-hmm.</i>" + Environment.NewLine + "- In my spare time.";
+            const string expected = "In my spare time.";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjectionsItalicSecondLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveInterjections = true;
+            string text = "- In my spare time." + Environment.NewLine + "<i>- Mm-hmm.</i>";
+            const string expected = "In my spare time.";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjectionsItalicBothLines()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveInterjections = true;
+            string text = "<i>- In my spare time.</i>" + Environment.NewLine + "<i>- Mm-hmm.</i>";
+            const string expected = "<i>In my spare time.</i>";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //
