@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Linq;
+using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -358,7 +359,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             foreach (string s in parts)
             {
                 var stSub = new StripableText(s, pre, post);
-                if (!StartAndEndsWithHearImpariedTags(stSub.StrippedText))
+                string tempStrippedtext = stSub.StrippedText;
+                if (lineNumber == parts.Length - 1 && st.Post.Contains("?", StringComparison.Ordinal))
+                    tempStrippedtext += "?";
+                else if (stSub.Post.Contains("?", StringComparison.Ordinal))
+                    tempStrippedtext += "?";
+                if (!StartAndEndsWithHearImpariedTags(tempStrippedtext))
                 {
                     if (removedDialogInFirstLine && stSub.Pre.Contains("- "))
                         stSub.Pre = stSub.Pre.Replace("- ", string.Empty);
@@ -745,6 +751,26 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     if (oldText.Contains(Environment.NewLine + "-") && lines[0].StartsWith('-'))
                         lines[0] = lines[0].Remove(0, 1);
                     return lines[0].Trim();
+                }
+                if (Utilities.RemoveHtmlTags(lines[0], false).Trim() == "-")
+                {
+                    if (Utilities.RemoveHtmlTags(lines[1], false).Trim() == "-")
+                        return string.Empty;
+                    if (lines[1].StartsWith('-') && lines[1].Length > 1)
+                        return lines[1].Remove(0, 1).Trim();
+                    if (lines[1].StartsWith("<i>-") && lines[1].Length > 4)
+                        return "<i>" + lines[1].Remove(0, 4).Trim();
+                    return lines[1];
+                }
+                if (Utilities.RemoveHtmlTags(lines[1], false).Trim() == "-")
+                {
+                    if (Utilities.RemoveHtmlTags(lines[0], false).Trim() == "-")
+                        return string.Empty;
+                    if (lines[0].StartsWith('-') && lines[0].Length > 1)
+                        return lines[0].Remove(0, 1).Trim();
+                    if (lines[0].StartsWith("<i>-") && lines[0].Length > 4)
+                        return "<i>" + lines[0].Remove(0, 4).Trim();
+                    return lines[0];
                 }
             }
 
