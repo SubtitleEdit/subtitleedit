@@ -38,9 +38,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.LineBreak)) //TODO: Remove in 3.4
             {
                 labelLineBreak.Visible = false;
-                textBoxLineBreak.Visible = false;
+                comboBoxLineBreak.Visible = false;
             }
-            textBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
+            comboBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
+            comboBoxLineBreak.Width = groupBoxSplitting.Width - comboBoxLineBreak.Left - 5;
 
             if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.OpenTextFiles)) //TODO: Fix in 3.4
             {
@@ -87,6 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             else if (Configuration.Settings.Tools.ImportTextSplitting.Equals("line", StringComparison.OrdinalIgnoreCase))
                 radioButtonLineMode.Checked = true;
             checkBoxMergeShortLines.Checked = Configuration.Settings.Tools.ImportTextMergeShortLines;
+            comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
             FixLargeFonts();
@@ -200,7 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             foreach (ListViewItem item in listViewItemCollection)
             {
-                string line = string.Empty;
+                string line;
                 try
                 {
                     line = File.ReadAllText(item.Text).Trim();
@@ -211,9 +213,16 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 line = line.Replace("|", Environment.NewLine);
-                if (textBoxLineBreak.Text.Length > 0)
+                if (comboBoxLineBreak.Text.Length > 0)
                 {
-                    line = line.Replace(textBoxLineBreak.Text, Environment.NewLine);
+                    foreach (string splitter in comboBoxLineBreak.Text.Split(';'))
+                    {
+                        var tempSplitter = splitter.Trim();
+                        if (tempSplitter.Length > 0)
+                        {
+                            line = line.Replace(tempSplitter, Environment.NewLine);
+                        }
+                    }
                 }
 
                 if (string.IsNullOrWhiteSpace(line))
@@ -276,7 +285,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void MakePseudoStartTime()
         {
-            double millisecondsInterval = (double)numericUpDownGapBetweenLines.Value;
+            var millisecondsInterval = (double)numericUpDownGapBetweenLines.Value;
             double millisecondsIndex = millisecondsInterval;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
@@ -307,13 +316,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ImportLineMode(IEnumerable<string> lines)
         {
-            foreach (string _line in lines)
+            foreach (string loopLine in lines)
             {
                 // Replace user line break character with Environment.NewLine.
-                string line = _line;
-                if (textBoxLineBreak.Text.Length > 0)
+                string line = loopLine;
+                if (comboBoxLineBreak.Text.Length > 0)
                 {
-                    line = _line.Replace(textBoxLineBreak.Text, Environment.NewLine);
+                    foreach (string splitter in comboBoxLineBreak.Text.Split(';'))
+                    {
+                        var tempSplitter = splitter.Trim();
+                        if (tempSplitter.Length > 0)
+                        {
+                            line = line.Replace(tempSplitter, Environment.NewLine);
+                        }
+                    }
                 }
 
                 if (string.IsNullOrWhiteSpace(line))
@@ -349,7 +365,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string text = sb.ToString().Trim();
                         if (checkBoxAutoBreak.Enabled && checkBoxAutoBreak.Checked)
                             text = Utilities.AutoBreakLine(text);
-                        _subtitle.Paragraphs.Add(new Paragraph() { Text = text });
+                        _subtitle.Paragraphs.Add(new Paragraph { Text = text });
                     }
                     sb = new StringBuilder();
                 }
@@ -437,19 +453,19 @@ namespace Nikse.SubtitleEdit.Forms
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[2].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
-                _subtitle.Paragraphs.Add(new Paragraph() { Text = tarr[0] + Environment.NewLine + tarr[1] });
+                _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            else if (checkBoxMergeShortLines.Checked == false && tarr.Length == 2 &&
+            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 2 &&
                 tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength &&
                 tarr[1].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
-                _subtitle.Paragraphs.Add(new Paragraph() { Text = tarr[0] + Environment.NewLine + tarr[1] });
+                _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0] + Environment.NewLine + tarr[1] });
                 return;
             }
-            else if (checkBoxMergeShortLines.Checked == false && tarr.Length == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
+            if (checkBoxMergeShortLines.Checked == false && tarr.Length == 1 && tarr[0].Length < Configuration.Settings.General.SubtitleLineMaximumLength)
             {
-                _subtitle.Paragraphs.Add(new Paragraph() { Text = tarr[0].Trim() });
+                _subtitle.Paragraphs.Add(new Paragraph { Text = tarr[0].Trim() });
                 return;
             }
 
@@ -458,8 +474,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (CanMakeThreeLiner(out threeliner, sb.ToString()))
             {
                 var parts = threeliner.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[0] + Environment.NewLine + parts[1] });
-                _subtitle.Paragraphs.Add(new Paragraph() { Text = parts[2].Trim() });
+                _subtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
+                _subtitle.Paragraphs.Add(new Paragraph { Text = parts[2].Trim() });
                 return;
             }
 
@@ -467,13 +483,11 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (p == null)
                 {
-                    p = new Paragraph();
-                    p.Text = text;
+                    p = new Paragraph { Text = text };
                 }
                 else if (p.Text.Contains(Environment.NewLine))
                 {
                     _subtitle.Paragraphs.Add(p);
-                    p = null;
                     p = new Paragraph();
                     if (text.Length >= Configuration.Settings.General.SubtitleLineMaximumLength)
                         p.Text = Utilities.AutoBreakLine(text);
@@ -598,7 +612,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             GeneratePreview();
             // textBoxLineBreak and its label are enabled if radioButtonLineMode is checked.
-            textBoxLineBreak.Enabled = radioButtonLineMode.Checked;
+            comboBoxLineBreak.Enabled = radioButtonLineMode.Checked;
             labelLineBreak.Enabled = radioButtonLineMode.Checked;
         }
 
@@ -615,7 +629,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxTextDragDrop(object sender, DragEventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var files = (string[])e.Data.GetData(DataFormats.FileDrop);
             if (files.Length == 1)
             {
                 LoadTextFile(files[0]);
@@ -749,12 +763,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Configuration.Settings.Tools.ImportTextSplitting = "auto";
             Configuration.Settings.Tools.ImportTextMergeShortLines = checkBoxMergeShortLines.Checked;
-        }
-
-        private void textBoxLineBreak_TextChanged(object sender, EventArgs e)
-        {
-            GeneratePreview();
-        }
+            Configuration.Settings.Tools.ImportTextLineBreak = comboBoxLineBreak.Text.Trim();
+        }     
 
         private void checkBoxMultipleFiles_CheckedChanged(object sender, EventArgs e)
         {
@@ -784,7 +794,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
         {
-            string[] fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
             foreach (string fileName in fileNames)
             {
                 AddInputFile(fileName);
@@ -810,6 +820,11 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private void checkBoxAutoBreak_CheckedChanged(object sender, EventArgs e)
+        {
+            GeneratePreview();
+        }
+
+        private void comboBoxLineBreak_TextChanged(object sender, EventArgs e)
         {
             GeneratePreview();
         }
