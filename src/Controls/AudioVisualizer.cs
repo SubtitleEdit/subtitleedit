@@ -788,7 +788,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 text = "#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString() + "  " + paragraph.Duration.ToShortString();
                                 actualWidth = TextRenderer.MeasureText(text, font).Width;
                                 if (actualWidth >= w)
-                                    text = paragraph.StartTime.ToShortString() + "  " + paragraph.Duration.ToShortString();
+                                    text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortString();
                                 actualWidth = TextRenderer.MeasureText(text, font).Width;
                                 if (actualWidth >= w)
                                     text = paragraph.Duration.ToShortString();
