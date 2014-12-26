@@ -75,7 +75,7 @@ Email: mailto:moob@live.com.pt</TranslatedBy>
     <Size>Tamanho</Size>
   </General>
   <About>
-    <Title>Sobre o Subtitle Edit</Title>
+    <Title>Acerca do Subtitle Edit</Title>
     <AboutText1>Subtitle Edit é um Software Livre sob a licença pública GNU.
 Pode distribui-lo, modificá-lo e usá-lo livremente.
 
@@ -839,7 +839,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CheckForUpdates>Verificar se há actualizações...</CheckForUpdates>
         <Title>Ajuda</Title>
         <Help>&amp;Ajuda</Help>
-        <About>&amp;Sobre</About>
+        <About>&amp;Acerca</About>
       </Help>
       <ToolBar>
         <New>Novo</New>
@@ -1111,7 +1111,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MatroskaFiles>Ficheiros Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nenhuma legenda encontrada</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ficheiro Matroska (.mkv) inválido: {0}</NotAValidMatroskaFileX>
-    <ParsingMatroskaFile>Analisando ficheiro Matroska (.mkv). Por favor, aguarde...</ParsingMatroskaFile>
+    <ParsingMatroskaFile>A analisar o ficheiro Matroska (.mkv). Por favor, aguarde...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>A analisar o ficheiro Transport Stream. Por favor, aguarde...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Antes de importar legenda do ficheiro Matroska (.mkv)</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Legenda importada do ficheiro Matroska (.mkv)</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ficheiro '{0}' não aceite - ficheiro demasiado grande</DropFileXNotAccepted>
@@ -1471,7 +1472,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <SubtitleFontColor>Cor do tipo de letra</SubtitleFontColor>
     <SubtitleBackgroundColor>Cor de fundo</SubtitleBackgroundColor>
     <SpellChecker>Corrector ortográfico</SpellChecker>
-    <RememberRecentFiles>Lembrar ficheiros recentes (para reabrir)</RememberRecentFiles>
+    <RememberRecentFiles>Mostrar os ficheiros recentes (para reabrir)</RememberRecentFiles>
     <StartWithLastFileLoaded>Iniciar com o último ficheiro carregado</StartWithLastFileLoaded>
     <RememberSelectedLine>Lembrar linha seleccionada</RememberSelectedLine>
     <RememberPositionAndSize>Lembrar tamanho e posição da janela principal</RememberPositionAndSize>
