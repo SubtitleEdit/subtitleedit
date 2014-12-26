@@ -4108,6 +4108,11 @@ namespace Nikse.SubtitleEdit.Forms
                             _findHelper.SelectedPosition += _findHelper.FindTextLength;
                             ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedIndex + 1, _findHelper.FindText));
                             Replace(replaceDialog);
+                            if (replaceDialog != null && !replaceDialog.IsDisposed)
+                            {
+                                replaceDialog.Dispose();
+                                replaceDialog = null;
+                            }
                             return;
                         }
                         if (_replaceStartLineIndex >= 1) // Prompt for start over
@@ -4128,11 +4133,21 @@ namespace Nikse.SubtitleEdit.Forms
                                     _findHelper.SelectedPosition += _findHelper.FindTextLength;
                                     ShowStatus(string.Format(_language.NoXFoundAtLineY, _findHelper.SelectedIndex + 1, _findHelper.FindText));
                                     Replace(replaceDialog);
+                                    if (replaceDialog != null)
+                                    {
+                                        replaceDialog.Dispose();
+                                        replaceDialog = null;
+                                    }
                                     return;
                                 }
                             }
                             else
                             {
+                                if (replaceDialog != null && !replaceDialog.IsDisposed)
+                                {
+                                    replaceDialog.Dispose();
+                                    replaceDialog = null;
+                                }
                                 return;
                             }
                         }
@@ -4210,12 +4225,22 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 else
                                 {
+                                    if (replaceDialog != null && !replaceDialog.IsDisposed)
+                                    {
+                                        replaceDialog.Dispose();
+                                        replaceDialog = null;
+                                    }
                                     return;
                                 }
                             }
 
                         }
                         Replace(replaceDialog);
+                        if (replaceDialog != null && !replaceDialog.IsDisposed)
+                        {
+                            replaceDialog.Dispose();
+                            replaceDialog = null;
+                        }
                         return;
                     }
                 }
