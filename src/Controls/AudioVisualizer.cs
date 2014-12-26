@@ -191,7 +191,9 @@ namespace Nikse.SubtitleEdit.Controls
         public Color BackgroundColor { get; set; }
         public Color Color { get; set; }
         public Color SelectedColor { get; set; }
+        public Color ParagraphColor { get; set; }
         public Color TextColor { get; set; }
+        public float TextSize { get; set; }
         public Color GridColor { get; set; }
         public bool DrawGridLines { get; set; }
         public bool AllowNewSelection { get; set; }
@@ -273,7 +275,9 @@ namespace Nikse.SubtitleEdit.Controls
             BackgroundColor = Color.Black;
             Color = Color.GreenYellow;
             SelectedColor = Color.Red;
+            ParagraphColor = Color.LimeGreen;
             TextColor = Color.Gray;
+            TextSize = 11;
             GridColor = Color.FromArgb(255, 20, 20, 18);
             DrawGridLines = true;
             AllowNewSelection = true;
@@ -288,7 +292,7 @@ namespace Nikse.SubtitleEdit.Controls
             _previousAndNextParagraphs.Clear();
             _currentParagraph = null;
 
-            int positionMilliseconds = (int)Math.Round(currentVideoPositionSeconds * 1000.0);
+            var positionMilliseconds = (int)Math.Round(currentVideoPositionSeconds * 1000.0);
             if (_selectedParagraph != null && _selectedParagraph.StartTime.TotalMilliseconds < positionMilliseconds && _selectedParagraph.EndTime.TotalMilliseconds > positionMilliseconds)
             {
                 _currentParagraph = _selectedParagraph;
@@ -374,7 +378,7 @@ namespace Nikse.SubtitleEdit.Controls
         private static int CalculateHeight(double value, int imageHeight, int maxHeight)
         {
             double percentage = value / maxHeight;
-            int result = (int)Math.Round((percentage * imageHeight) + (imageHeight / 2.0));
+            var result = (int)Math.Round((percentage * imageHeight) + (imageHeight / 2.0));
             return imageHeight - result;
         }
 
@@ -401,7 +405,7 @@ namespace Nikse.SubtitleEdit.Controls
         {
             if (_wavePeaks != null && _wavePeaks.AllSamples != null)
             {
-                List<Paragraph> selectedParagraphs = new List<Paragraph>();
+                var selectedParagraphs = new List<Paragraph>();
                 if (_selectedIndices != null)
                 {
                     var n = _wavePeaks.Header.SampleRate * _zoomFactor;
@@ -424,6 +428,20 @@ namespace Nikse.SubtitleEdit.Controls
                     {
                     }
                 }
+                //var otherParagraphs = new List<Paragraph>();
+                //var nOther = _wavePeaks.Header.SampleRate * _zoomFactor;
+                //try
+                //{
+                //    foreach (Paragraph p in _subtitle.Paragraphs) //int index in _selectedIndices)
+                //    {
+                //        var p2 = new Paragraph(p) { StartFrame = (int)(p.StartTime.TotalSeconds*nOther), EndFrame = (int)(p.EndTime.TotalSeconds*nOther) };
+                //        // not really frames... just using them as position markers for better performance
+                //        otherParagraphs.Add(p2);
+                //    }
+                //}
+                //catch
+                //{
+                //}
 
                 if (StartPositionSeconds < 0)
                     StartPositionSeconds = 0;
@@ -433,7 +451,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 Graphics graphics = e.Graphics;
                 int begin = SecondsToXPosition(StartPositionSeconds);
-                int beginNoZoomFactor = (int)Math.Round(StartPositionSeconds * _wavePeaks.Header.SampleRate); // do not use zoom factor here!
+                var beginNoZoomFactor = (int)Math.Round(StartPositionSeconds * _wavePeaks.Header.SampleRate); // do not use zoom factor here!
 
                 int start = -1;
                 int end = -1;
@@ -443,7 +461,7 @@ namespace Nikse.SubtitleEdit.Controls
                     end = SecondsToXPosition(_selectedParagraph.EndTime.TotalSeconds);
                 }
                 int imageHeight = Height;
-                int maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) + 0.5);
+                var maxHeight = (int)(Math.Max(Math.Abs(_wavePeaks.DataMinValue), Math.Abs(_wavePeaks.DataMaxValue)) + 0.5);
                 maxHeight = (int)(maxHeight * VerticalZoomPercent);
                 if (maxHeight < 0)
                     maxHeight = 1000;
@@ -459,11 +477,13 @@ namespace Nikse.SubtitleEdit.Controls
                         imageHeight -= _nfft / 2;
                 }
 
+                //                using (var penOther = new Pen(ParagraphColor))
                 using (var penNormal = new Pen(Color))
                 using (var penSelected = new Pen(SelectedColor)) // selected paragraph
                 {
                     var pen = penNormal;
                     int lastCurrentEnd = -1;
+                    //                    int lastOtherCurrentEnd = -1;
 
                     if (ShowWaveform)
                     {
@@ -475,6 +495,8 @@ namespace Nikse.SubtitleEdit.Controls
                                 if (n < _wavePeaks.AllSamples.Count)
                                 {
                                     int newY = CalculateHeight(_wavePeaks.AllSamples[n], imageHeight, maxHeight);
+                                    //for (int tempX = x; tempX <= i; tempX++)
+                                    //    graphics.DrawLine(pen, tempX, y, tempX, newY);
                                     graphics.DrawLine(pen, x, y, i, newY);
                                     //graphics.FillRectangle(new SolidBrush(Color), x, y, 1, 1); // draw pixel instead of line
 
@@ -484,6 +506,8 @@ namespace Nikse.SubtitleEdit.Controls
                                         pen = penSelected;
                                     else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
                                         pen = penSelected;
+                                    //else if (IsSelectedIndex(n, ref lastOtherCurrentEnd, otherParagraphs))
+                                    //    pen = penOther;
                                     else
                                         pen = penNormal;
                                 }
@@ -503,11 +527,13 @@ namespace Nikse.SubtitleEdit.Controls
                                     graphics.DrawLine(pen, x2, y, x3, newY);
                                     x2 = x3;
                                     y = newY;
-                                    int n = (int)(begin + x3);
+                                    var n = (int)(begin + x3);
                                     if (n <= end && n >= start)
                                         pen = penSelected;
                                     else if (IsSelectedIndex(n, ref lastCurrentEnd, selectedParagraphs))
                                         pen = penSelected;
+                                    //else if (IsSelectedIndex(n, ref lastOtherCurrentEnd, otherParagraphs))
+                                    //    pen = penOther;
                                     else
                                         pen = penNormal;
                                 }
@@ -652,10 +678,10 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void DrawTimeLine(double startPositionSeconds, PaintEventArgs e, int imageHeight)
         {
-            int start = (int)Math.Round(startPositionSeconds + 0.5);
+            var start = (int)Math.Round(startPositionSeconds + 0.5);
             double seconds = start - StartPositionSeconds;
             float position = SecondsToXPosition(seconds);
-            Pen pen = new Pen(TextColor);
+            var pen = new Pen(TextColor);
             var textBrush = new SolidBrush(TextColor);
             var textFont = new Font(Font.FontFamily, 7);
             while (position < Width)
@@ -700,23 +726,26 @@ namespace Nikse.SubtitleEdit.Controls
             int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds) - begin;
             int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds) - begin;
             int currentRegionWidth = currentRegionRight - currentRegionLeft;
-            using (var brush = new SolidBrush(Color.FromArgb(32, 255, 255, 255)))
+            using (var brush = new SolidBrush(Color.FromArgb(42, 255, 255, 255))) // back color for paragraphs
             {
                 e.Graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, e.Graphics.VisibleClipBounds.Height);
 
-                var pen = new Pen(new SolidBrush(Color.FromArgb(128, 150, 150, 150))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
+                var pen = new Pen(new SolidBrush(Color.FromArgb(175, 0, 100, 0))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Solid, Width = 2 };
                 e.Graphics.DrawLine(pen, currentRegionLeft, 0, currentRegionLeft, e.Graphics.VisibleClipBounds.Height);
                 pen.Dispose();
-                pen = new Pen(new SolidBrush(Color.FromArgb(135, 0, 100, 0))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash };
-                e.Graphics.DrawLine(pen, currentRegionRight, 0, currentRegionRight, e.Graphics.VisibleClipBounds.Height);
+                pen = new Pen(new SolidBrush(Color.FromArgb(175, 110, 10, 10))) { DashStyle = System.Drawing.Drawing2D.DashStyle.Dash, Width = 2 };
+                e.Graphics.DrawLine(pen, currentRegionRight - 1, 0, currentRegionRight - 1, e.Graphics.VisibleClipBounds.Height);
 
                 var n = _zoomFactor * _wavePeaks.Header.SampleRate;
                 if (Configuration.Settings != null && Configuration.Settings.General.UseTimeFormatHHMMSSFF)
                 {
                     if (n > 80)
                     {
-                        e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), Font, textBrush, new PointF(currentRegionLeft + 3, 10));
-                        e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF() + " --> " + paragraph.EndTime.ToShortStringHHMMSSFF(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                        using (var font = new Font(Font.FontFamily, TextSize, FontStyle.Bold))
+                        {
+                            e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), font, textBrush, new PointF(currentRegionLeft + 3, 10));
+                            e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF() + " --> " + paragraph.EndTime.ToShortStringHHMMSSFF(), font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                        }
                     }
                     else if (n > 51)
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
@@ -727,8 +756,47 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (n > 80)
                     {
-                        e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), Font, textBrush, new PointF(currentRegionLeft + 3, 10));
-                        e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString() + " --> " + paragraph.EndTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
+                        using (var font = new Font(Font.FontFamily, TextSize, FontStyle.Bold))
+                        {
+                            using (var blackBrush = new SolidBrush(Color.Black))
+                            {
+                                var text = Utilities.RemoveHtmlTags(paragraph.Text, true);
+                                text = text.Replace(Environment.NewLine, "  ");
+
+                                int w = currentRegionRight - currentRegionLeft;
+                                int actualWidth = TextRenderer.MeasureText(text, font).Width;
+                                bool shortned = false;
+                                while (actualWidth > w - 12 && text.Length > 1)
+                                {
+                                    text = text.Remove(text.Length - 1);
+                                    actualWidth = TextRenderer.MeasureText(text, font).Width;
+                                    shortned = true;
+                                }
+                                if (shortned)
+                                {
+                                    text = text.TrimEnd() + "…";
+                                }
+
+                                // poor mans outline
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 11 - 7));
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, 9 - 7));
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
+
+                                e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
+
+                                text = "#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString() + " --> " + paragraph.EndTime.ToShortString();
+                                int top = Height - 14 - TextRenderer.MeasureText("#", font).Height;
+                                // poor mans outline
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
+                                e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
+
+                                e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
+                            }
+                        }
+
                     }
                     else if (n > 51)
                         e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortString(), Font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
@@ -764,7 +832,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                 Cursor = Cursors.VSplit;
                 double seconds = XPositionToSeconds(e.X);
-                int milliseconds = (int)(seconds * 1000.0);
+                var milliseconds = (int)(seconds * 1000.0);
 
                 if (SetParagrapBorderHit(milliseconds, NewSelectionParagraph))
                 {
@@ -875,7 +943,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (e.Button == MouseButtons.Right)
                 {
                     double seconds = XPositionToSeconds(e.X);
-                    int milliseconds = (int)(seconds * 1000.0);
+                    var milliseconds = (int)(seconds * 1000.0);
 
                     double currentRegionLeft = Math.Min(_mouseMoveStartX, _mouseMoveEndX);
                     double currentRegionRight = Math.Max(_mouseMoveStartX, _mouseMoveEndX);
@@ -1050,14 +1118,14 @@ namespace Nikse.SubtitleEdit.Controls
             if (paragraph == null)
                 return false;
 
-            if (Math.Abs(milliseconds - paragraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection)
+            if (IsParagrapBorderStartHit(milliseconds, paragraph.StartTime.TotalMilliseconds))
             {
                 _oldParagraph = new Paragraph(paragraph);
                 _mouseDownParagraph = paragraph;
                 _mouseDownParagraphType = MouseDownParagraphType.Start;
                 return true;
             }
-            if (Math.Abs(milliseconds - paragraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection)
+            if (IsParagrapBorderEndHit(milliseconds, paragraph.EndTime.TotalMilliseconds))
             {
                 _oldParagraph = new Paragraph(paragraph);
                 _mouseDownParagraph = paragraph;
@@ -1131,7 +1199,7 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Button == MouseButtons.None)
             {
                 double seconds = XPositionToSeconds(e.X);
-                int milliseconds = (int)(seconds * 1000.0);
+                var milliseconds = (int)(seconds * 1000.0);
 
                 if (IsParagrapBorderHit(milliseconds, NewSelectionParagraph))
                     Cursor = Cursors.VSplit;
@@ -1156,7 +1224,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
-                        int milliseconds = (int)(seconds * 1000.0);
+                        var milliseconds = (int)(seconds * 1000.0);
                         var subtitleIndex = _subtitle.GetIndex(_mouseDownParagraph);
                         _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
                         _nextParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex + 1);
@@ -1173,7 +1241,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             if (_firstMove && e.X > oldMouseMoveLastX && _nextParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.End)
                             {
-                                if (Math.Abs(_nextParagraph.StartTime.TotalMilliseconds - _mouseDownParagraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection + 2)
+                                if (IsParagrapBorderStartHit(_mouseDownParagraph.EndTime.TotalMilliseconds, _nextParagraph.StartTime.TotalMilliseconds))
                                 {
                                     _mouseDownParagraph = _nextParagraph;
                                     _mouseDownParagraphType = MouseDownParagraphType.Start;
@@ -1181,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Controls
                             }
                             else if (_firstMove && e.X < oldMouseMoveLastX && _prevParagraph != null && _mouseDownParagraphType == MouseDownParagraphType.Start)
                             {
-                                if (Math.Abs(_prevParagraph.EndTime.TotalMilliseconds - _mouseDownParagraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection + 2)
+                                if (IsParagrapBorderEndHit(_mouseDownParagraph.StartTime.TotalMilliseconds, _prevParagraph.EndTime.TotalMilliseconds))
                                 {
                                     _mouseDownParagraph = _prevParagraph;
                                     _mouseDownParagraphType = MouseDownParagraphType.End;
@@ -1333,8 +1401,18 @@ namespace Nikse.SubtitleEdit.Controls
             if (paragraph == null)
                 return false;
 
-            return Math.Abs(milliseconds - paragraph.StartTime.TotalMilliseconds) <= ClosenessForBorderSelection ||
-                   Math.Abs(milliseconds - paragraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection;
+            return IsParagrapBorderStartHit(milliseconds, paragraph.StartTime.TotalMilliseconds) ||
+                   IsParagrapBorderEndHit(milliseconds, paragraph.EndTime.TotalMilliseconds);
+        }
+
+        private bool IsParagrapBorderStartHit(double milliseconds, double startMs)
+        {
+            return Math.Abs(milliseconds - (startMs - 5)) - 10 <= ClosenessForBorderSelection;
+        }
+
+        private bool IsParagrapBorderEndHit(double milliseconds, double endMs)
+        {
+            return Math.Abs(milliseconds - (endMs - 22)) - 7 <= ClosenessForBorderSelection;
         }
 
         private void WaveformMouseUp(object sender, MouseEventArgs e)
@@ -1406,7 +1484,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (OnPause != null)
                     OnPause.Invoke(sender, null);
                 double seconds = XPositionToSeconds(e.X);
-                int milliseconds = (int)(seconds * 1000.0);
+                var milliseconds = (int)(seconds * 1000.0);
 
                 Paragraph p = null;
                 if (IsParagrapHit(milliseconds, _selectedParagraph))
@@ -1466,7 +1544,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (ModifierKeys == Keys.Shift && _selectedParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
-                        int milliseconds = (int)(seconds * 1000.0);
+                        var milliseconds = (int)(seconds * 1000.0);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
                             if (seconds < _selectedParagraph.EndTime.TotalSeconds)
@@ -1483,7 +1561,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (ModifierKeys == Keys.Control && _selectedParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
-                        int milliseconds = (int)(seconds * 1000.0);
+                        var milliseconds = (int)(seconds * 1000.0);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
                             if (seconds > _selectedParagraph.StartTime.TotalSeconds)
@@ -1512,7 +1590,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (ModifierKeys == Keys.Alt && _selectedParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
-                        int milliseconds = (int)(seconds * 1000.0);
+                        var milliseconds = (int)(seconds * 1000.0);
                         if (_mouseDownParagraphType == MouseDownParagraphType.None || _mouseDownParagraphType == MouseDownParagraphType.Whole)
                         {
                             _oldParagraph = new Paragraph(_selectedParagraph);
@@ -1748,14 +1826,14 @@ namespace Nikse.SubtitleEdit.Controls
         private void DrawSpectrogramBitmap(double seconds, Graphics graphics)
         {
             double duration = EndPositionSeconds - StartPositionSeconds;
-            int width = (int)(duration / _sampleDuration);
+            var width = (int)(duration / _sampleDuration);
 
             var bmpDestination = new Bitmap(width, 128); //calculate width
             var gfx = Graphics.FromImage(bmpDestination);
 
             double startRow = seconds / _secondsPerImage;
-            int bitmapIndex = (int)startRow;
-            int subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
+            var bitmapIndex = (int)startRow;
+            var subtractValue = (int)Math.Round((startRow - bitmapIndex) * _imageWidth);
 
             int i = 0;
             while (i * _imageWidth < width && i + bitmapIndex < _spectrogramBitmaps.Count)
@@ -1807,8 +1885,8 @@ namespace Nikse.SubtitleEdit.Controls
                 average += Math.Abs(_wavePeaks.AllSamples[k]);
             average = average / (_wavePeaks.AllSamples.Count - begin);
 
-            int maxThreshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
-            int silenceThreshold = (int)(average * (mininumVolumePercent / 100.0));
+            var maxThreshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
+            var silenceThreshold = (int)(average * (mininumVolumePercent / 100.0));
 
             int length50Ms = SecondsToXPosition(0.050);
             double secondsPerParagraph = defaultMilliseconds / 1000.0;
