@@ -36,6 +36,7 @@
             this.checkBoxMultipleFiles = new System.Windows.Forms.CheckBox();
             this.textBoxText = new System.Windows.Forms.TextBox();
             this.groupBoxImportOptions = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutoBreak = new System.Windows.Forms.CheckBox();
             this.checkBoxGenerateTimeCodes = new System.Windows.Forms.CheckBox();
             this.groupBoxTimeCodes = new System.Windows.Forms.GroupBox();
             this.labelGapBetweenSubtitles = new System.Windows.Forms.Label();
@@ -49,7 +50,6 @@
             this.checkBoxRemoveLinesWithoutLetters = new System.Windows.Forms.CheckBox();
             this.groupBoxSplitting = new System.Windows.Forms.GroupBox();
             this.labelLineBreak = new System.Windows.Forms.Label();
-            this.textBoxLineBreak = new System.Windows.Forms.TextBox();
             this.radioButtonSplitAtBlankLines = new System.Windows.Forms.RadioButton();
             this.radioButtonAutoSplit = new System.Windows.Forms.RadioButton();
             this.radioButtonLineMode = new System.Windows.Forms.RadioButton();
@@ -58,7 +58,7 @@
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
-            this.checkBoxAutoBreak = new System.Windows.Forms.CheckBox();
+            this.comboBoxLineBreak = new System.Windows.Forms.ComboBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.groupBoxImportText.SuspendLayout();
             this.groupBoxImportOptions.SuspendLayout();
@@ -73,7 +73,7 @@
             // buttonOpenText
             // 
             this.buttonOpenText.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonOpenText.Location = new System.Drawing.Point(368, 19);
+            this.buttonOpenText.Location = new System.Drawing.Point(382, 19);
             this.buttonOpenText.Name = "buttonOpenText";
             this.buttonOpenText.Size = new System.Drawing.Size(143, 21);
             this.buttonOpenText.TabIndex = 0;
@@ -91,7 +91,7 @@
             this.groupBoxImportText.Controls.Add(this.buttonOpenText);
             this.groupBoxImportText.Location = new System.Drawing.Point(12, 12);
             this.groupBoxImportText.Name = "groupBoxImportText";
-            this.groupBoxImportText.Size = new System.Drawing.Size(517, 365);
+            this.groupBoxImportText.Size = new System.Drawing.Size(531, 365);
             this.groupBoxImportText.TabIndex = 0;
             this.groupBoxImportText.TabStop = false;
             this.groupBoxImportText.Text = "Import text";
@@ -109,7 +109,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 48);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(505, 311);
+            this.listViewInputFiles.Size = new System.Drawing.Size(519, 311);
             this.listViewInputFiles.TabIndex = 6;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -130,7 +130,7 @@
             // 
             this.checkBoxMultipleFiles.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBoxMultipleFiles.AutoSize = true;
-            this.checkBoxMultipleFiles.Location = new System.Drawing.Point(164, 22);
+            this.checkBoxMultipleFiles.Location = new System.Drawing.Point(178, 22);
             this.checkBoxMultipleFiles.Name = "checkBoxMultipleFiles";
             this.checkBoxMultipleFiles.Size = new System.Drawing.Size(198, 17);
             this.checkBoxMultipleFiles.TabIndex = 5;
@@ -148,7 +148,7 @@
             this.textBoxText.Multiline = true;
             this.textBoxText.Name = "textBoxText";
             this.textBoxText.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxText.Size = new System.Drawing.Size(505, 297);
+            this.textBoxText.Size = new System.Drawing.Size(519, 297);
             this.textBoxText.TabIndex = 1;
             this.textBoxText.TextChanged += new System.EventHandler(this.TextBoxTextTextChanged);
             this.textBoxText.DragDrop += new System.Windows.Forms.DragEventHandler(this.TextBoxTextDragDrop);
@@ -165,12 +165,23 @@
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveLinesWithoutLetters);
             this.groupBoxImportOptions.Controls.Add(this.groupBoxSplitting);
             this.groupBoxImportOptions.Controls.Add(this.checkBoxRemoveEmptyLines);
-            this.groupBoxImportOptions.Location = new System.Drawing.Point(535, 12);
+            this.groupBoxImportOptions.Location = new System.Drawing.Point(549, 12);
             this.groupBoxImportOptions.Name = "groupBoxImportOptions";
-            this.groupBoxImportOptions.Size = new System.Drawing.Size(341, 365);
+            this.groupBoxImportOptions.Size = new System.Drawing.Size(357, 365);
             this.groupBoxImportOptions.TabIndex = 1;
             this.groupBoxImportOptions.TabStop = false;
             this.groupBoxImportOptions.Text = "Import options";
+            // 
+            // checkBoxAutoBreak
+            // 
+            this.checkBoxAutoBreak.AutoSize = true;
+            this.checkBoxAutoBreak.Location = new System.Drawing.Point(19, 186);
+            this.checkBoxAutoBreak.Name = "checkBoxAutoBreak";
+            this.checkBoxAutoBreak.Size = new System.Drawing.Size(104, 17);
+            this.checkBoxAutoBreak.TabIndex = 7;
+            this.checkBoxAutoBreak.Text = "Auto-break lines";
+            this.checkBoxAutoBreak.UseVisualStyleBackColor = true;
+            this.checkBoxAutoBreak.CheckedChanged += new System.EventHandler(this.checkBoxAutoBreak_CheckedChanged);
             // 
             // checkBoxGenerateTimeCodes
             // 
@@ -191,7 +202,7 @@
             this.groupBoxTimeCodes.Enabled = false;
             this.groupBoxTimeCodes.Location = new System.Drawing.Point(6, 206);
             this.groupBoxTimeCodes.Name = "groupBoxTimeCodes";
-            this.groupBoxTimeCodes.Size = new System.Drawing.Size(329, 126);
+            this.groupBoxTimeCodes.Size = new System.Drawing.Size(340, 126);
             this.groupBoxTimeCodes.TabIndex = 5;
             this.groupBoxTimeCodes.TabStop = false;
             this.groupBoxTimeCodes.Text = "Time codes";
@@ -303,7 +314,7 @@
             // buttonRefresh
             // 
             this.buttonRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.buttonRefresh.Location = new System.Drawing.Point(6, 338);
+            this.buttonRefresh.Location = new System.Drawing.Point(22, 338);
             this.buttonRefresh.Name = "buttonRefresh";
             this.buttonRefresh.Size = new System.Drawing.Size(102, 21);
             this.buttonRefresh.TabIndex = 6;
@@ -326,14 +337,14 @@
             // 
             // groupBoxSplitting
             // 
+            this.groupBoxSplitting.Controls.Add(this.comboBoxLineBreak);
             this.groupBoxSplitting.Controls.Add(this.labelLineBreak);
-            this.groupBoxSplitting.Controls.Add(this.textBoxLineBreak);
             this.groupBoxSplitting.Controls.Add(this.radioButtonSplitAtBlankLines);
             this.groupBoxSplitting.Controls.Add(this.radioButtonAutoSplit);
             this.groupBoxSplitting.Controls.Add(this.radioButtonLineMode);
             this.groupBoxSplitting.Location = new System.Drawing.Point(6, 17);
             this.groupBoxSplitting.Name = "groupBoxSplitting";
-            this.groupBoxSplitting.Size = new System.Drawing.Size(329, 68);
+            this.groupBoxSplitting.Size = new System.Drawing.Size(340, 68);
             this.groupBoxSplitting.TabIndex = 0;
             this.groupBoxSplitting.TabStop = false;
             this.groupBoxSplitting.Text = "Splitting";
@@ -346,16 +357,6 @@
             this.labelLineBreak.Size = new System.Drawing.Size(56, 13);
             this.labelLineBreak.TabIndex = 4;
             this.labelLineBreak.Text = "Line break";
-            // 
-            // textBoxLineBreak
-            // 
-            this.textBoxLineBreak.Enabled = false;
-            this.textBoxLineBreak.Location = new System.Drawing.Point(237, 41);
-            this.textBoxLineBreak.Name = "textBoxLineBreak";
-            this.textBoxLineBreak.Size = new System.Drawing.Size(39, 21);
-            this.textBoxLineBreak.TabIndex = 3;
-            this.textBoxLineBreak.Text = "|";
-            this.textBoxLineBreak.TextChanged += new System.EventHandler(this.textBoxLineBreak_TextChanged);
             // 
             // radioButtonSplitAtBlankLines
             // 
@@ -413,7 +414,7 @@
             this.groupBoxImportResult.Controls.Add(this.SubtitleListview1);
             this.groupBoxImportResult.Location = new System.Drawing.Point(12, 383);
             this.groupBoxImportResult.Name = "groupBoxImportResult";
-            this.groupBoxImportResult.Size = new System.Drawing.Size(864, 245);
+            this.groupBoxImportResult.Size = new System.Drawing.Size(894, 245);
             this.groupBoxImportResult.TabIndex = 2;
             this.groupBoxImportResult.TabStop = false;
             this.groupBoxImportResult.Text = "Preview";
@@ -426,7 +427,7 @@
             // 
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(795, 636);
+            this.buttonCancel.Location = new System.Drawing.Point(825, 636);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 4;
@@ -438,7 +439,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(714, 636);
+            this.buttonOK.Location = new System.Drawing.Point(744, 636);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 3;
@@ -446,16 +447,18 @@
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.ButtonOkClick);
             // 
-            // checkBoxAutoBreak
+            // comboBoxLineBreak
             // 
-            this.checkBoxAutoBreak.AutoSize = true;
-            this.checkBoxAutoBreak.Location = new System.Drawing.Point(19, 186);
-            this.checkBoxAutoBreak.Name = "checkBoxAutoBreak";
-            this.checkBoxAutoBreak.Size = new System.Drawing.Size(104, 17);
-            this.checkBoxAutoBreak.TabIndex = 7;
-            this.checkBoxAutoBreak.Text = "Auto-break lines";
-            this.checkBoxAutoBreak.UseVisualStyleBackColor = true;
-            this.checkBoxAutoBreak.CheckedChanged += new System.EventHandler(this.checkBoxAutoBreak_CheckedChanged);
+            this.comboBoxLineBreak.FormattingEnabled = true;
+            this.comboBoxLineBreak.Items.AddRange(new object[] {
+            "|",
+            "\\N;\\n",
+            "|;\\N;\\n;//;<br>;<br />;<br/>"});
+            this.comboBoxLineBreak.Location = new System.Drawing.Point(218, 41);
+            this.comboBoxLineBreak.Name = "comboBoxLineBreak";
+            this.comboBoxLineBreak.Size = new System.Drawing.Size(116, 21);
+            this.comboBoxLineBreak.TabIndex = 5;
+            this.comboBoxLineBreak.TextChanged += new System.EventHandler(this.comboBoxLineBreak_TextChanged);
             // 
             // SubtitleListview1
             // 
@@ -473,7 +476,10 @@
             this.SubtitleListview1.MultiSelect = false;
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(852, 204);
+            this.SubtitleListview1.Size = new System.Drawing.Size(882, 204);
+            this.SubtitleListview1.SubtitleFontBold = false;
+            this.SubtitleListview1.SubtitleFontName = "Tahoma";
+            this.SubtitleListview1.SubtitleFontSize = 8;
             this.SubtitleListview1.TabIndex = 0;
             this.SubtitleListview1.UseCompatibleStateImageBehavior = false;
             this.SubtitleListview1.UseSyntaxColoring = true;
@@ -483,7 +489,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(888, 673);
+            this.ClientSize = new System.Drawing.Size(918, 673);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.groupBoxImportResult);
@@ -544,11 +550,11 @@
         private System.Windows.Forms.CheckBox checkBoxGenerateTimeCodes;
         private System.Windows.Forms.GroupBox groupBoxTimeCodes;
         private System.Windows.Forms.Label labelLineBreak;
-        private System.Windows.Forms.TextBox textBoxLineBreak;
         private System.Windows.Forms.CheckBox checkBoxMultipleFiles;
         private System.Windows.Forms.ListView listViewInputFiles;
         private System.Windows.Forms.ColumnHeader columnHeaderFName;
         private System.Windows.Forms.ColumnHeader columnHeaderSize;
         private System.Windows.Forms.CheckBox checkBoxAutoBreak;
+        private System.Windows.Forms.ComboBox comboBoxLineBreak;
     }
 }
