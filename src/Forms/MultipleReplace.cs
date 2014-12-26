@@ -304,12 +304,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (listViewReplaceList.Items.Count < 1 || listViewReplaceList.SelectedItems.Count < 1)
                 return;
-            for (int i = listViewReplaceList.Items.Count - 1; i >= 0; i--)
-            {
-                ListViewItem item = listViewReplaceList.Items[i];
-                if (item.Selected)
-                    item.Remove();
-            }
+            foreach (ListViewItem item in listViewReplaceList.SelectedItems)
+                item.Remove();
             GeneratePreview();
             SaveReplaceList(false);
         }
