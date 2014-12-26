@@ -1471,7 +1471,7 @@ can edit in same subtitle file (collaboration)</Information>
     <SubtitleFontColor>Subtitle font color</SubtitleFontColor>
     <SubtitleBackgroundColor>Subtitle background color</SubtitleBackgroundColor>
     <SpellChecker>Spell checker</SpellChecker>
-    <RememberRecentFiles>Remember recent files (for reopen)</RememberRecentFiles>
+    <RememberRecentFiles>Show recent files (for reopen)</RememberRecentFiles>
     <StartWithLastFileLoaded>Start with last file loaded</StartWithLastFileLoaded>
     <RememberSelectedLine>Remember selected line</RememberSelectedLine>
     <RememberPositionAndSize>Remember main window position and size</RememberPositionAndSize>
@@ -1590,6 +1590,7 @@ can edit in same subtitle file (collaboration)</Information>
     <ToggleDockUndockOfVideoControls>Toggle dock/undock of video controls</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Set end, add new and go to new</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Adjust via end position and go to next</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Set end and go to next</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Set start, auto duration and go to next</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Set end, next start and go to next</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Key down=set start, Key up=set end and go to next</AdjustStartDownEndUpAndGoToNext>

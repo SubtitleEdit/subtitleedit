@@ -1758,6 +1758,7 @@
             public string ToggleDockUndockOfVideoControls { get; set; }
             public string CreateSetEndAddNewAndGoToNew { get; set; }
             public string AdjustViaEndAutoStartAndGoToNext { get; set; }
+            public string AdjustSetEndTimeAndGoToNext { get; set; }            
             public string AdjustSetStartAutoDurationAndGoToNext { get; set; }
             public string AdjustSetEndNextStartAndGoToNext { get; set; }
             public string AdjustStartDownEndUpAndGoToNext { get; set; }

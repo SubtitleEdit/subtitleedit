@@ -4370,6 +4370,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/AdjustViaEndAutoStartAndGoToNext":
                     language.Settings.AdjustViaEndAutoStartAndGoToNext = reader.Value;
                     break;
+                case "Settings/AdjustSetEndTimeAndGoToNext":
+                    language.Settings.AdjustSetEndTimeAndGoToNext = reader.Value;
+                    break;
                 case "Settings/AdjustSetStartAutoDurationAndGoToNext":
                     language.Settings.AdjustSetStartAutoDurationAndGoToNext = reader.Value;
                     break;
