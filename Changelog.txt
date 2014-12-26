@@ -2,7 +2,7 @@
 
 3.4.5 (xth December 2014)
 * NEW:
-   * Basic read support for Ayato + Unipac format + unknow format
+   * Basic read support for Ayato + Unipac format + unknown format
    * Preview with background image for image export - thx Christophe
 * IMPROVED:
    * Updated Czech translation - thx Trottel
@@ -19,7 +19,7 @@
    * Bug regarding "Remove dash in beginning of lines" - thx Robert
    * Correct version number in Slovenian translation
    * Fix for missed char after new line in PAC w16 - thx Max
-   * Fixed minor bug in split subtitle - thx kempniu
+   * Fixed some bugs in split subtitle - thx kempniu
    * Fixed mkv/mks support in "Batch convert" - thx Juan
    * Fixed minor bug in Find-next - thx amerzone
    * Fixed minor bug in Replace in source view
