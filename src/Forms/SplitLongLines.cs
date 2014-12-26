@@ -178,6 +178,21 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p.Text.Contains('-'))
                         {
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
+
+                            var tempText = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");
+                            if (Utilities.CountTagInText(tempText, "-") == 2 && (p.Text.StartsWith("-") || p.Text.StartsWith("<i>-")))
+                            {
+                                int idx = tempText.IndexOf(". -", StringComparison.Ordinal);
+                                if (idx < 1)
+                                    idx = tempText.IndexOf("! -", StringComparison.Ordinal);
+                                if (idx < 1)
+                                    idx = tempText.IndexOf("? -", StringComparison.Ordinal);
+                                if (idx > 1)
+                                {
+                                    dialogText = tempText.Remove(idx + 1, 1).Insert(idx + 1, Environment.NewLine);
+                                }
+                            }                        
+
                             string[] arr = dialogText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
                                 isDialog = true;
