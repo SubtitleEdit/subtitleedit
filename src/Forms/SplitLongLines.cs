@@ -191,7 +191,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     dialogText = tempText.Remove(idx + 1, 1).Insert(idx + 1, Environment.NewLine);
                                 }
-                            }                        
+                            }
 
                             string[] arr = dialogText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                             if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))

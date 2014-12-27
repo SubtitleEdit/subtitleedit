@@ -764,7 +764,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.Tools.ImportTextSplitting = "auto";
             Configuration.Settings.Tools.ImportTextMergeShortLines = checkBoxMergeShortLines.Checked;
             Configuration.Settings.Tools.ImportTextLineBreak = comboBoxLineBreak.Text.Trim();
-        }     
+        }
 
         private void checkBoxMultipleFiles_CheckedChanged(object sender, EventArgs e)
         {

@@ -783,7 +783,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, 10 - 7));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, 10 - 7));
                                 e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
-   
+
                                 text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortString();
                                 actualWidth = TextRenderer.MeasureText(text, font).Width;
                                 if (actualWidth >= w)
@@ -794,7 +794,7 @@ namespace Nikse.SubtitleEdit.Controls
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 2, top));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 4, top));
-                                e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));                                    
+                                e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, top));
                             }
                         }
 
