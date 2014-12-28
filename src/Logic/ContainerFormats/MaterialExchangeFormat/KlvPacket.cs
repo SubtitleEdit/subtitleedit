@@ -11,14 +11,15 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
     /// </summary>
     public class KlvPacket
     {
-        public static byte[] PartitionPack = { 0x06, 0x0e, 0x2b, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0D, 0x01, 0x02, 0x01, 0x01, 0x02, 0x00, 0x00 };
+        public static byte[] PartitionPack = { 0x06, 0x0e, 0x2b, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0D, 0x01, 0x02, 0x01, 0x01, 0xff, 0xff, 0x00 }; // 0xff can have different values
         public static byte[] Preface = { 0x06, 0x0E, 0x2B, 0x34, 0x02, 0x53, 0x01, 0x01, 0x0d, 0x01, 0x01, 0x01, 0x01, 0x01, 0x2F, 0x00 };
-        public static byte[] EssenceElement = { 0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0D, 0x01, 0x03, 0x01, 0x00, 0x00, 0x00, 0x00 };
-        public static byte[] OperationalPattern = { 0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x01, 0x0D, 0x01, 0x02, 0x01, 0x00, 0x00, 0x00, 0x00 };
+        public static byte[] EssenceElement = { 0x06, 0x0E, 0x2B, 0x34, 0x01, 0x02, 0x01, 0x01, 0x0D, 0x01, 0x03, 0x01, 0xff, 0xff, 0xff, 0xff };
+        public static byte[] OperationalPattern = { 0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x01, 0x0D, 0x01, 0x02, 0x01, 0x00, 0xff, 0xff, 0x00 };
         public static byte[] PartitionMetadata = { 0x06, 0x0e, 0x2b, 0x34, 0x02, 0x05, 0x01, 0x01, 0x0d, 0x01, 0x02, 0x01, 0x01, 0x04, 0x04, 0x00 };
-        public static byte[] StructuralMetadata = { 0x06, 0x0e, 0x2b, 0x34, 0x02, 0x53, 0x01, 0x01, 0x0d, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00, 0x00 };
-        public static byte[] DataDefinitionVideo = { 0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x01, 0x01, 0x03, 0x02, 0x02, 0x01, 0x00, 0x00, 0x00 };
-        public static byte[] DataDefinitionAudio = { 0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x01, 0x01, 0x03, 0x02, 0x02, 0x02, 0x00, 0x00, 0x00 };
+        public static byte[] StructuralMetadata = { 0x06, 0x0e, 0x2b, 0x34, 0x02, 0x53, 0x01, 0x01, 0x0d, 0x01, 0x01, 0x01, 0x00, 0xff, 0xff, 0x00 };
+        public static byte[] DataDefinitionVideo = { 0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x01, 0x01, 0x03, 0x02, 0x02, 0x01, 0xff, 0xff, 0x00 };
+        public static byte[] DataDefinitionAudio = { 0x06, 0x0E, 0x2B, 0x34, 0x04, 0x01, 0x01, 0x01, 0x01, 0x03, 0x02, 0x02, 0x02, 0xff, 0xff, 0x00 };
+        public static byte[] Primer = { 0x06, 0xe, 0x2b, 0x34, 0x02, 0x05, 0x1, 0xff, 0x0d, 0x01, 0x02, 0x01, 0x01, 0x05, 0x01, 0xff };
 
         private const int KeySize = 16;
 
@@ -76,39 +77,43 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             return first;
         }
 
-        public KeyIdentifier IdentifyerType
+        public KeyIdentifier IdentifierType
         {
             get
             {
-                if (KeyIs(PartitionPack))
+                if (IsKey(PartitionPack))
                 {
                     return KeyIdentifier.PartitionPack;
                 }
-                if (KeyIs(Preface))
+                if (IsKey(Preface))
                 {
                     return KeyIdentifier.Preface;
                 }
-                if (KeyIs(EssenceElement))
+                if (IsKey(EssenceElement))
                 {
                     return KeyIdentifier.EssenceElement;
                 }
-                if (KeyIs(OperationalPattern))
+                if (IsKey(OperationalPattern))
                 {
                     return KeyIdentifier.OperationalPattern;
                 }
-                if (KeyIs(PartitionMetadata))
+                if (IsKey(PartitionMetadata))
                 {
                     return KeyIdentifier.PartitionMetadata;
                 }
-                if (KeyIs(StructuralMetadata))
+                if (IsKey(StructuralMetadata))
                 {
                     return KeyIdentifier.StructuralMetadata;
                 }
-                if (KeyIs(DataDefinitionVideo))
+                if (IsKey(DataDefinitionVideo))
                 {
                     return KeyIdentifier.DataDefinitionVideo;
                 }
-                if (KeyIs(DataDefinitionAudio))
+                if (IsKey(DataDefinitionAudio))
+                {
+                    return KeyIdentifier.DataDefinitionAudio;
+                }
+                if (IsKey(Primer))
                 {
                     return KeyIdentifier.DataDefinitionAudio;
                 }
@@ -117,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             }
         }
 
-        private bool KeyIs(byte[] key)
+        private bool IsKey(byte[] key)
         {
             if (KeySize != key.Length)
             {
@@ -126,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 
             for (int i = 0; i < KeySize; i++)
             {
-                if (Key[i] != key[i] && i != 13 && i != 14)
+                if (Key[i] != key[i] && key[i] != 0xff)
                 {
                     return false;
                 }
