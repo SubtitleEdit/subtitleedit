@@ -3051,12 +3051,6 @@ namespace Nikse.SubtitleEdit.Logic
                     text = text.Replace(" ?", "?");
             }
 
-            while (text.Contains("¿ "))
-                text = text.Replace("¿ ", "¿");
-
-            while (text.Contains("¡ "))
-                text = text.Replace("¡ ", "¡");
-
             if (text.Contains("! </i>" + Environment.NewLine))
                 text = text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
 

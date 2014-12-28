@@ -57,6 +57,8 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly LanguageStructure.General _languageGeneral;
         private bool _hasFixesBeenMade;
 
+        private static readonly Regex FixMissingSpacesReInvertedExclamation = new Regex(@"(?<![\s\d])(¡)(?=[a-zA-Z])", RegexOptions.Compiled);
+        private static readonly Regex FixMissingSpacesReInvertedQuestionMark = new Regex(@"(?<![\s\d])(¿)(?=[a-zA-Z])", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReComma = new Regex(@"[^\s\d],[^\s]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesRePeriod = new Regex(@"[a-z][a-z][.][a-zA-Z]", RegexOptions.Compiled);
         private static readonly Regex FixMissingSpacesReQuestionMark = new Regex(@"[^\s\d]\?[a-zA-Z]", RegexOptions.Compiled);
@@ -1397,6 +1399,46 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                         }
                         match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
+                    }
+                }
+
+                // missing space after "¡"
+                match = FixMissingSpacesReInvertedExclamation.Match(p.Text);
+                if (match.Success)
+                {
+                    while (match.Success)
+                    {
+                        if (!@"""<".Contains(p.Text[match.Index + 1]))
+                        {
+                            if (AllowFix(p, fixAction))
+                            {
+                                missingSpaces++;
+                                string oldText = p.Text;
+                                p.Text = p.Text.Replace(match.Value, "¡ ");
+                                AddFixToListView(p, fixAction, oldText, p.Text);
+                            }
+                        }
+                        match = FixMissingSpacesReInvertedExclamation.Match(p.Text, match.Index + 1);
+                    }
+                }
+
+                // missing space after "¿"
+                match = FixMissingSpacesReInvertedQuestionMark.Match(p.Text);
+                if (match.Success)
+                {
+                    while (match.Success)
+                    {
+                        if (!@"""<".Contains(p.Text[match.Index + 1]))
+                        {
+                            if (AllowFix(p, fixAction))
+                            {
+                                missingSpaces++;
+                                string oldText = p.Text;
+                                p.Text = p.Text.Replace(match.Value, "¿ ");
+                                AddFixToListView(p, fixAction, oldText, p.Text);
+                            }
+                        }
+                        match = FixMissingSpacesReInvertedQuestionMark.Match(p.Text, match.Index + 1);
                     }
                 }
 
