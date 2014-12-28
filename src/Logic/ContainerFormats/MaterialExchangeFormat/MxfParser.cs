@@ -1,13 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 {
     public class MxfParser
     {
-
         public string FileName { get; private set; }
         public bool IsValid { get; private set; }
+
+        private readonly List<string> _subtitleList = new List<string>();
+        public List<string> GetSubtitles()
+        {
+            return _subtitleList;
+        }
 
         private long _startPosition;
 
@@ -33,8 +39,6 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
             ReadHeaderPartitionPack(stream);
             if (IsValid)
             {
-                //TODO: where are the subtitles? (pos 16.544 in Recium_sub.mxf - in "ContentStorage")
-
                 var length = stream.Length;
                 long next = _startPosition;
                 while (next + 20 < length)
@@ -42,16 +46,50 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
                     stream.Seek(next, SeekOrigin.Begin);
                     var klv = new KlvPacket(stream);
 
-                    Console.WriteLine();
-                    Console.WriteLine("Key: " + klv.DisplayKey);
-                    Console.WriteLine("Type: " + klv.IdentifyerType);
-                    Console.WriteLine("Total size: " + klv.TotalSize);
-                    Console.WriteLine("Data position: " + klv.DataPosition);
-                    Console.WriteLine("Partition status: " + klv.PartionStatus);
+                    //Console.WriteLine();
+                    //Console.WriteLine("Key: " + klv.DisplayKey);
+                    //Console.WriteLine("Type: " + klv.IdentifyerType);
+                    //Console.WriteLine("Total size: " + klv.TotalSize);
+                    //Console.WriteLine("Data position: " + klv.DataPosition);
+                    //if (klv.IdentifyerType == KeyIdentifier.PartitionPack)
+                    //    Console.WriteLine("Partition status: " + klv.PartionStatus);
 
                     next += klv.TotalSize;
+
+                    if (klv.IdentifierType == KeyIdentifier.EssenceElement && 
+                        klv.DataSize < 500000)
+                    {
+                        stream.Seek(klv.DataPosition, SeekOrigin.Begin);
+                        var buffer = new byte[klv.DataSize];
+                        stream.Read(buffer, 0, buffer.Length);
+                        string s = System.Text.Encoding.UTF8.GetString(buffer);
+                        if (IsSubtitle(s))
+                        {
+                            _subtitleList.Add(s);
+                        }
+                    }
                 }
             }
+        }
+
+        private bool IsSubtitle(string s)
+        {
+            if (s.Contains("\0"))
+            {
+                return false;
+            }
+            if (!s.Contains("xml") && !s.Contains(" --> ") && !s.Contains("00:00"))
+            {
+                return false;
+            }
+
+            var list = new List<string>();
+            foreach (string line in s.Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'))
+            {
+                list.Add(line);
+            }
+            var subtitle = new Subtitle();
+            return subtitle.ReloadLoadSubtitle(list, null) != null;
         }
 
         private void ReadHeaderPartitionPack(Stream stream)

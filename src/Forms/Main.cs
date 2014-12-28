@@ -1752,6 +1752,41 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                if (ext == ".mxf")
+                {
+                    if (FileUtil.IsMaterialExchangeFormat(fileName))
+                    {
+                        var parser = new MxfParser(fileName);
+                        if (parser.IsValid)
+                        {
+                            var subtitles = parser.GetSubtitles();
+                            if (subtitles.Count > 0)
+                            {
+                                SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                                encoding = GetCurrentEncoding();
+                                var list = new List<string>();
+                                foreach (string line in subtitles[0].Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'))
+                                {
+                                    list.Add(line);
+                                }
+                                _subtitle = new Subtitle();
+                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
+                                SetCurrentFormat(mxfFormat);
+                                _fileName = Path.GetFileNameWithoutExtension(fileName);
+                                SetTitle();
+                                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                                _sourceViewChange = false;
+                                _changeSubtitleToString = SerializeSubtitle(_subtitle);
+                                ResetHistory();
+                                SetUndockedWindowsTitle();
+                                _converted = true;
+                                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
+                                return;
+                            }
+                        }
+                    }
+                }
+
                 if (fi.Length > 1024 * 1024 * 10) // max 10 mb
                 {
 
@@ -2082,18 +2117,6 @@ namespace Nikse.SubtitleEdit.Forms
                         encoding = GetCurrentEncoding();
                         justConverted = true;
                         format = GetCurrentSubtitleFormat();
-                    }
-                }
-
-                if (format == null && ext == ".mxf")
-                {
-                    if (FileUtil.IsMaterialExchangeFormat(fileName))
-                    {
-                        var parser = new MxfParser(fileName);
-                        if (parser.IsValid)
-                        {
-                            MessageBox.Show("This is a valid MxfFile...");
-                        }
                     }
                 }
 

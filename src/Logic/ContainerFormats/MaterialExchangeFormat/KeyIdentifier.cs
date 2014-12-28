@@ -10,6 +10,7 @@
         PartitionMetadata,
         StructuralMetadata,
         DataDefinitionVideo,
-        DataDefinitionAudio
+        DataDefinitionAudio,
+        Primer
     }
 }
