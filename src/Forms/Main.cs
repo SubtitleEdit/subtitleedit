@@ -14702,10 +14702,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             // find index where to insert
             int index = 0;
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
             {
-                if (p.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds)
-                    break;
+                Paragraph p = _subtitle.Paragraphs[i];
+                if (p.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds &&
+                    (!p.StartTime.IsMaxTime || !HasSmallerStartTimes(_subtitle, i + 1, newParagraph.StartTime.TotalMilliseconds)))
+                {
+                        break;
+                }                
                 index++;
             }
 
@@ -14744,6 +14748,17 @@ namespace Nikse.SubtitleEdit.Forms
 
             ShowStatus(string.Format(_language.VideoControls.NewTextInsertAtX, newParagraph.StartTime.ToShortString()));
             audioVisualizer.Invalidate();
+        }
+
+        private static bool HasSmallerStartTimes(Subtitle subtitle, int startIndex, double startMs)
+        {
+            for (int i = startIndex; i < subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = subtitle.Paragraphs[i];
+                if (startMs > p.StartTime.TotalMilliseconds && !p.StartTime.IsMaxTime)
+                    return true;
+            }
+            return false;
         }
 
         private void addParagraphAndPasteToolStripMenuItem_Click(object sender, EventArgs e)
