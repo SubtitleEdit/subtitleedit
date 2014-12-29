@@ -13843,7 +13843,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
                             ShowSource();
                     }
-                    SubtitleListview1.SetStartTime(index + 1, _subtitle.Paragraphs[index + 1]);
+                    if (!_subtitle.Paragraphs[index + 1].StartTime.IsMaxTime)
+                        SubtitleListview1.SetStartTime(index + 1, _subtitle.Paragraphs[index + 1]);
                     SubtitleListview1.SelectIndexAndEnsureVisible(index + 1, true);
                 }
                 _makeHistoryPaused = false;
