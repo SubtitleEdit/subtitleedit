@@ -666,7 +666,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformSelectedColor = Color.Red;
             WaveformBackgroundColor = Color.Black;
             WaveformTextColor = Color.Gray;
-            WaveformTextSize = 10;
+            WaveformTextSize = 9;
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
             WaveformDoubleClickOnNonParagraphAction = string.Empty;
             WaveformMouseWheelScrollUpIsForward = true;
