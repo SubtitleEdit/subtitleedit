@@ -368,7 +368,12 @@ namespace Nikse.SubtitleEdit.Controls
         {
             StartPositionSeconds = startPositionSeconds;
             _selectedIndices = selectedIndexes;
-            _subtitle = subtitle;
+            _subtitle = new Subtitle();
+            foreach (var p in subtitle.Paragraphs)
+            {
+                if (!p.StartTime.IsMaxTime)
+                    _subtitle.Paragraphs.Add(p);
+            }
             _currentVideoPositionSeconds = currentVideoPositionSeconds;
             _selectedParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex);
             NearestSubtitles(subtitle, currentVideoPositionSeconds, subtitleIndex);
