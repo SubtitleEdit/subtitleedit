@@ -2595,6 +2595,7 @@ namespace Nikse.SubtitleEdit.Forms
                     mediaPlayer.VideoPlayer = null;
                     timer1.Stop();
                 }
+                ResetShowEarlierOrLater();
             }
             else
             {
@@ -3225,6 +3226,23 @@ namespace Nikse.SubtitleEdit.Forms
             SetUndockedWindowsTitle();
             mediaPlayer.SubtitleText = string.Empty;
             ShowStatus(_language.New);
+
+            ResetShowEarlierOrLater();
+        }
+
+        private void ResetShowEarlierOrLater()
+        {
+            try
+            {
+                if (_showEarlierOrLater != null && !_showEarlierOrLater.IsDisposed)
+                {
+                    _showEarlierOrLater.ResetTotalAdjustment();
+                }
+            }
+            catch
+            {
+                // form closing or alike
+            }
         }
 
         private void FileNew()
