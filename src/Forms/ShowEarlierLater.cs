@@ -10,13 +10,13 @@ namespace Nikse.SubtitleEdit.Forms
     {
         public delegate void AdjustEventHandler(double adjustMilliseconds, SelectionChoice selection);
 
-        private TimeSpan _totalAdjustment = TimeSpan.FromMilliseconds(0);
+        private TimeSpan _totalAdjustment;
         private AdjustEventHandler _adjustCallback;
 
         public ShowEarlierLater()
         {
             InitializeComponent();
-            labelTotalAdjustment.Text = string.Empty;
+            ResetTotalAdjustment();
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
 
             Text = Configuration.Settings.Language.ShowEarlierLater.Title;
@@ -27,6 +27,12 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonSelectedLinesOnly.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesOnly;
             radioButtonSelectedLineAndForward.Text = Configuration.Settings.Language.ShowEarlierLater.SelectedLinesAndForward;
             FixLargeFonts();
+        }
+
+        public void ResetTotalAdjustment()
+        {
+            _totalAdjustment = TimeSpan.FromMilliseconds(0);
+            labelTotalAdjustment.Text = string.Empty;
         }
 
         private void FixLargeFonts()
