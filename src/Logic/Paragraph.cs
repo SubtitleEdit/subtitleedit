@@ -99,6 +99,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal void Adjust(double factor, double adjust)
         {
+            if (StartTime.IsMaxTime)
+                return;
+                    
             double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjust;
             StartTime.TimeSpan = TimeSpan.FromSeconds(seconds);
 
