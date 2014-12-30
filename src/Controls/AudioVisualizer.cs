@@ -769,12 +769,12 @@ namespace Nikse.SubtitleEdit.Controls
                                 text = text.Replace(Environment.NewLine, "  ");
 
                                 int w = currentRegionRight - currentRegionLeft;
-                                int actualWidth = TextRenderer.MeasureText(text, font).Width;
+                                int actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
                                 bool shortned = false;
                                 while (actualWidth > w - 12 && text.Length > 1)
                                 {
                                     text = text.Remove(text.Length - 1);
-                                    actualWidth = TextRenderer.MeasureText(text, font).Width;
+                                    actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
                                     shortned = true;
                                 }
                                 if (shortned)
@@ -790,10 +790,10 @@ namespace Nikse.SubtitleEdit.Controls
                                 e.Graphics.DrawString(text, font, textBrush, new PointF(currentRegionLeft + 3, 10 - 7));
 
                                 text = "#" + paragraph.Number + "  " + paragraph.Duration.ToShortString();
-                                actualWidth = TextRenderer.MeasureText(text, font).Width;
+                                actualWidth = (int)e.Graphics.MeasureString(text, font).Width;
                                 if (actualWidth >= w)
                                     text = paragraph.Duration.ToShortString();
-                                int top = Height - 14 - TextRenderer.MeasureText("#", font).Height;
+                                int top = Height - 14 - (int)e.Graphics.MeasureString("#", font).Height;
                                 // poor mans outline
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top + 1));
                                 e.Graphics.DrawString(text, font, blackBrush, new PointF(currentRegionLeft + 3, top - 1));
