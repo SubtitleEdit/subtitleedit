@@ -862,6 +862,17 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextDontCrashOnEmptyString()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = true;
+            string text = string.Empty;
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(text, actual);
+        }
+
         #region Additional test attributes
 
         //

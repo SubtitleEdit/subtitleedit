@@ -473,7 +473,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = text.TrimStart().TrimStart('-').TrimStart();
             }
 
-            if (oldText.TrimStart().StartsWith("<i>- ") && text != null && !text.Contains(Environment.NewLine) &&
+            if (oldText.TrimStart().StartsWith("<i>- ") && text != null && text.StartsWith("<i>- ") && !text.Contains(Environment.NewLine) &&
                 (oldText.Contains(Environment.NewLine + "- ") || oldText.Contains(Environment.NewLine + " - ") || oldText.Contains(Environment.NewLine + "<i>- ") || oldText.Contains(Environment.NewLine + "<i> - ")))
             {
                 text = text.Remove(3, 2);
