@@ -464,7 +464,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 }
             }
 
-            if (!string.IsNullOrEmpty(text))
+            if (!string.IsNullOrEmpty(text) || (st.Pre.Contains("♪") || st.Post.Contains("♪")))
                 text = st.Pre + text + st.Post;
 
             if (oldText.TrimStart().StartsWith("- ") && text != null && !text.Contains(Environment.NewLine) &&
