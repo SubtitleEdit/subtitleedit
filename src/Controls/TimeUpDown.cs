@@ -138,25 +138,14 @@ namespace Nikse.SubtitleEdit.Controls
                     if (startTime.EndsWith(CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator))
                         startTime += "000";
 
-                    string[] times = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
-
-                    if (times.Length == 4)
+                    var tokens = startTime.Split(new[] { ':', ',', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (tokens.Length == 4)
                     {
-                        int hours;
-                        int.TryParse(times[0], out hours);
-
-                        int minutes;
-                        int.TryParse(times[1], out minutes);
-
-                        int seconds;
-                        int.TryParse(times[2], out seconds);
-
-                        int milliSeconds;
-                        int.TryParse(times[3].PadRight(3, '0'), out milliSeconds);
-
-                        var tc = new TimeCode(hours, minutes, seconds, milliSeconds);
-                        if (hours < 0 && tc.TotalMilliseconds > 0)
+                        var tc = TimeCode.FromTimestampTokens(tokens[0], tokens[1], tokens[2], tokens[3].PadRight(3, '0'));
+                        if (tokens[0].StartsWith('-'))
+                        {
                             tc.TotalMilliseconds *= -1;
+                        }
                         return tc;
                     }
                 }

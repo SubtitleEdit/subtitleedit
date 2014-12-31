@@ -286,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoInfo.Text = string.Empty;
                 labelSingleLine.Text = string.Empty;
                 Text = Title;
-                timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownStartTime.TimeCode = new TimeCode();
                 checkBoxAutoRepeatOn.Checked = Configuration.Settings.General.AutoRepeatOn;
                 comboBoxAutoRepeat.SelectedIndex = Configuration.Settings.General.AutoRepeatCount;
                 checkBoxAutoContinue.Checked = Configuration.Settings.General.AutoContinueOn;
@@ -428,8 +428,8 @@ namespace Nikse.SubtitleEdit.Forms
                 mediaPlayer.SubtitleText = string.Empty;
                 //                comboBoxAutoRepeat.SelectedIndex = 2;
                 comboBoxAutoContinue.SelectedIndex = 2;
-                timeUpDownVideoPosition.TimeCode = new TimeCode(0, 0, 0, 0);
-                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode(0, 0, 0, 0);
+                timeUpDownVideoPosition.TimeCode = new TimeCode();
+                timeUpDownVideoPositionAdjust.TimeCode = new TimeCode();
                 timeUpDownVideoPosition.TimeCodeChanged += VideoPositionChanged;
                 timeUpDownVideoPositionAdjust.TimeCodeChanged += VideoPositionChanged;
                 timeUpDownVideoPosition.Enabled = false;

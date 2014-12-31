@@ -205,8 +205,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     return TimeCode.FromSeconds(float.Parse(arr[0]));
                 }
             }
-            return new TimeCode(0, 0, 0, 0);
+            return new TimeCode();
         }
-
     }
 }

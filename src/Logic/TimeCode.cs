@@ -125,6 +125,11 @@ namespace Nikse.SubtitleEdit.Logic
             _totalMilliseconds = timeSpan.TotalMilliseconds;
         }
 
+        public TimeCode(DateTime dateTime)
+            : this(dateTime.Hour, dateTime.Minute, dateTime.Second, dateTime.Millisecond)
+        {
+        }
+
         public TimeCode(double totalMilliseconds)
         {
             _totalMilliseconds = totalMilliseconds;
@@ -133,6 +138,11 @@ namespace Nikse.SubtitleEdit.Logic
         public TimeCode(int hour, int minute, int seconds, int milliseconds)
         {
             _totalMilliseconds = hour * 60 * 60 * 1000 + minute * 60 * 1000 + seconds * 1000 + milliseconds;
+        }
+
+        public TimeCode()
+            : this(0)
+        {
         }
 
         public int Hours

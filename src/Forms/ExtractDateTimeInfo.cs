@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
             InitializeComponent();
             comboBoxDateTimeFormats.SelectedIndex = 0;
             labelVideoFileName.Text = string.Empty;
-            timeUpDownStartTime.TimeCode = new TimeCode(0, 0, 0, 0);
+            timeUpDownStartTime.TimeCode = new TimeCode();
             timeUpDownDuration.TimeCode = new TimeCode(1, 0, 0, 0);
             comboBoxDateTimeFormats.Items.Clear();
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
@@ -68,29 +68,29 @@ namespace Nikse.SubtitleEdit.Forms
                 labelVideoFileName.Text = VideoFileName;
 
                 DateTime start;
-                double durationInSeconds;
+                double duration;
                 string ext = Path.GetExtension(VideoFileName).ToLower();
                 if (ext == ".mp4" || ext == ".m4v" || ext == ".3gp")
                 {
                     Logic.Mp4.MP4Parser mp4Parser = new Logic.Mp4.MP4Parser(VideoFileName);
                     start = mp4Parser.CreationDate;
-                    durationInSeconds = mp4Parser.Duration.TotalSeconds;
+                    duration = mp4Parser.Duration.TotalMilliseconds;
                 }
                 else
                 {
                     var fi = new FileInfo(VideoFileName);
                     start = fi.CreationTime;
                     VideoInfo vi = Utilities.GetVideoInfo(VideoFileName);
-                    durationInSeconds = vi.TotalMilliseconds / 1000.0;
-                    if (durationInSeconds < 1)
+                    duration = vi.TotalMilliseconds;
+                    if (duration < 1)
                     {
                         MessageBox.Show("Unable to get duration");
-                        durationInSeconds = 60 * 60;
+                        duration = 3600000; // 1 hour
                     }
                 }
                 dateTimePicker1.Value = start;
-                timeUpDownStartTime.TimeCode = new TimeCode(start.Hour, start.Minute, start.Second, start.Millisecond);
-                timeUpDownDuration.TimeCode = TimeCode.FromSeconds(durationInSeconds);
+                timeUpDownStartTime.TimeCode = new TimeCode(start);
+                timeUpDownDuration.TimeCode = new TimeCode(duration);
             }
         }
 

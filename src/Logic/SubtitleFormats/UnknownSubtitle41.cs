@@ -122,7 +122,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Configuration.Settings.General.CurrentFrameRate = 24.0;
             string frames16 = parts[0];
             string frames = parts[1];
-            return new TimeCode(0, 0, 0, FramesToMilliseconds(16 * int.Parse(frames16) + int.Parse(frames)));
+            return new TimeCode(FramesToMilliseconds(16 * int.Parse(frames16) + int.Parse(frames)));
         }
 
     }

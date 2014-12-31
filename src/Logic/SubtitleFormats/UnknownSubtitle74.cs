@@ -76,20 +76,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (line.Length == 8 && line[2] == ':' && RegexTimeCodes.IsMatch(line) && !RegexTimeCodes.IsMatch(next))
                 {
                     paragraph = new Paragraph();
-                    if (TryReadTimeCodesLine(line, paragraph))
+                    var timeTokens = line.Split(':');
+                    paragraph.StartTime = TimeCode.FromTimestampTokens(timeTokens[0], timeTokens[1], timeTokens[2], null);
+                    paragraph.Text = next;
+                    if (!string.IsNullOrWhiteSpace(paragraph.Text))
                     {
-                        paragraph.Text = next;
-                        if (!string.IsNullOrWhiteSpace(paragraph.Text))
-                        {
-                            subtitle.Paragraphs.Add(paragraph);
-                            i++;
-                        }
-                        else
-                        {
-                            _errorCount++;
-                        }
+                        subtitle.Paragraphs.Add(paragraph);
+                        i++;
                     }
-                    else if (!string.IsNullOrWhiteSpace(line))
+                    else
                     {
                         _errorCount++;
                     }
@@ -125,23 +120,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             subtitle.Renumber(1);
-        }
-
-        private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
-        {
-            string[] parts = line.Split(':');
-            try
-            {
-                int startHours = int.Parse(parts[0]);
-                int startMinutes = int.Parse(parts[1]);
-                int startSeconds = int.Parse(parts[2]);
-                paragraph.StartTime = new TimeCode(startHours, startMinutes, startSeconds, 0);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }
