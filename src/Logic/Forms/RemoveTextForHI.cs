@@ -625,7 +625,22 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         {
                             int index = match.Index;
                             string temp = text.Remove(index, s.Length);
-
+                            if (index == 2 && temp.StartsWith("-  —"))
+                            {
+                                temp = temp.Remove(2, 2);
+                            }
+                            else if (index == 2 && temp.StartsWith("- —"))
+                            {
+                                temp = temp.Remove(2, 1);
+                            }
+                            else if (index == 0 && temp.StartsWith(" —"))
+                            {
+                                temp = temp.Remove(0, 2);
+                            }
+                            else if (index == 0 && temp.StartsWith("—"))
+                            {
+                                temp = temp.Remove(0, 1);
+                            }
                             string pre = string.Empty;
                             if (index > 0)
                                 doRepeat = true;
