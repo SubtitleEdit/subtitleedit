@@ -873,6 +873,21 @@ namespace Test
             Assert.AreEqual(text, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextKeepMusicSymbolsButRemoveHI()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveIfTextContains = null;
+            const string text = "<i>♪♪[Ambient Electronic]</i>";
+            const string expected = "<i>♪♪</i>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+        
+
         #region Additional test attributes
 
         //
