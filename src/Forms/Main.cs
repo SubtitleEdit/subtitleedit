@@ -1781,8 +1781,17 @@ namespace Nikse.SubtitleEdit.Forms
                                 SetUndockedWindowsTitle();
                                 _converted = true;
                                 ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
+
+                                ShowSource();
+                                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                                _subtitleListViewIndex = -1;
+                                SubtitleListview1.FirstVisibleIndex = -1;
+                                SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
                                 return;
                             }
+                            MessageBox.Show("No subtitles found!");
+                            return;
                         }
                     }
                 }
