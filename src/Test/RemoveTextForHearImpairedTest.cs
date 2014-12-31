@@ -875,7 +875,7 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
-        public void RemoveTextKeepMusicSymbolsButRemoveHI()
+        public void RemoveTextKeepMusicSymbolsButRemoveHi()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
             target.Settings.RemoveTextBetweenCustomTags = false;
@@ -886,7 +886,47 @@ namespace Test
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
-        
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextRemoveEmdash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBetweenBrackets = true;
+            target.Settings.RemoveIfTextContains = null;
+            target.Settings.RemoveInterjections = true;
+            const string text = "Oh — Oh, that's nice!";
+            const string expected = "That's nice!";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }                
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextIfUppercaseEmdashRemoveInDialogue()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "- Uh—uh, my God!" + Environment.NewLine + "- Uh, my God.";
+            string expected = "- My God!" + Environment.NewLine + "- My God.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextIfUppercaseEmdashRemoveInDialogueWithSpaces()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "- Uh — uh, my God!" + Environment.NewLine + "- Uh, my God.";
+            string expected = "- My God!" + Environment.NewLine + "- My God.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
 
         #region Additional test attributes
 
