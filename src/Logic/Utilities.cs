@@ -1697,6 +1697,7 @@ namespace Nikse.SubtitleEdit.Logic
             AddExtension(sb, ".uld"); // Ultech drop frame
             AddExtension(sb, new SonicScenaristBitmaps().Extension);
             AddExtension(sb, ".mks");
+            AddExtension(sb, ".mxf");
             AddExtension(sb, ".sup");
             AddExtension(sb, ".dost");
             AddExtension(sb, new Ayato().Extension);
