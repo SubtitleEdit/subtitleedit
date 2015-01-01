@@ -18,6 +18,8 @@ namespace Nikse.SubtitleEdit.Forms
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
         private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
+        public List<int> DeleteIndices = new List<int>();
+
 
         public MultipleReplace()
         {
@@ -145,6 +147,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             FixCount = 0;
+            DeleteIndices = new List<int>();
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 bool hit = false;
@@ -205,12 +208,18 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     FixCount++;
                     AddToPreviewListView(p, newText);
-                    FixedSubtitle.Paragraphs[_subtitle.GetIndex(p)].Text = newText;
+                    int index = _subtitle.GetIndex(p);
+                    FixedSubtitle.Paragraphs[index].Text = newText;
+                    if (!string.IsNullOrWhiteSpace(p.Text) && string.IsNullOrWhiteSpace(newText))
+                    {
+                        DeleteIndices.Add(index);
+                    }
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.MultipleReplace.LinesFoundX, FixCount);
             Cursor = Cursors.Default;
+            DeleteIndices.Reverse();
         }
 
         private void AddToReplaceListView(bool enabled, string findWhat, string replaceWith, string searchType)
