@@ -928,6 +928,19 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextEmdashComma()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "- I just, uh —" + Environment.NewLine + "- What?";
+            string expected = "- I just —" + Environment.NewLine + "- What?";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+       
         #region Additional test attributes
 
         //
