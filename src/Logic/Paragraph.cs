@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             if (StartTime.IsMaxTime)
                 return;
-                    
+
             double seconds = StartTime.TimeSpan.TotalSeconds * factor + adjust;
             StartTime.TimeSpan = TimeSpan.FromSeconds(seconds);
 

@@ -14741,8 +14741,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.StartTime.TotalMilliseconds > newParagraph.StartTime.TotalMilliseconds &&
                     (!p.StartTime.IsMaxTime || !HasSmallerStartTimes(_subtitle, i + 1, newParagraph.StartTime.TotalMilliseconds)))
                 {
-                        break;
-                }                
+                    break;
+                }
                 index++;
             }
 

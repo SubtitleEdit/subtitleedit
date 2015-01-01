@@ -20,7 +20,6 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
         public List<int> DeleteIndices = new List<int>();
 
-
         public MultipleReplace()
         {
             InitializeComponent();
