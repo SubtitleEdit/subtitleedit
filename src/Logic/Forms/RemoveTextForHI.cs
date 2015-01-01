@@ -712,11 +712,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 }
                             }
 
-
                             if (index > 3 && temp.Substring(index - 2).StartsWith(",  —"))
                             {
                                 temp = temp.Remove(index - 2, 1);
-                                index --;
+                                index--;
                             }
                             else if (index > 3 && temp.Substring(index - 2).StartsWith(", —"))
                             {

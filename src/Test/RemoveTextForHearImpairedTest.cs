@@ -900,7 +900,7 @@ namespace Test
             const string expected = "That's nice!";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
-        }                
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -940,7 +940,7 @@ namespace Test
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
         }
-       
+
         #region Additional test attributes
 
         //

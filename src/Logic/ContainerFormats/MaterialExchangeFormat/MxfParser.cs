@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat
 
                     next += klv.TotalSize;
 
-                    if (klv.IdentifierType == KeyIdentifier.EssenceElement && 
+                    if (klv.IdentifierType == KeyIdentifier.EssenceElement &&
                         klv.DataSize < 500000)
                     {
                         stream.Seek(klv.DataPosition, SeekOrigin.Begin);
