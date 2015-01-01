@@ -712,6 +712,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 }
                             }
 
+
+                            if (index > 3 && temp.Substring(index - 2).StartsWith(",  —"))
+                            {
+                                temp = temp.Remove(index - 2, 1);
+                                index --;
+                            }
+                            else if (index > 3 && temp.Substring(index - 2).StartsWith(", —"))
+                            {
+                                temp = temp.Remove(index - 2, 1);
+                                index--;
+                            }
+
                             if (removeAfter)
                             {
                                 if (index == 0)
@@ -747,6 +759,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 if (pre.EndsWith(' ') && temp.StartsWith('-'))
                                     temp = temp.Remove(0, 1);
 
+                                if (pre.EndsWith(',') && temp.StartsWith('—'))
+                                    pre = pre.TrimEnd(',') + " ";
                                 temp = pre + temp;
                             }
 
