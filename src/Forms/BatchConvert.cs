@@ -857,6 +857,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         form.Initialize(p.Subtitle);
                         p.Subtitle = form.FixedSubtitle;
+
+                        foreach (int deleteIndex in form.DeleteIndices)
+                        {
+                            p.Subtitle.Paragraphs.RemoveAt(deleteIndex);
+                        }
+                        p.Subtitle.Renumber(1);
                     }
                 }
                 catch (Exception exception)
