@@ -748,6 +748,18 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUneededSpaces5()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "\"Foo\" bar.";
+                InitializeFixCommonErrorsLine(target, "\"Foo \" bar.", "\" Foo \" bar.");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+                Assert.AreEqual(target.Subtitle.Paragraphs[1].Text, expected);
+            }
+        }
         #endregion Fix unneeded spaces
 
         #region Start with uppercase after paragraph
