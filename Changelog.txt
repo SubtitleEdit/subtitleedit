@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.5 (xth December 2014)
+3.4.5 (xth January 2015)
 * NEW:
    * Basic read support for Ayato + Unipac format + unknown format
    * Import of DCinema subtitles from mxf files
@@ -27,7 +27,7 @@
    * Some fixes for "Remove text for HI" - thx Thunderbolt8
    * Fix for "Split long lines" - thx XhmikosR
    * Somes fixes in waveform and lines with empty time codes
-
+   * "Multiple replace" lines left empty are now removed
 
 3.4.4 (28th November 2014)
 * NEW:
