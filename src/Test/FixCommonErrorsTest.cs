@@ -751,7 +751,7 @@ namespace Test
         [TestMethod]
         public void FixUneededSpaces5()
         {
-            using(var target = GetFixCommonErrorsLib())
+            using (var target = GetFixCommonErrorsLib())
             {
                 const string expected = "\"Foo\" bar.";
                 InitializeFixCommonErrorsLine(target, "\"Foo \" bar.", "\" Foo \" bar.");
