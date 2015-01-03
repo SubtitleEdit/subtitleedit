@@ -1471,7 +1471,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <SubtitleFontColor>Barva písma titulků</SubtitleFontColor>
     <SubtitleBackgroundColor>Barva pozadí titulků</SubtitleBackgroundColor>
     <SpellChecker>Kontrola pravopisu</SpellChecker>
-    <RememberRecentFiles>Zapamatovat poslední soubory (pro znovuotevření)</RememberRecentFiles>
+    <RememberRecentFiles>Zobrazit poslední soubory (pro znovuotevření)</RememberRecentFiles>
     <StartWithLastFileLoaded>Spustit s načteným posledním souborem</StartWithLastFileLoaded>
     <RememberSelectedLine>Zapamatovat vybraný řádek</RememberSelectedLine>
     <RememberPositionAndSize>Zapamatovat pozici a velikost hlavního okna</RememberPositionAndSize>
@@ -1590,6 +1590,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ToggleDockUndockOfVideoControls>Ukotvit/zrušit ukotvení ovládání videa</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Nastavit konec, přidat nový a přejít na nový</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Nastavit podle pozice konce a přejít na další</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Nastavit konec a přejít na další</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Nastavit začátek, automatické trvání a přejít na další</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Nastavit konec, další začátek a přejít na další</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Šipka dolů = nastavit začátek, šipka nahoru = nastavit konec a přejít na další</AdjustStartDownEndUpAndGoToNext>
