@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.5 (xth January 2015)
+3.4.5 (4th January 2015)
 * NEW:
    * Basic read support for Ayato + Unipac format + unknown format
    * Import of DCinema subtitles from MXF files
@@ -9,7 +9,7 @@
    * Updated Czech translation - thx Trottel
    * Batch convert now remembers format - thx MM
    * Remove text for HI: Remove text before colon only if uppercase is now default - thx XhmikosR
-   * Waveform text should now be easier to read + borders should also be easer to see
+   * Waveform text should now be easier to read + borders should also be easier to see
    * Allow for custom res for FCP-xml-image export - thx Ben
    * Import plain text now remembers split char - thx Yash
 * FIXED:
@@ -26,7 +26,7 @@
    * Fixed minor bug in Replace in source view
    * Some fixes for "Remove text for HI" - thx Thunderbolt8
    * Fix for "Split long lines" - thx XhmikosR
-   * Some fixes in waveform and lines with empty time codes
+   * Some fixes in waveform regarding lines with empty time codes
    * "Multiple replace" lines left empty are now removed
 
 3.4.4 (28th November 2014)

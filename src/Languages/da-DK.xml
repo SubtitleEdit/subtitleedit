@@ -2,10 +2,10 @@
 <Language Name="Dansk">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.4</Version>
+    <Version>3.4.5</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -416,6 +416,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Linje højde</LineHeight>
     <BoxSingleLine>Boks - enkelt linje</BoxSingleLine>
     <BoxMultiLine>Boks - multi linie</BoxMultiLine>
+    <Forced>Forced</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
@@ -578,6 +579,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '* sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} vigtige log beskeder!</NumberOfImportantLogMessages>
     <FixedOkXY>Rettet og OK - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hej John! - Hej Ida! -&gt; Hej John!&lt;br /&gt;- Hej Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Mangler ordbøger?</Title>
@@ -1106,6 +1110,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <NoSubtitlesFound>Ingen undertekster fundet</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dette er ikke en gyldig Matroska fil: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Parsing Matroska filen. Vent venligst...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Parsing Transport Stream-fil. Vent venligst...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Før import af undertekst fra Matroska fil</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Undertekst importeret fra Matroska fil</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Drop fil '{0}' ikke accepteret - filen er for stor</DropFileXNotAccepted>
@@ -1219,6 +1224,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kan ikke læse/redigere .idx filer. Idx filer er en del af et idx/sub fil par (også kaldet VobSub), og Subtitle Edit kan kun åbne .sub filen.</ErrorLoadIdx>
     <ErrorLoadRar>Denne fil er sandsynligvis en komprimeret .rar fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadRar>
     <ErrorLoadZip>Denne fil er sandsynligvis en komprimeret .zip fil. Subtitle Edit kan ikke åbne komprimerede filer.</ErrorLoadZip>
+    <ErrorLoadPng>Denne fil synes at være en PNG billedfil. Subtitle Edit kan ikke åbne PNG-filer.</ErrorLoadPng>
+    <ErrorLoadSrr>Denne fil synes at være en ReScene .srr fil - ikke en undertekst fil.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
@@ -1494,6 +1501,8 @@ Fortsæt?</SubtitleAppendPrompt>
     <DirectShowDescription>Quartz.dll i system32 mappen</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed kode fra DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1580,6 +1589,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ToggleDockUndockOfVideoControls>Skift dok/frigør af video kontrol</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Sæt slut, tilføj ny og gå til ny</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Juster via slutposition og gå til næste</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Set slut og gå til næste</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Sæt start, auto varighed og gå til næste</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Sæt slut, næste start og gå til næste</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tast ned = set start, tast op = sæt slut og gå til næste</AdjustStartDownEndUpAndGoToNext>
