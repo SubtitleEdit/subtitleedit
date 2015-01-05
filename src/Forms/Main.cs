@@ -11705,11 +11705,12 @@ namespace Nikse.SubtitleEdit.Forms
                         _subtitle.Paragraphs[i].Text = multipleReplace.FixedSubtitle.Paragraphs[i].Text;
                     }
 
+                    var startFrom = _subtitle.Paragraphs[0].Number > -1 ? _subtitle.Paragraphs[0].Number : 1;
                     foreach (int deleteIndex in multipleReplace.DeleteIndices)
                     {
                         _subtitle.Paragraphs.RemoveAt(deleteIndex);
                     }
-                    _subtitle.Renumber(1);
+                    _subtitle.Renumber(startFrom);
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                     RestoreSubtitleListviewIndexes();
