@@ -3145,6 +3145,31 @@ namespace Nikse.SubtitleEdit.Logic
                         idx = -1;
                 }
             }
+
+            if (Utilities.CountTagInText(text, "\"") == 2 && text.Contains(" \" "))
+            {
+                int idx = text.IndexOf(" \" ", StringComparison.Ordinal);
+                int idxp = text.IndexOf('"');
+
+                //"Foo " bar.
+                if ((idxp > -1 && idxp < idx) & Utilities.AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
+                {
+                    text = text.Remove(idx, 1);
+                }
+
+                //" Foo " bar.
+                idx = text.IndexOf(" \" ", StringComparison.Ordinal);
+                idxp = text.IndexOf('"');
+                if (idxp > -1 && idx > idxp)
+                {
+                    if (text[idxp + 1] == ' ' && Utilities.AllLettersAndNumbers.Contains(text[idxp + 2]))
+                    {
+                        text = text.Remove(idxp + 1, 1);
+                        idx--;
+                    }
+                    text = text.Remove(idx, 1);
+                }
+            }
             return text;
         }
 
