@@ -2162,8 +2162,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsName(string candidate)
         {
-            MakeSureNamesListIsLoaded();
-            return _namesEtcList.Contains(candidate);
+            try
+            {
+                MakeSureNamesListIsLoaded();
+                return _namesEtcList.Contains(candidate);
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
         private void MakeSureNamesListIsLoaded()
@@ -2183,13 +2190,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_abbreviationList != null)
                 return _abbreviationList;
-
-            MakeSureNamesListIsLoaded();
-            _abbreviationList = new List<string>();
-            foreach (string name in _namesEtcList)
+            try
             {
-                if (name.EndsWith('.'))
-                    _abbreviationList.Add(name);
+                MakeSureNamesListIsLoaded();
+                _abbreviationList = new List<string>();
+                foreach (string name in _namesEtcList)
+                {
+                    if (name.EndsWith('.'))
+                        _abbreviationList.Add(name);
+                }
+            }
+            catch
+            {
+                return new List<string>();
             }
             return _abbreviationList;
         }
