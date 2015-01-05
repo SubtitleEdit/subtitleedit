@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using Microsoft.WindowsAPICodePack.Taskbar;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.SpellCheck;
@@ -1227,8 +1228,21 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private SpellCheckOcrTextResult SpellCheckOcrText(string line, Bitmap bitmap, string word, List<string> suggestions)
         {
             var result = new SpellCheckOcrTextResult { Fixed = false, FixedWholeLine = false, Line = null, Word = null };
+
             _spellCheck.Initialize(word, suggestions, line, bitmap);
+
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Paused);
+            }
+
             _spellCheck.ShowDialog(_parentForm);
+
+            if (TaskbarManager.IsPlatformSupported)
+            {
+                TaskbarManager.Instance.SetProgressState(TaskbarProgressBarState.Normal);
+            }
+
             switch (_spellCheck.ActionResult)
             {
                 case OcrSpellCheck.Action.Abort:
