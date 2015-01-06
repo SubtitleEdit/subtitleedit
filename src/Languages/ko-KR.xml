@@ -1108,6 +1108,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
     <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Matroska 파일의 구문을 분석하는 중...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>전송 스트림 파일의 구문을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Matroska 파일에서 자막을 추출했습니다.</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>파일 '{0}'을 가져올 수 없습니다 - 파일이 너무 큼.</DropFileXNotAccepted>
@@ -1470,7 +1471,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleFontColor>글자 색</SubtitleFontColor>
     <SubtitleBackgroundColor>배경 색</SubtitleBackgroundColor>
     <SpellChecker>맞춤법 검사기</SpellChecker>
-    <RememberRecentFiles>최근 사용한 파일 목록 저장</RememberRecentFiles>
+    <RememberRecentFiles>최근 사용한 파일 표시</RememberRecentFiles>
     <StartWithLastFileLoaded>최근 사용한 파일 불러오기</StartWithLastFileLoaded>
     <RememberSelectedLine>선택한 줄 기억</RememberSelectedLine>
     <RememberPositionAndSize>메인 창의 위치 및 크기 기억</RememberPositionAndSize>
@@ -1588,7 +1589,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ShortcutIsNotValid>다음 단축키 사용불가: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>비디오 컨트롤 연결 | 해제</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>끝 지점과 새로 추가할 지점을 정하고 새 지점으로 이동</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStartAndGoToNext>끝 지점 정하고 다음으로 이동</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>끝 지점을 통해 조정하고 다음으로 이동</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>끝 지점 정하고 다음으로 이동</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>시작 지점과 표시시간을 정하고 다음으로 이동</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>끝 지점과 다음 시작 지점을 정하고 다음으로 이동</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>'↓'키=시작 지점 설정, '↑'키=끝 지점 정하고 다음으로 이동</AdjustStartDownEndUpAndGoToNext>
