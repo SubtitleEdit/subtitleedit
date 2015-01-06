@@ -2817,8 +2817,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool breakToLetters)
         {
-
-            const string endChars = "!?.:;,#%$£";
+            const string endChars = "-!?.:;,#%$£";
             var list = new List<string>();
 
             if (breakToLetters)
