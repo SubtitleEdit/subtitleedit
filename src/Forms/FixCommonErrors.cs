@@ -4309,9 +4309,7 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewFixes.Items[idx - 1].Selected = false;
                 }
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private void GoToLineNumber()
@@ -4354,7 +4352,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string[] MakeDiffHtml(string before, string after)
         {
-
             before = before.Replace("<br />", "↲");
             after = after.Replace("<br />", "↲");
             before = before.Replace(Environment.NewLine, "↲");
@@ -4583,67 +4580,66 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewFixesSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (listViewFixes.SelectedItems.Count > 0)
-            {
-                var p = (Paragraph)listViewFixes.SelectedItems[0].Tag;
+            if (listViewFixes.SelectedItems.Count == 0)
+                return;
 
-                foreach (ListViewItem lvi in subtitleListView1.Items)
+            var p = (Paragraph)listViewFixes.SelectedItems[0].Tag;
+            foreach (ListViewItem lvi in subtitleListView1.Items)
+            {
+                var p2 = lvi.Tag as Paragraph;
+                if (p2 != null && p.ID == p2.ID)
                 {
-                    var p2 = lvi.Tag as Paragraph;
-                    if (p2 != null && p.ID == p2.ID)
-                    {
-                        var index = lvi.Index;
-                        if (index - 1 > 0)
-                            subtitleListView1.EnsureVisible(index - 1);
-                        if (index + 1 < subtitleListView1.Items.Count)
-                            subtitleListView1.EnsureVisible(index + 1);
-                        subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
-                        subtitleListView1.SelectNone();
-                        subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
-                        subtitleListView1.Items[index].Selected = true;
-                        subtitleListView1.EnsureVisible(index);
-                        return;
-                    }
+                    var index = lvi.Index;
+                    if (index - 1 > 0)
+                        subtitleListView1.EnsureVisible(index - 1);
+                    if (index + 1 < subtitleListView1.Items.Count)
+                        subtitleListView1.EnsureVisible(index + 1);
+                    subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+                    subtitleListView1.SelectNone();
+                    subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
+                    subtitleListView1.Items[index].Selected = true;
+                    subtitleListView1.EnsureVisible(index);
+                    return;
                 }
             }
         }
 
         private void SubtitleListView1SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_originalSubtitle.Paragraphs.Count > 0)
+            if (_originalSubtitle.Paragraphs.Count == 0)
+                return;
+
+            int firstSelectedIndex = 0;
+            if (subtitleListView1.SelectedItems.Count > 0)
+                firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+
+            Paragraph p = GetParagraphOrDefault(firstSelectedIndex);
+            if (p != null)
             {
-                int firstSelectedIndex = 0;
-                if (subtitleListView1.SelectedItems.Count > 0)
-                    firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+                textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
+                InitializeListViewEditBox(p);
+                textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
 
-                Paragraph p = GetParagraphOrDefault(firstSelectedIndex);
-                if (p != null)
-                {
-                    textBoxListViewText.TextChanged -= TextBoxListViewTextTextChanged;
-                    InitializeListViewEditBox(p);
-                    textBoxListViewText.TextChanged += TextBoxListViewTextTextChanged;
-
-                    _subtitleListViewIndex = firstSelectedIndex;
-                    UpdateOverlapErrors();
-                    UpdateListViewTextInfo(p.Text);
-                }
+                _subtitleListViewIndex = firstSelectedIndex;
+                UpdateOverlapErrors();
+                UpdateListViewTextInfo(p.Text);
             }
         }
 
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
         {
             if (_subtitleListViewIndex >= 0)
-            {
-                string text = textBoxListViewText.Text.TrimEnd();
-                UpdateListViewTextInfo(text);
+                return;
 
-                // update _subtitle + listview
-                _originalSubtitle.Paragraphs[_subtitleListViewIndex].Text = text;
-                subtitleListView1.SetText(_subtitleListViewIndex, text);
+            string text = textBoxListViewText.Text.TrimEnd();
+            UpdateListViewTextInfo(text);
 
-                EnableOkButton();
-                UpdateListSyntaxColoring();
-            }
+            // update _subtitle + listview
+            _originalSubtitle.Paragraphs[_subtitleListViewIndex].Text = text;
+            subtitleListView1.SetText(_subtitleListViewIndex, text);
+
+            EnableOkButton();
+            UpdateListSyntaxColoring();
         }
 
         private void EnableOkButton()
@@ -4680,19 +4676,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void NumericUpDownDurationValueChanged(object sender, EventArgs e)
         {
-            if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            if (_originalSubtitle.Paragraphs.Count == 0 || subtitleListView1.SelectedItems.Count == 0)
+                return;
+
+            int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+            Paragraph currentParagraph = GetParagraphOrDefault(firstSelectedIndex);
+            if (currentParagraph != null)
             {
-                int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+                UpdateOverlapErrors();
 
-                Paragraph currentParagraph = GetParagraphOrDefault(firstSelectedIndex);
-                if (currentParagraph != null)
-                {
-                    UpdateOverlapErrors();
-
-                    // update _subtitle + listview
-                    currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
-                    subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph);
-                }
+                // update _subtitle + listview
+                currentParagraph.EndTime.TotalMilliseconds = currentParagraph.StartTime.TotalMilliseconds + ((double)numericUpDownDuration.Value * 1000.0);
+                subtitleListView1.SetDuration(firstSelectedIndex, currentParagraph);
             }
         }
 
@@ -4897,13 +4892,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonAutoBreakClick(object sender, EventArgs e)
         {
-            if (textBoxListViewText.Text.Length > 0)
-            {
-                string oldText = textBoxListViewText.Text;
-                textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text, Language);
-                if (oldText != textBoxListViewText.Text)
-                    EnableOkButton();
-            }
+            if (textBoxListViewText.Text.Length == 0)
+                return;
+            string oldText = textBoxListViewText.Text;
+            textBoxListViewText.Text = Utilities.AutoBreakLine(textBoxListViewText.Text, Language);
+            if (oldText != textBoxListViewText.Text)
+                EnableOkButton();
         }
 
         private void ButtonUnBreakClick(object sender, EventArgs e)
@@ -4969,7 +4963,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
                         item.Checked = false;
                 }
-
             }
         }
 
@@ -5094,75 +5087,75 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void SplitSelectedParagraph(double? splitSeconds)
         {
-            if (_originalSubtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
+            if (_originalSubtitle.Paragraphs.Count == 0 && subtitleListView1.SelectedItems.Count == 0)
+                return;
+
+            subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
+            int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+
+            // save de-seleced fixes
+            var deSelectedFixes = new List<string>();
+            foreach (ListViewItem item in listViewFixes.Items)
             {
-                subtitleListView1.SelectedIndexChanged -= SubtitleListView1SelectedIndexChanged;
-                int firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
-
-                // save de-seleced fixes
-                var deSelectedFixes = new List<string>();
-                foreach (ListViewItem item in listViewFixes.Items)
+                if (!item.Checked)
                 {
-                    if (!item.Checked)
-                    {
-                        int number = Convert.ToInt32(item.SubItems[1].Text);
-                        if (number > firstSelectedIndex)
-                            number++;
-                        deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
-                    }
+                    int number = Convert.ToInt32(item.SubItems[1].Text);
+                    if (number > firstSelectedIndex)
+                        number++;
+                    deSelectedFixes.Add(number + item.SubItems[2].Text + item.SubItems[3].Text);
                 }
+            }
 
-                Paragraph currentParagraph = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex);
-                var newParagraph = new Paragraph();
+            Paragraph currentParagraph = _originalSubtitle.GetParagraphOrDefault(firstSelectedIndex);
+            var newParagraph = new Paragraph();
 
-                string oldText = currentParagraph.Text;
-                string[] lines = currentParagraph.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+            string oldText = currentParagraph.Text;
+            string[] lines = currentParagraph.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
+            {
+                currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
+                newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
+            }
+            else
+            {
+                string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
+                lines = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                if (lines.Length == 2)
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
                     newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
                 }
-                else
-                {
-                    string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
-                    lines = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                    if (lines.Length == 2)
-                    {
-                        currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
-                        newParagraph.Text = Utilities.AutoBreakLine(lines[1], Language);
-                    }
-                }
+            }
 
-                double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
-                if (startFactor < 0.20)
-                    startFactor = 0.20;
-                if (startFactor > 0.80)
-                    startFactor = 0.80;
+            double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+            if (startFactor < 0.20)
+                startFactor = 0.20;
+            if (startFactor > 0.80)
+                startFactor = 0.80;
 
-                double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
-                if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
-                    middle = splitSeconds.Value * 1000.0;
-                newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
-                currentParagraph.EndTime.TotalMilliseconds = middle;
-                newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
+            double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds * startFactor);
+            if (splitSeconds.HasValue && splitSeconds.Value > (currentParagraph.StartTime.TotalSeconds + 0.2) && splitSeconds.Value < (currentParagraph.EndTime.TotalSeconds - 0.2))
+                middle = splitSeconds.Value * 1000.0;
+            newParagraph.EndTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds;
+            currentParagraph.EndTime.TotalMilliseconds = middle;
+            newParagraph.StartTime.TotalMilliseconds = currentParagraph.EndTime.TotalMilliseconds + 1;
 
-                _originalSubtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
-                _originalSubtitle.Renumber(1);
-                subtitleListView1.Fill(_originalSubtitle);
-                textBoxListViewText.Text = currentParagraph.Text;
+            _originalSubtitle.Paragraphs.Insert(firstSelectedIndex + 1, newParagraph);
+            _originalSubtitle.Renumber(1);
+            subtitleListView1.Fill(_originalSubtitle);
+            textBoxListViewText.Text = currentParagraph.Text;
 
-                subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
-                subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
+            subtitleListView1.SelectIndexAndEnsureVisible(firstSelectedIndex);
+            subtitleListView1.SelectedIndexChanged += SubtitleListView1SelectedIndexChanged;
 
-                // restore de-selected fixes
-                listViewFixes.Items.Clear();
-                _onlyListFixes = true;
-                Next();
-                foreach (ListViewItem item in listViewFixes.Items)
-                {
-                    if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
-                        item.Checked = false;
-                }
+            // restore de-selected fixes
+            listViewFixes.Items.Clear();
+            _onlyListFixes = true;
+            Next();
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                if (deSelectedFixes.Contains(item.SubItems[1].Text + item.SubItems[2].Text + item.SubItems[3].Text))
+                    item.Checked = false;
             }
         }
 
@@ -5183,12 +5176,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void comboBoxLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Subtitle != null)
-            {
-                var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
-                _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
-                AddFixActions(ci.ThreeLetterISOLanguageName);
-            }
+            if (Subtitle == null)
+                return;
+            var ci = (CultureInfo)comboBoxLanguage.SelectedItem;
+            _autoDetectGoogleLanguage = ci.TwoLetterISOLanguageName;
+            AddFixActions(ci.ThreeLetterISOLanguageName);
         }
 
         private void comboBoxLanguage_Enter(object sender, EventArgs e)
