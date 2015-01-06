@@ -1141,6 +1141,7 @@
     <Compile Include="Logic\SubtitleFormats\ZeroG.cs" />
     <Compile Include="Logic\TarHeader.cs" />
     <Compile Include="Logic\TarReader.cs" />
+    <Compile Include="Logic\TaskbarList.cs" />
     <Compile Include="Logic\TextDraw.cs" />
     <Compile Include="Logic\TimeCode.cs" />
     <Compile Include="Logic\TransportStream\AdaptationField.cs" />

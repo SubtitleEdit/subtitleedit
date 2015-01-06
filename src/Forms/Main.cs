@@ -8651,6 +8651,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             ShowStatus(string.Format("{0}, {1:0}%", statusMessage, _lastProgressPercent));
             statusStrip1.Refresh();
+            TaskbarList.SetProgressValue(Handle, percent, 100);
             if (DateTime.Now.Ticks % 10 == 0)
             {
                 Application.DoEvents();
@@ -8692,6 +8693,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             if (isSsa)
             {
                 foreach (var p in Utilities.LoadMatroskaSSA(matroskaSubtitleInfo, matroska.Path, format, sub).Paragraphs)
@@ -8730,6 +8732,7 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             Cursor.Current = Cursors.Default;
 
             MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
@@ -8804,6 +8807,7 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             Cursor.Current = Cursors.Default;
 
             MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
@@ -8896,6 +8900,7 @@ namespace Nikse.SubtitleEdit.Forms
             Refresh();
             Cursor.Current = Cursors.WaitCursor;
             var sub = matroska.GetSubtitle(matroskaSubtitleInfo.TrackNumber, MatroskaProgress);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             Cursor.Current = Cursors.Default;
 
             int noOfErrors = 0;
@@ -9048,6 +9053,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tsParser = new TransportStreamParser();
             tsParser.Parse(fileName, (pos, total) => UpdateProgress(pos, total, _language.ParsingTransportStreamFile));
             ShowStatus(string.Empty);
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
 
             if (tsParser.SubtitlePacketIds.Count == 0)
             {
@@ -11727,7 +11733,7 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            using (var formSubRip = new DvdSubRip())
+            using (var formSubRip = new DvdSubRip(Handle))
             {
                 if (formSubRip.ShowDialog(this) != DialogResult.OK)
                 {

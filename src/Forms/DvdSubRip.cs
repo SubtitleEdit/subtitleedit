@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Windows.Forms.VisualStyles;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VobSub;
@@ -22,6 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
         private long _lastVobPresentationTimestamp;
         private long _lastNavEndPts;
         private long _accumulatedPresentationTimestamp;
+        private IntPtr _taskbarFormHandle;
 
         public string SelectedLanguage
         {
@@ -33,9 +35,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public DvdSubRip()
+        public DvdSubRip(IntPtr taskbarFormHandle)
         {
             InitializeComponent();
+            _taskbarFormHandle = taskbarFormHandle;
             labelStatus.Text = string.Empty;
             buttonStartRipping.Enabled = false;
 
@@ -175,6 +178,7 @@ namespace Nikse.SubtitleEdit.Forms
                     RipSubtitles(vobFileName, ms, i - 1); // Rip/demux subtitle vob packs
             }
             progressBarRip.Visible = false;
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             buttonStartRipping.Enabled = false;
             if (_abort)
             {
@@ -292,8 +296,13 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     position += 0x800;
 
-                    progressBarRip.Value = (int)((position * 100) / length);
-                    Application.DoEvents();
+                    var progress = (int)((position * 100) / length);
+                    if (progress != progressBarRip.Value)
+                    {
+                        progressBarRip.Value = progress;
+                        TaskbarList.SetProgressValue(_taskbarFormHandle, (vobNumber * 100) + progressBarRip.Value, progressBarRip.Maximum * listBoxVobFiles.Items.Count);
+                        Application.DoEvents();
+                    }
                     lba++;
                 }
             }
