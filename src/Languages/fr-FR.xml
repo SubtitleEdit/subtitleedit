@@ -416,6 +416,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Hauteur de ligne</LineHeight>
     <BoxSingleLine>Boîte unique</BoxSingleLine>
     <BoxMultiLine>Boîte multi-lignes</BoxMultiLine>
+    <Forced>Forced</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Exporter du texte</Title>
@@ -1105,6 +1106,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <NoSubtitlesFound>Aucun sous-titre trouvé</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ce n'est pas un fichier Matroska valide: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Analyse du fichier Matroska. Patientez...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Analyse du fichier de flux de transport. Veuillez patienter...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Avant l'importation de sous-titres du fichier Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Sous-titre importés de fichier Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Déposer fichier '{0}' impossible - fichier trop volumineux</DropFileXNotAccepted>
@@ -1217,9 +1219,17 @@ Poursuivre?</SubtitleAppendPrompt>
 
  Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
-    <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx. Ils font partie de paires de fichiers idx/sub (également appelés VobSub). Subtitle Edit peut ouvrir le fichier .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Ce fichier est une archive .rar. Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadRar>
-    <ErrorLoadZip>Ce fichier est une archive .zip. Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadZip>
+    <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx :
+- Ils font partie de paires de fichiers idx/sub (également appelés VobSub).
+- Subtitle Edit peut ouvrir le fichier .sub.</ErrorLoadIdx>
+    <ErrorLoadRar>Ce fichier est une archive .rar :
+- Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadRar>
+    <ErrorLoadZip>Ce fichier est une archive .zip :
+- Subtitle Edit ne peut pas ouvrir les fichiers compressés.</ErrorLoadZip>
+    <ErrorLoadPng>Ce fichier semble être un fichier image .PNG :
+- Subtitle Edit ne peut pas ouvrir les fichiers PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Ce fichier semble être des métadonnées d'archives ReScene .SRR :
+- Ce n’est pas un fichier de sous-titres.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska
@@ -1586,6 +1596,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <ToggleDockUndockOfVideoControls>Attacher/détacher les fenêtres vidéos</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Définir la fin, ajouter nouvelle position et y aller</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajuster par rapport à la dernière position et aller à la suite</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Définir fin et aller au suivant</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Régler la durée de démarrage automatique, et aller à la suite</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Régler la fin et le début prochain démarrage, et aller à la suite</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Touche vers le bas=voir le départ, touche vers le haut=régler la fin et aller à la suite</AdjustStartDownEndUpAndGoToNext>
