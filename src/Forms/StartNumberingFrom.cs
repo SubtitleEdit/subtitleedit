@@ -46,25 +46,24 @@ namespace Nikse.SubtitleEdit.Forms
             else
             {
                 if (e.KeyCode == Keys.D0 ||
-                   e.KeyCode == Keys.D1 ||
-                   e.KeyCode == Keys.D2 ||
-                   e.KeyCode == Keys.D3 ||
-                   e.KeyCode == Keys.D4 ||
-                   e.KeyCode == Keys.D5 ||
-                   e.KeyCode == Keys.D6 ||
-                   e.KeyCode == Keys.D7 ||
-                   e.KeyCode == Keys.D8 ||
-                   e.KeyCode == Keys.D9 ||
-                   e.KeyCode == Keys.Delete ||
-                   e.KeyCode == Keys.Left ||
-                   e.KeyCode == Keys.Right ||
-                   e.KeyCode == Keys.Back ||
-                   (e.KeyValue >= 96 && e.KeyValue <= 105))
+                    e.KeyCode == Keys.D1 ||
+                    e.KeyCode == Keys.D2 ||
+                    e.KeyCode == Keys.D3 ||
+                    e.KeyCode == Keys.D4 ||
+                    e.KeyCode == Keys.D5 ||
+                    e.KeyCode == Keys.D6 ||
+                    e.KeyCode == Keys.D7 ||
+                    e.KeyCode == Keys.D8 ||
+                    e.KeyCode == Keys.D9 ||
+                    e.KeyCode == Keys.Delete ||
+                    e.KeyCode == Keys.Left ||
+                    e.KeyCode == Keys.Right ||
+                    e.KeyCode == Keys.Back ||
+                    e.KeyCode == Keys.Home ||
+                    e.KeyCode == Keys.End ||
+                    (e.KeyValue >= 96 && e.KeyValue <= 105))
                 {
-                }
-                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End) ||
-                    e.KeyCode == (Keys.MButton | Keys.Space) || e.KeyCode == (Keys.LButton | Keys.RButton | Keys.Space))
-                {
+                    return;
                 }
                 else if (e.KeyData == (Keys.Control | Keys.V) && Clipboard.GetText(TextDataFormat.UnicodeText).Length > 0)
                 {
