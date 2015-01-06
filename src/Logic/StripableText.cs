@@ -51,8 +51,8 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
 
-                    // tags like <i> or <font color="#ff0000">
-                    if (text.StartsWith('<') && text.IndexOf('>') <= 21)
+                    // tags like <i> or <font face="Segoe Print" color="#ff0000">
+                    if (text.StartsWith('<') && text.IndexOf('>') < (text.Length - 7))
                     {
                         int index = text.IndexOf('>') + 1;
                         Pre += text.Substring(0, index);
@@ -74,21 +74,19 @@ namespace Nikse.SubtitleEdit.Logic
 
                     if (text.EndsWith('>'))
                     {
-                        string lower = text.ToLower();
-
                         // tags </i> </b> </u>
-                        if (lower.EndsWith("</i>", StringComparison.Ordinal) ||
-                            lower.EndsWith("</b>", StringComparison.Ordinal) ||
-                            lower.EndsWith("</u>", StringComparison.Ordinal))
+                        if (text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
+                            text.EndsWith("</b>", StringComparison.OrdinalIgnoreCase) ||
+                            text.EndsWith("</u>", StringComparison.OrdinalIgnoreCase))
                         {
-                            Post = text.Substring(text.Length - 4, 4) + Post;
+                            Post = text.Substring(text.Length - 4) + Post;
                             text = text.Substring(0, text.Length - 4);
                         }
 
                         // tag </font>
-                        if (lower.EndsWith("</font>", StringComparison.Ordinal))
+                        if (text.EndsWith("</font>", StringComparison.OrdinalIgnoreCase))
                         {
-                            Post = text.Substring(text.Length - 7, 7) + Post;
+                            Post = text.Substring(text.Length - 7) + Post;
                             text = text.Substring(0, text.Length - 7);
                         }
                     }
