@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Maximum = listViewInputFiles.Items.Count;
             progressBar1.Value = 0;
-            progressBar1.Visible = progressBar1.Maximum > 2;            
+            progressBar1.Visible = progressBar1.Maximum > 2;
             string toFormat = comboBoxSubtitleFormats.Text;
             groupBoxOutput.Enabled = false;
             groupBoxConvertOptions.Enabled = false;

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 
 namespace Nikse.SubtitleEdit.Logic
-{   
+{
     /// <summary>
     /// Windows 7+ taskbar list - http://msdn.microsoft.com/en-us/library/windows/desktop/dd391692%28v=vs.85%29.aspx
     /// </summary>
@@ -193,22 +193,22 @@ namespace Nikse.SubtitleEdit.Logic
 
     public struct ThumbButton
     {
-        #pragma warning disable 0169
+#pragma warning disable 0169
 
-        ThumbButtonMask _mask;
-        uint _id;
-        uint _bitmap;
-        IntPtr _icon;
+        private ThumbButtonMask _mask;
+        private uint _id;
+        private uint _bitmap;
+        private IntPtr _icon;
 
         [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 260)]
         public string Tip;
-        ThumbButtonFlags _flags;
+        private ThumbButtonFlags _flags;
 
-        #pragma warning restore 0169
+#pragma warning restore 0169
     }
 
     [Flags]
-    enum ThumbButtonFlags
+    internal enum ThumbButtonFlags
     {
         Enabled = 0,
         Disabled = 0x1,
@@ -229,4 +229,3 @@ namespace Nikse.SubtitleEdit.Logic
     }
 
 }
-

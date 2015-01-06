@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Windows.Forms.VisualStyles;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.VobSub;
