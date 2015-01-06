@@ -2858,7 +2858,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 while (match.Success)
                 {
-                    if (s[match.Index] == target && !s.Substring(match.Index).StartsWith("i.e."))
+                    if (s[match.Index] == target && !s.Substring(match.Index).StartsWith("i.e.", StringComparison.Ordinal))
                     {
                         var prev = '\0';
                         var next = '\0';
