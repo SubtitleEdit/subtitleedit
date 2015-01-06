@@ -760,6 +760,7 @@ namespace Test
                 Assert.AreEqual(target.Subtitle.Paragraphs[1].Text, expected);
             }
         }
+
         #endregion Fix unneeded spaces
 
         #region Start with uppercase after paragraph
