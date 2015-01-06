@@ -519,7 +519,7 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Maximum = listViewInputFiles.Items.Count;
             progressBar1.Value = 0;
-            progressBar1.Visible = progressBar1.Maximum > 2;
+            progressBar1.Visible = progressBar1.Maximum > 2;            
             string toFormat = comboBoxSubtitleFormats.Text;
             groupBoxOutput.Enabled = false;
             groupBoxConvertOptions.Enabled = false;
@@ -687,9 +687,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (format == null && bluRaySubtitles.Count == 0 && !isVobSub && !isMatroska)
                     {
-                        if (progressBar1.Value < progressBar1.Maximum)
-                            progressBar1.Value++;
-                        labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+                        IncrementAndShowProgress();
                     }
                     else
                     {
@@ -798,9 +796,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch
                 {
-                    if (progressBar1.Value < progressBar1.Maximum)
-                        progressBar1.Value++;
-                    labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+                    IncrementAndShowProgress();
                 }
                 index++;
             }
@@ -818,12 +814,21 @@ namespace Nikse.SubtitleEdit.Forms
             _converting = false;
             labelStatus.Text = string.Empty;
             progressBar1.Visible = false;
+            TaskbarList.SetProgressState(Handle, TaskbarButtonProgressFlags.NoProgress);
             buttonConvert.Enabled = true;
             buttonCancel.Enabled = true;
             groupBoxOutput.Enabled = true;
             groupBoxConvertOptions.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
+        }
+
+        private void IncrementAndShowProgress()
+        {
+            if (progressBar1.Value < progressBar1.Maximum)
+                progressBar1.Value++;
+            TaskbarList.SetProgressValue(Handle, progressBar1.Value, progressBar1.Maximum);
+            labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
         }
 
         private static void DoThreadWork(object sender, DoWorkEventArgs e)
@@ -939,9 +944,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     p.Item.SubItems[3].Text = "ERROR";
                 }
-                if (progressBar1.Value < progressBar1.Maximum)
-                    progressBar1.Value++;
-                labelStatus.Text = progressBar1.Value + " / " + progressBar1.Maximum;
+                IncrementAndShowProgress();
                 if (progressBar1.Value == progressBar1.Maximum)
                     labelStatus.Text = string.Empty;
             }
