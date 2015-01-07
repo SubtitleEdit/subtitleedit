@@ -5173,8 +5173,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxListViewTextKeyDown(object sender, KeyEventArgs e)
         {
-            int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
-            Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
+            Utilities.CheckAutoWrap(textBoxListViewText, e, Utilities.GetNumberOfLines(textBoxListViewText.Text));
         }
 
         private void FixCommonErrorsFormClosing(object sender, FormClosingEventArgs e)

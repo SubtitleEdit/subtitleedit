@@ -3376,5 +3376,20 @@ namespace Nikse.SubtitleEdit.Logic
             return subtitle;
         }
 
+        public static int GetNumberOfLines(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return 0;
+
+            int lines = 1;
+            int idx = text.IndexOf('\n');
+            while (idx != -1)
+            {
+                lines++;
+                idx = text.IndexOf('\n', idx + 1);
+            }
+            return lines;
+        }
+
     }
 }
