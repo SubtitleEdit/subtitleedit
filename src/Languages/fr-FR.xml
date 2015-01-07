@@ -349,13 +349,13 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
   <EffectKaraoke>
     <Title>Effet Karaoké</Title>
     <ChooseColor>Choisir couleur:</ChooseColor>
-    <TotalMilliseconds>Milliseconds total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en milliseconds:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Millisecondes total:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Délai de fin en millisecondes:</EndDelayInMilliseconds>
   </EffectKaraoke>
   <EffectTypewriter>
     <Title>Effet machine à écrire</Title>
-    <TotalMilliseconds>Milliseconds total:</TotalMilliseconds>
-    <EndDelayInMilliseconds>Délai de fin en milliseconds:</EndDelayInMilliseconds>
+    <TotalMilliseconds>Millisecondes total:</TotalMilliseconds>
+    <EndDelayInMilliseconds>Délai de fin en millisecondes:</EndDelayInMilliseconds>
   </EffectTypewriter>
   <ExportCustomText>
     <Title>Exporter format de texte personnalisé</Title>
@@ -886,7 +886,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnCopyOriginalTextToCurrent>Copier la colonne de texte en cours</ColumnCopyOriginalTextToCurrent>
         <Split>Scinder</Split>
         <MergeSelectedLines>Fusionner (lignes sélec.)</MergeSelectedLines>
-        <MergeSelectedLinesAsDialog>Fusionner - style dialog</MergeSelectedLinesAsDialog>
+        <MergeSelectedLinesAsDialog>Fusionner - style dialogue</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Fusionner ligne précédente</MergeWithLineBefore>
         <MergeWithLineAfter>Fusionner ligne suivante</MergeWithLineAfter>
         <Normal>Normal</Normal>
@@ -1191,7 +1191,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <SpellCheckAbortedXCorrections>Vérification d'orthographe annulée. {0} lignes modifiées.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Vérification d'orthographe terminée. {0} lignes modifiées.</SpellCheckCompletedXCorrections>
     <OpenOtherSubtitle>Ouvrir un autre sous-titre</OpenOtherSubtitle>
-    <BeforeToggleDialogDashes>Avant de modifier les tirets de dialog</BeforeToggleDialogDashes>
+    <BeforeToggleDialogDashes>Avant de modifier les tirets de dialogue</BeforeToggleDialogDashes>
     <ExportPlainTextAs>Export de texte brut</ExportPlainTextAs>
     <TextFiles>Fichiers texte</TextFiles>
     <SubtitleExported>Sous-titres exportés</SubtitleExported>
@@ -2040,6 +2040,6 @@ Poursuivre?</SubtitleAppendPrompt>
   </WaveformGenerateTimeCodes>
   <WebVttNewVoice>
     <Title>Web VTT – Définir l’interprète</Title>
-    <VoiceName>Interprète du dialog</VoiceName>
+    <VoiceName>Interprète du dialogue</VoiceName>
   </WebVttNewVoice>
 </Language>
