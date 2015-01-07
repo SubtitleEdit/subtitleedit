@@ -65,9 +65,9 @@
             // 
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(12, 90);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(15, 90);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(224, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(221, 21);
             this.comboBoxDictionaries.TabIndex = 20;
             // 
             // labelLanguage
