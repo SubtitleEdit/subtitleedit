@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (string.IsNullOrEmpty(Text))
                     return 0;
-                return Text.Length - Text.Replace(Environment.NewLine, string.Empty).Length;
+                return Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries).Length;
             }
         }
 
