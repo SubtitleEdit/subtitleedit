@@ -59,12 +59,11 @@ namespace Nikse.SubtitleEdit.Forms
                    e.KeyCode == Keys.Left ||
                    e.KeyCode == Keys.Right ||
                    e.KeyCode == Keys.Back ||
+                   e.KeyCode == Keys.Home ||
+                   e.KeyCode == Keys.End ||
                    (e.KeyValue >= 96 && e.KeyValue <= 105))
                 {
-                }
-                else if (e.KeyData == (Keys.Shift | Keys.Home) || e.KeyData == (Keys.Shift | Keys.End) ||
-                    e.KeyCode == (Keys.MButton | Keys.Space) || e.KeyCode == (Keys.LButton | Keys.RButton | Keys.Space))
-                {
+                    return;
                 }
                 else if (e.KeyData == (Keys.Control | Keys.V) && Clipboard.GetText(TextDataFormat.UnicodeText).Length > 0)
                 {
