@@ -166,12 +166,16 @@ namespace Nikse.SubtitleEdit
                     if (nbai.Text == item.Text)
                     {
                         MessageBox.Show("Text already defined");
+                        textBoxNoBreakAfter.Focus();
+                        textBoxNoBreakAfter.SelectAll();
                         return;
                     }
                 }
                 else if (nbai.Regex != null && item.Regex != null)
                 {
                     MessageBox.Show("Text already defined");
+                    textBoxNoBreakAfter.Focus();
+                    textBoxNoBreakAfter.SelectAll();
                     return;
                 }
             }
