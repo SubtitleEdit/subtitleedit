@@ -248,18 +248,22 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var languages = GetUsedLanguages(subtitle);
             if (languages.Count > 0)
             {
+                var divParentNode = div.ParentNode;
+
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
                     if (p.Language == null)
                     {
+                        if (p.NewSection)
+                        {
+                            div = xml.CreateElement("div", "http://www.w3.org/ns/ttml");
+                            divParentNode.AppendChild(div);
+                        }
                         XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, p);
                         div.AppendChild(paragraph);
                         no++;
                     }
                 }
-                var divParentNode = div.ParentNode;
-                if (div.ChildNodes.Count == 0)
-                    divParentNode.RemoveChild(div);
 
                 foreach (string language in languages)
                 {
@@ -268,24 +272,51 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     attr.Value = language;
                     div.Attributes.Append(attr);
                     divParentNode.AppendChild(div);
+                    bool firstParagraph = true;
                     foreach (Paragraph p in subtitle.Paragraphs)
                     {
                         if (p.Language == language)
                         {
+                            if (p.NewSection && !firstParagraph)
+                            {
+                                div = xml.CreateElement("div", "http://www.w3.org/ns/ttml");
+                                attr = xml.CreateAttribute("xml:lang", "http://www.w3.org/XML/1998/namespace");
+                                attr.Value = language;
+                                div.Attributes.Append(attr);
+                                divParentNode.AppendChild(div);
+                            }
+                            firstParagraph = false;
                             XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, p);
                             div.AppendChild(paragraph);
                             no++;
                         }
                     }
                 }
+
+                if (divParentNode != null && divParentNode.HasChildNodes && !divParentNode.FirstChild.HasChildNodes)
+                {
+                    divParentNode.RemoveChild(divParentNode.FirstChild);
+                }
             }
-            else
+            else            
             {
+                var divParentNode = div.ParentNode;
+
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {
+                    if (p.NewSection)
+                    {
+                        div = xml.CreateElement("div", "http://www.w3.org/ns/ttml");
+                        divParentNode.AppendChild(div);
+                    }
                     XmlNode paragraph = MakeParagraph(subtitle, xml, defaultStyle, no, headerStyles, p);
                     div.AppendChild(paragraph);
                     no++;
+                }
+
+                if (divParentNode != null && divParentNode.HasChildNodes && !divParentNode.FirstChild.HasChildNodes)
+                {
+                    divParentNode.RemoveChild(divParentNode.FirstChild);
                 }
             }
 
@@ -444,6 +475,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             string defaultStyle = null;
             if (body.Attributes["style"] != null)
                 defaultStyle = body.Attributes["style"].InnerText;
+            XmlNode lastDiv = null;
             foreach (XmlNode node in body.SelectNodes("//ttml:p", nsmgr))
             {
                 try
@@ -528,14 +560,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             p.Text = "{\\an8}" + p.Text;
                     }
 
-                    // check language
                     if (node.ParentNode.Name == "div")
                     {
+                        // check language
                         if (node.ParentNode.Attributes["xml:lang"] != null)
                             p.Language = node.ParentNode.Attributes["xml:lang"].InnerText;
                         else if (node.ParentNode.Attributes["lang"] != null)
                             p.Language = node.ParentNode.Attributes["lang"].InnerText;
-                    }
+
+                        // check for new div
+                        if (lastDiv != null && node.ParentNode != lastDiv)
+                            p.NewSection = true;
+                        lastDiv = node.ParentNode;
+                    }                   
 
                     p.Extra = SetExtra(p);
 
