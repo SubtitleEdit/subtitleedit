@@ -415,6 +415,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Altura da linha</LineHeight>
     <BoxSingleLine>Caixa - única linha</BoxSingleLine>
     <BoxMultiLine>Caixa - multilinha</BoxMultiLine>
+    <Forced>Forçada</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -1108,6 +1109,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <NoSubtitlesFound>Nenhuma legenda encontrada</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Este não é um arquivo Matroska válido: {0}</NotAValidMatroskaFileX>
     <ParsingMatroskaFile>Analisando arquivo Matroska. Por favor, aguarde...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Analisando arquivo de fluxo de transporte, Por favor, aguarde...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Antes de importar legenda do arquivo Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Legenda importada do arquivo Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Arquivo '{0}' não aceito - o arquivo é muito grande</DropFileXNotAccepted>
@@ -1221,6 +1223,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Impossível ler/editar arquivos. idx. Arquivos idx são parte de um par de arquivos idx/sub (também chamado VobSub), e o Subtitle Edit pode abrir o arquivo .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Este arquivo parece ser um arquivo RAR compactado. O Subtitle Edit não consegue abrir arquivos compactados.</ErrorLoadRar>
     <ErrorLoadZip>Este arquivo parece ser um arquivo ZIP compactado. O Subtitle Edit não consegue abrir arquivos compactados</ErrorLoadZip>
+    <ErrorLoadPng>Este arquivo parece ser uma imagem PNG. O Subtitle Edit não pode abrir arquivos PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Este arquivo parece ser um arquivo .srr ReScene - não é uma legenda.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Selecionar legenda a partir do arquivo Matroska</Title>
@@ -1584,6 +1588,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controles de vídeo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Definir final, adicionar novo e ir para novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar posição final e ir ao seguinte</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Definir final e ir para próximo</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ajustar início, autoduração e ir ao seguinte</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Definir final, próximo início e seguir adiante</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Seta abaixo=início inicial, Seta acima=definir final e seguir adiante</AdjustStartDownEndUpAndGoToNext>
