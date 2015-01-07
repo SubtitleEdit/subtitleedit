@@ -44,6 +44,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public string Style { get; set; }
 
+        public bool NewSection { get; set; }
+
         public Paragraph()
         {
             StartTime = TimeCode.FromSeconds(0);
@@ -77,6 +79,7 @@ namespace Nikse.SubtitleEdit.Logic
             ID = paragraph.ID;
             Language = paragraph.Language;
             Style = paragraph.Style;
+            NewSection = paragraph.NewSection;
         }
 
         public Paragraph(int startFrame, int endFrame, string text)
@@ -130,9 +133,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             get
             {
-                if (string.IsNullOrEmpty(Text))
-                    return 0;
-                return Text.Length - Text.Replace(Environment.NewLine, string.Empty).Length;
+                return Utilities.GetNumberOfLines(Text);
             }
         }
 

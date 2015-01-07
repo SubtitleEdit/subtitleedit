@@ -6644,7 +6644,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (_subtitleListViewIndex >= 0)
             {
-                int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
+                int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
                 Utilities.CheckAutoWrap(textBoxListViewText, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                 // update _subtitle + listview
@@ -6672,7 +6672,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph original = Utilities.GetOriginalParagraph(_subtitleListViewIndex, p, _subtitleAlternate.Paragraphs);
                 if (original != null)
                 {
-                    int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
+                    int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
                     Utilities.CheckAutoWrap(textBoxListViewTextAlternate, new KeyEventArgs(Keys.None), numberOfNewLines);
 
                     // update _subtitle + listview
@@ -6698,7 +6698,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
                 return;
 
-            int numberOfNewLines = textBoxListViewText.Text.Length - textBoxListViewText.Text.Replace(Environment.NewLine, " ").Length;
+            int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
             //Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
@@ -16437,7 +16437,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count < 1)
                 return;
 
-            int numberOfNewLines = textBoxListViewTextAlternate.Text.Length - textBoxListViewTextAlternate.Text.Replace(Environment.NewLine, " ").Length;
+            int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
 
             //Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
