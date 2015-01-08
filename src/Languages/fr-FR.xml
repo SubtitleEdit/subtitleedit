@@ -1905,7 +1905,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <KeepChangesMessage>Les sous-titres ont été changés dans 'Synchro visuelle'.</KeepChangesMessage>
     <SynchronizationDone>Synchronisation terminée !</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>La scène de début doit venir avant la scène finale !</StartSceneMustComeBeforeEndScene>
-    <Tip>&lt;ctrl+flèche gauche/droite&gt; pour avancer/reculer de100 ms</Tip>
+    <Tip>&lt;ctrl+flèche gauche/droite&gt; pour avancer/reculer de 100 ms</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Modification de la base de données d'images</Title>
