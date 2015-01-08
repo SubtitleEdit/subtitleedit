@@ -86,12 +86,13 @@ DIGITAL_CINEMA=YES
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             Paragraph paragraph = null;
-            ExpectingLine expecting = ExpectingLine.Number;
+            var expecting = ExpectingLine.Number;
             _errorCount = 0;
 
             subtitle.Paragraphs.Clear();
-            foreach (string line in lines)
+            foreach (string l in lines)
             {
+                string line = l.Replace("[L]", string.Empty).Replace("[N]", string.Empty).TrimEnd();
                 if (RegexNumber.IsMatch(line))
                 {
                     if (paragraph != null)
