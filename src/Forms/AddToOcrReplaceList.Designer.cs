@@ -41,9 +41,9 @@
             // 
             this.comboBoxDictionaries.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDictionaries.FormattingEnabled = true;
-            this.comboBoxDictionaries.Location = new System.Drawing.Point(12, 85);
+            this.comboBoxDictionaries.Location = new System.Drawing.Point(15, 85);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
-            this.comboBoxDictionaries.Size = new System.Drawing.Size(194, 21);
+            this.comboBoxDictionaries.Size = new System.Drawing.Size(191, 21);
             this.comboBoxDictionaries.TabIndex = 20;
             // 
             // labelLanguage
@@ -83,7 +83,7 @@
             this.labelDescription.AutoSize = true;
             this.labelDescription.Location = new System.Drawing.Point(12, 13);
             this.labelDescription.Name = "labelDescription";
-            this.labelDescription.Size = new System.Drawing.Size(109, 13);
+            this.labelDescription.Size = new System.Drawing.Size(117, 13);
             this.labelDescription.TabIndex = 23;
             this.labelDescription.Text = "Add to OCR replace list";
             // 
