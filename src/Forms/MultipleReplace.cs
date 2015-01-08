@@ -209,7 +209,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddToPreviewListView(p, newText);
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
-                    if (!string.IsNullOrWhiteSpace(p.Text) && string.IsNullOrWhiteSpace(newText))
+                    if (!string.IsNullOrWhiteSpace(p.Text) && string.IsNullOrWhiteSpace(newText) || Utilities.RemoveHtmlTags(newText, true).Trim().Length == 0)
                     {
                         DeleteIndices.Add(index);
                     }
