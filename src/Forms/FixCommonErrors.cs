@@ -1954,7 +1954,7 @@ namespace Nikse.SubtitleEdit.Forms
                                         uppercaseIsInsideLowercaseWords++;
                                         AddFixToListView(p, fixAction, oldText, p.Text);
                                     }
-                                    else if (@"‘’¡¿„“()[]♪'. ".Contains(before) && !Utilities.LowercaseVowels.Contains(char.ToLower(after)))
+                                    else if (@"‘’¡¿„“()[]♪'. @".Contains(before) && !Utilities.LowercaseVowels.Contains(char.ToLower(after)))
                                     {
                                     }
                                     else
