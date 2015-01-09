@@ -381,8 +381,8 @@ namespace Nikse.SubtitleEdit.Controls
                                     }
                                 }
                             }
+                            i += end;
                         }
-                        i += end;
                         //fontIndices.Push(_subtitleTextBox.Text.Length);
                         if (fontFound)
                         {
