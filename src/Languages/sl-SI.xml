@@ -5,7 +5,7 @@
     <Version>3.4.5</Version>
     <TranslatedBy>Prevedel: Hawk</TranslatedBy>
     <CultureName>sl-SI</CultureName>
-    <HelpFile></HelpFile>
+    <HelpFile />
     <Ok>V redu</Ok>
     <Cancel>Prekini</Cancel>
     <Apply>Potrdi</Apply>
@@ -166,7 +166,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <ScanningFolder>Preiskujem {0} in podmape za podnapise...</ScanningFolder>
     <Recursive>Vključi podmape</Recursive>
     <SetMinMsBetweenSubtitles>Nastavi mini. milisekund med vrsticami</SetMinMsBetweenSubtitles>
-    <PlainText></PlainText>
+    <PlainText />
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -199,18 +199,18 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Prilagodi hitrost v odstotku</Title>
     <Info>Spremeni hitrost podnapisa v odstotku</Info>
-    <Custom></Custom>
-    <ToDropFrame></ToDropFrame>
-    <FromDropFrame></FromDropFrame>
+    <Custom />
+    <ToDropFrame />
+    <FromDropFrame />
   </ChangeSpeedInPercent>
   <CheckForUpdates>
-    <Title></Title>
-    <CheckingForUpdates></CheckingForUpdates>
-    <CheckingForUpdatesFailedX></CheckingForUpdatesFailedX>
-    <CheckingForUpdatesNoneAvailable></CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion></CheckingForUpdatesNewVersion>
-    <InstallUpdate></InstallUpdate>
-    <NoUpdates></NoUpdates>
+    <Title />
+    <CheckingForUpdates />
+    <CheckingForUpdatesFailedX />
+    <CheckingForUpdatesNoneAvailable />
+    <CheckingForUpdatesNewVersion />
+    <InstallUpdate />
+    <NoUpdates />
   </CheckForUpdates>
   <ChooseAudioTrack>
     <Title>Izberi audio datoteko</Title>
@@ -226,11 +226,11 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <Language>Jezik</Language>
   </ChooseLanguage>
   <ColorChooser>
-    <Title></Title>
-    <Red></Red>
-    <Green></Green>
-    <Blue></Blue>
-    <Alpha></Alpha>
+    <Title />
+    <Red />
+    <Green />
+    <Blue />
+    <Alpha />
   </ColorChooser>
   <ColumnPaste>
     <Title>Prilepi stolpec</Title>
@@ -274,11 +274,11 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FontEffect>Učinek</FontEffect>
     <FontEffectColor>Učinek barve</FontEffectColor>
     <FontSize>Velikost</FontSize>
-    <TopBottomMargin></TopBottomMargin>
-    <FadeUpTime></FadeUpTime>
-    <FadeDownTime></FadeDownTime>
-    <ZPosition></ZPosition>
-    <ZPositionHelp></ZPositionHelp>
+    <TopBottomMargin />
+    <FadeUpTime />
+    <FadeDownTime />
+    <ZPosition />
+    <ZPositionHelp />
     <ChooseColor>Izberi barvo...</ChooseColor>
     <Generate>Ustvari</Generate>
   </DCinemaProperties>
@@ -391,16 +391,16 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FontColor>Barva pisave</FontColor>
     <BorderColor>Barva obrobe</BorderColor>
     <BorderWidth>Višina obrobe</BorderWidth>
-    <BorderStyle></BorderStyle>
-    <BorderStyleOneBox></BorderStyleOneBox>
-    <BorderStyleBoxForEachLine></BorderStyleBoxForEachLine>
-    <BorderStyleNormalWidthX></BorderStyleNormalWidthX>
+    <BorderStyle />
+    <BorderStyleOneBox />
+    <BorderStyleBoxForEachLine />
+    <BorderStyleNormalWidthX />
     <ShadowColor>Barva sence</ShadowColor>
     <ShadowWidth>Debelina sence</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Format slike</ImageFormat>
     <SimpleRendering>Enostavno upodabljanje</SimpleRendering>
-    <AntiAliasingWithTransparency></AntiAliasingWithTransparency>
+    <AntiAliasingWithTransparency />
     <Text3D>3D</Text3D>
     <SideBySide3D>Polovično en ob drugem</SideBySide3D>
     <HalfTopBottom3D>Polovično en nad drugim</HalfTopBottom3D>
@@ -420,9 +420,9 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <SomeLinesWereTooLongX>Nekatere vrstice so bile predolge:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Višina vrstice</LineHeight>
-    <BoxSingleLine></BoxSingleLine>
-    <BoxMultiLine></BoxMultiLine>
-    <Forced></Forced>
+    <BoxSingleLine />
+    <BoxMultiLine />
+    <Forced />
   </ExportPngXml>
   <ExportText>
     <Title>Izvozi besedilo</Title>
@@ -585,9 +585,9 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sladke sanje' -&gt; '♫ sladke sanje'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} pomembna sporočila!</NumberOfImportantLogMessages>
     <FixedOkXY>Popravljeno in v redu - '{0}': {1}</FixedOkXY>
-    <FixOcrErrorExample></FixOcrErrorExample>
-    <FixSpaceBetweenNumbersExample></FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample></FixDialogsOneLineExample>
+    <FixOcrErrorExample />
+    <FixSpaceBetweenNumbersExample />
+    <FixDialogsOneLineExample />
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Potrebuješ slovarje?</Title>
@@ -698,8 +698,8 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <RestoreAutoBackup>Obnovi samodejno-varnostno kopijo...</RestoreAutoBackup>
         <AdvancedSubStationAlphaProperties>Napredna Sub postaja Alpha lastnosti...</AdvancedSubStationAlphaProperties>
         <SubStationAlphaProperties>Sub postaja Alpha lastnosti...</SubStationAlphaProperties>
-        <EbuProperties></EbuProperties>
-        <PacProperties></PacProperties>
+        <EbuProperties />
+        <PacProperties />
         <OpenOriginal>Odpri izvirni podnapis (način prevajanja)...</OpenOriginal>
         <SaveOriginal>Shrani izvirni podnapis</SaveOriginal>
         <CloseOriginal>Zapri izvirni podnapis</CloseOriginal>
@@ -766,7 +766,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <ChangeSpeedInPercent>Spremeni hitrost (odstotek)...</ChangeSpeedInPercent>
         <MergeShortLines>Združi kratke vrstice...</MergeShortLines>
         <MergeDuplicateText>Združi vrstice z enakim besedilom...</MergeDuplicateText>
-        <MergeSameTimeCodes></MergeSameTimeCodes>
+        <MergeSameTimeCodes />
         <SplitLongLines>Razdeli dolge vrstice...</SplitLongLines>
         <MinimumDisplayTimeBetweenParagraphs>Minimalni predvajalni čas med podnapisi...</MinimumDisplayTimeBetweenParagraphs>
         <SortBy>Razvrsti po</SortBy>
@@ -841,7 +841,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
         <LeaveSession>Zapusti sejo</LeaveSession>
       </Networking>
       <Help>
-        <CheckForUpdates></CheckForUpdates>
+        <CheckForUpdates />
         <Title>Pomoč</Title>
         <Help>&amp;Pomoč</Help>
         <About>&amp;O programu</About>
@@ -1001,7 +1001,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Shranjen originalni podnapis {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>datoteka na disku spremenjena</FileOnDiskModified>
     <OverwriteModifiedFile>Prepiši datoteko {0} spremenjena {1} {2}{3} z datoteko naloženo iz diska {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly></FileXIsReadOnly>
+    <FileXIsReadOnly />
     <UnableToSaveSubtitleX>Ne morem shraniti podnapisa {0}</UnableToSaveSubtitleX>
     <BeforeNew>Pred novo</BeforeNew>
     <New>Nova</New>
@@ -1075,7 +1075,7 @@ Nadaljujem?</SubtitleAppendPrompt>
     <NothingToUndo>Ni kaj razveljaviti</NothingToUndo>
     <InvalidLanguageNameX>Nepravilno ime jezika: {0}</InvalidLanguageNameX>
     <UnableToChangeLanguage>Ne morem zamenjati jezika!</UnableToChangeLanguage>
-    <DoNotDisplayMessageAgain></DoNotDisplayMessageAgain>
+    <DoNotDisplayMessageAgain />
     <NumberOfCorrectedWords>Število popravljenih besed: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Število izpuščenih besed: {0}</NumberOfSkippedWords>
     <NumberOfCorrectWords>Število pravilnih besed: {0}</NumberOfCorrectWords>
@@ -1161,7 +1161,7 @@ Nadaljujem?</SubtitleAppendPrompt>
     <OcrReplacePairXNotAdded>Par OCR liste '{0} -&gt; {1}' NI bil dodan v OCR listo</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} izbranih vrstic</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Podnapis vsebuje unicode glasbene simbole. S shranjevanjem kot ANSI se bodo znaki izbrisali. Shranim vseeno?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning></UnicodeCharactersAnsiWarning>
+    <UnicodeCharactersAnsiWarning />
     <NegativeTimeWarning>Podnapis vsebuje negativne časovne zapise. Shranim vseeno?</NegativeTimeWarning>
     <BeforeMergeShortLines>Pred združevanjem kratkih vrstic</BeforeMergeShortLines>
     <BeforeSplitLongLines>Pred razčlenjevanjem dolgih vrstic</BeforeSplitLongLines>
@@ -1221,12 +1221,12 @@ Nadaljujem?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Ni veljavna XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Pred združitvijo vrstic z enakim besedilom</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Podnapis s časovnim zapisom ima drugače oštevilčene vrstice ({0}) kot trenutni ({1}) - nadaljujem vseeno?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream></ParsingTransportStream>
+    <ParsingTransportStream />
     <ErrorLoadIdx>Ne gre beri/popravi .idx datoteke. Idx datoteka je del idx/sub datoteke (imenovane VobSub), Subtitle Edit lahko odpira le sub datoteke.</ErrorLoadIdx>
     <ErrorLoadRar>Ta datoteka je kompresirana .rar datoteka. Subtitle Edit ne odpira kompresiranih datotek.</ErrorLoadRar>
     <ErrorLoadZip>Ta datoteka je kompresirana .zip datoteka. Subtitle Edit ne odpira kompresiranih datotek.</ErrorLoadZip>
-    <ErrorLoadPng></ErrorLoadPng>
-    <ErrorLoadSrr></ErrorLoadSrr>
+    <ErrorLoadPng />
+    <ErrorLoadSrr />
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Izberi podanapis iz Matroska datoteke</Title>
@@ -1263,11 +1263,11 @@ Nadaljujem?</SubtitleAppendPrompt>
     <OnlyMergeContinuationLines>Združi edino dodane vrstice</OnlyMergeContinuationLines>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
-    <Title></Title>
-    <MaxDifferenceMilliseconds></MaxDifferenceMilliseconds>
-    <ReBreakLines></ReBreakLines>
-    <NumberOfMergesX></NumberOfMergesX>
-    <MergedText></MergedText>
+    <Title />
+    <MaxDifferenceMilliseconds />
+    <ReBreakLines />
+    <NumberOfMergesX />
+    <MergedText />
   </MergeTextWithSameTimeCodes>
   <ModifySelection>
     <Title>Uredi izbor</Title>
@@ -1352,7 +1352,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <PluginXDownloaded>Vtičniki {0} preneseno</PluginXDownloaded>
     <Download>&amp;Prenesi</Download>
     <Remove>&amp;Odstrani</Remove>
-    <UpdateAllX></UpdateAllX>
+    <UpdateAllX />
     <UnableToDownloadPluginListX>Ne morem prenesti spisek vtičnikov: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Potrebna je novejša verzija Subtitle Edit!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Posodobitev na voljo!]</UpdateAvailable>
@@ -1491,7 +1491,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <AutoBackupEveryMinute>Na minuto</AutoBackupEveryMinute>
     <AutoBackupEveryFiveMinutes>Na pet min</AutoBackupEveryFiveMinutes>
     <AutoBackupEveryFifteenMinutes>Na petnajst</AutoBackupEveryFifteenMinutes>
-    <CheckForUpdates></CheckForUpdates>
+    <CheckForUpdates />
     <AllowEditOfOriginalSubtitle>Dovoli urejanje izvornega podnapisa</AllowEditOfOriginalSubtitle>
     <PromptDeleteLines>Opomni za brisanje vrstic</PromptDeleteLines>
     <TimeCodeMode>Način časovnega zapisa</TimeCodeMode>
@@ -1502,13 +1502,13 @@ popravlja enak podnapis (sodelovanje)</Information>
     <DirectShowDescription>quartz.dll v sistem32 mapi</DirectShowDescription>
     <ManagedDirectX>Upravljanje DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideo predvajanje - .NET Vodena koda iz DirectX</ManagedDirectXDescription>
-    <MpcHc></MpcHc>
-    <MpcHcDescription></MpcHcDescription>
+    <MpcHc />
+    <MpcHcDescription />
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC medijski predvajalnik</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll iz VLC media predvajalnika 1.1.0 ali novejši</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel></VlcBrowseToLabel>
+    <VlcBrowseToLabel />
     <ShowStopButton>Prikaži gumb Ustavi</ShowStopButton>
     <ShowMuteButton>Prikaži gumb Tiho</ShowMuteButton>
     <ShowFullscreenButton>Prikaži gumb Celoten zaslon</ShowFullscreenButton>
@@ -1538,7 +1538,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <WaveformUseFFmpeg>Uporabi FFmpeg za wave izlužitev</WaveformUseFFmpeg>
     <WaveformFFmpegPath>Pot do FFmpeg</WaveformFFmpegPath>
     <WaveformBrowseToFFmpeg>Brskaj do FFmpeg</WaveformBrowseToFFmpeg>
-    <WaveformBrowseToVLC></WaveformBrowseToVLC>
+    <WaveformBrowseToVLC />
     <SubStationAlphaStyle>(Napredno) Stil Sub postaje Alpha</SubStationAlphaStyle>
     <ChooseFont>Izberi pisavo</ChooseFont>
     <ChooseColor>Izberi barvo</ChooseColor>
@@ -1577,7 +1577,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <MusicSymbol>Glasbeni simbol</MusicSymbol>
     <MusicSymbolsToReplace>Glasbeni simboli za zamenjavo (ločeni s presledkom)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popravi navadne napake - uporabi tudi pravila za vstavljene</FixCommonOcrErrorsUseHardcodedRules>
-    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime></FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+    <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime />
     <Shortcuts>Bližnjice</Shortcuts>
     <Shortcut>Bližnjica</Shortcut>
     <Control>Nadzor</Control>
@@ -1644,9 +1644,9 @@ popravlja enak podnapis (sodelovanje)</Information>
     <SyntaxColorOverlap>Pobarvaj prekoračitev časovnega zapisa</SyntaxColorOverlap>
     <SyntaxErrorColor>Barva napake</SyntaxErrorColor>
     <GoToFirstSelectedLine>Pojdi na prvo izbrano vrstico</GoToFirstSelectedLine>
-    <GoToNextEmptyLine></GoToNextEmptyLine>
+    <GoToNextEmptyLine />
     <MergeSelectedLines>Združi izbrane vrstice</MergeSelectedLines>
-    <MergeSelectedLinesOnlyFirstText></MergeSelectedLinesOnlyFirstText>
+    <MergeSelectedLinesOnlyFirstText />
     <ToggleTranslationMode>Preklopi način prevajanja</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Preklopi med izvornim in prevedenim</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Združi izvornega in prevedenaga</MergeOriginalAndTranslation>
@@ -1656,12 +1656,12 @@ popravlja enak podnapis (sodelovanje)</Information>
     <ListViewColumnInsert>Stolpec, vstavi besedilo</ListViewColumnInsert>
     <ListViewColumnPaste>Stolpec, prilepi</ListViewColumnPaste>
     <ListViewFocusWaveform>Fokusiraj krivuljo/spektrograg</ListViewFocusWaveform>
-    <ListViewGoToNextError></ListViewGoToNextError>
+    <ListViewGoToNextError />
     <ShowBeamer>Zaženi prenosnik za podnapise v celem ekranu</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Pomakni besedo nižje v naslednjo vrstico</MainTextBoxMoveLastWordDown>
     <MainTextBoxMoveFirstWordFromNextUp>Pomakni besedo višje v naslednjo vrstico</MainTextBoxMoveFirstWordFromNextUp>
-    <MainTextBoxSelectionToLower></MainTextBoxSelectionToLower>
-    <MainTextBoxSelectionToUpper></MainTextBoxSelectionToUpper>
+    <MainTextBoxSelectionToLower />
+    <MainTextBoxSelectionToUpper />
     <MainTextBoxAutoBreak>Samodejno lomi besedilo</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Odstrani lom besedila</MainTextBoxUnbreak>
     <MainFileSaveAll>Shrani vse</MainFileSaveAll>
@@ -1954,7 +1954,7 @@ Ohranim spremembe?</KeepChangesMessage>
     <OcrAutoCorrectionSpellChecking>OCR samodejno popravljanje / črkovalnik</OcrAutoCorrectionSpellChecking>
     <FixOcrErrors>Uredi OCR napake</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Uvozi besedilo s pripadajočimi časovnimi zapisi...</ImportTextWithMatchingTimeCodes>
-    <ImportNewTimeCodes></ImportNewTimeCodes>
+    <ImportNewTimeCodes />
     <SaveSubtitleImageAs>Shrani sliko podnapisa kot...</SaveSubtitleImageAs>
     <SaveAllSubtitleImagesAsBdnXml>Shrani vse slike (png/bdn xml)...</SaveAllSubtitleImagesAsBdnXml>
     <SaveAllSubtitleImagesWithHtml>Shrani vse slike s HTML indeks...</SaveAllSubtitleImagesWithHtml>
