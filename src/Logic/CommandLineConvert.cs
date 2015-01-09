@@ -492,7 +492,22 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                            if (!File.Exists(outputFileName))
+                            {
+                                Console.WriteLine("File not found!");
+                                errors++;
+                                return false;
+                            }
+                            if ((File.GetAttributes(outputFileName) & FileAttributes.ReadOnly) == FileAttributes.ReadOnly)
+                            {
+                                Console.WriteLine("File is Read-Only!");
+                                errors++;
+                                return false;
+                            }
+                            else
+                            {
+                                File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                            }
                         }
 
                         if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
