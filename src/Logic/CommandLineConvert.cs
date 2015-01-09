@@ -492,7 +492,16 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                            try
+                            {
+                                File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                            }
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex.Message);
+                                errors++;
+                                return false;
+                            }
                         }
 
                         if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
