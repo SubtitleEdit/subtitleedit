@@ -190,6 +190,7 @@
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.buttonCancel);
             this.KeyPreview = true;
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(750, 400);
             this.Name = "MergeDoubleLines";
             this.ShowIcon = false;
