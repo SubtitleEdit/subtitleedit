@@ -6462,7 +6462,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Replace(Convert.ToChar(0x202E).ToString(), string.Empty).
                 Replace(Convert.ToChar(0x202B).ToString(), string.Empty);
 
-            int numberOfLines = 1 + (text.Trim().Length - text.Trim().Replace(Environment.NewLine, string.Empty).Length) / Environment.NewLine.Length;
+            int numberOfLines = Utilities.GetNumberOfLines(text.Trim());
             int maxLines = int.MaxValue;
             if (Configuration.Settings.Tools.ListViewSyntaxMoreThanXLines)
                 maxLines = Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX;
