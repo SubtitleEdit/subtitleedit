@@ -154,10 +154,12 @@ DIGITAL_CINEMA=YES
                             s = s.Replace("[/I]", "</i>");
                             s = s.Replace("[P]", string.Empty);
                             s = s.Replace("[/P]", string.Empty);
+                            s = s.Replace("\0", string.Empty);
                             paragraph.Text = (paragraph.Text + Environment.NewLine + s).Trim();
                             if (paragraph.Text.Length > 2000)
                             {
                                 _errorCount += 100;
+                                subtitle.Renumber(1);
                                 return;
                             }
                         }
