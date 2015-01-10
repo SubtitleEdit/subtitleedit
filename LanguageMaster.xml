@@ -1528,6 +1528,7 @@ can edit in same subtitle file (collaboration)</Information>
     <WaveformSelectedColor>Selected color</WaveformSelectedColor>
     <WaveformBackgroundColor>Back color</WaveformBackgroundColor>
     <WaveformTextColor>Text color</WaveformTextColor>
+    <WaveformTextFontSize>Text font size</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Empty 'Spectrograms' and 'Waveforms' folders</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveforms' and 'Spectrograms' folders contain {0} files ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogram</Spectrogram>

@@ -923,6 +923,7 @@
     <Compile Include="Logic\SubtitleFormats\FinalCutProXml14.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType6.cs" />
     <Compile Include="Logic\SubtitleFormats\JsonType5.cs" />
+    <Compile Include="Logic\SubtitleFormats\SamiYouTube.cs" />
     <Compile Include="Logic\SubtitleFormats\SatBoxPng.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle73.cs" />
     <Compile Include="Logic\SubtitleFormats\AdobeEncoreLineTabNewLine.cs" />

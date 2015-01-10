@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
 
             checkBoxAutoDetectAnsiEncoding.Checked = gs.AutoGuessAnsiEncoding;
-            comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString();
+            comboBoxSubtitleFontSize.Text = gs.SubtitleFontSize.ToString(CultureInfo.InvariantCulture);
             checkBoxSubtitleFontBold.Checked = gs.SubtitleFontBold;
             checkBoxSubtitleCenter.Checked = gs.CenterSubtitleInTextBox;
             panelSubtitleFontColor.BackColor = gs.SubtitleFontColor;
@@ -388,6 +388,18 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSpectrogramAppearance.Items.Clear();
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
+            if (string.IsNullOrEmpty(language.WaveformTextFontSize))
+            {
+                labelWaveformTextSize.Visible = false;
+                comboBoxWaveformTextSize.Visible = false;
+                checkBoxWaveformTextBold.Visible = false;
+            }
+            else
+            {
+                labelWaveformTextSize.Text = language.WaveformTextFontSize;
+                comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
+                checkBoxWaveformTextBold.Left = comboBoxWaveformTextSize.Left + comboBoxWaveformTextSize.Width + 5;
+            }
 
             buttonWaveformsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
@@ -617,6 +629,8 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxSpectrogramAppearance.SelectedIndex = 0;
             else
                 comboBoxSpectrogramAppearance.SelectedIndex = 1;
+            comboBoxWaveformTextSize.Text = Configuration.Settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture);
+            checkBoxWaveformTextBold.Checked = Configuration.Settings.VideoControls.WaveformTextBold;
             checkBoxReverseMouseWheelScrollDirection.Checked = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
             checkBoxAllowOverlap.Checked = Configuration.Settings.VideoControls.WaveformAllowOverlap;
             checkBoxWaveformHoverFocus.Checked = Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter;
@@ -1236,6 +1250,9 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "OneColorGradient";
             else
                 Configuration.Settings.VideoControls.SpectrogramAppearance = "Classic";
+
+            Configuration.Settings.VideoControls.WaveformTextSize = int.Parse(comboBoxWaveformTextSize.Text);
+            Configuration.Settings.VideoControls.WaveformTextBold = checkBoxWaveformTextBold.Checked;
             Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward = checkBoxReverseMouseWheelScrollDirection.Checked;
             Configuration.Settings.VideoControls.WaveformAllowOverlap = checkBoxAllowOverlap.Checked;
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;

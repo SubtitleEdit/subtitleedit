@@ -4184,6 +4184,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/WaveformTextColor":
                     language.Settings.WaveformTextColor = reader.Value;
                     break;
+                case "Settings/WaveformTextFontSize":
+                    language.Settings.WaveformTextFontSize = reader.Value;
+                    break;
                 case "Settings/WaveformAndSpectrogramsFolderEmpty":
                     language.Settings.WaveformAndSpectrogramsFolderEmpty = reader.Value;
                     break;

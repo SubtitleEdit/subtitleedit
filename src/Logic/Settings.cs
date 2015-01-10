@@ -640,7 +640,8 @@ namespace Nikse.SubtitleEdit.Logic
         public Color WaveformSelectedColor { get; set; }
         public Color WaveformBackgroundColor { get; set; }
         public Color WaveformTextColor { get; set; }
-        public double WaveformTextSize { get; set; }
+        public int WaveformTextSize { get; set; }
+        public bool WaveformTextBold { get; set; }
         public string WaveformDoubleClickOnNonParagraphAction { get; set; }
         public string WaveformRightClickOnNonParagraphAction { get; set; }
         public bool WaveformMouseWheelScrollUpIsForward { get; set; }
@@ -667,6 +668,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformBackgroundColor = Color.Black;
             WaveformTextColor = Color.Gray;
             WaveformTextSize = 9;
+            WaveformTextBold = true;
             WaveformDoubleClickOnNonParagraphAction = "PlayPause";
             WaveformDoubleClickOnNonParagraphAction = string.Empty;
             WaveformMouseWheelScrollUpIsForward = true;
@@ -2027,7 +2029,10 @@ namespace Nikse.SubtitleEdit.Logic
                 settings.VideoControls.WaveformTextColor = Color.FromArgb(int.Parse(subNode.InnerText));
             subNode = node.SelectSingleNode("WaveformTextSize");
             if (subNode != null)
-                settings.VideoControls.WaveformTextSize = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
+                settings.VideoControls.WaveformTextSize = Convert.ToInt32(subNode.InnerText, CultureInfo.InvariantCulture);
+            subNode = node.SelectSingleNode("WaveformTextBold");
+            if (subNode != null)
+                settings.VideoControls.WaveformTextBold = Convert.ToBoolean(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformDoubleClickOnNonParagraphAction");
             if (subNode != null)
                 settings.VideoControls.WaveformDoubleClickOnNonParagraphAction = subNode.InnerText;
@@ -2927,6 +2932,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("WaveformBackgroundColor", settings.VideoControls.WaveformBackgroundColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextColor", settings.VideoControls.WaveformTextColor.ToArgb().ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformTextSize", settings.VideoControls.WaveformTextSize.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformTextBold", settings.VideoControls.WaveformTextBold.ToString());
                 textWriter.WriteElementString("WaveformDoubleClickOnNonParagraphAction", settings.VideoControls.WaveformDoubleClickOnNonParagraphAction);
                 textWriter.WriteElementString("WaveformRightClickOnNonParagraphAction", settings.VideoControls.WaveformRightClickOnNonParagraphAction);
                 textWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString());
