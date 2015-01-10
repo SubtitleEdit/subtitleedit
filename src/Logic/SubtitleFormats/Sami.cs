@@ -114,6 +114,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                        "<SYNC Start=\"{1}\"><P Class=\"{3}\">&nbsp;</P></SYNC>";
                 paragraphWriteFormatOpen = "<SYNC Start=\"{0}\"><P Class=\"{2}\">{1}</P></SYNC>";
             }
+            else if (Name == new SamiYouTube().Name)
+            {
+                paragraphWriteFormat = "<SYNC Start=\"{0}\"><P Class=\"{3}\">{2}</P></SYNC>" + Environment.NewLine +
+                                       "<SYNC Start=\"{1}\"><P Class=\"{3}\"></P></SYNC>";
+                paragraphWriteFormatOpen = "<SYNC Start=\"{0}\"><P Class=\"{2}\">{1}</P></SYNC>";
+            }
 
             int count = 1;
             var sb = new StringBuilder();
@@ -173,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
                     currentClass = p.Extra;
-                if (next != null && Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
+                if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, currentClass));
                 else
                     sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, currentClass));
@@ -188,9 +194,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 1)
                 return WebUtility.HtmlEncode(text);
-            else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
+            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 2)
                 return HtmlUtil.EncodeNamed(text);
-            else if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
+            if (Configuration.Settings.SubtitleSettings.SamiHtmlEncodeMode == 3)
                 return HtmlUtil.EncodeNumeric(text);
             return text;
         }
@@ -370,7 +376,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             partial.Append(text[i]);
                         }
-                        else if (tagOn)
+                        else
                         {
                             total.Append(text[i]);
                         }
