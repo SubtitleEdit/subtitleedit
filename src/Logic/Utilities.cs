@@ -1888,11 +1888,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static bool IsValidRegex(string testPattern)
         {
-            if (string.IsNullOrEmpty(testPattern))
-            {
-                return false;
-            }
-
             try
             {
                 Regex.Match("", testPattern);
