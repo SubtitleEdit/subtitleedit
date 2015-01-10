@@ -47,8 +47,9 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
         private const int IndexRemoveSpaceBetweenNumbers = 28;
         private const int IndexDialogsOnOneLine = 29;
-        private const int IndexDanishLetterI = 30;
-        private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
+        private const int IndexFixInvalidEllipses = 30;
+        private const int IndexDanishLetterI = 31;
+        private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 32;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
         private int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -384,8 +385,13 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked),
                 new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked),
-                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked)
+                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked),
             };
+
+            if (string.IsNullOrEmpty(_language.FixInvalidEllipses))
+                _fixActions.Add(new FixItem("Fix Ellipses", "Foobar.. -> Foobar...", delegate { FixInvalidEllipses(); }, ce.FixInvalidEllipsesTicked));
+            else
+                _fixActions.Add(new FixItem(_language.FixInvalidEllipses, "Foobar.. -> Foobar...", delegate { FixInvalidEllipses(); }, ce.FixInvalidEllipsesTicked));
 
             if (string.IsNullOrEmpty(_language.FixOcrErrorExample))
                 _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
@@ -422,7 +428,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _spanishInvertedQuestionAndExclamationMarksIndex = _fixActions.Count;
                 _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", delegate { FixSpanishInvertedQuestionAndExclamationMarks(); }, ce.SpanishInvertedQuestionAndExclamationMarksTicked));
             }
-
+            
             listView1.Items.Clear();
             foreach (FixItem fi in _fixActions)
                 AddFixActionItemToListView(fi);
@@ -3179,6 +3185,37 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        public void FixInvalidEllipses()
+        {
+            string fixAction = _language.FixInvalidEllipses == null ? string.Empty : _language.FixInvalidEllipses;
+            int fixCount = 0;
+            listViewFixes.BeginUpdate();
+            for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
+            {
+                Paragraph p = Subtitle.Paragraphs[i];
+                var text = p.Text;
+                if (!text.Contains("..")) continue;
+                if(AllowFix(p, fixAction))
+                {
+                    var oldText = text;
+                    text = FixCommonErrorsHelper.FixInvalidEllises(text);
+                    if (oldText != text)
+                    {
+                        p.Text = text;
+                        fixCount++;
+                        AddFixToListView(p, fixAction, oldText, text);
+                    }
+                }
+            }
+            listViewFixes.EndUpdate();
+            listViewFixes.Refresh();
+            if(fixCount > 0)
+            {
+                _totalFixes += fixCount;
+                LogStatus(_language.FixInvalidEllipses, string.Format(_language.XFixEllipsesStart, fixCount));
+            }
+        }
+
         private static string FixMissingOpenBracket(string text, string openB)
         {
             string pre = string.Empty;
@@ -4517,6 +4554,7 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixHyphensAddTicked = listView1.Items[IndexFixHyphensAdd].Checked;
             ce.Fix3PlusLinesTicked = listView1.Items[IndexFix3PlusLines].Checked;
             ce.FixDoubleDashTicked = listView1.Items[IndexFixDoubleDash].Checked;
+            ce.FixInvalidEllipsesTicked = listView1.Items[IndexFixInvalidEllipses].Checked;
             ce.FixDoubleGreaterThanTicked = listView1.Items[IndexFixDoubleGreaterThan].Checked;
             ce.FixEllipsesStartTicked = listView1.Items[IndexFixEllipsesStart].Checked;
             ce.FixMissingOpenBracketTicked = listView1.Items[IndexFixMissingOpenBracket].Checked;

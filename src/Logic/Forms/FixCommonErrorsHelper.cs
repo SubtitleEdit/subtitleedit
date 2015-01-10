@@ -6,6 +6,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class FixCommonErrorsHelper
     {
+        public static string FixInvalidEllises(string text)
+        {
+            var regex = new System.Text.RegularExpressions.Regex(@"\b\.{2}(?!\.)");
+            int addOne = 0;
+            foreach (System.Text.RegularExpressions.Match match in regex.Matches(text))
+            {
+                text = text.Insert((match.Index + 2) + addOne, ".");
+                addOne++;
+            }
+            return text;
+        }
+
         public static string FixEllipsesStartHelper(string text)
         {
             if (string.IsNullOrEmpty(text) || text.Trim().Length < 4)

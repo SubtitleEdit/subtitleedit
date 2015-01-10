@@ -631,17 +631,20 @@
             public string FixDoubleDash { get; set; }
             public string FixDoubleGreaterThan { get; set; }
             public string FixEllipsesStart { get; set; }
+            public string FixInvalidEllipses { get; set; }
             public string FixMissingOpenBracket { get; set; }
             public string FixMusicNotation { get; set; }
             public string XFixDoubleDash { get; set; }
             public string XFixDoubleGreaterThan { get; set; }
             public string XFixEllipsesStart { get; set; }
+            public string XFixInvalidEllipses { get; set; }
             public string XFixMissingOpenBracket { get; set; }
             public string XFixMusicNotation { get; set; }
             public string FixDoubleDashExample { get; set; }
             public string FixDoubleGreaterThanExample { get; set; }
             public string FixEllipsesStartExample { get; set; }
             public string FixMissingOpenBracketExample { get; set; }
+            public string FixInvalidEllipsesExample { get; set; }
             public string FixMusicNotationExample { get; set; }
             public string NumberOfImportantLogMessages { get; set; }
             public string FixedOkXY { get; set; }

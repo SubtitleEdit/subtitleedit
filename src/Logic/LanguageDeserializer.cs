@@ -1604,6 +1604,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "FixCommonErrors/FixEllipsesStart":
                     language.FixCommonErrors.FixEllipsesStart = reader.Value;
                     break;
+                case "FixCommonErrors/FixInvalidEllipses":
+                    language.FixCommonErrors.FixInvalidEllipses = reader.Value;
+                    break;
                 case "FixCommonErrors/FixMissingOpenBracket":
                     language.FixCommonErrors.FixMissingOpenBracket = reader.Value;
                     break;
@@ -1618,6 +1621,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "FixCommonErrors/XFixEllipsesStart":
                     language.FixCommonErrors.XFixEllipsesStart = reader.Value;
+                    break;
+                case "FixCommonErrors/XFixInvalidEllipses":
+                    language.FixCommonErrors.XFixInvalidEllipses = reader.Value;
                     break;
                 case "FixCommonErrors/XFixMissingOpenBracket":
                     language.FixCommonErrors.XFixMissingOpenBracket = reader.Value;
@@ -1636,6 +1642,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "FixCommonErrors/FixMissingOpenBracketExample":
                     language.FixCommonErrors.FixMissingOpenBracketExample = reader.Value;
+                    break;
+                case "FixCommonErrors/FixInvalidEllipsesExample":
+                    language.FixCommonErrors.FixInvalidEllipsesExample = reader.Value;
                     break;
                 case "FixCommonErrors/FixMusicNotationExample":
                     language.FixCommonErrors.FixMusicNotationExample = reader.Value;

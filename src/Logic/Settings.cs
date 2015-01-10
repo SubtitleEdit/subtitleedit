@@ -392,7 +392,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool FixEllipsesStartTicked { get; set; }
         public bool FixMissingOpenBracketTicked { get; set; }
         public bool FixMusicNotationTicked { get; set; }
-
+        public bool FixInvalidEllipsesTicked { get; set; }
         public FixCommonErrorsSettings()
         {
             EmptyLinesTicked = true;
