@@ -361,26 +361,30 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             size += (2 + palSize * 5) /* PDS */;
             size += rleBuf.Length;
 
+            int leftOrRightMargin = bottomMargin;
+            if (leftOrRightMargin > 20)
+                leftOrRightMargin = 20;
+
             switch (alignment)
             {
                 case ContentAlignment.BottomLeft:
-                    pic.WindowXOffset = bottomMargin;
+                    pic.WindowXOffset = leftOrRightMargin;
                     pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
                     break;
                 case ContentAlignment.BottomRight:
                     pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
-                    pic.WindowYOffset = pic.Height - (bm.Height + bottomMargin);
+                    pic.WindowYOffset = pic.Height - (bm.Height + leftOrRightMargin);
                     break;
                 case ContentAlignment.MiddleCenter:
                     pic.WindowXOffset = (pic.Width - bm.Width) / 2;
                     pic.WindowYOffset = (pic.Height - bm.Height) / 2;
                     break;
                 case ContentAlignment.MiddleLeft:
-                    pic.WindowXOffset = bottomMargin;
+                    pic.WindowXOffset = leftOrRightMargin;
                     pic.WindowYOffset = (pic.Height - bm.Height) / 2;
                     break;
                 case ContentAlignment.MiddleRight:
-                    pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
+                    pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
                     pic.WindowYOffset = (pic.Height - bm.Height) / 2;
                     break;
                 case ContentAlignment.TopCenter:
@@ -388,11 +392,11 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                     pic.WindowYOffset = bottomMargin;
                     break;
                 case ContentAlignment.TopLeft:
-                    pic.WindowXOffset = bottomMargin;
+                    pic.WindowXOffset = leftOrRightMargin;
                     pic.WindowYOffset = bottomMargin;
                     break;
                 case ContentAlignment.TopRight:
-                    pic.WindowXOffset = pic.Width - bm.Width - bottomMargin;
+                    pic.WindowXOffset = pic.Width - bm.Width - leftOrRightMargin;
                     pic.WindowYOffset = bottomMargin;
                     break;
                 default: // ContentAlignment.BottomCenter:
