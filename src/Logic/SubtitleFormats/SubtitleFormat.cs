@@ -98,6 +98,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new RhozetHarmonic(),
                     new Sami(),
                     new SamiModern(),
+                    new SamiYouTube(),
                     new Scenarist(),
                     new ScenaristClosedCaptions(),
                     new ScenaristClosedCaptionsDropFrame(),
