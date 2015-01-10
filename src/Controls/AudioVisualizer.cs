@@ -194,6 +194,7 @@ namespace Nikse.SubtitleEdit.Controls
         public Color ParagraphColor { get; set; }
         public Color TextColor { get; set; }
         public float TextSize { get; set; }
+        public bool TextBold { get; set; }
         public Color GridColor { get; set; }
         public bool DrawGridLines { get; set; }
         public bool AllowNewSelection { get; set; }
@@ -277,7 +278,8 @@ namespace Nikse.SubtitleEdit.Controls
             SelectedColor = Color.Red;
             ParagraphColor = Color.LimeGreen;
             TextColor = Color.Gray;
-            TextSize = 10;
+            TextSize = 9;
+            TextBold = true;
             GridColor = Color.FromArgb(255, 20, 20, 18);
             DrawGridLines = true;
             AllowNewSelection = true;
@@ -731,6 +733,7 @@ namespace Nikse.SubtitleEdit.Controls
             int currentRegionLeft = SecondsToXPosition(paragraph.StartTime.TotalSeconds) - begin;
             int currentRegionRight = SecondsToXPosition(paragraph.EndTime.TotalSeconds) - begin;
             int currentRegionWidth = currentRegionRight - currentRegionLeft;
+            var drawingStyle = TextBold ? FontStyle.Bold : FontStyle.Regular;
             using (var brush = new SolidBrush(Color.FromArgb(42, 255, 255, 255))) // back color for paragraphs
             {
                 e.Graphics.FillRectangle(brush, currentRegionLeft, 0, currentRegionWidth, e.Graphics.VisibleClipBounds.Height);
@@ -746,7 +749,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (n > 80)
                     {
-                        using (var font = new Font(Font.FontFamily, TextSize, FontStyle.Bold))
+                        using (var font = new Font(Font.FontFamily, TextSize, drawingStyle))
                         {
                             e.Graphics.DrawString(paragraph.Text.Replace(Environment.NewLine, "  "), font, textBrush, new PointF(currentRegionLeft + 3, 10));
                             e.Graphics.DrawString("#" + paragraph.Number + "  " + paragraph.StartTime.ToShortStringHHMMSSFF() + " --> " + paragraph.EndTime.ToShortStringHHMMSSFF(), font, textBrush, new PointF(currentRegionLeft + 3, Height - 32));
@@ -761,7 +764,7 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (n > 80)
                     {
-                        using (var font = new Font(Font.FontFamily, TextSize, FontStyle.Bold))
+                        using (var font = new Font(Font.FontFamily, TextSize, drawingStyle))
                         {
                             using (var blackBrush = new SolidBrush(Color.Black))
                             {
