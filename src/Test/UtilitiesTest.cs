@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.Forms;
 
 namespace Test
 {
@@ -276,5 +277,27 @@ namespace Test
             Assert.AreEqual(count, 0);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddTest()
+        {
+            var test1 = @"<font color=""#008080"">- Foobar.
+Foobar.</font>";
+            var expected1 = @"<font color=""#008080"">- Foobar.
+- Foobar.</font>";
+
+            var test2 = @"<i>Foobar.</i>
+- Foobar.";
+            var expected2 = @"<i>- Foobar.</i>
+- Foobar.";
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
+            sub.Paragraphs.Add(new Paragraph(test2, 0000, 11111));
+
+            string output1 = FixCommonErrorsHelper.FixHyphensAdd(sub, 0, "en");
+            string output2 = FixCommonErrorsHelper.FixHyphensAdd(sub, 1, "en");
+
+            Assert.AreEqual(output1, expected1); Assert.AreEqual(output2, expected2);
+        }
     }
 }

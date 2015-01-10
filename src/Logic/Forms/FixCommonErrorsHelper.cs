@@ -289,16 +289,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             Paragraph p = subtitle.Paragraphs[i];
             string text = p.Text;
-
-            if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
-                text.Contains(Environment.NewLine + "-") ||
-                text.Contains(Environment.NewLine + " -") ||
-                text.Contains(Environment.NewLine + "<i>-") ||
-                text.Contains(Environment.NewLine + "<i> -") ||
-                text.Contains(Environment.NewLine + "<I>-") ||
-                text.Contains(Environment.NewLine + "<I> -"))
+            var textCache = Utilities.RemoveHtmlTags(text.TrimStart());
+            if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
@@ -311,20 +303,22 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         var parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         if (parts.Length == 2)
                         {
-                            bool doAdd = parts[0].TrimEnd().EndsWith('.') || parts[0].TrimEnd().EndsWith('!') || parts[0].TrimEnd().EndsWith('?') || language == "ko";
-
-                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':'))
+                            var part0 = parts[0].TrimEnd();
+                            bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || language == "ko";
+                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':') && !doAdd)
                                 doAdd = false;
-                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':'))
+                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':') && !doAdd)
                                 doAdd = false;
 
                             if (doAdd)
                             {
                                 int idx = text.IndexOf('-');
-                                bool addFirstLine = idx < 5;
-                                if (addFirstLine && idx > 0 && Utilities.AllLetters.Contains(text[idx - 1]))
-                                    addFirstLine = false;
-                                if (addFirstLine)
+                                int newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                                bool addSecondLine = idx < newLineIdx ? true : false;
+
+                                if (addSecondLine && idx > 0 && Utilities.AllLetters.Contains(text[idx - 1]))
+                                    addSecondLine = false;
+                                if (addSecondLine)
                                 {
                                     // add dash in second line.
                                     if (text.Contains(Environment.NewLine + "<i>"))
