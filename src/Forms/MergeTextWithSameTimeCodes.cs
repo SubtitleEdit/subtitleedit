@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private Subtitle _mergedSubtitle;
         private bool _loading = true;
-        private Timer previewTimer = new Timer();
+        private readonly Timer _previewTimer = new Timer();
         public int NumberOfMerges { get; private set; }
         private string _language;
         private Dictionary<int, bool> _isFixAllowedList = new Dictionary<int, bool>();
@@ -23,7 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
         }
@@ -37,8 +37,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            previewTimer.Tick += previewTimer_Tick;
-            previewTimer.Interval = 250;
+            _previewTimer.Tick += previewTimer_Tick;
+            _previewTimer.Interval = 250;
             FixLargeFonts();
         }
 
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void previewTimer_Tick(object sender, EventArgs e)
         {
-            previewTimer.Stop();
+            _previewTimer.Stop();
             Cursor = Cursors.WaitCursor;
             GeneratePreview();
             Cursor = Cursors.Default;
@@ -86,7 +86,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             foreach (string number in lineNumbers.TrimEnd(',').Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                _isFixAllowedList.Add(Convert.ToInt32(number), true);
+                int key = Convert.ToInt32(number);
+                if (!_isFixAllowedList.ContainsKey(key))
+                    _isFixAllowedList.Add(key, true);
             }
         }
 
@@ -197,9 +199,16 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!mergedIndexes.Contains(i - 1))
                             mergedIndexes.Add(i - 1);
 
-                        lineNumbers.Append(p.Number);
-                        lineNumbers.Append(',');
-                        lineNumbers.Append(next.Number);
+                        if (!("," + lineNumbers).Contains("," + p.Number + ","))
+                        {
+                            lineNumbers.Append(p.Number);
+                            lineNumbers.Append(',');
+                        }
+                        if (!("," + lineNumbers).Contains("," + next.Number + ","))
+                        {
+                            lineNumbers.Append(next.Number);
+                            lineNumbers.Append(',');
+                        }
                     }
                     else
                     {
@@ -217,7 +226,7 @@ namespace Nikse.SubtitleEdit.Forms
                     lineNumbers = new StringBuilder();
                 }
             }
-            if (lineNumbers.Length > 0 && clearFixes)
+            if (lineNumbers.Length > 0 && clearFixes && p != null)
             {
                 AddToListView(p, lineNumbers.ToString(), p.Text);
             }
