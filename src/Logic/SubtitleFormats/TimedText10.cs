@@ -462,12 +462,23 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (body == null)
                 return;
 
-            XmlAttribute frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
+            var frameRateAttr = xml.DocumentElement.Attributes["ttp:frameRate"];
             if (frameRateAttr != null)
             {
                 double fr;
                 if (double.TryParse(frameRateAttr.Value, out fr))
+                {
                     Configuration.Settings.General.CurrentFrameRate = fr;
+
+                    var frameRateMultiplier = xml.DocumentElement.Attributes["ttp:frameRateMultiplier"];
+                    if (frameRateMultiplier != null)
+                    {
+                        if (frameRateMultiplier.InnerText == "999 1000")
+                        {
+                            Configuration.Settings.General.CurrentFrameRate = fr * (999.0 / 1000.0);
+                        }
+                    }
+                }
             }
 
             Configuration.Settings.SubtitleSettings.TimedText10TimeCodeFormatSource = null;
