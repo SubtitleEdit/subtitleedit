@@ -195,16 +195,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             Paragraph p = subtitle.Paragraphs[i];
             string text = p.Text;
-
-            if (text.TrimStart().StartsWith('-') ||
-                text.TrimStart().StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) ||
-                text.TrimStart().StartsWith("<i> -", StringComparison.OrdinalIgnoreCase) ||
-                text.Contains(Environment.NewLine + '-') ||
-                text.Contains(Environment.NewLine + " -") ||
-                text.Contains(Environment.NewLine + "<i>-") ||
-                text.Contains(Environment.NewLine + "<i> -") ||
-                text.Contains(Environment.NewLine + "<I>-") ||
-                text.Contains(Environment.NewLine + "<I> -"))
+            var textCache = Utilities.RemoveHtmlTags(text.TrimStart());
+            if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
 
@@ -214,13 +206,15 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
-                        bool remove = true;
                         var parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        bool remove = true;
+                        var part0 = parts[0].TrimEnd();
+                        bool doRemove = "!?.".Contains(part0[part0.Length - 1]);
                         if (parts.Length == 2)
                         {
-                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(": "))
+                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(": ") && !doRemove)
                                 remove = false;
-                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(": "))
+                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(": ") && !doRemove)
                                 remove = false;
                         }
 
@@ -290,10 +284,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
             text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
             text = text.Replace(Environment.NewLine + "<b> ", Environment.NewLine + "<b>");
-            if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+            text = text.Replace(Environment.NewLine + "<u> ", Environment.NewLine + "<u>");
+            if (text.StartsWith("<", StringComparison.OrdinalIgnoreCase) && text.Length > 3 && "ibu".Contains(text[1].ToString(), StringComparison.OrdinalIgnoreCase) && text[2] == '>')
                 text = text.Remove(3, 1);
-            if (text.StartsWith("<b> ", StringComparison.OrdinalIgnoreCase))
-                text = text.Remove(3, 1);
+
+            // Todo: do the same for font tags...
             return text;
         }
 
