@@ -1527,6 +1527,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <WaveformSelectedColor>Farbe markiert</WaveformSelectedColor>
     <WaveformBackgroundColor>Hintergrundfarbe</WaveformBackgroundColor>
     <WaveformTextColor>Textfarbe</WaveformTextColor>
+    <WaveformTextFontSize>Schriftgröße</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Ordner für Spektogramme und Wellenform leeren</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Ordner für Spektogramme und Wellenform enthält {0} Dateien ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogramm</Spectrogram>
@@ -1589,6 +1590,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ToggleDockUndockOfVideoControls>An-/Abdocken der Videosteuerung umschalten</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ende setzen, ergänzen und dahin</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Über Endposition anpassen und weiter</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Ende setzen und weiter</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Start setzen, Autolänge und weiter</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Ende setzen, nächster Start und weiter</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Pfeil unten=Start, Pfeil hoch=Ende setzen und weiter</AdjustStartDownEndUpAndGoToNext>
