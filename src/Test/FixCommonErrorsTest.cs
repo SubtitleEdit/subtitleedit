@@ -1007,9 +1007,10 @@ namespace Test
         {
             using (var target = GetFixCommonErrorsLib())
             {
-                InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
+                InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>", "Foobar.\r\n<font color='red'>- Mm-hmm.</font>");
                 target.FixHyphens();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
+                Assert.AreEqual(target.Subtitle.Paragraphs[1].Text, "Foobar.\r\n<font color='red'>Mm-hmm.</font>");
             }
         }
 
