@@ -241,20 +241,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             else
                             {
                                 int indexOfNewLine = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
-                                if (indexOfNewLine > 0)
+                                if (indexOfNewLine == -1)
+                                    return text;
+                                idx = text.IndexOf('-', indexOfNewLine);
+                                if (idx > indexOfNewLine && indexOfNewLine + 5 < text.Length)
                                 {
+                                    text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
                                     idx = text.IndexOf('-', indexOfNewLine);
-                                    if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
+                                    if (idx > indexOfNewLine && indexOfNewLine + 5 < text.Length)
                                     {
-                                        text = text.Remove(idx, 1).TrimStart().Replace(Environment.NewLine + " ", Environment.NewLine);
-
-                                        idx = text.IndexOf('-', indexOfNewLine);
-                                        if (idx >= 0 && indexOfNewLine + 5 > indexOfNewLine)
-                                        {
-                                            text = text.Remove(idx, 1).TrimStart();
-
-                                            text = RemoveSpacesBeginLine(text);
-                                        }
+                                        text = text.Remove(idx, 1).TrimStart();
+                                        text = RemoveSpacesBeginLine(text);
                                     }
                                 }
                             }
