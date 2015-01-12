@@ -83,10 +83,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             public string Name { get; set; }
             public string Example { get; set; }
-            public EventHandler Action { get; set; }
+            public Action Action { get; set; }
             public bool DefaultChecked { get; set; }
 
-            public FixItem(string name, string example, EventHandler action, bool selected)
+            public FixItem(string name, string example, Action action, bool selected)
             {
                 Name = name;
                 Example = example;
@@ -360,31 +360,31 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, delegate { FixEmptyLines(); }, ce.EmptyLinesTicked),
-                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, delegate { FixOverlappingDisplayTimes(); }, ce.OverlappingDisplayTimeTicked),
-                new FixItem(_language.FixShortDisplayTimes, string.Empty, delegate { FixShortDisplayTimes(); }, ce.TooShortDisplayTimeTicked),
-                new FixItem(_language.FixLongDisplayTimes, string.Empty, delegate { FixLongDisplayTimes(); }, ce.TooLongDisplayTimeTicked),
-                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, delegate { FixInvalidItalicTags(); }, ce.InvalidItalicTagsTicked),
-                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, delegate { FixUnneededSpaces(); }, ce.UnneededSpacesTicked),
-                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, delegate { FixUnneededPeriods(); }, ce.UnneededPeriodsTicked),
-                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, delegate { FixMissingSpaces(); }, ce.MissingSpacesTicked),
-                new FixItem(_language.BreakLongLines, string.Empty, delegate { FixLongLines(); }, ce.BreakLongLinesTicked),
-                new FixItem(_language.RemoveLineBreaks, string.Empty, delegate { FixShortLines(); }, ce.MergeShortLinesTicked),
-                new FixItem(_language.RemoveLineBreaksAll, string.Empty, delegate { FixShortLinesAll(); }, ce.MergeShortLinesAllTicked),
-                new FixItem(_language.FixDoubleApostrophes, string.Empty, delegate { FixDoubleApostrophes(); }, ce.DoubleApostropheToQuoteTicked),
-                new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, delegate { FixMusicNotation(); }, ce.FixMusicNotationTicked),
-                new FixItem(_language.AddPeriods, string.Empty, delegate { FixMissingPeriodsAtEndOfLine(); }, ce.AddPeriodAfterParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterParagraph(); }, ce.StartWithUppercaseLetterAfterParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, delegate { FixStartWithUppercaseLetterAfterPeriodInsideParagraph(); }, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, delegate { FixStartWithUppercaseLetterAfterColon(); }, ce.StartWithUppercaseLetterAfterColonTicked),
-                new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, delegate { AddMissingQuotes(); }, ce.AddMissingQuotesTicked),
-                new FixItem(_language.FixHyphens, string.Empty, delegate { FixHyphens(); }, ce.FixHyphensTicked),
-                new FixItem(_language.FixHyphensAdd, string.Empty, delegate { FixHyphensAdd(); }, ce.FixHyphensAddTicked),
-                new FixItem(_language.Fix3PlusLines, string.Empty, delegate { Fix3PlusLines(); }, ce.Fix3PlusLinesTicked),
-                new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, delegate { FixDoubleDash(); }, ce.FixDoubleDashTicked),
-                new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, delegate { FixDoubleGreaterThan(); }, ce.FixDoubleGreaterThanTicked),
-                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, delegate { FixEllipsesStart(); }, ce.FixEllipsesStartTicked),
-                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, delegate { FixMissingOpenBracket(); }, ce.FixMissingOpenBracketTicked)
+                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, new Action (FixEmptyLines), ce.EmptyLinesTicked),
+                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, new Action(FixOverlappingDisplayTimes), ce.OverlappingDisplayTimeTicked),
+                new FixItem(_language.FixShortDisplayTimes, string.Empty, new Action(FixShortDisplayTimes), ce.TooShortDisplayTimeTicked),
+                new FixItem(_language.FixLongDisplayTimes, string.Empty, new Action(FixLongDisplayTimes), ce.TooLongDisplayTimeTicked),
+                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, new Action(FixInvalidItalicTags), ce.InvalidItalicTagsTicked),
+                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, new Action(FixUnneededSpaces), ce.UnneededSpacesTicked),
+                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, new Action(FixUnneededPeriods), ce.UnneededPeriodsTicked),
+                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, new Action(FixMissingSpaces), ce.MissingSpacesTicked),
+                new FixItem(_language.BreakLongLines, string.Empty, new Action(FixLongLines), ce.BreakLongLinesTicked),
+                new FixItem(_language.RemoveLineBreaks, string.Empty, new Action(FixShortLines), ce.MergeShortLinesTicked),
+                new FixItem(_language.RemoveLineBreaksAll, string.Empty, new Action(FixShortLinesAll), ce.MergeShortLinesAllTicked),
+                new FixItem(_language.FixDoubleApostrophes, string.Empty, new Action(FixDoubleApostrophes), ce.DoubleApostropheToQuoteTicked),
+                new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, new Action(FixMusicNotation), ce.FixMusicNotationTicked),
+                new FixItem(_language.AddPeriods, string.Empty, new Action(FixMissingPeriodsAtEndOfLine), ce.AddPeriodAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, new Action(FixStartWithUppercaseLetterAfterParagraph), ce.StartWithUppercaseLetterAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, new Action(FixStartWithUppercaseLetterAfterPeriodInsideParagraph), ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, new Action(FixStartWithUppercaseLetterAfterColon), ce.StartWithUppercaseLetterAfterColonTicked),
+                new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, new Action(AddMissingQuotes), ce.AddMissingQuotesTicked),
+                new FixItem(_language.FixHyphens, string.Empty, new Action(FixHyphens), ce.FixHyphensTicked),
+                new FixItem(_language.FixHyphensAdd, string.Empty, new Action(FixHyphensAdd), ce.FixHyphensAddTicked),
+                new FixItem(_language.Fix3PlusLines, string.Empty, new Action(Fix3PlusLines), ce.Fix3PlusLinesTicked),
+                new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, new Action(FixDoubleDash), ce.FixDoubleDashTicked),
+                new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, new Action(FixDoubleGreaterThan), ce.FixDoubleGreaterThanTicked),
+                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, new Action(FixEllipsesStart), ce.FixEllipsesStartTicked),
+                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, new Action(FixMissingOpenBracket), ce.FixMissingOpenBracketTicked)
             };
 
             if (string.IsNullOrEmpty(_language.FixOcrErrorExample))
@@ -392,35 +392,35 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
 
-            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, delegate { FixUppercaseIInsideWords(); }, ce.UppercaseIInsideLowercaseWordTicked));
-            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, delegate { FixAloneLowercaseIToUppercaseI(); }, ce.AloneLowercaseIToUppercaseIEnglishTicked));
+            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, new Action(FixUppercaseIInsideWords), ce.UppercaseIInsideLowercaseWordTicked));
+            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, new Action(FixAloneLowercaseIToUppercaseI), ce.AloneLowercaseIToUppercaseIEnglishTicked));
 
             if (string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample))
-                _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
+                _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", new Action(RemoveSpaceBetweenNumbers), ce.RemoveSpaceBetweenNumberTicked));
             else
-                _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, delegate { RemoveSpaceBetweenNumbers(); }, ce.RemoveSpaceBetweenNumberTicked));
+                _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, new Action(RemoveSpaceBetweenNumbers), ce.RemoveSpaceBetweenNumberTicked));
 
             if (string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample))
-                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! -> Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
+                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! -> Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", new Action(DialogsOnOneLine), ce.FixDialogsOnOneLineTicked));
             else
-                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, delegate { DialogsOnOneLine(); }, ce.FixDialogsOnOneLineTicked));
+                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, new Action(DialogsOnOneLine), ce.FixDialogsOnOneLineTicked));
 
             if (Language == "tr")
             {
                 _turkishAnsiIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixTurkishAnsi, "Ý > İ, Ð > Ğ, Þ > Ş, ý > ı, ð > ğ, þ > ş", delegate { TurkishAnsiToUnicode(); }, ce.TurkishAnsiTicked));
+                _fixActions.Add(new FixItem(_language.FixTurkishAnsi, "Ý > İ, Ð > Ğ, Þ > Ş, ý > ı, ð > ğ, þ > ş", new Action(TurkishAnsiToUnicode), ce.TurkishAnsiTicked));
             }
 
             if (Language == "da")
             {
                 _danishLetterIIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", delegate { FixDanishLetterI(); }, ce.DanishLetterITicked));
+                _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", new Action(FixDanishLetterI), ce.DanishLetterITicked));
             }
 
             if (Language == "es")
             {
                 _spanishInvertedQuestionAndExclamationMarksIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", delegate { FixSpanishInvertedQuestionAndExclamationMarks(); }, ce.SpanishInvertedQuestionAndExclamationMarksTicked));
+                _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", new Action(FixSpanishInvertedQuestionAndExclamationMarks), ce.SpanishInvertedQuestionAndExclamationMarksTicked));
             }
 
             listView1.Items.Clear();
@@ -4231,18 +4231,18 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked && item.Index != IndexRemoveEmptyLines)
                 {
                     var fixItem = (FixItem)item.Tag;
-                    fixItem.Action.Invoke(null, null);
+                    fixItem.Action.Invoke();
                 }
             }
             if (listView1.Items[IndexInvalidItalicTags].Checked)
             {
                 var fixItem = (FixItem)listView1.Items[IndexInvalidItalicTags].Tag;
-                fixItem.Action.Invoke(null, null);
+                fixItem.Action.Invoke();
             }
             if (listView1.Items[IndexRemoveEmptyLines].Checked)
             {
                 var fixItem = (FixItem)listView1.Items[IndexRemoveEmptyLines].Tag;
-                fixItem.Action.Invoke(null, null);
+                fixItem.Action.Invoke();
             }
 
             // build log
