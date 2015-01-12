@@ -232,7 +232,7 @@
             // columnHeaderLine
             // 
             this.columnHeaderLine.Text = "Line#";
-            this.columnHeaderLine.Width = 122;
+            this.columnHeaderLine.Width = 64;
             // 
             // columnHeaderText
             // 
