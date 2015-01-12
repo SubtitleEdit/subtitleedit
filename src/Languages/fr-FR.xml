@@ -1534,6 +1534,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <WaveformSelectedColor>Couleur onde sélec.</WaveformSelectedColor>
     <WaveformBackgroundColor>Couleur de fond</WaveformBackgroundColor>
     <WaveformTextColor>Couleur du texte</WaveformTextColor>
+    <WaveformTextFontSize>Taille de police</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Effacer contenu</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Dossiers 'Waveforms' et 'Spectrograms' contiennent {0} fichiers ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogramme</Spectrogram>
