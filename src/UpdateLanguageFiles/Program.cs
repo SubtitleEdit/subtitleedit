@@ -38,6 +38,7 @@ namespace UpdateLanguageFiles
                 if (languageDeserializerContent != languageDeserializerContentOld)
                 {
                     File.WriteAllText(args[1], languageDeserializerContent);
+                    noOfChanges++;
                     Console.Write(" LanguageDeserializer.cs generated... ");
                 }
 
@@ -64,7 +65,7 @@ namespace UpdateLanguageFiles
         {
             var fileName = @"src\Properties\AssemblyInfo.cs.template";
             if (!File.Exists(fileName))
-                fileName = @"..\..\src\Properties\AssemblyInfo.cs.template";
+                fileName = @"..\src\Properties\AssemblyInfo.cs.template";
             if (!File.Exists(fileName))
                 fileName = @"..\..\src\Properties\AssemblyInfo.cs.template";
             if (!File.Exists(fileName))
