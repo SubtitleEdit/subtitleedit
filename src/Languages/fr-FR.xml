@@ -42,14 +42,14 @@
     <VideoEncodingX>Encodage vidéo: {0}</VideoEncodingX>
     <SingleLineLengths>Longueur de ligne:</SingleLineLengths>
     <TotalLengthX>Longueur totale: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Longueur totale: {0} (coupez la ligne!)</TotalLengthXSplitLine>
-    <SplitLine>Scinder!</SplitLine>
+    <TotalLengthXSplitLine>Longueur totale: {0} (coupez la ligne !)</TotalLengthXSplitLine>
+    <SplitLine>Scinder !</SplitLine>
     <NotAvailable>Non applicable</NotAvailable>
     <OverlapPreviousLineX>Chevauchement ligne préc. ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Chevauche ({0:#,##0.###})</OverlapX>
     <OverlapNextX>Chevauche suivant ({0:#,##0.###})</OverlapNextX>
     <Negative>Négatif</Negative>
-    <RegularExpressionIsNotValid>Expression régulière invalide !</RegularExpressionIsNotValid>
+    <RegularExpressionIsNotValid>Expression régulière invalide !</RegularExpressionIsNotValid>
     <SubtitleSaved>Sous-titre sauvegardé</SubtitleSaved>
     <CurrentSubtitle>Sous-titre courant</CurrentSubtitle>
     <OriginalText>Texte original</OriginalText>
@@ -77,13 +77,13 @@
     <AboutText1>Subtitle Edit est un logiciel gratuit distribué sous licence publique GNU.
 Vous pouvez le distribuer, le modifier et l'utiliser librement.
 
-Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
+Le code source C# est disponible sur GitHub : https://github.com/SubtitleEdit/subtitleedit
 
 Visitez www.nikse.dk pour obtenir la dernière version.
 
 Les suggestions sont plus que bienvenues.
 
-Courriel : mailto:nikse.dk@gmail.com</AboutText1>
+Courriel : mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Ajouter à la liste de noms/etc.</Title>
@@ -104,7 +104,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseWait>Ceci peut prendre quelques minutes - Veuillez patienter...</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player introuvable</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC media player ?</GoToVlcMediaPlayerHomePage>
+    <GoToVlcMediaPlayerHomePage>Voulez-vous aller sur le site de VLC media player ?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Génération du fichier des pics...</GeneratingPeakFile>
     <GeneratingSpectrogram>Création du spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
@@ -149,7 +149,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteOriginalFiles>Remplacer les fichiers originaux (nouvelle extension si le format est différent)</OverwriteOriginalFiles>
     <RedoCasing>Définir majuscules/minuscules</RedoCasing>
     <Convert>Convertir</Convert>
-    <NothingToConvert>Rien à convertir !</NothingToConvert>
+    <NothingToConvert>Rien à convertir !</NothingToConvert>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
     <Converted>Convertir</Converted>
     <ConvertedX>Convertir ({0})</ConvertedX>
@@ -202,7 +202,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <CheckingForUpdates>Recherche de mise à jour...</CheckingForUpdates>
     <CheckingForUpdatesFailedX>Recherche de mise à jour a échoué : {0}</CheckingForUpdatesFailedX>
     <CheckingForUpdatesNoneAvailable>Vous utilisez la dernière version de Subtitle Edit :)</CheckingForUpdatesNoneAvailable>
-    <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
+    <CheckingForUpdatesNewVersion>Nouvelle version disponible !</CheckingForUpdatesNewVersion>
     <InstallUpdate>Aller à la page de téléchargement</InstallUpdate>
     <NoUpdates>Ne pas mettre à jour</NoUpdates>
   </CheckForUpdates>
@@ -272,7 +272,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FadeUpTime>Fondu début</FadeUpTime>
     <FadeDownTime>Fondu fin</FadeDownTime>
     <ZPosition>Position Z</ZPosition>
-    <ZPositionHelp>Les nombres positifs déplacent le texte plus loin, les nombres négatifs plus près ; si la position « Z » est zéro, alors c'est de la 2D.</ZPositionHelp>
+    <ZPositionHelp>Les nombres positifs déplacent le texte plus loin, les nombres négatifs plus près ; si la position « Z » est zéro, alors c'est de la 2D.</ZPositionHelp>
     <ChooseColor>Choix...</ChooseColor>
     <Generate>Générer</Generate>
   </DCinemaProperties>
@@ -306,7 +306,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Interrompu par l'utilisateur</AbortedByUser>
     <ReadingSubtitleData>Lecture données des sous-titres...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper fichier VOB {1} sur {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVIDEO-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
+    <WrongIfoType>Mauvais type de fichier IFO ‘’{0}’’, il doit être de type ‘’DVDVIDEO-VTS’’. {1} Essayer autre fichier que « {2} »</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Choix de la langue</Title>
@@ -492,7 +492,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <AddPeriods>Ajouter un point quand la ligne suivante commence par une majuscule</AddPeriods>
     <StartWithUppercaseLetterAfterParagraph>Commencer par une majuscule après un paragraphe</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Mettre une majuscule après un point dans un paragraphe</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <StartWithUppercaseLetterAfterColon>Mettre une majuscule après deux points</StartWithUppercaseLetterAfterColon>
+    <StartWithUppercaseLetterAfterColon>Mettre une majuscule après un deux-points</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Remplacer le i minuscule isolé par un I (Anglais)</FixLowercaseIToUppercaseI>
     <FixCommonOcrErrors>Corriger les erreurs OCR fréquentes (d'après la liste des correctifs OCR)</FixCommonOcrErrors>
     <CommonOcrErrorsFixed>Erreurs OCR fréquentes corrigées (d'après le fichier OcrReplaceList): {0}</CommonOcrErrorsFixed>
@@ -520,7 +520,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <NothingToFixBut>Rien à corriger mais quelques points peuvent être améliorés - voir le rapport</NothingToFixBut>
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Le remplacement du 'i' minuscule isolé en 'I' (Anglais)" est activé mais le sous-titre actuel ne semble pas être de l'anglais.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuer</Continue>
-    <ContinueAnyway>Continuer quand même ?</ContinueAnyway>
+    <ContinueAnyway>Continuer quand même ?</ContinueAnyway>
     <UncheckedFixLowercaseIToUppercaseI>Décocher "Remplacer minuscules 'i' isolé par 'I' (anglais uniquement)"</UncheckedFixLowercaseIToUppercaseI>
     <XIsChangedToUppercase>{0} i mis en majuscule</XIsChangedToUppercase>
     <FixFirstLetterToUppercaseAfterParagraph>Mettre la première lettre en majuscule après un paragraphe</FixFirstLetterToUppercaseAfterParagraph>
@@ -577,14 +577,14 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FixEllipsesStartExample>'... et ensuite nous' -&gt; 'et ensuite nous'</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>'clic] Attention !' -&gt; '[clic] Attention !'</FixMissingOpenBracketExample>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
-    <NumberOfImportantLogMessages>{0} messages traces importants!</NumberOfImportantLogMessages>
+    <NumberOfImportantLogMessages>{0} messages traces importants !</NumberOfImportantLogMessages>
     <FixedOkXY>Corrigé et bon - '{0}': {1}</FixedOkXY>
     <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
     <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
-    <Title>Besoin de dictionnaires ?</Title>
+    <Title>Besoin de dictionnaires ?</Title>
     <DescriptionLine1>Le correcteur d'orthographe de Subtitle Edit est basé sur le moteur</DescriptionLine1>
     <DescriptionLine2>NHunspell qui utilise les dictionnaires d'Open Office.</DescriptionLine2>
     <GetDictionariesHere>Récupérez les dictionnaires ici :</GetDictionariesHere>
@@ -596,9 +596,9 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <XDownloaded>{0} a été téléchargé et installé</XDownloaded>
   </GetDictionaries>
   <GetTesseractDictionaries>
-    <Title>Besoin de dictionnaires ?</Title>
+    <Title>Besoin de dictionnaires ?</Title>
     <DescriptionLine1>Télécharger un dictionnaire Tesseract OCR</DescriptionLine1>
-    <DownloadFailed>Échec du téléchargement !</DownloadFailed>
+    <DownloadFailed>Échec du téléchargement !</DownloadFailed>
     <GetDictionariesHere>Téléchargez dictionnaires ici :</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>Sélectionner votre langue et cliquer sur "Télécharger"</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Ouvrir le répertoire "Dictionnaires"</OpenDictionariesFolder>
@@ -971,33 +971,33 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
       <Fast>Rapide</Fast>
       <VeryFast>Très rapide</VeryFast>
     </VideoControls>
-    <SaveChangesToUntitled>Enregistrer les modifications sans titre?</SaveChangesToUntitled>
-    <SaveChangesToX>Enregistrer les modifications de {0}?</SaveChangesToX>
-    <SaveChangesToUntitledOriginal>Sauvegarder les modifications de l'original sans titre?</SaveChangesToUntitledOriginal>
-    <SaveChangesToOriginalX>Sauvegarder les modifications sous l'original {0}?</SaveChangesToOriginalX>
+    <SaveChangesToUntitled>Enregistrer les modifications sans titre ?</SaveChangesToUntitled>
+    <SaveChangesToX>Enregistrer les modifications de {0} ?</SaveChangesToX>
+    <SaveChangesToUntitledOriginal>Sauvegarder les modifications de l'original sans titre ?</SaveChangesToUntitledOriginal>
+    <SaveChangesToOriginalX>Sauvegarder les modifications sous l'original {0} ?</SaveChangesToOriginalX>
     <SaveSubtitleAs>Sauver sous-titre comme...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Sauvegarder le sous-titre original sous...</SaveOriginalSubtitleAs>
-    <NoSubtitleLoaded>Pas de sous-titre chargé !</NoSubtitleLoaded>
+    <NoSubtitleLoaded>Pas de sous-titre chargé !</NoSubtitleLoaded>
     <VisualSyncSelectedLines>Synchronisation visuelle - Lignes sélectionnées</VisualSyncSelectedLines>
     <VisualSyncTitle>Synchronisation visuelle</VisualSyncTitle>
     <BeforeVisualSync>Avant synchronisation visuelle</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Synchronisation visuelle effectués sur des lignes sélectionnées</VisualSyncPerformedOnSelectedLines>
     <VisualSyncPerformed>Synchronisation visuelle effectuée</VisualSyncPerformed>
-    <ImportThisVobSubSubtitle>Importer ce sous-titre VobSub?</ImportThisVobSubSubtitle>
+    <ImportThisVobSubSubtitle>Importer ce sous-titre VobSub ?</ImportThisVobSubSubtitle>
     <FileXIsLargerThan10MB>Fichier supérieure à 10 Mo: {0}</FileXIsLargerThan10MB>
-    <ContinueAnyway>Continuer malgré tout?</ContinueAnyway>
+    <ContinueAnyway>Continuer malgré tout ?</ContinueAnyway>
     <BeforeLoadOf>Avant chargement de {0}</BeforeLoadOf>
     <LoadedSubtitleX>Sous-titres chargés {0}</LoadedSubtitleX>
     <LoadedEmptyOrShort>Sous-titre vide ou très court chargé {0}</LoadedEmptyOrShort>
-    <FileIsEmptyOrShort>Le fichier est vide ou très courte !</FileIsEmptyOrShort>
+    <FileIsEmptyOrShort>Le fichier est vide ou très courte !</FileIsEmptyOrShort>
     <FileNotFound>Fichier introuvable: {0}</FileNotFound>
     <SavedSubtitleX>Sous-titres enregistrés {0}</SavedSubtitleX>
     <SavedOriginalSubtitleX>Sous-titre original {0} sauvegardé</SavedOriginalSubtitleX>
     <FileOnDiskModified>Fichier sur disque modifié</FileOnDiskModified>
-    <OverwriteModifiedFile>Écraser le fichier {0} modifiée à {1} {2}{3} avec le fichier actuel chargé à {4} {5}?</OverwriteModifiedFile>
+    <OverwriteModifiedFile>Écraser le fichier {0} modifiée à {1} {2}{3} avec le fichier actuel chargé à {4} {5} ?</OverwriteModifiedFile>
     <FileXIsReadOnly>Impossible d'enregistrer le fichier {0}
 
-Le fichier est en lecture seule !</FileXIsReadOnly>
+Le fichier est en lecture seule !</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Impossible d'enregistrer le fichier sous-titre {0}</UnableToSaveSubtitleX>
     <BeforeNew>Avant nouveau</BeforeNew>
     <New>Nouveau</New>
@@ -1009,11 +1009,11 @@ Le fichier est en lecture seule !</FileXIsReadOnly>
     <OpenVideoFile>Ouvrir fichier vidéo...</OpenVideoFile>
     <NewFrameRateUsedToCalculateTimeCodes>Nouvelle cadence de frame ({0}) a été utilisée pour calculer l'heure de début/fin</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Nouvelle cadence de frame ({0}) a été utilisé pour le calcul des numéros de frame de début/fin</NewFrameRateUsedToCalculateFrameNumbers>
-    <FindContinue>L'élément de recherche n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</FindContinue>
-    <FindContinueTitle>Poursuivre recherche ?</FindContinueTitle>
-    <ReplaceContinueNotFound>L'élément à remplacer n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</ReplaceContinueNotFound>
-    <ReplaceXContinue>L'article cherché a été remplacé {0} fois. Voulez-vous aller vers le haut du document et poursuivre la recherche ?</ReplaceXContinue>
-    <ReplaceContinueTitle>Continuer de «remplacer»?</ReplaceContinueTitle>
+    <FindContinue>L'élément de recherche n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</FindContinue>
+    <FindContinueTitle>Poursuivre recherche ?</FindContinueTitle>
+    <ReplaceContinueNotFound>L'élément à remplacer n'a pas été trouvé. Souhaitez-vous recommencer à partir du haut du document et faire une nouvelle recherche ?</ReplaceContinueNotFound>
+    <ReplaceXContinue>L'article cherché a été remplacé {0} fois. Voulez-vous aller vers le haut du document et poursuivre la recherche ?</ReplaceXContinue>
+    <ReplaceContinueTitle>Continuer de « remplacer » ?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Recherche de '{0}' sur le numéro de ligne {1} ...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' trouvé à la ligne {1}</XFoundAtLineNumberY>
     <XNotFound>'{0}' introuvable</XNotFound>
@@ -1025,7 +1025,7 @@ Le fichier est en lecture seule !</FileXIsReadOnly>
     <NoXFoundAtLineY>Correspondance trouvée à la ligne {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Un remplacement effectué.</OneReplacementMade>
     <BeforeChangesMadeInSourceView>Avant les modifications apportées en mode Source</BeforeChangesMadeInSourceView>
-    <UnableToParseSourceView>Impossible d'analyser le texte source!</UnableToParseSourceView>
+    <UnableToParseSourceView>Impossible d'analyser le texte source !</UnableToParseSourceView>
     <GoToLineNumberX>Aller au numéro de la ligne {0}</GoToLineNumberX>
     <CreateAdjustChangesApplied>Appliquer modifications créer/régler</CreateAdjustChangesApplied>
     <SelectedLines>Lignes sélectionnées</SelectedLines>
@@ -1044,21 +1044,21 @@ Le fichier est en lecture seule !</FileXIsReadOnly>
     <SubtitleSplitted>Sous-titre découpé</SubtitleSplitted>
     <SubtitleAppendPrompt>Ceci concatènera un sous-titre existant, qui devrait déjà être synchronisé avec le fichier vidéo, aux sous-titres actuellement chargés.
 
-Poursuivre?</SubtitleAppendPrompt>
+Poursuivre ?</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>Ajouter un sous-titre</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>Sous-titre ouvert à compléter...</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>Synchronisation visuelle - ajouter deuxième partie de sous-titre</AppendViaVisualSyncTitle>
-    <AppendSynchronizedSubtitlePrompt>Ajouter ce sous-titre synchronisé ?</AppendSynchronizedSubtitlePrompt>
+    <AppendSynchronizedSubtitlePrompt>Ajouter ce sous-titre synchronisé ?</AppendSynchronizedSubtitlePrompt>
     <BeforeAppend>Avant ajout</BeforeAppend>
     <SubtitleAppendedX>Sous-titre ajouté: {0}</SubtitleAppendedX>
-    <SubtitleNotAppended>Sous-titre non ajouté!</SubtitleNotAppended>
+    <SubtitleNotAppended>Sous-titre non ajouté !</SubtitleNotAppended>
     <GoogleTranslate>Traduction Google</GoogleTranslate>
     <MicrosoftTranslate>Traduction Microsoft</MicrosoftTranslate>
     <BeforeGoogleTranslation>Avant la traduction Google</BeforeGoogleTranslation>
     <SelectedLinesTranslated>Lignes sélectionnées traduites</SelectedLinesTranslated>
     <SubtitleTranslated>Sous-titre traduit</SubtitleTranslated>
     <TranslateSwedishToDanish>Traduire sous-titre Suédois actuellement chargé en Danois</TranslateSwedishToDanish>
-    <TranslateSwedishToDanishWarning>Traduire les sous-titres Suédois actuellement chargés (est-ce bien du Suédois?) en Danois ?</TranslateSwedishToDanishWarning>
+    <TranslateSwedishToDanishWarning>Traduire les sous-titres Suédois actuellement chargés (est-ce bien du Suédois ?) en Danois ?</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>Traduction par www.nikse.dk/mt...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>Avant traduction du Suédois en Danois</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>Traduction du Suédois en Danois terminée</TranslationFromSwedishToDanishComplete>
@@ -1068,7 +1068,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <RedoPerformed>Exécuter rétablir</RedoPerformed>
     <NothingToUndo>Rien à annuler</NothingToUndo>
     <InvalidLanguageNameX>Nom de langue invalide: {0}</InvalidLanguageNameX>
-    <UnableToChangeLanguage>Impossible de changer de langue!</UnableToChangeLanguage>
+    <UnableToChangeLanguage>Impossible de changer de langue !</UnableToChangeLanguage>
     <DoNotDisplayMessageAgain>Ne plus afficher ce message</DoNotDisplayMessageAgain>
     <NumberOfCorrectedWords>Nombre de mots corrigés: {0}</NumberOfCorrectedWords>
     <NumberOfSkippedWords>Nombre de mots ignorés: {0}</NumberOfSkippedWords>
@@ -1084,10 +1084,10 @@ Poursuivre?</SubtitleAppendPrompt>
     <XLinesSavedAsY>{0} lignes enregistrée comme {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} lignes supprimées</XLinesDeleted>
     <BeforeDeletingXLines>Avant de supprimer {0} lignes</BeforeDeletingXLines>
-    <DeleteXLinesPrompt>Supprimer {0} lignes ?</DeleteXLinesPrompt>
+    <DeleteXLinesPrompt>Supprimer {0} lignes ?</DeleteXLinesPrompt>
     <OneLineDeleted>Ligne supprimée</OneLineDeleted>
     <BeforeDeletingOneLine>Avant de supprimer une ligne</BeforeDeletingOneLine>
-    <DeleteOneLinePrompt>Supprimer une ligne?</DeleteOneLinePrompt>
+    <DeleteOneLinePrompt>Supprimer une ligne ?</DeleteOneLinePrompt>
     <BeforeInsertLine>Avant d'insérer ligne</BeforeInsertLine>
     <LineInserted>Ligne insérée</LineInserted>
     <BeforeLineUpdatedInListView>Avant ligne mise à jour dans listview</BeforeLineUpdatedInListView>
@@ -1120,7 +1120,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <BeforeChangeFrameRate>Avant le changement de cadence de frames</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Avant de régler la vitesse en pourcentage</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Cadence de frame changée de {0} en {1}</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} introuvable! Importer le fichier VobSub quand même?</IdxFileNotFoundWarning>
+    <IdxFileNotFoundWarning>{0} introuvable ! Importer le fichier VobSub quand même ?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>En-tête non valide fichier VobSub: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>Ouvrir sous-titres VobSub (sub/idx)...</OpenVobSubFile>
     <VobSubFiles>Fichiers sous-titres VobSub</VobSubFiles>
@@ -1155,9 +1155,9 @@ Poursuivre?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>'{0} -&gt; {1}' a été ajouté à la liste corrective OCR</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>'{0} -&gt; {1}' n'a pas été ajouté à la liste corrective OCR</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} lignes sélectionnées</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Sous-titre contenant des notes de musique unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde ?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Sous-titre contenant des caractères Unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde ?</UnicodeCharactersAnsiWarning>
-    <NegativeTimeWarning>Sous-titre contenant des codes de temps négatifs. Continuer la sauvegarde ?</NegativeTimeWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Sous-titre contenant des notes de musique unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde ?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Sous-titre contenant des caractères Unicode. Ils seront perdus en sauvegardant avec encodage ANSI. Poursuivre la sauvegarde ?</UnicodeCharactersAnsiWarning>
+    <NegativeTimeWarning>Sous-titre contenant des codes de temps négatifs. Continuer la sauvegarde ?</NegativeTimeWarning>
     <BeforeMergeShortLines>Avant de fusionner les lignes courtes</BeforeMergeShortLines>
     <BeforeSplitLongLines>Avant de couper les lignes longues</BeforeSplitLongLines>
     <MergedShortLinesX>Nombre de lignes fusionnées: {0}</MergedShortLinesX>
@@ -1173,7 +1173,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <BeforeSetStartTimeAndOffsetTheRest>Avant définir l'heure de début et décaler la suite</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Avant définir l'heure de fin et décaler la suite</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Avant définir le dernier temps selon la position vidéo et calcul auto. du début</BeforeSetEndAndVideoPosition>
-    <ContinueWithCurrentSpellCheck>Poursuivre la vérification d'orthographe?</ContinueWithCurrentSpellCheck>
+    <ContinueWithCurrentSpellCheck>Poursuivre la vérification d'orthographe ?</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Caractères/sec: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Obtenir cadence de trame (fps) d'un fichier vidéo</GetFrameRateFromVideoFile>
     <NetworkMessage>Nouveau message: {0} ({1}): {2}</NetworkMessage>
@@ -1206,18 +1206,18 @@ Poursuivre?</SubtitleAppendPrompt>
     <BeforeColumnShiftCellsDown>Avant de coller et de déplacer les colonnes vers le bas</BeforeColumnShiftCellsDown>
     <ErrorLoadingPluginXErrorY>Erreur lors du chargement du plugin: {0}: {1}</ErrorLoadingPluginXErrorY>
     <BeforeRunningPluginXVersionY>Avant d'exécuter le plugin: {0}: {1}</BeforeRunningPluginXVersionY>
-    <UnableToReadPluginResult>Impossible de lire le plugin du sous-titre!</UnableToReadPluginResult>
+    <UnableToReadPluginResult>Impossible de lire le plugin du sous-titre !</UnableToReadPluginResult>
     <UnableToCreateBackupDirectory>Impossible de créer un dossier de sauvegarde {0}: {1}</UnableToCreateBackupDirectory>
     <BeforeDisplaySubtitleJoin>Avant la fusion des sous-titres</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Sous-titres associés</SubtitlesJoined>
     <StatusLog>Messages de statut</StatusLog>
     <XSceneChangesImported>{0} changements de scène importé</XSceneChangesImported>
     <PluginXExecuted>Plugin '{0}' exécuté</PluginXExecuted>
-    <NotAValidXSubFile>Ce n'est pas un fichier XSUB valide!</NotAValidXSubFile>
+    <NotAValidXSubFile>Ce n'est pas un fichier XSUB valide !</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Avant de fusionner les lignes avec le même texte</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Le timecode du sous-titre importé a un nombre différent de lignes ({0}) par rapport à l'actuel ({1}).
 
- Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
+ Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
     <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx :
 - Ils font partie de paires de fichiers idx/sub (également appelés VobSub).
@@ -1354,14 +1354,14 @@ Poursuivre?</SubtitleAppendPrompt>
     <Type>Type</Type>
     <OpenPluginsFolder>Ouvrez le dossier 'Plugins'</OpenPluginsFolder>
     <GetPluginsInfo1>Les plugins modifiés des sous-titres doivent être téléchargés dans le dossier "Plugins"</GetPluginsInfo1>
-    <GetPluginsInfo2>Sélectionnez le plugin et cliquez sur «Télécharger»</GetPluginsInfo2>
+    <GetPluginsInfo2>Sélectionnez le plugin et cliquez sur « Télécharger »</GetPluginsInfo2>
     <PluginXDownloaded>Plugin {0} téléchargé(s)</PluginXDownloaded>
     <Download>&amp;Télécharger</Download>
     <Remove>&amp;Supprimer</Remove>
     <UpdateAllX>Tout mettre à jour ({0})</UpdateAllX>
     <UnableToDownloadPluginListX>Impossible de télécharger la liste des plugins: {0}</UnableToDownloadPluginListX>
-    <NewVersionOfSubtitleEditRequired>Une nouvelle version de Subtitle Edit est nécessaire!</NewVersionOfSubtitleEditRequired>
-    <UpdateAvailable>[Nouvelle version disponible!]</UpdateAvailable>
+    <NewVersionOfSubtitleEditRequired>Une nouvelle version de Subtitle Edit est nécessaire !</NewVersionOfSubtitleEditRequired>
+    <UpdateAvailable>[Nouvelle version disponible !]</UpdateAvailable>
     <UpdateAll>Tout mettre à jour</UpdateAll>
     <XPluginsUpdated>{0} plugin(s) mis à jour</XPluginsUpdated>
   </PluginsGet>
@@ -1387,7 +1387,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Parentheses>(...)</Parentheses>
     <QuestionMarks>?...?</QuestionMarks>
     <And>et</And>
-    <RemoveTextBeforeColon>Supprimer le texte devant deux points « : »</RemoveTextBeforeColon>
+    <RemoveTextBeforeColon>Supprimer le texte devant un deux-points « : »</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Uniquement le texte en MAJUSCULE</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Uniquement sur une ligne séparée</OnlyIfInSeparateLine>
     <LinesFoundX>Lignes trouvées {0}</LinesFoundX>
@@ -1413,7 +1413,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <DateAndTime>Date et heure</DateAndTime>
     <FileName>Nom</FileName>
     <Extension>Format</Extension>
-    <NoBackedUpFilesFound>Pas de fichiers de sauvegarde trouvé!</NoBackedUpFilesFound>
+    <NoBackedUpFilesFound>Pas de fichiers de sauvegarde trouvé !</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Recherche de silence</Title>
@@ -1534,6 +1534,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <WaveformSelectedColor>Couleur onde sélec.</WaveformSelectedColor>
     <WaveformBackgroundColor>Couleur de fond</WaveformBackgroundColor>
     <WaveformTextColor>Couleur du texte</WaveformTextColor>
+    <WaveformTextFontSize>Taille de police</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Effacer contenu</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Dossiers 'Waveforms' et 'Spectrograms' contiennent {0} fichiers ({1:0.00} Mo)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogramme</Spectrogram>
@@ -1563,10 +1564,10 @@ Poursuivre?</SubtitleAppendPrompt>
     <Location>Emplacement</Location>
     <UseOnlineNamesEtc>Utiliser le fichier web "Names_Etc.xml"</UseOnlineNamesEtc>
     <WordAddedX>Mot ajouter: {0}</WordAddedX>
-    <WordAlreadyExists>Le mot existe déjà !</WordAlreadyExists>
+    <WordAlreadyExists>Le mot existe déjà !</WordAlreadyExists>
     <WordNotFound>Mot introuvable</WordNotFound>
-    <RemoveX>Enlever {0} ?</RemoveX>
-    <CannotUpdateNamesEtcOnline>Impossible de mettre à jour "NamesEtc.xml" en ligne !</CannotUpdateNamesEtcOnline>
+    <RemoveX>Enlever {0} ?</RemoveX>
+    <CannotUpdateNamesEtcOnline>Impossible de mettre à jour "NamesEtc.xml" en ligne !</CannotUpdateNamesEtcOnline>
     <ProxyServerSettings>Configuration du serveur proxy</ProxyServerSettings>
     <ProxyAddress>Adresse du proxy</ProxyAddress>
     <ProxyAuthentication>Authentification</ProxyAuthentication>
@@ -1678,7 +1679,7 @@ Poursuivre?</SubtitleAppendPrompt>
   </Settings>
   <SetVideoOffset>
     <Title>Régler décalage vidéo</Title>
-    <Description>Régler décalage vidéo (sous-titres ne devraient pas suivre la durée réelle de la vidéo, ex : +10 hours)</Description>
+    <Description>Régler décalage vidéo (sous-titres ne devraient pas suivre la durée réelle de la vidéo, ex : +10 hours)</Description>
     <RelativeToCurrentVideoPosition>Par rapport à la position de la vidéo en cours</RelativeToCurrentVideoPosition>
   </SetVideoOffset>
   <ShowEarlierLater>
@@ -1758,20 +1759,20 @@ Poursuivre?</SubtitleAppendPrompt>
     <Description2>ouvrir un fichier vidéo pour obtenir sa durée.</Description2>
     <Split>&amp;Diviser</Split>
     <Done>&amp;Annuler</Done>
-    <NothingToSplit>Rien à partitionner!</NothingToSplit>
+    <NothingToSplit>Rien à partitionner !</NothingToSplit>
     <SavePartOneAs>Sauver partie 1 sous...</SavePartOneAs>
     <SavePartTwoAs>Sauver partie 2 sous...</SavePartTwoAs>
     <Part1>Partie1</Part1>
     <Part2>Partie2</Part2>
     <UnableToSaveFileX>Impossible de sauver {0}</UnableToSaveFileX>
-    <OverwriteExistingFiles>Remplacer les fichiers existants?</OverwriteExistingFiles>
+    <OverwriteExistingFiles>Remplacer les fichiers existants ?</OverwriteExistingFiles>
     <FolderNotFoundX>Dossier non trouvé: {0}</FolderNotFoundX>
     <Untitled>Sans titre</Untitled>
   </SplitSubtitle>
   <StartNumberingFrom>
     <Title>Nouvelle numérotation...</Title>
     <StartFromNumber>Démarrer à partir de :</StartFromNumber>
-    <PleaseEnterAValidNumber>Oups, veuillez entrer un nombre !</PleaseEnterAValidNumber>
+    <PleaseEnterAValidNumber>Oups, veuillez entrer un nombre !</PleaseEnterAValidNumber>
   </StartNumberingFrom>
   <Statistics>
     <Title>Statistiques</Title>
@@ -1901,11 +1902,11 @@ Poursuivre?</SubtitleAppendPrompt>
     <PlayXSecondsAndBack>Lire {0} s puis retour</PlayXSecondsAndBack>
     <FindText>Rechercher texte</FindText>
     <GoToSubPosition>Aller sous-position</GoToSubPosition>
-    <KeepChangesTitle>Conserver les modifications ?</KeepChangesTitle>
+    <KeepChangesTitle>Conserver les modifications ?</KeepChangesTitle>
     <KeepChangesMessage>Les sous-titres ont été changés dans 'Synchro visuelle'.</KeepChangesMessage>
-    <SynchronizationDone>Synchronisation terminée !</SynchronizationDone>
-    <StartSceneMustComeBeforeEndScene>La scène de début doit venir avant la scène finale !</StartSceneMustComeBeforeEndScene>
-    <Tip>&lt;ctrl+flèche gauche/droite&gt; pour avancer/reculer de100 ms</Tip>
+    <SynchronizationDone>Synchronisation terminée !</SynchronizationDone>
+    <StartSceneMustComeBeforeEndScene>La scène de début doit venir avant la scène finale !</StartSceneMustComeBeforeEndScene>
+    <Tip>&lt;ctrl+flèche gauche/droite&gt; pour avancer/reculer de 100 ms</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Modification de la base de données d'images</Title>
@@ -1989,7 +1990,7 @@ Poursuivre?</SubtitleAppendPrompt>
     <Spanish>Espagnol</Spanish>
     <German>Allemand</German>
     <AutoSubmitOnFirstChar>Soumission auto. au &amp;premier caractère</AutoSubmitOnFirstChar>
-    <EditLastX>Dernière édition « {0} »</EditLastX>
+    <EditLastX>Dernière édition « {0} »</EditLastX>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>Comparer les correspondances avec l'image actuelle...</Title>
