@@ -140,9 +140,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 _mplayer.StartInfo.FileName = mplayerExeName;
                 //vo options: gl, gl2, directx:noaccel
                 if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
-                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -nosub -noautosu -loop 0 -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
+                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -nosub -noautosub -loop 0 -osdlevel 0 -vsync -wid " + ownerControl.Handle.ToInt32() + " \"" + videoFileName + "\" ";
                 else
-                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -nosub -noautosu -loop 0 -osdlevel 0 -vo direct3d -wid " + (int)ownerControl.Handle + " \"" + videoFileName + "\" ";
+                    _mplayer.StartInfo.Arguments = "-nofs -quiet -slave -idle -nosub -noautosub -loop 0 -osdlevel 0 -vo direct3d -wid " + (int)ownerControl.Handle + " \"" + videoFileName + "\" ";
 
                 _mplayer.StartInfo.UseShellExecute = false;
                 _mplayer.StartInfo.RedirectStandardInput = true;
