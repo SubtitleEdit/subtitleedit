@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -345,6 +346,17 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     sb.AppendLine(string.Format(header, title));
                 }
+
+                // Set correct style on paragraphs
+                foreach (Paragraph p in subtitle.Paragraphs)
+                {
+                    if (p.Extra != null && p.Extra.Contains('/'))
+                    {
+                        p.Extra = p.Extra.Split('/')[0].Trim();
+                    }
+                }
+
+
             }
             catch
             {
