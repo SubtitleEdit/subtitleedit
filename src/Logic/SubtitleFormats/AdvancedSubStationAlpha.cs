@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -126,9 +126,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             const string commentWriteFormat = "Comment: {6},{0},{1},{3},{4},0,0,0,{5},{2}";
 
             var sb = new StringBuilder();
-            Color fontColor = Color.FromArgb(Configuration.Settings.SubtitleSettings.SsaFontColorArgb);
             bool isValidAssHeader = !string.IsNullOrEmpty(subtitle.Header) && subtitle.Header.Contains("[V4+ Styles]");
-            List<string> styles = new List<string>();
+            var styles = new List<string>();
             if (isValidAssHeader)
             {
                 sb.AppendLine(subtitle.Header.Trim());
@@ -181,11 +180,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             {
                 bool styleFound = false;
                 var ttStyles = new StringBuilder();
-                foreach (string styleName in AdvancedSubStationAlpha.GetStylesFromHeader(subtitle.Header))
+                foreach (string styleName in GetStylesFromHeader(subtitle.Header))
                 {
                     try
                     {
-                        var ssaStyle = AdvancedSubStationAlpha.GetSsaStyle(styleName, subtitle.Header);
+                        var ssaStyle = GetSsaStyle(styleName, subtitle.Header);
                         if (ssaStyle != null)
                         {
                             // Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
@@ -324,8 +323,16 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         if (!int.TryParse(fontSize, out fSize))
                             fSize = 20;
 
-                        const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,0,0,0,0,100,100,0,0,1,2,2,2,10,10,10,1";
-                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, GetSsaColorString(c)));
+                        string italic = "0";
+                        if (fontStyle == "italic")
+                            italic = "1";
+
+                        string bold = "0";
+                        if (fontWeight == "bold")
+                            bold = "1";
+
+                        const string styleFormat = "Style: {0},{1},{2},{3},&H0300FFFF,&H00000000,&H02000000,{4},{5},0,0,100,100,0,0,1,2,2,2,10,10,10,1";
+                        ttStyles.AppendLine(string.Format(styleFormat, name, fontFamily, fSize, GetSsaColorString(c), bold, italic));
                     }
                 }
 
@@ -962,7 +969,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            else if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 9)
+            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 9)
             {
                 s = s.Substring(3);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -977,14 +984,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            else
+            int number;
+            if (int.TryParse(f, out number))
             {
-                int number;
-                if (int.TryParse(f, out number))
-                {
-                    Color temp = Color.FromArgb(number);
-                    return Color.FromArgb(255, temp.B, temp.G, temp.R);
-                }
+                Color temp = Color.FromArgb(number);
+                return Color.FromArgb(255, temp.B, temp.G, temp.R);
             }
             return defaultColor;
         }
@@ -1270,8 +1274,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public static SsaStyle GetSsaStyle(string styleName, string header)
         {
-            var style = new SsaStyle();
-            style.Name = styleName;
+            var style = new SsaStyle { Name = styleName };
 
             int nameIndex = -1;
             int fontNameIndex = -1;
@@ -1448,7 +1451,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 }
             }
 
-            return new SsaStyle() { Name = styleName };
+            return new SsaStyle { Name = styleName };
         }
 
         public override bool HasStyleSupport
