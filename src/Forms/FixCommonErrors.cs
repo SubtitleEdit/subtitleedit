@@ -2208,18 +2208,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
                 string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
 
-                if (oldText != fixedText)
+                if (oldText != fixedText && AllowFix(p, fixAction))
                 {
                     p.Text = fixedText;
-                    if (AllowFix(p, fixAction))
-                    {
-                        fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
+                    fixedStartWithUppercaseLetterAfterParagraphTicked++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             listViewFixes.EndUpdate();
@@ -2993,26 +2986,16 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
 
                 string newText = p.Text;
-                string noTagsText = Utilities.RemoveHtmlTags(newText);
                 foreach (string musicSymbol in musicSymbols)
                 {
                     newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
                     newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                 }
-
-                if (!newText.Equals(oldText))
+                if (newText != oldText && Utilities.RemoveHtmlTags(newText) != oldText && AllowFix(p, fixAction))
                 {
-                    if (!noTagsText.Equals(Utilities.RemoveHtmlTags(oldText)))
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.Text = newText;
-                            fixCount++;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                    }
+                    p.Text = newText;
+                    fixCount++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             if (fixCount > 0)
