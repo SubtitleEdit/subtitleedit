@@ -1528,6 +1528,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <WaveformSelectedColor>Barva výběru</WaveformSelectedColor>
     <WaveformBackgroundColor>Barva pozadí</WaveformBackgroundColor>
     <WaveformTextColor>Barva textu</WaveformTextColor>
+    <WaveformTextFontSize>Velikost písma textu</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Vyprázdnit složky 'Spectrograms' a 'Waveforms'</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Složky 'Waveforms' a 'Spectrograms' obsahují {0} souborů ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
