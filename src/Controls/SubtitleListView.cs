@@ -152,6 +152,17 @@ namespace Nikse.SubtitleEdit.Controls
             e.DrawDefault = true;
         }
 
+        private bool IsVerticalScrollbarVisible()
+        {
+            if (Items.Count < 2)
+                return false;
+
+            int singleRowHeight = GetItemRect(0).Height;
+            int maxVisibleItems = (Height - TopItem.Bounds.Top) / singleRowHeight;
+
+            return Items.Count > maxVisibleItems;
+        }
+
         private void SubtitleListView_DrawSubItem(object sender, DrawListViewSubItemEventArgs e)
         {
             Color backgroundColor = Items[e.ItemIndex].SubItems[e.ColumnIndex].BackColor;
@@ -175,33 +186,85 @@ namespace Nikse.SubtitleEdit.Controls
 
                 if (e.Item.Selected)
                 {
-                    Rectangle rect = e.Bounds;
-                    if (Configuration.Settings != null)
+                    if (RightToLeftLayout)
                     {
-                        if (backgroundColor == BackColor)
-                            backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
+                        int w = Columns.Count;
+                        for (int i = 0; i < Columns.Count; i++)
+                            w += Columns[i].Width;
+
+                        int extra = 0;
+                        int extra2 = 0;
+                        if (!IsVerticalScrollbarVisible())
+                        {
+                            // no vertical scrollbar
+                            extra = 14;
+                            extra2 = 11;
+                        }
                         else
                         {
-                            int r = backgroundColor.R - 39;
-                            int g = backgroundColor.G - 39;
-                            int b = backgroundColor.B - 39;
-                            if (r < 0)
-                                r = 0;
-                            if (g < 0)
-                                g = 0;
-                            if (b < 0)
-                                b = 0;
-                            backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                            // no vertical scrollbar
+                            extra = -3;
+                            extra2 = -5;
                         }
-                        SolidBrush sb = new SolidBrush(backgroundColor);
-                        e.Graphics.FillRectangle(sb, rect);
+
+                        var rect = new Rectangle(w - (e.Bounds.Left + e.Bounds.Width + 2) + extra, e.Bounds.Top, e.Bounds.Width, e.Bounds.Height);
+                        if (Configuration.Settings != null)
+                        {
+                            if (backgroundColor == BackColor)
+                                backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
+                            else
+                            {
+                                int r = backgroundColor.R - 39;
+                                int g = backgroundColor.G - 39;
+                                int b = backgroundColor.B - 39;
+                                if (r < 0)
+                                    r = 0;
+                                if (g < 0)
+                                    g = 0;
+                                if (b < 0)
+                                    b = 0;
+                                backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                            }
+                            var sb = new SolidBrush(backgroundColor);
+                            e.Graphics.FillRectangle(sb, rect);
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(Brushes.LightBlue, rect);
+                        }
+                        var rtlBounds = new Rectangle(w - (e.Bounds.Left + e.Bounds.Width) + extra2, e.Bounds.Top + 2, e.Bounds.Width, e.Bounds.Height);
+                        sf.FormatFlags = StringFormatFlags.DirectionRightToLeft;
+                        e.Graphics.DrawString(e.SubItem.Text, Font, new SolidBrush(e.Item.ForeColor), rtlBounds, sf);
                     }
                     else
                     {
-                        e.Graphics.FillRectangle(Brushes.LightBlue, rect);
+                        Rectangle rect = e.Bounds;
+                        if (Configuration.Settings != null)
+                        {
+                            if (backgroundColor == BackColor)
+                                backgroundColor = Configuration.Settings.Tools.ListViewUnfocusedSelectedColor;
+                            else
+                            {
+                                int r = backgroundColor.R - 39;
+                                int g = backgroundColor.G - 39;
+                                int b = backgroundColor.B - 39;
+                                if (r < 0)
+                                    r = 0;
+                                if (g < 0)
+                                    g = 0;
+                                if (b < 0)
+                                    b = 0;
+                                backgroundColor = Color.FromArgb(backgroundColor.A, r, g, b);
+                            }
+                            var sb = new SolidBrush(backgroundColor);
+                            e.Graphics.FillRectangle(sb, rect);
+                        }
+                        else
+                        {
+                            e.Graphics.FillRectangle(Brushes.LightBlue, rect);
+                        }
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);                       
                     }
-                    //rect = new Rectangle(e.Bounds.Left + 4, e.Bounds.Top+2, e.Bounds.Width - 3, e.Bounds.Height);
-                    TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
                 }
                 else
                 {
@@ -971,7 +1034,7 @@ namespace Nikse.SubtitleEdit.Controls
                 ListViewItem item = Items[index];
                 return item.BackColor;
             }
-            return Control.DefaultBackColor;
+            return DefaultBackColor;
         }
 
         /// <summary>
