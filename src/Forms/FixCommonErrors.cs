@@ -3097,7 +3097,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleGreaterThan;
             int fixCount = 0;
-            string post = string.Empty;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
