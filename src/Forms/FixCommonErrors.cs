@@ -3097,28 +3097,37 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string fixAction = _language.FixDoubleGreaterThan;
             int fixCount = 0;
+            string post = string.Empty;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-
-                if (p.Text.StartsWith(">> "))
+                if (!p.Text.Contains(">>", StringComparison.Ordinal))
+                    continue;
+                var text = p.Text;
+                var oldText = text;
+                if (!text.Contains(Environment.NewLine))
                 {
-                    if (AllowFix(p, fixAction))
+                    text = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(text);
+                    if (oldText != text && AllowFix(p, fixAction))
                     {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(3);
                         fixCount++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        p.Text = text;
+                        AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
-                if (p.Text.StartsWith(">>"))
+                else
                 {
-                    if (AllowFix(p, fixAction))
+                    var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    for (int k = 0; k < lines.Length; k++)
                     {
-                        string oldText = p.Text;
-                        p.Text = p.Text.Substring(2);
+                        lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
+                    }
+                    text = string.Join(Environment.NewLine, lines);
+                    if (oldText != text && AllowFix(p, fixAction))
+                    {
                         fixCount++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        p.Text = text;
+                        AddFixToListView(p, fixAction, oldText, text);
                     }
                 }
             }
