@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
             {
                 int endIndex = text.IndexOf("\">", StringComparison.Ordinal);
-                if (endIndex > 19)
+                if (endIndex > 19 && endIndex < (text.Length - 7))
                 {
                     post += text.Substring(0, endIndex + 2);
                     text = text.Remove(0, endIndex + 2).TrimStart();
@@ -368,9 +368,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 else
                     text = text.Substring(2);
                 text = text.TrimStart();
-                if (!string.IsNullOrEmpty(post))
-                    text = post + text;
             }
+            if (post != null)
+                text = post + text;
             return text;
         }
     }

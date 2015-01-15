@@ -1151,6 +1151,48 @@ namespace Test
 
         #endregion Ellipses start
 
+        #region FixDoubleGreater
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDoubleGreaterThanTest2()
+        {
+            string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
+            string input2 = "<b>>>Hello world!</b>\r\n<i>>>Hello</i>";
+            string input3 = "<u>>>Hello world!</u>\r\n<b>>>Hello</b>";
+            string input4 = "<font color=\"#008040\">>>Hello world!</font>\r\n<font color=\"#008040\">>>Hello</font>";
+
+            const string expected1 = "<i>Hello world!</i>\r\n<i>Hello</i>";
+            const string expected2 = "<b>Hello world!</b>\r\n<i>Hello</i>";
+            const string expected3 = "<u>Hello world!</u>\r\n<b>Hello</b>";
+            const string expected4 = "<font color=\"#008040\">Hello world!</font>\r\n<font color=\"#008040\">Hello</font>";
+
+            string[] lines1 = input1.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines2 = input2.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines3 = input3.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            string[] lines4 = input4.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+
+            for (int i = 0; i < lines1.Length; i++)
+            {
+                lines1[i] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines1[i]);
+                lines2[i] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines2[i]);
+                lines3[i] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines3[i]);
+                lines4[i] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines4[i]);
+            }
+
+            var result1 = string.Join(Environment.NewLine, lines1);
+            var result2 = string.Join(Environment.NewLine, lines2);
+            var result3 = string.Join(Environment.NewLine, lines3);
+            var result4 = string.Join(Environment.NewLine, lines4);
+
+            Assert.AreEqual(result1, expected1);
+            Assert.AreEqual(result2, expected2);
+            Assert.AreEqual(result3, expected3);
+            Assert.AreEqual(result4, expected4);
+        }
+
+        #endregion
+
         #region Fix uppercase I inside words
 
         [TestMethod]
