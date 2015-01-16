@@ -4430,6 +4430,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CopyTextOnly":
                     language.Settings.CopyTextOnly = reader.Value;
                     break;
+                case "Settings/CopyTextOnlyFromOriginalToCurrent":
+                    language.Settings.CopyTextOnlyFromOriginalToCurrent = reader.Value;
+                    break;
                 case "Settings/AutoDurationSelectedLines":
                     language.Settings.AutoDurationSelectedLines = reader.Value;
                     break;

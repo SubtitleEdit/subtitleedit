@@ -738,8 +738,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialog + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialog));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToggleFocus));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));            
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
+            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent))
+                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.AutoDurationSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnDelete + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnInsert + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnInsertText));
@@ -1465,6 +1467,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewAlignment = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.CopyTextOnly.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewCopyText = GetShortcut(node.Text);
+                    else if (Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent != null && text == Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.AutoDurationSelectedLines.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewAutoDuration = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ListViewColumnDelete.Replace("&", string.Empty))

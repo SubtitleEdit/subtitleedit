@@ -820,6 +820,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewAlignment { get; set; }
         public string MainListViewCopyText { get; set; }
+        public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }
         public string MainListViewColumnInsertText { get; set; }
@@ -2371,6 +2372,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewCopyText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewAutoDuration");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAutoDuration = subNode.InnerText;
@@ -3056,6 +3060,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
                 textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
                 textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
+                textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
                 textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
                 textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
                 textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
