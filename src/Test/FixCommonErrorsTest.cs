@@ -206,6 +206,21 @@ namespace Test
             }
         }
 
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MergeShortLinesHearingImpaired()
+        {
+            string input = "[engine roaring]" + Environment.NewLine + "[cluck]";
+            string expected = input;
+            
+            var result = FixCommonErrorsHelper.FixShortLines(input);
+
+            Assert.AreEqual(result, expected);
+        }
+
+        
+
         #endregion Merge short lines
 
         #region Fix Italics
