@@ -242,11 +242,5 @@ namespace Nikse.SubtitleEdit.Forms
             int index = comboBoxDictionaries.SelectedIndex;
             labelPleaseWait.Text = _descriptions[index];
         }
-
-        private void buttonOK_Click(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

@@ -6,7 +6,6 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public partial class FcpProperties : PositionAndSizeForm
     {
-
         public int FcpFontSize { get; set; }
         public string FcpFontName { get; set; }
 
@@ -22,7 +21,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownFontSize.Value = 18;
             }
-
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
@@ -42,6 +40,5 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
         }
-
     }
 }
