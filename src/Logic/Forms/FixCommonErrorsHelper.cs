@@ -9,17 +9,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public static string FixEllipsesStartHelper(string text)
         {
-            if (string.IsNullOrEmpty(text) || text.Trim().Length < 4)
+            if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !text.Contains("..", StringComparison.Ordinal))
                 return text;
-            if (!text.Contains(".."))
-                return text;
-            var post = string.Empty;
+
+            var pre = string.Empty;
             if (text.StartsWith("<font ", StringComparison.Ordinal) && text.IndexOf('>', 5) > -1)
             {
                 var idx = text.IndexOf('>', 5);
                 if (idx > -1)
                 {
-                    post = text.Substring(0, text.IndexOf('>') + 1);
+                    pre = text.Substring(0, text.IndexOf('>') + 1);
                     text = text.Substring(idx + 1).TrimStart();
                 }
             }
@@ -31,7 +30,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             text = text.Replace("-..", "- ..");
             var tag = "- ...";
-            if (text.StartsWith(tag))
+            if (text.StartsWith(tag, StringComparison.Ordinal))
             {
                 text = "- " + text.Substring(tag.Length);
                 while (text.StartsWith("- .", StringComparison.Ordinal))
@@ -42,14 +41,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             tag = "<i>...";
-            if (text.StartsWith(tag))
+            if (text.StartsWith(tag, StringComparison.Ordinal))
             {
                 text = "<i>" + text.Substring(tag.Length);
                 while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
                     text = "<i>" + text.Substring(4);
             }
             tag = "<i> ...";
-            if (text.StartsWith(tag))
+            if (text.StartsWith(tag, StringComparison.Ordinal))
             {
                 text = "<i>" + text.Substring(tag.Length);
                 while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
@@ -57,14 +56,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             tag = "- <i>...";
-            if (text.StartsWith(tag))
+            if (text.StartsWith(tag, StringComparison.Ordinal))
             {
                 text = "- <i>" + text.Substring(tag.Length);
                 while (text.StartsWith("- <i>.", StringComparison.Ordinal))
                     text = "- <i>" + text.Substring(6);
             }
             tag = "- <i> ...";
-            if (text.StartsWith(tag))
+            if (text.StartsWith(tag, StringComparison.Ordinal))
             {
                 text = "- <i>" + text.Substring(tag.Length);
                 while (text.StartsWith("- <i>.", StringComparison.Ordinal))
@@ -74,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             // Narrator:... Hello foo!
             text = text.Replace(":..", ": ..");
             tag = ": ..";
-            if (text.Contains(tag))
+            if (text.Contains(tag, StringComparison.Ordinal))
             {
                 text = text.Replace(": ..", ": ");
                 while (text.Contains(": ."))
@@ -83,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // <i>- ... Foo</i>
             tag = "<i>- ...";
-            if (text.StartsWith(tag))
+            if (text.StartsWith(tag, StringComparison.Ordinal))
             {
                 text = text.Substring(tag.Length);
                 text = text.TrimStart('.', ' ');
@@ -93,19 +92,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
             var index = text.IndexOf(':');
-            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
+            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains("..", StringComparison.Ordinal))
             {
-                post += text.Substring(0, index + 1);
-                if (post.Length < 2)
+                pre += text.Substring(0, index + 1);                
+                if (pre.Length < 2)
                     return text;
 
-                text = text.Remove(0, index + 1);
-                text = text.Trim();
+                text = text.Remove(0, index + 1).TrimStart();
                 text = FixEllipsesStartHelper(text);
+                if (pre.Length > 0)
+                    pre += " ";
             }
-            if (!String.IsNullOrEmpty(post))
-                text = post + text;
-            return text;
+            return pre + text;
         }
 
         public static string FixDialogsOnOneLine(string text, string language)
