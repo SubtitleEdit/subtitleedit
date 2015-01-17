@@ -1000,7 +1000,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
 
 Ficheiro é só de leitura!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Não foi possível guardar a legenda {0}
-A legenda parece não ter conteúdo - tente guardar novamente se tiver a trabalhar numa legenda válida!</UnableToSaveSubtitleX>
+A legenda não parece ter linhas legendadas - tente guardar novamente se estiver a trabalhar numa legenda válida!</UnableToSaveSubtitleX>
     <BeforeNew>Antes de novo</BeforeNew>
     <New>Novo</New>
     <BeforeConvertingToX>Convertendo anterior para {0}</BeforeConvertingToX>
@@ -1466,7 +1466,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DurationMaximumMilliseconds>Duração Máxima milissegundos</DurationMaximumMilliseconds>
     <MinimumGapMilliseconds>Min. de intervalo entre legendas em ms</MinimumGapMilliseconds>
     <SubtitleFont>Tipo de letra</SubtitleFont>
-    <SubtitleFontSize>Tamanho</SubtitleFontSize>
+    <SubtitleFontSize>Tamanho do tipo de letra da legenda</SubtitleFontSize>
     <SubtitleBold>Negrito</SubtitleBold>
     <SubtitleCenter>Centralizado</SubtitleCenter>
     <SubtitleFontColor>Cor do tipo de letra</SubtitleFontColor>
@@ -1529,6 +1529,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformSelectedColor>Cor seleccionada</WaveformSelectedColor>
     <WaveformBackgroundColor>Cor de fundo</WaveformBackgroundColor>
     <WaveformTextColor>Cor do texto</WaveformTextColor>
+    <WaveformTextFontSize>Tamanho do tipo de letra</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Esvaziar pastas "Espectrogramas" e "Formas de onda"</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>As pastas "Espectrogramas" e "Formas de onda" contém {0} ficheiros ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Espectrograma</Spectrogram>
@@ -1589,10 +1590,11 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <UpdateShortcut>Actualizar</UpdateShortcut>
     <ShortcutIsNotValid>Atalho inválido: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Alternar acoplar/desacoplar controlos de vídeo</ToggleDockUndockOfVideoControls>
-    <CreateSetEndAddNewAndGoToNew>Definir final, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
+    <CreateSetEndAddNewAndGoToNew>Definir o fim, adicionar novo e ir para o novo</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Ajustar pela posição final e ir para o seguinte</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Definir o fim e ir para a seguinte</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Definir início da Auto duração e ir para o seguinte</AdjustSetStartAutoDurationAndGoToNext>
-    <AdjustSetEndNextStartAndGoToNext>Definir final, a seguir início e ir para o seguinte</AdjustSetEndNextStartAndGoToNext>
+    <AdjustSetEndNextStartAndGoToNext>Definir o fim, a seguir início e ir para o seguinte</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tecla para baixo=definir início, tecla para cima=definir final e ir para o seguinte</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Adiantar as linhas seleccionadas 100 ms</AdjustSelected100MsForward>
     <AdjustSelected100MsBack>Atrasar as linhas seleccionadas 100 ms</AdjustSelected100MsBack>
@@ -1609,6 +1611,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ToggleDialogDashes>Alternar hífens de diálogo</ToggleDialogDashes>
     <Alignment>Alinhamento (linhas seleccionadas)</Alignment>
     <CopyTextOnly>Copiar só o texto para a área de transferência (linhas seleccionadas)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Copiar o texto do original para a actual</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duração (linhas seleccionadas)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Inverter RTL início/fim</ReverseStartAndEndingForRTL>
     <VerticalZoom>Zoom vertical entrada</VerticalZoom>
