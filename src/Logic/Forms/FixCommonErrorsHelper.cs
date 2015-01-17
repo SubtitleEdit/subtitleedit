@@ -6,6 +6,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 {
     public static class FixCommonErrorsHelper
     {
+
         public static string FixEllipsesStartHelper(string text)
         {
             if (string.IsNullOrEmpty(text) || text.Trim().Length < 4)
@@ -13,9 +14,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (!text.Contains(".."))
                 return text;
             var post = string.Empty;
-            if(text.StartsWith("<font ",StringComparison.Ordinal) && text.IndexOf('>', 5) > -1)
+            if (text.StartsWith("<font ", StringComparison.Ordinal) && text.IndexOf('>', 5) > -1)
             {
-                var idx =text.IndexOf('>', 5);
+                var idx = text.IndexOf('>', 5);
                 if (idx > -1)
                 {
                     post = text.Substring(0, text.IndexOf('>') + 1);
@@ -380,9 +381,39 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     text = text.Substring(2);
                 text = text.TrimStart();
             }
-            if (post != null)
-                text = post + text;
+            text = post + text;
             return text;
         }
+
+        internal static string FixShortLines(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine, StringComparison.Ordinal))
+                return text;
+
+            string s = Utilities.RemoveHtmlTags(text);
+            if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && text.Contains(Environment.NewLine))
+            {
+                s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
+                s = s.TrimStart('-');
+                if (!s.Contains('.') &&
+                    !s.Contains('?') &&
+                    !s.Contains('!') &&
+                    !s.Contains(':') &&
+                    !s.Contains(';') &&
+                    !s.Contains('-') &&
+                    !s.Contains('♪') &&
+                    !s.Contains('♫') &&
+                    !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
+                    !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
+                    text != text.ToUpper())
+                {
+                    s = text.Replace(Environment.NewLine, " ");
+                    s = s.Replace("  ", " ");
+                    return s;
+                }
+            }
+            return text;
+        }
+
     }
 }
