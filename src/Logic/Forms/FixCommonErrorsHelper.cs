@@ -93,14 +93,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
             var index = text.IndexOf(':');
-            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
+            if (text.Contains("..") && index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text[index + 2] == ' ')
             {
-                post += text.Substring(0, index + 1);
+                post += text.Substring(0, index + 2);
                 if (post.Length < 2)
                     return text;
 
-                text = text.Remove(0, index + 1);
-                text = text.Trim();
+                text = text.Remove(0, index + 1).TrimStart();
                 text = FixEllipsesStartHelper(text);
             }
             if (!String.IsNullOrEmpty(post))

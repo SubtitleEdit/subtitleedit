@@ -219,8 +219,6 @@ namespace Test
             Assert.AreEqual(result, expected);
         }
 
-        
-
         #endregion Merge short lines
 
         #region Fix Italics
