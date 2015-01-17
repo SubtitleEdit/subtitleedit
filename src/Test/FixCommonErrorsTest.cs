@@ -1149,6 +1149,29 @@ namespace Test
             Assert.AreEqual(result, "<i>Kurt: true but bad.</i>");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic5()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<font color=\"#000000\">... true but bad.</font>");
+            Assert.AreEqual(result, "<font color=\"#000000\">true but bad.</font>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic6()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<font color=\"#000000\"><i>Kurt: ... true but bad.</i></font>");
+            Assert.AreEqual(result, "<font color=\"#000000\"><i>Kurt: true but bad.</i></font>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic7()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i><font color=\"#000000\">Kurt: ...true but bad.</font></i>");
+            Assert.AreEqual(result, "<i><font color=\"#000000\">Kurt: true but bad.</font></i>");
+        }
         #endregion Ellipses start
 
         #region FixDoubleGreater
