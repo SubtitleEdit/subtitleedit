@@ -92,9 +92,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
             var index = text.IndexOf(':');
-            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains("..", StringComparison.Ordinal))
+            if (index > 0 && text.Contains("..", StringComparison.Ordinal) && text.Length > index + 2 && !char.IsDigit(text[index + 1]))
             {
-                pre += text.Substring(0, index + 1);                
+                if (text[index + 2] == ' ')
+                    pre += text.Substring(0, index + 2);
+                else
+                    pre += text.Substring(0, index + 1);                
                 if (pre.Length < 2)
                     return text;
 
