@@ -12,6 +12,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
             if (!text.Contains(".."))
                 return text;
+            var post = string.Empty;
+            if(text.StartsWith("<font ",StringComparison.Ordinal) && text.IndexOf('>', 5) > -1)
+            {
+                var idx =text.IndexOf('>', 5);
+                if (idx > -1)
+                {
+                    post = text.Substring(0, text.IndexOf('>') + 1);
+                    text = text.Substring(idx + 1).TrimStart();
+                }
+            }
 
             if (text.StartsWith("...", StringComparison.Ordinal))
             {
@@ -84,15 +94,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var index = text.IndexOf(':');
             if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains(".."))
             {
-                var post = text.Substring(0, index + 1);
+                post += text.Substring(0, index + 1);
                 if (post.Length < 2)
                     return text;
 
                 text = text.Remove(0, index + 1);
                 text = text.Trim();
                 text = FixEllipsesStartHelper(text);
-                text = post + " " + text;
             }
+            if (!String.IsNullOrEmpty(post))
+                text = post + text;
             return text;
         }
 
