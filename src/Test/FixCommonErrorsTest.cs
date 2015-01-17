@@ -1166,6 +1166,14 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic5()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("WOMAN 2: <i>...24 hours a day at BabyC.</i>");
+            Assert.AreEqual(result, "WOMAN 2: <i>24 hours a day at BabyC.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixEllipsesStartFont1()
         {
             var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<font color=\"#000000\">... true but bad.</font>");
