@@ -1164,6 +1164,7 @@ namespace Nikse.SubtitleEdit.Controls
 
         private void WaveformMouseMove(object sender, MouseEventArgs e)
         {
+
             if (_wavePeaks == null)
                 return;
 
@@ -1176,7 +1177,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph == null)
                     {
                         _mouseMoveEndX = 0;
-                        _mouseMoveStartX += (int)(_wavePeaks.Header.SampleRate * 0.1);
+                        _mouseMoveStartX += (int)(_wavePeaks.Header.SampleRate*0.1);
                         OnPositionSelected.Invoke(this, new ParagraphEventArgs(StartPositionSeconds, null));
                     }
                 }
@@ -1192,7 +1193,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph == null)
                     {
                         _mouseMoveEndX = Width;
-                        _mouseMoveStartX -= (int)(_wavePeaks.Header.SampleRate * 0.1);
+                        _mouseMoveStartX -= (int)(_wavePeaks.Header.SampleRate*0.1);
                         OnPositionSelected.Invoke(this, new ParagraphEventArgs(StartPositionSeconds, null));
                     }
                 }
@@ -1208,13 +1209,13 @@ namespace Nikse.SubtitleEdit.Controls
             if (e.Button == MouseButtons.None)
             {
                 double seconds = XPositionToSeconds(e.X);
-                var milliseconds = (int)(seconds * 1000.0);
+                var milliseconds = (int)(seconds*1000.0);
 
                 if (IsParagrapBorderHit(milliseconds, NewSelectionParagraph))
                     Cursor = Cursors.VSplit;
                 else if (IsParagrapBorderHit(milliseconds, _selectedParagraph) ||
-                    IsParagrapBorderHit(milliseconds, _currentParagraph) ||
-                    IsParagrapBorderHit(milliseconds, _previousAndNextParagraphs))
+                         IsParagrapBorderHit(milliseconds, _currentParagraph) ||
+                         IsParagrapBorderHit(milliseconds, _previousAndNextParagraphs))
                 {
                     Cursor = Cursors.VSplit;
                 }
@@ -1233,7 +1234,7 @@ namespace Nikse.SubtitleEdit.Controls
                     if (_mouseDownParagraph != null)
                     {
                         double seconds = XPositionToSeconds(e.X);
-                        var milliseconds = (int)(seconds * 1000.0);
+                        var milliseconds = (int)(seconds*1000.0);
                         var subtitleIndex = _subtitle.GetIndex(_mouseDownParagraph);
                         _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
                         _nextParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex + 1);
@@ -1294,6 +1295,8 @@ namespace Nikse.SubtitleEdit.Controls
                                 {
                                     if (OnTimeChanged != null)
                                         OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
+                                    Refresh();
+                                    return;
                                 }
                             }
                         }
@@ -1330,6 +1333,8 @@ namespace Nikse.SubtitleEdit.Controls
 
                                     if (OnTimeChanged != null)
                                         OnTimeChanged.Invoke(this, new ParagraphEventArgs(seconds, _mouseDownParagraph, _oldParagraph, _mouseDownParagraphType, AllowMovePrevOrNext));
+                                    Refresh();
+                                    return;
                                 }
                             }
                         }
@@ -1372,13 +1377,13 @@ namespace Nikse.SubtitleEdit.Controls
                             var startTotalSeconds = XPositionToSeconds(start);
                             var endTotalSeconds = XPositionToSeconds(end);
 
-                            if (PreventOverlap && endTotalSeconds * 1000.0 >= _wholeParagraphMaxMilliseconds)
+                            if (PreventOverlap && endTotalSeconds*1000.0 >= _wholeParagraphMaxMilliseconds)
                             {
                                 NewSelectionParagraph.EndTime.TotalMilliseconds = _wholeParagraphMaxMilliseconds - 1;
                                 Invalidate();
                                 return;
                             }
-                            if (PreventOverlap && startTotalSeconds * 1000.0 <= _wholeParagraphMinMilliseconds)
+                            if (PreventOverlap && startTotalSeconds*1000.0 <= _wholeParagraphMinMilliseconds)
                             {
                                 NewSelectionParagraph.StartTime.TotalMilliseconds = _wholeParagraphMinMilliseconds + 1;
                                 Invalidate();
