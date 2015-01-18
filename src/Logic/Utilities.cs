@@ -3163,7 +3163,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (Utilities.CountTagInText(text, "\"") == 2 && text.Contains(" \" "))
+            if (Utilities.CountTagInText(text, '"') == 2 && text.Contains(" \" "))
             {
                 int idx = text.IndexOf(" \" ", StringComparison.Ordinal);
                 int idxp = text.IndexOf('"');
