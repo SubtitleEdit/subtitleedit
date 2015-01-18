@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     else
                     {
                         var st = new StripableText(pre);
-                        if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(s, ":") == 1 &&
+                        if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(s, ':') == 1 &&
                             !newText.EndsWith('.') && !newText.EndsWith('!') && !newText.EndsWith('?') && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
                             s != s.ToUpper())
                         {
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             else
                                 newText = newText + Environment.NewLine + s;
                         }
-                        else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && s.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(s, ":") == 1 &&
+                        else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && s.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(s, ':') == 1 &&
                             !newText.EndsWith('.') && !newText.EndsWith('!') && !newText.EndsWith('?') && !newText.EndsWith(".</i>") && !newText.EndsWith("!</i>") && !newText.EndsWith("?</i>") &&
                             s != s.ToUpper())
                         {
@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             else
                                 newText = newText + Environment.NewLine + s;
                         }
-                        else if (Utilities.CountTagInText(s, ":") == 1)
+                        else if (Utilities.CountTagInText(s, ':') == 1)
                         {
                             bool remove = true;
                             if (indexOfColon > 0 && indexOfColon < s.Length - 1)
@@ -314,7 +314,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             else if (Utilities.CountTagInText(newText, Environment.NewLine) == 1 && removedInFirstLine == false && removedInSecondLine)
             {
                 string noTags = Utilities.RemoveHtmlTags(newText, true).Trim();
-                bool insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, "-") == 1;
+                bool insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, '-') == 1;
                 if (insertDash)
                 {
                     if (newText.Contains(Environment.NewLine + "<i>"))
@@ -637,7 +637,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             {
                                 temp = temp.Remove(0, 2);
                             }
-                            else if (index == 0 && temp.StartsWith("—"))
+                            else if (index == 0 && temp.StartsWith('—'))
                             {
                                 temp = temp.Remove(0, 1);
                             }

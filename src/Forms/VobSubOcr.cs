@@ -5794,7 +5794,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
             }
 
-            if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
+            if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
                 && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
@@ -5849,7 +5849,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Sometimes Tesseract has problems with small fonts - it helps to make the image larger
             if (HtmlUtil.RemoveOpenCloseTags(textWithOutFixes, HtmlUtil.TagItalic).Replace("@", string.Empty).Replace("%", string.Empty).Replace("|", string.Empty).Trim().Length < 3
-                || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
+                || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
             {
                 string rs = TesseractResizeAndRetry(bitmap);
                 textWithOutFixes = rs;
