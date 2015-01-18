@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     count++;
                 }
                 string text = lineSb.ToString();
-                int noOfLines = Utilities.CountTagInText(text, "|") + 1;
+                int noOfLines = Utilities.CountTagInText(text, '|') + 1;
                 if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:i}") == noOfLines)
                     text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
                 else if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:b}") == noOfLines)

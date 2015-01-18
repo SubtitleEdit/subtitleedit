@@ -5943,7 +5943,7 @@ namespace Nikse.SubtitleEdit.Forms
                             (!oneColorText.Contains('9') || line.Contains('9')) &&
                             (!oneColorText.Contains('•') || line.Contains('•')) &&
                             (!oneColorText.Contains(')') || line.Contains(')')) &&
-                            Utilities.CountTagInText(oneColorText, "(") < 2 && Utilities.CountTagInText(oneColorText, ")") < 2 &&
+                            Utilities.CountTagInText(oneColorText, '(') < 2 && Utilities.CountTagInText(oneColorText, ')') < 2 &&
                             Utilities.CountTagInText(oneColorText, Environment.NewLine) < 3)
                         {
                             int modiCorrectWords;
@@ -6016,19 +6016,19 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!ok)
                                 ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>") && line.EndsWith("</i>");
 
-                            if (ok && Utilities.CountTagInText(unItalicText, "/") > Utilities.CountTagInText(line, "/") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '/') > Utilities.CountTagInText(line, '/') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "\\") > Utilities.CountTagInText(line, "\\"))
+                            if (ok && Utilities.CountTagInText(unItalicText, '\') > Utilities.CountTagInText(line, '\'))
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, ")") > Utilities.CountTagInText(line, ")") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, ')') > Utilities.CountTagInText(line, ')') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "(") > Utilities.CountTagInText(line, "(") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '(') > Utilities.CountTagInText(line, '(') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "$") > Utilities.CountTagInText(line, "$") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '$') > Utilities.CountTagInText(line, '$') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "€") > Utilities.CountTagInText(line, "€") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '€') > Utilities.CountTagInText(line, '€') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "•") > Utilities.CountTagInText(line, "•"))
+                            if (ok && Utilities.CountTagInText(unItalicText, '•') > Utilities.CountTagInText(line, '•'))
                                 ok = false;
 
                             if (ok)
@@ -6318,7 +6318,7 @@ namespace Nikse.SubtitleEdit.Forms
                             (!modiText.Contains('9') || line.Contains('9')) &&
                             (!modiText.Contains('•') || line.Contains('•')) &&
                             (!modiText.Contains(')') || line.Contains(')')) &&
-                            Utilities.CountTagInText(modiText, "(") < 2 && Utilities.CountTagInText(modiText, ")") < 2 &&
+                            Utilities.CountTagInText(modiText, '(') < 2 && Utilities.CountTagInText(modiText, ')') < 2 &&
                             Utilities.CountTagInText(modiText, Environment.NewLine) < 3)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
