@@ -1195,7 +1195,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, Language);
 
-                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, " ") != Utilities.CountTagInText(oldText, " ") + Utilities.CountTagInText(oldText, char160))
+                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, ' ') != Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, char160))
                 {
                     if (AllowFix(p, fixAction))
                     {
@@ -1459,7 +1459,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
-                if (Utilities.CountTagInText(p.Text, "\"") == 2)
+                if (Utilities.CountTagInText(p.Text, '"') == 2)
                 {
                     int start = p.Text.IndexOf('"');
                     int end = p.Text.LastIndexOf('"');
@@ -1650,7 +1650,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[i];
 
-                if (Utilities.CountTagInText(p.Text, "\"") == 1)
+                if (Utilities.CountTagInText(p.Text, '"') == 1)
                 {
                     Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                     if (next != null)
@@ -1660,7 +1660,7 @@ namespace Nikse.SubtitleEdit.Forms
                             next = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (next.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
                                  next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(next.Text, "\"") == 2)
+                                 Utilities.CountTagInText(next.Text, '"') == 2)
                             next = null; // seems to have valid quotes, so no spanning
                     }
 
@@ -1672,7 +1672,7 @@ namespace Nikse.SubtitleEdit.Forms
                             prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
                                  prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(prev.Text, "\"") == 2)
+                                 Utilities.CountTagInText(prev.Text, '"') == 2)
                             prev = null; // seems to have valid quotes, so no spanning
                     }
 
