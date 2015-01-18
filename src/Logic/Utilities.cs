@@ -2323,7 +2323,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 // - foo.</i>
                 // - bar.</i>
-                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine) && text.EndsWith(endTag, StringComparison.Ordinal))
+                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal))
                 {
                     text = text.Replace(endTag, string.Empty);
                     text = beginTag + text + endTag;
@@ -2370,6 +2370,23 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
+                //<i>- You think they're they gone?<i>
+                //<i>- That can't be.</i>
+                if ((italicBeginTagCount == 3 && italicEndTagCount == 1) && CountTagInText(text, Environment.NewLine) == 1)
+                {
+                    var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    var firstLine = text.Substring(0, newLineIdx).Trim();
+                    var secondLine = text.Substring(newLineIdx).Trim();
+
+                    if (StartsAndEndsWithTag(firstLine, beginTag, beginTag) && StartsAndEndsWithTag(secondLine, beginTag, endTag) ||
+                        StartsAndEndsWithTag(secondLine, beginTag, beginTag) && StartsAndEndsWithTag(firstLine, beginTag, endTag))
+                    {
+                        text = text.Replace("<i>", string.Empty);
+                        text = text.Replace("</i>", string.Empty);
+                        text = text.Replace("  ", " ");
+                        text = "<i>" + text + "</i>";
+                    }
+                }
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<i> </i>", string.Empty);
                 text = text.Replace("<i>  </i>", string.Empty);
