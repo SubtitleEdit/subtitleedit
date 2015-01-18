@@ -491,12 +491,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         _namesEtcList.Add(ChangeWord);
                         _namesEtcListUppercase.Add(ChangeWord.ToUpper());
-                        if (_languageName.StartsWith("en_") && !ChangeWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+                        if (_languageName.StartsWith("en_") && !ChangeWord.EndsWith('s'))
                         {
                             _namesEtcList.Add(ChangeWord + "s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "S");
                         }
-                        if (!ChangeWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+                        if (!ChangeWord.EndsWith('s'))
                         {
                             _namesEtcListWithApostrophe.Add(ChangeWord + "'s");
                             _namesEtcListUppercase.Add(ChangeWord.ToUpper() + "'S");
@@ -1261,12 +1261,12 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             _namesEtcList.Remove(undo.UndoWord);
                             _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper());
-                            if (_languageName.StartsWith("en_") && !undo.UndoWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+                            if (_languageName.StartsWith("en_") && !undo.UndoWord.EndsWith('s'))
                             {
                                 _namesEtcList.Remove(undo.UndoWord + "s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "S");
                             }
-                            if (!undo.UndoWord.EndsWith("s", StringComparison.OrdinalIgnoreCase))
+                            if (!undo.UndoWord.EndsWith('s'))
                             {
                                 _namesEtcListWithApostrophe.Remove(undo.UndoWord + "'s");
                                 _namesEtcListUppercase.Remove(undo.UndoWord.ToUpper() + "'S");

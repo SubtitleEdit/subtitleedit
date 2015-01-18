@@ -21,7 +21,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             var tempText = text.Replace(Environment.NewLine, " ").Replace("  ", " ");
-            if (Utilities.CountTagInText(tempText, "-") == 2 && (text.StartsWith("-") || text.StartsWith("<i>-")))
+            if (Utilities.CountTagInText(tempText, '-') == 2 && (text.StartsWith('-') || text.StartsWith("<i>-")))
             {
                 int idx = tempText.IndexOf(". -", StringComparison.Ordinal);
                 if (idx < 1)

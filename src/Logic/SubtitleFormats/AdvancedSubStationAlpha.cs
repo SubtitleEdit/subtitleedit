@@ -962,13 +962,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             //Black = &H000000&
             string s = f.Trim().Trim('&');
 
-            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length < 7)
+            if (s.StartsWith('h') && s.Length < 7)
             {
                 while (s.Length < 7)
                     s = s.Insert(1, "0");
             }
 
-            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 7)
+            if (s.StartsWith('h') && s.Length == 7)
             {
                 s = s.Substring(1);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
@@ -981,7 +981,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                     return defaultColor;
                 }
             }
-            if (s.StartsWith("h", StringComparison.OrdinalIgnoreCase) && s.Length == 9)
+            if (s.StartsWith('h') && s.Length == 9)
             {
                 s = s.Substring(3);
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
