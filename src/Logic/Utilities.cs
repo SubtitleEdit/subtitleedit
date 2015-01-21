@@ -181,9 +181,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static bool IsInteger(string s)
         {
             int i;
-            if (int.TryParse(s, out i))
-                return true;
-            return false;
+            return int.TryParse(s, out i);
         }
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
