@@ -15,6 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.AddToOcrReplaceList AddToOcrReplaceList;
         public LanguageStructure.AddToUserDictionary AddToUserDictionary;
         public LanguageStructure.AddWaveform AddWaveform;
+        public LanguageStructure.AddWaveformBatch AddWaveformBatch;
         public LanguageStructure.AdjustDisplayDuration AdjustDisplayDuration;
         public LanguageStructure.ApplyDurationLimits ApplyDurationLimits;
         public LanguageStructure.AutoBreakUnbreakLines AutoBreakUnbreakLines;
@@ -226,6 +227,14 @@ namespace Nikse.SubtitleEdit.Logic
                 GeneratingSpectrogram = "Generating spectrogram...",
                 ExtractingSeconds = "Extracting audio: {0:0.0} seconds",
                 ExtractingMinutes = "Extracting audio: {0}.{1:00} minutes",
+            };
+
+            AddWaveformBatch = new LanguageStructure.AddWaveformBatch
+            {
+                Title = "Generate waveform batch",
+                Calculating = "Calculating...",
+                ExtractingAudio = "Extracting audio...",
+                Done = "Done",
             };
 
             AdjustDisplayDuration = new LanguageStructure.AdjustDisplayDuration
@@ -1257,6 +1266,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CloseVideo = "Close video file",
                         ImportSceneChanges = "Import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
+                        WaveformBatchGenerate = "Waveform batch generate...",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveform = "Show/hide waveform",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",

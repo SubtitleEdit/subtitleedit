@@ -116,6 +116,14 @@
             public string ExtractingMinutes { get; set; }
         }
 
+        public class AddWaveformBatch
+        {
+            public string Title { get; set; }
+            public string ExtractingAudio { get; set; }
+            public string Calculating { get; set; }
+            public string Done { get; set; }
+        }
+
         public class AdjustDisplayDuration
         {
             public string Title { get; set; }
@@ -1139,6 +1147,7 @@
                     public string CloseVideo { get; set; }
                     public string ImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
+                    public string WaveformBatchGenerate { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveform { get; set; }
                     public string ShowHideWaveformAndSpectrogram { get; set; }

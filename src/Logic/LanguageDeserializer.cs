@@ -23,6 +23,7 @@ namespace Nikse.SubtitleEdit.Logic
             language.AddToOcrReplaceList = new LanguageStructure.AddToOcrReplaceList();
             language.AddToUserDictionary = new LanguageStructure.AddToUserDictionary();
             language.AddWaveform = new LanguageStructure.AddWaveform();
+            language.AddWaveformBatch = new LanguageStructure.AddWaveformBatch();
             language.AdjustDisplayDuration = new LanguageStructure.AdjustDisplayDuration();
             language.ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits();
             language.AutoBreakUnbreakLines = new LanguageStructure.AutoBreakUnbreakLines();
@@ -424,6 +425,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AddWaveform/ExtractingMinutes":
                     language.AddWaveform.ExtractingMinutes = reader.Value;
+                    break;
+                case "AddWaveformBatch/Title":
+                    language.AddWaveformBatch.Title = reader.Value;
+                    break;
+                case "AddWaveformBatch/ExtractingAudio":
+                    language.AddWaveformBatch.ExtractingAudio = reader.Value;
+                    break;
+                case "AddWaveformBatch/Calculating":
+                    language.AddWaveformBatch.Calculating = reader.Value;
+                    break;
+                case "AddWaveformBatch/Done":
+                    language.AddWaveformBatch.Done = reader.Value;
                     break;
                 case "AdjustDisplayDuration/Title":
                     language.AdjustDisplayDuration.Title = reader.Value;
@@ -2944,6 +2957,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Video/RemoveSceneChanges":
                     language.Main.Menu.Video.RemoveSceneChanges = reader.Value;
+                    break;
+                case "Main/Menu/Video/WaveformBatchGenerate":
+                    language.Main.Menu.Video.WaveformBatchGenerate = reader.Value;
                     break;
                 case "Main/Menu/Video/ShowHideVideo":
                     language.Main.Menu.Video.ShowHideVideo = reader.Value;
