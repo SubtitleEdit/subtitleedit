@@ -231,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             AddWaveformBatch = new LanguageStructure.AddWaveformBatch
             {
-                Title = "Generate waveform batch",
+                Title = "Batch generate waveform data",
                 Calculating = "Calculating...",
                 ExtractingAudio = "Extracting audio...",
                 Done = "Done",
@@ -1266,7 +1266,7 @@ namespace Nikse.SubtitleEdit.Logic
                         CloseVideo = "Close video file",
                         ImportSceneChanges = "Import scene changes...",
                         RemoveSceneChanges = "Remove scene changes",
-                        WaveformBatchGenerate = "Waveform batch generate...",
+                        WaveformBatchGenerate = "Batch generate waveforms...",
                         ShowHideVideo = "Show/hide video",
                         ShowHideWaveform = "Show/hide waveform",
                         ShowHideWaveformAndSpectrogram = "Show/hide waveform and spectrogram",
