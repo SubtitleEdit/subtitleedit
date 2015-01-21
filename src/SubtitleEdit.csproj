@@ -91,6 +91,12 @@
     </Compile>
     <Compile Include="Core\FastFileStream.cs" />
     <Compile Include="Core\StringExtensions.cs" />
+    <Compile Include="Forms\AddWaveformBatch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AddWaveformBatch.Designer.cs">
+      <DependentUpon>AddWaveformBatch.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\CheckForUpdates.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -1233,6 +1239,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\AudioVisualizer.resx">
       <DependentUpon>AudioVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AddWaveformBatch.resx">
+      <DependentUpon>AddWaveformBatch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\CheckForUpdates.resx">
       <DependentUpon>CheckForUpdates.cs</DependentUpon>

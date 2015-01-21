@@ -1135,6 +1135,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (!string.IsNullOrEmpty(_language.Menu.Video.ImportSceneChanges)) //TODO: Remove in SE 3.4
                 toolStripMenuItemImportSceneChanges.Text = _language.Menu.Video.ImportSceneChanges;
 
+            if (!string.IsNullOrEmpty(_language.Menu.Video.WaveformBatchGenerate))
+                toolStripMenuItemAddWaveformBatch.Text = _language.Menu.Video.WaveformBatchGenerate;
+
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
                 showhideWaveformToolStripMenuItem.Text = _language.Menu.Video.ShowHideWaveformAndSpectrogram;
             else
@@ -14624,7 +14627,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Convert.ToBase64String(hash, 0, hash.Length);
         }
 
-        private static string GetPeakWaveFileName(string videoFileName)
+        public static string GetPeakWaveFileName(string videoFileName)
         {
             string dir = Configuration.WaveformsFolder.TrimEnd(Path.DirectorySeparatorChar);
             if (!Directory.Exists(dir))
@@ -19238,12 +19241,20 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void toolStripMenuItem3_Click(object sender, EventArgs e)
+        private void toolStripMenuItemExportEdlClick(object sender, EventArgs e)
         {
             using (var exportBdnXmlPng = new ExportPngXml())
             {
                 exportBdnXmlPng.Initialize(_subtitle, GetCurrentSubtitleFormat(), "EDL", _fileName, _videoInfo, _videoFileName);
                 exportBdnXmlPng.ShowDialog(this);
+            }
+        }
+
+        private void ToolStripMenuItemAddWaveformBatchClick(object sender, EventArgs e)
+        {
+            using (var form = new AddWaveformBatch())
+            {
+                form.ShowDialog(this);
             }
         }
 
