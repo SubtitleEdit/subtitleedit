@@ -76,31 +76,21 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string RemoveStartEndNoise(string text)
         {
-            string s = text.Trim();
-            if (s.StartsWith("<b>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<i>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<u>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<B>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<I>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<U>") && s.Length > 3)
-                s = s.Substring(3);
+            const int i = ('i' | 'I');
+            const int b = ('b' | 'B');
+            const int u = ('u' | 'U');
 
-            if (s.EndsWith("</b>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</i>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</u>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</B>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</I>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</U>") && s.Length > 4)
+            string s = text.Trim();
+            // <i> <I> | <b> <B> | <u> <U>
+            if (text.Length > 3 && text[0] == '<' && text[2] == '>' &&
+                ((text[1] & i) == text[1] || (text[1] & b) == text[1] || (text[1] & u) == text[1]))
+            {
+                s = s.Substring(0, 3);
+            }
+            // </i> </I> | </b> </B> | </u> </U>
+            int idx = (s.Length - 4);
+            if(s.Length > 4 && s[idx + 2] == '/' && s[idx] == '<' &&
+                 ((text[idx + 3] & i) == text[idx] || (text[idx + 3] & b) == text[idx] || (text[idx + 3] & u) == text[idx]))
                 s = s.Substring(0, s.Length - 4);
 
             if (s.StartsWith('-') && s.Length > 2)
