@@ -110,6 +110,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
     <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Batch generate waveform data</Title>
+    <ExtractingAudio>Extracting audio...</ExtractingAudio>
+    <Calculating>Calculating...</Calculating>
+    <Done>Done</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Adjust durations</Title>
     <AdjustVia>Adjust via</AdjustVia>
@@ -793,6 +799,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Close video file</CloseVideo>
         <ImportSceneChanges>Import scene changes...</ImportSceneChanges>
         <RemoveSceneChanges>Remove scene changes</RemoveSceneChanges>
+        <WaveformBatchGenerate>Batch generate waveforms...</WaveformBatchGenerate>
         <ShowHideVideo>Show/hide video</ShowHideVideo>
         <ShowHideWaveform>Show/hide waveform</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Show/hide waveform and spectrogram</ShowHideWaveformAndSpectrogram>
