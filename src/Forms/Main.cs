@@ -27,7 +27,6 @@ namespace Nikse.SubtitleEdit.Forms
 
     public sealed partial class Main : Form
     {
-
         private class ComboBoxZoomItem
         {
             public string Text { get; set; }
