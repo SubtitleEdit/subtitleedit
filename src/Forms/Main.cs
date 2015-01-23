@@ -1264,6 +1264,16 @@ namespace Nikse.SubtitleEdit.Forms
             colorToolStripMenuItem1.Text = _language.Menu.ContextMenu.Color;
             fontNameToolStripMenuItem.Text = _language.Menu.ContextMenu.FontName;
             toolStripMenuItemInsertUnicodeSymbol.Text = _language.Menu.Edit.InsertUnicodeSymbol;
+            if (!string.IsNullOrEmpty(_language.Menu.Edit.InsertUnicodeControlCharacters))
+            {
+                toolStripMenuItemInsertUnicodeControlCharacters.Text = _language.Menu.Edit.InsertUnicodeControlCharacters;
+                leftToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersLRM;
+                righttoleftMarkToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersRLM;
+                startOfLefttorightEmbeddingLREToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersLRE;
+                startOfRighttoleftEmbeddingRLEToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersRLE;
+                startOfLefttorightOverrideLROToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersLRO;
+                startOfRighttoleftOverrideRLOToolStripMenuItem.Text = _language.Menu.Edit.InsertUnicodeControlCharactersRLO;
+            }
 
             // main controls
             SubtitleListview1.InitializeLanguage(_languageGeneral, Configuration.Settings);

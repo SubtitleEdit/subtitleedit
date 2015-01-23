@@ -1203,7 +1203,14 @@ namespace Nikse.SubtitleEdit.Logic
                         Undo = "Undo",
                         Redo = "Redo",
                         ShowUndoHistory = "Show history (for undo)",
-                        InsertUnicodeSymbol = "Insert unicode symbol",
+                        InsertUnicodeSymbol = "Insert Unicode symbol",
+                        InsertUnicodeControlCharacters = "Insert Unicode control characters",
+                        InsertUnicodeControlCharactersLRM = "Left-to-right mark (LRM)",
+                        InsertUnicodeControlCharactersRLM = "Right-to-left mark (RLM)",
+                        InsertUnicodeControlCharactersLRE = "Start of left-to-right embedding (LRE)",
+                        InsertUnicodeControlCharactersRLE = "Start of right-to-left embedding (RLE)",
+                        InsertUnicodeControlCharactersLRO = "Start of left-to-right override (LRO)",
+                        InsertUnicodeControlCharactersRLO = "Start of right-to-left override (RLO)",
                         Find = "&Find",
                         FindNext = "Find &next",
                         Replace = "&Replace",
@@ -2289,7 +2296,8 @@ Keep changes?",
                 NoMatch = "<No match>",
                 AutoTransparentBackground = "Auto transparent background",
                 InspectCompareMatchesForCurrentImage = "Inspect compare matches for current image...",
-                EditLastAdditions = "Edit last image compare additions..."
+                EditLastAdditions = "Edit last image compare additions...",
+                SetUnitalicFactor = "Set un-italic factor...",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

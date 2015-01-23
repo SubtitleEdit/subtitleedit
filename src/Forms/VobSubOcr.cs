@@ -424,6 +424,7 @@ namespace Nikse.SubtitleEdit.Forms
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
+            toolStripMenuItemSetUnItalicFactor.Text = language.SetUnitalicFactor;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
 
             toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
