@@ -506,6 +506,8 @@ namespace Nikse.SubtitleEdit.Logic
                         s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                         s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
                         s = s.Replace(Environment.NewLine + "</i>", "<i>" + Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
                         s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
                         return s.TrimEnd();
                     }
