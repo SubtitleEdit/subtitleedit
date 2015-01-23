@@ -170,14 +170,14 @@ https://github.com/SubtitleEdit/subtitleedit
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
-            if (e.KeyCode == (Keys.Control | Keys.C))
-            {
-                // Todo: copy to clipboard
-            }
+            else if (e.KeyData == (Keys.Control | Keys.C))
+                Clipboard.SetText(string.Format(writeFormat, _general, _mostUsedWords, _mostUsedLines), TextDataFormat.UnicodeText);
         }
 
         private static void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
         {
+            if (lastLine.Contains("< "))
+                lastLine = Utilities.FixInvalidItalicTags(lastLine);
             lastLine = lastLine.Trim('\'');
             lastLine = lastLine.Replace("\"", "");
             lastLine = lastLine.Replace("<i>", "");
@@ -188,6 +188,28 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("</b>", ".");
             lastLine = lastLine.Replace("<B>", "");
             lastLine = lastLine.Replace("</B>", ".");
+            lastLine = lastLine.Replace("<u>", "");
+            lastLine = lastLine.Replace("</u>", ".");
+            lastLine = lastLine.Replace("<U>", "");
+            lastLine = lastLine.Replace("</U>", ".");
+
+            var idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            var error = false;
+            while (idx > -1)
+            {
+                var endIdx = lastLine.IndexOf('>', idx + 6);
+                if (endIdx < idx)
+                {
+                    error = !error;
+                    break;
+                }
+                endIdx++;
+                lastLine = lastLine.Remove(idx, (endIdx - idx));
+                idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            }
+            if(!error)
+                lastLine = lastLine.Replace("</font>", ".");
+
             string[] words = lastLine.Split(new[] { ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string word in words)
@@ -219,6 +241,10 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("</b>", ".");
             lastLine = lastLine.Replace("<B>", "");
             lastLine = lastLine.Replace("</B>", ".");
+            lastLine = lastLine.Replace("<u>", "");
+            lastLine = lastLine.Replace("</u>", ".");
+            lastLine = lastLine.Replace("<U>", "");
+            lastLine = lastLine.Replace("</U>", ".");
             lastLine = lastLine.Replace('!', '.');
             lastLine = lastLine.Replace('?', '.');
             lastLine = lastLine.Replace("...", ".");
@@ -250,12 +276,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void CalculateMostUsedWords()
         {
-            Dictionary<string, string> hashtable = new Dictionary<string, string>();
+            var hashtable = new Dictionary<string, string>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedWordsAdd(hashtable, p.Text);
 
-            SortedDictionary<string, string> sortedTable = new SortedDictionary<string, string>();
+            var sortedTable = new SortedDictionary<string, string>();
             foreach (KeyValuePair<string, string> item in hashtable)
             {
                 if (int.Parse(item.Value) > 1)
@@ -286,7 +312,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void CalculateMostUsedLines()
         {
-            Dictionary<string, string> hashtable = new Dictionary<string, string>();
+            var hashtable = new Dictionary<string, string>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
@@ -327,7 +353,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            var saveFile = new SaveFileDialog() { Filter = "Text files (*.txt)|*.txt|NFO Files (*.nfo)|*.nfo" };
+            var saveFile = new SaveFileDialog() { Filter = "Text files (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" };
             if (saveFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string fileName = saveFile.FileName;
