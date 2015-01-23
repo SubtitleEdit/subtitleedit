@@ -42,6 +42,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
             this.checkBoxShowOnlyDifferences = new System.Windows.Forms.CheckBox();
             this.checkBoxOnlyListDifferencesInText = new System.Windows.Forms.CheckBox();
@@ -49,6 +51,10 @@ namespace Nikse.SubtitleEdit.Forms
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -148,6 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox1.ContextMenuStrip = this.contextMenuStrip1;
             this.richTextBox1.Location = new System.Drawing.Point(8, 486);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
@@ -155,10 +162,25 @@ namespace Nikse.SubtitleEdit.Forms
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(128, 26);
+            // 
+            // copyTextToolStripMenuItem
+            // 
+            this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.copyTextToolStripMenuItem.Text = "Copy Text";
+            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
+            // 
             // richTextBox2
             // 
             this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox2.ContextMenuStrip = this.contextMenuStrip2;
             this.richTextBox2.Location = new System.Drawing.Point(490, 485);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
@@ -255,6 +277,20 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragDrop);
             this.subtitleListView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragEnter);
             // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem1});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(153, 48);
+            // 
+            // copyTextToolStripMenuItem1
+            // 
+            this.copyTextToolStripMenuItem1.Name = "copyTextToolStripMenuItem1";
+            this.copyTextToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.copyTextToolStripMenuItem1.Text = "Copy Text";
+            this.copyTextToolStripMenuItem1.Click += new System.EventHandler(this.copyTextToolStripMenuItem1_Click);
+            // 
             // Compare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -285,6 +321,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compare_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Compare_KeyDown);
             this.Resize += new System.EventHandler(this.Compare_Resize);
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -310,5 +348,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxOnlyListDifferencesInText;
         private System.Windows.Forms.CheckBox checkBoxIgnoreLineBreaks;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem1;
     }
 }

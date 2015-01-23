@@ -893,5 +893,27 @@ namespace Nikse.SubtitleEdit.Forms
                     CompareSubtitles();
             }
         }
+
+        private void copyTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyTextToClipboard(richTextBox1);
+        }
+
+        private void copyTextToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyTextToClipboard(richTextBox2);
+        }
+
+        private static void CopyTextToClipboard(RichTextBox sender)
+        {
+            if (sender.Text.Trim().Length == 0)
+                return;
+            if (sender.SelectedText.Length > 0)
+            {
+                Clipboard.SetText(sender.SelectedText);
+                return;
+            }
+            Clipboard.SetText(sender.Text);
+        }
     }
 }
