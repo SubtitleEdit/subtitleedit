@@ -45,14 +45,14 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxShowOnlyDifferences = new System.Windows.Forms.CheckBox();
             this.checkBoxOnlyListDifferencesInText = new System.Windows.Forms.CheckBox();
             this.checkBoxIgnoreLineBreaks = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
-            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.copyTextToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
@@ -167,12 +167,13 @@ namespace Nikse.SubtitleEdit.Forms
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.copyTextToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(128, 26);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 26);
             // 
             // copyTextToolStripMenuItem
             // 
             this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
-            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(127, 22);
+            this.copyTextToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
             this.copyTextToolStripMenuItem.Text = "Copy Text";
             this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
             // 
@@ -187,6 +188,21 @@ namespace Nikse.SubtitleEdit.Forms
             this.richTextBox2.Size = new System.Drawing.Size(478, 43);
             this.richTextBox2.TabIndex = 7;
             this.richTextBox2.Text = "";
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem1});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(169, 26);
+            // 
+            // copyTextToolStripMenuItem1
+            // 
+            this.copyTextToolStripMenuItem1.Name = "copyTextToolStripMenuItem1";
+            this.copyTextToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.copyTextToolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
+            this.copyTextToolStripMenuItem1.Text = "Copy Text";
+            this.copyTextToolStripMenuItem1.Click += new System.EventHandler(this.copyTextToolStripMenuItem1_Click);
             // 
             // checkBoxShowOnlyDifferences
             // 
@@ -276,20 +292,6 @@ namespace Nikse.SubtitleEdit.Forms
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.SubtitleListView1SelectedIndexChanged);
             this.subtitleListView1.DragDrop += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragDrop);
             this.subtitleListView1.DragEnter += new System.Windows.Forms.DragEventHandler(this.subtitleListView1_DragEnter);
-            // 
-            // contextMenuStrip2
-            // 
-            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.copyTextToolStripMenuItem1});
-            this.contextMenuStrip2.Name = "contextMenuStrip2";
-            this.contextMenuStrip2.Size = new System.Drawing.Size(153, 48);
-            // 
-            // copyTextToolStripMenuItem1
-            // 
-            this.copyTextToolStripMenuItem1.Name = "copyTextToolStripMenuItem1";
-            this.copyTextToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-            this.copyTextToolStripMenuItem1.Text = "Copy Text";
-            this.copyTextToolStripMenuItem1.Click += new System.EventHandler(this.copyTextToolStripMenuItem1_Click);
             // 
             // Compare
             // 
