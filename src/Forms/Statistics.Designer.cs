@@ -36,6 +36,7 @@
             this.labelMostUsedWords = new System.Windows.Forms.Label();
             this.textBoxMostUsedLines = new System.Windows.Forms.TextBox();
             this.textBoxMostUsedWords = new System.Windows.Forms.TextBox();
+            this.buttonExport = new System.Windows.Forms.Button();
             this.groupBoxGeneral.SuspendLayout();
             this.groupBoxMostUsed.SuspendLayout();
             this.SuspendLayout();
@@ -136,11 +137,22 @@
             this.textBoxMostUsedWords.Size = new System.Drawing.Size(320, 183);
             this.textBoxMostUsedWords.TabIndex = 0;
             // 
+            // buttonExport
+            // 
+            this.buttonExport.Location = new System.Drawing.Point(561, 632);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(75, 23);
+            this.buttonExport.TabIndex = 7;
+            this.buttonExport.Text = "Export";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
+            // 
             // Statistics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(732, 665);
+            this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.groupBoxMostUsed);
             this.Controls.Add(this.groupBoxGeneral);
             this.Controls.Add(this.buttonOK);
@@ -172,5 +184,6 @@
         private System.Windows.Forms.TextBox textBoxMostUsedLines;
         private System.Windows.Forms.Label labelMostUsedLines;
         private System.Windows.Forms.Label labelMostUsedWords;
+        private System.Windows.Forms.Button buttonExport;
     }
 }
