@@ -36,6 +36,8 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 checkBoxOnlyListDifferencesInText.Visible = false;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
+            copyTextToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
@@ -45,8 +47,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 subtitleListView1.InitializeTimestampColumnWidths(this);
@@ -136,7 +138,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cavena890.IsMine(null, openFileDialog1.FileName))
                     {
                         cavena890.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = cavena890;
                     }
                 }
                 subtitleListView1.Fill(_subtitle1);
@@ -179,7 +180,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cavena890.IsMine(null, openFileDialog1.FileName))
                     {
                         cavena890.LoadSubtitle(_subtitle2, null, openFileDialog1.FileName);
-                        format = cavena890;
                     }
                 }
 
@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     break;
                                 }
-                                else if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
+                                if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
                                 {
                                     for (int j = 0; j < i; j++)
                                     {
@@ -735,7 +735,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Timer1Tick(object sender, EventArgs e)
         {
             char activeListView;
-            var p = PointToClient(Control.MousePosition);
+            var p = PointToClient(MousePosition);
             if (p.X >= subtitleListView1.Left && p.X <= subtitleListView1.Left + subtitleListView1.Width + 2)
                 activeListView = 'L';
             else if (p.X >= subtitleListView2.Left && p.X <= subtitleListView2.Left + subtitleListView2.Width + 2)
