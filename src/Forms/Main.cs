@@ -6458,13 +6458,13 @@ namespace Nikse.SubtitleEdit.Forms
             string s = text.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
             // remove unicode control characters
-            s = s.Replace(Convert.ToChar(8207).ToString(), string.Empty).
-                Replace(Convert.ToChar(8206).ToString(), string.Empty).
-                Replace(Convert.ToChar(0x202A).ToString(), string.Empty).
-                Replace(Convert.ToChar(0x202B).ToString(), string.Empty).
-                Replace(Convert.ToChar(0x202D).ToString(), string.Empty).
-                Replace(Convert.ToChar(0x202E).ToString(), string.Empty).
-                Replace(Convert.ToChar(0x202B).ToString(), string.Empty);
+            s = s.Replace("\u8207", string.Empty).
+                Replace("\u8206", string.Empty).
+                Replace("\u202A", string.Empty).
+                Replace("\u202B", string.Empty).
+                Replace("\u202D", string.Empty).
+                Replace("\u202E", string.Empty).
+                Replace("\u002B", string.Empty);
 
             int numberOfLines = Utilities.GetNumberOfLines(text.Trim());
             int maxLines = int.MaxValue;
@@ -19071,37 +19071,37 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void leftToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox(Convert.ToChar(8207).ToString());
+            PasteIntoActiveTextBox("\u8207");
         }
 
         private void righttoleftMarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox(Convert.ToChar(8206).ToString());
+            PasteIntoActiveTextBox("\u8206");
         }
 
         private void startOfLefttorightEmbeddingLREToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox(Convert.ToChar(0x202A).ToString());
+            PasteIntoActiveTextBox("\u202A");
         }
 
         private void startOfRighttoleftEmbeddingRLEToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox(Convert.ToChar(0x202B).ToString());
+            PasteIntoActiveTextBox("\u202B");
         }
 
         private void startOfLefttorightOverrideLROToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox(Convert.ToChar(0x202D).ToString());
+            PasteIntoActiveTextBox("\u202D");
         }
 
         private void startOfRighttoleftOverrideRLOToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox(Convert.ToChar(0x202E).ToString());
+            PasteIntoActiveTextBox("\u202E");
         }
 
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
         {
-            string rtl = Convert.ToChar(0x202B).ToString();
+            string rtl = "\u202B";
             int selectedIndex = FirstSelectedIndex;
             foreach (int index in SubtitleListview1.SelectedIndices)
             {
