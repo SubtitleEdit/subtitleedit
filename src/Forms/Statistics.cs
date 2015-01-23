@@ -170,10 +170,8 @@ https://github.com/SubtitleEdit/subtitleedit
         {
             if (e.KeyCode == Keys.Escape)
                 DialogResult = DialogResult.Cancel;
-            if (e.KeyCode == (Keys.Control | Keys.C))
-            {
-                // Todo: copy to clipboard
-            }
+            else if (e.KeyData == (Keys.Control | Keys.C))
+                Clipboard.SetText(string.Format(writeFormat, _general, _mostUsedWords, _mostUsedLines), TextDataFormat.UnicodeText);
         }
 
         private static void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
@@ -327,7 +325,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            var saveFile = new SaveFileDialog() { Filter = "Text files (*.txt)|*.txt|NFO Files (*.nfo)|*.nfo" };
+            var saveFile = new SaveFileDialog() { Filter = "Text files (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" };
             if (saveFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string fileName = saveFile.FileName;
