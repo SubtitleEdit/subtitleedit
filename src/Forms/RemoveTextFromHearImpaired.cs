@@ -1,4 +1,4 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Globalization;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
 using System;
@@ -65,49 +65,14 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
-        }
-
-        public static string RemoveStartEndNoise(string text)
-        {
-            string s = text.Trim();
-            if (s.StartsWith("<b>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<i>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<u>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<B>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<I>") && s.Length > 3)
-                s = s.Substring(3);
-            if (s.StartsWith("<U>") && s.Length > 3)
-                s = s.Substring(3);
-
-            if (s.EndsWith("</b>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</i>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</u>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</B>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</I>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-            if (s.EndsWith("</U>") && s.Length > 4)
-                s = s.Substring(0, s.Length - 4);
-
-            if (s.StartsWith('-') && s.Length > 2)
-                s = s.TrimStart('-');
-
-            return s.Trim();
-        }
+        }        
 
         public void Initialize(Subtitle subtitle)
         {
@@ -131,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxLinesFound.Visible = false;
             int h = groupBoxRemoveTextConditions.Top + groupBoxRemoveTextConditions.Height + buttonOK.Height + 50;
             MinimumSize = new Size(MinimumSize.Width, h);
-            this.Height = h;
+            Height = h;
         }
 
         private void GeneratePreview()
@@ -144,16 +109,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
-            int prevIndex = -1;
-            var settings = GetSettings();
+            int prevIndex = -1;            
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
-                string prevText = string.Empty;
-                var prev = _subtitle.GetParagraphOrDefault(prevIndex);
-                if (prev != null)
-                    prevText = prev.Text;
                 prevIndex++;
-
                 _removeTextForHILib.WarningIndex = prevIndex;
                 string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                 bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
@@ -175,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
                 item.UseItemStyleForSubItems = true;
                 item.BackColor = Color.PeachPuff;
             }
-            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString());
+            var subItem = new ListViewItem.ListViewSubItem(item, p.Number.ToString(CultureInfo.InvariantCulture));
             item.SubItems.Add(subItem);
             subItem = new ListViewItem.ListViewSubItem(item, p.Text.Replace(Environment.NewLine, Configuration.Settings.General.ListViewLineSeparatorString));
             item.SubItems.Add(subItem);
@@ -201,17 +160,11 @@ namespace Nikse.SubtitleEdit.Forms
         public int RemoveTextFromHearImpaired()
         {
             int count = 0;
-            var settings = GetSettings();
             for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 if (IsFixAllowed(p))
                 {
-                    string prevText = string.Empty;
-                    var prev = _subtitle.GetParagraphOrDefault(i - 1);
-                    if (prev != null)
-                        prevText = prev.Text;
-
                     _removeTextForHILib.Settings = GetSettings();
                     string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                     if (string.IsNullOrEmpty(newText))
@@ -315,22 +268,23 @@ namespace Nikse.SubtitleEdit.Forms
 
         public RemoveTextForHISettings GetSettings()
         {
-            var settings = new RemoveTextForHISettings();
-            settings.OnlyIfInSeparateLine = checkBoxOnlyIfInSeparateLine.Checked;
-            settings.RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked;
-            settings.RemoveTextBeforeColon = checkBoxRemoveTextBeforeColon.Checked;
-            settings.RemoveTextBeforeColonOnlyUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked;
-            settings.ColonSeparateLine = checkBoxColonSeparateLine.Checked;
-            settings.RemoveWhereContains = checkBoxRemoveWhereContains.Checked;
-            settings.RemoveIfTextContains = comboBoxRemoveIfTextContains.Text;
-            settings.RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked;
-            settings.RemoveInterjections = checkBoxRemoveInterjections.Checked;
-            settings.RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked;
-            settings.RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked;
-            settings.RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked;
-            settings.RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked;
-            settings.CustomStart = comboBoxCustomStart.Text;
-            settings.CustomEnd = comboBoxCustomEnd.Text;
+            var settings = new RemoveTextForHISettings
+            {
+                OnlyIfInSeparateLine = checkBoxOnlyIfInSeparateLine.Checked, 
+                RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked, 
+                RemoveTextBeforeColon = checkBoxRemoveTextBeforeColon.Checked, 
+                RemoveTextBeforeColonOnlyUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked, 
+                ColonSeparateLine = checkBoxColonSeparateLine.Checked, 
+                RemoveWhereContains = checkBoxRemoveWhereContains.Checked, 
+                RemoveIfTextContains = comboBoxRemoveIfTextContains.Text, 
+                RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked, 
+                RemoveInterjections = checkBoxRemoveInterjections.Checked, 
+                RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked, 
+                RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked, 
+                RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked, 
+                RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked, 
+                CustomStart = comboBoxCustomStart.Text, CustomEnd = comboBoxCustomEnd.Text
+            };
             return settings;
         }
 
