@@ -186,6 +186,10 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("</b>", ".");
             lastLine = lastLine.Replace("<B>", "");
             lastLine = lastLine.Replace("</B>", ".");
+            lastLine = lastLine.Replace("<u>", "");
+            lastLine = lastLine.Replace("</u>", ".");
+            lastLine = lastLine.Replace("<U>", "");
+            lastLine = lastLine.Replace("</U>", ".");
             string[] words = lastLine.Split(new[] { ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string word in words)
@@ -217,6 +221,10 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("</b>", ".");
             lastLine = lastLine.Replace("<B>", "");
             lastLine = lastLine.Replace("</B>", ".");
+            lastLine = lastLine.Replace("<u>", "");
+            lastLine = lastLine.Replace("</u>", ".");
+            lastLine = lastLine.Replace("<U>", "");
+            lastLine = lastLine.Replace("</U>", ".");
             lastLine = lastLine.Replace('!', '.');
             lastLine = lastLine.Replace('?', '.');
             lastLine = lastLine.Replace("...", ".");
@@ -248,12 +256,12 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void CalculateMostUsedWords()
         {
-            Dictionary<string, string> hashtable = new Dictionary<string, string>();
+            var hashtable = new Dictionary<string, string>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedWordsAdd(hashtable, p.Text);
 
-            SortedDictionary<string, string> sortedTable = new SortedDictionary<string, string>();
+            var sortedTable = new SortedDictionary<string, string>();
             foreach (KeyValuePair<string, string> item in hashtable)
             {
                 if (int.Parse(item.Value) > 1)
@@ -284,7 +292,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void CalculateMostUsedLines()
         {
-            Dictionary<string, string> hashtable = new Dictionary<string, string>();
+            var hashtable = new Dictionary<string, string>();
 
             foreach (Paragraph p in _subtitle.Paragraphs)
                 MostUsedLinesAdd(hashtable, p.Text.Replace(Environment.NewLine, " ").Replace("  ", " "));
