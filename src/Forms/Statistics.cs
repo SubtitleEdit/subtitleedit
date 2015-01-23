@@ -176,6 +176,8 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private static void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
         {
+            if (lastLine.Contains("< "))
+                lastLine = Utilities.FixInvalidItalicTags(lastLine);
             lastLine = lastLine.Trim('\'');
             lastLine = lastLine.Replace("\"", "");
             lastLine = lastLine.Replace("<i>", "");
@@ -190,6 +192,24 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("</u>", ".");
             lastLine = lastLine.Replace("<U>", "");
             lastLine = lastLine.Replace("</U>", ".");
+
+            var idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            var error = false;
+            while (idx > -1)
+            {
+                var endIdx = lastLine.IndexOf('>', idx + 6);
+                if (endIdx < idx)
+                {
+                    error = !error;
+                    break;
+                }
+                endIdx++;
+                lastLine = lastLine.Remove(idx, (endIdx - idx));
+                idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            }
+            if(!error)
+                lastLine = lastLine.Replace("</font>", ".");
+
             string[] words = lastLine.Split(new[] { ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringSplitOptions.RemoveEmptyEntries);
 
             foreach (string word in words)
