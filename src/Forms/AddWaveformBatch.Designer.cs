@@ -42,7 +42,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.buttonRipWave = new System.Windows.Forms.Button();
             this.labelProgress = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.buttonDone = new System.Windows.Forms.Button();
             this.contextMenuStripFiles = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.removeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.removeAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -183,17 +183,17 @@
             this.labelProgress.TabIndex = 18;
             this.labelProgress.Text = "labelProgress";
             // 
-            // button1
+            // buttonDone
             // 
-            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.button1.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.button1.Location = new System.Drawing.Point(1004, 555);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 24;
-            this.button1.Text = "&Done";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.buttonDone.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonDone.ImeMode = System.Windows.Forms.ImeMode.NoControl;
+            this.buttonDone.Location = new System.Drawing.Point(1004, 555);
+            this.buttonDone.Name = "buttonDone";
+            this.buttonDone.Size = new System.Drawing.Size(75, 23);
+            this.buttonDone.TabIndex = 24;
+            this.buttonDone.Text = "&Done";
+            this.buttonDone.UseVisualStyleBackColor = true;
+            this.buttonDone.Click += new System.EventHandler(this.buttonDoneClick);
             // 
             // contextMenuStripFiles
             // 
@@ -237,11 +237,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1091, 590);
             this.Controls.Add(this.labelInfo);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.buttonDone);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.buttonRipWave);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.groupBoxInput);
+            this.MinimumSize = new System.Drawing.Size(900, 600);
             this.Name = "AddWaveformBatch";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
@@ -270,7 +271,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button buttonRipWave;
         private System.Windows.Forms.Label labelProgress;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button buttonDone;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripFiles;
         private System.Windows.Forms.ToolStripMenuItem removeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem removeAllToolStripMenuItem;

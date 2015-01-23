@@ -25,6 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             Text = Configuration.Settings.Language.AddWaveformBatch.Title;
             buttonRipWave.Text = Configuration.Settings.Language.AddWaveform.GenerateWaveformData;
+            buttonDone.Text = Configuration.Settings.Language.General.Ok;
 
             var l = Configuration.Settings.Language.BatchConvert;
             groupBoxInput.Text = l.Input;
@@ -95,8 +96,9 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listViewInputFiles.Items.Add(item);
             }
-            catch
+            catch 
             {
+                // Ignore errors
             }
         }
 
@@ -173,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInputFiles.Items.Add(item);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void buttonDoneClick(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
         }
@@ -200,7 +202,6 @@ namespace Nikse.SubtitleEdit.Forms
             listViewInputFiles.EndUpdate();
             Refresh();
             int index = 0;
-            IncrementAndShowProgress();
             while (index < listViewInputFiles.Items.Count && _abort == false)
             {
                 var item = listViewInputFiles.Items[index];
