@@ -110,6 +110,12 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Udpakker lyd: {0:0.0} sekunder</ExtractingSeconds>
     <ExtractingMinutes>Udpakker lyd:. {0} (1:00) minutter</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Batch generer bølgeform data</Title>
+    <ExtractingAudio>Udpakker lyd...</ExtractingAudio>
+    <Calculating>Beregning...</Calculating>
+    <Done>Udført</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Juster visnings tid</Title>
     <AdjustVia>Juster via</AdjustVia>
@@ -735,6 +741,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Annuler fortryd</Redo>
         <ShowUndoHistory>Vis historik (fortryd)</ShowUndoHistory>
         <InsertUnicodeSymbol>Indsæt unicode symbol</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Indsæt Unicode kontrol karakterer</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Venstre-til-højre mærke (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Højre mod venstre mærke (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Start på venstre-til-højre indlejring (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Start på højre-til-venstre indlejring (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Start på venstre-til-højre overstyring (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Start på højre-til-venstre overstyring (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Find</Find>
         <FindNext>Find &amp;næste</FindNext>
         <Replace>&amp;Erstat</Replace>
@@ -793,6 +806,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Luk videofil</CloseVideo>
         <ImportSceneChanges>Importer sceneskift...</ImportSceneChanges>
         <RemoveSceneChanges>Fjern sceneskift</RemoveSceneChanges>
+        <WaveformBatchGenerate>Batch generer bølgeformer...</WaveformBatchGenerate>
         <ShowHideVideo>Vis/skjul video</ShowHideVideo>
         <ShowHideWaveform>Vis/skjul lyd kurve</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Vis/skjul bølgeform og spektrogram</ShowHideWaveformAndSpectrogram>
@@ -1527,6 +1541,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformSelectedColor>Valgte farve</WaveformSelectedColor>
     <WaveformBackgroundColor>Baggrundsfarve</WaveformBackgroundColor>
     <WaveformTextColor>Tekstfarve</WaveformTextColor>
+    <WaveformTextFontSize></WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Tøm 'Spectrograms' og 'Waveforms' mapper</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveform' og 'Spectrograms' mapper indeholder {0} filer ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1608,6 +1623,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <Alignment>Justering (valgte linier)</Alignment>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent></CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
@@ -1967,6 +1983,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoTransparentBackground>Auto gennemsigtig baggrund</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Undersøg resultater for aktuelle billede...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Rediger sidste tekst/billede...</EditLastAdditions>
+    <SetUnitalicFactor></SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>

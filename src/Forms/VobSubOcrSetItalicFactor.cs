@@ -19,6 +19,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDown1.Value = (decimal)factor;
 
             saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)

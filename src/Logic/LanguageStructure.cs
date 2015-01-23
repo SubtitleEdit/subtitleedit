@@ -1087,6 +1087,13 @@
                     public string Redo { get; set; }
                     public string ShowUndoHistory { get; set; }
                     public string InsertUnicodeSymbol { get; set; }
+                    public string InsertUnicodeControlCharacters { get; set; }
+                    public string InsertUnicodeControlCharactersLRM { get; set; }
+                    public string InsertUnicodeControlCharactersRLM { get; set; }
+                    public string InsertUnicodeControlCharactersLRE { get; set; }
+                    public string InsertUnicodeControlCharactersRLE { get; set; }
+                    public string InsertUnicodeControlCharactersLRO { get; set; }
+                    public string InsertUnicodeControlCharactersRLO { get; set; }
                     public string Find { get; set; }
                     public string FindNext { get; set; }
                     public string Replace { get; set; }
@@ -2180,6 +2187,7 @@
             public string AutoTransparentBackground { get; set; }
             public string InspectCompareMatchesForCurrentImage { get; set; }
             public string EditLastAdditions { get; set; }
+            public string SetUnitalicFactor { get; set; }
         }
 
         public class VobSubOcrCharacter

@@ -2688,6 +2688,27 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/Menu/Edit/InsertUnicodeSymbol":
                     language.Main.Menu.Edit.InsertUnicodeSymbol = reader.Value;
                     break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharacters":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharacters = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersLRM":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersLRM = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersRLM":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersRLM = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersLRE":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersLRE = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersRLE":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersRLE = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersLRO":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersLRO = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersRLO":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersRLO = reader.Value;
+                    break;
                 case "Main/Menu/Edit/Find":
                     language.Main.Menu.Edit.Find = reader.Value;
                     break;
@@ -5312,6 +5333,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "VobSubOcr/EditLastAdditions":
                     language.VobSubOcr.EditLastAdditions = reader.Value;
+                    break;
+                case "VobSubOcr/SetUnitalicFactor":
+                    language.VobSubOcr.SetUnitalicFactor = reader.Value;
                     break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;

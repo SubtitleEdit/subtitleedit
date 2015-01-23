@@ -740,7 +740,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Undo>Undo</Undo>
         <Redo>Redo</Redo>
         <ShowUndoHistory>Show history (for undo)</ShowUndoHistory>
-        <InsertUnicodeSymbol>Insert unicode symbol</InsertUnicodeSymbol>
+        <InsertUnicodeSymbol>Insert Unicode symbol</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Insert Unicode control characters</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Left-to-right mark (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Right-to-left mark (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Start of left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Start of right-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Start of left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Start of right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Find</Find>
         <FindNext>Find &amp;next</FindNext>
         <Replace>&amp;Replace</Replace>
@@ -1978,6 +1985,7 @@ Keep changes?</KeepChangesMessage>
     <AutoTransparentBackground>Auto transparent background</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Inspect compare matches for current image...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edit last image compare additions...</EditLastAdditions>
+    <SetUnitalicFactor>Set un-italic factor...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual image to text</Title>
