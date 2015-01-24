@@ -6608,7 +6608,7 @@ namespace Nikse.SubtitleEdit.Forms
             string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
             string languageOriginal = string.Empty;
             if (_subtitleAlternate != null)
-                Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
+                languageOriginal = Utilities.AutoDetectGoogleLanguage(_subtitleAlternate);
 
             if (SubtitleListview1.SelectedItems.Count > 1)
             {
