@@ -10,8 +10,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Chk : SubtitleFormat
     {
-        private Encoding _codePage = Encoding.GetEncoding(850);
-        private string _languageId = "DEN"; // English
+        private readonly Encoding _codePage = Encoding.GetEncoding(850);
+//        private string _languageId = "DEN"; // English
 
         public override string Extension
         {
@@ -100,13 +100,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p = new Paragraph();
                 p.Number = buffer[index + 3] * 256 + buffer[index + 4]; // Subtitle number
                 p.Text = sb.ToString();
-                if (p.Number == 0 && p.Text.StartsWith("LANG:", StringComparison.Ordinal) && p.Text.Length > 8)
-                {
-                    _languageId = p.Text.Substring(5, 3);
-                }
+                //if (p.Number == 0 && p.Text.StartsWith("LANG:", StringComparison.Ordinal) && p.Text.Length > 8)
+                //{
+                //    _languageId = p.Text.Substring(5, 3);
+                //}
                 return p;
             }
-            else if (buffer[index] == 0x0a && _timeCodeQueue.Count > 0)
+            if (buffer[index] == 0x0a && _timeCodeQueue.Count > 0)
             {
                 // ?
             }
@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (end - start > 0)
                     text = _codePage.GetString(buffer, start, end - start);
             }
-            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && "0123456789".Contains(text[2].ToString()) && "0123456789".Contains(text[3].ToString()))
+            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && "0123456789".Contains(text[2]) && "0123456789".Contains(text[3]))
             {
                 text = text.Remove(0, 5);
             }
@@ -241,12 +241,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else
                 {
-                    sb.Append(text[i].ToString());
+                    sb.Append(text[i]);
                 }
                 i++;
             }
 
-            text = sb.ToString() + post;
+            text = sb + post;
             if (Utilities.RemoveHtmlTags(text).Trim().Length == 0)
                 return string.Empty;
             return text;
