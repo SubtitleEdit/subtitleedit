@@ -563,12 +563,16 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
             s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine, " ");
             s = s.Replace("   ", " ");
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
             s = s.Replace("  ", " ");
-
+            s = s.Trim();
             string temp = RemoveHtmlTags(s, true);
 
             if (temp.Length < mergeLinesShorterThan)
