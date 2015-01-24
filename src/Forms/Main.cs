@@ -2304,6 +2304,21 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                // retry Matroska (file with wrong extension)
+                if (format == null && !string.IsNullOrWhiteSpace(fileName))
+                {
+                    var matroska = new MatroskaFile(fileName);
+                    if (matroska.IsValid)
+                    {
+                        var subtitleList = matroska.GetTracks(true);
+                        if (subtitleList.Count > 0)
+                        {
+                            ImportSubtitleFromMatroskaFile(fileName);
+                            return;
+                        }                        
+                    }
+                }
+
                 // check for idx file
                 if (format == null && fi.Length > 100 && ext == ".idx")
                 {
