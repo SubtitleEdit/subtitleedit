@@ -317,5 +317,46 @@ Foobar.</font>";
 
             Assert.AreEqual(output1, expected1); Assert.AreEqual(output2, expected2);
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineBreaks1()
+        {
+            string result = Utilities.RemoveLineBreaks("Hey" + Environment.NewLine + "you!");
+            Assert.AreEqual(result, "Hey you!");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineBreaks2()
+        {
+            string result = Utilities.RemoveLineBreaks("<i>Foobar " + Environment.NewLine + "</i> foobar.");
+            Assert.AreEqual(result, "<i>Foobar</i> foobar.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineBreaks3()
+        {
+            string result = Utilities.RemoveLineBreaks("<i>Foobar " + Environment.NewLine + "</i>foobar.");
+            Assert.AreEqual(result, "<i>Foobar</i> foobar.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineBreaks4()
+        {
+            string result = Utilities.RemoveLineBreaks("<i>Hey</i>" + Environment.NewLine + "<i>you!</i>");
+            Assert.AreEqual(result, "<i>Hey you!</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveLineBreaks5()
+        {
+            string result = Utilities.RemoveLineBreaks("<i>Foobar" + Environment.NewLine + "</i>");
+            Assert.AreEqual(result, "<i>Foobar</i>");
+        }
+
     }
 }

@@ -438,14 +438,7 @@ namespace Nikse.SubtitleEdit.Logic
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
-            s = s.Replace(Environment.NewLine, " ");
-            s = s.Replace("   ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
+            s = RemoveLineBreaks(s);
 
             var htmlTags = new Dictionary<int, string>();
             var sb = new StringBuilder();
@@ -559,20 +552,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            string s = text;
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
-            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
-            s = s.Replace(Environment.NewLine, " ");
-            s = s.Replace("   ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Trim();
+            string s = RemoveLineBreaks(text);
             string temp = RemoveHtmlTags(s, true);
 
             if (temp.Length < mergeLinesShorterThan)
@@ -755,6 +735,27 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             return s.TrimEnd();
+        }
+
+        internal static string RemoveLineBreaks(string s)
+        {
+            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
+            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            s = s.Replace(Environment.NewLine, " ");
+            s = s.Replace(" </i>", "</i> ");
+            s = s.Replace(" </b>", "</b> ");
+            s = s.Replace(" </u>", "</u> ");
+            s = s.Replace(" </font>", "</font> ");
+            s = s.Replace("   ", " ");
+            s = s.Replace("  ", " ");
+            s = s.Replace("  ", " ");
+            s = s.Replace("  ", " ");
+            return s.Trim();
         }
 
         private static string ReInsertHtmlTags(string s, Dictionary<int, string> htmlTags)
