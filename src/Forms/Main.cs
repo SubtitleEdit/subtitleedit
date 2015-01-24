@@ -2315,7 +2315,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             ImportSubtitleFromMatroskaFile(fileName);
                             return;
-                        }                        
+                        }
                     }
                 }
 
@@ -6581,9 +6581,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
             {
                 MakeHistoryForUndo(_language.BeforeSettingFontToNormal);
-
-                bool isSsa = GetCurrentSubtitleFormat().FriendlyName == new SubStationAlpha().FriendlyName ||
-                             GetCurrentSubtitleFormat().FriendlyName == new AdvancedSubStationAlpha().FriendlyName;
+                var subFormatName = GetCurrentSubtitleFormat().FriendlyName;
+                bool isSsa = subFormatName == new SubStationAlpha().FriendlyName ||
+                             subFormatName == new AdvancedSubStationAlpha().FriendlyName;
 
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
@@ -6591,10 +6591,10 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p != null)
                     {
                         int indexOfEndBracket = p.Text.IndexOf('}');
-                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                            p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
+                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket == 5)
+                            p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
                         p.Text = Utilities.RemoveHtmlTags(p.Text);
-                        p.Text = p.Text.Replace("♪", string.Empty);
+                        p.Text = RemoveUnicodeCharacters(p.Text);
                         if (isSsa)
                             p.Text = RemoveSsaStyle(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
@@ -6618,6 +6618,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        private string RemoveUnicodeCharacters(string text)
+        {
+            IList<char> uCharList = new List<char>() { '♫', '♪', '☺', '☹', '♥', '©', '☮', '☯', 'Σ', '∞', '≡', '⇒', 'π' };
+            foreach (char uChar in uCharList)
+            {
+                var idx = text.IndexOf(uChar);
+                if (idx > -1)
+                    text = text.Replace(uChar, ' ');
+            }
+            text = text.Trim();
+            while (text.IndexOf("  ", StringComparison.Ordinal) > -1)
+            {
+                text = text.Replace("  ", " ");
+            }
+            return text;
+        }
         private void ButtonAutoBreakClick(object sender, EventArgs e)
         {
             string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
