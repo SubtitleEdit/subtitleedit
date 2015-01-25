@@ -167,6 +167,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Include sub folders</Recursive>
     <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
     <PlainText>Plain text</PlainText>
+    <Filter>Filter</Filter>
+    <FilterSkipped>Skipped by filter</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>More than two lines in one subtitle</FilterMoreThanTwoLines>
+    <FilterContains>Text contains...</FilterContains>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
