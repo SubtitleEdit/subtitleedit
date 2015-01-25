@@ -1192,17 +1192,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, Language);
 
-                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, ' ') != Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, char160))
+                if (AllowFix(p, fixAction) && p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, ' ') != Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, char160))
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        doubleSpaces++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
+                    doubleSpaces++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
                 else
                 {
