@@ -2821,7 +2821,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool breakToLetters)
         {
-
             const string endChars = "!?.:;,#%$£";
             var list = new List<string>();
 
@@ -2972,16 +2971,15 @@ namespace Nikse.SubtitleEdit.Logic
             const string zeroWhiteSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
             const string noBreakSpace = "\u00A0";
-            const string char160 = " "; // Convert.ToChar(160).ToString()
+            const string someKindOfWhiteSpace = "\u009D";
 
             text = text.Trim();
 
             text = text.Replace(zeroWhiteSpace, string.Empty);
             text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
-            text = text.Replace(noBreakSpace, string.Empty);
-            text = text.Replace(char160, " ");
+            text = text.Replace(noBreakSpace, " ");
+            text = text.Replace(someKindOfWhiteSpace, string.Empty); // some kind of hidden space!!!
 
-            text = text.Replace("", string.Empty); // some kind of hidden space!!!
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
