@@ -296,6 +296,11 @@ namespace Nikse.SubtitleEdit.Logic
                 Recursive = "Include sub folders",
                 SetMinMsBetweenSubtitles = "Set min. milliseconds between subtitles",
                 PlainText = "Plain text",
+                Filter = "Filter",
+                FilterSkipped = "Skipped by filter",
+                FilterSrtNoUtf8BOM = "SubRip (.srt) files without UTF-8 BOM header",
+                FilterMoreThanTwoLines = "More than two lines in one subtitle",
+                FilterContains = "Text contains...",
             };
 
             Beamer = new LanguageStructure.Beamer

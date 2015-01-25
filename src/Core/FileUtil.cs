@@ -271,5 +271,15 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+        public static bool HasUtf8Bom(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                fs.Read(buffer, 0, 3);
+                return buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf;
+            }
+        }
+
     }
 }

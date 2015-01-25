@@ -211,6 +211,24 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             _removeTextForHearingImpaired = new Logic.Forms.RemoveTextForHI(new Logic.Forms.RemoveTextForHISettings());
+
+            if (string.IsNullOrEmpty(l.Filter))
+            {
+                comboBoxFilter.Visible = false;
+                textBoxFilter.Visible = false;
+                labelFilter.Visible = false;
+            }
+            else
+            {
+                labelFilter.Text = l.Filter;
+                comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
+                comboBoxFilter.Items[1] = l.FilterSrtNoUtf8BOM;
+                comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
+                comboBoxFilter.Items[3] = l.FilterContains;
+                comboBoxFilter.SelectedIndex = 0;
+                comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
+                textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
+            }
         }
 
         private void FixLargeFonts()
@@ -525,6 +543,8 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxConvertOptions.Enabled = false;
             buttonInputBrowse.Enabled = false;
             buttonSearchFolder.Enabled = false;
+            comboBoxFilter.Enabled = false;
+            textBoxFilter.Enabled = false;
             _count = 0;
             _converted = 0;
             _errors = 0;
@@ -744,54 +764,64 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             sub.Header = _ssaStyle;
                         }
-                        foreach (Paragraph p in sub.Paragraphs)
+
+                        bool skip = CheckSkipFilter(fileName, format, sub);
+                        if (skip)
                         {
-                            if (checkBoxRemoveTextForHI.Checked)
+                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.FilterSkipped;
+                        }
+                        else
+                        {
+
+                            foreach (Paragraph p in sub.Paragraphs)
                             {
-                                p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text);
+                                if (checkBoxRemoveTextForHI.Checked)
+                                {
+                                    p.Text = _removeTextForHearingImpaired.RemoveTextFromHearImpaired(p.Text);
+                                }
+                                if (checkBoxRemoveFormatting.Checked)
+                                {
+                                    p.Text = Utilities.RemoveHtmlTags(p.Text);
+                                    if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[5] == '}')
+                                        p.Text = p.Text.Remove(0, 6);
+                                    if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[4] == '}')
+                                        p.Text = p.Text.Remove(0, 5);
+                                }
                             }
-                            if (checkBoxRemoveFormatting.Checked)
+                            sub.RemoveEmptyLines();
+                            if (checkBoxFixCasing.Checked)
                             {
-                                p.Text = Utilities.RemoveHtmlTags(p.Text);
-                                if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[5] == '}')
-                                    p.Text = p.Text.Remove(0, 6);
-                                if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[4] == '}')
-                                    p.Text = p.Text.Remove(0, 5);
+                                _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
+                                _changeCasingNames.Initialize(sub);
+                                _changeCasingNames.FixCasing();
                             }
+                            double fromFrameRate;
+                            double toFrameRate;
+                            if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
+                            double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
+                            {
+                                sub.ChangeFrameRate(fromFrameRate, toFrameRate);
+                            }
+                            if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
+                            {
+                                var totalMilliseconds = timeUpDownAdjust.TimeCode.TotalMilliseconds;
+                                if (radioButtonShowEarlier.Checked)
+                                    totalMilliseconds *= -1;
+                                sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(totalMilliseconds));
+                            }
+                            while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
+                            {
+                                Application.DoEvents();
+                                System.Threading.Thread.Sleep(100);
+                            }
+                            var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
+                            if (!worker1.IsBusy)
+                                worker1.RunWorkerAsync(parameter);
+                            else if (!worker2.IsBusy)
+                                worker2.RunWorkerAsync(parameter);
+                            else if (!worker3.IsBusy)
+                                worker3.RunWorkerAsync(parameter);
                         }
-                        sub.RemoveEmptyLines();
-                        if (checkBoxFixCasing.Checked)
-                        {
-                            _changeCasing.FixCasing(sub, Utilities.AutoDetectGoogleLanguage(sub));
-                            _changeCasingNames.Initialize(sub);
-                            _changeCasingNames.FixCasing();
-                        }
-                        double fromFrameRate;
-                        double toFrameRate;
-                        if (double.TryParse(comboBoxFrameRateFrom.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out fromFrameRate) &&
-                        double.TryParse(comboBoxFrameRateTo.Text.Replace(",", "."), NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out toFrameRate))
-                        {
-                            sub.ChangeFrameRate(fromFrameRate, toFrameRate);
-                        }
-                        if (timeUpDownAdjust.TimeCode.TotalMilliseconds > 0.00001)
-                        {
-                            var totalMilliseconds = timeUpDownAdjust.TimeCode.TotalMilliseconds;
-                            if (radioButtonShowEarlier.Checked)
-                                totalMilliseconds *= -1;
-                            sub.AddTimeToAllParagraphs(TimeSpan.FromMilliseconds(totalMilliseconds));
-                        }
-                        while (worker1.IsBusy && worker2.IsBusy && worker3.IsBusy)
-                        {
-                            Application.DoEvents();
-                            System.Threading.Thread.Sleep(100);
-                        }
-                        var parameter = new ThreadDoWorkParameter(checkBoxFixCommonErrors.Checked, checkBoxMultipleReplace.Checked, checkBoxSplitLongLines.Checked, checkBoxAutoBalance.Checked, checkBoxSetMinimumDisplayTimeBetweenSubs.Checked, item, sub, GetCurrentSubtitleFormat(), GetCurrentEncoding(), Configuration.Settings.Tools.BatchConvertLanguage, fileName, toFormat, format);
-                        if (!worker1.IsBusy)
-                            worker1.RunWorkerAsync(parameter);
-                        else if (!worker2.IsBusy)
-                            worker2.RunWorkerAsync(parameter);
-                        else if (!worker3.IsBusy)
-                            worker3.RunWorkerAsync(parameter);
                     }
                 }
                 catch
@@ -821,6 +851,42 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxConvertOptions.Enabled = true;
             buttonInputBrowse.Enabled = true;
             buttonSearchFolder.Enabled = true;
+            comboBoxFilter.Enabled = true;
+            textBoxFilter.Enabled = true;
+        }
+
+        private bool CheckSkipFilter(string fileName, SubtitleFormat format, Subtitle sub)
+        {
+            bool skip = false;
+            if (comboBoxFilter.SelectedIndex == 1)
+            {
+                if (format != null && format.GetType() == typeof(SubRip) && FileUtil.HasUtf8Bom(fileName))
+                    skip = true;
+            }
+            else if (comboBoxFilter.SelectedIndex == 2)
+            {
+                foreach (Paragraph p in sub.Paragraphs)
+                {
+                    if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 2)
+                    {
+                        skip = true;
+                        break;
+                    }
+                }
+            }
+            else if (comboBoxFilter.SelectedIndex == 3 && !string.IsNullOrWhiteSpace(textBoxFilter.Text))
+            {
+                skip = true;
+                foreach (Paragraph p in sub.Paragraphs)
+                {
+                    if (p.Text != null && p.Text.Contains(textBoxFilter.Text))
+                    {
+                        skip = false;
+                        break;
+                    }
+                }
+            }
+            return skip;
         }
 
         private void IncrementAndShowProgress()
@@ -1263,6 +1329,11 @@ namespace Nikse.SubtitleEdit.Forms
                 form.InitializeSettingsOnly();
                 form.ShowDialog(this);
             }
+        }
+
+        private void comboBoxFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3;
         }
 
     }

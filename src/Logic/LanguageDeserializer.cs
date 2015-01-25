@@ -462,6 +462,21 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/PlainText":
                     language.BatchConvert.PlainText = reader.Value;
                     break;
+                case "BatchConvert/Filter":
+                    language.BatchConvert.Filter = reader.Value;
+                    break;
+                case "BatchConvert/FilterSkipped":
+                    language.BatchConvert.FilterSkipped = reader.Value;
+                    break;
+                case "BatchConvert/FilterSrtNoUtf8BOM":
+                    language.BatchConvert.FilterSrtNoUtf8BOM = reader.Value;
+                    break;
+                case "BatchConvert/FilterMoreThanTwoLines":
+                    language.BatchConvert.FilterMoreThanTwoLines = reader.Value;
+                    break;
+                case "BatchConvert/FilterContains":
+                    language.BatchConvert.FilterContains = reader.Value;
+                    break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
                     break;
