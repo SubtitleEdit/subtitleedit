@@ -1026,14 +1026,11 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldText = text;
 
                     text = Utilities.FixInvalidItalicTags(text);
-                    if (text != oldText)
+                    if (text != oldText && AllowFix(Subtitle.Paragraphs[i], fixAction))
                     {
-                        if (AllowFix(Subtitle.Paragraphs[i], fixAction))
-                        {
-                            Subtitle.Paragraphs[i].Text = text;
-                            noOfInvalidHtmlTags++;
-                            AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
-                        }
+                        Subtitle.Paragraphs[i].Text = text;
+                        noOfInvalidHtmlTags++;
+                        AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                     }
                 }
             }
