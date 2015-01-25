@@ -540,7 +540,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return text;
 
             // do not autobreak dialogs
-            if (text.Contains('-') && text.Contains(Environment.NewLine))
+            if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
                 string dialogS = RemoveHtmlTags(text);
                 var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
@@ -828,10 +828,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (s == null)
                 return null;
 
-            if (!s.Contains('<'))
+            if (s.Length < 3 || s.IndexOf('<') == -1)
                 return s;
 
-            if (s.Contains("< ", StringComparison.Ordinal))
+            if (s.IndexOf("< ", StringComparison.Ordinal) > -1)
                 s = FixInvalidItalicTags(s);
 
             return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
@@ -853,7 +853,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string RemoveSsaTags(string s)
         {
             int k = s.IndexOf('{');
-            while (k >= 0)
+            while (k > -1)
             {
                 int l = s.IndexOf('}', k);
                 if (l > k)
@@ -862,11 +862,11 @@ namespace Nikse.SubtitleEdit.Logic
                     if (s.Length > 1 && s.Length > k)
                         k = s.IndexOf('{', k);
                     else
-                        k = -1;
+                        break;
                 }
                 else
                 {
-                    k = -1;
+                    break;
                 }
             }
             return s;
@@ -1150,63 +1150,48 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectGoogleLanguage(Encoding encoding)
         {
-            if (encoding.CodePage == 860)
-                return "pt"; // Portuguese
-            if (encoding.CodePage == 949)
-                return "ko"; // Korean
-            if (encoding.CodePage == 950)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 1253)
-                return "el"; // Greek
-            if (encoding.CodePage == 1254)
-                return "tr"; // Turkish
-            if (encoding.CodePage == 1255)
-                return "he"; // Hebrew
-            if (encoding.CodePage == 1256)
-                return "ar"; // Arabic
-            if (encoding.CodePage == 1258)
-                return "vi"; // Vietnamese
-            if (encoding.CodePage == 1361)
-                return "ko"; // Korean
-            if (encoding.CodePage == 10001)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 20000)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 20002)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 20932)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 20936)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 20949)
-                return "ko"; // Korean
-            if (encoding.CodePage == 28596)
-                return "ar"; // Arabic
-            if (encoding.CodePage == 28597)
-                return "el"; // Greek
-            if (encoding.CodePage == 28598)
-                return "he"; // Hebrew
-            if (encoding.CodePage == 28599)
-                return "tr"; // Turkish
-            if (encoding.CodePage == 50220)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 50221)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 50222)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 50225)
-                return "ko"; // Korean
-            if (encoding.CodePage == 51932)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 51936)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 51949)
-                return "ko"; // Korean
-            if (encoding.CodePage == 52936)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 54936)
-                return "zh"; // Chinese
-            return null;
+            switch (encoding.CodePage)
+            {
+                case 860:
+                    return "pt"; // Portuguese
+                case 28599:
+                case 1254:
+                    return "tr"; // Turkish
+                case 28598:
+                case 1255:
+                    return "he"; // Hebrew
+                case 28596:
+                case 1256:
+                    return "ar"; // Arabic
+                case 1258:
+                    return "vi"; // Vietnamese
+                case 949:
+                case 1361:
+                case 20949:
+                case 51949:
+                case 50225:
+                    return "ko"; // Korean
+                case 1253:
+                case 28597:
+                    return "el"; // Greek
+                case 50220:
+                case 50221:
+                case 50222:
+                case 51932:
+                case 20932:
+                case 10001:
+                    return "ja"; // Japanese
+                case 20000:
+                case 20002:
+                case 20936:
+                case 950:
+                case 52936:
+                case 54936:
+                case 51936:
+                    return "zh"; // Chinese
+                default:
+                    return null;
+            }
         }
 
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
