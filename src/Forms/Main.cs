@@ -19097,18 +19097,49 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void PasteIntoActiveTextBox(string s)
         {
-            if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+            if (SubtitleListview1.SelectedItems.Count > 1)
             {
-                textBoxSource.Text = textBoxSource.Text.Insert(textBoxSource.SelectionStart, s);
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p == null)
+                        continue;
+                    p.Text = s + " " + p.Text;
+                    SubtitleListview1.SetText(item.Index, p.Text);
+                }
+                ShowSource();
+                RefreshSelectedParagraph();
             }
             else
             {
-                if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
-                    textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
+                if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
+                {
+                    PasteIntoActiveTextBoxHelper(textBoxSource.SelectionStart, s, (TextBoxBase)textBoxSource);
+                }
                 else
-                    textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s);
+                {
+                    if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
+                    {
+                        PasteIntoActiveTextBoxHelper(textBoxListViewTextAlternate.SelectionStart, s, (TextBoxBase)textBoxListViewTextAlternate);
+                    }
+                    else
+                    {
+                        PasteIntoActiveTextBoxHelper(textBoxListViewText.SelectionStart, s, (TextBoxBase)textBoxListViewText);
+                    }
+                } 
             }
         }
+
+        private void PasteIntoActiveTextBoxHelper(int idx, string s, TextBoxBase textBox)
+        {
+            if (idx == 0)
+                textBox.Text = textBox.Text.Insert(idx, s + " ");
+            else if (textBox.Text.Length == idx)
+                textBox.Text = textBox.Text + " " + s;
+            else
+                textBox.Text = textBox.Text.Insert(idx, s);
+        }
+
 
         private void leftToolStripMenuItem_Click(object sender, EventArgs e)
         {
