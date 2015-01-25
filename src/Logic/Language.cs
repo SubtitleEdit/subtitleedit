@@ -99,6 +99,7 @@ namespace Nikse.SubtitleEdit.Logic
         public LanguageStructure.VobSubOcrCharacter VobSubOcrCharacter;
         public LanguageStructure.VobSubOcrCharacterInspect VobSubOcrCharacterInspect;
         public LanguageStructure.VobSubOcrNewFolder VobSubOcrNewFolder;
+        public LanguageStructure.VobSubOcrSetItalicFactor VobSubOcrSetItalicFactor;
         public LanguageStructure.Waveform Waveform;
         public LanguageStructure.WaveformGenerateTimeCodes WaveformGenerateTimeCodes;
         public LanguageStructure.WebVttNewVoice WebVttNewVoice;
@@ -2329,6 +2330,12 @@ Keep changes?",
             {
                 Title = "New folder",
                 Message = "Name of new character database folder",
+            };
+
+            VobSubOcrSetItalicFactor = new LanguageStructure.VobSubOcrSetItalicFactor
+            {
+                Title = "Set un-italic factor",
+                Description = "Adjust value until text style is normal and not italic. Note that original image should be italic.",
             };
 
             Waveform = new LanguageStructure.Waveform

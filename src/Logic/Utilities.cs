@@ -831,7 +831,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (s.Length < 3 || s.IndexOf('<') == -1)
                 return s;
 
-            if (s.IndexOf("< ", StringComparison.Ordinal) > -1)
+            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
                 s = FixInvalidItalicTags(s);
 
             return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
@@ -853,7 +853,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string RemoveSsaTags(string s)
         {
             int k = s.IndexOf('{');
-            while (k > -1)
+            while (k >= 0)
             {
                 int l = s.IndexOf('}', k);
                 if (l > k)
@@ -3150,13 +3150,13 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (Utilities.CountTagInText(text, '"') == 2 && text.Contains(" \" "))
+            if (CountTagInText(text, '"') == 2 && text.Contains(" \" "))
             {
                 int idx = text.IndexOf(" \" ", StringComparison.Ordinal);
                 int idxp = text.IndexOf('"');
 
                 //"Foo " bar.
-                if ((idxp > -1 && idxp < idx) & Utilities.AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
+                if ((idxp >= 0 && idxp < idx) & AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
                 {
                     text = text.Remove(idx, 1);
                 }
@@ -3164,9 +3164,9 @@ namespace Nikse.SubtitleEdit.Logic
                 //" Foo " bar.
                 idx = text.IndexOf(" \" ", StringComparison.Ordinal);
                 idxp = text.IndexOf('"');
-                if (idxp > -1 && idx > idxp)
+                if (idxp >= 0 && idx > idxp)
                 {
-                    if (text[idxp + 1] == ' ' && Utilities.AllLettersAndNumbers.Contains(text[idxp + 2]))
+                    if (text[idxp + 1] == ' ' && AllLettersAndNumbers.Contains(text[idxp + 2]))
                     {
                         text = text.Remove(idxp + 1, 1);
                         idx--;
