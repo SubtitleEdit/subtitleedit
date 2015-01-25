@@ -3060,38 +3060,17 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains("¡ "))
                 text = text.Replace("¡ ", "¡");
 
-            if (text.Contains("! </i>" + Environment.NewLine))
-                text = text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+            // Italic
+            if (text.Contains("<i>") || text.Contains("<I>") || text.Contains("</i>") || text.Contains("</I>"))
+                text = RemoveSpaceBeforeAfterTag(text, "<i>");
+            
+            // Bold
+            if (text.Contains("<b>") || text.Contains("<B>") || text.Contains("</b>") || text.Contains("</B>"))
+                text = RemoveSpaceBeforeAfterTag(text, "<b>");
 
-            if (text.Contains("? </i>" + Environment.NewLine))
-                text = text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
-
-            if (text.EndsWith(" </i>", StringComparison.Ordinal))
-                text = text.Substring(0, text.Length - " </i>".Length) + "</i>";
-
-            if (text.Contains(" </i>" + Environment.NewLine))
-                text = text.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-
-            if (text.EndsWith(" </I>", StringComparison.Ordinal))
-                text = text.Substring(0, text.Length - " </I>".Length) + "</I>";
-
-            if (text.Contains(" </I>" + Environment.NewLine))
-                text = text.Replace(" </I>" + Environment.NewLine, "</I>" + Environment.NewLine);
-
-            if (text.StartsWith("<i> ", StringComparison.Ordinal))
-                text = "<i>" + text.Substring("<i> ".Length);
-
-            if (text.Contains(Environment.NewLine + "<i> "))
-
-                text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
-
-            text = text.Trim();
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-            if (text.StartsWith("<I> ", StringComparison.Ordinal))
-                text = "<I>" + text.Substring("<I> ".Length);
-
-            if (text.Contains(Environment.NewLine + "<I> "))
-                text = text.Replace(Environment.NewLine + "<I> ", Environment.NewLine + "<I>");
+            // Underline
+            if (text.Contains("<u>") || text.Contains("<U>") || text.Contains("</u>") || text.Contains("</U>"))
+                text = RemoveSpaceBeforeAfterTag(text, "<u>");
 
             text = text.Trim();
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -3172,6 +3151,69 @@ namespace Nikse.SubtitleEdit.Logic
                     text = text.Remove(idx, 1);
                 }
             }
+            return text;
+        }
+
+        private static string RemoveSpaceBeforeAfterTag(string text, string openTag)
+        {
+            //  todo: do not count this in unneeded space fix
+            // todo: do same thing for 'font' tags
+            text = text
+                .Replace("<I>", "<i>")
+                .Replace("<B>", "<b>")
+                .Replace("<U>", "<u>")
+                .Replace("</I>", "</i>")
+                .Replace("</B>", "</b")
+                .Replace("</U>", "</u>");
+
+            var closeTag = string.Empty;
+            switch (openTag)
+            {
+                case "<i>":
+                    closeTag = "</i>";
+                    break;
+                case "<b>":
+                    closeTag = "</b>";
+                    break;
+                case "<u>":
+                    closeTag = "</u>";
+                    break;
+            }
+
+            // Open tags
+            var open1 = openTag + " ";
+            var open2 = Environment.NewLine + openTag + " ";
+
+            // Closing tags
+            var close1 = "! " + closeTag + Environment.NewLine;
+            var close2 = "? " + closeTag + Environment.NewLine;
+            var close3 = " " + closeTag;
+            var close4 = " " + closeTag + Environment.NewLine;
+
+            if (text.Contains(close1, StringComparison.Ordinal))
+                text = text.Replace(close1, "!" + closeTag + Environment.NewLine);
+
+            if (text.Contains(close2, StringComparison.Ordinal))
+                text = text.Replace(close2, "?" + closeTag + Environment.NewLine);
+
+            if (text.EndsWith(close3, StringComparison.Ordinal))
+                text = text.Substring(0, text.Length - close3.Length) + closeTag;
+
+            if (text.Contains(close4))
+                text = text.Replace(close4, closeTag + Environment.NewLine);
+            
+            // e.g: ! </i><br>...
+            if (text.StartsWith(open1, StringComparison.Ordinal))
+                text = openTag + text.Substring(open1.Length);
+
+            if (text.Contains(open2, StringComparison.Ordinal))
+                text = text.Replace(open2, Environment.NewLine + openTag);
+
+            // ^'<I> '
+            text = text.Trim();
+            if (text.StartsWith(open1, StringComparison.Ordinal))
+                text = openTag + text.Substring(open1.Length);
+
             return text;
         }
 
