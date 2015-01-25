@@ -1026,14 +1026,11 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldText = text;
 
                     text = Utilities.FixInvalidItalicTags(text);
-                    if (text != oldText)
+                    if (AllowFix(Subtitle.Paragraphs[i], fixAction) && text != oldText)
                     {
-                        if (AllowFix(Subtitle.Paragraphs[i], fixAction))
-                        {
-                            Subtitle.Paragraphs[i].Text = text;
-                            noOfInvalidHtmlTags++;
-                            AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
-                        }
+                        Subtitle.Paragraphs[i].Text = text;
+                        noOfInvalidHtmlTags++;
+                        AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                     }
                 }
             }
@@ -1184,8 +1181,6 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixUnneededSpaces()
         {
-            const string char160 = " "; // Convert.ToChar(160).ToString()
-
             string fixAction = _language.UnneededSpace;
             int doubleSpaces = 0;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
@@ -1195,23 +1190,15 @@ namespace Nikse.SubtitleEdit.Forms
 
                 p.Text = Utilities.RemoveUnneededSpaces(p.Text, Language);
 
-                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, ' ') != Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, char160))
+                if (AllowFix(p, fixAction) && p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, ' ') < Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, "\u00A0"))
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        doubleSpaces++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
+                    doubleSpaces++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
                 else
                 {
                     p.Text = oldText;
                 }
-
             }
             if (doubleSpaces > 0)
             {
