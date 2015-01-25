@@ -13,10 +13,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
 
             var pre = string.Empty;
-            if (text.StartsWith("<font ", StringComparison.Ordinal) && text.IndexOf('>', 5) > -1)
+            if (text.StartsWith("<font ", StringComparison.Ordinal) && text.IndexOf('>', 5) >= 0)
             {
                 var idx = text.IndexOf('>', 5);
-                if (idx > -1)
+                if (idx >= 0)
                 {
                     pre = text.Substring(0, text.IndexOf('>') + 1);
                     text = text.Substring(idx + 1).TrimStart();

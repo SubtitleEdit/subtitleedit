@@ -5,7 +5,7 @@
     <Version>3.4.5</Version>
     <TranslatedBy>Oversat til dansk af Nikse (mailto:nikse.dk@gmail.com)</TranslatedBy>
     <CultureName>da-DK</CultureName>
-    <HelpFile />
+    <HelpFile></HelpFile>
     <Ok>&amp;OK</Ok>
     <Cancel>&amp;Fortryd</Cancel>
     <Apply>Anvend</Apply>
@@ -1541,7 +1541,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <WaveformSelectedColor>Valgte farve</WaveformSelectedColor>
     <WaveformBackgroundColor>Baggrundsfarve</WaveformBackgroundColor>
     <WaveformTextColor>Tekstfarve</WaveformTextColor>
-    <WaveformTextFontSize></WaveformTextFontSize>
+    <WaveformTextFontSize>Tekst skriftstørrelse</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Tøm 'Spectrograms' og 'Waveforms' mapper</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>'Waveform' og 'Spectrograms' mapper indeholder {0} filer ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1623,7 +1623,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <ToggleDialogDashes>Toggle dialog tankestreger</ToggleDialogDashes>
     <Alignment>Justering (valgte linier)</Alignment>
     <CopyTextOnly>Kopier kun tekst til klippe-bord (valgte linier)</CopyTextOnly>
-    <CopyTextOnlyFromOriginalToCurrent></CopyTextOnlyFromOriginalToCurrent>
+    <CopyTextOnlyFromOriginalToCurrent>Kopier tekst fra original</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-varighed (valgte linjer)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Byt rundt på højre-mod-venstre start/slut</ReverseStartAndEndingForRTL>
     <VerticalZoom>Lodret zoom</VerticalZoom>
@@ -1983,7 +1983,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <AutoTransparentBackground>Auto gennemsigtig baggrund</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Undersøg resultater for aktuelle billede...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Rediger sidste tekst/billede...</EditLastAdditions>
-    <SetUnitalicFactor></SetUnitalicFactor>
+    <SetUnitalicFactor>Juster de-kursiv faktor...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manual billede til tekst</Title>
@@ -2010,6 +2010,10 @@ Fortsæt?</SubtitleAppendPrompt>
     <Title>Ny mappe</Title>
     <Message>Navn på ny tegn database mappe</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Juster de-kursiv faktor</Title>
+    <Description>Juster værdi indtil tekst stil er normalt og ikke kursiv. Bemærk, at det oprindelige billede skal være kursiv.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klik for at tilføje audio kurve</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik for at tilføje bølgeform/spektrogram</ClickToAddWaveformAndSpectrogram>

@@ -2221,6 +2221,12 @@
             public string Message { get; set; }
         }
 
+        public class VobSubOcrSetItalicFactor
+        {
+            public string Title { get; set; }
+            public string Description { get; set; }
+        }
+
         public class Waveform
         {
             public string ClickToAddWaveform { get; set; }

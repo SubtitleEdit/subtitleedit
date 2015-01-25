@@ -2012,6 +2012,10 @@ Keep changes?</KeepChangesMessage>
     <Title>New folder</Title>
     <Message>Name of new character database folder</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Set un-italic factor</Title>
+    <Description>Adjust value until text style is normal and not italic. Note that original image should be italic.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Click to add waveform</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Click to add waveform/spectrogram</ClickToAddWaveformAndSpectrogram>

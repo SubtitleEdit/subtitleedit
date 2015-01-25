@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class VobSubOcrSetItalicFactor
+    sealed partial class VobSubOcrSetItalicFactor
     {
         /// <summary>
         /// Required designer variable.
@@ -32,14 +32,14 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.buttonOK = new System.Windows.Forms.Button();
             this.pictureBoxSubtitleImage = new System.Windows.Forms.PictureBox();
-            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.label1 = new System.Windows.Forms.Label();
-            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.contextMenuStripListview = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveImageAsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
+            this.labelDescription = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.contextMenuStripListview.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonCancel
@@ -79,6 +79,20 @@
             this.pictureBoxSubtitleImage.TabIndex = 9;
             this.pictureBoxSubtitleImage.TabStop = false;
             // 
+            // contextMenuStripListview
+            // 
+            this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveImageAsToolStripMenuItem});
+            this.contextMenuStripListview.Name = "contextMenuStripListview";
+            this.contextMenuStripListview.Size = new System.Drawing.Size(158, 26);
+            // 
+            // saveImageAsToolStripMenuItem
+            // 
+            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
+            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
+            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
+            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
+            // 
             // numericUpDown1
             // 
             this.numericUpDown1.DecimalPlaces = 2;
@@ -103,36 +117,22 @@
             131072});
             this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
-            // label1
+            // labelDescription
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(76, 21);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(431, 13);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Adjust value until text style is normal and not italic. Note that original image " +
+            this.labelDescription.AutoSize = true;
+            this.labelDescription.Location = new System.Drawing.Point(76, 21);
+            this.labelDescription.Name = "labelDescription";
+            this.labelDescription.Size = new System.Drawing.Size(431, 13);
+            this.labelDescription.TabIndex = 11;
+            this.labelDescription.Text = "Adjust value until text style is normal and not italic. Note that original image " +
     "should be italic.";
-            // 
-            // contextMenuStripListview
-            // 
-            this.contextMenuStripListview.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.saveImageAsToolStripMenuItem});
-            this.contextMenuStripListview.Name = "contextMenuStripListview";
-            this.contextMenuStripListview.Size = new System.Drawing.Size(158, 48);
-            // 
-            // saveImageAsToolStripMenuItem
-            // 
-            this.saveImageAsToolStripMenuItem.Name = "saveImageAsToolStripMenuItem";
-            this.saveImageAsToolStripMenuItem.Size = new System.Drawing.Size(157, 22);
-            this.saveImageAsToolStripMenuItem.Text = "Save image as...";
-            this.saveImageAsToolStripMenuItem.Click += new System.EventHandler(this.saveImageAsToolStripMenuItem_Click);
             // 
             // VobSubOcrSetItalicFactor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(767, 345);
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.labelDescription);
             this.Controls.Add(this.numericUpDown1);
             this.Controls.Add(this.pictureBoxSubtitleImage);
             this.Controls.Add(this.buttonCancel);
@@ -147,8 +147,8 @@
             this.Text = "Set un-italic factor";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.VobSubOcrSetItalicFactor_KeyDown);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSubtitleImage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.contextMenuStripListview.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -160,7 +160,7 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.PictureBox pictureBoxSubtitleImage;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label labelDescription;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.ContextMenuStrip contextMenuStripListview;
         private System.Windows.Forms.ToolStripMenuItem saveImageAsToolStripMenuItem;

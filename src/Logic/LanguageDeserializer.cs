@@ -5394,6 +5394,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcrNewFolder/Message":
                     language.VobSubOcrNewFolder.Message = reader.Value;
                     break;
+                case "VobSubOcrSetItalicFactor/Title":
+                    language.VobSubOcrSetItalicFactor.Title = reader.Value;
+                    break;
+                case "VobSubOcrSetItalicFactor/Description":
+                    language.VobSubOcrSetItalicFactor.Description = reader.Value;
+                    break;
                 case "Waveform/ClickToAddWaveform":
                     language.Waveform.ClickToAddWaveform = reader.Value;
                     break;
