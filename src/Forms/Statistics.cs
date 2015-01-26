@@ -195,7 +195,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
             var idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
             var error = false;
-            while (idx > -1)
+            while (idx >= 0)
             {
                 var endIdx = lastLine.IndexOf('>', idx + 6);
                 if (endIdx < idx)

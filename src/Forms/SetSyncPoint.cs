@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
-            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic)
+            if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic)
             {
                 var libVlc = (LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
                 libVlc.AudioTrackNumber = _audioTrackNumber;

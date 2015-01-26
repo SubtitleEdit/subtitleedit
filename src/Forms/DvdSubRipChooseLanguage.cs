@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count > -1)
+            if (listBox1.Items.Count >= 0)
             {
                 if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
                     SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
@@ -175,7 +175,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSaveAs_Click(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count > -1)
+            if (listBox1.Items.Count >= 0)
             {
                 if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
                     SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
