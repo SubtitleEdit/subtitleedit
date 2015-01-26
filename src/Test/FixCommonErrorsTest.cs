@@ -213,13 +213,13 @@ namespace Test
         {
             string input = "[engine roaring]" + Environment.NewLine + "[cluck]";
             string expected = input;
-            
+
             var result = FixCommonErrorsHelper.FixShortLines(input);
 
             Assert.AreEqual(result, expected);
         }
 
-        
+
 
         #endregion Merge short lines
 
