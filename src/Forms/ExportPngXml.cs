@@ -1577,7 +1577,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     sb = new StringBuilder();
 
                     int endIndex = text.Substring(i).IndexOf('>');
-                    if (endIndex == -1)
+                    if (endIndex < 0)
                     {
                         i += 9999;
                     }
@@ -2122,7 +2122,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 sb = new StringBuilder();
 
                                 int endIndex = text.Substring(i).IndexOf('>');
-                                if (endIndex == -1)
+                                if (endIndex < 0)
                                 {
                                     i += 9999;
                                 }

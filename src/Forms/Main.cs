@@ -6624,11 +6624,11 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (char uChar in uCharList)
             {
                 var idx = text.IndexOf(uChar);
-                if (idx > -1)
+                if (idx >= 0)
                     text = text.Replace(uChar, ' ');
             }
             text = text.Trim();
-            while (text.IndexOf("  ", StringComparison.Ordinal) > -1)
+            while (text.IndexOf("  ", StringComparison.Ordinal) >= 0)
             {
                 text = text.Replace("  ", " ");
             }
@@ -17441,28 +17441,28 @@ namespace Nikse.SubtitleEdit.Forms
             var s = Utilities.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             int totalLength = s.Length;
             string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
-            if (lineBreakPos == -1 || pos <= lineBreakPos)
+            if (lineBreakPos < 0 || pos <= lineBreakPos)
             {
                 lineTotal.Text = "1," + (pos + 1) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
             int secondLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, lineBreakPos + 1, StringComparison.Ordinal);
-            if (secondLineBreakPos == -1 || pos <= secondLineBreakPos + extraNewLineLength)
+            if (secondLineBreakPos < 0 || pos <= secondLineBreakPos + extraNewLineLength)
             {
                 lineTotal.Text = "2," + (pos - (lineBreakPos + extraNewLineLength)) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
             int thirdLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, secondLineBreakPos + 1, StringComparison.Ordinal);
-            if (thirdLineBreakPos == -1 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
+            if (thirdLineBreakPos < 0 || pos < thirdLineBreakPos + (extraNewLineLength * 2))
             {
                 lineTotal.Text = "3," + (pos - (secondLineBreakPos + extraNewLineLength)) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
                 return;
             }
             int forthLineBreakPos = textBox.Text.IndexOf(Environment.NewLine, thirdLineBreakPos + 1, StringComparison.Ordinal);
-            if (forthLineBreakPos == -1 || pos < forthLineBreakPos + (extraNewLineLength * 3))
+            if (forthLineBreakPos < 0 || pos < forthLineBreakPos + (extraNewLineLength * 3))
             {
                 lineTotal.Text = "4," + (pos - (thirdLineBreakPos + extraNewLineLength)) + totalL;
                 lineTotal.Left = textBox.Left + (textBox.Width - lineTotal.Width);
