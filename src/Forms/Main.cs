@@ -19099,15 +19099,48 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
-                textBoxSource.Text = textBoxSource.Text.Insert(textBoxSource.SelectionStart, s);
+                PasteIntoActiveTextBoxHelper(textBoxSource.SelectionStart, s, (TextBoxBase)textBoxSource);
             }
             else
             {
                 if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
+                {
+
+                    PasteIntoActiveTextBoxHelper(textBoxListViewTextAlternate.SelectionStart, s, (TextBoxBase)textBoxListViewTextAlternate);
                     textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
+
+                }
                 else
-                    textBoxListViewText.Text = textBoxListViewText.Text.Insert(textBoxListViewText.SelectionStart, s);
+                {
+                    if (SubtitleListview1.SelectedItems.Count > 1 && !textBoxListViewText.Focused)
+                    {
+                        foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                        {
+                            Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                            if (p == null)
+                                continue;
+                            p.Text = s + " " + p.Text;
+                            SubtitleListview1.SetText(item.Index, p.Text);
+                        }
+                    }
+                    else
+                    {
+                        PasteIntoActiveTextBoxHelper(textBoxListViewText.SelectionStart, s, (TextBoxBase)textBoxListViewText);
+                    }
+                    ShowSource();
+                    RefreshSelectedParagraph();
+                }
             }
+        }
+
+        private void PasteIntoActiveTextBoxHelper(int idx, string s, TextBoxBase textBox)
+        {
+            if (idx == 0)
+                textBox.Text = textBox.Text.Insert(idx, s + " ");
+            else if (textBox.Text.Length == idx)
+                textBox.Text = textBox.Text + " " + s;
+            else
+                textBox.Text = textBox.Text.Insert(idx, s);
         }
 
         private void leftToolStripMenuItem_Click(object sender, EventArgs e)
