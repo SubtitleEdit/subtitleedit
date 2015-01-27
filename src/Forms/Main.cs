@@ -11956,14 +11956,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = sender as ToolStripItem;
             if (item != null)
-                PasteIntoActiveTextBox(item.Text, false);
+                PasteIntoActiveTextBox(item.Text);
         }
 
         private void InsertUnicodeGlyphAllowMultiLine(object sender, EventArgs e)
         {
             var item = sender as ToolStripItem;
             if (item != null)
-                PasteIntoActiveTextBox(item.Text, true);
+                PasteIntoActiveTextBox(item.Text);
         }
 
         private void ToolStripMenuItemAutoMergeShortLinesClick(object sender, EventArgs e)
@@ -19102,7 +19102,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PasteIntoActiveTextBox(string s, bool allowMultiLine)
+        private void PasteIntoActiveTextBox(string s, bool allowMultiLine = false)
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
@@ -19140,32 +19140,32 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void leftToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u8207", false);
+            PasteIntoActiveTextBox("\u8207");
         }
 
         private void righttoleftMarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u8206", false);
+            PasteIntoActiveTextBox("\u8206");
         }
 
         private void startOfLefttorightEmbeddingLREToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202A", false);
+            PasteIntoActiveTextBox("\u202A");
         }
 
         private void startOfRighttoleftEmbeddingRLEToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202B", false);
+            PasteIntoActiveTextBox("\u202B");
         }
 
         private void startOfLefttorightOverrideLROToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202D", false);
+            PasteIntoActiveTextBox("\u202D");
         }
 
         private void startOfRighttoleftOverrideRLOToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202E", false);
+            PasteIntoActiveTextBox("\u202E");
         }
 
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
