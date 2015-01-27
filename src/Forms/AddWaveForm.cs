@@ -118,7 +118,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonRipWave.Enabled = true;
                 return;
             }
-            
+
             process.Start();
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.Visible = true;

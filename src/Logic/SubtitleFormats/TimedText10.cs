@@ -298,7 +298,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     divParentNode.RemoveChild(divParentNode.FirstChild);
                 }
             }
-            else            
+            else
             {
                 var divParentNode = div.ParentNode;
 
@@ -583,7 +583,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (lastDiv != null && node.ParentNode != lastDiv)
                             p.NewSection = true;
                         lastDiv = node.ParentNode;
-                    }                   
+                    }
 
                     p.Extra = SetExtra(p);
 

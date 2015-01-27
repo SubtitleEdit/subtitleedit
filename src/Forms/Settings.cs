@@ -738,7 +738,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialog + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialog));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToggleFocus));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));            
+            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
             if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent))
                 listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent));
