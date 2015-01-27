@@ -11928,7 +11928,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     foreach (string s in Configuration.Settings.Tools.UnicodeSymbolsToInsert.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
                     {
-                        toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Add(s, null, InsertUnicodeGlyph);
+                        toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Add(s, null, InsertUnicodeGlyphAllowMultiLine);
                         if (Environment.OSVersion.Version.Major < 6 && Configuration.Settings.General.SubtitleFontName == Utilities.WinXP2KUnicodeFontName) // 6 == Vista/Win2008Server/Win7
                             toolStripMenuItemInsertUnicodeCharacter.DropDownItems[toolStripMenuItemInsertUnicodeCharacter.DropDownItems.Count - 1].Font = new Font(Utilities.WinXP2KUnicodeFontName, toolStripMenuItemInsertUnicodeSymbol.Font.Size);
                     }
@@ -11956,7 +11956,14 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var item = sender as ToolStripItem;
             if (item != null)
-                PasteIntoActiveTextBox(item.Text);
+                PasteIntoActiveTextBox(item.Text, false);
+        }
+
+        private void InsertUnicodeGlyphAllowMultiLine(object sender, EventArgs e)
+        {
+            var item = sender as ToolStripItem;
+            if (item != null)
+                PasteIntoActiveTextBox(item.Text, true);
         }
 
         private void ToolStripMenuItemAutoMergeShortLinesClick(object sender, EventArgs e)
@@ -19095,24 +19102,22 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PasteIntoActiveTextBox(string s)
+        private void PasteIntoActiveTextBox(string s, bool allowMultiLine)
         {
             if (tabControlSubtitle.SelectedIndex == TabControlSourceView)
             {
-                PasteIntoActiveTextBoxHelper(textBoxSource.SelectionStart, s, (TextBoxBase)textBoxSource);
+                textBoxSource.SelectedText = s;
             }
             else
             {
                 if (textBoxListViewTextAlternate.Visible && textBoxListViewTextAlternate.Enabled && textBoxListViewTextAlternate.Focused)
                 {
-
-                    PasteIntoActiveTextBoxHelper(textBoxListViewTextAlternate.SelectionStart, s, (TextBoxBase)textBoxListViewTextAlternate);
+                    textBoxListViewTextAlternate.SelectedText = s;
                     textBoxListViewTextAlternate.Text = textBoxListViewTextAlternate.Text.Insert(textBoxListViewTextAlternate.SelectionStart, s);
-
                 }
                 else
                 {
-                    if (SubtitleListview1.SelectedItems.Count > 1 && !textBoxListViewText.Focused)
+                    if (SubtitleListview1.SelectedItems.Count > 1 && !textBoxListViewText.Focused && allowMultiLine)
                     {
                         foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                         {
@@ -19125,7 +19130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        PasteIntoActiveTextBoxHelper(textBoxListViewText.SelectionStart, s, (TextBoxBase)textBoxListViewText);
+                        textBoxListViewText.SelectedText = s;
                     }
                     ShowSource();
                     RefreshSelectedParagraph();
@@ -19133,44 +19138,34 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void PasteIntoActiveTextBoxHelper(int idx, string s, TextBoxBase textBox)
-        {
-            if (idx == 0)
-                textBox.Text = textBox.Text.Insert(idx, s + " ");
-            else if (textBox.Text.Length == idx)
-                textBox.Text = textBox.Text + " " + s;
-            else
-                textBox.Text = textBox.Text.Insert(idx, s);
-        }
-
         private void leftToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u8207");
+            PasteIntoActiveTextBox("\u8207", false);
         }
 
         private void righttoleftMarkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u8206");
+            PasteIntoActiveTextBox("\u8206", false);
         }
 
         private void startOfLefttorightEmbeddingLREToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202A");
+            PasteIntoActiveTextBox("\u202A", false);
         }
 
         private void startOfRighttoleftEmbeddingRLEToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202B");
+            PasteIntoActiveTextBox("\u202B", false);
         }
 
         private void startOfLefttorightOverrideLROToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202D");
+            PasteIntoActiveTextBox("\u202D", false);
         }
 
         private void startOfRighttoleftOverrideRLOToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            PasteIntoActiveTextBox("\u202E");
+            PasteIntoActiveTextBox("\u202E", false);
         }
 
         private void toolStripMenuItemRtlUnicodeControlChar_Click(object sender, EventArgs e)
