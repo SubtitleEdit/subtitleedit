@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class Watermark : Form
     {
-        private const char zeroWhiteSpace = '\u200B';
+        private const char ZeroWidthSpace = '\u200B';
         private const char zeroWidthNoBreakSpace = '\uFEFF';
 
         private int _firstSelectedIndex;
@@ -62,7 +62,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string ReadWaterMark(string input)
         {
-            if (!input.Contains(zeroWhiteSpace))
+            if (!input.Contains(ZeroWidthSpace))
                 return string.Empty;
             int i = 0;
             StringBuilder sb = new StringBuilder();
@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             while (i < input.Length)
             {
                 var c = input[i];
-                if (c == zeroWhiteSpace)
+                if (c == ZeroWidthSpace)
                 {
                     if (letter > 0)
                         sb.Append(Encoding.ASCII.GetString(new byte[] { (byte)letter }));
@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Forms
                 StringBuilder sb = new StringBuilder();
                 foreach (byte b in buffer)
                 {
-                    sb.Append(zeroWhiteSpace);
+                    sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
                         sb.Append(zeroWidthNoBreakSpace);
                 }
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     StringBuilder sb = new StringBuilder();
                     Paragraph p = subtitle.Paragraphs[indices[j]];
-                    sb.Append(zeroWhiteSpace);
+                    sb.Append(ZeroWidthSpace);
                     for (int i = 0; i < b; i++)
                         sb.Append(zeroWidthNoBreakSpace);
                     if (p.Text.Length > 1)
@@ -168,7 +168,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void RemoveWaterMark(Subtitle subtitle)
         {
-            var zws = zeroWhiteSpace.ToString(CultureInfo.InvariantCulture);
+            var zws = ZeroWidthSpace.ToString(CultureInfo.InvariantCulture);
             var zwnbs = zeroWidthNoBreakSpace.ToString(CultureInfo.InvariantCulture);
             foreach (Paragraph p in subtitle.Paragraphs)
                 p.Text = p.Text.Replace(zws, string.Empty).Replace(zwnbs, string.Empty);

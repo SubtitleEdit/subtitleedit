@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             timerProgressBarRefresh.Start();
 
-            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is LibVlcDynamic)
+            if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibVlcDynamic)
             {
                 var libVlc = (LibVlcDynamic)MediaPlayerStart.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
             _endStopPosition = _endGoBackPosition + 0.1;
             MediaPlayerEnd.Play();
 
-            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
+            if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
             {
                 var libVlc = (LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;

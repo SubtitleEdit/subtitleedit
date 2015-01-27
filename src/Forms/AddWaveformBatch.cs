@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listViewInputFiles.Items.Add(item);
             }
-            catch 
+            catch
             {
                 // Ignore errors
             }
@@ -114,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
                 buttonInputBrowse.Enabled = false;
                 buttonSearchFolder.Enabled = false;
                 _abort = false;
-                
+
                 SearchFolder(folderBrowserDialog1.SelectedPath);
 
                 buttonRipWave.Enabled = true;

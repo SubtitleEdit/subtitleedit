@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var index = text.IndexOf(':');
             if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains("..", StringComparison.Ordinal))
             {
-                pre += text.Substring(0, index + 1);                
+                pre += text.Substring(0, index + 1);
                 if (pre.Length < 2)
                     return text;
 

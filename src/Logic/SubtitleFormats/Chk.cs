@@ -185,7 +185,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace("õI", "Î");
             text = text.Replace("õU", "Û");
 
-            return ApplyFont(text);                
+            return ApplyFont(text);
         }
 
         private static string ApplyFont(string text)

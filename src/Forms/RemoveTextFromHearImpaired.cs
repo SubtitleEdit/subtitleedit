@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
             }
-        }        
+        }
 
         public void Initialize(Subtitle subtitle)
         {
@@ -109,7 +109,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
-            int prevIndex = -1;            
+            int prevIndex = -1;
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 prevIndex++;
@@ -270,19 +270,19 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var settings = new RemoveTextForHISettings
             {
-                OnlyIfInSeparateLine = checkBoxOnlyIfInSeparateLine.Checked, 
-                RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked, 
-                RemoveTextBeforeColon = checkBoxRemoveTextBeforeColon.Checked, 
-                RemoveTextBeforeColonOnlyUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked, 
-                ColonSeparateLine = checkBoxColonSeparateLine.Checked, 
-                RemoveWhereContains = checkBoxRemoveWhereContains.Checked, 
-                RemoveIfTextContains = comboBoxRemoveIfTextContains.Text, 
-                RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked, 
-                RemoveInterjections = checkBoxRemoveInterjections.Checked, 
-                RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked, 
-                RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked, 
-                RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked, 
-                RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked, 
+                OnlyIfInSeparateLine = checkBoxOnlyIfInSeparateLine.Checked,
+                RemoveIfAllUppercase = checkBoxRemoveIfAllUppercase.Checked,
+                RemoveTextBeforeColon = checkBoxRemoveTextBeforeColon.Checked,
+                RemoveTextBeforeColonOnlyUppercase = checkBoxRemoveTextBeforeColonOnlyUppercase.Checked,
+                ColonSeparateLine = checkBoxColonSeparateLine.Checked,
+                RemoveWhereContains = checkBoxRemoveWhereContains.Checked,
+                RemoveIfTextContains = comboBoxRemoveIfTextContains.Text,
+                RemoveTextBetweenCustomTags = checkBoxRemoveTextBetweenCustomTags.Checked,
+                RemoveInterjections = checkBoxRemoveInterjections.Checked,
+                RemoveTextBetweenSquares = checkBoxRemoveTextBetweenSquares.Checked,
+                RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
+                RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
+                RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked,
                 CustomStart = comboBoxCustomStart.Text, CustomEnd = comboBoxCustomEnd.Text
             };
             return settings;

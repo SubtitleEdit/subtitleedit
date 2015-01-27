@@ -216,16 +216,16 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                         int questIndex = start.LastIndexOf("? ", StringComparison.Ordinal);
                                         int exclaIndex = start.LastIndexOf("! ", StringComparison.Ordinal);
                                         int endIndex = periodIndex;
-                                        if (endIndex == -1 || questIndex > endIndex)
+                                        if (questIndex > endIndex)
                                             endIndex = questIndex;
-                                        if (endIndex == -1 || exclaIndex > endIndex)
+                                        if (exclaIndex > endIndex)
                                             endIndex = exclaIndex;
                                         if (colonIndex > 0 && colonIndex < s2.Length - 1)
                                         {
                                             if (char.IsDigit(s2[colonIndex - 1]) && char.IsDigit(s2[colonIndex + 1]))
-                                                endIndex = -10;
+                                                endIndex = 0;
                                         }
-                                        if (endIndex == -1)
+                                        if (endIndex < 0)
                                             s2 = s2.Remove(0, colonIndex - endIndex);
                                         else if (endIndex > 0)
                                             s2 = s2.Remove(endIndex + 1, colonIndex - endIndex);
@@ -434,9 +434,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     var temp = new StripableText(text);
                     temp.StrippedText = temp.StrippedText.Replace(Environment.NewLine, " ");
                     int splitIndex = temp.StrippedText.LastIndexOf('!');
-                    if (splitIndex == -1)
+                    if (splitIndex < 0)
                         splitIndex = temp.StrippedText.LastIndexOf('?');
-                    if (splitIndex == -1)
+                    if (splitIndex < 0)
                         splitIndex = temp.StrippedText.LastIndexOf('.');
                     if (splitIndex > 0)
                     {
@@ -941,7 +941,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             int start = text.IndexOf(startTag, StringComparison.Ordinal);
-            if (start == -1 || start == text.Length - 1)
+            if (start < 0 || start == text.Length - 1)
                 return text;
 
             int end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);

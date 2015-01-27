@@ -613,7 +613,7 @@ namespace Nikse.SubtitleEdit.Logic
             int mid = s.Length / 2;
 
             // try to find " - " with uppercase letter after (dialog)
-            if (splitPos == -1 && s.Contains(" - "))
+            if (splitPos < 0 && s.Contains(" - "))
             {
                 for (int j = 0; j <= (maximumLength / 2) + 5; j++)
                 {
@@ -650,7 +650,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (splitPos == maximumLength + 1 && s[maximumLength] != ' ') // only allow space for last char (as it does not count)
                 splitPos = -1;
 
-            if (splitPos == -1)
+            if (splitPos < 0)
             {
                 for (int j = 0; j < 15; j++)
                 {
@@ -687,7 +687,7 @@ namespace Nikse.SubtitleEdit.Logic
                 splitPos = -1;
             }
 
-            if (splitPos == -1)
+            if (splitPos < 0)
             {
                 for (int j = 0; j < 25; j++)
                 {
@@ -719,7 +719,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (splitPos == -1)
+            if (splitPos < 0)
             {
                 splitPos = mid;
                 s = s.Insert(mid - 1, Environment.NewLine);
@@ -828,7 +828,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (s == null)
                 return null;
 
-            if (s.Length < 3 || s.IndexOf('<') == -1)
+            if (s.Length < 3 || s.IndexOf('<') < 0)
                 return s;
 
             if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
@@ -1607,10 +1607,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
 
-            const string zeroWhiteSpace = "\u200B";
+            const string ZeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(ZeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -2969,14 +2969,14 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string text, string language)
         {
-            const string zeroWhiteSpace = "\u200B";
+            const string ZeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
             const string noBreakSpace = "\u00A0";
             const string char160 = " "; // Convert.ToChar(160).ToString()
 
             text = text.Trim();
 
-            text = text.Replace(zeroWhiteSpace, string.Empty);
+            text = text.Replace(ZeroWidthSpace, string.Empty);
             text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
             text = text.Replace(noBreakSpace, string.Empty);
             text = text.Replace(char160, " ");
