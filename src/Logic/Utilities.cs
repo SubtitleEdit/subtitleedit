@@ -2196,14 +2196,11 @@ namespace Nikse.SubtitleEdit.Logic
             int noOfLines = CountTagInText(text, Environment.NewLine) + 1;
             if (italicBeginTagCount + italicEndTagCount > 0)
             {
-                if (italicBeginTagCount == 1 && italicEndTagCount == 1)
+                if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
                 {
-                    if (text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
-                    {
-                        text = text.Replace(beginTag, "___________@");
-                        text = text.Replace(endTag, beginTag);
-                        text = text.Replace("___________@", endTag);
-                    }
+                    text = text.Replace(beginTag, "___________@");
+                    text = text.Replace(endTag, beginTag);
+                    text = text.Replace("___________@", endTag);
                 }
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 0)
@@ -3063,7 +3060,7 @@ namespace Nikse.SubtitleEdit.Logic
             // Italic
             if (text.Contains("<i>", StringComparison.OrdinalIgnoreCase) && text.Contains("</i>", StringComparison.OrdinalIgnoreCase))
                 text = RemoveSpaceBeforeAfterTag(text, "<i>");
-            
+
             // Bold
             if (text.Contains("<b>", StringComparison.OrdinalIgnoreCase) && text.Contains("</b>", StringComparison.OrdinalIgnoreCase))
                 text = RemoveSpaceBeforeAfterTag(text, "<b>");
@@ -3199,7 +3196,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (text.Contains(close4))
                 text = text.Replace(close4, closeTag + Environment.NewLine);
-            
+
             // e.g: ! </i><br>Foobar
             if (text.StartsWith(open1, StringComparison.Ordinal))
                 text = openTag + text.Substring(open1.Length);
