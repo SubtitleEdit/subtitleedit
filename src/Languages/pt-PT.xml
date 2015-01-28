@@ -112,6 +112,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>A extrair o áudio: {0}.{1:00} minutos</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Gerar pacote de dados de forma de onda</Title>
+    <ExtractingAudio>A extrair o áudio...</ExtractingAudio>
+    <Calculating>A calcular...</Calculating>
+    <Done>Concluído</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajustar duração</Title>
     <AdjustVia>Ajustar por</AdjustVia>
@@ -163,6 +169,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Incluir sub-pastas</Recursive>
     <SetMinMsBetweenSubtitles>Definir mínimo em (ms) entre as legendas</SetMinMsBetweenSubtitles>
     <PlainText>Texto sem formatação</PlainText>
+    <Filter>Filtro</Filter>
+    <FilterSkipped>Ignorado pelo filtro</FilterSkipped>
+    <FilterSrtNoUtf8BOM>Ficheiros SubRip (.srt) sem o cabeçalho UTF-8 BOM</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Mais de duas linhas numa legenda</FilterMoreThanTwoLines>
+    <FilterContains>O texto contém...</FilterContains>
   </BatchConvert>
   <Beamer>
     <Title>Vídeo projector</Title>
@@ -735,7 +746,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Undo>Anular</Undo>
         <Redo>Refazer</Redo>
         <ShowUndoHistory>Mostrar histórico (para anular)</ShowUndoHistory>
-        <InsertUnicodeSymbol>Inserir símbolo unicode</InsertUnicodeSymbol>
+        <InsertUnicodeSymbol>Inserir símbolo Unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Inserir carácter de controlo Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Marca da esquerda para a direita (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Marca da direita para a esquerda (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Início de incorporação da esquerda para a direita (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Início de incorporação da direita para a esquerda (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Início de substituição da esquerda para a direita (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Início de substituição da direita para a esquerda (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Localizar</Find>
         <FindNext>Localizar &amp;seguinte</FindNext>
         <Replace>&amp;Substituir</Replace>
@@ -794,6 +812,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Fechar ficheiro de vídeo</CloseVideo>
         <ImportSceneChanges>Importar mudanças de cena...</ImportSceneChanges>
         <RemoveSceneChanges>Remover mudanças de cena</RemoveSceneChanges>
+        <WaveformBatchGenerate>Gerar formas de onda em série...</WaveformBatchGenerate>
         <ShowHideVideo>Mostrar/ocultar vídeo</ShowHideVideo>
         <ShowHideWaveform>Mostrar/ocultar forma de onda</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Mostrar/ocultar forma de onda e espectrograma</ShowHideWaveformAndSpectrogram>
@@ -1972,6 +1991,7 @@ Manter as alterações?</KeepChangesMessage>
     <AutoTransparentBackground>Fundo auto transparente</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Inspeccionar coincidências para a imagem actual...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editar última imagem comparando com as adicionadas...</EditLastAdditions>
+    <SetUnitalicFactor>Definir um factor itálico...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagem para texto manualmente</Title>
@@ -1998,6 +2018,10 @@ Manter as alterações?</KeepChangesMessage>
     <Title>Nova pasta</Title>
     <Message>Nome da nova pasta de base de dados de caracteres</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Definir um factor itálico</Title>
+    <Description>Ajustar o valor até que o estilo do texto seja normal e não itálico. Note-se que a imagem original deve ser itálico.</Description>
+  </VobSubOcrSetItalicFactor>  
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
