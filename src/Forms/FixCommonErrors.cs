@@ -799,11 +799,11 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = p.Text.Replace(Environment.NewLine, " ");
 
                             string stripped = Utilities.RemoveHtmlTags(prev.Text).TrimStart();
-                            if (!stripped.StartsWith("- "))
+                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
                                 prev.Text = "- " + prev.Text.TrimStart();
 
                             stripped = Utilities.RemoveHtmlTags(p.Text).TrimStart();
-                            if (!stripped.StartsWith("- "))
+                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
                                 p.Text = "- " + p.Text.TrimStart();
 
                             prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
@@ -1249,7 +1249,7 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
 
-                        if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι") || p.Text.Substring(match.Index).StartsWith("ο,τι")))
+                        if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
                             doFix = false;
 
                         if (doFix && AllowFix(p, fixAction))
@@ -1369,11 +1369,11 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (arr[0][0] == '-' && arr[0][1] != ' ')
                             arr[0] = arr[0].Insert(1, " ");
-                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-") && arr[0][4] != ' ')
+                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[0][4] != ' ')
                             arr[0] = arr[0].Insert(4, " ");
                         if (arr[1][0] == '-' && arr[1][1] != ' ' && arr[1][1] != '-')
                             arr[1] = arr[1].Insert(1, " ");
-                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-") && arr[1][4] != ' ')
+                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[1][4] != ' ')
                             arr[1] = arr[1].Insert(4, " ");
                         string newText = arr[0] + Environment.NewLine + arr[1];
                         if (newText != p.Text && AllowFix(p, fixAction))
@@ -1611,7 +1611,7 @@ namespace Nikse.SubtitleEdit.Forms
                         lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
                         string line = lines[0].Trim();
 
-                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
+                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"", StringComparison.Ordinal) && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
                         {
                             p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
                             p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
@@ -1637,7 +1637,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (lines[1].Contains('"'))
                         {
                             line = lines[1].Trim();
-                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
+                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"", StringComparison.Ordinal) && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
                             {
                                 p.Text = p.Text.Trim() + "\"";
                             }
@@ -1687,13 +1687,13 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (next == null || !next.Text.Contains('"'))
                             {
-                                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                                if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
                                     p.Text = p.Text.Replace("</i>", "\"</i>");
                                 else
                                     p.Text = p.Text + "\"";
                             }
                         }
-                        else if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "<i>") == 1)
+                        else if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "<i>") == 1)
                         {
                             if (prev == null || !prev.Text.Contains('"'))
                                 p.Text = p.Text.Replace("<i>", "<i>\"");
@@ -1932,7 +1932,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p.Text != p.Text.ToUpper())
                         {
                             //don't end the sentence if the next word is an I word as they're always capped.
-                            if (!next.Text.StartsWith("I ") && !next.Text.StartsWith("I'"))
+                            if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
                             {
                                 //test to see if the first word of the next line is a name
                                 if (!IsName(next.Text.Split(new[] { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' })[0]))
@@ -2131,22 +2131,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string text = p.Text;
                 string pre = string.Empty;
-                if (text.Length > 4 && text.StartsWith("<i> "))
+                if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
                 {
                     pre = "<i> ";
                     text = text.Substring(4);
                 }
-                if (text.Length > 3 && text.StartsWith("<i>"))
+                if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
                 {
                     pre = "<i>";
                     text = text.Substring(3);
                 }
-                if (text.Length > 4 && text.StartsWith("<I> "))
+                if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
                 {
                     pre = "<I> ";
                     text = text.Substring(4);
                 }
-                if (text.Length > 3 && text.StartsWith("<I>"))
+                if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
                 {
                     pre = "<I>";
                     text = text.Substring(3);
@@ -2181,7 +2181,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
                 if (prevText == " .")
                     isPrevEndOfLine = true;
-                if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
+                if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                     (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                     !char.IsDigit(firstLetter) &&
                     isPrevEndOfLine)
@@ -2195,9 +2195,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (IsTurkishLittleI(firstLetter, encoding, language))
                             p.Text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                        else if (language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                      text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                      text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
+                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") ||
+                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
+                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
                             p.Text = pre + "I" + text.Substring(1);
                         else
                             p.Text = pre + char.ToUpper(firstLetter) + text.Substring(1);
@@ -2212,22 +2212,22 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string text = arr[1];
                     string pre = string.Empty;
-                    if (text.Length > 4 && text.StartsWith("<i> "))
+                    if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
                     {
                         pre = "<i> ";
                         text = text.Substring(4);
                     }
-                    if (text.Length > 3 && text.StartsWith("<i>"))
+                    if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
                     {
                         pre = "<i>";
                         text = text.Substring(3);
                     }
-                    if (text.Length > 4 && text.StartsWith("<I> "))
+                    if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
                     {
                         pre = "<I> ";
                         text = text.Substring(4);
                     }
-                    if (text.Length > 3 && text.StartsWith("<I>"))
+                    if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
                     {
                         pre = "<I>";
                         text = text.Substring(3);
@@ -2256,7 +2256,7 @@ namespace Nikse.SubtitleEdit.Forms
                     char firstLetter = text[0];
                     string prevText = Utilities.RemoveHtmlTags(arr[0]);
                     bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
-                    if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
+                    if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                         (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                         !prevText.EndsWith("...", StringComparison.Ordinal) &&
                         isPrevEndOfLine)
@@ -2270,9 +2270,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (IsTurkishLittleI(firstLetter, encoding, language))
                                 text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                            else if (language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                     text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                     text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
+                            else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                     text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
+                                                     text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
                                 text = pre + "I" + text.Substring(1);
                             else
                                 text = pre + char.ToUpper(firstLetter) + text.Substring(1);
@@ -2281,16 +2281,16 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                    if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) &&
-                        (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")) &&
+                    if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
+                        (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)) &&
                         !arr[0].StartsWith("--", StringComparison.Ordinal) && !arr[0].StartsWith("<i>--", StringComparison.Ordinal) &&
                         !arr[1].StartsWith("--", StringComparison.Ordinal) && !arr[1].StartsWith("<i>--", StringComparison.Ordinal))
                     {
-                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ") && arr[1].Length > 6)
+                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ", StringComparison.Ordinal) && arr[1].Length > 6)
                         {
                             p.Text = arr[0] + Environment.NewLine + "<i>- " + char.ToUpper(arr[1][5]) + arr[1].Remove(0, 6);
                         }
-                        else if (isPrevEndOfLine && arr[1].StartsWith("- ") && arr[1].Length > 3)
+                        else if (isPrevEndOfLine && arr[1].StartsWith("- ", StringComparison.Ordinal) && arr[1].Length > 3)
                         {
                             p.Text = arr[0] + Environment.NewLine + "- " + char.ToUpper(arr[1][2]) + arr[1].Remove(0, 3);
                         }
@@ -2300,11 +2300,11 @@ namespace Nikse.SubtitleEdit.Forms
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
                             prevText = Utilities.RemoveHtmlTags(prev.Text);
                         bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
-                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ") && arr[0].Length > 6)
+                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
                         {
                             p.Text = "<i>- " + char.ToUpper(arr[0][5]) + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];
                         }
-                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ") && arr[0].Length > 3)
+                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ", StringComparison.Ordinal) && arr[0].Length > 3)
                         {
                             p.Text = "- " + char.ToUpper(arr[0][2]) + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
                         }
@@ -2616,11 +2616,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string temp = text.Substring(match.Index + 2);
                     if (temp != "1/2" &&
-                        !temp.StartsWith("1/2 ") &&
-                        !temp.StartsWith("1/2.") &&
-                        !temp.StartsWith("1/2!") &&
-                        !temp.StartsWith("1/2?") &&
-                        !temp.StartsWith("1/2<"))
+                        !temp.StartsWith("1/2 ", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2.", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2!", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2?", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2<", StringComparison.Ordinal))
                     {
                         text = text.Remove(match.Index + 1, 1);
                     }
@@ -2925,13 +2925,13 @@ namespace Nikse.SubtitleEdit.Forms
                         text = text.Replace("... </", "...</"); // </i>, </font>...
                         text = text.Replace("... ?", "...?");
                         text = text.Replace("... !", "...!");
-                        if (text.StartsWith("... "))
+                        if (text.StartsWith("... ", StringComparison.Ordinal))
                             text = text.Remove(3, 1);
-                        if (text.StartsWith("<i>... "))
+                        if (text.StartsWith("<i>... ", StringComparison.Ordinal))
                             text = text.Remove(6, 1);
-                        if (text.StartsWith("<font>... "))
+                        if (text.StartsWith("<font>... ", StringComparison.Ordinal))
                             text = text.Remove("<font>... ".Length - 1, 1);
-                        if (text.StartsWith("<b>... "))
+                        if (text.StartsWith("<b>... ", StringComparison.Ordinal))
                             text = text.Remove("<b>... ".Length - 1, 1);
                     }
                     //if (text.EndsWith('-'))
@@ -2978,33 +2978,36 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (!p.Text.Contains(">>", StringComparison.Ordinal))
-                    continue;
-                var text = p.Text;
-                var oldText = text;
-                if (!text.Contains(Environment.NewLine))
+                if (AllowFix(p, fixAction))
                 {
-                    text = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(text);
-                    if (oldText != text && AllowFix(p, fixAction))
+                    if (!p.Text.Contains(">>", StringComparison.Ordinal))
+                        continue;
+                    var text = p.Text;
+                    var oldText = text;
+                    if (!text.Contains(Environment.NewLine))
                     {
-                        fixCount++;
-                        p.Text = text;
-                        AddFixToListView(p, fixAction, oldText, text);
+                        text = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(text);
+                        if (oldText != text)
+                        {
+                            fixCount++;
+                            p.Text = text;
+                            AddFixToListView(p, fixAction, oldText, text);
+                        }
                     }
-                }
-                else
-                {
-                    var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                    for (int k = 0; k < lines.Length; k++)
+                    else
                     {
-                        lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
-                    }
-                    text = string.Join(Environment.NewLine, lines);
-                    if (oldText != text && AllowFix(p, fixAction))
-                    {
-                        fixCount++;
-                        p.Text = text;
-                        AddFixToListView(p, fixAction, oldText, text);
+                        var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        for (int k = 0; k < lines.Length; k++)
+                        {
+                            lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
+                        }
+                        text = string.Join(Environment.NewLine, lines);
+                        if (oldText != text)
+                        {
+                            fixCount++;
+                            p.Text = text;
+                            AddFixToListView(p, fixAction, oldText, text);
+                        }
                     }
                 }
             }
@@ -3073,7 +3076,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (text.Contains(" " + closeB))
                 openB = openB + " ";
-
             do
             {
                 if (text.Length > 1 && text.StartsWith('-'))
@@ -3084,7 +3086,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         text = text.Substring(1);
                 }
-                if (text.Length > 3 && text.StartsWith("<i>"))
+                if (text.Length > 3 && text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     pre += "<i>";
                     if (text[3] == ' ')
@@ -3103,7 +3105,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     text = text.TrimStart(' ');
                 }
-            } while (text.StartsWith("<i>") || text.StartsWith('-'));
+            } while (text.StartsWith("<i>", StringComparison.Ordinal) || text.StartsWith('-'));
 
             text = pre + openB + text;
             return text;
