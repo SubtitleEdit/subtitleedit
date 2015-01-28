@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace UpdateLanguageFiles
 {
@@ -25,11 +26,10 @@ namespace UpdateLanguageFiles
                 string oldLanguageAsXml = File.ReadAllText(args[0]);
                 if (oldLanguageAsXml != currentLanguageAsXml)
                 {
-                    File.WriteAllText(args[0], currentLanguageAsXml);
+                    language.Save(args[0]);
                     noOfChanges++;
-                    Console.Write(" LanguageMaster.xml generated... ");
+                    Console.Write(" {0} generated...", Path.GetFileName(args[0]));
                 }
-                language.Save(args[0]);
 
                 string languageDeserializerContent = Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
                 string languageDeserializerContentOld = string.Empty;
@@ -37,9 +37,9 @@ namespace UpdateLanguageFiles
                     languageDeserializerContentOld = File.ReadAllText(args[1]);
                 if (languageDeserializerContent != languageDeserializerContentOld)
                 {
-                    File.WriteAllText(args[1], languageDeserializerContent);
+                    File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
                     noOfChanges++;
-                    Console.Write(" LanguageDeserializer.cs generated... ");
+                    Console.Write(" {0} generated...", Path.GetFileName(args[1]));
                 }
 
                 if (noOfChanges == 0)
