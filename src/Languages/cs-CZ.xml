@@ -110,6 +110,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Extrahování zvuku: {0:0,0} sekund</ExtractingSeconds>
     <ExtractingMinutes>Extrahování zvuku: {0},{1:00} minut</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Dávkově generovat data křivky</Title>
+    <ExtractingAudio>Extrahování audia...</ExtractingAudio>
+    <Calculating>Výpočet...</Calculating>
+    <Done>Hotovo</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Upravit trvání</Title>
     <AdjustVia>Upravit pomocí</AdjustVia>
@@ -161,6 +167,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Včetně podsložek</Recursive>
     <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
     <PlainText>Prostý text</PlainText>
+    <Filter>Filtr</Filter>
+    <FilterSkipped>Přeskočeno filtrem</FilterSkipped>
+    <FilterSrtNoUtf8BOM>Soubory SubRip (.srt) bez hlavičky UTF-8 BOM</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Více než dva řádky v jednom titulku</FilterMoreThanTwoLines>
+    <FilterContains>Text obsahuje...</FilterContains>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -734,7 +745,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Undo>Zpět</Undo>
         <Redo>Znovu</Redo>
         <ShowUndoHistory>Zobrazit historii (pro vrácení zpět)</ShowUndoHistory>
-        <InsertUnicodeSymbol>Vložit symbol unicode</InsertUnicodeSymbol>
+        <InsertUnicodeSymbol>Vložit symbol Unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Vložit řídicí znaky Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Značka zleva doprava (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Značka zprava doleva (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Začátek vkládání zleva doprava (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Začátek vkládání zprava doleva (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Začátek přepisování zleva doprava (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Začátek přepisování zprava doleva (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Najít</Find>
         <FindNext>Najít &amp;další</FindNext>
         <Replace>Na&amp;hradit</Replace>
@@ -778,7 +796,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Ascending>Vzestupně</Ascending>
         <Descending>Sestupně</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Vytvořit nový prázdný překlad z aktuálních titulků</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Hromadný převod...</BatchConvert>
+        <BatchConvert>Dávkový převod...</BatchConvert>
         <GenerateTimeAsText>Generovat čas jako text...</GenerateTimeAsText>
         <MeasurementConverter>Převodník jednotek...</MeasurementConverter>
         <SplitSubtitle>Rozdělit titulky...</SplitSubtitle>
@@ -793,6 +811,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Zavřít soubor videa</CloseVideo>
         <ImportSceneChanges>Importovat změny scén...</ImportSceneChanges>
         <RemoveSceneChanges>Odebrat změny scén</RemoveSceneChanges>
+        <WaveformBatchGenerate>Dávkově generovat křivky...</WaveformBatchGenerate>
         <ShowHideVideo>Zobrazit nebo skrýt video</ShowHideVideo>
         <ShowHideWaveform>Zobrazit nebo skrýt křivku</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Zobrazit nebo skrýt křivku a spektrogram</ShowHideWaveformAndSpectrogram>
@@ -1610,6 +1629,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <ToggleDialogDashes>Přepnout dialogové pomlčky</ToggleDialogDashes>
     <Alignment>Zarovnání (vybrané řádky)</Alignment>
     <CopyTextOnly>Kopírovat text pouze do schránky (vybrané řádky)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Kopírovat text z původního do aktuálního</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatické trvání (vybrané řádky)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Obrátit začátek a konec zprava dolevaeverse RTL start/end</ReverseStartAndEndingForRTL>
     <VerticalZoom>Svislé zvětšení</VerticalZoom>
@@ -1970,6 +1990,7 @@ Zachovat změny?</KeepChangesMessage>
     <AutoTransparentBackground>Automatické průhledné pozadí</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Prozkoumat porovnání shod pro aktuální snímek...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Upravit poslední přidaná porovnání snímků...</EditLastAdditions>
+    <SetUnitalicFactor>Nastavit koeficient nekurzívy...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ručně snímek na text</Title>
@@ -1996,6 +2017,10 @@ Zachovat změny?</KeepChangesMessage>
     <Title>Nová složka</Title>
     <Message>Název nové složky databáze znaků</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Nastavit koeficient nekurzívy</Title>
+    <Description>Upravujte hodnotu, dokud styl textu nebude normální a ne kurzívou. Pozor, původní obrázek by měl být kurzívou.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klepněte pro přidání křivky</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klepněte pro přidání křivky a spektrogramu</ClickToAddWaveformAndSpectrogram>
