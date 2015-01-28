@@ -452,7 +452,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Generovat čas jako text</Title>
-    <Description />
+    <OpenVideoFile>Zvolte soubor videa, ze kterého extrahovat informace o datu a čase</OpenVideoFile>
     <StartFrom>Začít od</StartFrom>
     <DateTimeFormat>Formát data a času</DateTimeFormat>
     <Example>Příklad</Example>
