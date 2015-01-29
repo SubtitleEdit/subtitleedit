@@ -473,6 +473,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x27, //э
             0x28, //(
             0x29, //)
+            0x2b, //+
             0x2c, //,
             0x2d, //_
             0x2e, //ю
@@ -493,6 +494,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x4c, //Д
             0x4d, //Ь
             0x4e, //Т
+            0x4f, //Щ
             0x50, //З
             0x52, //К
             0x53, //Ы
@@ -549,6 +551,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x9b, //ћ
             0x9d, //§
             0x9f, //џ
+            0xa2, //%
             0xac, //C
             0xad, //D
             0xae, //E
@@ -622,7 +625,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "э", //0x27
             "(", //0x28
             ")", //0x29
-            "б", //",", //0x2c
+            "+", //0x2b
+            "б", //",", //0x2c            
             "_", //0x2d
             "ю", //0x2e
             "Ж", //0x3a
@@ -642,6 +646,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "Д", //0x4c
             "Ь", //0x4d
             "Т", //0x4e
+            "Щ", //0x4f
             "З", //0x50
             "К", //0x52
             "Ы", //0x53
@@ -698,6 +703,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "њ", //0x9a
             "§", //0x9d
             "џ", //0x9f
+            "%", //0xa2
             "C", //0xac
             "D", //0xad
             "E", //0xae
