@@ -7,7 +7,7 @@
     <CultureName>nl-NL</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
-    <Cancel>&amp;Afbreken</Cancel>
+    <Cancel>&amp;Annuleren</Cancel>
     <Apply>Toepassen</Apply>
     <None>Geen</None>
     <All>Alle</All>
@@ -20,12 +20,12 @@
     <OpenVideoFile>Videobestand openen...</OpenVideoFile>
     <OpenVideoFileTitle>Videobestand openen</OpenVideoFileTitle>
     <NoVideoLoaded>Geen video geladen</NoVideoLoaded>
-    <VideoInformation>Video-info</VideoInformation>
+    <VideoInformation>Video informatie</VideoInformation>
     <PositionX>Positie / tĳdsduur: {0}</PositionX>
     <StartTime>Starttĳd</StartTime>
     <EndTime>Eindtĳd</EndTime>
     <Duration>Tĳdsduur</Duration>
-    <NumberSymbol>#</NumberSymbol>
+    <NumberSymbol>№</NumberSymbol>
     <Number>Aantal</Number>
     <Text>Tekst</Text>
     <HourMinutesSecondsMilliseconds>uur:min:sec:ms</HourMinutesSecondsMilliseconds>
@@ -54,7 +54,7 @@
     <CurrentSubtitle>Huidige ondertitel</CurrentSubtitle>
     <OriginalText>Originele tekst</OriginalText>
     <OpenOriginalSubtitleFile>Originele ondertitel openen...</OpenOriginalSubtitleFile>
-    <PleaseWait>Even geduld aub...</PleaseWait>
+    <PleaseWait>Even geduld a.u.b.</PleaseWait>
     <SessionKey>Sessiesleutel</SessionKey>
     <UserName>Gebruikersnaam</UserName>
     <UserNameAlreadyInUse>Gebruikersnaam al in gebruik</UserNameAlreadyInUse>
@@ -101,7 +101,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Golfvormdata genereren</Title>
     <SourceVideoFile>Bronvideobestand:</SourceVideoFile>
     <GenerateWaveformData>Golfvormdata genereren</GenerateWaveformData>
-    <PleaseWait>Dit kan enkele minuten duren - even geduld aub</PleaseWait>
+    <PleaseWait>Dit kan enkele minuten duren - even geduld a.u.b.</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player niet gevonden</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit heeft VLC media player 1.1.x of nieuwer nodig voor de extractie van audiodata.</VlcMediaPlayerNotFound>
     <GoToVlcMediaPlayerHomePage>Wilt u naar de VLC media player home pagina?</GoToVlcMediaPlayerHomePage>
@@ -110,6 +110,12 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>
     <ExtractingMinutes>Audio uitpakken: {0} {1:00} minuten</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Golfvormdata in batch genereren</Title>
+    <ExtractingAudio>Audio uitpakken...</ExtractingAudio>
+    <Calculating>Berekenen...</Calculating>
+    <Done>Klaar</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Tĳdsduur aanpassen</Title>
     <AdjustVia>Aanpassen via</AdjustVia>
@@ -150,7 +156,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RedoCasing>Hoofd-/kleine letters herzien</RedoCasing>
     <Convert>Converteren</Convert>
     <NothingToConvert>Niets te converteren</NothingToConvert>
-    <PleaseChooseOutputFolder>Doelmap kiezen alstublieft</PleaseChooseOutputFolder>
+    <PleaseChooseOutputFolder>Doelmap kiezen a.u.b.</PleaseChooseOutputFolder>
     <Converted>Geconverteerd</Converted>
     <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
@@ -161,6 +167,11 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Inclusief submappen</Recursive>
     <SetMinMsBetweenSubtitles>Bepaal min. millisec. tussen ondertitels</SetMinMsBetweenSubtitles>
     <PlainText>Platte tekst</PlainText>
+    <Filter>Filteren</Filter>
+    <FilterSkipped>Door filter uitgesloten</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip bestanden zonder UTF-8 BOM</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Meer dan twee regels per ondertitel</FilterMoreThanTwoLines>
+    <FilterContains>Tekst bevat...</FilterContains>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -213,7 +224,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Codering kiezen</Title>
     <CodePage>Karaktercodetabel</CodePage>
     <DisplayName>Weergavenaam</DisplayName>
-    <PleaseSelectAnEncoding>Kies een codering aub</PleaseSelectAnEncoding>
+    <PleaseSelectAnEncoding>Kies een codering a.u.b.</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
     <Title>Taal kiezen</Title>
@@ -415,6 +426,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LineHeight>Regelhoogte</LineHeight>
     <BoxSingleLine>Eénregelig kader</BoxSingleLine>
     <BoxMultiLine>Meerregelig kader</BoxMultiLine>
+    <Forced>Ingebakken</Forced>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
@@ -577,6 +589,9 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixMusicNotationExample>'âTª sweet dreams are' -&gt; '♫ sweet dreams are'</FixMusicNotationExample>
     <NumberOfImportantLogMessages>{0} belangrĳke logmeldingen!</NumberOfImportantLogMessages>
     <FixedOkXY>Gecorrigeerd en oké - '{0}': {1}</FixedOkXY>
+    <FixOcrErrorExample>D0n't -&gt; Don't</FixOcrErrorExample>
+    <FixSpaceBetweenNumbersExample>1 100 -&gt; 1100</FixSpaceBetweenNumbersExample>
+    <FixDialogsOneLineExample>Hi John! - Hi Ida! -&gt; Hi John!&lt;br /&gt;- Hi Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Woordenboeken nodig?</Title>
@@ -605,7 +620,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <From>Van:</From>
     <To>Naar:</To>
     <Translate>Vertalen</Translate>
-    <PleaseWait>Even geduld aub... Dit kan enige tĳd duren</PleaseWait>
+    <PleaseWait>Even geduld a.u.b. Dit kan enige tĳd duren</PleaseWait>
     <PoweredByGoogleTranslate>Powered by Google Translate</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Powered by Microsoft Translate</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
@@ -730,6 +745,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>&amp;Herhalen</Redo>
         <ShowUndoHistory>Geschiedenis voor ongedaan maken tonen</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Unicode symbool invoegen</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Unicode controle karakters</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Left-to-right markering (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Right-to-left markering (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Rright-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Zoeken</Find>
         <FindNext>Volge&amp;nde zoeken</FindNext>
         <Replace>&amp;Vervangen</Replace>
@@ -788,6 +810,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Videobestand sluiten</CloseVideo>
         <ImportSceneChanges>Scènewisselingen importeren</ImportSceneChanges>
         <RemoveSceneChanges>Scènewisselingen verwĳderen</RemoveSceneChanges>
+        <WaveformBatchGenerate>Golfvormen genereren</WaveformBatchGenerate>
         <ShowHideVideo>Video tonen/verbergen</ShowHideVideo>
         <ShowHideWaveform>Golfvorm tonen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Golfvorm en spectrogram tonen/verbergen</ShowHideWaveformAndSpectrogram>
@@ -1104,7 +1127,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska-bestanden</MatroskaFiles>
     <NoSubtitlesFound>Geen ondertitels gevonden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dit is geen geldig Matroska bestand: {0}</NotAValidMatroskaFileX>
-    <ParsingMatroskaFile>Matroska-bestand analyseren. Even geduld aub...</ParsingMatroskaFile>
+    <ParsingMatroskaFile>Matroska-bestand analyseren. Even geduld a.u.b.</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Transportstroom analyseren. Even geduld a.u.b.</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vóór ondertitelimport uit Matroska-bestand</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Ondertitel uit Matroska bestand geïmporteerd</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Plaatsen van bestand '{0}' onmogelĳk - bestand is te groot</DropFileXNotAccepted>
@@ -1214,14 +1238,16 @@ Verder gaan?</SubtitleAppendPrompt>
     <NotAValidXSubFile>Ongeldig XSub-bestand</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Vóór samenvoegen regels met dezelfde tekst</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Ondertitel met tĳdcodes heeft een ander aantal regels ({0}) dan huidige ondertitel ({1}) - Toch doorgaan?</ImportTimeCodesDifferentNumberOfLinesWarning>
-    <ParsingTransportStream>Analyseer transportstroom - even geduld aub...</ParsingTransportStream>
+    <ParsingTransportStream>Transportstroom analyseren - even geduld a.u.b.</ParsingTransportStream>
     <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een idx/sub bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
     <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
+    <ErrorLoadPng>Dit is een png-afbeeldingsbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
+    <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
-    <PleaseChoose>Meer dan één ondertitel gevonden - kies aub</PleaseChoose>
+    <PleaseChoose>Meer dan één ondertitel gevonden - kies a.u.b.</PleaseChoose>
     <TrackXLanguageYTypeZ>Spoor {0} - {1} - taal: {2} - type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
@@ -1275,8 +1301,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <EndsWith>Eindigt met</EndsWith>
     <NoContains>Bevat niet</NoContains>
     <RegEx>Reguliere expressie</RegEx>
-    <UnequalLines>Ongelĳke teksten</UnequalLines>
-    <EqualLines>Gelĳke teksten</EqualLines>
+    <UnequalLines>Oneven regelnummers</UnequalLines>
+    <EqualLines>Even regelnummers</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Meermaals vervangen</Title>
@@ -1493,6 +1519,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DirectShowDescription>quartz.dll in System32 map</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
     <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET managed code van DirectX</ManagedDirectXDescription>
+    <MpcHc>MPC-HC</MpcHc>
+    <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
@@ -1517,6 +1545,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformSelectedColor>Geselecteerde kleur</WaveformSelectedColor>
     <WaveformBackgroundColor>Achtergrondkleur</WaveformBackgroundColor>
     <WaveformTextColor>Tekstkleur</WaveformTextColor>
+    <WaveformTextFontSize>Lettergrootte</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Mappen voor spectrogrammen en golfvormen legen</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Mappen voor spectrogrammen en golfvormen bevatten {0} bestanden ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spectrogram</Spectrogram>
@@ -1578,12 +1607,13 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ShortcutIsNotValid>Snelkoppeling is niet geldig: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Wissel koppel/loskoppel video controles</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Bepaal einde, voeg nieuwe toe en ga naar nieuwe</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStartAndGoToNext>Pas aan via eindpositie en naar volgende</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Pas aan via eindpositie en ga naar volgende</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Bepaal einde en ga naar volgende</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Bepaal start, auto duur en naar volgende</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Bepaal einde, volgende start en naar volgende</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Pĳl omlaag=bepaal start, Pĳl omhoog=bepaal einde en naar volgende</AdjustStartDownEndUpAndGoToNext>
-    <AdjustSelected100MsForward>Verplaats geselecteerde regels 100 ms naar voren</AdjustSelected100MsForward>
-    <AdjustSelected100MsBack>Verplaats geselecteerde regels 100 ms terug</AdjustSelected100MsBack>
+    <AdjustSelected100MsForward>Verplaats geselecteerde regels 100 msec. vooruit</AdjustSelected100MsForward>
+    <AdjustSelected100MsBack>Verplaats geselecteerde regels 100 msec. terug</AdjustSelected100MsBack>
     <AdjustSetStartTimeKeepDuration>Bepaal starttĳd, behoud duur</AdjustSetStartTimeKeepDuration>
     <AdjustSetEndAndOffsetTheRest>Stel einde in, compenseer de rest</AdjustSetEndAndOffsetTheRest>
     <AdjustSetEndAndOffsetTheRestAndGoToNext>Stel einde in, compenseer de rest en naar volgende</AdjustSetEndAndOffsetTheRestAndGoToNext>
@@ -1597,6 +1627,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ToggleDialogDashes>Dialoogstreepjes wisselen</ToggleDialogDashes>
     <Alignment>Uitlĳning (geselecteerde regels)</Alignment>
     <CopyTextOnly>Alleen tekst kopiëren naar klembord (geselecteerde regels)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Tekst van origineel naar huidige kopiëren</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto-duur (geselecteerde regels)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Omgekeerde RNL start/einde</ReverseStartAndEndingForRTL>
     <VerticalZoom>Verticale zoom</VerticalZoom>
@@ -1957,6 +1988,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <AutoTransparentBackground>Auto transparante achtergrond</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Inspecteer vergelĳkingsovereenkomsten voor huidig beeld...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bewerk laatste beeldvergelĳkingstoevoegingen...</EditLastAdditions>
+    <SetUnitalicFactor>Decursiveringsfactor bepalen</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Handmatig beeld naar tekst</Title>
@@ -1983,6 +2015,10 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Title>Nieuwe map</Title>
     <Message>Naam van de nieuwe karakter databankmap</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Decursiveringsfactor bepalen</Title>
+    <Description>Waarde aanpassen tot cursief in romein overgaat. De originele afbeelding moet cursief zĳn.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klik om golfvorm toe te voegen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik om golfvorm/spectrogram toe te voegen</ClickToAddWaveformAndSpectrogram>
