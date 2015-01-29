@@ -6052,7 +6052,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[1] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6060,7 +6060,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[2] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6068,7 +6068,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.StartsWith("J'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6076,7 +6076,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("S "))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6084,7 +6084,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("<i>S</i> "))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 8).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6092,7 +6092,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.StartsWith(";'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6100,7 +6100,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.StartsWith(",{*") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 3).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6109,7 +6109,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.EndsWith("J'") && (line.EndsWith('♪') || textWithOutFixes.EndsWith('♪') || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 3, 2).TrimEnd() + " ♪";
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6356,7 +6356,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //check Tesseract... find an other way to do this...
-                //string tmp = Utilities.RemoveHtmlTags(line).Trim();
+                //string tmp = HtmlUtil.RemoveHtmlTags(line).Trim();
                 //if (!tmp.TrimEnd().EndsWith("..."))
                 //{
                 //    tmp = tmp.TrimEnd('.').TrimEnd();
@@ -6364,7 +6364,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //    {
                 //        if (_nocrChars == null)
                 //            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
-                //        string text = Utilities.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
+                //        string text = HtmlUtil.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
                 //        string post = string.Empty;
                 //        if (line.EndsWith("</i>"))
                 //        {
@@ -7152,7 +7152,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         subtitleListView1.SetText(item.Index, p.Text);
                         if (item.Index == _selectedIndex)
                             textBoxCurrentText.Text = p.Text;

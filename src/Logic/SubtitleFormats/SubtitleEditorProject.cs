@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 style.InnerText = "Default";
                 paragraph.Attributes.Append(style);
 
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 XmlAttribute textNode = xml.CreateAttribute("text");
                 textNode.InnerText = text;
                 paragraph.Attributes.Append(textNode);

@@ -58,7 +58,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(end);
 
                 XmlNode text = xml.CreateElement("Text");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text, true);
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 paragraph.AppendChild(text);
 
                 xml.DocumentElement.AppendChild(paragraph);

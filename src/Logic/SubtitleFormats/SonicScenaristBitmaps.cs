@@ -45,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //0001       00:49:26:22  00:49:27:13  t01_v001c001_22_0001.bmp
-                sb.AppendLine(string.Format("{0:0000}       {1}  {2}  {3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
+                sb.AppendLine(string.Format("{0:0000}       {1}  {2}  {3}", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\t")));
                 index++;
             }
             return sb.ToString();

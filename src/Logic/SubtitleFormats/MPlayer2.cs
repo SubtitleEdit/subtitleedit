@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     if (line.Contains("</i>"))
                         italicOn = false;
-                    sb.Append(Utilities.RemoveHtmlTags(line));
+                    sb.Append(HtmlUtil.RemoveHtmlTags(line));
                     count++;
                 }
                 sb.AppendLine();

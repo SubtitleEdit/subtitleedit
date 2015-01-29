@@ -542,7 +542,7 @@ namespace Nikse.SubtitleEdit.Logic
             // do not autobreak dialogs
             if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
-                string dialogS = RemoveHtmlTags(text);
+                string dialogS = HtmlUtil.RemoveHtmlTags(text);
                 var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
                 if (arr.Length == 2)
                 {
@@ -553,7 +553,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             string s = RemoveLineBreaks(text);
-            string temp = RemoveHtmlTags(s, true);
+            string temp = HtmlUtil.RemoveHtmlTags(s, true);
 
             if (temp.Length < mergeLinesShorterThan)
             {
@@ -563,7 +563,7 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isDialog = true;
                     foreach (string line in lines)
                     {
-                        string cleanLine = RemoveHtmlTags(line).Trim();
+                        string cleanLine = HtmlUtil.RemoveHtmlTags(line).Trim();
                         isDialog = isDialog && (cleanLine.StartsWith('-') || cleanLine.StartsWith('—'));
                     }
                     if (isDialog)
@@ -821,33 +821,6 @@ namespace Nikse.SubtitleEdit.Logic
             catch
             {
             }
-        }
-
-        public static string RemoveHtmlTags(string s)
-        {
-            if (s == null)
-                return null;
-
-            if (s.Length < 3 || s.IndexOf('<') < 0)
-                return s;
-
-            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
-                s = FixInvalidItalicTags(s);
-
-            return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
-        }
-
-        public static string RemoveHtmlTags(string s, bool alsoSsaTags)
-        {
-            if (s == null)
-                return null;
-
-            s = RemoveHtmlTags(s);
-
-            if (alsoSsaTags)
-                s = RemoveSsaTags(s);
-
-            return s;
         }
 
         public static string RemoveSsaTags(string s)
@@ -1115,7 +1088,7 @@ namespace Nikse.SubtitleEdit.Logic
             double optimalCharactersPerSecond = charactersPerSecond;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
-            double duration = (RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
+            double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
@@ -1595,7 +1568,7 @@ namespace Nikse.SubtitleEdit.Logic
             int maxLength = 0;
             foreach (string line in text.SplitToLines())
             {
-                string s = RemoveHtmlTags(line, true);
+                string s = HtmlUtil.RemoveHtmlTags(line, true);
                 if (s.Length > maxLength)
                     maxLength = s.Length;
             }
@@ -1610,7 +1583,7 @@ namespace Nikse.SubtitleEdit.Logic
             const string ZeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(ZeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(ZeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -1844,7 +1817,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            var lines = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
+            var lines = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
 
             const int max = 3;
 
@@ -2453,7 +2426,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            int length = RemoveHtmlTags(textBox.Text).Length;
+            int length = HtmlUtil.RemoveHtmlTags(textBox.Text).Length;
             if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && length > Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true

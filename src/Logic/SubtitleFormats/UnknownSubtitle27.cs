@@ -44,7 +44,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 index++;
                 //00:18:02:  (斉藤)失礼な大人って！  (悠子)何言ってんのあんた？
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "  ");
                 sb.AppendLine(string.Format("{0}  {1}", EncodeTimeCode(p.StartTime), text));
                 sb.AppendLine();

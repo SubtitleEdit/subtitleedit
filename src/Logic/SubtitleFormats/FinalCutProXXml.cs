@@ -103,12 +103,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 XmlNode titleNode = clip.SelectSingleNode("title");
                 titleNode.Attributes["offset"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 60000) + "/60000s";
-                titleNode.Attributes["name"].Value = Utilities.RemoveHtmlTags(p.Text);
+                titleNode.Attributes["name"].Value = HtmlUtil.RemoveHtmlTags(p.Text);
                 titleNode.Attributes["duration"].Value = Convert.ToInt64(p.Duration.TotalSeconds * 60000) + "/60000s";
                 titleNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 60000) + "/60000s";
 
                 XmlNode text = clip.SelectSingleNode("title/text");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
 
                 videoNode.AppendChild(clip);
                 number++;

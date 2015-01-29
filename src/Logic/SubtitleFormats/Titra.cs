@@ -59,7 +59,7 @@ ATTENTION : Pas plus de 40 caractères PAR LIGNE
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 index++;
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 sb.AppendLine(string.Format("* {0} :\t{1}\t{2}\t{3}{4}{5}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), GetMaxCharsForDuration(p.Duration.TotalSeconds) + "c", Environment.NewLine, text));
                 sb.AppendLine();
                 if (!text.Contains(Environment.NewLine))

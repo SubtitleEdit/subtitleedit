@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 //string text = p.Text.Replace("<i>", "@iSTART__").Replace("</i>", "@iEND__");
                 string text = p.Text.Replace(Environment.NewLine, "\n").Replace("\n", "@iNEWLINE__");
-                text = Utilities.RemoveHtmlTags(text);
+                text = HtmlUtil.RemoveHtmlTags(text);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = paragraph.InnerXml.Replace("@iNEWLINE__", "<br />");
                 //paragraph.InnerXml = paragraph.InnerXml.Replace("@iSTART__", "<i>").Replace("@iEND__", "</i>");

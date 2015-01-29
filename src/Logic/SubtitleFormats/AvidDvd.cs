@@ -73,7 +73,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.AppendLine("$Italic = FALSE");
                 }
 
-                text = Utilities.RemoveHtmlTags(text, true);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
                 sb.AppendLine(string.Format("{0}\t{1}\t{2}\t{3}", count, MakeTimeCode(p.StartTime), MakeTimeCode(p.EndTime), text.Replace(Environment.NewLine, "|")));
                 sb.AppendLine();
                 count++;

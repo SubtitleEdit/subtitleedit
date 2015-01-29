@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -351,6 +352,33 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             return encoded.ToString();
+        }
+
+        public static string RemoveHtmlTags(string s)
+        {
+            if (s == null)
+                return null;
+
+            if (s.Length < 3 || s.IndexOf('<') < 0)
+                return s;
+
+            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
+                s = Utilities.FixInvalidItalicTags(s);
+
+            return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
+        }
+
+        public static string RemoveHtmlTags(string s, bool alsoSsaTags)
+        {
+            if (s == null)
+                return null;
+
+            s = RemoveHtmlTags(s);
+
+            if (alsoSsaTags)
+                s = Utilities.RemoveSsaTags(s);
+
+            return s;
         }
     }
 }

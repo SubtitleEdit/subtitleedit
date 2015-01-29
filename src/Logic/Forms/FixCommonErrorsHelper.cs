@@ -113,8 +113,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 var parts = text.Replace(" - ", Environment.NewLine).SplitToLines();
                 if (parts.Length == 2)
                 {
-                    string part0 = Utilities.RemoveHtmlTags(parts[0]).Trim();
-                    string part1 = Utilities.RemoveHtmlTags(parts[1]).Trim();
+                    string part0 = HtmlUtil.RemoveHtmlTags(parts[0]).Trim();
+                    string part1 = HtmlUtil.RemoveHtmlTags(parts[1]).Trim();
                     if (part0.Length > 1 && "-—!?.\"".Contains(part0[part0.Length - 1]) &&
                         part1.Length > 1 && ("'" + Utilities.UppercaseLetters).Contains(part1[0]))
                     {
@@ -206,14 +206,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
+                    var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
                         bool remove = true;
-                        var parts = Utilities.RemoveHtmlTags(text).SplitToLines();
+                        var parts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
                         if (parts.Length == 2)
                         {
                             if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(": "))
@@ -269,7 +269,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             else if (text.StartsWith("<font ", StringComparison.Ordinal))
             {
                 var prev = subtitle.GetParagraphOrDefault(i - 1);
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
                     var st = new StripableText(text);
                     if (st.Pre.EndsWith('-') || st.Pre.EndsWith("- ", StringComparison.Ordinal))
@@ -299,18 +299,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             Paragraph p = subtitle.Paragraphs[i];
             string text = p.Text;
-            var textCache = Utilities.RemoveHtmlTags(text.TrimStart());
+            var textCache = HtmlUtil.RemoveHtmlTags(text.TrimStart());
             if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || !HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || HtmlUtil.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
+                    var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
-                        var parts = Utilities.RemoveHtmlTags(text).SplitToLines();
+                        var parts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
                         if (parts.Length == 2)
                         {
                             var part0 = parts[0].TrimEnd();
@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine, StringComparison.Ordinal))
                 return text;
 
-            string s = Utilities.RemoveHtmlTags(text);
+            string s = HtmlUtil.RemoveHtmlTags(text);
             if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && text.Contains(Environment.NewLine))
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');

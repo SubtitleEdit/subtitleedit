@@ -279,7 +279,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         i += 7;
                                     }
 
-                                    fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                    fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
                                     txt = new StringBuilder();
                                 }
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         fontNode.Attributes.Append(fontEffect);
                                     }
 
-                                    fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                    fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
                                     txt = new StringBuilder();
                                 }
@@ -366,7 +366,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     fontNode.Attributes.Append(fontEffect);
                                 }
 
-                                fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
                             }
                             else if (html.Length > 0 && html.ToString().StartsWith("<Font "))
@@ -414,7 +414,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     fontNode.Attributes.Append(fontEffect);
                                 }
 
-                                fontNode.InnerText = Utilities.RemoveHtmlTags(line);
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(line);
                                 html.Append(fontNode.OuterXml);
                             }
                         }

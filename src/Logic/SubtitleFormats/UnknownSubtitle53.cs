@@ -41,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = Utilities.RemoveHtmlTags(p.Text).Replace("♪", "\\M");
+                string text = HtmlUtil.RemoveHtmlTags(p.Text).Replace("♪", "\\M");
                 sb.AppendLine(EncodeTimeCode(p.StartTime) + " " + text);
             }
             return sb.ToString().Trim();

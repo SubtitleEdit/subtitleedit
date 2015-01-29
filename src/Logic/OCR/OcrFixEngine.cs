@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             int start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?');
                 if (start < text.Length - 4)
                 {
@@ -490,7 +490,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
                 if (start < text.Length - 5)
                 {
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
                 if (start < text.Length - 8)
                 {
@@ -652,7 +652,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
 
                 if (i > 0)
                     lastLine = lines[i - 1];
-                lastLine = Utilities.RemoveHtmlTags(lastLine);
+                lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
 
                 if (string.IsNullOrEmpty(lastLine) ||
                     lastLine.EndsWith('.') ||
@@ -830,7 +830,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 lastLine.EndsWith(']') ||
                 lastLine.EndsWith('♪'))
             {
-                lastLine = Utilities.RemoveHtmlTags(lastLine);
+                lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
                 var st = new StripableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
