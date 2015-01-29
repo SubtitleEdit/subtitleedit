@@ -35,6 +35,11 @@ namespace Nikse.SubtitleEdit.Core
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
+        public static string[] SplitToLines(this string source)
+        {
+            return source.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+        }
+
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
         public static int FastIndexOf(this string source, string pattern)
         {
