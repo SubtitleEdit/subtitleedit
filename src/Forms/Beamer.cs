@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).SplitToLines())
             {
                 if (subtitleAlignLeft)
                     lefts.Add(5);

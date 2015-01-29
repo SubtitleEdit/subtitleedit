@@ -109,7 +109,7 @@ https://github.com/SubtitleEdit/subtitleedit
                     maximumCharsSec = charsSec;
                 totalCharsSec += charsSec;
 
-                foreach (string line in p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in p.Text.SplitToLines())
                 {
                     len = line.Length;
                     if (len < minimumSingleLineLength)

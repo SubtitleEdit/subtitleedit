@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -96,7 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = p.Text.SplitToLines();
                 foreach (string line in arr)
                 {
                     string s = Utilities.RemoveHtmlTags(line);

@@ -388,7 +388,7 @@ namespace Nikse.SubtitleEdit.Forms
             text = string.Empty;
             if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
             {
-                var breaked = Utilities.AutoBreakLine(input).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var breaked = Utilities.AutoBreakLine(input).SplitToLines();
                 if (breaked.Length == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     var first = new StringBuilder();
@@ -473,13 +473,13 @@ namespace Nikse.SubtitleEdit.Forms
             string threeliner;
             if (CanMakeThreeLiner(out threeliner, sb.ToString()))
             {
-                var parts = threeliner.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = threeliner.SplitToLines();
                 _subtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
                 _subtitle.Paragraphs.Add(new Paragraph { Text = parts[2].Trim() });
                 return;
             }
 
-            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty).SplitToLines())
             {
                 if (p == null)
                 {
@@ -554,7 +554,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AutoSplit(List<string> list, string line)
         {
-            foreach (string split in Utilities.AutoBreakLine(line).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string split in Utilities.AutoBreakLine(line).SplitToLines())
             {
                 if (split.Length <= Configuration.Settings.General.SubtitleLineMaximumLength)
                     list.Add(split);
