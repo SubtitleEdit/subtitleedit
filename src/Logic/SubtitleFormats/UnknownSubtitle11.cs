@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (line.Contains("</u>"))
                         underlineOn = false;
 
-                    lineSb.Append(Utilities.RemoveHtmlTags(line));
+                    lineSb.Append(HtmlUtil.RemoveHtmlTags(line));
                     count++;
                 }
                 string text = lineSb.ToString();
@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = "{Y:b}" + text.Replace("{y:b}", string.Empty);
                 else if (noOfLines > 1 && Utilities.CountTagInText(text, "{y:u}") == noOfLines)
                     text = "{Y:u}" + text.Replace("{y:u}", string.Empty);
-                sb.AppendLine(Utilities.RemoveHtmlTags(text));
+                sb.AppendLine(HtmlUtil.RemoveHtmlTags(text));
             }
             return sb.ToString().Trim();
         }

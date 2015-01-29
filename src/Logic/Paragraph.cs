@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 if (string.IsNullOrEmpty(Text))
                     return 0;
-                int wordCount = Utilities.RemoveHtmlTags(Text).Split((" ,.!?;:()[]" + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
+                int wordCount = HtmlUtil.RemoveHtmlTags(Text).Split((" ,.!?;:()[]" + Environment.NewLine).ToCharArray(), StringSplitOptions.RemoveEmptyEntries).Length;
                 return (60.0 / Duration.TotalSeconds) * wordCount;
             }
         }

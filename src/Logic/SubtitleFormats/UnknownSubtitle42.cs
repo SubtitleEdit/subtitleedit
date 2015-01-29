@@ -43,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string style = "N";
                 if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal))
                     style = "I";
-                sb.AppendLine(string.Format("SUB[0 {0} {1}>{2}]{3}{4}", style, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format("SUB[0 {0} {1}>{2}]{3}{4}", style, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
                 sb.AppendLine();
             }
             return sb.ToString().Trim();

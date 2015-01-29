@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 if (indexOfColon > 0)
                 {
                     string pre = s.Substring(0, indexOfColon);
-                    if (Settings.RemoveTextBeforeColonOnlyUppercase && Utilities.RemoveHtmlTags(pre, true) != Utilities.RemoveHtmlTags(pre, true).ToUpper())
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase && HtmlUtil.RemoveHtmlTags(pre, true) != HtmlUtil.RemoveHtmlTags(pre, true).ToUpper())
                     {
                         newText = newText + Environment.NewLine + s;
                         newText = newText.Trim();
@@ -313,7 +313,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             else if (Utilities.CountTagInText(newText, Environment.NewLine) == 1 && removedInFirstLine == false && removedInSecondLine)
             {
-                string noTags = Utilities.RemoveHtmlTags(newText, true).Trim();
+                string noTags = HtmlUtil.RemoveHtmlTags(newText, true).Trim();
                 bool insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, '-') == 1;
                 if (insertDash)
                 {
@@ -428,7 +428,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             // fix 3 lines to two liners - if only two lines
             if (noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 2)
             {
-                string[] a = Utilities.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(new[] { '!', '?', '.' }, StringSplitOptions.RemoveEmptyEntries);
+                string[] a = HtmlUtil.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(new[] { '!', '?', '.' }, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length == 2)
                 {
                     var temp = new StripableText(text);
@@ -795,9 +795,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         lines[0] = lines[0].Remove(0, 1);
                     return lines[0].Trim();
                 }
-                if (Utilities.RemoveHtmlTags(lines[0], false).Trim() == "-")
+                if (HtmlUtil.RemoveHtmlTags(lines[0], false).Trim() == "-")
                 {
-                    if (Utilities.RemoveHtmlTags(lines[1], false).Trim() == "-")
+                    if (HtmlUtil.RemoveHtmlTags(lines[1], false).Trim() == "-")
                         return string.Empty;
                     if (lines[1].StartsWith('-') && lines[1].Length > 1)
                         return lines[1].Remove(0, 1).Trim();
@@ -805,9 +805,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                         return "<i>" + lines[1].Remove(0, 4).Trim();
                     return lines[1];
                 }
-                if (Utilities.RemoveHtmlTags(lines[1], false).Trim() == "-")
+                if (HtmlUtil.RemoveHtmlTags(lines[1], false).Trim() == "-")
                 {
-                    if (Utilities.RemoveHtmlTags(lines[0], false).Trim() == "-")
+                    if (HtmlUtil.RemoveHtmlTags(lines[0], false).Trim() == "-")
                         return string.Empty;
                     if (lines[0].StartsWith('-') && lines[0].Length > 1)
                         return lines[0].Remove(0, 1).Trim();
@@ -966,7 +966,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var sb = new StringBuilder();
             foreach (string line in lines)
             {
-                string lineNoHtml = Utilities.RemoveHtmlTags(line);
+                string lineNoHtml = HtmlUtil.RemoveHtmlTags(line);
                 string tmp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim();
                 if (lineNoHtml != lineNoHtml.ToLower() && lineNoHtml == lineNoHtml.ToUpper())
                 {

@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = ",b" + Environment.NewLine + text;
                 if (text.StartsWith("{\\an8}"))
                     text = ",12" + Environment.NewLine + text;
-                text = Utilities.RemoveHtmlTags(text, true);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
                 sb.AppendLine(string.Format(paragraphWriteFormat, text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
             return sb.ToString().Trim();

@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 index++;
                 StringBuilder text = new StringBuilder();
-                text.Append(Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
+                text.Append(HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " ")));
                 while (text.Length < 34)
                     text.Append(' ');
                 sb.AppendFormat("{0}{1}", text, EncodeTimeCode(p.StartTime));

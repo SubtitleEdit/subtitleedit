@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(end);
 
                 XmlAttribute text = xml.CreateAttribute("CaptionText");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text, true);
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 paragraph.Attributes.Append(text);
 
                 XmlAttribute align = xml.CreateAttribute("Align");

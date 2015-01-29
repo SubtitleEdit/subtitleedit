@@ -45,9 +45,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 // if (p.StartTime.TotalMilliseconds == lastEndTimeMilliseconds)
-                sb.AppendFormat("{0}{1}", Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime));
+                sb.AppendFormat("{0}{1}", HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime));
                 //else
-                //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
+                //    sb.Append(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text), EncodeTimeCode(p.EndTime)));
                 lastEndTimeMilliseconds = p.EndTime.TotalMilliseconds;
             }
             return sb.ToString().Trim();

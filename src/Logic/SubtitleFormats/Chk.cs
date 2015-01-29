@@ -247,7 +247,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
 
             text = sb + post;
-            if (Utilities.RemoveHtmlTags(text).Trim().Length == 0)
+            if (HtmlUtil.RemoveHtmlTags(text).Trim().Length == 0)
                 return string.Empty;
             return text;
         }
