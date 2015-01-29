@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 
 namespace Nikse.SubtitleEdit.Logic
 {
