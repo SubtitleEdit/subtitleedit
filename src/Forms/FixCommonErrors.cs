@@ -1072,7 +1072,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = p.Text.SplitToLines();
                 bool tooLong = false;
                 foreach (string line in lines)
                 {
@@ -1364,7 +1364,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!p.Text.StartsWith("--", StringComparison.Ordinal))
                 {
-                    string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var arr = p.Text.SplitToLines();
                     if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                     {
                         if (arr[0][0] == '-' && arr[0][1] != ' ')
@@ -1605,10 +1605,10 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     string oldText = p.Text;
-                    string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
                     if (lines.Length == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
                     { // dialog
-                        lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        lines = p.Text.SplitToLines();
                         string line = lines[0].Trim();
 
                         if (line.Length > 5 && line.TrimStart().StartsWith("- \"", StringComparison.Ordinal) && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
@@ -2280,7 +2280,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    arr = p.Text.SplitToLines();
                     if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
                         (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)) &&
                         !arr[0].StartsWith("--", StringComparison.Ordinal) && !arr[0].StartsWith("<i>--", StringComparison.Ordinal) &&
@@ -2294,7 +2294,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             p.Text = arr[0] + Environment.NewLine + "- " + char.ToUpper(arr[1][2]) + arr[1].Remove(0, 3);
                         }
-                        arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        arr = p.Text.SplitToLines();
 
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
@@ -2996,7 +2996,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        var lines = text.SplitToLines();
                         for (int k = 0; k < lines.Length; k++)
                         {
                             lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
@@ -3042,7 +3042,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        var lines = text.SplitToLines();
                         var fixedParagraph = string.Empty;
                         for (int k = 0; k < lines.Length; k++)
                         {
@@ -5005,7 +5005,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var newParagraph = new Paragraph();
 
                 string oldText = currentParagraph.Text;
-                string[] lines = currentParagraph.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = currentParagraph.Text.SplitToLines();
                 if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
@@ -5014,7 +5014,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
-                    lines = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    lines = s.SplitToLines();
                     if (lines.Length == 2)
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);

@@ -434,7 +434,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             string s = AutoBreakLine(text, 0, 0, language);
 
-            var arr = s.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var arr = s.SplitToLines();
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (temp.Length < mergeLinesShorterThan)
             {
-                string[] lines = text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.SplitToLines();
                 if (lines.Length > 1)
                 {
                     bool isDialog = true;
@@ -1593,7 +1593,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
-            foreach (string line in text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.SplitToLines())
             {
                 string s = RemoveHtmlTags(line, true);
                 if (s.Length > maxLength)
@@ -2521,7 +2521,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
-            string[] lines = text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.SplitToLines();
             foreach (string line in lines)
             {
                 string s = line.Trim();
