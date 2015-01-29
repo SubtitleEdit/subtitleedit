@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -59,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!sb.ToString().TrimStart().StartsWith("[{\"startMillis"))
                 return;
 
-            foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).SplitToLines())
             {
                 string s = line.Trim() + "}";
                 string start = Json.ReadTag(s, "startMillis");

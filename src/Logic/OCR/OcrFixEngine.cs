@@ -645,7 +645,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string FixLowercaseIToUppercaseI(string input, string lastLine)
         {
             var sb = new StringBuilder();
-            string[] lines = input.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = input.SplitToLines();
             for (int i = 0; i < lines.Length; i++)
             {
                 string l = lines[i];

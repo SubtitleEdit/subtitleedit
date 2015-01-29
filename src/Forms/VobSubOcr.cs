@@ -1287,7 +1287,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
                 {
-                    string[] fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.SplitToLines();
                     var bitmaps = new List<Bitmap>();
                     int maxWidth = 0;
                     int totalHeight = 0;

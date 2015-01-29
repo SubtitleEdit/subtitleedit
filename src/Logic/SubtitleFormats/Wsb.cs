@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -41,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 sb.AppendLine(string.Format("{0:0000} : {1},{2},10", index + 1, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
                 sb.AppendLine("80 80 80");
-                foreach (string line in p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in p.Text.SplitToLines())
                     sb.AppendLine("C1Y00 " + line.Trim());
                 sb.AppendLine();
                 index++;

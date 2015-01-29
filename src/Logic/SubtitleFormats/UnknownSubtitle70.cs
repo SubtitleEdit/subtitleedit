@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //{y:b} is italics for single line
                 //{Y:b} is italics for both lines
 
-                string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = p.Text.SplitToLines();
                 int count = 0;
                 bool italicOn = false;
                 bool boldOn = false;
