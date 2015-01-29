@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
             {
-                string[] parts = text.Replace(" - ", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = text.Replace(" - ", Environment.NewLine).SplitToLines();
                 if (parts.Length == 2)
                 {
                     string part0 = Utilities.RemoveHtmlTags(parts[0]).Trim();
@@ -133,8 +133,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("— -") || text.Contains("-- -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
             {
                 string temp = Utilities.AutoBreakLine(text, 99, 33, language);
-                var arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = text.SplitToLines();
+                var arrTemp = temp.SplitToLines();
                 if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith('-') && arrTemp[1].TrimStart().StartsWith('-'))
                     text = temp;
                 else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal) && arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("-- -") || text.Contains("— -")) && !text.Contains(Environment.NewLine))
             {
                 string temp = Utilities.AutoBreakLine(text, language);
-                var arrTemp = temp.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arrTemp = temp.SplitToLines();
                 if (arrTemp.Length == 2)
                 {
                     if (arrTemp[1].TrimStart().StartsWith('-') || arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
@@ -208,12 +208,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                 if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
                         bool remove = true;
-                        var parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = Utilities.RemoveHtmlTags(text).SplitToLines();
                         if (parts.Length == 2)
                         {
                             if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(": "))
@@ -306,11 +306,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                 if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
                 {
-                    var lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
                     int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
                     if (startHyphenCount == 1)
                     {
-                        var parts = Utilities.RemoveHtmlTags(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        var parts = Utilities.RemoveHtmlTags(text).SplitToLines();
                         if (parts.Length == 2)
                         {
                             var part0 = parts[0].TrimEnd();
