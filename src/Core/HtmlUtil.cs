@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Core
             if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
                 s = Utilities.FixInvalidItalicTags(s);
 
-            return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
+            return HtmlUtil.RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
         }
 
         public static string RemoveHtmlTags(string s, bool alsoSsaTags)
