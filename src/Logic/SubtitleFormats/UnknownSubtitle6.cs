@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -58,10 +59,10 @@ SRPSKI
             {
                 string firstLine = string.Empty;
                 string secondLine = string.Empty;
-                string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = p.Text.SplitToLines();
                 if (lines.Length > 2)
                 {
-                    lines = Utilities.AutoBreakLine(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    lines = Utilities.AutoBreakLine(p.Text).SplitToLines();
                 }
                 if (lines.Length > 0)
                     firstLine = lines[0];

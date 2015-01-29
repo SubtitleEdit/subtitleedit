@@ -1896,7 +1896,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
 
                 // align lines with gjpqy, a bit lower
-                var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.SplitToLines();
                 int baseLinePadding = 13;
                 if (parameter.SubtitleFontSize < 30)
                     baseLinePadding = 12;
@@ -1925,7 +1925,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 var lefts = new List<float>();
                 if (text.Contains("<font", StringComparison.OrdinalIgnoreCase) || text.Contains("<i>", StringComparison.OrdinalIgnoreCase))
                 {
-                    foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (string line in text.SplitToLines())
                     {
                         var lineNoHtml = HtmlUtil.RemoveOpenCloseTags(line, HtmlUtil.TagItalic, HtmlUtil.TagFont);
                         if (parameter.AlignLeft)
@@ -1938,7 +1938,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                    foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).SplitToLines())
                     {
                         if (parameter.AlignLeft)
                             lefts.Add(5);

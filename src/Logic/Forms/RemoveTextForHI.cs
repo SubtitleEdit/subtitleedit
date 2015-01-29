@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
 
             string newText = string.Empty;
-            string[] parts = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var parts = text.Trim().SplitToLines();
             int noOfNames = 0;
             int count = 0;
             bool removedInFirstLine = false;
@@ -259,7 +259,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
-                string[] arr = newText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = newText.SplitToLines();
                 if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                 {
                     string arr0 = new StripableText(arr[0]).StrippedText;
@@ -350,7 +350,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             var st = new StripableText(text, pre, post);
             var sb = new StringBuilder();
-            string[] parts = st.StrippedText.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var parts = st.StrippedText.Trim().SplitToLines();
             int lineNumber = 0;
             bool removedDialogInFirstLine = false;
             int noOfNamesRemoved = 0;
@@ -778,7 +778,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     }
                 }
             }
-            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.SplitToLines();
             if (text != oldText && lines.Length == 2)
             {
                 if (lines[0] == "-" && lines[1] == "-")

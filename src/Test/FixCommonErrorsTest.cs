@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Core;
 
 namespace Test
 {
@@ -1213,10 +1214,10 @@ namespace Test
             const string expected3 = "<u>Hello world!</u>\r\n<b>Hello</b>";
             const string expected4 = "<font color=\"#008040\">Hello world!</font>\r\n<font color=\"#008040\">Hello</font>";
 
-            string[] lines1 = input1.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines2 = input2.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines3 = input3.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines4 = input4.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines1 = input1.SplitToLines();
+            var lines2 = input2.SplitToLines();
+            var lines3 = input3.SplitToLines();
+            var lines4 = input4.SplitToLines();
 
             for (int i = 0; i < lines1.Length; i++)
             {

@@ -277,7 +277,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else // teletext
                 {
-                    string[] lines = TextField.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = TextField.SplitToLines();
                     var sb = new StringBuilder();
                     string veryFirstColor = null;
                     foreach (string line in lines)

@@ -69,11 +69,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendLine(string.Format(format, Separator, "Start time (hh:mm:ss:ff)", "End time (hh:mm:ss:ff)", "Line 1", "Line 2"));
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                var arr = p.Text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = p.Text.Trim().SplitToLines();
                 if (arr.Length > 3)
                 {
                     string s = Utilities.AutoBreakLine(p.Text);
-                    arr = s.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    arr = s.Trim().SplitToLines();
                 }
                 string line1 = string.Empty;
                 string line2 = string.Empty;

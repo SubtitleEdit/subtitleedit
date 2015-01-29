@@ -104,7 +104,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!sb.ToString().TrimStart().StartsWith("[{\"start"))
                 return;
 
-            foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in sb.ToString().Replace("},{", Environment.NewLine).SplitToLines())
             {
                 string s = line.Trim() + "}";
                 string start = ReadTag(s, "start");

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -55,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 paragraph.AppendChild(time);
 
-                string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = p.Text.SplitToLines();
                 for (int i = 0; i < arr.Length; i++)
                 {
                     XmlNode text = xml.CreateElement("text" + (i + 1));
