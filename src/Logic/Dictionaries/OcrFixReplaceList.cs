@@ -157,7 +157,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             }
 
             // begin fromLine
-            string[] lines = newText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = newText.SplitToLines();
             var sb = new StringBuilder();
             foreach (string l in lines)
             {

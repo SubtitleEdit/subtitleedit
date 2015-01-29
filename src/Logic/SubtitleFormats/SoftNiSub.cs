@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
 
                 // Split lines (split a subtitle into its lines)
-                var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.SplitToLines();
                 int count = 0;
                 var lineSb = new StringBuilder();
                 string tempLine = string.Empty;
@@ -174,7 +174,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 text = text.Replace("]", @"</i>");
 
                                 // Split subtitle lines (one subtitle has one or more lines)
-                                var subtitleLines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                                var subtitleLines = text.SplitToLines();
                                 int count = 0;
                                 var lineSb = new StringBuilder();
                                 string tempLine = string.Empty;

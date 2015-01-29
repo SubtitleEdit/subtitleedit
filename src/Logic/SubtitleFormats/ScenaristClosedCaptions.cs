@@ -569,7 +569,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string FixMax4LinesAndMax32CharsPerLine(string text, string language)
         {
-            var lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Trim().SplitToLines();
             bool allOk = true;
             foreach (string line in lines)
             {
@@ -583,7 +583,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return text;
 
             text = Utilities.AutoBreakLine(text, 1, 4, language);
-            lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            lines = text.Trim().SplitToLines();
             allOk = true;
             foreach (string line in lines)
             {
@@ -597,7 +597,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 return text;
 
             text = AutoBreakLineMax4Lines(text, 32);
-            lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            lines = text.Trim().SplitToLines();
             allOk = true;
             foreach (string line in lines)
             {
@@ -719,7 +719,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             //text = text.Replace("ã", "aã");
             //text = text.Replace("õ", "oõ");
 
-            var lines = text.Trim().Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.Trim().SplitToLines();
             int italic = 0;
             var sb = new StringBuilder();
             int count = 1;

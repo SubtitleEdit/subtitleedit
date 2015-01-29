@@ -371,7 +371,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             if (headerLines == null)
                 headerLines = DefaultStyle;
 
-            foreach (string line in headerLines.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in headerLines.SplitToLines())
             {
                 if (line.StartsWith("style:", StringComparison.OrdinalIgnoreCase))
                 {
@@ -1037,7 +1037,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             int marginVIndex = -1;
             int borderStyleIndex = -1;
 
-            foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in header.SplitToLines())
             {
                 string s = line.Trim().ToLower();
                 if (s.StartsWith("format:", StringComparison.Ordinal))
@@ -1310,7 +1310,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
             if (header == null)
                 header = DefaultHeader;
 
-            foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in header.SplitToLines())
             {
                 string s = line.Trim().ToLower();
                 if (s.StartsWith("format:", StringComparison.Ordinal))

@@ -129,7 +129,7 @@ namespace Nikse.SubtitleEdit.Forms
                     maxLength = s.Length;
                     maxLengthIndex = i;
                 }
-                string[] arr = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = s.SplitToLines();
                 foreach (string line in arr)
                 {
                     if (line.Length > singleLineMaxLengthIndex)
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
 
-                            string[] arr = dialogText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                            var arr = dialogText.SplitToLines();
                             if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
                                 isDialog = true;
 
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 text = dialogText;
                             if (text.Contains(Environment.NewLine))
                             {
-                                string[] arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                                var arr = text.SplitToLines();
                                 if (arr.Length == 2)
                                 {
                                     int spacing1 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;

@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)));
                 sb.Append(']');
 
-                string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = p.Text.SplitToLines();
                 int count = 0;
                 bool italicOn = false;
                 foreach (string line in parts)

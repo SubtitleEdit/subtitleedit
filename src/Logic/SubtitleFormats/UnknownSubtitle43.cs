@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -64,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text;
 
                 bool first = true;
-                foreach (string line in text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in text.SplitToLines())
                 {
                     if (!first)
                     {

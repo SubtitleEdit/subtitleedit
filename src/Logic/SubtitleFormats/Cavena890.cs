@@ -328,9 +328,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string line1 = string.Empty;
             string line2 = string.Empty;
-            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.SplitToLines();
             if (lines.Length > 2)
-                lines = Utilities.AutoBreakLine(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                lines = Utilities.AutoBreakLine(text).SplitToLines();
             if (lines.Length > 1)
             {
                 line1 = lines[0];

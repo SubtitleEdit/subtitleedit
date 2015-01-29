@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (s.Length > totalLineMaxCharacters)
                 return true;
 
-            string[] arr = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var arr = s.SplitToLines();
             foreach (string line in arr)
             {
                 if (line.Length > singleLineMaxCharacters)
@@ -31,7 +31,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 if (idx > 1)
                 {
                     string dialogText = tempText.Remove(idx + 1, 1).Insert(idx + 1, Environment.NewLine);
-                    arr = dialogText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    arr = dialogText.SplitToLines();
                     foreach (string line in arr)
                     {
                         if (line.Length > singleLineMaxCharacters)
@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             string text = Utilities.AutoBreakLine(p.Text, language);
                             if (text.Contains(Environment.NewLine))
                             {
-                                string[] arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                                var arr = text.SplitToLines();
                                 if (arr.Length == 2)
                                 {
                                     int spacing1 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
