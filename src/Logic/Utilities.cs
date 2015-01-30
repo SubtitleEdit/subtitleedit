@@ -2235,7 +2235,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
-                    var lines = text.Replace(Environment.NewLine, "\n").Split('\n');
+                    var lines = text.SplitToLines();
                     if (lines.Length == 2 && lines[0].StartsWith("<i>", StringComparison.Ordinal) && lines[0].EndsWith("</i>", StringComparison.Ordinal) &&
                         lines[1].StartsWith("<i>", StringComparison.Ordinal))
                     {
