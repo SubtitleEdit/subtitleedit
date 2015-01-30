@@ -1159,18 +1159,16 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string oldText = p.Text;
-
-                p.Text = Utilities.RemoveUnneededSpaces(p.Text, Language);
-
-                if (AllowFix(p, fixAction) && p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, ' ') < Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, "\u00A0"))
+                if (AllowFix(p, fixAction))
                 {
-                    doubleSpaces++;
-                    AddFixToListView(p, fixAction, oldText, p.Text);
-                }
-                else
-                {
-                    p.Text = oldText;
+                    var oldText = p.Text;
+                    var text = Utilities.RemoveUnneededSpaces(p.Text, Language);
+                    if (text.Length != oldText.Length && Utilities.CountTagInText(text, ' ') < Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0'))
+                    {
+                        doubleSpaces++;
+                        p.Text = text;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
                 }
             }
             if (doubleSpaces > 0)
