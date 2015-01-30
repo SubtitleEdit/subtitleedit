@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 _lineNumber++;
                 string line = lines[i].TrimEnd();
-                line = line.Trim(Convert.ToChar(127)); // 127=delete acscii
+                line = line.Trim('\u007F'); // 127=delete acscii
 
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
@@ -207,8 +207,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveBadChars(string line)
         {
-            line = line.Replace("\0", " ");
-            return line;
+            return line.Replace("\0", " ");
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)

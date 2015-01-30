@@ -427,10 +427,8 @@ namespace Nikse.SubtitleEdit.Logic
         internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, string pacCodePage, double? targetFrameRate)
         {
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-
             try
             {
-
                 // adjust offset
                 if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
                 {
