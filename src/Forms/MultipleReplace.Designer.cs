@@ -38,6 +38,7 @@
             this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.groupBoxReplaces = new System.Windows.Forms.GroupBox();
+            this.checkBoxAutoRefresh = new System.Windows.Forms.CheckBox();
             this.radioButtonRegEx = new System.Windows.Forms.RadioButton();
             this.radioButtonCaseSensitive = new System.Windows.Forms.RadioButton();
             this.buttonRemoveAll = new System.Windows.Forms.Button();
@@ -58,17 +59,18 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveUpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.moveDownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.radioButtonNormal = new System.Windows.Forms.RadioButton();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
-            this.moveTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.moveBottomToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBoxLinesFound.SuspendLayout();
             this.groupBoxReplaces.SuspendLayout();
             this.contextMenuStrip1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -158,6 +160,7 @@
             this.groupBoxReplaces.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxReplaces.Controls.Add(this.checkBoxAutoRefresh);
             this.groupBoxReplaces.Controls.Add(this.radioButtonRegEx);
             this.groupBoxReplaces.Controls.Add(this.radioButtonCaseSensitive);
             this.groupBoxReplaces.Controls.Add(this.buttonRemoveAll);
@@ -176,6 +179,20 @@
             this.groupBoxReplaces.Size = new System.Drawing.Size(922, 312);
             this.groupBoxReplaces.TabIndex = 0;
             this.groupBoxReplaces.TabStop = false;
+            // 
+            // checkBoxAutoRefresh
+            // 
+            this.checkBoxAutoRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkBoxAutoRefresh.AutoSize = true;
+            this.checkBoxAutoRefresh.Checked = true;
+            this.checkBoxAutoRefresh.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxAutoRefresh.Location = new System.Drawing.Point(826, 73);
+            this.checkBoxAutoRefresh.Name = "checkBoxAutoRefresh";
+            this.checkBoxAutoRefresh.Size = new System.Drawing.Size(90, 17);
+            this.checkBoxAutoRefresh.TabIndex = 23;
+            this.checkBoxAutoRefresh.Text = "Auto Refresh";
+            this.checkBoxAutoRefresh.UseVisualStyleBackColor = true;
+            this.checkBoxAutoRefresh.CheckedChanged += new System.EventHandler(this.checkBoxAutoRefresh_CheckedChanged);
             // 
             // radioButtonRegEx
             // 
@@ -337,7 +354,7 @@
             this.moveTopToolStripMenuItem,
             this.moveBottomToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 136);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(162, 114);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // deleteToolStripMenuItem
@@ -360,6 +377,20 @@
             this.moveDownToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.moveDownToolStripMenuItem.Text = "Move down";
             this.moveDownToolStripMenuItem.Click += new System.EventHandler(this.moveDownToolStripMenuItem_Click);
+            // 
+            // moveTopToolStripMenuItem
+            // 
+            this.moveTopToolStripMenuItem.Name = "moveTopToolStripMenuItem";
+            this.moveTopToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.moveTopToolStripMenuItem.Text = "Move to top";
+            this.moveTopToolStripMenuItem.Click += new System.EventHandler(this.moveTopToolStripMenuItem_Click);
+            // 
+            // moveBottomToolStripMenuItem
+            // 
+            this.moveBottomToolStripMenuItem.Name = "moveBottomToolStripMenuItem";
+            this.moveBottomToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.moveBottomToolStripMenuItem.Text = "Move to bottom";
+            this.moveBottomToolStripMenuItem.Click += new System.EventHandler(this.moveBottomToolStripMenuItem_Click);
             // 
             // radioButtonNormal
             // 
@@ -421,20 +452,6 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
-            // moveTopToolStripMenuItem
-            // 
-            this.moveTopToolStripMenuItem.Name = "moveTopToolStripMenuItem";
-            this.moveTopToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.moveTopToolStripMenuItem.Text = "Move to top";
-            this.moveTopToolStripMenuItem.Click += new System.EventHandler(this.moveTopToolStripMenuItem_Click);
-            // 
-            // moveBottomToolStripMenuItem
-            // 
-            this.moveBottomToolStripMenuItem.Name = "moveBottomToolStripMenuItem";
-            this.moveBottomToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-            this.moveBottomToolStripMenuItem.Text = "Move to bottom";
-            this.moveBottomToolStripMenuItem.Click += new System.EventHandler(this.moveBottomToolStripMenuItem_Click);
-            // 
             // MultipleReplace
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -458,6 +475,7 @@
             this.contextMenuStrip1.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.ResumeLayout(false);
 
@@ -502,5 +520,6 @@
         private System.Windows.Forms.Button buttonRemoveAll;
         private System.Windows.Forms.ToolStripMenuItem moveTopToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem moveBottomToolStripMenuItem;
+        private System.Windows.Forms.CheckBox checkBoxAutoRefresh;
     }
 }

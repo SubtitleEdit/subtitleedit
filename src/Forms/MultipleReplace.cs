@@ -91,7 +91,9 @@ namespace Nikse.SubtitleEdit.Forms
                 _oldMultipleSearchAndReplaceList.Add(item);
             }
 
-            GeneratePreview();
+            if (checkBoxAutoRefresh.Checked)
+                GeneratePreview();
+
             if (subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
                 groupBoxLinesFound.Enabled = false;
         }
@@ -131,7 +133,8 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 AddToReplaceListView(true, textBoxFind.Text, textBoxReplace.Text, EnglishSearchTypeToLocal(searchType));
-                GeneratePreview();
+                if (checkBoxAutoRefresh.Checked)
+                    GeneratePreview();
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
                 textBoxFind.Select();
@@ -305,7 +308,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListViewReplaceListItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            GeneratePreview();
+            if (checkBoxAutoRefresh.Checked)
+                GeneratePreview();
         }
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
@@ -318,7 +322,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Selected)
                     item.Remove();
             }
-            GeneratePreview();
+            if (checkBoxAutoRefresh.Checked)
+                GeneratePreview();
             SaveReplaceList(false);
         }
 
@@ -375,8 +380,10 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubItems[1].Text = textBoxFind.Text;
                     item.SubItems[2].Text = textBoxReplace.Text;
                     item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
+                    
+                    if (checkBoxAutoRefresh.Checked)
+                        GeneratePreview();
 
-                    GeneratePreview();
                     textBoxFind.Select();
                     SaveReplaceList(false);
                 }
@@ -464,7 +471,8 @@ namespace Nikse.SubtitleEdit.Forms
             listViewReplaceList.Items[index].Selected = false;
             listViewReplaceList.Items[index2].Selected = true;
             SaveReplaceList(false);
-            GeneratePreview();
+            if (checkBoxAutoRefresh.Checked)
+                GeneratePreview();
         }
 
         private void moveDownToolStripMenuItem_Click(object sender, EventArgs e)
@@ -564,7 +572,10 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewReplaceList.Items.Clear();
                 foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
                     AddToReplaceListView(item.Enabled, item.FindWhat, item.ReplaceWith, EnglishSearchTypeToLocal(item.SearchType));
-                GeneratePreview();
+
+                if (checkBoxAutoRefresh.Checked)
+                    GeneratePreview();
+
                 listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
                 listViewReplaceList.EndUpdate();
             }
@@ -579,7 +590,8 @@ namespace Nikse.SubtitleEdit.Forms
         private void MultipleReplace_Shown(object sender, EventArgs e)
         {
             listViewReplaceList.ItemChecked += ListViewReplaceListItemChecked;
-            GeneratePreview();
+            if (checkBoxAutoRefresh.Checked)
+                GeneratePreview();
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -590,6 +602,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Configuration.Settings.MultipleSearchAndReplaceList.Add(item);
             }
             DialogResult = DialogResult.Cancel;
+        }
+
+        private void checkBoxAutoRefresh_CheckedChanged(object sender, EventArgs e)
+        {
+            if (checkBoxAutoRefresh.Checked)
+                GeneratePreview();
         }
     }
 }
