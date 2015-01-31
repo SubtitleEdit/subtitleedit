@@ -1,4 +1,4 @@
-#region #Disclaimer
+﻿#region #Disclaimer
 
 // Author: Adalberto L. Simeone (Taranto, Italy)
 // E-Mail: avengerdragon@gmail.com
