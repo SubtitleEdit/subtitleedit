@@ -74,17 +74,14 @@
   </General>
   <About>
     <Title>Tietoja Subtitle Editistä</Title>
-    <AboutText1>
-Subtitle Edit on ilmainen GNU Public License -ohjelma.Voit jakaa, muokata ja käyttää sitä vapaasti. C# lähdekoodi on saatavilla https://github.com/SubtitleEdit/subtitleedit
+    <AboutText1>Subtitle Edit on ilmainen GNU Public License -ohjelma.Voit jakaa, muokata ja käyttää sitä vapaasti. C# lähdekoodi on saatavilla https://github.com/SubtitleEdit/subtitleedit
 Vieraile www.nikse.dk uusimman version saamiseksi.
 Ehdotukset ovat erittäin tervetulleita.
-Sähköposti: mailto:nikse.dk@gmail.com
-        </AboutText1>
+Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Lisää nimet/etc -luetteloon</Title>
-    <Description>Lisää nimet-/virheluetteloon (sama kirjainkoko)
-        </Description>
+    <Description>Lisää nimet-/virheluetteloon (sama kirjainkoko)</Description>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Lisää tekstintunnistuskorvausluetteloon</Title>
@@ -100,11 +97,8 @@ Sähköposti: mailto:nikse.dk@gmail.com
     <GenerateWaveformData>Muodosta aaltomuoto tiedoista</GenerateWaveformData>
     <PleaseWait>Tämä voi kestää muutamia minuutteja - odota</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media playeria ei löydy</VlcMediaPlayerNotFoundTitle>
-    <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee äänidatan purkamiseksi VLC media playerin (1.1.x tai uudemman).
-        </VlcMediaPlayerNotFound>
-    <GoToVlcMediaPlayerHomePage>
-Siirrytäänkö VLC media playerin kotisivulle?
-        </GoToVlcMediaPlayerHomePage>
+    <VlcMediaPlayerNotFound>Subtitle Edit tarvitsee äänidatan purkamiseksi VLC media playerin (1.1.x tai uudemman).</VlcMediaPlayerNotFound>
+    <GoToVlcMediaPlayerHomePage>Siirrytäänkö VLC media playerin kotisivulle?</GoToVlcMediaPlayerHomePage>
     <GeneratingPeakFile>Muodostetaan huipputiedosto...</GeneratingPeakFile>
     <GeneratingSpectrogram>Muodostetaan spectrogrammi...</GeneratingSpectrogram>
     <ExtractingSeconds>Puretaan audio: {0:0.0} sekuntia</ExtractingSeconds>
@@ -997,14 +991,10 @@ Siirrytäänkö VLC media playerin kotisivulle?
     <NewFrameRateUsedToCalculateTimeCodes>Uutta kuvataajuutta ({0}) käytettiin laskettaessa alku-/loppuaikaleimat</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Uutta kuvataajuutta ({0}) käytettiin laskettaessa alku-/loppukuvien numerot</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Etsittävää kohdetta ei löytynyt.
- Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
+Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <FindContinueTitle>Jatketaanko hakua?</FindContinueTitle>
-    <ReplaceContinueNotFound>
-Etsittävää kohdetta ei löytynyt. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
-        </ReplaceContinueNotFound>
-    <ReplaceXContinue>
-Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
-        </ReplaceXContinue>
+    <ReplaceContinueNotFound>Etsittävää kohdetta ei löytynyt. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?</ReplaceXContinue>
     <ReplaceContinueTitle>Jatketaanko 'Korvausta'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Etsitään '{0}' riviltä {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' löytyi riviltä {1}</XFoundAtLineNumberY>
@@ -1124,9 +1114,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja ja
     <ShowAllLinesXSecondsLinesLater>Näytä kaikki rivit {0:0.0##} sekuntia myöhemmin</ShowAllLinesXSecondsLinesLater>
     <ShowSelectedLinesXSecondsLinesEarlier>Näytä valitut rivit {0:0.0##} sekuntia aikaisemmin</ShowSelectedLinesXSecondsLinesEarlier>
     <ShowSelectedLinesXSecondsLinesLater>Näytä valitut rivit {0:0.0##} sekuntia myöhemmin</ShowSelectedLinesXSecondsLinesLater>
-    <ShowSelectionAndForwardXSecondsLinesEarlier>
-Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
-        </ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia myöhemmin</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Näytä aikaisemmat/myöhemmät suoritukset valituilla riveillä</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Kaksoissanat regexin kautta {0}</DoubleWordsViaRegEx>
@@ -1201,10 +1189,8 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <BeforeDisplaySubtitleJoin>Ennen tekstityksien liittämistä</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Liitetyt tekstitykset</SubtitlesJoined>
     <StatusLog>Tilaloki</StatusLog>
-    <XSceneChangesImported>Tuotu {0} kohtausmuutosta
-    </XSceneChangesImported>
-    <PluginXExecuted>Suoritettiin laajennus '{0}'.
-    </PluginXExecuted>
+    <XSceneChangesImported>Tuotu {0} kohtausmuutosta</XSceneChangesImported>
+    <PluginXExecuted>Suoritettiin laajennus '{0}'.</PluginXExecuted>
     <NotAValidXSubFile>Tiedosto ei ole XSub-muodossa!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Ennen samansisältöisten rivien yhdistämistä</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Aikaleimat sisältävässä tekstityksessä on eri rivimäärä ({0)} kuin nykyisessä tekstityksessä - jatketaanko silti?</ImportTimeCodesDifferentNumberOfLinesWarning>
@@ -1627,8 +1613,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <ToggleTranslationMode>Vaihda käännöksen tila</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Vaihda alkuperäinen ja käännös</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Yhdistä alkuperäinen ja käännös</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>Oikotie on jo määritelty: {0}
-    </ShortcutIsAlreadyDefinedX>
+    <ShortcutIsAlreadyDefinedX>Oikotie on jo määritelty: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Vaihda käännös ja alkuperäinen video/audio esikatselussa</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Sarake, poista teksti</ListViewColumnDelete>
     <ListViewColumnInsert>Sarake, lisää teksti</ListViewColumnInsert>

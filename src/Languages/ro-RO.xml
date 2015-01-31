@@ -1082,7 +1082,7 @@ Continui?</SubtitleAppendPrompt>
     <SpellCheck>Verificare ortografică</SpellCheck>
     <BeforeSpellCheck>Anterior verificării ortografice</BeforeSpellCheck>
     <SpellCheckChangedXToY>Verificarea ortografică: Schimbat '{0}' la '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Înaintea adăugării indexului &lt;{0}&gt; </BeforeAddingTagX>
+    <BeforeAddingTagX>Înaintea adăugării indexului &lt;{0}&gt;</BeforeAddingTagX>
     <TagXAdded>&lt;{0}&gt; indecși adăugați</TagXAdded>
     <LineXOfY>linia {0} a {1}</LineXOfY>
     <XLinesSavedAsY>{0} linii salvate ca {1}</XLinesSavedAsY>
