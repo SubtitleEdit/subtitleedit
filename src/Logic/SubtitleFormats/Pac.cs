@@ -626,7 +626,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "(", //0x28
             ")", //0x29
             "+", //0x2b
-            "б", //",", //0x2c            
+            "б", //",", //0x2c
             "_", //0x2d
             "ю", //0x2e
             "Ж", //0x3a
