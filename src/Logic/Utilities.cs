@@ -3073,8 +3073,8 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains("<font ", StringComparison.OrdinalIgnoreCase))
             {
                 var idx = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-                var endIdx = text.IndexOf('>', idx);
-                if (endIdx > idx && endIdx < text.Length)
+                var endIdx = text.IndexOf('>', idx + 6);
+                if (endIdx > idx && endIdx < text.Length - 8)
                 {
                     var color = text.Substring(idx, (endIdx - idx) + 1);
                     text = RemoveSpaceBeforeAfterTag(text, color);
