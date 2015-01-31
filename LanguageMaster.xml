@@ -1303,8 +1303,8 @@ Continue?</SubtitleAppendPrompt>
     <EndsWith>Ends with</EndsWith>
     <NoContains>Not contains</NoContains>
     <RegEx>Regular expression</RegEx>
-    <UnequalLines>Unequal lines</UnequalLines>
-    <EqualLines>Equal lines</EqualLines>
+    <UnequalLines>Odd-numbered lines</UnequalLines>
+    <EqualLines>Even-numbered lines</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Multiple replace</Title>
