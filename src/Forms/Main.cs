@@ -1197,7 +1197,7 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripButtonSaveAs.ToolTipText = _language.Menu.ToolBar.SaveAs;
             toolStripButtonFind.ToolTipText = _language.Menu.ToolBar.Find;
             toolStripButtonReplace.ToolTipText = _language.Menu.ToolBar.Replace;
-            toolStripButtonFixCommonErrors.ToolTipText = Configuration.Settings.Language.Settings.FixCommonerrors; // TODO: 3.4 Use Toolbar translation tag
+            toolStripButtonFixCommonErrors.ToolTipText = _language.Menu.ToolBar.FixCommonErrors;
             toolStripButtonVisualSync.ToolTipText = _language.Menu.ToolBar.VisualSync;
             toolStripButtonSpellCheck.ToolTipText = _language.Menu.ToolBar.SpellCheck;
             toolStripButtonSettings.ToolTipText = _language.Menu.ToolBar.Settings;
