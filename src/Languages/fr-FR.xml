@@ -1217,7 +1217,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Avant de fusionner les lignes avec le même texte</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Le timecode du sous-titre importé a un nombre différent de lignes ({0}) par rapport à l'actuel ({1}).
 
- Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
+Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
     <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx :
 - Ils font partie de paires de fichiers idx/sub (également appelés VobSub).
@@ -1232,8 +1232,7 @@ Poursuivre ?</SubtitleAppendPrompt>
 - Ce n’est pas un fichier de sous-titres.</ErrorLoadSrr>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Choisir les sous-titres du fichier Matroska
-</Title>
+    <Title>Choisir les sous-titres du fichier Matroska</Title>
     <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
     <TrackXLanguageYTypeZ>Piste {0} - {1} - langue: {2} - type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1320,8 +1319,7 @@ Poursuivre ?</SubtitleAppendPrompt>
   <NetworkJoin>
     <Title>Rejoindre une session réseau</Title>
     <Information>Joignez-vous à la session actuelle, où plusieurs personnes
- peuvent modifier le même fichier de sous-titres (collaboration)
-</Information>
+peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Join>Rejoindre</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1332,8 +1330,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <Title>Démarrer une session réseau</Title>
     <ConnectionTo>Connexion à {0}...</ConnectionTo>
     <Information>Démarrer une nouvelle session, où plusieurs personnes
- peuvent modifier le même fichier de sous-titres (collaboration)
-</Information>
+peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Start>Démarrer</Start>
   </NetworkStart>
   <OpenVideoDvd>
