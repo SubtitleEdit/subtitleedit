@@ -1644,8 +1644,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>快捷键已经定义:
-{0}
-</ShortcutIsAlreadyDefinedX>
+{0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>在 视频/音频 预览中切换翻译和原文</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>列，删除文本</ListViewColumnDelete>
     <ListViewColumnInsert>列，插入文本</ListViewColumnInsert>

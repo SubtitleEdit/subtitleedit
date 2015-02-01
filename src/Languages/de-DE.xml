@@ -110,6 +110,12 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
     <ExtractingMinutes>Extrahiere Audio: {0}.{1:00} Minuten</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Stapelgenerierung von Wellenformdaten</Title>
+    <ExtractingAudio>Audio extrahieren...</ExtractingAudio>
+    <Calculating>Berechnen...</Calculating>
+    <Done>Fertig</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Längen anpassen</Title>
     <AdjustVia>Anpassen über</AdjustVia>
@@ -161,6 +167,11 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Unterordner einschließen</Recursive>
     <SetMinMsBetweenSubtitles>Min. Millisekunden zwischen Untertitel</SetMinMsBetweenSubtitles>
     <PlainText>Text</PlainText>
+    <Filter>Dateifilter</Filter>
+    <FilterSkipped>Vom Filter ausgeschlossen</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip Dateien ohne UTF-8 Bytereihenfolge-Markierung</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Texte mit mehr als zwei Zeilen</FilterMoreThanTwoLines>
+    <FilterContains>Text enthält...</FilterContains>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -734,6 +745,13 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Wiederherstellen</Redo>
         <ShowUndoHistory>Verlauf (für Rückgängig) anzeigen</ShowUndoHistory>
         <InsertUnicodeSymbol>Unicode Symbol einfügen</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Unicode Steuerzeichen einfügen</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Links-nach-rechts-Zeichen (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Rechts-nach-links-Zeichen (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Links-nach-rechts-Einbettung (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Rechts-nach-links-Einbettung (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Links-nach-rechts-Zwang (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Rechts-nach-links-Zwang (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Suchen</Find>
         <FindNext>&amp;Weitersuchen</FindNext>
         <Replace>&amp;Ersetzen</Replace>
@@ -792,6 +810,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Videodatei schließen</CloseVideo>
         <ImportSceneChanges>Szenenänderungen importieren...</ImportSceneChanges>
         <RemoveSceneChanges>Szenenänderungen entfernen</RemoveSceneChanges>
+        <WaveformBatchGenerate>Wellenforme im Stapel generieren...</WaveformBatchGenerate>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
         <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Wellenform und Spektogramm anzeigen/verbergen</ShowHideWaveformAndSpectrogram>
@@ -1609,6 +1628,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
     <CopyTextOnly>Nur Text in Zwischenablage kopieren (gewählte Zeilen)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Nur Text vom Original im aktuellen Untertitel kopieren</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto Dauer (gewählte Zeilen)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren</ReverseStartAndEndingForRTL>
     <VerticalZoom>Vertikale vergrößern</VerticalZoom>
@@ -1969,6 +1989,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoTransparentBackground>Auto transparenter Hintergrund</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Untersuche Vergleichstreffer für aktuelles Bild...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bearbeite letzte Bildvergleiche...</EditLastAdditions>
+    <SetUnitalicFactor>Entkursivierungsfaktor setzen...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuelles Bild zu Text</Title>
@@ -1995,6 +2016,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Title>Neuer Ordner</Title>
     <Message>Name des neuen Zeichendatenbank Ordners</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Entkursivierungsfaktor setzen</Title>
+    <Description>Anpassen bis zur aufrechten Schriftlage. Das Originalbild muss in Kursivschrift vorliegen.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klicken um Wellenform hinzuzufügen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klicken um Wellenform/Spektogramm hinzuzufügen</ClickToAddWaveformAndSpectrogram>

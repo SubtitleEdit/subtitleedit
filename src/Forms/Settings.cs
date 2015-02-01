@@ -398,6 +398,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 labelWaveformTextSize.Text = language.WaveformTextFontSize;
                 comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
+                checkBoxWaveformTextBold.Text = language.SubtitleBold;
                 checkBoxWaveformTextBold.Left = comboBoxWaveformTextSize.Left + comboBoxWaveformTextSize.Width + 5;
             }
 

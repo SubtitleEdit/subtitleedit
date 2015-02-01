@@ -20,7 +20,7 @@
     <OpenVideoFile>Videobestand openen...</OpenVideoFile>
     <OpenVideoFileTitle>Videobestand openen</OpenVideoFileTitle>
     <NoVideoLoaded>Geen video geladen</NoVideoLoaded>
-    <VideoInformation>Video informatie</VideoInformation>
+    <VideoInformation>Videoinformatie</VideoInformation>
     <PositionX>Positie / tĳdsduur: {0}</PositionX>
     <StartTime>Starttĳd</StartTime>
     <EndTime>Eindtĳd</EndTime>
@@ -28,14 +28,14 @@
     <NumberSymbol>№</NumberSymbol>
     <Number>Aantal</Number>
     <Text>Tekst</Text>
-    <HourMinutesSecondsMilliseconds>uur:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>uur:min:sec:msec</HourMinutesSecondsMilliseconds>
     <Bold>Vet</Bold>
     <Italic>Cursief</Italic>
     <Underline>Onderstrepen</Underline>
     <Visible>Zichtbaar</Visible>
     <FrameRate>Beeldsnelheid</FrameRate>
     <Name>Naam</Name>
-    <FileNameXAndSize>Bestandsnaam: {0} ({1})</FileNameXAndSize>
+    <FileNameXAndSize>Bestandsnaam: {0}  ({1})</FileNameXAndSize>
     <ResolutionX>Resolutie: {0}</ResolutionX>
     <FrameRateX>Beeldsnelheid: {0:0.0###}</FrameRateX>
     <TotalFramesX>Totaal aantal beelden: {0:#,##0.##}</TotalFramesX>
@@ -143,7 +143,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   <BatchConvert>
     <Title>Batch-conversie</Title>
     <Input>Invoer</Input>
-    <InputDescription>Invoerbestanden (blader of sleep en plaats)</InputDescription>
+    <InputDescription>Invoerbestanden (blader of sleep-en-plaats)</InputDescription>
     <Status>Status</Status>
     <Output>Uitvoer</Output>
     <ChooseOutputFolder>Doelmap kiezen</ChooseOutputFolder>
@@ -151,7 +151,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Style>Stĳl...</Style>
     <ConvertOptions>Conversieopties</ConvertOptions>
     <RemoveFormatting>Formateringstekens verwĳderen</RemoveFormatting>
-    <RemoveTextForHI>Tekst voor slechthorenden verwĳderen</RemoveTextForHI>
+    <RemoveTextForHI>D&amp;&amp;SH tekst verwĳderen</RemoveTextForHI>
     <OverwriteOriginalFiles>Originele bestanden vervangen (nieuwe extensie als formaat gewĳzigd is)</OverwriteOriginalFiles>
     <RedoCasing>Hoofd-/kleine letters herzien</RedoCasing>
     <Convert>Converteren</Convert>
@@ -222,7 +222,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ChooseAudioTrack>
   <ChooseEncoding>
     <Title>Codering kiezen</Title>
-    <CodePage>Karaktercodetabel</CodePage>
+    <CodePage>Tekencodetabel</CodePage>
     <DisplayName>Weergavenaam</DisplayName>
     <PleaseSelectAnEncoding>Kies een codering a.u.b.</PleaseSelectAnEncoding>
   </ChooseEncoding>
@@ -332,7 +332,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <CodePageNumber>Codepage nummer (CPN)</CodePageNumber>
     <DiskFormatCode>Disk formatcode (DFC)</DiskFormatCode>
     <DisplayStandardCode>Weergavestandaard (DSC)</DisplayStandardCode>
-    <CharacterCodeTable>Karaktertabel (CCT)</CharacterCodeTable>
+    <CharacterCodeTable>Tekencodetabel (CCT)</CharacterCodeTable>
     <LanguageCode>Taalcode (LC)</LanguageCode>
     <OriginalProgramTitle>Originele programmatitel (OPT)</OriginalProgramTitle>
     <OriginalEpisodeTitle>Originele episodetitel (OET)</OriginalEpisodeTitle>
@@ -424,7 +424,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL bestandsnaam kiezen</SaveDvdStudioProStlAs>
     <SomeLinesWereTooLongX>Enkele regels zĳn te lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Regelhoogte</LineHeight>
-    <BoxSingleLine>Eénlĳnig kader</BoxSingleLine>
+    <BoxSingleLine>Enkellĳnig kader</BoxSingleLine>
     <BoxMultiLine>Meerlĳnig kader</BoxMultiLine>
     <Forced>Ingebakken</Forced>
   </ExportPngXml>
@@ -474,10 +474,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Step1>Stap 1/2 - Te corrigeren fouten selecteren</Step1>
     <WhatToFix>Wat te corrigeren</WhatToFix>
     <Example>Voorbeeld</Example>
-    <SelectAll>Alles selecteren</SelectAll>
+    <SelectAll>Allemaal</SelectAll>
     <InverseSelection>Selectie omkeren</InverseSelection>
-    <Back>&lt; &amp;Terug</Back>
-    <Next>&amp;Volgende &gt;</Next>
+    <Back>&lt;&amp;Terug</Back>
+    <Next>&amp;Volgende&gt;</Next>
     <Step2>Stap 2/2 - Correcties verifiëren</Step2>
     <Fixes>Correcties</Fixes>
     <Log>Logboek</Log>
@@ -500,12 +500,12 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixUppercaseIInsindeLowercaseWords>Hoofdletter i in klein geschreven woorden (OCR-fout) corrigeren</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
-    <StartWithUppercaseLetterAfterParagraph>Start met hoofdletter na paragraaf</StartWithUppercaseLetterAfterParagraph>
-    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Begin met hoofdletter na punt in paragraaf</StartWithUppercaseLetterAfterPeriodInsideParagraph>
-    <StartWithUppercaseLetterAfterColon>Begin met hoofdletter na dubbele punt/komma</StartWithUppercaseLetterAfterColon>
+    <StartWithUppercaseLetterAfterParagraph>Begin met hoofdletter na een alinea</StartWithUppercaseLetterAfterParagraph>
+    <StartWithUppercaseLetterAfterPeriodInsideParagraph>Begin met hoofdletter na een punt</StartWithUppercaseLetterAfterPeriodInsideParagraph>
+    <StartWithUppercaseLetterAfterColon>Begin met hoofdletter na puntkomma/dubbele punt</StartWithUppercaseLetterAfterColon>
     <FixLowercaseIToUppercaseI>Alleenstaande 'i' door 'I' vervangen (Engels)</FixLowercaseIToUppercaseI>
-    <FixCommonOcrErrors>Gangbare OCR fouten corrigeren (m.b.v. de OCR-correctielĳst)</FixCommonOcrErrors>
-    <CommonOcrErrorsFixed>Gangbare OCR fouten gecorrigeerd (m.b.v. de OCR-correctielĳst): {0}</CommonOcrErrorsFixed>
+    <FixCommonOcrErrors>Gangbare OCR-fouten corrigeren (m.b.v. de OCR-correctielĳst)</FixCommonOcrErrors>
+    <CommonOcrErrorsFixed>Gangbare OCR-fouten gecorrigeerd (m.b.v. de OCR-correctielĳst): {0}</CommonOcrErrorsFixed>
     <RemoveSpaceBetweenNumber>Verwĳder ruimte tussen getallen</RemoveSpaceBetweenNumber>
     <FixDialogsOnOneLine>Eénregelige dialogen corrigeren</FixDialogsOnOneLine>
     <RemoveSpaceBetweenNumbersFixed>Spaties tussen getallen verwĳderd: {0}</RemoveSpaceBetweenNumbersFixed>
@@ -549,7 +549,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
     <FixLowercaseIToUppercaseIExample>What do i care. -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Tekst nummer {0}: Starttĳd is later dan eindtĳd: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
-    <UnableToFixStartTimeLaterThanEndTime>Kan tekst nummer {0} niet corrigeren: startĳdstip is later dan eindtĳdstip: {1}</UnableToFixStartTimeLaterThanEndTime>
+    <UnableToFixStartTimeLaterThanEndTime>Kan tekst nummer {0} niet corrigeren: starttĳd is later dan eindtĳd: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} gecorrigeerd naar: {1} {2}</XFixedToYZ>
     <UnableToFixTextXY>Kan tekst nummer {0} niet corrigeren: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>{0} overlappende tĳden gecorrigeerd</XOverlappingTimestampsFixed>
@@ -635,13 +635,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </GoogleOrMicrosoftTranslate>
   <GoToLine>
     <Title>Ga naar ondertitel nr.</Title>
-    <XIsNotAValidNumber>{0} is geen geldig getal</XIsNotAValidNumber>
+    <XIsNotAValidNumber>{0} is geen geldig ondertitelnummer</XIsNotAValidNumber>
   </GoToLine>
   <ImportImages>
     <Title>Afbeeldingen importeren</Title>
     <ImageFiles>Beeldbestanden</ImageFiles>
     <Input>Invoer</Input>
-    <InputDescription>Kies invoer bestanden (blader of versleep)</InputDescription>
+    <InputDescription>Kies invoer bestanden (blader of sleep-en-plaats)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Scènewisselingen importeren</Title>
@@ -745,7 +745,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>&amp;Herhalen</Redo>
         <ShowUndoHistory>Geschiedenis voor ongedaan maken tonen</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Unicode symbool invoegen</InsertUnicodeSymbol>
-        <InsertUnicodeControlCharacters>Unicode controle karakters</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharacters>Unicode controletekens</InsertUnicodeControlCharacters>
         <InsertUnicodeControlCharactersLRM>Left-to-right markering (LRM)</InsertUnicodeControlCharactersLRM>
         <InsertUnicodeControlCharactersRLM>Right-to-left markering (RLM)</InsertUnicodeControlCharactersRLM>
         <InsertUnicodeControlCharactersLRE>Left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
@@ -758,7 +758,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Meermaals vervangen...</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ga naar ondertitel nummer...</GoToSubtitleNumber>
         <RightToLeftMode>Rechts-naar-links (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>RTL via unicode-controlekarakters corigeren (geselecteerde ondertitels)</FixTrlViaUnicodeControlCharacters>
+        <FixTrlViaUnicodeControlCharacters>RTL via Unicode controletekens corigeren (geselecteerde ondertitels)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>RTL begin/einde omkeren (geselecteerde ondertitels)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Originele tekst weergeven in audio/video voorbeeld</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>&amp;Selectie wĳzigen...</ModifySelection>
@@ -766,7 +766,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       </Edit>
       <Tools>
         <Title>E&amp;xtra</Title>
-        <AdjustDisplayDuration>Duurtĳd &amp;aanpassen...</AdjustDisplayDuration>
+        <AdjustDisplayDuration>&amp;Tĳdsduur aanpassen...</AdjustDisplayDuration>
         <ApplyDurationLimits>Tĳdsduurlimieten toepassen</ApplyDurationLimits>
         <DurationsBridgeGap>Tĳdsduurhiaten overbruggen...</DurationsBridgeGap>
         <FixCommonErrors>Gangbare &amp;fouten corrigeren...</FixCommonErrors>
@@ -789,7 +789,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TextSingleLineMaximumLength>Tekst - max. lengte enkele regel</TextSingleLineMaximumLength>
         <TextTotalLength>Tekst - totale lengte</TextTotalLength>
         <TextNumberOfLines>Tekst - aantal regels</TextNumberOfLines>
-        <TextNumberOfCharactersPerSeconds>Tekst - aantal tekens/sec</TextNumberOfCharactersPerSeconds>
+        <TextNumberOfCharactersPerSeconds>Tekst - aantal tekens/sec.</TextNumberOfCharactersPerSeconds>
         <WordsPerMinute>Tekst - woorden per minuut (wpm)</WordsPerMinute>
         <Style>Stĳl</Style>
         <Ascending>Oplopend</Ascending>
@@ -868,7 +868,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <FixCommonErrors>Gangbare fouten corrigeren</FixCommonErrors>
         <VisualSync>Visuele synchronisatie</VisualSync>
         <SpellCheck>Spellingcontrole</SpellCheck>
-        <Settings>Instellingen</Settings>
+        <Settings>Voorkeuren</Settings>
         <Help>Help</Help>
         <ShowHideWaveform>Golfvorm tonen/verbergen</ShowHideWaveform>
         <ShowHideVideo>Video tonen/verbergen</ShowHideVideo>
@@ -893,7 +893,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertBefore>Invoegen vóór</InsertBefore>
         <InsertAfter>Invoegen na</InsertAfter>
         <InsertSubtitleAfter>Ondertitel invoegen na deze regel...</InsertSubtitleAfter>
-        <CopyToClipboard>Als tekst kopiëren naar het klem&amp;bord</CopyToClipboard>
+        <CopyToClipboard>Naar het klem&amp;bord kopiëren</CopyToClipboard>
         <Column>Kolom</Column>
         <ColumnDeleteText>Tekst verwĳderen</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Tekst verwĳderen en cellen naar boven schuiven</ColumnDeleteTextAndShiftCellsUp>
@@ -1177,8 +1177,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <OcrReplacePairXAdded>Paar '{0} -&gt; {1}' is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Paar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR-correctielĳst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} teksten geselecteerd</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat unicode muzieknootsymbolen. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeMusicSymbolsAnsiWarning>
-    <UnicodeCharactersAnsiWarning>Ondertitel bevat unicode karakters. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeCharactersAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat Unicode muzieknootsymbolen. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeCharactersAnsiWarning>Ondertitel bevat Unicode tekens. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Ondertitel bevat negatieve tĳdcodes. Toch opslaan?</NegativeTimeWarning>
     <BeforeMergeShortLines>Vóór samenvoegen korte regels</BeforeMergeShortLines>
     <BeforeSplitLongLines>Vóór opdelen lange regels</BeforeSplitLongLines>
@@ -1196,7 +1196,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <BeforeSetEndTimeAndOffsetTheRest>Vóór eindtĳd instellen en overige opschuiven</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Vóór eindtĳd op videopositie zetten en automatisch start berekenen</BeforeSetEndAndVideoPosition>
     <ContinueWithCurrentSpellCheck>Doorgaan met de huidige spellingcontrole?</ContinueWithCurrentSpellCheck>
-    <CharactersPerSecond>Karakters/s: {0:0.00}</CharactersPerSecond>
+    <CharactersPerSecond>Tekens/sec.: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Beeldsnelheid uit videobestand halen</GetFrameRateFromVideoFile>
     <NetworkMessage>Nieuw bericht: {0} ({1}): {2}</NetworkMessage>
     <NetworkUpdate>Tekst bĳgewerkt: {0} ({1}): Index = {2}, Tekst = {3}</NetworkUpdate>
@@ -1273,7 +1273,7 @@ Verder gaan?</SubtitleAppendPrompt>
   </MergeDoubleLines>
   <MergedShortLines>
     <Title>Korte ondertitels saamenvoegen</Title>
-    <MaximumCharacters>Max. aantal karakters per ondertitel</MaximumCharacters>
+    <MaximumCharacters>Max. aantal tekens per ondertitel</MaximumCharacters>
     <MaximumMillisecondsBetween>Max. milliseconden tussen ondertitels</MaximumMillisecondsBetween>
     <NumberOfMergesX>Aantal samenvoegingen: {0}</NumberOfMergesX>
     <MergedText>Samengevoegde tekst</MergedText>
@@ -1314,7 +1314,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <LinesFoundX>Gevonden regels: {0}</LinesFoundX>
     <Delete>Verwĳderen</Delete>
     <Add>Toevoegen</Add>
-    <Update>&amp;Update</Update>
+    <Update>Bĳwerken</Update>
     <Enabled>Ingeschakeld</Enabled>
     <SearchType>Soort zoekopdracht</SearchType>
     <RemoveAll>Alles verwĳderen</RemoveAll>
@@ -1373,7 +1373,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <UnableToDownloadPluginListX>Kan plug-in lĳst niet downloaden: {0}</UnableToDownloadPluginListX>
     <NewVersionOfSubtitleEditRequired>Nieuwere versie van Subtitle Edit nodig!</NewVersionOfSubtitleEditRequired>
     <UpdateAvailable>[Update beschikbaar!]</UpdateAvailable>
-    <UpdateAll>Alles  bĳwerken</UpdateAll>
+    <UpdateAll>Alles bĳwerken</UpdateAll>
     <XPluginsUpdated>{0} plug-in(s) bĳgewerkt</XPluginsUpdated>
   </PluginsGet>
   <RegularExpressionContextMenu>
@@ -1382,16 +1382,16 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <NewLine>Regeleinde (\r\n)</NewLine>
     <NewLineShort>Regeleinde (\n)</NewLineShort>
     <AnyDigit>Elk cĳfer (\d)</AnyDigit>
-    <AnyCharacter>Elk karakter (.)</AnyCharacter>
+    <AnyCharacter>Elk teken (.)</AnyCharacter>
     <AnyWhitespace>Elke witruimte (\s)</AnyWhitespace>
     <ZeroOrMore>Nul of meer (*)</ZeroOrMore>
     <OneOrMore>Eén of meer (+)</OneOrMore>
-    <InCharacterGroup>In karaktergroep ([test])</InCharacterGroup>
-    <NotInCharacterGroup>Niet in karaktergroep ([^test])</NotInCharacterGroup>
+    <InCharacterGroup>In tekengroep ([test])</InCharacterGroup>
+    <NotInCharacterGroup>Niet in tekengroep ([^test])</NotInCharacterGroup>
   </RegularExpressionContextMenu>
   <RemoveTextFromHearImpaired>
-    <Title>Tekst voor slechthorenden verwĳderen</Title>
-    <RemoveTextConditions>Tekstvoorwaarden verwĳderen</RemoveTextConditions>
+    <Title>Tekst voor doven en slechthorenden verwĳderen</Title>
+    <RemoveTextConditions>Voorwaarden voor verwĳderen</RemoveTextConditions>
     <RemoveTextBetween>Tekst verwĳderen tussen</RemoveTextBetween>
     <SquareBrackets>'[' en ']'</SquareBrackets>
     <Brackets>'{' en '}'</Brackets>
@@ -1440,7 +1440,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ShowOnlyModifiedLines>Toon alleen gewĳzigde regels</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minimum milliseconden tussen regels</MinimumMillisecondsBetweenParagraphs>
     <FrameInfo>Beeldsnelheid info</FrameInfo>
-    <OneFrameXisYMilliseconds>Een beeld op {0:0.00} fps is {1} milliseconden</OneFrameXisYMilliseconds>
+    <OneFrameXisYMilliseconds>Eén beeld op {0:0.00} fps is {1} milliseconden</OneFrameXisYMilliseconds>
   </SetMinimumDisplayTimeBetweenParagraphs>
   <SetSyncPoint>
     <Title>Sync-punt voor tekst {0} bepalen</Title>
@@ -1451,12 +1451,12 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <ThreeSecondsForward>3 sec. &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
-    <Title>Instellingen</Title>
+    <Title>Voorkeuren</Title>
     <General>Algemeen</General>
     <Toolbar>Werkbalk</Toolbar>
     <VideoPlayer>Videospeler</VideoPlayer>
     <WaveformAndSpectrogram>Golfvorm/Spectrogram</WaveformAndSpectrogram>
-    <Tools>Gereedschappen</Tools>
+    <Tools>Extra</Tools>
     <WordLists>Woordenlĳsten</WordLists>
     <SsaStyle>SSA stĳl</SsaStyle>
     <Proxy>Proxy</Proxy>
@@ -1467,9 +1467,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SaveAs>Opslaan als</SaveAs>
     <Find>Zoeken</Find>
     <Replace>Vervangen</Replace>
-    <VisualSync>Visuele sync</VisualSync>
+    <VisualSync>Visuele synchronisatie</VisualSync>
     <SpellCheck>Spellingcontrole</SpellCheck>
-    <SettingsName>Instellingen</SettingsName>
+    <SettingsName>Voorkeuren</SettingsName>
     <Help>Help</Help>
     <ShowFrameRate>Toon beeldsnelheid in de werkbalk</ShowFrameRate>
     <DefaultFrameRate>Standaard beeldsnelheid</DefaultFrameRate>
@@ -1478,9 +1478,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SubtitleLineMaximumLength>Max. lengte enkele regel</SubtitleLineMaximumLength>
     <MaximumCharactersPerSecond>Max. tekens/sec.</MaximumCharactersPerSecond>
     <AutoWrapWhileTyping>Tekstomloop tĳdens het typen</AutoWrapWhileTyping>
-    <DurationMinimumMilliseconds>Min. tĳdsduur, milliseconden</DurationMinimumMilliseconds>
-    <DurationMaximumMilliseconds>Max. tĳdsduur, milliseconden</DurationMaximumMilliseconds>
-    <MinimumGapMilliseconds>Min. ruimte tussen ondertitels in ms</MinimumGapMilliseconds>
+    <DurationMinimumMilliseconds>Min. tĳdsduur in milliseconden</DurationMinimumMilliseconds>
+    <DurationMaximumMilliseconds>Max. tĳdsduur in milliseconden</DurationMaximumMilliseconds>
+    <MinimumGapMilliseconds>Min. ruimte tussen ondertitels in msec.</MinimumGapMilliseconds>
     <SubtitleFont>Ondertitel lettertype</SubtitleFont>
     <SubtitleFontSize>Ondertitel lettergrootte</SubtitleFontSize>
     <SubtitleBold>Vet</SubtitleBold>
@@ -1500,9 +1500,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainListViewVideoGoToPositionAndPause>Ga naar videopositie en pauzeer</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ga naar videopositie en speel af</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Ga naar tekstbewerkingsvak</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar videopositie - 1 s en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
-    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie - ½ s en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
-    <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie - 1 s en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar videopositie  min 1 seconde en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie min ½ seconde en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie min 1 seconde en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Ga naar tekstbewerkingsvak en pauzeer op videopositie</MainListViewEditTextAndPause>
     <AutoBackup>Automatische back-up</AutoBackup>
     <AutoBackupEveryMinute>Elke minuut</AutoBackupEveryMinute>
@@ -1537,8 +1537,8 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformShowGridLines>Toon rasterlĳnen</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Muiswiel scrollrichting omkeren</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Sta overlap toe (bĳ verplaatsen/herschalen)</WaveformAllowOverlap>
-    <WaveformFocusMouseEnter>Op muis invoer focussen</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Ook op muis invoer focusen in de lĳstweergave</WaveformListViewFocusMouseEnter>
+    <WaveformFocusMouseEnter>Op muisinvoer focussen</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Ook op muisinvoer focusen in de lĳstweergave</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>Laat herpositionering toe binnen</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milliseconden</WaveformBorderHitMs2>
     <WaveformColor>Golfvormkleur</WaveformColor>
@@ -1640,10 +1640,10 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WaveformFocusListView>Focus lĳstweergave</WaveformFocusListView>
     <GoBack1Frame>Eén frame terug</GoBack1Frame>
     <GoForward1Frame>Eén frame vooruit</GoForward1Frame>
-    <GoBack100Milliseconds>100 ms terug</GoBack100Milliseconds>
-    <GoForward100Milliseconds>100 ms naar voren</GoForward100Milliseconds>
-    <GoBack500Milliseconds>500 ms terug</GoBack500Milliseconds>
-    <GoForward500Milliseconds>500 ms naar voren</GoForward500Milliseconds>
+    <GoBack100Milliseconds>100 msec. terug</GoBack100Milliseconds>
+    <GoForward100Milliseconds>100 msec. vooruit</GoForward100Milliseconds>
+    <GoBack500Milliseconds>500 msec. terug</GoBack500Milliseconds>
+    <GoForward500Milliseconds>500 msec. vooruit</GoForward500Milliseconds>
     <GoBack1Second>Eén seconde terug</GoBack1Second>
     <GoForward1Second>Eén seconde vooruit</GoForward1Second>
     <TogglePlayPause>Verander tussen afspelen/pauze</TogglePlayPause>
@@ -1655,13 +1655,13 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <CustomSearch4>Vertalen, op maat zoeken 4</CustomSearch4>
     <CustomSearch5>Vertalen, op maat zoeken 5</CustomSearch5>
     <CustomSearch6>Vertalen, op maat zoeken 6</CustomSearch6>
-    <SyntaxColoring>Syntaxiskleuren</SyntaxColoring>
-    <ListViewSyntaxColoring>Lĳstweergave syntaxiskleuren</ListViewSyntaxColoring>
-    <SyntaxColorDurationIfTooSmall>Tĳdsduurkleur indien te kort</SyntaxColorDurationIfTooSmall>
-    <SyntaxColorDurationIfTooLarge>Tĳdsduurkleur indien te lang</SyntaxColorDurationIfTooLarge>
-    <SyntaxColorTextIfTooLong>Tekstkleur indien te lang</SyntaxColorTextIfTooLong>
-    <SyntaxColorTextMoreThanXLines>Tekstkleur bĳ meer regels dan:</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>Tĳdcodekleur bĳ overlap</SyntaxColorOverlap>
+    <SyntaxColoring>Syntaxiskleuring</SyntaxColoring>
+    <ListViewSyntaxColoring>Lĳstweergave syntaxiskleuring</ListViewSyntaxColoring>
+    <SyntaxColorDurationIfTooSmall>Kleur tĳdsduur indien te kort</SyntaxColorDurationIfTooSmall>
+    <SyntaxColorDurationIfTooLarge>Kleur tĳdsduur indien te lang</SyntaxColorDurationIfTooLarge>
+    <SyntaxColorTextIfTooLong>Kleur tekst indien te lang</SyntaxColorTextIfTooLong>
+    <SyntaxColorTextMoreThanXLines>Kleur tekst bĳ meer regels dan:</SyntaxColorTextMoreThanXLines>
+    <SyntaxColorOverlap>Kleur tĳdcode bĳ overlap</SyntaxColorOverlap>
     <SyntaxErrorColor>Foutkleur</SyntaxErrorColor>
     <GoToFirstSelectedLine>Ga naar eerste geselecteerde regel</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Ga naar volgende lege regel</GoToNextEmptyLine>
@@ -1701,14 +1701,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <TotalAdjustmentX>Totale aanpassing: {0}</TotalAdjustmentX>
     <AllLines>Alle regels</AllLines>
     <SelectedLinesOnly>Alleen geselecteerde regels</SelectedLinesOnly>
-    <SelectedLinesAndForward>Geselecteerde en daaropvolgende regel(s)</SelectedLinesAndForward>
+    <SelectedLinesAndForward>Geselecteerde en daaropvolgende regels</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Geschiedenis (voor ongedaan maken)</Title>
     <SelectRollbackPoint>Selecteer tĳd/omschrĳving voor terugdraaiing</SelectRollbackPoint>
     <Time>Tĳd</Time>
     <Description>Omschrĳving</Description>
-    <CompareHistoryItems>Vergelĳk geschiedenis items</CompareHistoryItems>
+    <CompareHistoryItems>Vergelĳk geschiedenisitems</CompareHistoryItems>
     <CompareWithCurrent>Vergelĳk met de huidige</CompareWithCurrent>
     <Rollback>Terugdraaien</Rollback>
   </ShowHistory>
@@ -1718,9 +1718,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <WordNotFound>Woord niet gevonden</WordNotFound>
     <Language>Taal</Language>
     <Change>Deze wĳzigen</Change>
-    <ChangeAll>Allen wĳzigen</ChangeAll>
+    <ChangeAll>Alle &amp;wĳzigen</ChangeAll>
     <SkipOnce>Deze overslaan</SkipOnce>
-    <SkipAll>&amp;Allen overslaan</SkipAll>
+    <SkipAll>Alle &amp;overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan naam/ruis-lĳst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
     <AddToOcrReplaceList>Paar toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
@@ -1742,13 +1742,13 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
   </SpellCheck>
   <Split>
     <Title>Splits</Title>
-    <SplitOptions>Splits opties</SplitOptions>
+    <SplitOptions>Splitsopties</SplitOptions>
     <Lines>Regels</Lines>
-    <Characters>Karakters</Characters>
+    <Characters>Tekens</Characters>
     <NumberOfEqualParts>Aantal gelĳke delen</NumberOfEqualParts>
     <SubtitleInfo>Ondertitel informatie</SubtitleInfo>
     <NumberOfLinesX>Aantal regels: {0:#,###}</NumberOfLinesX>
-    <NumberOfCharactersX>Aantal karakters: {0:#,###,###}</NumberOfCharactersX>
+    <NumberOfCharactersX>Aantal tekens: {0:#,###,###}</NumberOfCharactersX>
     <Output>Uitvoer</Output>
     <FileName>Bestandsnaam</FileName>
     <OutputFolder>Doelmap</OutputFolder>
@@ -1794,9 +1794,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MostUsedWords>Meest gebruikte woorden</MostUsedWords>
     <NothingFound>Niets gevonden</NothingFound>
     <NumberOfLinesX>Aantal ondertitelregels: {0:#,###}</NumberOfLinesX>
-    <LengthInFormatXinCharactersY>Aantal karakters als {0}: {1: #, ###, ##0}</LengthInFormatXinCharactersY>
-    <NumberOfCharactersInTextOnly>Aantal tekstkarakters alleen: {0:#,###,##0}</NumberOfCharactersInTextOnly>
-    <TotalCharsPerSecond>Totaal karakters/seconde: {0:0.0} seconden</TotalCharsPerSecond>
+    <LengthInFormatXinCharactersY>Aantal tekens als {0}: {1: #, ###, ##0}</LengthInFormatXinCharactersY>
+    <NumberOfCharactersInTextOnly>Aantal teksttekens alleen: {0:#,###,##0}</NumberOfCharactersInTextOnly>
+    <TotalCharsPerSecond>Totaal tekens/seconde: {0:0.0} seconden</TotalCharsPerSecond>
     <NumberOfItalicTags>Aantal cursief tags: {0}</NumberOfItalicTags>
     <NumberOfBoldTags>Aantal vet tags: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Aantal onderstrepen tags: {0}</NumberOfUnderlineTags>
@@ -1812,9 +1812,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <DurationMinimum>Duur - minimum: {0:0.000} seconden</DurationMinimum>
     <DurationMaximum>Duur - maximum: {0:0.000} seconden</DurationMaximum>
     <DurationAverage>Duur - gemiddeld: {0:0.000} seconden</DurationAverage>
-    <CharactersPerSecondMinimum>Karakters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
-    <CharactersPerSecondMaximum>Karakters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
-    <CharactersPerSecondAverage>Karakters/sec - gemiddeld: {0:0.000}</CharactersPerSecondAverage>
+    <CharactersPerSecondMinimum>Tekens/sec. - minimum: {0:0.000}</CharactersPerSecondMinimum>
+    <CharactersPerSecondMaximum>Tekens/sec. - maximum: {0:0.000}</CharactersPerSecondMaximum>
+    <CharactersPerSecondAverage>Tekens/sec. - gemiddeld: {0:0.000}</CharactersPerSecondAverage>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced SubStation Alpha eigenschappen</Title>
@@ -1908,9 +1908,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <StartScene>Startscène</StartScene>
     <EndScene>Eindscène</EndScene>
     <Synchronize>Synchroniseren</Synchronize>
-    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Speel {0} s en terug</PlayXSecondsAndBack>
+    <HalfASecondBack>&lt; ½ sec.</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 sec.</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Speel {0} sec. en terug</PlayXSecondsAndBack>
     <FindText>Tekst zoeken</FindText>
     <GoToSubPosition>Ga naar ondertitel positie</GoToSubPosition>
     <KeepChangesTitle>Wĳzigingen behouden?</KeepChangesTitle>
@@ -1919,7 +1919,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
 Wĳzigingen behouden?</KeepChangesMessage>
     <SynchronizationDone>Synchroniseren voltooid!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Startscène moet vóór eindscène komen!</StartSceneMustComeBeforeEndScene>
-    <Tip>Tip: Gebruik &lt;ctrl+pĳl links/rechts&gt; om 100 ms terug/verder te gaan</Tip>
+    <Tip>Tip: Gebruik &lt;ctrl+pĳl links/rechts&gt; om 100 msec. terug/verder te gaan</Tip>
   </VisualSync>
   <VobSubEditCharacters>
     <Title>Bewerken beeld vergelĳken databank</Title>
@@ -1956,7 +1956,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <ConvertingImageCompareDatabase>Beeldvergelĳkingsdatabankformaat updaten (images.db/images.xml)...</ConvertingImageCompareDatabase>
     <SubtitleImage>Ondertitel beeld</SubtitleImage>
     <SubtitleText>Ondertitel tekst</SubtitleText>
-    <UnableToCreateCharacterDatabaseFolder>Kan 'Karakter databank map' {0} niet maken</UnableToCreateCharacterDatabaseFolder>
+    <UnableToCreateCharacterDatabaseFolder>Kan tekendatabankmap {0} niet maken</UnableToCreateCharacterDatabaseFolder>
     <SubtitleImageXofY>Ondertitel beeld {0} van {1}</SubtitleImageXofY>
     <ImagePalette>Afbeeldingspalet</ImagePalette>
     <UseCustomColors>Aangepaste kleuren gebruiken</UseCustomColors>
@@ -1968,7 +1968,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <PromptForUnknownWords>Vraag naar onbekende woorden</PromptForUnknownWords>
     <TryToGuessUnkownWords>Probeer onbekende woorden te raden</TryToGuessUnkownWords>
     <AutoBreakSubtitleIfMoreThanTwoLines>Auto einde paragraaf als er meer dan twee regels zĳn</AutoBreakSubtitleIfMoreThanTwoLines>
-    <AllFixes>Alle herstellingen</AllFixes>
+    <AllFixes>Alle correcties</AllFixes>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
     <OcrAutoCorrectionSpellChecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellChecking>
@@ -1995,8 +1995,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <ShrinkSelection>Selectie verkleinen</ShrinkSelection>
     <ExpandSelection>Selectie uitbreiden</ExpandSelection>
     <SubtitleImage>Ondertitelbeeld</SubtitleImage>
-    <Characters>Karakter(s)</Characters>
-    <CharactersAsText>Karakter(s) als tekst</CharactersAsText>
+    <Characters>Teken(s)</Characters>
+    <CharactersAsText>Teken(s) als tekst</CharactersAsText>
     <Italic>&amp;Cursief</Italic>
     <Abort>&amp;Afbreken</Abort>
     <Skip>&amp;Overslaan</Skip>
@@ -2013,7 +2013,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Nieuwe map</Title>
-    <Message>Naam van de nieuwe karakter databankmap</Message>
+    <Message>Naam van de nieuwe tekendatabankmap</Message>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
     <Title>Decursiveringsfactor bepalen</Title>
@@ -2023,8 +2023,8 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <ClickToAddWaveform>Klik om golfvorm toe te voegen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klik om golfvorm/spectrogram toe te voegen</ClickToAddWaveformAndSpectrogram>
     <Seconds>Seconden</Seconds>
-    <ZoomIn>Zoom in</ZoomIn>
-    <ZoomOut>Zoom uit</ZoomOut>
+    <ZoomIn>Inzoomen</ZoomIn>
+    <ZoomOut>Uitzoomen</ZoomOut>
     <AddParagraphHere>Tekst hier invoegen</AddParagraphHere>
     <AddParagraphHereAndPasteText>Klembordtekst hier invoegen</AddParagraphHereAndPasteText>
     <FocusTextBox>Focus op tekstveld</FocusTextBox>
@@ -2047,7 +2047,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Beginning>Begin</Beginning>
     <DeleteLines>Regels verwĳderen</DeleteLines>
     <FromCurrentVideoPosition>Vanaf de huidige videopositie</FromCurrentVideoPosition>
-    <DetectOptions>Detecteer opties</DetectOptions>
+    <DetectOptions>Detectieopties</DetectOptions>
     <ScanBlocksOfMs>Scan blokken van milliseconden</ScanBlocksOfMs>
     <BlockAverageVolMin1>Blokgemiddelde volume moet boven</BlockAverageVolMin1>
     <BlockAverageVolMin2>% van het totale gemiddelde volume</BlockAverageVolMin2>

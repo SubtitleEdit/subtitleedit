@@ -1329,7 +1329,7 @@ Fortsæt?</SubtitleAppendPrompt>
   <NetworkJoin>
     <Title>Deltag i netværks-session</Title>
     <Information>Hop med i en eksisterende session, hvor flere personer
- kan redigere i samme undertekst fil (fælles projekt online)</Information>
+kan redigere i samme undertekst fil (fælles projekt online)</Information>
     <Join>Deltag</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1340,7 +1340,7 @@ Fortsæt?</SubtitleAppendPrompt>
     <Title>Start netværks-session</Title>
     <ConnectionTo>Forbinder til {0}...</ConnectionTo>
     <Information>Start ny session, hvor flere personer
- kan redigere i samme undertekst fil (fælles online projekt)</Information>
+kan redigere i samme undertekst fil (fælles online projekt)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>

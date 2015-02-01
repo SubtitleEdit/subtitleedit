@@ -144,7 +144,7 @@
             // checkBoxSplitLongLines
             // 
             this.checkBoxSplitLongLines.AutoSize = true;
-            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(16, 145);
+            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 145);
             this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
             this.checkBoxSplitLongLines.Size = new System.Drawing.Size(93, 17);
             this.checkBoxSplitLongLines.TabIndex = 8;
@@ -165,7 +165,7 @@
             // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 191);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 191);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(208, 17);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
@@ -175,7 +175,7 @@
             // checkBoxAutoBalance
             // 
             this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 168);
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 168);
             this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
             this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
             this.checkBoxAutoBalance.TabIndex = 8;
@@ -196,7 +196,7 @@
             // checkBoxMultipleReplace
             // 
             this.checkBoxMultipleReplace.AutoSize = true;
-            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(16, 122);
+            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 122);
             this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
             this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
             this.checkBoxMultipleReplace.TabIndex = 6;
@@ -206,7 +206,7 @@
             // checkBoxFixCommonErrors
             // 
             this.checkBoxFixCommonErrors.AutoSize = true;
-            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(16, 97);
+            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 97);
             this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
             this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
             this.checkBoxFixCommonErrors.TabIndex = 4;
@@ -328,7 +328,7 @@
             // checkBoxFixCasing
             // 
             this.checkBoxFixCasing.AutoSize = true;
-            this.checkBoxFixCasing.Location = new System.Drawing.Point(16, 47);
+            this.checkBoxFixCasing.Location = new System.Drawing.Point(15, 47);
             this.checkBoxFixCasing.Name = "checkBoxFixCasing";
             this.checkBoxFixCasing.Size = new System.Drawing.Size(95, 17);
             this.checkBoxFixCasing.TabIndex = 1;
@@ -338,7 +338,7 @@
             // checkBoxRemoveTextForHI
             // 
             this.checkBoxRemoveTextForHI.AutoSize = true;
-            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(16, 72);
+            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(15, 72);
             this.checkBoxRemoveTextForHI.Name = "checkBoxRemoveTextForHI";
             this.checkBoxRemoveTextForHI.Size = new System.Drawing.Size(115, 17);
             this.checkBoxRemoveTextForHI.TabIndex = 2;
@@ -348,7 +348,7 @@
             // checkBoxRemoveFormatting
             // 
             this.checkBoxRemoveFormatting.AutoSize = true;
-            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(16, 22);
+            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(15, 22);
             this.checkBoxRemoveFormatting.Name = "checkBoxRemoveFormatting";
             this.checkBoxRemoveFormatting.Size = new System.Drawing.Size(115, 17);
             this.checkBoxRemoveFormatting.TabIndex = 0;
