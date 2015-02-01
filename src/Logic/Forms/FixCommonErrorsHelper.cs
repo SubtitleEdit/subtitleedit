@@ -341,16 +341,21 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 if (addSecondLine)
                                 {
                                     // add dash in second line.
-                                    if (text.Contains(Environment.NewLine + "<i>"))
-                                        text = text.Replace(Environment.NewLine + "<i>", Environment.NewLine + "<i>- ");
+                                    newLineIdx += 2;
+                                    if(text.LineBreakStartsWithHtmlTag(true))
+                                    {
+                                        text = text.Insert(newLineIdx + 3, "- ");
+                                    }
                                     else
+                                    {
                                         text = text.Replace(Environment.NewLine, Environment.NewLine + "- ").Replace(Environment.NewLine + "-  ", Environment.NewLine + "- ");
+                                    }
                                 }
                                 else
                                 {
                                     // add dash in first line.
-                                    if (text.StartsWith("<i>", StringComparison.Ordinal))
-                                        text = "<i>- " + text.Remove(0, 3).Trim();
+                                    if (text.LineStartsWithHtmlTag(true))
+                                        text = text.Substring(0, 3) + "- " + text.Remove(0, 3).Trim();
                                     else if (text.StartsWith("{\\an", StringComparison.Ordinal) && text.Length > 6 && text[5] == '}')
                                         text = text.Insert(6, "- ");
                                     else
