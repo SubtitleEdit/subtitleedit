@@ -314,20 +314,22 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
-                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-') || Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith("--", StringComparison.Ordinal))
+                if (prev == null || !Utilities.RemoveHtmlTags(prev.Text).TrimEnd().EndsWith('-'))
                 {
-                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
-                    int startHyphenCount = lines.Count(line => line.TrimStart().StartsWith('-'));
-                    if (startHyphenCount == 1)
+                    var noTagLines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
+                    int startHyphenCount = noTagLines.Count(line => line.TrimStart().StartsWith('-'));
+                    int totalHyphen = Utilities.CountTagInText(text, " -");
+
+                    if (startHyphenCount == 1 && totalHyphen == 0)
                     {
-                        var parts = Utilities.RemoveHtmlTags(text).SplitToLines();
-                        if (parts.Length == 2)
+                        var noTagsParts = Utilities.RemoveHtmlTags(text).SplitToLines();
+                        if (noTagsParts.Length == 2)
                         {
-                            var part0 = parts[0].TrimEnd();
+                            var part0 = noTagsParts[0].TrimEnd();
                             bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || language == "ko";
-                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':') && !doAdd)
+                            if (noTagsParts[0].TrimStart().StartsWith('-') && noTagsParts[1].Contains(':') && !doAdd)
                                 doAdd = false;
-                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':') && !doAdd)
+                            if (noTagsParts[1].TrimStart().StartsWith('-') && noTagsParts[0].Contains(':') && !doAdd)
                                 doAdd = false;
 
                             if (doAdd)
