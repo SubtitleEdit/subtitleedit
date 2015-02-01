@@ -1005,19 +1005,22 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                var text = Subtitle.Paragraphs[i].Text;
-                if (text.Contains('<'))
+                if (AllowFix(Subtitle.Paragraphs[i], fixAction))
                 {
-                    text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
-                    string oldText = text;
-
-                    text = Utilities.FixInvalidItalicTags(text);
-                    if (AllowFix(Subtitle.Paragraphs[i], fixAction) && text != oldText)
+                    var text = Subtitle.Paragraphs[i].Text;
+                    if (text.Contains('<'))
                     {
-                        Subtitle.Paragraphs[i].Text = text;
-                        noOfInvalidHtmlTags++;
-                        AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
-                    }
+                        text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
+                        string oldText = text;
+
+                        text = Utilities.FixInvalidItalicTags(text);
+                        if (text != oldText)
+                        {
+                            Subtitle.Paragraphs[i].Text = text;
+                            noOfInvalidHtmlTags++;
+                            AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
+                        }
+                    } 
                 }
             }
             listViewFixes.EndUpdate();
