@@ -11,7 +11,6 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-
     public sealed partial class GoogleTranslate : PositionAndSizeForm
     {
         private Subtitle _subtitle;
@@ -317,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
-            //            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            //string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
             input = input.Replace(Environment.NewLine, NewlineString);
