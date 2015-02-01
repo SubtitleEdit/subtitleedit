@@ -879,7 +879,7 @@ namespace Nikse.SubtitleEdit.Forms
                 skip = true;
                 foreach (Paragraph p in sub.Paragraphs)
                 {
-                    if (p.Text != null && p.Text.Contains(textBoxFilter.Text))
+                    if (p.Text != null && p.Text.Contains(textBoxFilter.Text, StringComparison.Ordinal))
                     {
                         skip = false;
                         break;

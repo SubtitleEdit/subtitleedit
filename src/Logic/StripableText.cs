@@ -39,7 +39,6 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     // ASS/SSA codes like {\an9}
-
                     if (text.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         int endIndex = text.IndexOf('}');
