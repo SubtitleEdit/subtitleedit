@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1} {0} |", p.Text.Replace("|", NewlineString), SplitterString);
+                    string text = string.Format("{1} {0} |", p.Text, SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
