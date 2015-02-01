@@ -108,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         buffer[10] = 3;
                     fs.Write(buffer, 0, buffer.Length);
 
-                    text = Utilities.RemoveHtmlTags(text);
+                    text = HtmlUtil.RemoveHtmlTags(text);
                     if (text.Length > 118)
                         text = text.Substring(0, 118);
                     fs.WriteByte((byte)(text.Length));

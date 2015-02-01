@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -42,7 +43,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int index = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{0}" + Environment.NewLine + "{1}", EncodeTimeCode(p.StartTime), Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
+                sb.AppendLine(string.Format("{0}" + Environment.NewLine + "{1}", EncodeTimeCode(p.StartTime), HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, " "))));
                 index++;
             }
             return sb.ToString();

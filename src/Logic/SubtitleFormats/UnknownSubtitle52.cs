@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -72,7 +73,7 @@ SW_VER: 2.25";
                 string startTime = string.Format(timeFormat, p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds));
                 string endTime = string.Format(timeFormat, p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
                 string duration = string.Format(timeFormat, p.Duration.Hours, p.Duration.Minutes, p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds));
-                sb.AppendLine(string.Format(paragraphWriteFormat, number, startTime, endTime, duration, Utilities.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format(paragraphWriteFormat, number, startTime, endTime, duration, HtmlUtil.RemoveHtmlTags(p.Text)));
                 number++;
             }
             return sb.ToString().Trim();

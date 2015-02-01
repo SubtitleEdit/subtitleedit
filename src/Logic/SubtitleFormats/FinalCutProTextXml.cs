@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 end.InnerText = ((int)Math.Round(p.EndTime.TotalSeconds * frameRate)).ToString();
 
                 XmlNode text = generatorItem.SelectSingleNode("generatoritem/effect/parameter[parameterid='str']/value");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
                 text.InnerXml = text.InnerXml.Replace(Environment.NewLine, newLine);
 
                 trackNode.AppendChild(generatorItem.SelectSingleNode("generatoritem"));

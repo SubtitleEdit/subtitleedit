@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -209,7 +210,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddToPreviewListView(p, newText);
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
-                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || Utilities.RemoveHtmlTags(newText, true).Trim().Length == 0))
+                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || HtmlUtil.RemoveHtmlTags(newText, true).Trim().Length == 0))
                     {
                         DeleteIndices.Add(index);
                     }

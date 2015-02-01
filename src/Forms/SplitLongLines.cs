@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string s = Utilities.RemoveHtmlTags(p.Text);
+                string s = HtmlUtil.RemoveHtmlTags(p.Text);
                 if (s.Length > maxLength)
                 {
                     maxLength = s.Length;
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = subtitle.GetParagraphOrDefault(i);
                 if (p != null && p.Text != null)
                 {
-                    string oldText = Utilities.RemoveHtmlTags(p.Text);
+                    string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
                         bool isDialog = false;
@@ -229,9 +229,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
-                                    if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
+                                    if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
                                     {
-                                        var startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                                        var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
                                         if (startFactor < 0.25)
                                             startFactor = 0.25;
                                         if (startFactor > 0.75)
@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
-                                    string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
+                                    string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
                                     if (p1.EndsWith('.') || p1.EndsWith('!') || p1.EndsWith('?') || p1.EndsWith(':') || p1.EndsWith(')') || p1.EndsWith(']') || p1.EndsWith('♪'))
                                     {
                                         if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -58,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "|");
                 sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3}", p.StartTime.Hours,
                                                                p.StartTime.Minutes,

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -45,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 index++;
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\n\n");
                 sb.AppendFormat("{0}:{1} {2} {3}\n{4}\n\n", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), EncodeDuration(p), text);
             }

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -768,7 +769,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             using (var blackBrush = new SolidBrush(Color.Black))
                             {
-                                var text = Utilities.RemoveHtmlTags(paragraph.Text, true);
+                                var text = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
                                 text = text.Replace(Environment.NewLine, "  ");
 
                                 int w = currentRegionRight - currentRegionLeft;

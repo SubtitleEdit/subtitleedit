@@ -176,7 +176,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (checkLastLine)
             {
-                string s = Utilities.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
+                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
                                           s.EndsWith('.') ||

@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     // Replace remaining italics tags
                     text = text.Replace("<i>", @"[");
                     text = text.Replace("</i>", @"]");
-                    text = Utilities.RemoveHtmlTags(text);
+                    text = HtmlUtil.RemoveHtmlTags(text);
                 }
 
                 // Add top-position SoftNI marker "}" at the beginning of first line.

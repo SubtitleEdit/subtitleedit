@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode paragraph = xml.CreateElement("marker");
                 paragraph.InnerXml = string.Format(CultureInfo.InvariantCulture, innerXml, p.StartTime.TotalSeconds, p.Duration.TotalSeconds);
-                paragraph.SelectSingleNode("comment").Attributes["value"].InnerText = Utilities.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "||");
+                paragraph.SelectSingleNode("comment").Attributes["value"].InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "||");
                 root.AppendChild(paragraph);
             }
 

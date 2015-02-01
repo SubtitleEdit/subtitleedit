@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -59,7 +60,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.AppendLine(p.Actor.ToUpper());
                 else
                     sb.AppendLine("UNKNOWN ACTOR");
-                sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
+                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine();
             }
             return sb.ToString();

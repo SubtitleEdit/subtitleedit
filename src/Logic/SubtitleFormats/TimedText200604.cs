@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("p", "http://www.w3.org/2006/04/ttaf1");
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
 
                 bool first = true;
                 foreach (string line in text.SplitToLines())

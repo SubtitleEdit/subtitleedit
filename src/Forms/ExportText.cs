@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -113,7 +114,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string s = p.Text;
                 if (removeStyling)
                 {
-                    s = Utilities.RemoveHtmlTags(s, true);
+                    s = HtmlUtil.RemoveHtmlTags(s, true);
                 }
 
                 if (formatUnbreak)

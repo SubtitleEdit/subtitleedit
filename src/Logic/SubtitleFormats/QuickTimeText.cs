@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -54,7 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //[00:00:26.26]
                 //tout le temps,
                 //[00:00:35.08]
-                sb.AppendLine(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime) + Environment.NewLine, Utilities.RemoveHtmlTags(p.Text) + Environment.NewLine, EncodeTimeCode(p.EndTime) + Environment.NewLine));
+                sb.AppendLine(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime) + Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text) + Environment.NewLine, EncodeTimeCode(p.EndTime) + Environment.NewLine));
                 index++;
             }
             return sb.ToString();

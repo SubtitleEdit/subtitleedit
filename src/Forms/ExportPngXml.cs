@@ -1513,7 +1513,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private static int CalcWidthViaDraw(string text, MakeBitmapParameter parameter)
         {
-            //text = Utilities.RemoveHtmlTags(text, true).Trim();
+            //text = HtmlUtil.RemoveHtmlTags(text, true).Trim();
             text = text.Trim();
             var path = new GraphicsPath();
             var sb = new StringBuilder();
@@ -1876,7 +1876,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 using (var bmpTemp = new Bitmap(1, 1))
                 using (var g = Graphics.FromImage(bmpTemp))
                 {
-                    textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
+                    textSize = g.MeasureString(HtmlUtil.RemoveHtmlTags(text), font);
                 }
                 int sizeX = (int)(textSize.Width * 1.8) + 150;
                 int sizeY = (int)(textSize.Height * 0.9) + 50;
@@ -1967,7 +1967,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             parameter.SubtitleColor = Utilities.GetColorFromFontString(text, parameter.SubtitleColor);
                         }
 
-                        text = Utilities.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
+                        text = HtmlUtil.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
                         var brush = new SolidBrush(parameter.BorderColor);
                         int x = 3;
                         const int y = 3;
@@ -3406,7 +3406,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int indexOfEndBracket = p.Text.IndexOf('}');
                         if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1);
-                        p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = p.Text.Replace("<" + BoxSingleLine + ">", string.Empty).Replace("</" + BoxSingleLine + ">", string.Empty);
                         p.Text = p.Text.Replace("<" + BoxMultiLine + ">", string.Empty).Replace("</" + BoxMultiLine + ">", string.Empty);
 

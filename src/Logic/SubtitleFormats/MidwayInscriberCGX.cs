@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -36,7 +37,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             StringBuilder sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                sb.AppendLine(string.Format("{3} <{0}> <{1}>{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format("{3} <{0}> <{1}>{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
                 //Var vi bedre end japanerne
                 //eller bare mere heldige? <12:03:29:03> <12:03:35:06>
             }

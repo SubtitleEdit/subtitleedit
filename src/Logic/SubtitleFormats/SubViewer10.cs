@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             sb.AppendFormat(header, title);
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "|"));
+                string text = HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "|"));
 
                 sb.AppendLine(string.Format(paragraphWriteFormat,
                                         p.StartTime.Hours,
