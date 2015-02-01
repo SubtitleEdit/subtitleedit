@@ -2322,7 +2322,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                         if (StartsAndEndsWithTag(firstLine, beginTag, endTag) && StartsAndEndsWithTag(secondLine, beginTag, endTag))
                         {
-                            text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty);
+                            text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty).Trim();
                             text = beginTag + text + endTag;
                         }
                     }
@@ -2341,7 +2341,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         text = text.Replace("<i>", string.Empty);
                         text = text.Replace("</i>", string.Empty);
-                        text = text.Replace("  ", " ");
+                        text = text.Replace("  ", " ").Trim();
                         text = "<i>" + text + "</i>";
                     }
                 }
