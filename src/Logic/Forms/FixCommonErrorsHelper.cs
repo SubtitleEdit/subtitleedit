@@ -288,10 +288,20 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
             text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
             text = text.Replace(Environment.NewLine + "<b> ", Environment.NewLine + "<b>");
-            if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
-                text = text.Remove(3, 1);
-            if (text.StartsWith("<b> ", StringComparison.OrdinalIgnoreCase))
-                text = text.Remove(3, 1);
+            text = text.Replace(Environment.NewLine + "<u> ", Environment.NewLine + "<u>");
+
+            if (text.LineStartsWithHtmlTag(true) && text[3] == 0x20)
+            {
+                text = text.Remove(3, 1).TrimStart();
+            }
+            if (text.LineStartsWithHtmlTag(false, true))
+            {
+                var closeIdx = text.IndexOf('>');
+                if (closeIdx > -1 && text[closeIdx + 1] == 0x20)
+                {
+                    text = text.Remove(closeIdx + 1, 1);
+                }
+            }
             return text;
         }
 
