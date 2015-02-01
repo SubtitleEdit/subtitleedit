@@ -331,8 +331,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleListReferenceCode>Código de referência da lista da legenda</SubtitleListReferenceCode>
     <CountryOfOrigin>País de origem</CountryOfOrigin>
     <RevisionNumber>Número da revisão</RevisionNumber>
-    <MaxNoOfDisplayableChars> Nº máx. caracteres por linha</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows> Nº máx. linhas</MaxNumberOfDisplayableRows>
+    <MaxNoOfDisplayableChars>Nº máx. caracteres por linha</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Nº máx. linhas</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Número de sequência do disco</DiskSequenceNumber>
     <TotalNumberOfDisks>Número total de discos</TotalNumberOfDisks>
     <Import>Importar...</Import>
@@ -1325,7 +1325,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <Title>Iniciar sessão de rede</Title>
     <ConnectionTo>Conectando a {0}...</ConnectionTo>
     <Information>Começar nova sesão onde várias pessoas
- podem editar o mesmo arquivo de legenda (colaboração)</Information>
+podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Start>Início</Start>
   </NetworkStart>
   <OpenVideoDvd>
