@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using System.Xml;
 using Nikse.SubtitleEdit.Logic;
 
@@ -3557,6 +3557,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "MultipleReplace/MoveToBottom":
                     language.MultipleReplace.MoveToBottom = reader.Value;
+                    break;
+                case "MultipleReplace/AutoRefresh":
+                    language.MultipleReplace.AutoRefresh = reader.Value;
                     break;
                 case "NetworkChat/Title":
                     language.NetworkChat.Title = reader.Value;

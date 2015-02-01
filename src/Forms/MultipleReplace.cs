@@ -48,6 +48,11 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Columns[2].Text = Configuration.Settings.Language.General.Before;
             listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.After;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.Delete;
+            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
+            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
+            moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
+            moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
+            checkBoxAutoRefresh.Text = Configuration.Settings.Language.MultipleReplace.AutoRefresh;
             buttonRemoveAll.Text = Configuration.Settings.Language.MultipleReplace.RemoveAll;
             buttonImport.Text = Configuration.Settings.Language.MultipleReplace.Import;
             buttonExport.Text = Configuration.Settings.Language.MultipleReplace.Export;
@@ -58,11 +63,6 @@ namespace Nikse.SubtitleEdit.Forms
             FixLargeFonts();
             splitContainer1.Panel1MinSize = 200;
             splitContainer1.Panel2MinSize = 200;
-
-            moveUpToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveUp;
-            moveDownToolStripMenuItem.Text = Configuration.Settings.Language.DvdSubRip.MoveDown;
-            moveTopToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToTop;
-            moveBottomToolStripMenuItem.Text = Configuration.Settings.Language.MultipleReplace.MoveToBottom;
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
@@ -380,7 +380,7 @@ namespace Nikse.SubtitleEdit.Forms
                     item.SubItems[1].Text = textBoxFind.Text;
                     item.SubItems[2].Text = textBoxReplace.Text;
                     item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
-                    
+
                     if (checkBoxAutoRefresh.Checked)
                         GeneratePreview();
 

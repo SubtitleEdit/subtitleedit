@@ -1471,6 +1471,7 @@
             public string Rules { get; set; }
             public string MoveToTop { get; set; }
             public string MoveToBottom { get; set; }
+            public string AutoRefresh { get; set; }
         }
 
         public class NetworkChat

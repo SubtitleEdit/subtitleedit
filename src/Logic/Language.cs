@@ -1577,7 +1577,8 @@ namespace Nikse.SubtitleEdit.Logic
                 ExportRulesTitle = "Export replace rule(s) to...",
                 Rules = "Export rules",
                 MoveToBottom = "Move to bottom",
-                MoveToTop = "Move to top"
+                MoveToTop = "Move to top",
+                AutoRefresh = "Auto refresh"
             };
 
             NetworkChat = new LanguageStructure.NetworkChat
