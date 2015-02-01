@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public static bool QualifiesForSplit(string text, int singleLineMaxCharacters, int totalLineMaxCharacters)
         {
-            string s = Utilities.RemoveHtmlTags(text.Trim());
+            string s = HtmlUtil.RemoveHtmlTags(text.Trim());
             if (s.Length > totalLineMaxCharacters)
                 return true;
 
@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
-                                    string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text);
+                                    string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text);
                                     if (p1.EndsWith('.') || p1.EndsWith('!') || p1.EndsWith('?') || p1.EndsWith(':') || p1.EndsWith(')') || p1.EndsWith(']') || p1.EndsWith('♪'))
                                     {
                                         if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))

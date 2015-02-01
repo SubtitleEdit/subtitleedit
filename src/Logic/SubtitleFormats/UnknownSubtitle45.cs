@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -51,7 +52,7 @@ ST 0 EB 3.10
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
                 index++;
-                sb.AppendLine(string.Format("*         {0}-{1} 00.00 00.0 1 {2} 00 16-090-090{3}{4}{3}@", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), index.ToString().PadLeft(4, '0'), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format("*         {0}-{1} 00.00 00.0 1 {2} 00 16-090-090{3}{4}{3}@", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), index.ToString().PadLeft(4, '0'), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
             }
             System.Windows.Forms.RichTextBox rtBox = new System.Windows.Forms.RichTextBox();
             rtBox.Text = sb.ToString();

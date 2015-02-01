@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (index != 0) sb.AppendLine();
                 index++;
 
-                sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
+                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 sb.AppendLine(EncodeTimeCode(p.StartTime));
                 sb.AppendLine(EncodeTimeCode(p.EndTime));
 

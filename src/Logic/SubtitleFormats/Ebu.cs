@@ -273,7 +273,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //font tags
                 if (header.DisplayStandardCode == "0") // Open subtitling
                 {
-                    TextField = Utilities.RemoveHtmlTags(TextField, true);
+                    TextField = HtmlUtil.RemoveHtmlTags(TextField, true);
                 }
                 else // teletext
                 {
@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             sb.Append(prefix);
                         sb.AppendLine(s);
                     }
-                    TextField = Utilities.RemoveHtmlTags(sb.ToString()).TrimEnd();
+                    TextField = HtmlUtil.RemoveHtmlTags(sb.ToString()).TrimEnd();
                 }
 
                 // newline

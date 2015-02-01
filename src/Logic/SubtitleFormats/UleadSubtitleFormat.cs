@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //How much in there? -
                 //Three...
                 sb.AppendLine(string.Format("#{0} {1} {2}", index, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
-                sb.AppendLine(Utilities.RemoveHtmlTags(p.Text));
+                sb.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text));
                 index++;
             }
             sb.AppendLine(string.Format(Footer, subtitle.Paragraphs.Count));

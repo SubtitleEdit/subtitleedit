@@ -126,7 +126,7 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.NumberOfLinesX, _subtitle.Paragraphs.Count));
             sb.AppendLine(string.Format(_l.LengthInFormatXinCharactersY, _format.FriendlyName, sourceLength));
             sb.AppendLine(string.Format(_l.NumberOfCharactersInTextOnly, allText.Length));
-            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, Utilities.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / 1000.0)));
+            sb.AppendLine(string.Format(_l.TotalCharsPerSecond, HtmlUtil.RemoveHtmlTags(allText.ToString()).Length / (totalDuration / 1000.0)));
             sb.AppendLine(string.Format(_l.NumberOfItalicTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<i>")));
             sb.AppendLine(string.Format(_l.NumberOfBoldTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<b>")));
             sb.AppendLine(string.Format(_l.NumberOfUnderlineTags, Utilities.CountTagInText(allText.ToString().ToLower(), "<u>")));

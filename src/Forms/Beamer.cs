@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
 
-            textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
+            textSize = g.MeasureString(HtmlUtil.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
             int sizeX = (int)(textSize.Width * 0.8) + 40;

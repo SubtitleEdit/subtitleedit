@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 text = text.Replace("<i>", "@Italic@");
                 text = text.Replace("</i>", "@Italic@");
                 text = text.Replace(Environment.NewLine, "//");
-                sb.AppendLine(string.Format("{0},\t{1},\t{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Utilities.RemoveHtmlTags(text)));
+                sb.AppendLine(string.Format("{0},\t{1},\t{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), HtmlUtil.RemoveHtmlTags(text)));
             }
             return sb.ToString();
         }

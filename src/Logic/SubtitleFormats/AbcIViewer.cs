@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -53,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 end.InnerText = ToTimeCode(p.EndTime.TotalMilliseconds);
                 paragraph.Attributes.Append(end);
 
-                paragraph.InnerText = Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "|"), true);
+                paragraph.InnerText = HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "|"), true);
 
                 reel.AppendChild(paragraph);
             }

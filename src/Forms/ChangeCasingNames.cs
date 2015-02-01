@@ -90,7 +90,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string name = item.SubItems[1].Text;
 
-                    string textNoTags = Utilities.RemoveHtmlTags(text);
+                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
                     if (textNoTags != textNoTags.ToUpper())
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
             var sb = new StringBuilder();
             foreach (Paragraph p in _subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
-            string text = Utilities.RemoveHtmlTags(sb.ToString());
+            string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
             string textToLower = text.ToLower();
             foreach (string name in namesEtcList)
             {

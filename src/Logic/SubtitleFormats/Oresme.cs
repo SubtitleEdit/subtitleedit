@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -48,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 const string tags = "{Bottom}{Open Caption}{Center}{White}{Font Arial GVP Bold}";
-                string text = Utilities.RemoveHtmlTags(p.Text, true);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 text = text.Replace(Environment.NewLine, "{N}");
                 sb.AppendLine(string.Format(format, EncodeTimeCode(p.StartTime), tags, text));
             }

@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -229,8 +230,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (p.Text != null && next.Text != null)
             {
-                string s = Utilities.RemoveHtmlTags(p.Text.Trim());
-                string s2 = Utilities.RemoveHtmlTags(next.Text.Trim());
+                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+                string s2 = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
                 return s == s2;
             }
             return false;
@@ -246,8 +247,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (p.Text != null && next.Text != null)
             {
-                string s = Utilities.RemoveHtmlTags(p.Text.Trim());
-                string s2 = Utilities.RemoveHtmlTags(next.Text.Trim());
+                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+                string s2 = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
                 if (!string.IsNullOrEmpty(s) && s2.Length > 0 && s2.StartsWith(s))
                     return true;
             }

@@ -48,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count2 = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
+                var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                 if (lines.Length > 0)
                 {
                     sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), count.ToString().PadLeft(2, ' '), lines[0]));

@@ -212,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static double CalculateStepLength(string text, double duration)
         {
-            text = Utilities.RemoveHtmlTags(text);
+            text = HtmlUtil.RemoveHtmlTags(text);
             return duration / text.Length;
         }
 

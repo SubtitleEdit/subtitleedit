@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -60,7 +61,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text;
                 if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
                     text = Utilities.AutoBreakLine(text);
-                text = Utilities.RemoveHtmlTags(text, true);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
                 if (p.Text.Contains("<i>"))
                 {
                     if (Utilities.CountTagInText(p.Text, "<i>") == 1 && Utilities.CountTagInText(p.Text, "</i>") == 1 &&

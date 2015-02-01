@@ -6479,7 +6479,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.GetLineLengths(singleLine, text);
 
             buttonSplitLine.Visible = false;
-            text = Utilities.RemoveHtmlTags(text, true);
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             string s = text.Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
 
             // remove unicode control characters
@@ -6593,7 +6593,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int indexOfEndBracket = p.Text.IndexOf('}');
                         if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                             p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
-                        p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = RemoveUnicodeCharacters(p.Text);
                         if (isSsa)
                             p.Text = RemoveSsaStyle(p.Text);
@@ -6604,7 +6604,7 @@ namespace Nikse.SubtitleEdit.Forms
                             Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
                             if (original != null)
                             {
-                                original.Text = Utilities.RemoveHtmlTags(original.Text);
+                                original.Text = HtmlUtil.RemoveHtmlTags(original.Text);
                                 original.Text = original.Text.Replace("♪", string.Empty);
                                 if (isSsa)
                                     original.Text = RemoveSsaStyle(original.Text);
@@ -6947,7 +6947,7 @@ namespace Nikse.SubtitleEdit.Forms
                         idx = p.Text.LastIndexOf(Environment.NewLine, StringComparison.Ordinal);
 
                         // Check if the last line of the subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
-                        if (Utilities.RemoveHtmlTags(p.Text.Substring((idx > 0 ? idx + Environment.NewLine.Length : 0))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                        if (HtmlUtil.RemoveHtmlTags(p.Text.Substring((idx > 0 ? idx + Environment.NewLine.Length : 0))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                             p.Text = Utilities.AutoBreakLine(p.Text);
                     }
 
@@ -7057,7 +7057,7 @@ namespace Nikse.SubtitleEdit.Forms
                         idx = next.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
 
                         // Check if the first line of the next subtitle (the one that now contains the moved word) is longer than SubtitleLineMaximumLength.
-                        if (Utilities.RemoveHtmlTags(next.Text.Substring(0, (idx > 0 ? idx : next.Text.Length))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                        if (HtmlUtil.RemoveHtmlTags(next.Text.Substring(0, (idx > 0 ? idx : next.Text.Length))).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                             next.Text = Utilities.AutoBreakLine(next.Text);
                     }
 
@@ -7275,7 +7275,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         string s = currentParagraph.Text;
-                        var arr = Utilities.RemoveHtmlTags(s, true).Replace(Environment.NewLine, "\n").Split('\n');
+                        var arr = HtmlUtil.RemoveHtmlTags(s, true).Replace(Environment.NewLine, "\n").Split('\n');
                         if (arr.Length != 2 || arr[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || arr[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
                             if (arr.Length == 2 && arr[0].StartsWith('-') && arr[1].StartsWith('-'))
@@ -7354,9 +7354,9 @@ namespace Nikse.SubtitleEdit.Forms
                     newParagraph.Text = newParagraph.Text.Remove(3, 1);
 
                 double middle = currentParagraph.StartTime.TotalMilliseconds + (currentParagraph.Duration.TotalMilliseconds / 2);
-                if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
+                if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
                 {
-                    var startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                    var startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
                     if (startFactor < 0.25)
                         startFactor = 0.25;
                     if (startFactor > 0.75)
@@ -13623,7 +13623,7 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedText = selectedText.Trim();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
-                        textBoxSearchWord.Text = Utilities.RemoveHtmlTags(selectedText);
+                        textBoxSearchWord.Text = HtmlUtil.RemoveHtmlTags(selectedText);
                     }
                 }
             }
@@ -15219,7 +15219,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             string text = tb.SelectedText;
             int selectionStart = tb.SelectionStart;
-            text = Utilities.RemoveHtmlTags(text);
+            text = HtmlUtil.RemoveHtmlTags(text);
             tb.SelectedText = text;
             tb.SelectionStart = selectionStart;
             tb.SelectionLength = text.Length;
@@ -17219,7 +17219,7 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedText = selectedText.Trim();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
-                        textBoxSearchWord.Text = Utilities.RemoveHtmlTags(selectedText);
+                        textBoxSearchWord.Text = HtmlUtil.RemoveHtmlTags(selectedText);
                     }
                 }
             }
@@ -17444,7 +17444,7 @@ namespace Nikse.SubtitleEdit.Forms
             int extraNewLineLength = Environment.NewLine.Length - 1;
             int lineBreakPos = textBox.Text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
             int pos = textBox.SelectionStart;
-            var s = Utilities.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
+            var s = HtmlUtil.RemoveHtmlTags(textBox.Text, true).Replace(Environment.NewLine, string.Empty); // we don't count new line in total length... correct?
             int totalLength = s.Length;
             string totalL = "     " + string.Format(_languageGeneral.TotalLengthX, totalLength);
             if (lineBreakPos < 0 || pos <= lineBreakPos)
@@ -18242,7 +18242,7 @@ namespace Nikse.SubtitleEdit.Forms
                     timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.StartTime.Milliseconds)));
                     timeCodeLines.AppendLine(string.Format("{0:00}:{1:00}:{2:00}:{3:00}", p.EndTime.Hours, p.EndTime.Minutes, p.EndTime.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(p.EndTime.Milliseconds)));
 
-                    textLines.AppendLine(Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "|"));
+                    textLines.AppendLine(HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "|"));
                     textLines.AppendLine();
                 }
 

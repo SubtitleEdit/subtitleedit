@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -65,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 XmlNode paragraph = xml.CreateElement("cuepoint");
 
                 XmlNode text = xml.CreateElement("name");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, " ").Replace("  ", " ");
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, " ").Replace("  ", " ");
                 paragraph.AppendChild(text);
 
                 XmlNode start = xml.CreateElement("startTime");

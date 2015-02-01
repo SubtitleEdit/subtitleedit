@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -77,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     paragraph.Attributes.Append(spkid);
                 }
 
-                paragraph.InnerText = Utilities.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "<s/>"));
+                paragraph.InnerText = HtmlUtil.RemoveHtmlTags(p.Text.Replace(Environment.NewLine, "<s/>"));
 
                 reel.AppendChild(paragraph);
             }

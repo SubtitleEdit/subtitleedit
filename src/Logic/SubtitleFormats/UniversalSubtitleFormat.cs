@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -77,7 +78,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(stop);
 
                 XmlNode text = xml.CreateElement("text");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
                 paragraph.AppendChild(text);
 
                 XmlAttribute style = xml.CreateAttribute("style");

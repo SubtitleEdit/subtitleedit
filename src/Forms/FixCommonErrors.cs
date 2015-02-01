@@ -798,11 +798,11 @@ namespace Nikse.SubtitleEdit.Forms
                             prev.Text = prev.Text.Replace(Environment.NewLine, " ");
                             p.Text = p.Text.Replace(Environment.NewLine, " ");
 
-                            string stripped = Utilities.RemoveHtmlTags(prev.Text).TrimStart();
+                            string stripped = HtmlUtil.RemoveHtmlTags(prev.Text).TrimStart();
                             if (!stripped.StartsWith("- ", StringComparison.Ordinal))
                                 prev.Text = "- " + prev.Text.TrimStart();
 
-                            stripped = Utilities.RemoveHtmlTags(p.Text).TrimStart();
+                            stripped = HtmlUtil.RemoveHtmlTags(p.Text).TrimStart();
                             if (!stripped.StartsWith("- ", StringComparison.Ordinal))
                                 p.Text = "- " + p.Text.TrimStart();
 
@@ -1076,7 +1076,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool tooLong = false;
                 foreach (string line in lines)
                 {
-                    if (Utilities.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (HtmlUtil.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
                     }
@@ -1132,7 +1132,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[i];
 
-                string s = Utilities.RemoveHtmlTags(p.Text);
+                string s = HtmlUtil.RemoveHtmlTags(p.Text);
                 if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
                     s = Utilities.AutoBreakLine(p.Text, Language);
@@ -1605,7 +1605,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     string oldText = p.Text;
-                    var lines = Utilities.RemoveHtmlTags(p.Text).SplitToLines();
+                    var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     if (lines.Length == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
                     { // dialog
                         lines = p.Text.SplitToLines();
@@ -1913,8 +1913,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
-                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
-                string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
+                    nextText = HtmlUtil.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
+                string tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd();
 
                 if (IsOneLineUrl(p.Text) || p.Text.Contains('♪') || p.Text.Contains('♫') || p.Text.EndsWith('\''))
                 {
@@ -2176,7 +2176,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string prevText = " .";
                 if (prev != null)
-                    prevText = Utilities.RemoveHtmlTags(prev.Text);
+                    prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
 
                 bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
                 if (prevText == " .")
@@ -2254,7 +2254,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     char firstLetter = text[0];
-                    string prevText = Utilities.RemoveHtmlTags(arr[0]);
+                    string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
                     bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
                     if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                         (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
@@ -2298,7 +2298,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
-                            prevText = Utilities.RemoveHtmlTags(prev.Text);
+                            prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
                         bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
                         if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
                         {
@@ -2484,7 +2484,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (last != null)
                 {
-                    string lastText = Utilities.RemoveHtmlTags(last.Text);
+                    string lastText = HtmlUtil.RemoveHtmlTags(last.Text);
                     if (lastText.EndsWith(':') || lastText.EndsWith(';'))
                     {
                         var st = new StripableText(p.Text);
@@ -2882,8 +2882,8 @@ namespace Nikse.SubtitleEdit.Forms
                         newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
                         newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
                     }
-                    var noTagsText = Utilities.RemoveHtmlTags(newText);
-                    if (newText != oldText && noTagsText != Utilities.RemoveHtmlTags(oldText))
+                    var noTagsText = HtmlUtil.RemoveHtmlTags(newText);
+                    if (newText != oldText && noTagsText != HtmlUtil.RemoveHtmlTags(oldText))
                     {
                         p.Text = newText;
                         fixCount++;
@@ -3884,8 +3884,8 @@ namespace Nikse.SubtitleEdit.Forms
                     skip = true;
 
                 if (!skip && Utilities.CountTagInText(p.Text, mark) == Utilities.CountTagInText(p.Text, inverseMark) &&
-                    Utilities.RemoveHtmlTags(p.Text).TrimStart(inverseMark[0]).Contains(inverseMark) == false &&
-                    Utilities.RemoveHtmlTags(p.Text).TrimEnd(mark).Contains(mark) == false)
+                    HtmlUtil.RemoveHtmlTags(p.Text).TrimStart(inverseMark[0]).Contains(inverseMark) == false &&
+                    HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd(mark).Contains(mark) == false)
                 {
                     skip = true;
                 }
@@ -3954,11 +3954,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
 
                                     var st = new StripableText(part);
-                                    if (j == 0 && mark == '!' && st.Pre == "¿" && Utilities.CountTagInText(p.Text, mark) == 1 && Utilities.RemoveHtmlTags(p.Text).EndsWith(mark))
+                                    if (j == 0 && mark == '!' && st.Pre == "¿" && Utilities.CountTagInText(p.Text, mark) == 1 && HtmlUtil.RemoveHtmlTags(p.Text).EndsWith(mark))
                                     {
                                         p.Text = inverseMark + p.Text;
                                     }
-                                    else if (j == 0 && mark == '?' && st.Pre == "¡" && Utilities.CountTagInText(p.Text, mark) == 1 && Utilities.RemoveHtmlTags(p.Text).EndsWith(mark))
+                                    else if (j == 0 && mark == '?' && st.Pre == "¡" && Utilities.CountTagInText(p.Text, mark) == 1 && HtmlUtil.RemoveHtmlTags(p.Text).EndsWith(mark))
                                     {
                                         p.Text = inverseMark + p.Text;
                                     }
@@ -4663,7 +4663,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             Utilities.GetLineLengths(labelSingleLine, text);
 
-            string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
+            string s = HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
             buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
@@ -5022,7 +5022,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                double startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
                 if (startFactor < 0.20)
                     startFactor = 0.20;
                 if (startFactor > 0.80)

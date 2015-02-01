@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -195,7 +196,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             n3sub1sub3sub1sub.Attributes.Append(n3sub1sub3sub1suba1);
             n3sub1sub3sub1.AppendChild(n3sub1sub3sub1sub);
 
-            var lines = Utilities.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\n").Split('\n');
+            var lines = HtmlUtil.RemoveHtmlTags(p.Text, true).Replace(Environment.NewLine, "\n").Split('\n');
             for (int i = 0; i < lines.Length; i++)
             {
                 var n3sub1sub3sub2 = xml.CreateElement("w:r", "http://schemas.openxmlformats.org/wordprocessingml/2006/main");
