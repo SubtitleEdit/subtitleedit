@@ -36,7 +36,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             bool continuation = false;
             foreach (string line in lines)
             {
-                if (line.StartsWith("$FontName") || line.StartsWith("$ColorIndex1"))
+                if (line.StartsWith("$FontName", StringComparison.Ordinal) || line.StartsWith("$ColorIndex1", StringComparison.Ordinal))
                     return false;
                 Match m = null;
                 if (line.Length > 8 && line[2] == ':')

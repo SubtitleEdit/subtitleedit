@@ -132,7 +132,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (installed.Text.TrimEnd('.') == node.SelectSingleNode("Name").InnerText.TrimEnd('.') &&
                             installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
                         {
-                            //                            item.BackColor = Color.LightGreen;
+                            //item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
                             installed.SubItems[1].Text = _language.UpdateAvailable + " " + installed.SubItems[1].Text;
                             buttonUpdateAll.Visible = true;
