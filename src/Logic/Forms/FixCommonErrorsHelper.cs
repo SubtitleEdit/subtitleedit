@@ -366,6 +366,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             }
                         }
                     }
+                    // - Shut it off. -Get the fuck<br/>out of here, Darryl.
+                    if (totalHyphen == 1 && startHyphenCount == 1)
+                    {
+                        var idx = text.IndexOf(" -", StringComparison.Ordinal);
+                        if (idx > 1 && ".?!".Contains(text[idx - 1]) && idx + 2 < text.Length)
+                        {
+                            var firstLine = text.Substring(0, idx).Replace(Environment.NewLine, " ").Trim();
+                            var secondLine = text.Substring(idx + 1).Insert(1, " ").Replace(Environment.NewLine, " ").Trim();
+                            text = firstLine + Environment.NewLine + secondLine;
+                        }
+                    }
                 }
             }
             return text;
