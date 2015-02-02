@@ -3045,11 +3045,31 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!isUnicode)
                 {
-                    allText = allText.Replace("—", "-"); // mdash, code 8212
-                    allText = allText.Replace("―", "-"); // mdash, code 8213
+                    const string defHyphen = "-"; // - Hyphen-minus (\u002D) (Basic Latin)
+                    const string defColon = ":"; // : Colon (\uu003A) (Basic Latin)
+
+                    // Hyphens
+                    allText = allText.Replace("\u2043", defHyphen); // ⁃ Hyphen bullet (\u2043)
+                    allText = allText.Replace("\u2010", defHyphen); // ‐ Hyphen (\u2010)
+                    allText = allText.Replace("\u2012", defHyphen); // ‒ Figure dash (\u2012)
+                    allText = allText.Replace("\u2013", defHyphen); // – En dash (\u2013)
+                    allText = allText.Replace("\u2014", defHyphen); // — Em dash (\u2014)
+                    allText = allText.Replace("\u2015", defHyphen); // ― Horizontal bar (\u2015)
+
+                    // Colons:
+                    allText = allText.Replace("\u02F8", defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
+                    allText = allText.Replace("\uFF1A", defColon); // ： Fullwidth Colon (\uFF1A)
+                    allText = allText.Replace("\uF313", defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
+
+                    // Others
                     allText = allText.Replace("…", "...");
                     allText = allText.Replace("♪", "#");
                     allText = allText.Replace("♫", "#");
+
+                    // Spaces
+                    allText = allText.Replace("\u00A0", " "); // No-Break Space
+                    allText = allText.Replace("\u200B", " "); // Zero Width Space
+                    allText = allText.Replace("\uFEFF", " "); // Zero Width No-Break Space
                 }
 
                 bool containsNegativeTime = false;
@@ -4300,7 +4320,6 @@ namespace Nikse.SubtitleEdit.Forms
                                         _findHelper.SelectedPosition += _findHelper.ReplaceText.Length;
                                         ShowStatus(string.Format(msg + _language.XFoundAtLineNumberY, _findHelper.FindText, _findHelper.SelectedIndex + 1));
                                     }
-
                                 }
                                 else
                                 {
@@ -4312,7 +4331,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     return;
                                 }
                             }
-
                         }
                         Replace(replaceDialog);
                         if (replaceDialog != null && !replaceDialog.IsDisposed)
@@ -19254,9 +19272,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_timerCheckForUpdates != null)
                     _timerCheckForUpdates.Stop();
             }
-            catch
-            {
-            }
+            catch { }
 
             using (var form = new CheckForUpdates(this))
             {
