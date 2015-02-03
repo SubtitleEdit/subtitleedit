@@ -3042,6 +3042,17 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains("<u>", StringComparison.OrdinalIgnoreCase) && text.Contains("</u>", StringComparison.OrdinalIgnoreCase))
                 text = RemoveSpaceBeforeAfterTag(text, "<u>");
 
+            // Font
+            if (text.Contains("<font ", StringComparison.OrdinalIgnoreCase))
+            {
+                var idx = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+                var endIdx = text.IndexOf('>', idx + 6);
+                if (endIdx > idx && endIdx < text.Length - 8)
+                {
+                    var color = text.Substring(idx, (endIdx - idx) + 1).ToLower();
+                    text = RemoveSpaceBeforeAfterTag(text, color);
+                }
+            }
             text = text.Trim();
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
@@ -3132,8 +3143,21 @@ namespace Nikse.SubtitleEdit.Logic
                 .Replace("<U>", "<u>")
                 .Replace("</I>", "</i>")
                 .Replace("</B>", "</b")
-                .Replace("</U>", "</u>");
+                .Replace("</U>", "</u>")
+                .Replace("</FONT>", "</font>");
 
+            if (text.Contains("<FONT", StringComparison.Ordinal))
+            {
+                var idx = text.IndexOf("<FONT ", StringComparison.Ordinal);
+                while (idx > -1)
+                {
+                    var endIdx = text.IndexOf('>', idx);
+                    if (endIdx == -1) break;
+                    var lowerFont = text.Substring(idx, endIdx - idx + 1).ToLower();
+                    text = text.Remove(idx, endIdx - idx + 1).Insert(idx, lowerFont);
+                    idx = text.IndexOf("<FONT ", endIdx, StringComparison.Ordinal);
+                }
+            }
             var closeTag = string.Empty;
             switch (openTag)
             {
@@ -3147,6 +3171,9 @@ namespace Nikse.SubtitleEdit.Logic
                     closeTag = "</u>";
                     break;
             }
+
+            if (closeTag.Length == 0 && openTag.Contains("<font ", StringComparison.Ordinal))
+                closeTag = "</font>";
 
             // Open tags
             var open1 = openTag + " ";
