@@ -3068,8 +3068,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                     // Spaces
                     allText = allText.Replace("\u00A0", " "); // No-Break Space
-                    allText = allText.Replace("\u200B", " "); // Zero Width Space
-                    allText = allText.Replace("\uFEFF", " "); // Zero Width No-Break Space
+                    allText = allText.Replace("\u200B", string.Empty); // Zero Width Space
+                    allText = allText.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
                 }
 
                 bool containsNegativeTime = false;
