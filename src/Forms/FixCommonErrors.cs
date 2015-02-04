@@ -2654,13 +2654,16 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string oldText = p.Text;
-                var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
-                if (AllowFix(p, fixAction) && oldText != text)
+                if (AllowFix(p, fixAction))
                 {
-                    p.Text = text;
-                    noOfFixes++;
-                    AddFixToListView(p, fixAction, oldText, p.Text);
+                    string oldText = p.Text;
+                    var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
+                    if (oldText != text)
+                    {
+                        p.Text = text;
+                        noOfFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    } 
                 }
             }
             if (noOfFixes > 0)
