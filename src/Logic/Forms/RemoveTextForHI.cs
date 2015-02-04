@@ -85,7 +85,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
             // House 7x01 line 52: and she would like you to do three things:
             // Okay or remove???
-            if (text.IndexOf(':') > 0 && text.IndexOf(':') == text.Length - 1 && text != text.ToUpper())
+            var noTagText = HtmlUtil.RemoveHtmlTags(text);
+            if (noTagText.IndexOf(':') > 0 && noTagText.IndexOf(':') == noTagText.Length - 1 && noTagText != noTagText.ToUpper())
                 return text;
 
             string newText = string.Empty;
