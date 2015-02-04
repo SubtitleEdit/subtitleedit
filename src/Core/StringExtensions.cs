@@ -5,6 +5,17 @@ namespace Nikse.SubtitleEdit.Core
 {
     internal static class StringExtensions
     {
+        public static int IndexOfAny(this string s, string[] words, StringComparison comparisonType)
+        {
+            for (var i = 0; i < words.Length; i++)
+            {
+                var idx = s.IndexOf(words[i], comparisonType);
+                if (idx >= 0)
+                    return idx;
+            }
+            return -1;
+        }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
