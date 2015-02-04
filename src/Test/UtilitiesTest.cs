@@ -150,6 +150,15 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixInvalidItalicTags9()
+        {
+            string s1 = "FALCONE:<i> I didn't think</i>\r\n<i>it was going to be you,</i>";
+            string s2 = Utilities.FixInvalidItalicTags(s1);
+            Assert.AreEqual(s2, "FALCONE: <i>I didn't think\r\nit was going to be you,</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesDoubleSpace1()
         {
             string s1 = "This is  a test";
