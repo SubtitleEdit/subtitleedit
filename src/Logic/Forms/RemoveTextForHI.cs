@@ -100,11 +100,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 int indexOfColon = s.IndexOf(':');
                 if (indexOfColon > 0)
                 {
-                    string pre = s.Substring(0, indexOfColon);
-                    if (Settings.RemoveTextBeforeColonOnlyUppercase && HtmlUtil.RemoveHtmlTags(pre, true) != HtmlUtil.RemoveHtmlTags(pre, true).ToUpper())
+                    var pre = s.Substring(0, indexOfColon);
+                    if (pre.IndexOf(", ", StringComparison.Ordinal) > 0) // Barry, remember: She cannot
                     {
-                        newText = newText + Environment.NewLine + s;
-                        newText = newText.Trim();
+                        newText = (newText + Environment.NewLine + s).Trim();
+                        continue;
+                    }
+
+                    var noTagPre = HtmlUtil.RemoveHtmlTags(pre);
+                    if (Settings.RemoveTextBeforeColonOnlyUppercase && noTagPre != noTagPre.ToUpper())
+                    {
+                        newText = (newText + Environment.NewLine + s).Trim();
                     }
                     else
                     {
@@ -248,9 +254,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     newText = newText + Environment.NewLine + s;
                     newText = newText.Trim();
 
-                    if (newText.EndsWith("</i>") && text.StartsWith("<i>") && !newText.StartsWith("<i>"))
+                    if (newText.EndsWith("</i>", StringComparison.Ordinal) && text.StartsWith("<i>", StringComparison.Ordinal) && !newText.StartsWith("<i>", StringComparison.Ordinal))
                         newText = "<i>" + newText;
-                    else if (newText.EndsWith("</b>") && text.StartsWith("<b>") && !newText.StartsWith("<b>"))
+                    else if (newText.EndsWith("</b>", StringComparison.Ordinal) && text.StartsWith("<b>", StringComparison.Ordinal) && !newText.StartsWith("<b>", StringComparison.Ordinal))
                         newText = "<b>" + newText;
                 }
                 count++;
