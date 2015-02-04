@@ -115,8 +115,7 @@ namespace Nikse.SubtitleEdit.Forms
                 prevIndex++;
                 _removeTextForHILib.WarningIndex = prevIndex;
                 string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
-                bool hit = p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty);
-                if (hit)
+                if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
                 {
                     count++;
                     AddToListView(p, newText);

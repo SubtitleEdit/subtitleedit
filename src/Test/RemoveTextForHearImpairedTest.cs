@@ -78,6 +78,57 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveColonTest3()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            const string text = "Barry, remember: She cannot\r\nteleport if she cannot see.";
+            const string expected = text;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveColonTest4()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            const string text = "http://subscene.com/u/659433\r\nImproved by: @Ivandrofly";
+            const string expected = text;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveColonTest5()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            const string text = "Okay! Narrator: Hello!";
+            const string expected = text;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         ///     A test for RemoveHIInsideLine
         /// </summary>
