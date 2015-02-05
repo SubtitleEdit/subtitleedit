@@ -27,8 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelCodePageNumber.Text = language.CodePageNumber;
             labelDiskFormatCode.Text = language.DiskFormatCode;
-            if (!string.IsNullOrEmpty(language.DisplayStandardCode)) //TODO: Fix in 3.4
-                labelDisplayStandardCode.Text = language.DisplayStandardCode;
+            labelDisplayStandardCode.Text = language.DisplayStandardCode;
             labelCharacterCodeTable.Text = language.CharacterCodeTable;
             labelLanguageCode.Text = language.LanguageCode;
             labelOriginalProgramTitle.Text = language.OriginalProgramTitle;

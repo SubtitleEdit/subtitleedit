@@ -1,4 +1,4 @@
-#pragma warning disable 0108
+﻿#pragma warning disable 0108
 
 namespace MultiLanguage
 {

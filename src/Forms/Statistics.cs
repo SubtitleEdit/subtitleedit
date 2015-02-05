@@ -146,13 +146,10 @@ https://github.com/SubtitleEdit/subtitleedit
             sb.AppendLine(string.Format(_l.DurationMaximum, maximumDuration / 1000.0));
             sb.AppendLine(string.Format(_l.DurationAverage, totalDuration / _subtitle.Paragraphs.Count / 1000.0));
             sb.AppendLine();
-            if (!string.IsNullOrEmpty(_l.CharactersPerSecondMinimum))
-            {
-                sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec));
-                sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec));
-                sb.AppendLine(string.Format(_l.CharactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
-                sb.AppendLine();
-            }
+            sb.AppendLine(string.Format(_l.CharactersPerSecondMinimum, minimumCharsSec));
+            sb.AppendLine(string.Format(_l.CharactersPerSecondMaximum, maximumCharsSec));
+            sb.AppendLine(string.Format(_l.CharactersPerSecondAverage, totalCharsSec / _subtitle.Paragraphs.Count));
+            sb.AppendLine();
             _general = sb.ToString().Trim();
         }
 

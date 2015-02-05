@@ -541,8 +541,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     if (errors.Count > 20)
                         errorSb.AppendLine("...");
-                    if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX)) //TODO: Fix in 3.4
-                        MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX, errorSb));
+                    MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.SomeLinesWereTooLongX, errorSb));
                 }
 
                 progressBar1.Visible = false;
@@ -2562,35 +2561,28 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.BoxSingleLine)) //TODO: Remove in SE 3.4
-            {
-                boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
-                boxMultiLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxMultiLine;
-            }
+            boxSingleLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxSingleLine;
+            boxMultiLineToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.BoxMultiLine;
 
             comboBox3D.Items.Clear();
             comboBox3D.Items.Add(Configuration.Settings.Language.General.None);
             comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.SideBySide3D);
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.HalfTopBottom3D)) //TODO: Remove in SE 3.4
-                comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.HalfTopBottom3D);
+            comboBox3D.Items.Add(Configuration.Settings.Language.ExportPngXml.HalfTopBottom3D);
             comboBox3D.SelectedIndex = 0;
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.Depth)) //TODO: Remove in SE 3.4
-                labelDepth.Text = Configuration.Settings.Language.ExportPngXml.Depth;
+            labelDepth.Text = Configuration.Settings.Language.ExportPngXml.Depth;
 
             numericUpDownDepth3D.Left = labelDepth.Left + labelDepth.Width + 3;
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.Text3D)) //TODO: Remove in SE 3.4
-                label3D.Text = Configuration.Settings.Language.ExportPngXml.Text3D;
+            label3D.Text = Configuration.Settings.Language.ExportPngXml.Text3D;
 
             comboBox3D.Left = label3D.Left + label3D.Width + 3;
 
             checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
 
-            labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.BorderStyle)) //TODO: Remove in SE 3.4
-                labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderStyle;
+            //labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
+            labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderStyle;
 
             labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
@@ -2609,14 +2601,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBoxHAlign.Items.Add(Configuration.Settings.Language.ExportPngXml.Right);
             }
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.ShadowWidth)) //TODO: Remove in 3.4
-            {
-                buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
-                labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
-                labelShadowTransparency.Text = Configuration.Settings.Language.ExportPngXml.Transparency;
-            }
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ExportPngXml.LineHeight)) //TODO: Remove in 3.4
-                labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
+            buttonShadowColor.Text = Configuration.Settings.Language.ExportPngXml.ShadowColor;
+            labelShadowWidth.Text = Configuration.Settings.Language.ExportPngXml.ShadowWidth;
+            labelShadowTransparency.Text = Configuration.Settings.Language.ExportPngXml.Transparency;
+            labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
 
             linkLabelPreview.Text = Configuration.Settings.Language.General.Preview;
 
@@ -2799,8 +2787,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 comboBox3D.Visible = false;
                 numericUpDownDepth3D.Enabled = true;
                 labelDepth.Enabled = true;
-                if (!string.IsNullOrEmpty(Configuration.Settings.Language.DCinemaProperties.ZPosition))
-                    labelDepth.Text = Configuration.Settings.Language.DCinemaProperties.ZPosition;
+                labelDepth.Text = Configuration.Settings.Language.DCinemaProperties.ZPosition;
             }
 
             if (_exportType == "FCP")
@@ -2833,10 +2820,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (exportType == "BLURAYSUP" || exportType == "VOBSUB" || exportType == "BDNXML")
             {
                 subtitleListView1.CheckBoxes = true;
-                string text = Configuration.Settings.Language.ExportPngXml.Forced;
-                if (string.IsNullOrEmpty(text))
-                    text = "Forced";
-                subtitleListView1.Columns.Insert(0, text);
+                subtitleListView1.Columns.Insert(0, Configuration.Settings.Language.ExportPngXml.Forced);
 
                 SubtitleListView1Fill(_subtitle);
 
@@ -2861,24 +2845,15 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void InitBorderStyle()
         {
             comboBoxBorderWidth.Items.Clear();
-            string text = Configuration.Settings.Language.ExportPngXml.BorderStyleNormalWidthX;
-            int index = 2;
-            if (string.IsNullOrEmpty(text))
-            {
-                text = "{0}";
-            }
-            else
-            {
-                comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine);
-                comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox);
-                index = 4;
-            }
+
+            comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine);
+            comboBoxBorderWidth.Items.Add(Configuration.Settings.Language.ExportPngXml.BorderStyleOneBox);
 
             for (int i = 0; i < 16; i++)
             {
-                comboBoxBorderWidth.Items.Add(string.Format(text, i));
+                comboBoxBorderWidth.Items.Add(string.Format(Configuration.Settings.Language.ExportPngXml.BorderStyleNormalWidthX, i));
             }
-            comboBoxBorderWidth.SelectedIndex = index;
+            comboBoxBorderWidth.SelectedIndex = 4;
         }
 
         private void SetLastFrameRate(double lastFrameRate)

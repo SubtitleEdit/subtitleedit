@@ -30,11 +30,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
-            checkBoxIgnoreLineBreaks.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences); // TODO: Remove in SE 3.4
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText))
-                checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
-            else
-                checkBoxOnlyListDifferencesInText.Visible = false;
+            checkBoxIgnoreLineBreaks.Visible = true;
+            checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
             copyTextToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
@@ -380,10 +377,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (wordsChanged != totalWords && wordsChanged > 0 && !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged))
+                if (wordsChanged != totalWords && wordsChanged > 0)
                 {
                     string formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
-                    if (GetBreakToLetter() && !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged))
+                    if (GetBreakToLetter())
                         formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
 
                     labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100 / totalWords);
