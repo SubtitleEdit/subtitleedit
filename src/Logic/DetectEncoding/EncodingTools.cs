@@ -1,4 +1,4 @@
-// Ripped from http://www.codeproject.com/KB/recipes/DetectEncoding.aspx
+﻿// Ripped from http://www.codeproject.com/KB/recipes/DetectEncoding.aspx
 
 using System;
 using System.Collections.Generic;
