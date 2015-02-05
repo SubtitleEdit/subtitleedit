@@ -833,6 +833,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
+        public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -937,6 +938,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainToolsAutoDuration = string.Empty;
             MainTextBoxSelectionToLower = "Control+U";
             MainTextBoxSelectionToUpper = "Control+Shift+U";
+            MainTextBoxToggleAutoDuration = string.Empty;
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = string.Empty;
             MainCreatePlayFromJustBefore = string.Empty;
@@ -2414,6 +2416,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxToggleAutoDuration");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxToggleAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
@@ -3074,6 +3079,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
                 textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
                 textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
+                textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);                
                 textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
                 textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
                 textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

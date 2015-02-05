@@ -4539,6 +4539,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/MainTextBoxSelectionToUpper":
                     language.Settings.MainTextBoxSelectionToUpper = reader.Value;
                     break;
+                case "Settings/MainTextBoxToggleAutoDuration":
+                    language.Settings.MainTextBoxToggleAutoDuration = reader.Value;
+                    break;
                 case "Settings/MainTextBoxAutoBreak":
                     language.Settings.MainTextBoxAutoBreak = reader.Value;
                     break;

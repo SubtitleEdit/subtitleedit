@@ -140,6 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainTextBoxMoveFirstWordFromNextUp = Keys.None;
         private Keys _mainTextBoxSelectionToLower = Keys.None;
         private Keys _mainTextBoxSelectionToUpper = Keys.None;
+        private Keys _mainTextBoxToggleAutoDuration = Keys.None;
         private Keys _mainCreateInsertSubAtVideoPos = Keys.None;
         private Keys _mainCreatePlayFromJustBefore = Keys.None;
         private Keys _mainCreateSetStart = Keys.None;
@@ -6774,6 +6775,20 @@ namespace Nikse.SubtitleEdit.Forms
                     e.SuppressKeyPress = true;
                 }
             }
+            else if (_mainTextBoxToggleAutoDuration == e.KeyData) // toggle auto-duration
+            {
+                if (timerAutoDuration.Enabled)
+                {
+                    timerAutoDuration.Stop();
+                    labelAutoDuration.Visible = false;
+                }
+                else
+                {
+                    timerAutoDuration.Start();
+                    labelAutoDuration.Visible = true;
+                }
+                e.SuppressKeyPress = true;
+            }            
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;
@@ -14135,6 +14150,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mainTextBoxMoveFirstWordFromNextUp = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
             _mainTextBoxSelectionToLower = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower);
             _mainTextBoxSelectionToUpper = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper);
+            _mainTextBoxToggleAutoDuration = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration);
             _mainCreateInsertSubAtVideoPos = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateInsertSubAtVideoPos);
             _mainCreatePlayFromJustBefore = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore);
             _mainCreateSetStart = Utilities.GetKeys(Configuration.Settings.Shortcuts.MainCreateSetStart);
