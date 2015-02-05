@@ -1684,6 +1684,7 @@ can edit in same subtitle file (collaboration)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Move first word from next subtitle line up</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Selection to lowercase</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selection to uppercase</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Toggle auto duration</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto break text</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Unbreak text</MainTextBoxUnbreak>
     <MainFileSaveAll>Save all</MainFileSaveAll>

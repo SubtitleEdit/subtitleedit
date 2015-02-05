@@ -702,6 +702,7 @@ namespace Nikse.SubtitleEdit.Forms
             textBoxNode.Nodes.Add(language.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
             textBoxNode.Nodes.Add(language.MainTextBoxSelectionToLower + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
             textBoxNode.Nodes.Add(language.MainTextBoxSelectionToUpper + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
+            textBoxNode.Nodes.Add(language.MainTextBoxToggleAutoDuration + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter));
             textBoxNode.Nodes.Add(language.MainTextBoxAutoBreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
             textBoxNode.Nodes.Add(language.MainTextBoxUnbreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
@@ -1430,6 +1431,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxToggleAutoDuration.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxInsertAfter = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.MainTextBoxAutoBreak.Replace("&", string.Empty))

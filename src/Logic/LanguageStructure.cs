@@ -1854,6 +1854,7 @@
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }
+            public string MainTextBoxToggleAutoDuration { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
