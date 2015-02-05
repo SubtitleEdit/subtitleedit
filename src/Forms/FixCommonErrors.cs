@@ -189,7 +189,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Text = string.Empty;
             buttonBack.Visible = false;
             buttonNextFinish.Visible = false;
-            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = _languageGeneral.Ok;
         }
 
         public string Language
@@ -384,9 +384,12 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, FixDoubleDash, ce.FixDoubleDashTicked),
                 new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, FixDoubleGreaterThan, ce.FixDoubleGreaterThanTicked),
                 new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, FixEllipsesStart, ce.FixEllipsesStartTicked),
-                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, FixMissingOpenBracket, ce.FixMissingOpenBracketTicked), string.IsNullOrEmpty(_language.FixOcrErrorExample) ? new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", () => FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName), ce.FixOcrErrorsViaReplaceListTicked) : new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked),
+                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, FixMissingOpenBracket, ce.FixMissingOpenBracketTicked),
+                new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked),
                 new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, FixUppercaseIInsideWords, ce.UppercaseIInsideLowercaseWordTicked),
-                new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked), string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample) ? new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", RemoveSpaceBetweenNumbers, ce.RemoveSpaceBetweenNumberTicked) : new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, RemoveSpaceBetweenNumbers, ce.RemoveSpaceBetweenNumberTicked), string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample) ? new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! -> Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", DialogsOnOneLine, ce.FixDialogsOnOneLineTicked) : new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, DialogsOnOneLine, ce.FixDialogsOnOneLineTicked)
+                new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked),
+                new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, RemoveSpaceBetweenNumbers, ce.RemoveSpaceBetweenNumberTicked),
+                new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, DialogsOnOneLine, ce.FixDialogsOnOneLineTicked)
             };
 
             if (Language == "tr")
@@ -425,18 +428,18 @@ namespace Nikse.SubtitleEdit.Forms
             Text = _language.Title;
             groupBoxStep1.Text = _language.Step1;
             groupBox2.Text = _language.Step2;
-            listView1.Columns[0].Text = Configuration.Settings.Language.General.Apply;
+            listView1.Columns[0].Text = _languageGeneral.Apply;
             listView1.Columns[1].Text = _language.WhatToFix;
             listView1.Columns[2].Text = _language.Example;
             buttonSelectAll.Text = _language.SelectAll;
             buttonInverseSelection.Text = _language.InverseSelection;
             tabControl1.TabPages[0].Text = _language.Fixes;
             tabControl1.TabPages[1].Text = _language.Log;
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
+            listViewFixes.Columns[0].Text = _languageGeneral.Apply;
+            listViewFixes.Columns[1].Text = _languageGeneral.LineNumber;
             listViewFixes.Columns[2].Text = _language.Function;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[4].Text = Configuration.Settings.Language.General.After;
+            listViewFixes.Columns[3].Text = _languageGeneral.Before;
+            listViewFixes.Columns[4].Text = _languageGeneral.After;
             buttonNextFinish.Text = _language.Next;
             buttonBack.Text = _language.Back;
             buttonCancel.Text = _languageGeneral.Cancel;
@@ -4224,7 +4227,7 @@ namespace Nikse.SubtitleEdit.Forms
             string htmlFileName = Path.GetTempFileName() + ".html";
             var sb = new StringBuilder();
             sb.Append("<html><head><meta charset='utf-8'><title>Subtitle Edit - Fix common errors preview</title><style>body,p,td {font-size:90%; font-family:Tahoma;} td {border:1px solid black;padding:5px} table {border-collapse: collapse;}</style></head><body><table><tbody>");
-            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", Configuration.Settings.Language.General.LineNumber, _language.Function, Configuration.Settings.Language.General.Before, Configuration.Settings.Language.General.After));
+            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", _languageGeneral.LineNumber, _language.Function, _languageGeneral.Before, _languageGeneral.After));
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (item.Checked)

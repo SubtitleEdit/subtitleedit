@@ -149,16 +149,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (_updateAllListUrls.Count > 0)
             {
                 buttonUpdateAll.BackColor = Color.LightGreen;
-                if (!string.IsNullOrEmpty(Configuration.Settings.Language.PluginsGet.UpdateAllX))
-                {
-                    buttonUpdateAll.Text = string.Format(Configuration.Settings.Language.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
-                    buttonUpdateAll.Visible = true;
-                }
-                else if (!string.IsNullOrEmpty(Configuration.Settings.Language.PluginsGet.UpdateAll))
-                {
-                    buttonUpdateAll.Text = Configuration.Settings.Language.PluginsGet.UpdateAll;
-                    buttonUpdateAll.Visible = true;
-                }
+                buttonUpdateAll.Text = string.Format(Configuration.Settings.Language.PluginsGet.UpdateAllX, _updateAllListUrls.Count);
+                buttonUpdateAll.Visible = true;
             }
         }
 

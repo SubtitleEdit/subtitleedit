@@ -47,13 +47,10 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
 
             Text = Configuration.Settings.Language.MergeDoubleLines.Title;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.MergeDoubleLines.MaxMillisecondsBetweenLines)) //TODO: Remove in SE 3.3.4
-            {
-                labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergeDoubleLines.MaxMillisecondsBetweenLines;
-                checkBoxIncludeIncrementing.Text = Configuration.Settings.Language.MergeDoubleLines.IncludeIncrementing;
-                numericUpDownMaxMillisecondsBetweenLines.Left = labelMaxMillisecondsBetweenLines.Left + labelMaxMillisecondsBetweenLines.Width + 3;
-                checkBoxIncludeIncrementing.Left = numericUpDownMaxMillisecondsBetweenLines.Left + numericUpDownMaxMillisecondsBetweenLines.Width + 10;
-            }
+            labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergeDoubleLines.MaxMillisecondsBetweenLines;
+            checkBoxIncludeIncrementing.Text = Configuration.Settings.Language.MergeDoubleLines.IncludeIncrementing;
+            numericUpDownMaxMillisecondsBetweenLines.Left = labelMaxMillisecondsBetweenLines.Left + labelMaxMillisecondsBetweenLines.Width + 3;
+            checkBoxIncludeIncrementing.Left = numericUpDownMaxMillisecondsBetweenLines.Left + numericUpDownMaxMillisecondsBetweenLines.Width + 10;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;

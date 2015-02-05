@@ -77,7 +77,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (message == "Session not found!")
                         MessageBox.Show(string.Format(Configuration.Settings.Language.Main.XNotFound, textBoxSessionKey.Text));
-                    else if (message == "Username already in use!" && !string.IsNullOrEmpty(Configuration.Settings.Language.General.UserNameAlreadyInUse))
+                    else if (message == "Username already in use!")
                         MessageBox.Show(string.Format(Configuration.Settings.Language.General.UserNameAlreadyInUse, textBoxSessionKey.Text));
                     else
                         MessageBox.Show(message);
