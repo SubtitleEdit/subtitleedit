@@ -85,10 +85,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     numericUpDownZPosition.Value = zPosition;
                 else
                     numericUpDownZPosition.Value = 0;
-
-                }
-            FixLargeFonts(buttonCancel);
             }
+            FixLargeFonts(buttonCancel);
+        }
 
         private void buttonGenerateID_Click(object sender, EventArgs e)
         {
