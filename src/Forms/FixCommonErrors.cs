@@ -1023,7 +1023,7 @@ namespace Nikse.SubtitleEdit.Forms
                             noOfInvalidHtmlTags++;
                             AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                         }
-                    } 
+                    }
                 }
             }
             listViewFixes.EndUpdate();
