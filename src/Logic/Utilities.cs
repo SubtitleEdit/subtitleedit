@@ -352,6 +352,12 @@ namespace Nikse.SubtitleEdit.Logic
             return false;
         }
 
+        public static bool IsBetweenNumbers(string s, int position)
+        {
+            if (string.IsNullOrEmpty(s) || position < 1 || position + 2 > s.Length)
+                return false;
+            return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
+        }
         public static string AutoBreakLine(string text, string language)
         {
             return AutoBreakLine(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, language);
@@ -2324,6 +2330,29 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty).Trim();
                             text = beginTag + text + endTag;
+                        }
+                    }
+
+                    //FALCONE:<i> I didn't think</i><br /><i>it was going to be you,</i>
+                    var colIdx = text.IndexOf(':');
+                    if (colIdx > -1 && Utilities.CountTagInText(text, "<i>") + Utilities.CountTagInText(text, "</i>") == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
+                    {
+                        var firstLine = text.Substring(0, index);
+                        var secondLine = text.Substring(index).TrimStart();
+
+                        var secIdxCol = secondLine.IndexOf(':');
+                        if (secIdxCol < 0 || !IsBetweenNumbers(secondLine, secIdxCol))
+                        {
+                            var idx = firstLine.IndexOf(':');
+                            if (idx > 1)
+                            {
+                                var pre = text.Substring(0, idx + 1).TrimStart();
+                                text = text.Remove(0, idx + 1);
+                                text = FixInvalidItalicTags(text).Trim();
+                                if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                                    text  = RemoveSpaceBeforeAfterTag(text, "<i>");
+                                text = pre + " " + text;
+                            }
                         }
                     }
                 }
