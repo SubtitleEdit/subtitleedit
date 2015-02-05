@@ -1,5 +1,38 @@
 ﻿Subtitle Edit Changelog
 
+3.4.6 (xth March 2015) BETA
+* NEW:
+   * Added new subtitle format
+   * Added waveform text size/bold to UI
+   * Added filter to "Batch convert"
+   * Added new shortcut: Copy text from original to current - thx megasmile
+   * Added export functionality form "Statics" window - thx Ivandrofly
+   * Added format "Sami YouTube"
+   * Added custom shortcut for toggle textbox auto-duration - thx Tony
+* IMPROVED:
+   * Updated French translation - thx JM GBT
+   * Updated Czech translation - thx Trottel
+   * Updated Korean translation - thx domddol
+   * Updated Brazilian Portuguese translation - thx Igor
+   * Updated German/French translations - thx xylographe
+   * Taskbar icon progress info for batch-convert/dvd-rip/matroska+TS-import  
+* FIXED:
+   * Fixed missing rule for "Fix invalid italic tags" - thx Ivandrofly
+   * Fixed possible freeze in video player text - thx Mafu
+   * Fixed crash in 'Merge lines with same time code' - thx Miguel
+   * Frame rate reading fix for format "Timed Text" - thx SwK
+   * Keep line style when converting from "Timed Text" to ASS - thx SwK
+   * Fixed Alt+Drag issue in waveform - the Leon
+   * Fixed selected+unfocused rows for RTL in list view - thx gold
+   * Disabled native video player subtitles in MPlayer - thx larvanitis
+   * Handle possible crash in "Batch convert" - thx Ivandrofly
+   * "Multiple replace" remove line if only tag remains - thx Ivandrofly
+   * Some fixes for unknown subtitle 17 - thx Pedro
+   * Timed Text now keeps separate text element div tags separate - thx Krystian
+   * Some fixes for .chk files - thx Mark
+   * + Many minor fixes from Ivandrofly and xylographe
+
+
 3.4.5 (4th January 2015)
 * NEW:
    * Basic read support for Ayato + Unipac format + unknown format
@@ -28,6 +61,7 @@
    * Fix for "Split long lines" - thx XhmikosR
    * Some fixes in waveform regarding lines with empty time codes
    * "Multiple replace" lines left empty are now removed
+
 
 3.4.4 (28th November 2014)
 * NEW:
