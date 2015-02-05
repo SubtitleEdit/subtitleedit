@@ -166,7 +166,7 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.Append(extension);
                 i++;
             }
-            if (includeAudioFiles && !string.IsNullOrEmpty(Configuration.Settings.Language.General.AudioFiles))
+            if (includeAudioFiles)
             {
                 sb.Append('|');
                 sb.Append(Configuration.Settings.Language.General.AudioFiles);

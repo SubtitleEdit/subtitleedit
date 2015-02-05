@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         private VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
-        //        List<NOcrChar> _nocrChars = null;
+        //List<NOcrChar> _nocrChars = null;
         private NOcrDb _nOcrDb;
         private VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
         private int _nocrLastLowercaseHeight = -1;
@@ -313,8 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTesseractLanguage.Text = language.Language;
             labelImageDatabase.Text = language.ImageDatabase;
             labelNoOfPixelsIsSpace.Text = language.NoOfPixelsIsSpace;
-            if (!string.IsNullOrEmpty(language.MaxErrorPercent)) //TODO: Remove in SE 3.4
-                labelMaxErrorPercent.Text = language.MaxErrorPercent;
+            labelMaxErrorPercent.Text = language.MaxErrorPercent;
             buttonNewCharacterDatabase.Text = language.New;
             buttonEditCharacterDatabase.Text = language.Edit;
             buttonStartOcr.Text = language.StartOcr;
@@ -346,13 +345,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
             checkBoxGuessUnknownWords.Checked = Configuration.Settings.VobSubOcr.GuessUnknownWords;
 
-            if (!string.IsNullOrEmpty(language.TransportStream))
-            {
-                groupBoxTransportStream.Text = language.TransportStream;
-                checkBoxTransportStreamGrayscale.Text = language.TransportStreamGrayscale;
-                checkBoxTransportStreamGetColorAndSplit.Text = language.TransportStreamGetColor;
-                checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
-            }
+            groupBoxTransportStream.Text = language.TransportStream;
+            checkBoxTransportStreamGrayscale.Text = language.TransportStreamGrayscale;
+            checkBoxTransportStreamGetColorAndSplit.Text = language.TransportStreamGetColor;
+            checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellChecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
@@ -373,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelFixesMade.Text = string.Empty;
             labelFixesMade.Left = checkBoxAutoFixCommonErrors.Left + checkBoxAutoFixCommonErrors.Width;
 
-            labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty);
+            labelDictionaryLoaded.Text = string.Format(language.DictionaryX, string.Empty);
             comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
 
             groupBoxImageCompareMethod.Text = string.Empty; // language.OcrViaImageCompare;
@@ -391,10 +387,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
             comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             comboBoxOcrMethod.Items.Add(language.OcrViaModi);
-            if (!string.IsNullOrEmpty(language.OcrViaNOCR) && Configuration.Settings.General.ShowBetaStuff)
-                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
-            if (!string.IsNullOrEmpty(language.OcrViaNOCR) && Configuration.Settings.General.ShowBetaStuff)
+            if (Configuration.Settings.General.ShowBetaStuff)
             {
+                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
                 comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare + " NEW! ");
                 comboBoxOcrMethod.SelectedIndex = 4;
             }
@@ -415,8 +410,6 @@ namespace Nikse.SubtitleEdit.Forms
             normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
-            if (string.IsNullOrEmpty(language.ImportTextWithMatchingTimeCodes))
-                importTextWithMatchingTimeCodesToolStripMenuItem.Visible = false;
             importNewTimeCodesToolStripMenuItem.Text = language.ImportNewTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             toolStripMenuItemImageSaveAs.Text = language.SaveSubtitleImageAs;
@@ -473,7 +466,7 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxEmphasis2.Left = checkBoxEmphasis1Transparent.Left + checkBoxEmphasis1Transparent.Width + 8;
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
 
-            buttonGetTesseractDictionaries.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.GetTesseractDictionaries.Title);
+            buttonGetTesseractDictionaries.Visible = true;
 
             try
             {

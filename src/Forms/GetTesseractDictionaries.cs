@@ -20,14 +20,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.GetTesseractDictionaries.Title))
-            {
-                Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
-                labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
-                linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetTesseractDictionaries.OpenDictionariesFolder;
-                labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.ChooseLanguageAndClickDownload;
-                buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
-            }
+            Text = Configuration.Settings.Language.GetTesseractDictionaries.Title;
+            labelDescription1.Text = Configuration.Settings.Language.GetTesseractDictionaries.DescriptionLine1;
+            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetTesseractDictionaries.OpenDictionariesFolder;
+            labelChooseLanguageAndClickDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.ChooseLanguageAndClickDownload;
+            buttonDownload.Text = Configuration.Settings.Language.GetTesseractDictionaries.Download;
             labelPleaseWait.Text = string.Empty;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             LoadDictionaryList("Nikse.SubtitleEdit.Resources.TesseractDictionaries.xml.gz");

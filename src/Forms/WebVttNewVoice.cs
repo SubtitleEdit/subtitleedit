@@ -12,10 +12,8 @@ namespace Nikse.SubtitleEdit.Forms
         public WebVttNewVoice()
         {
             InitializeComponent();
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.WebVttNewVoice.Title)) //TODO: Remove in 3.4
-                Text = Configuration.Settings.Language.WebVttNewVoice.Title;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.WebVttNewVoice.VoiceName)) //TODO: Remove in 3.4
-                labelVoiceName.Text = Configuration.Settings.Language.WebVttNewVoice.VoiceName;
+            Text = Configuration.Settings.Language.WebVttNewVoice.Title;
+            labelVoiceName.Text = Configuration.Settings.Language.WebVttNewVoice.VoiceName;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             FixLargeFonts();

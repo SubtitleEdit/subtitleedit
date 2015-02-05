@@ -23,18 +23,15 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonTimeCodes.Enabled = !onlyText;
             radioButtonOriginalText.Visible = isOriginalAvailable;
 
-            if (Configuration.Settings.Language.ColumnPaste != null && !string.IsNullOrEmpty(Configuration.Settings.Language.ColumnPaste.Title))
-            {
-                Text = Configuration.Settings.Language.ColumnPaste.Title;
-                groupBoxChooseColumn.Text = Configuration.Settings.Language.ColumnPaste.ChooseColumn;
-                groupBoxOverwriteOrInsert.Text = Configuration.Settings.Language.ColumnPaste.OverwriteShiftCellsDown;
-                radioButtonOverwrite.Text = Configuration.Settings.Language.ColumnPaste.Overwrite;
-                radioButtonShiftCellsDown.Text = Configuration.Settings.Language.ColumnPaste.ShiftCellsDown;
-                radioButtonAll.Text = Configuration.Settings.Language.General.All;
-                radioButtonTimeCodes.Text = Configuration.Settings.Language.ColumnPaste.TimeCodesOnly;
-                radioButtonTextOnly.Text = Configuration.Settings.Language.ColumnPaste.TextOnly;
-                radioButtonOriginalText.Text = Configuration.Settings.Language.ColumnPaste.OriginalTextOnly;
-            }
+            Text = Configuration.Settings.Language.ColumnPaste.Title;
+            groupBoxChooseColumn.Text = Configuration.Settings.Language.ColumnPaste.ChooseColumn;
+            groupBoxOverwriteOrInsert.Text = Configuration.Settings.Language.ColumnPaste.OverwriteShiftCellsDown;
+            radioButtonOverwrite.Text = Configuration.Settings.Language.ColumnPaste.Overwrite;
+            radioButtonShiftCellsDown.Text = Configuration.Settings.Language.ColumnPaste.ShiftCellsDown;
+            radioButtonAll.Text = Configuration.Settings.Language.General.All;
+            radioButtonTimeCodes.Text = Configuration.Settings.Language.ColumnPaste.TimeCodesOnly;
+            radioButtonTextOnly.Text = Configuration.Settings.Language.ColumnPaste.TextOnly;
+            radioButtonOriginalText.Text = Configuration.Settings.Language.ColumnPaste.OriginalTextOnly;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
