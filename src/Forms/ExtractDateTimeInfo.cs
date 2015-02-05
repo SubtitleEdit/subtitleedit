@@ -31,16 +31,13 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDateTimeFormats.SelectedIndex = 0;
 
             var l = Configuration.Settings.Language.ExtractDateTimeInfo;
-            if (!string.IsNullOrEmpty(l.Title)) // Remove in SE 3.4
-            {
-                Text = l.Title;
-                labelChooseVideoFile.Text = l.OpenVideoFile;
-                labelStartFrom.Text = l.StartFrom;
-                labelDuration.Text = Configuration.Settings.Language.General.Duration;
-                labelExample.Text = l.Example;
-                buttonOK.Text = l.GenerateSubtitle;
-                labelWriteFormat.Text = l.DateTimeFormat;
-            }
+            Text = l.Title;
+            labelChooseVideoFile.Text = l.OpenVideoFile;
+            labelStartFrom.Text = l.StartFrom;
+            labelDuration.Text = Configuration.Settings.Language.General.Duration;
+            labelExample.Text = l.Example;
+            buttonOK.Text = l.GenerateSubtitle;
+            labelWriteFormat.Text = l.DateTimeFormat;
         }
 
         private static string DecodeFormat(DateTime dateTime, string format)

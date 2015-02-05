@@ -80,7 +80,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             radioButtonOpaqueBox.Text = l.OpaqueBox;
             buttonImport.Text = l.Import;
             buttonExport.Text = l.Export;
-            buttonExport.Visible = !string.IsNullOrEmpty(l.Export);
+            buttonExport.Visible = true;
             buttonCopy.Text = l.Copy;
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
@@ -1184,8 +1184,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             SetControlsFromStyle(style);
                             listViewStyles_SelectedIndexChanged(null, null);
 
-                            if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
-                                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, style.Name, openFileDialogImport.FileName);
+                            labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, style.Name, openFileDialogImport.FileName);
                             timerClearStatus.Start();
                         }
                     }
@@ -1301,8 +1300,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                 }
             }
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
-                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleName, saveFileDialogStyle.FileName);
+            labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleName, saveFileDialogStyle.FileName);
             timerClearStatus.Start();
         }
 

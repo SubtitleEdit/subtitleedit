@@ -49,7 +49,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //[00:00:07.12]
-                //d’être perdu dans un brouillard de pensées, 
+                //d’être perdu dans un brouillard de pensées,
                 //[00:00:17.06] (this line is optional!)
                 //              (blank line optional too)
                 //[00:00:26.26]
@@ -70,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //[00:00:07.12]
-            //d’être perdu dans un brouillard de pensées, 
+            //d’être perdu dans un brouillard de pensées,
             //[00:00:17.06] (this line is optional!)
             //              (blank line optional too)
             //[00:00:26.26]

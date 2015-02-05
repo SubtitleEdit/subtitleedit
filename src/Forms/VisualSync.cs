@@ -81,8 +81,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFindTextStart.Text = _language.FindText;
             buttonFindTextEnd.Text = _language.FindText;
             buttonSync.Text = _language.Synchronize;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = _languageGeneral.Ok;
+            buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
             FixLargeFonts();
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;

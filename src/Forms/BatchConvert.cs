@@ -152,8 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             comboBoxSubtitleFormats.SelectedIndex = selectedFormatIndex;
-            if (!string.IsNullOrEmpty(l.PlainText))
-                comboBoxSubtitleFormats.Items.Add(l.PlainText);
+            comboBoxSubtitleFormats.Items.Add(l.PlainText);
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
@@ -183,52 +182,31 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
-                buttonRemoveTextForHiSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
-                buttonFixCommonErrorSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.Settings)) //TODO: remove in 3.4
-                buttonMultipleReplaceSettings.Text = Configuration.Settings.Language.BatchConvert.Settings;
+            buttonRemoveTextForHiSettings.Text = l.Settings;
+            buttonFixCommonErrorSettings.Text = l.Settings;
+            buttonMultipleReplaceSettings.Text = l.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
-            checkBoxAutoBalance.Text = Configuration.Settings.Language.BatchConvert.AutoBalance;
-            checkBoxAutoBalance.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.AutoBalance); // TODO: Remove in 3.4
-            checkBoxSplitLongLines.Text = Configuration.Settings.Language.BatchConvert.SplitLongLines;
-            checkBoxSplitLongLines.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.SplitLongLines); // TODO: Remove in 3.4
+            checkBoxAutoBalance.Text = l.AutoBalance;
+            checkBoxAutoBalance.Visible = true;
+            checkBoxSplitLongLines.Text = l.SplitLongLines;
+            checkBoxSplitLongLines.Visible = true;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.SetMinMsBetweenSubtitles)) //TODO: remove in 3.4
-                checkBoxSetMinimumDisplayTimeBetweenSubs.Text = Configuration.Settings.Language.BatchConvert.SetMinMsBetweenSubtitles;
-            else
-                checkBoxSetMinimumDisplayTimeBetweenSubs.Visible = false;
-
-            buttonSearchFolder.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.ScanningFolder); //TODO: Remove in 3.4
-            checkBoxScanFolderRecursive.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.ScanningFolder); //TODO: Remove in 3.4
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.BatchConvert.OverwriteOriginalFiles)) //TODO: Remove in 3.4
-            {
-                checkBoxOverwriteOriginalFiles.Checked = false;
-                checkBoxOverwriteOriginalFiles.Visible = false;
-            }
+            checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
+            buttonSearchFolder.Visible = true;
+            checkBoxScanFolderRecursive.Visible = true;
 
             _removeTextForHearingImpaired = new Logic.Forms.RemoveTextForHI(new Logic.Forms.RemoveTextForHISettings());
 
-            if (string.IsNullOrEmpty(l.Filter))
-            {
-                comboBoxFilter.Visible = false;
-                textBoxFilter.Visible = false;
-                labelFilter.Visible = false;
-            }
-            else
-            {
-                labelFilter.Text = l.Filter;
-                comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
-                comboBoxFilter.Items[1] = l.FilterSrtNoUtf8BOM;
-                comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
-                comboBoxFilter.Items[3] = l.FilterContains;
-                comboBoxFilter.SelectedIndex = 0;
-                comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
-                textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
-            }
+            labelFilter.Text = l.Filter;
+            comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
+            comboBoxFilter.Items[1] = l.FilterSrtNoUtf8BOM;
+            comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
+            comboBoxFilter.Items[3] = l.FilterContains;
+            comboBoxFilter.SelectedIndex = 0;
+            comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
+            textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
         }
 
         private void FixLargeFonts()
