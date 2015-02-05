@@ -28,6 +28,14 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = text.TrimStart('.').TrimStart();
             }
 
+            // "...foobar"
+            if(text.StartsWith("\"..", StringComparison.Ordinal))
+            {
+                var endIdx = 0;
+                while (text[++endIdx] == '.');
+                text = text.Remove(1, endIdx - 1);
+            }
+
             text = text.Replace("-..", "- ..");
             var tag = "- ...";
             if (text.StartsWith(tag, StringComparison.Ordinal))

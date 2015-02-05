@@ -1196,6 +1196,16 @@ namespace Test
             var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i><font color=\"#000000\">Kurt: ...true but bad.</font></i>");
             Assert.AreEqual(result, "<i><font color=\"#000000\">Kurt: true but bad.</font></i>");
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartQuote()
+        {
+            var actual = "\"...Foobar\"";
+            var expected = "\"Foobar\"";
+            actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
+            Assert.AreEqual(actual, expected);
+        }
         #endregion Ellipses start
 
         #region FixDoubleGreater
