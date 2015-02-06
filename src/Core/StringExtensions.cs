@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Core
         {
             if (threeLengthTag && text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'I' || text[1] == 'u' || text[1] == 'U' || text[1] == 'b' || text[1] == 'B'))
                 return true;
-            if (includeFont && text.Length > 22 && text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
-                return true;
+            if (includeFont && text.Length > 5 && text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+                return text.IndexOf('>', 5) >= 5; // <font> or <font color="#000000">
             return false;
         }
 
