@@ -103,5 +103,16 @@ namespace Nikse.SubtitleEdit.Core
             }
             return -1;
         }
+
+        public static int IndexOfAny(this string s, string[] words, StringComparison comparionType)
+        {
+            for (int i = 0; i < words.Length; i++)
+            {
+                var idx = s.IndexOf(words[i], comparionType);
+                if (idx >= 0)
+                    return idx;
+            }
+            return -1;
+        }
     }
 }
