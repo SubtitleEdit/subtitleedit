@@ -1,4 +1,4 @@
-// (c) Giora Tamir (giora@gtamir.com), 2005
+﻿// (c) Giora Tamir (giora@gtamir.com), 2005
 
 using System;
 using System.Text;
