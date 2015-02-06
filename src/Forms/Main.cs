@@ -5657,11 +5657,11 @@ namespace Nikse.SubtitleEdit.Forms
                 typeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 karokeeEffectToolStripMenuItem.Visible = noNetWorkSession;
                 toolStripSeparatorAdvancedFunctions.Visible = noNetWorkSession;
-                fixCommonErrorsInSelectedLinesToolStripMenuItem.Visible = true;
+                //fixCommonErrorsInSelectedLinesToolStripMenuItem.Visible = true;
                 adjustDisplayTimeForSelectedLinesToolStripMenuItem.Visible = true;
-                showSelectedLinesEarlierlaterToolStripMenuItem.Visible = true;
+                //showSelectedLinesEarlierlaterToolStripMenuItem.Visible = true;
                 visualSyncSelectedLinesToolStripMenuItem.Visible = true;
-                googleTranslateSelectedLinesToolStripMenuItem.Visible = true;
+                //googleTranslateSelectedLinesToolStripMenuItem.Visible = true;
                 toolStripMenuItemGoogleMicrosoftTranslateSelLine.Visible = false;
                 toolStripMenuItemUnbreakLines.Visible = true;
                 toolStripMenuItemAutoBreakLines.Visible = true;
@@ -16608,8 +16608,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToolStripMenuItemSpellCheckMainDropDownOpening(object sender, EventArgs e)
         {
-            toolStripSeparator9.Visible = true;
-            GetDictionariesToolStripMenuItem.Visible = true;
+            //toolStripSeparator9.Visible = true;
+            //GetDictionariesToolStripMenuItem.Visible = true;
             addWordToNamesetcListToolStripMenuItem.Visible = true;
         }
 
