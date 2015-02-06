@@ -6788,7 +6788,7 @@ namespace Nikse.SubtitleEdit.Forms
                     labelAutoDuration.Visible = true;
                 }
                 e.SuppressKeyPress = true;
-            }            
+            }
 
             // last key down in text
             _lastTextKeyDownTicks = DateTime.Now.Ticks;

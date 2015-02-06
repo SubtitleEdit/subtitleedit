@@ -1,4 +1,4 @@
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using System.Collections.Generic;
 using System.Text;
 
