@@ -40,7 +40,7 @@
     <FrameRateX>Beeldsnelheid: {0:0.0###}</FrameRateX>
     <TotalFramesX>Totaal aantal beelden: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Videocodering: {0}</VideoEncodingX>
-    <SingleLineLengths>Regellengte:</SingleLineLengths>
+    <SingleLineLengths>Regellengten:</SingleLineLengths>
     <TotalLengthX>Totale lengte: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Totale lengte: {0} (regel opdelen!)</TotalLengthXSplitLine>
     <SplitLine>Regel opdelen!</SplitLine>
@@ -135,13 +135,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </ApplyDurationLimits>
   <AutoBreakUnbreakLines>
     <TitleAutoBreak>Geselecteerde teksten uitlĳnen</TitleAutoBreak>
-    <TitleUnbreak>Verwĳder regeleinden uit geselecteerde teksten</TitleUnbreak>
+    <TitleUnbreak>Regelafbrekingen uit geselecteerde teksten verwĳderen</TitleUnbreak>
     <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
     <OnlyBreakLinesLongerThan>Regel afbreken indien langer dan</OnlyBreakLinesLongerThan>
     <OnlyUnbreakLinesLongerThan>Regels samenvoegen indien tekst langer dan</OnlyUnbreakLinesLongerThan>
   </AutoBreakUnbreakLines>
   <BatchConvert>
-    <Title>Batch-conversie</Title>
+    <Title>Ondertitelbestanden in batch converteren</Title>
     <Input>Invoer</Input>
     <InputDescription>Invoerbestanden (blader of sleep-en-plaats)</InputDescription>
     <Status>Status</Status>
@@ -161,7 +161,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
     <SplitLongLines>Lange regels opdelen</SplitLongLines>
-    <AutoBalance>Regels automatisch uitlĳnen</AutoBalance>
+    <AutoBalance>Tekst automatisch uitlĳnen</AutoBalance>
     <ScanFolder>Doorzoek de map...</ScanFolder>
     <ScanningFolder>Doorzoek {0} en submappen naar ondertitelbestanden...</ScanningFolder>
     <Recursive>Inclusief submappen</Recursive>
@@ -178,11 +178,11 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </Beamer>
   <ChangeCasing>
     <Title>Hoofd-/kleine letters wĳzigen</Title>
-    <ChangeCasingTo>Verander schrĳfwĳze naar</ChangeCasingTo>
-    <NormalCasing>Normaal. Elke zin begint met een hoofdletter.</NormalCasing>
+    <ChangeCasingTo>Nieuwe schrĳfwĳze</ChangeCasingTo>
+    <NormalCasing>Normaal: elke zin begint met een hoofdletter</NormalCasing>
     <FixNamesCasing>Naamschrĳfwĳze corrigeren (via Dictionaries\NamesEtc.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Alleen naamschrĳfwĳze corrigeren (via Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
-    <OnlyChangeAllUppercaseLines>Alleen regels in hoofdletters wĳzigen</OnlyChangeAllUppercaseLines>
+    <OnlyChangeAllUppercaseLines>Alleen regels met uitsluitend hoofdletters wĳzigen</OnlyChangeAllUppercaseLines>
     <AllUppercase>ALLEMAAL HOOFDLETTERS</AllUppercase>
     <AllLowercase>allemaal kleine letters</AllLowercase>
   </ChangeCasing>
@@ -258,7 +258,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
     <IgnoreLineBreaks>Regeleinden negeren</IgnoreLineBreaks>
     <OnlyLookForDifferencesInText>Alleen naar tekstverschillen zoeken</OnlyLookForDifferencesInText>
-    <CannotCompareWithImageBasedSubtitles>Kan op beeld gebaseerde ondertitels niet vergelĳken</CannotCompareWithImageBasedSubtitles>
+    <CannotCompareWithImageBasedSubtitles>Vergelĳken met op beeld gebaseerde ondertitels is niet mogelĳk</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
     <Title>D-Cinema eigenschappen (interop)</Title>
@@ -298,11 +298,11 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <DivideEven>Hiaattĳd verdelen over beide teksten</DivideEven>
   </DurationsBridgeGaps>
   <DvdSubRip>
-    <Title>Ondertitels van DVD (VOB/IFO) rippen</Title>
-    <DvdGroupTitle>DVD-bestanden/info</DvdGroupTitle>
-    <IfoFile>IFO-bestand</IfoFile>
-    <IfoFiles>IFO-bestanden</IfoFiles>
-    <VobFiles>VOB-bestanden</VobFiles>
+    <Title>Ondertitels van dvd (vob/ifo) rippen</Title>
+    <DvdGroupTitle>Dvd-bestanden/info</DvdGroupTitle>
+    <IfoFile>Ifo-bestand</IfoFile>
+    <IfoFiles>Ifo-bestanden</IfoFiles>
+    <VobFiles>Vob-bestanden</VobFiles>
     <Add>Toevoegen...</Add>
     <Remove>Verwĳderen</Remove>
     <Clear>Leegmaken</Clear>
@@ -711,10 +711,10 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Compare>&amp;Vergelĳken...</Compare>
         <Statistics>Statistie&amp;ken...</Statistics>
         <Plugins>&amp;Plug-ins...</Plugins>
-        <ImportOcrFromDvd>Import/OCR DVD-ondertitel (VOB/IFO)...</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle>Import/OCR VobSub ondertitel (sub/idx)...</ImportOcrVobSubSubtitle>
-        <ImportBluRaySupFile>Import/OCR blu-ray ondertitel (sup)...</ImportBluRaySupFile>
-        <ImportXSub>Import/OCR XSub-ondertitel (divx/avi)...</ImportXSub>
+        <ImportOcrFromDvd>Import/OCR dvd-ondertitel (vob/ifo)...</ImportOcrFromDvd>
+        <ImportOcrVobSubSubtitle>Import/OCR VobSub-ondertitel (sub/idx)...</ImportOcrVobSubSubtitle>
+        <ImportBluRaySupFile>Import/OCR blu-ray-ondertitel (sup)...</ImportBluRaySupFile>
+        <ImportXSub>Import/OCR Xsub-ondertitel (divx/avi)...</ImportXSub>
         <ImportSubtitleFromMatroskaFile>Importeer ondertitel uit Matroska-bestand...</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>Importeer ondertitel met handmatig gekozen codering...</ImportSubtitleWithManualChosenEncoding>
         <ImportText>Importeer platte tekst...</ImportText>
@@ -722,7 +722,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ImportTimecodes>Importeer tĳdcodes...</ImportTimecodes>
         <Export>E&amp;xporteer</Export>
         <ExportBdnXml>BDN xml/png...</ExportBdnXml>
-        <ExportBluRaySup>Blu-ray sup...</ExportBluRaySup>
+        <ExportBluRaySup>Blu-ray (sup)...</ExportBluRaySup>
         <ExportVobSub>VobSub (sub/idx)...</ExportVobSub>
         <ExportCavena890>Cavena 890...</ExportCavena890>
         <ExportEbu>EBU-STL...</ExportEbu>
@@ -743,22 +743,22 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Title>Be&amp;werken</Title>
         <Undo>&amp;Ongedaan maken</Undo>
         <Redo>&amp;Herhalen</Redo>
-        <ShowUndoHistory>Geschiedenis voor ongedaan maken tonen</ShowUndoHistory>
+        <ShowUndoHistory>&amp;Geschiedenis voor ongedaan maken tonen</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Unicode symbool invoegen</InsertUnicodeSymbol>
         <InsertUnicodeControlCharacters>Unicode controletekens</InsertUnicodeControlCharacters>
-        <InsertUnicodeControlCharactersLRM>Left-to-right markering (LRM)</InsertUnicodeControlCharactersLRM>
-        <InsertUnicodeControlCharactersRLM>Right-to-left markering (RLM)</InsertUnicodeControlCharactersRLM>
-        <InsertUnicodeControlCharactersLRE>Left-to-right embedding (LRE)</InsertUnicodeControlCharactersLRE>
-        <InsertUnicodeControlCharactersRLE>Rright-to-left embedding (RLE)</InsertUnicodeControlCharactersRLE>
-        <InsertUnicodeControlCharactersLRO>Left-to-right override (LRO)</InsertUnicodeControlCharactersLRO>
-        <InsertUnicodeControlCharactersRLO>Right-to-left override (RLO)</InsertUnicodeControlCharactersRLO>
+        <InsertUnicodeControlCharactersLRM>Links-naar-rechts markering (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Rechts-naar-links markering (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Links-naar-rechts inbedding (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Rechts-naar-links inbedding (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Links-naar-rechts afdwingen (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Rechts-naar-links afdwingen (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Zoeken</Find>
         <FindNext>Volge&amp;nde zoeken</FindNext>
         <Replace>&amp;Vervangen</Replace>
-        <MultipleReplace>&amp;Meermaals vervangen...</MultipleReplace>
-        <GoToSubtitleNumber>&amp;Ga naar ondertitel nummer...</GoToSubtitleNumber>
+        <MultipleReplace>&amp;Meerdere vervangen...</MultipleReplace>
+        <GoToSubtitleNumber>&amp;Ga naar ondertitel...</GoToSubtitleNumber>
         <RightToLeftMode>Rechts-naar-links (RTL)</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>RTL via Unicode controletekens corigeren (geselecteerde ondertitels)</FixTrlViaUnicodeControlCharacters>
+        <FixTrlViaUnicodeControlCharacters>RTL via Unicode controletekens corrigeren (geselecteerde ondertitels)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>RTL begin/einde omkeren (geselecteerde ondertitels)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Originele tekst weergeven in audio/video voorbeeld</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>&amp;Selectie wĳzigen...</ModifySelection>
@@ -1122,7 +1122,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <BeforeSettingFontName>Vóór instellen lettertype</BeforeSettingFontName>
     <BeforeTypeWriterEffect>Vóór schrĳfmachine effect</BeforeTypeWriterEffect>
     <BeforeKaraokeEffect>Vóór karaoke-effect</BeforeKaraokeEffect>
-    <BeforeImportingDvdSubtitle>Vóór ondertitelimport van DVD</BeforeImportingDvdSubtitle>
+    <BeforeImportingDvdSubtitle>Vóór ondertitelimport van dvd</BeforeImportingDvdSubtitle>
     <OpenMatroskaFile>Matroska-bestand openen...</OpenMatroskaFile>
     <MatroskaFiles>Matroska-bestanden</MatroskaFiles>
     <NoSubtitlesFound>Geen ondertitels gevonden</NoSubtitlesFound>
@@ -1168,7 +1168,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <NumberOfLinesAutoBalancedX>Aantal uitgebalanceerde teksten: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Vóór verwĳderen regeleinden van selectie</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Aantal regels met verwĳderd regeleinde: {0}</NumberOfWithRemovedLineBreakX>
-    <BeforeMultipleReplace>Vóór meermaals vervangen</BeforeMultipleReplace>
+    <BeforeMultipleReplace>Vóór meerdere vervangen</BeforeMultipleReplace>
     <NumberOfLinesReplacedX>Aantal teksten met vervangingen: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>De naam '{0}' is toegevoegd aan de naamlĳst</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>De naam '{0}' is NIET toegevoegd aan de naamlĳst</NameXNotAddedToNamesEtcList>
@@ -1239,7 +1239,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Vóór samenvoegen regels met dezelfde tekst</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Ondertitel met tĳdcodes heeft een ander aantal regels ({0}) dan huidige ondertitel ({1}) - Toch doorgaan?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Transportstroom analyseren. Even geduld a.u.b.</ParsingTransportStream>
-    <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een idx/sub bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
+    <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een sub/idx bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
     <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
     <ErrorLoadPng>Dit is een png-afbeeldingsbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
@@ -1305,13 +1305,13 @@ Verder gaan?</SubtitleAppendPrompt>
     <EqualLines>Even regelnummers</EqualLines>
   </ModifySelection>
   <MultipleReplace>
-    <Title>Meermaals vervangen</Title>
+    <Title>Meerdere vervangen</Title>
     <FindWhat>Zoeken naar</FindWhat>
     <ReplaceWith>Vervangen door</ReplaceWith>
     <Normal>Normaal</Normal>
     <CaseSensitive>Hoofdlettergevoelig</CaseSensitive>
     <RegularExpression>Reguliere expressie</RegularExpression>
-    <LinesFoundX>Gevonden regels: {0}</LinesFoundX>
+    <LinesFoundX>Gevonden teksten: {0}</LinesFoundX>
     <Delete>Verwĳderen</Delete>
     <Add>Toevoegen</Add>
     <Update>Bĳwerken</Update>
@@ -1500,7 +1500,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainListViewVideoGoToPositionAndPause>Ga naar videopositie en pauzeer</MainListViewVideoGoToPositionAndPause>
     <MainListViewVideoGoToPositionAndPlay>Ga naar videopositie en speel af</MainListViewVideoGoToPositionAndPlay>
     <MainListViewEditText>Ga naar tekstbewerkingsvak</MainListViewEditText>
-    <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar videopositie  min 1 seconde en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
+    <MainListViewVideoGoToPositionMinus1SecAndPause>Ga naar videopositie min 1 seconde en pauzeer</MainListViewVideoGoToPositionMinus1SecAndPause>
     <MainListViewVideoGoToPositionMinusHalfSecAndPause>Ga naar videopositie min ½ seconde en pauzeer</MainListViewVideoGoToPositionMinusHalfSecAndPause>
     <MainListViewVideoGoToPositionMinus1SecAndPlay>Ga naar videopositie min 1 seconde en speel af</MainListViewVideoGoToPositionMinus1SecAndPlay>
     <MainListViewEditTextAndPause>Ga naar tekstbewerkingsvak en pauzeer op videopositie</MainListViewEditTextAndPause>
@@ -1682,6 +1682,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Verplaats eerste woord van volgende ondertitel naar boven</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Selectie naar kleine letters</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Selectie naar hoofdletters</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Auto tĳdsduur omkeren</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Breek tekst automatisch af</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Breek tekst niet automatisch af</MainTextBoxUnbreak>
     <MainFileSaveAll>Alles opslaan</MainFileSaveAll>
@@ -1694,14 +1695,14 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <RelativeToCurrentVideoPosition>Ten opzichte van de huidige videopositie.</RelativeToCurrentVideoPosition>
   </SetVideoOffset>
   <ShowEarlierLater>
-    <Title>Toon geselecteerde regels eerder/later</Title>
-    <TitleAll>Toon alle regels eerder/later</TitleAll>
+    <Title>Geselecteerde ondertitels eerder/later tonen</Title>
+    <TitleAll>Alle ondertitels eerder/later tonen</TitleAll>
     <ShowEarlier>Toon eerder</ShowEarlier>
     <ShowLater>Toon later</ShowLater>
     <TotalAdjustmentX>Totale aanpassing: {0}</TotalAdjustmentX>
-    <AllLines>Alle regels</AllLines>
-    <SelectedLinesOnly>Alleen geselecteerde regels</SelectedLinesOnly>
-    <SelectedLinesAndForward>Geselecteerde en daaropvolgende regels</SelectedLinesAndForward>
+    <AllLines>Alle ondertitels</AllLines>
+    <SelectedLinesOnly>Alleen geselecteerde ondertitels</SelectedLinesOnly>
+    <SelectedLinesAndForward>Geselecteerde en volgende ondertitels</SelectedLinesAndForward>
   </ShowEarlierLater>
   <ShowHistory>
     <Title>Geschiedenis (voor ongedaan maken)</Title>
