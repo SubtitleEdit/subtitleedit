@@ -28,12 +28,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = text.TrimStart('.').TrimStart();
             }
 
-            // "...foobar"
+            // "...foobar" / "... foobar"
             if (text.StartsWith("\"..", StringComparison.Ordinal))
             {
-                var endIdx = 0;
-                while (text[++endIdx] == '.') ;
-                text = text.Remove(1, endIdx - 1);
+                while (text.Length > 1 && text[1] == '.')
+                    text = text.Remove(1, 1);
+                if (text.Length > 1 && text[1] == ' ')
+                    text = text.Remove(1, 1);
             }
 
             text = text.Replace("-..", "- ..");

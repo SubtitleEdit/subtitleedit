@@ -1206,6 +1206,16 @@ namespace Test
             actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
             Assert.AreEqual(actual, expected);
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartQuote2()
+        {
+            var actual = "\"... Foobar\"";
+            var expected = "\"Foobar\"";
+            actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
+            Assert.AreEqual(actual, expected);
+        }
         #endregion Ellipses start
 
         #region FixDoubleGreater
