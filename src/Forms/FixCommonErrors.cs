@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Diagnostics;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Forms;
@@ -17,6 +18,9 @@ namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class FixCommonErrors : Form
     {
+
+        private HashSet<string> _allowList;
+
         private const int IndexRemoveEmptyLines = 0;
         private const int IndexOverlappingDisplayTime = 1;
         private const int IndexTooShortDisplayTime = 2;
@@ -513,17 +517,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool AllowFix(Paragraph p, string action)
         {
-            //if (!buttonBack.Enabled)
             if (_onlyListFixes || _batchMode)
                 return true;
 
-            string ln = p.Number.ToString(CultureInfo.InvariantCulture);
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.SubItems[1].Text == ln && item.SubItems[2].Text == action)
-                    return item.Checked;
-            }
-            return false;
+            return !_allowList.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);           
         }
 
         public void ShowStatus(string message)
@@ -4647,6 +4644,13 @@ namespace Nikse.SubtitleEdit.Forms
             int firstSelectedIndex = 0;
             if (subtitleListView1.SelectedItems.Count > 0)
                 firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+
+            _allowList = new HashSet<string>();
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                if (!item.Checked)
+                    _allowList.Add(item.SubItems[1].Text + "|" + item.SubItems[2].Text);
+            }
 
             _numberOfImportantLogMessages = 0;
             _onlyListFixes = false;
