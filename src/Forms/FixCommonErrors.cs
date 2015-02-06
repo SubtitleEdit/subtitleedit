@@ -554,7 +554,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FixEmptyLines()
+        public void FixEmptyLines()
         {
             string fixAction0 = _language.RemovedEmptyLine;
             string fixAction1 = _language.RemovedEmptyLineAtTop;
@@ -573,17 +573,71 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(p.Text))
                 {
                     string text = p.Text.Trim(' ');
+                    var oldText = text;
+                    var pre = string.Empty;
+                    var post = string.Empty;
+
+                    while (text.LineStartsWithHtmlTag(true, true))
+                    {
+                        // Three length tag
+                        if (text[2] == '>')
+                        {
+                            pre += text.Substring(0, 3);
+                            text = text.Remove(0, 3);
+                        }
+                        else // <font ...>
+                        {
+                            var closeIdx = text.IndexOf('>');
+                            if (closeIdx <= 2)
+                                break;
+                            else
+                            {
+                                pre += text.Substring(0, closeIdx + 1);
+                                text = text.Remove(0, closeIdx + 1);
+                            }
+                        }
+                    }
+                    while (text.LineEndsWithHtmlTag(true, true))
+                    {
+                        var len = text.Length;
+
+                        // Three length tag
+                        if (text[len - 4] == '<')
+                        {
+                            post = text.Substring(text.Length - 4) + post;
+                            text = text.Remove(text.Length - 4);
+                        }
+                        else // </font>
+                        {
+                            post = text.Substring(text.Length - 7) + post;
+                            text = text.Remove(text.Length - 7);
+                        }
+                    }
+
                     if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine))
                     {
-                        p.Text = text.TrimStart(Utilities.NewLineChars);
+                        if (pre.Length > 0)
+                            text = pre + text.TrimStart(Utilities.NewLineChars);
+                        else
+                            text = text.TrimStart(Utilities.NewLineChars);
+                        p.Text = text;
                         emptyLinesRemoved++;
-                        AddFixToListView(p, fixAction1, text, p.Text);
+                        AddFixToListView(p, fixAction1, oldText, p.Text);
                     }
+                    else
+                    {
+                        text = pre + text;
+                    }
+
                     if (AllowFix(p, fixAction2) && text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
-                        p.Text = text.TrimEnd(Utilities.NewLineChars);
+                        if (post.Length > 0)
+                            text = text.TrimEnd(Utilities.NewLineChars) + post;
+                        else
+                            text = text.TrimEnd(Utilities.NewLineChars);
+                        p.Text = text;
                         emptyLinesRemoved++;
-                        AddFixToListView(p, fixAction2, text, p.Text);
+                        AddFixToListView(p, fixAction2, oldText, p.Text);
                     }
                 }
             }
@@ -2889,12 +2943,12 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             var lines = text.SplitToLines();
                             for (int k = 0; k < lines.Length; k++)
-                                lines[k] = FixCommonErrorsHelper.RemoveSpacesBeingLineAfterEllipese(lines[k]);
+                                lines[k] = FixCommonErrorsHelper.RemoveSpacesBeingLineAfterEllipses(lines[k]);
                             text = string.Join(Environment.NewLine, lines);
                         }
                         else
                         {
-                            text = FixCommonErrorsHelper.RemoveSpacesBeingLineAfterEllipese(text);
+                            text = FixCommonErrorsHelper.RemoveSpacesBeingLineAfterEllipses(text);
                         }
                     }
                     //if (text.EndsWith('-'))
