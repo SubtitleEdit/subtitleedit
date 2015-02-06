@@ -188,14 +188,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
             checkBoxAutoBalance.Text = l.AutoBalance;
-            checkBoxAutoBalance.Visible = true;
             checkBoxSplitLongLines.Text = l.SplitLongLines;
-            checkBoxSplitLongLines.Visible = true;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
-            buttonSearchFolder.Visible = true;
-            checkBoxScanFolderRecursive.Visible = true;
 
             _removeTextForHearingImpaired = new Logic.Forms.RemoveTextForHI(new Logic.Forms.RemoveTextForHISettings());
 
