@@ -1312,5 +1312,34 @@ namespace Test
 
         #endregion Fix dialogs on one line
 
+        #region FixDoubleDash
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDoubleDashTest1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                // <font color="#000000"> and <font>
+                InitializeFixCommonErrorsLine(target, "<font color=\"#000000\">-- Mm-hmm.</font>");
+                target.FixDoubleDash();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color=\"#000000\">...Mm-hmm.</font>");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDoubleDashTest2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                // <font color="#000000"> and <font>
+                InitializeFixCommonErrorsLine(target, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">-- foobar</font>");
+                target.FixDoubleDash();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">...foobar</font>");
+            }
+        } 
+
+        #endregion
     }
 }

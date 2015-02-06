@@ -29,10 +29,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             // "...foobar"
-            if(text.StartsWith("\"..", StringComparison.Ordinal))
+            if (text.StartsWith("\"..", StringComparison.Ordinal))
             {
                 var endIdx = 0;
-                while (text[++endIdx] == '.');
+                while (text[++endIdx] == '.') ;
                 text = text.Remove(1, endIdx - 1);
             }
 
@@ -305,12 +305,39 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (text.LineStartsWithHtmlTag(false, true))
             {
                 var closeIdx = text.IndexOf('>');
-                if (closeIdx > -1 && text[closeIdx + 1] == 0x20)
-                {
+                if (closeIdx > 6 && text[closeIdx + 1] == 0x20)
                     text = text.Remove(closeIdx + 1, 1);
-                }
             }
             return text;
+        }
+
+        public static string RemoveSpacesBeingLineAfterEllipese(string line)
+        {
+            if (line.StartsWith("... ", StringComparison.Ordinal))
+                line = line.Remove(3, 1);
+            if (line.Length > 6 && line.LineStartsWithHtmlTag(true)) // <i>... foobar
+            {
+                var idx = line.IndexOf('>') + 1;
+                var pre = line.Substring(0, idx);
+                line = line.Remove(0, idx).TrimStart();
+                if(line.StartsWith("... "))
+                    line = line.Remove(3, 1);
+                line = pre + line;
+            }
+            if (line.LineStartsWithHtmlTag(false, true)) //<font color="#000000"> and <font>
+            {
+                // Todo: what if line number is > 1
+                var closeIdx = line.IndexOf('>', 5);
+                if (closeIdx >= 5 && line.Length > closeIdx + 5)
+                {
+                    var fontTag = line.Substring(0, closeIdx + 1).TrimStart();
+                    line = line.Substring(closeIdx + 1).TrimStart();
+                    if (line.StartsWith("... ", StringComparison.Ordinal))
+                        line = line.Remove("... ".Length - 1, 1);
+                    line = fontTag + line;
+                }
+            }
+            return line;
         }
 
         public static string FixHyphensAdd(Subtitle subtitle, int i, string language)
@@ -351,7 +378,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                 {
                                     // add dash in second line.
                                     newLineIdx += 2;
-                                    if(text.LineBreakStartsWithHtmlTag(true))
+                                    if (text.LineBreakStartsWithHtmlTag(true))
                                     {
                                         text = text.Insert(newLineIdx + 3, "- ").TrimEnd();
                                     }
