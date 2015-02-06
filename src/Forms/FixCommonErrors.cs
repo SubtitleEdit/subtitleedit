@@ -1737,11 +1737,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 }
             }
-            if (noOfFixes > 0)
-            {
-                _totalFixes += noOfFixes;
-                LogStatus(fixAction, string.Format(_language.XMissingQuotesAdded, noOfFixes));
-            }
+            UpdateFixStatus(noOfFixes, fixAction, _language.XMissingQuotesAdded);
         }
 
         private static string GetWholeWord(string text, int index)
@@ -1874,11 +1870,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 //isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
             }
-            if (uppercaseIsInsideLowercaseWords > 0)
-            {
-                _totalFixes += uppercaseIsInsideLowercaseWords;
-                LogStatus(_language.FixUppercaseIInsindeLowercaseWords, string.Format(_language.XUppercaseIsFoundInsideLowercaseWords, uppercaseIsInsideLowercaseWords));
-            }
+            UpdateFixStatus(uppercaseIsInsideLowercaseWords, _language.FixUppercaseIInsindeLowercaseWords, _language.XUppercaseIsFoundInsideLowercaseWords);
         }
 
         public void FixDoubleApostrophes()
@@ -1900,11 +1892,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixDoubleApostrophes, string.Format(_language.XDoubleApostrophesFixed, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixDoubleApostrophes, _language.XDoubleApostrophesFixed);
         }
 
         public void FixMissingPeriodsAtEndOfLine()
@@ -2031,12 +2019,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
-            if (missigPeriodsAtEndOfLine > 0)
-            {
-                _totalFixes += missigPeriodsAtEndOfLine;
-                LogStatus(_language.AddPeriods, string.Format(_language.XPeriodsAdded, missigPeriodsAtEndOfLine));
-            }
+            UpdateFixStatus(missigPeriodsAtEndOfLine, _language.AddPeriods, _language.XPeriodsAdded);
         }
 
         private static bool IsOneLineUrl(string s)
@@ -2122,11 +2105,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             listViewFixes.EndUpdate();
-            if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
-            {
-                _totalFixes += fixedStartWithUppercaseLetterAfterParagraphTicked;
-                LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
-            }
+            UpdateFixStatus(fixedStartWithUppercaseLetterAfterParagraphTicked, _language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
         }
 
         public static string FixStartWithUppercaseLetterAfterParagraph(Paragraph p, Paragraph prev, Encoding encoding, string language)
@@ -2657,18 +2636,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = Subtitle.Paragraphs[i];
                 string oldText = p.Text;
                 var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
-                if (AllowFix(p, fixAction) && oldText != text)
+                if (oldText != text && AllowFix(p, fixAction))
                 {
                     p.Text = text;
                     noOfFixes++;
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (noOfFixes > 0)
-            {
-                _totalFixes += noOfFixes;
-                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixDialogsOnOneLine, noOfFixes));
-            }
+            UpdateFixStatus(noOfFixes, _language.FixCommonOcrErrors, _language.FixDialogsOneLineExample);
         }
 
         private void TurkishAnsiToUnicode()
@@ -2678,29 +2653,22 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction))
+                string text = p.Text;
+                string oldText = text;
+                text = text.Replace("Ý", "İ");
+                text = text.Replace("Ð", "Ğ");
+                text = text.Replace("Þ", "Ş");
+                text = text.Replace("ý", "ı");
+                text = text.Replace("ð", "ğ");
+                text = text.Replace("þ", "ş");
+                if (oldText != text && AllowFix(p, fixAction))
                 {
-                    string text = p.Text;
-                    string oldText = text;
-                    text = text.Replace("Ý", "İ");
-                    text = text.Replace("Ð", "Ğ");
-                    text = text.Replace("Þ", "Ş");
-                    text = text.Replace("ý", "ı");
-                    text = text.Replace("ð", "ğ");
-                    text = text.Replace("þ", "ş");
-                    if (oldText != text)
-                    {
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (noOfFixes > 0)
-            {
-                _totalFixes += noOfFixes;
-                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixTurkishAnsi, noOfFixes));
-            }
+            UpdateFixStatus(noOfFixes, _language.FixCommonOcrErrors, _language.FixTurkishAnsi);
         }
 
         private void FixAloneLowercaseIToUppercaseI()
@@ -2723,11 +2691,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (iFixes > 0)
-            {
-                _totalFixes += iFixes;
-                LogStatus(_language.FixLowercaseIToUppercaseI, string.Format(_language.XIsChangedToUppercase, iFixes));
-            }
+            UpdateFixStatus(iFixes, _language.FixLowercaseIToUppercaseI, _language.XIsChangedToUppercase);
         }
 
         public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
@@ -2803,7 +2767,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string oldText = p.Text;
                     string text = FixCommonErrorsHelper.FixHyphensRemove(Subtitle, i);
-
                     if (text != oldText)
                     {
                         p.Text = text;
@@ -2812,11 +2775,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (iFixes > 0)
-            {
-                _totalFixes += iFixes;
-                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
-            }
+            UpdateFixStatus(iFixes, _language.FixHyphens, _language.XHyphensFixed);
         }
 
         public void FixHyphensAdd()
@@ -2830,7 +2789,6 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string oldText = p.Text;
                     string text = FixCommonErrorsHelper.FixHyphensAdd(Subtitle, i, Language);
-
                     if (text != oldText)
                     {
                         p.Text = text;
@@ -2839,10 +2797,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (iFixes > 0)
+            UpdateFixStatus(iFixes, _language.FixHyphen, _language.XHyphensFixed);
+        }
+
+        private void UpdateFixStatus(int fixes, string message, string xMessage)
+        {
+            if (fixes > 0)
             {
-                _totalFixes += iFixes;
-                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
+                _totalFixes += fixes;
+                LogStatus(message, string.Format(xMessage, fixes));
             }
         }
 
@@ -2853,7 +2816,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction) && Utilities.CountTagInText(p.Text, Environment.NewLine) > 1)
+                if (Utilities.CountTagInText(p.Text, Environment.NewLine) > 1 && AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
                     p.Text = Utilities.AutoBreakLine(p.Text);
@@ -2861,11 +2824,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (iFixes > 0)
-            {
-                _totalFixes += iFixes;
-                LogStatus(_language.Fix3PlusLines, string.Format(_language.X3PlusLinesFixed, iFixes));
-            }
+            UpdateFixStatus(iFixes, _language.Fix3PlusLines, _language.X3PlusLinesFixed);
         }
 
         public void FixMusicNotation()
@@ -2895,11 +2854,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixMusicNotation, string.Format(_language.XFixMusicNotation, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixMusicNotation, _language.XFixMusicNotation);
         }
 
         public void FixDoubleDash()
@@ -2968,11 +2923,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixDoubleDash, string.Format(_language.XFixDoubleDash, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixDoubleDash, _language.XFixDoubleDash);
         }
 
         public void FixDoubleGreaterThan()
@@ -3015,11 +2966,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixDoubleGreaterThan, string.Format(_language.XFixDoubleGreaterThan, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixDoubleGreaterThan, _language.XFixDoubleGreaterThan);
         }
 
         public void FixEllipsesStart()
@@ -3066,11 +3013,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             listViewFixes.Refresh();
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixEllipsesStart, _language.XFixEllipsesStart);
         }
 
         private static string FixMissingOpenBracket(string text, string openB)
@@ -3150,12 +3093,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixMissingOpenBracket, string.Format(_language.XFixMissingOpenBracket, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixMissingOpenBracket, _language.XFixMissingOpenBracket);
         }
 
         private static Regex MyRegEx(string inputRegex)
@@ -3872,11 +3810,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
-            }
+            UpdateFixStatus(fixCount, _language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
         }
 
         private void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool wasLastLineClosed, string fixAction, ref int fixCount)
