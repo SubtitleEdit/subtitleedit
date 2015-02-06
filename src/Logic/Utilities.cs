@@ -800,6 +800,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.Contains(Environment.NewLine))
             {
                 string newText = text.Replace(Environment.NewLine, " ");
+                newText = newText.Replace("</i> <i>", string.Empty);
+                newText = newText.Replace("</b> <b>", string.Empty);
+                newText = newText.Replace("</u> <u>", string.Empty);
+
                 while (newText.Contains("  "))
                     newText = newText.Replace("  ", " ");
                 return newText;
@@ -2350,7 +2354,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 text = text.Remove(0, idx + 1);
                                 text = FixInvalidItalicTags(text).Trim();
                                 if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
-                                    text  = RemoveSpaceBeforeAfterTag(text, "<i>");
+                                    text = RemoveSpaceBeforeAfterTag(text, "<i>");
                                 text = pre + " " + text;
                             }
                         }
