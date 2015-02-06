@@ -1020,7 +1020,7 @@ namespace Nikse.SubtitleEdit.Forms
                             noOfInvalidHtmlTags++;
                             AddFixToListView(Subtitle.Paragraphs[i], fixAction, oldText, text);
                         }
-                    } 
+                    }
                 }
             }
             listViewFixes.EndUpdate();
@@ -2633,16 +2633,13 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction))
+                string oldText = p.Text;
+                var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
+                if (oldText != text && AllowFix(p, fixAction))
                 {
-                    string oldText = p.Text;
-                    var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
-                    if (oldText != text)
-                    {
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    } 
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             UpdateFixStatus(noOfFixes, _language.FixCommonOcrErrors, _language.FixDialogsOneLineExample);
@@ -2655,22 +2652,19 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction))
+                string text = p.Text;
+                string oldText = text;
+                text = text.Replace("Ý", "İ");
+                text = text.Replace("Ð", "Ğ");
+                text = text.Replace("Þ", "Ş");
+                text = text.Replace("ý", "ı");
+                text = text.Replace("ð", "ğ");
+                text = text.Replace("þ", "ş");
+                if (oldText != text && AllowFix(p, fixAction))
                 {
-                    string text = p.Text;
-                    string oldText = text;
-                    text = text.Replace("Ý", "İ");
-                    text = text.Replace("Ð", "Ğ");
-                    text = text.Replace("Þ", "Ş");
-                    text = text.Replace("ý", "ı");
-                    text = text.Replace("ð", "ğ");
-                    text = text.Replace("þ", "ş");
-                    if (oldText != text)
-                    {
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             UpdateFixStatus(noOfFixes, _language.FixCommonOcrErrors, _language.FixTurkishAnsi);
@@ -2821,7 +2815,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction) && Utilities.CountTagInText(p.Text, Environment.NewLine) > 1)
+                if (Utilities.CountTagInText(p.Text, Environment.NewLine) > 1 && AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
                     p.Text = Utilities.AutoBreakLine(p.Text);
