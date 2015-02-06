@@ -2884,14 +2884,18 @@ namespace Nikse.SubtitleEdit.Forms
                         text = text.Replace("... </", "...</"); // </i>, </font>...
                         text = text.Replace("... ?", "...?");
                         text = text.Replace("... !", "...!");
-                        if (text.StartsWith("... ", StringComparison.Ordinal))
-                            text = text.Remove(3, 1);
-                        if (text.StartsWith("<i>... ", StringComparison.Ordinal))
-                            text = text.Remove(6, 1);
-                        if (text.StartsWith("<font>... ", StringComparison.Ordinal))
-                            text = text.Remove("<font>... ".Length - 1, 1);
-                        if (text.StartsWith("<b>... ", StringComparison.Ordinal))
-                            text = text.Remove("<b>... ".Length - 1, 1);
+
+                        if (text.IndexOf(Environment.NewLine, StringComparison.Ordinal) > 1)
+                        {
+                            var lines = text.SplitToLines();
+                            for (int k = 0; k < lines.Length; k++)
+                                lines[k] = FixCommonErrorsHelper.RemoveSpacesBeingLineAfterEllipese(lines[k]);
+                            text = string.Join(Environment.NewLine, lines);
+                        }
+                        else
+                        {
+                            text = FixCommonErrorsHelper.RemoveSpacesBeingLineAfterEllipese(text);
+                        }
                     }
                     //if (text.EndsWith('-'))
                     //{
