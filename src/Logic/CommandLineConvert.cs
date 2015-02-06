@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Windows.Forms.VisualStyles;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
@@ -151,7 +152,23 @@ namespace Nikse.SubtitleEdit.Logic
                     if (args.Length > idx && args[idx].StartsWith("/pac-codepage:", StringComparison.OrdinalIgnoreCase))
                         pacCodePage = args[idx].ToLower();
                 if (pacCodePage.Length > "/pac-codepage:".Length)
+                {
                     pacCodePage = pacCodePage.Remove(0, "/pac-codepage:".Length);
+                    if (string.Compare("Latin", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "0";
+                    else if (string.Compare("Greek", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "1";
+                    else if (string.Compare("Czech", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "2";
+                    else if (string.Compare("Arabic", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "3";
+                    else if (string.Compare("Hebrew", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "4";
+                    else if (string.Compare("Encoding", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "5";
+                    else if (string.Compare("Cyrillic", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "6";
+                }
 
                 bool overwrite = false;
                 for (int idx = 4; idx < max; idx++)
@@ -270,6 +287,12 @@ namespace Nikse.SubtitleEdit.Logic
                                 if (pac.IsMine(null, fileName))
                                 {
                                     pac.BatchMode = true;
+                                    
+                                    if (!string.IsNullOrEmpty(pacCodePage) && Utilities.IsInteger(pacCodePage))
+                                        pac.CodePage = int.Parse(pacCodePage);
+                                    else                                    
+                                        pac.CodePage = -1;
+
                                     pac.LoadSubtitle(sub, null, fileName);
                                     format = pac;
                                 }
