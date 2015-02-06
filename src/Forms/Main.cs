@@ -1047,7 +1047,6 @@ namespace Nikse.SubtitleEdit.Forms
             adjustDisplayTimeToolStripMenuItem.Text = _language.Menu.Tools.AdjustDisplayDuration;
             toolStripMenuItemApplyDurationLimits.Text = _language.Menu.Tools.ApplyDurationLimits;
             toolStripMenuItemDurationBridgeGaps.Text = _language.Menu.Tools.DurationsBridgeGap;
-            toolStripMenuItemDurationBridgeGaps.Visible = true;
             fixToolStripMenuItem.Text = _language.Menu.Tools.FixCommonErrors;
             startNumberingFromToolStripMenuItem.Text = _language.Menu.Tools.StartNumberingFrom;
             removeTextForHearImparedToolStripMenuItem.Text = _language.Menu.Tools.RemoveTextForHearingImpaired;
@@ -1057,7 +1056,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemAutoMergeShortLines.Text = _language.Menu.Tools.MergeShortLines;
             toolStripMenuItemMergeDuplicateText.Text = _language.Menu.Tools.MergeDuplicateText;
             toolStripMenuItemMergeLinesWithSameTimeCodes.Text = _language.Menu.Tools.MergeSameTimeCodes;
-            toolStripMenuItemMergeDuplicateText.Visible = true;
             toolStripMenuItemAutoSplitLongLines.Text = _language.Menu.Tools.SplitLongLines;
             setMinimumDisplayTimeBetweenParagraphsToolStripMenuItem.Text = _language.Menu.Tools.MinimumDisplayTimeBetweenParagraphs;
             toolStripMenuItem1.Text = _language.Menu.Tools.SortBy;
@@ -13700,9 +13698,6 @@ namespace Nikse.SubtitleEdit.Forms
             toolStripMenuItemFcpProperties.Visible = format.GetType() == typeof(FinalCutProXml);
 
             toolStripSeparator20.Visible = subtitleLoaded;
-
-            toolStripMenuItemImportXSub.Visible = true;
-
         }
 
         private void toolStripMenuItemOpenContainingFolder_Click(object sender, EventArgs e)
