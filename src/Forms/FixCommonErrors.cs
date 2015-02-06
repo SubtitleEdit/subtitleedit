@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using Nikse.SubtitleEdit.Logic.Forms;
@@ -4648,8 +4647,9 @@ namespace Nikse.SubtitleEdit.Forms
             _allowList = new HashSet<string>();
             foreach (ListViewItem item in listViewFixes.Items)
             {
-                if (!item.Checked)
-                    _allowList.Add(item.SubItems[1].Text + "|" + item.SubItems[2].Text);
+                string key = item.SubItems[1].Text + "|" + item.SubItems[2].Text;
+                if (!item.Checked && !_allowList.Contains(key))
+                    _allowList.Add(key);
             }
 
             _numberOfImportantLogMessages = 0;
