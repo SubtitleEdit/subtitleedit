@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Xml;
+using System.Text;
 using Nikse.SubtitleEdit.Logic;
 
 // !!! THIS FILE IS AUTO-GENERATED!!!
@@ -14,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Language CustomDeserializeLanguage(string fileName)
         {
-            string name = string.Empty;
+            var name = new StringBuilder(100);
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
 
@@ -24,20 +25,24 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if ((name.Length > 0 || string.CompareOrdinal(reader.Name, "Language") != 0) && !reader.IsEmptyElement)
-                            name = (name + "/" + reader.Name).TrimStart('/');
+                        if (!reader.IsEmptyElement)
+                        {
+                            if (name.Length > 0)
+                                name.Append('/');
+                            if (reader.Depth > 0)
+                                name.Append(reader.Name);
+                        }
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {
-                        int idx = name.LastIndexOf("/", System.StringComparison.Ordinal);
-                        if (idx > 0)
-                            name = name.Remove(idx);
-                        else
-                            name = string.Empty;
+                        if (name.Length > 0)
+                            name.Length -= reader.Name.Length;
+                        if (name.Length > 0)
+                            name.Length -= 1;
                     }
                     else if (reader.NodeType == XmlNodeType.Text)
                     {
-                        SetValue(language, reader, name);
+                        SetValue(language, reader, name.ToString());
                     }
                 }
             }
