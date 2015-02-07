@@ -12,6 +12,13 @@ namespace Nikse.SubtitleEdit.Core
             return StartsWithHtmlTag(text, threeLengthTag, includeFont);
         }
 
+        public static bool LineEndsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
+        {
+            if (text == null || text.Length < 6)
+                return false;
+            return EndsWithHtmlTag(text, threeLengthTag, includeFont);
+        }
+
         public static bool LineBreakStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
         {
             if (text == null || (!threeLengthTag && !includeFont))
@@ -32,6 +39,20 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
+
+        private static bool EndsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
+        {
+            var len = text.Length;
+            if (text[len - 1] != '>')
+                return false;
+
+            // </font> </i>
+            if (threeLengthTag && len > 3 && text[len - 4] == '<' && text[len - 3] == '/')
+                return true;
+            if (includeFont && len > 8 && text[len - 7] == '<' && text[len - 6] == '/')
+                return true;
+            return false;
+        }
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
