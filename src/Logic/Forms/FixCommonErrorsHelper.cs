@@ -9,7 +9,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public static string FixEllipsesStartHelper(string text)
         {
-            if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !text.Contains("..", StringComparison.Ordinal))
+            if (string.IsNullOrEmpty(text) || text.Trim().Length < 4 || !(text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal)))
                 return text;
 
             var pre = string.Empty;
@@ -28,13 +28,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = text.TrimStart('.').TrimStart();
             }
 
-            // "...foobar" / "... foobar"
-            if (text.StartsWith("\"..", StringComparison.Ordinal))
+            // "...foobar" / "... foobar" / ". .. foobar" 
+            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .")|| text.StartsWith("\" ..")|| text.StartsWith("\" . .")))
             {
-                while (text.Length > 1 && text[1] == '.')
-                    text = text.Remove(1, 1);
-                if (text.Length > 1 && text[1] == ' ')
-                    text = text.Remove(1, 1);
+                int removeLength = 0;
+                while (removeLength + 1 < text.Length && (text[1 + removeLength] == '.' || text[1 + removeLength] == ' '))
+                    removeLength++;
+                text = text.Remove(1, removeLength);
             }
 
             text = text.Replace("-..", "- ..");
