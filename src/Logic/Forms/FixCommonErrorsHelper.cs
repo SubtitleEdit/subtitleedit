@@ -13,95 +13,60 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 return text;
 
             var pre = string.Empty;
-            if (text.StartsWith("<font ", StringComparison.Ordinal) && text.IndexOf('>', 5) >= 0)
+
+            if (text.Length > 1 && text[0] == '-')
             {
-                var idx = text.IndexOf('>', 5);
-                if (idx >= 0)
-                {
-                    pre = text.Substring(0, text.IndexOf('>') + 1);
-                    text = text.Substring(idx + 1).TrimStart();
-                }
+                pre += text[1] == ' ' ? "- " : "-";
+                text = text.Remove(0, 1).TrimStart();
             }
 
-            if (text.StartsWith("...", StringComparison.Ordinal))
+            if (text.StartsWith("<font", StringComparison.Ordinal) && text.IndexOf('>', 5) >= 5)
             {
-                text = text.TrimStart('.').TrimStart();
+                var idx = text.IndexOf('>', 5);
+                if (idx >= 5)
+                {
+                    pre = text.Substring(0, text.IndexOf('>') + 1);
+                    text = text.Remove(0, idx + 1).TrimStart();
+                }
+            }
+            while (text.Length > 3 && text[0] == '<' && text[2] == '>')
+            {
+                pre += "<" + text[1] + ">";
+                text = text.Remove(0, 3).TrimStart();
+            }
+
+            if (text.StartsWith("..", StringComparison.Ordinal) || text.StartsWith(". .", StringComparison.Ordinal))
+            {
+                text = text.TrimStart('.', ' ').TrimStart();
             }
 
             // "...foobar" / "... foobar" / ". .. foobar" 
-            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .")|| text.StartsWith("\" ..")|| text.StartsWith("\" . .")))
+            if (text.StartsWith("\".", StringComparison.Ordinal) || text.StartsWith("\" .", StringComparison.Ordinal))
             {
-                int removeLength = 0;
-                while (removeLength + 1 < text.Length && (text[1 + removeLength] == '.' || text[1 + removeLength] == ' '))
-                    removeLength++;
-                text = text.Remove(1, removeLength);
+                pre += "\"";
+                text = text.Remove(0, 1).TrimStart(' ', '.');
             }
 
-            text = text.Replace("-..", "- ..");
-            var tag = "- ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
+            if (text.StartsWith("- .", StringComparison.Ordinal) || text.StartsWith("-.", StringComparison.Ordinal))
             {
-                text = "- " + text.Substring(tag.Length);
-                while (text.StartsWith("- .", StringComparison.Ordinal))
-                {
-                    text = "- " + text.Substring(3);
-                    text = text.Replace("  ", " ");
-                }
-            }
-
-            tag = "<i>...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "<i>" + text.Substring(tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4);
-            }
-            tag = "<i> ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "<i>" + text.Substring(tag.Length);
-                while (text.StartsWith("<i>.", StringComparison.Ordinal) || text.StartsWith("<i> ", StringComparison.Ordinal))
-                    text = "<i>" + text.Substring(4, text.Length - 4);
-            }
-
-            tag = "- <i>...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "- <i>" + text.Substring(tag.Length);
-                while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                    text = "- <i>" + text.Substring(6);
-            }
-            tag = "- <i> ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = "- <i>" + text.Substring(tag.Length);
-                while (text.StartsWith("- <i>.", StringComparison.Ordinal))
-                    text = "- <i>" + text.Substring(6);
+                pre += "-";
+                text = text.Remove(0, 1).TrimStart(' ', '.');
             }
 
             // Narrator:... Hello foo!
             text = text.Replace(":..", ": ..");
-            tag = ": ..";
-            if (text.Contains(tag, StringComparison.Ordinal))
+            if (text.Contains(": .", StringComparison.Ordinal))
             {
-                text = text.Replace(": ..", ": ");
-                while (text.Contains(": ."))
-                    text = text.Replace(": .", ": ");
+                var idx = text.IndexOf(": .", StringComparison.Ordinal);
+                pre += text.Substring(0, idx + 1);
+                text = text.Remove(0, idx + 1).TrimStart(' ', '.');
             }
 
-            // <i>- ... Foo</i>
-            tag = "<i>- ...";
-            if (text.StartsWith(tag, StringComparison.Ordinal))
-            {
-                text = text.Substring(tag.Length);
-                text = text.TrimStart('.', ' ');
-                text = "<i>- " + text;
-            }
             text = text.Replace("  ", " ");
 
             // WOMAN 2: <i>...24 hours a day at BabyC.</i>
             var index = text.IndexOf(':');
-            if (index > 0 && text.Length > index + 2 && !char.IsDigit(text[index + 1]) && text.Contains("..", StringComparison.Ordinal))
+            if (index > 0 && text.Length > index + 2 && !Utilities.IsBetweenNumbers(text, index) && (text.Contains("..", StringComparison.Ordinal) || text.Contains(". .", StringComparison.Ordinal)))
             {
                 pre += text.Substring(0, index + 1);
                 if (pre.Length < 2)
@@ -109,9 +74,10 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                 text = text.Remove(0, index + 1).TrimStart();
                 text = FixEllipsesStartHelper(text);
-                if (pre.Length > 0)
-                    pre += " ";
             }
+
+            if (pre.Length > 0 && pre[pre.Length - 1] != '>' && pre[pre.Length - 1] != ' ' && pre[pre.Length - 1] != '\"')
+                pre += " ";
             return pre + text;
         }
 
