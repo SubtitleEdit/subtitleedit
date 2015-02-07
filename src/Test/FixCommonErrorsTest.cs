@@ -779,6 +779,35 @@ namespace Test
 
         #endregion Fix unneeded spaces
 
+        #region Fix EmptyLines
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEmptyLinesTest1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>\r\nHello world!\r\n</i>");
+                target.FixEmptyLines();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>Hello world!</i>");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEmptyLinesTest2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<font color=\"#000000\">\r\nHello world!\r\n</font>");
+                target.FixEmptyLines();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color=\"#000000\">Hello world!</font>");
+            }
+        }
+
+
+        #endregion
+
         #region Start with uppercase after paragraph
 
         [TestMethod]
