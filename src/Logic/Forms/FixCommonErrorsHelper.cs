@@ -54,7 +54,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             // Narrator:... Hello foo!
-            text = text.Replace(":..", ": ..");
+            text = text.Replace(":.", ": .");
             if (text.Contains(": .", StringComparison.Ordinal))
             {
                 var idx = text.IndexOf(": .", StringComparison.Ordinal);
