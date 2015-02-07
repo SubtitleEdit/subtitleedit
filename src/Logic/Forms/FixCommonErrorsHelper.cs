@@ -312,7 +312,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return text;
         }
 
-        public static string RemoveSpacesBeingLineAfterEllipese(string line)
+        public static string RemoveSpacesBeginLineAfterEllipses(string line)
         {
             if (line.StartsWith("... ", StringComparison.Ordinal))
                 line = line.Remove(3, 1);
@@ -321,13 +321,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 var idx = line.IndexOf('>') + 1;
                 var pre = line.Substring(0, idx);
                 line = line.Remove(0, idx).TrimStart();
-                if (line.StartsWith("... "))
+                if (line.StartsWith("... ", StringComparison.Ordinal))
                     line = line.Remove(3, 1);
                 line = pre + line;
             }
             if (line.LineStartsWithHtmlTag(false, true)) //<font color="#000000"> and <font>
             {
-                // Todo: what if line number is > 1
                 var closeIdx = line.IndexOf('>', 5);
                 if (closeIdx >= 5 && line.Length > closeIdx + 5)
                 {
