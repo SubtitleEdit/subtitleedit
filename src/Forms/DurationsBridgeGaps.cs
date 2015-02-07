@@ -34,10 +34,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
             labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines;
             numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines))
-            {
-                numericUpDownMinMsBetweenLines.Visible = false; //TODO: Remove in SE 3.4
-            }
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
 

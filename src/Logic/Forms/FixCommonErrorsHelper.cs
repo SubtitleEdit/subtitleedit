@@ -321,7 +321,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 var idx = line.IndexOf('>') + 1;
                 var pre = line.Substring(0, idx);
                 line = line.Remove(0, idx).TrimStart();
-                if(line.StartsWith("... "))
+                if (line.StartsWith("... "))
                     line = line.Remove(3, 1);
                 line = pre + line;
             }

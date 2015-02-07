@@ -80,7 +80,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             radioButtonOpaqueBox.Text = l.OpaqueBox;
             buttonImport.Text = l.Import;
             buttonExport.Text = l.Export;
-            buttonExport.Visible = true;
             buttonCopy.Text = l.Copy;
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;

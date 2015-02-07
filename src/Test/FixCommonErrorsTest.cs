@@ -1358,7 +1358,7 @@ namespace Test
                 target.FixDoubleDash();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">...foobar</font>");
             }
-        } 
+        }
 
         #endregion
     }

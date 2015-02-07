@@ -466,8 +466,6 @@ namespace Nikse.SubtitleEdit.Forms
             pictureBoxEmphasis2.Left = checkBoxEmphasis1Transparent.Left + checkBoxEmphasis1Transparent.Width + 8;
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
 
-            buttonGetTesseractDictionaries.Visible = true;
-
             try
             {
                 numericUpDownMaxErrorPct.Value = (decimal)Configuration.Settings.VobSubOcr.AllowDifferenceInPercent;
@@ -7028,7 +7026,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxModiMethod.Visible = false;
             groupBoxNOCR.Visible = false;
 
-            groupBox.Visible = true;
+            //groupBox.Visible = true;
             groupBox.BringToFront();
             groupBox.Left = comboBoxOcrMethod.Left;
             groupBox.Top = 50;
