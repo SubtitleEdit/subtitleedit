@@ -156,8 +156,7 @@
             // 
             // progressBar1
             // 
-            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.progressBar1.Location = new System.Drawing.Point(12, 566);
             this.progressBar1.Name = "progressBar1";
@@ -166,6 +165,7 @@
             // 
             // buttonRipWave
             // 
+            this.buttonRipWave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonRipWave.Location = new System.Drawing.Point(840, 555);
             this.buttonRipWave.Name = "buttonRipWave";
             this.buttonRipWave.Size = new System.Drawing.Size(158, 23);
@@ -223,12 +223,13 @@
             // 
             // labelInfo
             // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.labelInfo.ForeColor = System.Drawing.Color.Gray;
             this.labelInfo.Location = new System.Drawing.Point(714, 550);
             this.labelInfo.Name = "labelInfo";
             this.labelInfo.Size = new System.Drawing.Size(120, 13);
             this.labelInfo.TabIndex = 19;
-            this.labelInfo.Text = "label1";
+            this.labelInfo.Text = "labelInfo";
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
             // AddWaveformBatch
@@ -242,7 +243,7 @@
             this.Controls.Add(this.buttonRipWave);
             this.Controls.Add(this.labelProgress);
             this.Controls.Add(this.groupBoxInput);
-            this.MinimumSize = new System.Drawing.Size(900, 600);
+            this.MinimumSize = new System.Drawing.Size(900, 400);
             this.Name = "AddWaveformBatch";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
