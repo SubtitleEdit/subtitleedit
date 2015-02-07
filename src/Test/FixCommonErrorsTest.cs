@@ -1202,7 +1202,7 @@ namespace Test
         public void FixEllipsesStartQuote()
         {
             var actual = "\"...Foobar\"";
-            var expected = "\"Foobar\"";
+            const string expected = "\"Foobar\"";
             actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
             Assert.AreEqual(actual, expected);
         }
@@ -1212,7 +1212,17 @@ namespace Test
         public void FixEllipsesStartQuote2()
         {
             var actual = "\"... Foobar\"";
-            var expected = "\"Foobar\"";
+            const string expected = "\"Foobar\"";
+            actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartQuote3()
+        {
+            var actual = "\" . . . Foobar\"";
+            const string expected = "\"Foobar\"";
             actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
             Assert.AreEqual(actual, expected);
         }
