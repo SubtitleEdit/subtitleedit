@@ -337,7 +337,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (pre.IndexOfAny(new[] { "Previously on", "Improved by", "http", ", " }, StringComparison.OrdinalIgnoreCase) >= 0)
                 return false;
 
-            // Okay! Narrator: Hello! 
+            // Okay! Narrator: Hello!
             if (pre.IndexOfAny(new[] { '!', '?' }) > 0)
                 return false;
             return true;

@@ -287,10 +287,10 @@ namespace Nikse.SubtitleEdit.Logic
                                 if (pac.IsMine(null, fileName))
                                 {
                                     pac.BatchMode = true;
-                                    
+
                                     if (!string.IsNullOrEmpty(pacCodePage) && Utilities.IsInteger(pacCodePage))
                                         pac.CodePage = int.Parse(pacCodePage);
-                                    else                                    
+                                    else
                                         pac.CodePage = -1;
 
                                     pac.LoadSubtitle(sub, null, fileName);

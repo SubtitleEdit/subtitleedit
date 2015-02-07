@@ -204,7 +204,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 lastLine = lastLine.Remove(idx, (endIdx - idx));
                 idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
             }
-            if(!error)
+            if (!error)
                 lastLine = lastLine.Replace("</font>", ".");
 
             string[] words = lastLine.Split(new[] { ' ', ',', '!', '?', '.', ':', ';', '-', '_', '@', '<', '>', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' }, StringSplitOptions.RemoveEmptyEntries);

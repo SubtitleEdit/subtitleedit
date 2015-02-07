@@ -30,7 +30,6 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
-            checkBoxIgnoreLineBreaks.Visible = true;
             checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
