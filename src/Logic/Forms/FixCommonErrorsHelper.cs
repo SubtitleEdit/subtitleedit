@@ -155,7 +155,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 var arrTemp = temp.SplitToLines();
                 if (arrTemp.Length == 2)
                 {
-                    if (arrTemp[1].TrimStart().StartsWith('-') || arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
+                    var secLineTemp = arrTemp[1].TrimStart();
+                    if (secLineTemp.StartsWith('-') || (secLineTemp.Length > 4 && secLineTemp[3] == '-' && secLineTemp[0] == '<' && secLineTemp[2] == '>'))
                         text = temp;
                 }
                 else
