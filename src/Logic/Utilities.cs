@@ -619,7 +619,7 @@ namespace Nikse.SubtitleEdit.Logic
             int mid = s.Length / 2;
 
             // try to find " - " with uppercase letter after (dialog)
-            if (splitPos < 0 && s.Contains(" - "))
+            if (s.Contains(" - "))
             {
                 for (int j = 0; j <= (maximumLength / 2) + 5; j++)
                 {
