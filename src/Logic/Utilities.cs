@@ -555,9 +555,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             string s = RemoveLineBreaks(text);
-            string temp = HtmlUtil.RemoveHtmlTags(s, true);
+            string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
 
-            if (temp.Length < mergeLinesShorterThan)
+            if (noTagText.Length < mergeLinesShorterThan)
             {
                 var lines = text.SplitToLines();
                 if (lines.Length > 1)
@@ -565,8 +565,8 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isDialog = true;
                     foreach (string line in lines)
                     {
-                        string noTags = HtmlUtil.RemoveHtmlTags(line).Trim();
-                        isDialog = isDialog && (noTags.StartsWith('-') || noTags.StartsWith('—'));
+                        string noTagLine = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
                     }
                     if (isDialog)
                     {
