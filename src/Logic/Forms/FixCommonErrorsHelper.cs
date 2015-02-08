@@ -119,19 +119,19 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             if (text.Contains(" - ") && !text.Contains(Environment.NewLine))
             {
-                var parts = text.Replace(" - ", Environment.NewLine).SplitToLines();
-                if (parts.Length == 2)
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text.Replace(" - ", Environment.NewLine), true).SplitToLines();
+                if (noTagLines.Length == 2)
                 {
-                    string part0 = HtmlUtil.RemoveHtmlTags(parts[0]).Trim();
-                    string part1 = HtmlUtil.RemoveHtmlTags(parts[1]).Trim();
-                    if (part0.Length > 1 && "-—!?.\"".Contains(part0[part0.Length - 1]) &&
+                    string part0 = noTagLines[0];
+                    string part1 = noTagLines[1];
+                    if (part0.Length > 1 && "-—!?.\")]>".Contains(part0[part0.Length - 1]) &&
                         part1.Length > 1 && ("'" + Utilities.UppercaseLetters).Contains(part1[0]))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");
                         if (Utilities.AllLettersAndNumbers.Contains(part0[0]))
                         {
-                            if (text.StartsWith("<i>", StringComparison.Ordinal))
-                                text = "<i>- " + text;
+                            if (text.Length > 3 && text[0] == '<' && text[2] == '>')
+                                text = "<" + text[1] + ">" + "- " + text.Substring(3).TrimStart();
                             else
                                 text = "- " + text;
                         }
