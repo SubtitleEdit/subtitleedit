@@ -522,7 +522,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ShowStatus(string message)
         {
-            message = message.Replace(Environment.NewLine, "  ");
+            message = message.Replace(Environment.NewLine, " ");
             if (message.Length > 83)
                 message = message.Substring(0, 80) + "...";
             labelStatus.Text = message;
