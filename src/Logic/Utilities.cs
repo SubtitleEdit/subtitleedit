@@ -336,13 +336,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsPartOfNumber(string s, int position)
         {
-            if (string.IsNullOrWhiteSpace(s))
+            if (string.IsNullOrWhiteSpace(s) || position + 2 > s.Length)
                 return false;
 
-            if (position + 2 > s.Length)
-                return false;
-
-            if (@",.".Contains(s[position]) && position > 0 && position < s.Length - 1)
+            if (position > 0 && position < s.Length - 1 && @",.".Contains(s[position]))
             {
                 return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
             }
@@ -369,8 +366,10 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool CanBreak(string s, int index, string language)
         {
             char nextChar = ' ';
-            if (index < s.Length)
+            if (index >= 0 && index < s.Length)
                 nextChar = s[index];
+            else
+                return false;
             if (!"\r\n\t ".Contains(nextChar))
                 return false;
 
