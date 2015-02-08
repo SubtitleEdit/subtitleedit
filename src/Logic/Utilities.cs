@@ -342,12 +342,9 @@ namespace Nikse.SubtitleEdit.Logic
             if (position + 2 > s.Length)
                 return false;
 
-            if (@",.".Contains(s[position]))
+            if (@",.".Contains(s[position]) && position > 0 && position < s.Length - 1)
             {
-                if (position > 0 && position < s.Length - 1)
-                {
-                    return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
-                }
+                return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
             }
             return false;
         }
