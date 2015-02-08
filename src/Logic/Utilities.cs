@@ -968,9 +968,13 @@ namespace Nikse.SubtitleEdit.Logic
             while (i < buffer.Length - 3)
             {
                 byte b = buffer[i];
-                if (b > 127)
+                if (b <= 0x7F)
                 {
-                    if (b >= 194 && b <= 223 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191)
+                    couldBeUtf8 = true;
+                }
+                else
+                {
+                    if (b >= 0xC2 && b <= 0xDF && buffer[i + 1] >= 0x80 && buffer[i + 1] <= 0xBF)
                     { // 2-byte sequence
                         utf8Count++;
                         i++;
@@ -981,9 +985,9 @@ namespace Nikse.SubtitleEdit.Logic
                         utf8Count++;
                         i += 2;
                     }
-                    else if (b >= 240 && b <= 244 && buffer[i + 1] >= 128 && buffer[i + 1] <= 191 &&
-                                                     buffer[i + 2] >= 128 && buffer[i + 2] <= 191 &&
-                                                     buffer[i + 3] >= 128 && buffer[i + 3] <= 191)
+                    else if (b >= 0xF0 && b <= 0xF4 && buffer[i + 1] >= 0x80 && buffer[i + 1] <= 0xBF &&
+                                                     buffer[i + 2] >= 0x80 && buffer[i + 2] <= 0xBF &&
+                                                     buffer[i + 3] >= 0x80 && buffer[i + 3] <= 0xBF)
                     { // 4-byte sequence
                         utf8Count++;
                         i += 3;
@@ -2350,7 +2354,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 text = text.Remove(0, idx + 1);
                                 text = FixInvalidItalicTags(text).Trim();
                                 if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
-                                    text  = RemoveSpaceBeforeAfterTag(text, "<i>");
+                                    text = RemoveSpaceBeforeAfterTag(text, "<i>");
                                 text = pre + " " + text;
                             }
                         }
