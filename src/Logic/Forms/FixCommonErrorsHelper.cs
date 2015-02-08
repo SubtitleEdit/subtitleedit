@@ -450,8 +450,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine, StringComparison.Ordinal))
                 return text;
 
-            string s = HtmlUtil.RemoveHtmlTags(text);
-            if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && text.Contains(Environment.NewLine))
+            string s = HtmlUtil.RemoveHtmlTags(text, true);
+            if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan)
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
@@ -465,11 +465,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     !s.Contains('♫') &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
-                    text != text.ToUpper())
+                    s != s.ToUpper())
                 {
-                    s = text.Replace(Environment.NewLine, " ");
-                    s = s.Replace("  ", " ");
-                    return s;
+                    return text.Replace(Environment.NewLine, " ").Replace("  ", " ");
                 }
             }
             return text;
