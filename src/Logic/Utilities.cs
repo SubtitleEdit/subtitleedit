@@ -549,11 +549,11 @@ namespace Nikse.SubtitleEdit.Logic
             // do not autobreak dialogs
             if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
-                var arr = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
-                if (arr.Length == 2)
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                if (noTagLines.Length == 2)
                 {
-                    var arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith('-') && arr[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
+                    var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
+                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
                         return text;
                 }
             }
@@ -569,8 +569,8 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isDialog = true;
                     foreach (string line in lines)
                     {
-                        string cleanLine = HtmlUtil.RemoveHtmlTags(line).Trim();
-                        isDialog = isDialog && (cleanLine.StartsWith('-') || cleanLine.StartsWith('—'));
+                        string noTags = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        isDialog = isDialog && (noTags.StartsWith('-') || noTags.StartsWith('—'));
                     }
                     if (isDialog)
                     {
