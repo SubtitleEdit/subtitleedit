@@ -336,18 +336,12 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsPartOfNumber(string s, int position)
         {
-            if (string.IsNullOrWhiteSpace(s))
+            if (string.IsNullOrWhiteSpace(s) || position + 2 > s.Length)
                 return false;
 
-            if (position + 2 > s.Length)
-                return false;
-
-            if (@",.".Contains(s[position]))
+            if (position > 0 && position < s.Length - 1 && @",.".Contains(s[position]))
             {
-                if (position > 0 && position < s.Length - 1)
-                {
-                    return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
-                }
+                return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
             }
             return false;
         }
@@ -358,6 +352,7 @@ namespace Nikse.SubtitleEdit.Logic
                 return false;
             return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
         }
+
         public static string AutoBreakLine(string text, string language)
         {
             return AutoBreakLine(text, Configuration.Settings.General.SubtitleLineMaximumLength, Configuration.Settings.Tools.MergeLinesShorterThan, language);
@@ -371,8 +366,10 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool CanBreak(string s, int index, string language)
         {
             char nextChar = ' ';
-            if (index < s.Length)
+            if (index >= 0 && index < s.Length)
                 nextChar = s[index];
+            else
+                return false;
             if (!"\r\n\t ".Contains(nextChar))
                 return false;
 
@@ -548,12 +545,11 @@ namespace Nikse.SubtitleEdit.Logic
             // do not autobreak dialogs
             if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
-                string dialogS = HtmlUtil.RemoveHtmlTags(text);
-                var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
-                if (arr.Length == 2)
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                if (noTagLines.Length == 2)
                 {
-                    string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith('-') && arr[1].TrimStart().StartsWith('-') && (arr0.EndsWith('.') || arr0.EndsWith('!') || arr0.EndsWith('?') || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                    var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
+                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
                         return text;
                 }
             }
@@ -569,8 +565,8 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isDialog = true;
                     foreach (string line in lines)
                     {
-                        string cleanLine = HtmlUtil.RemoveHtmlTags(line).Trim();
-                        isDialog = isDialog && (cleanLine.StartsWith('-') || cleanLine.StartsWith('—'));
+                        string noTags = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        isDialog = isDialog && (noTags.StartsWith('-') || noTags.StartsWith('—'));
                     }
                     if (isDialog)
                     {
@@ -619,7 +615,7 @@ namespace Nikse.SubtitleEdit.Logic
             int mid = s.Length / 2;
 
             // try to find " - " with uppercase letter after (dialog)
-            if (splitPos < 0 && s.Contains(" - "))
+            if (s.Contains(" - "))
             {
                 for (int j = 0; j <= (maximumLength / 2) + 5; j++)
                 {
@@ -1823,7 +1819,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            var lines = HtmlUtil.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
+            var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
 
             const int max = 3;
 
@@ -2350,7 +2346,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 text = text.Remove(0, idx + 1);
                                 text = FixInvalidItalicTags(text).Trim();
                                 if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
-                                    text  = RemoveSpaceBeforeAfterTag(text, "<i>");
+                                    text = RemoveSpaceBeforeAfterTag(text, "<i>");
                                 text = pre + " " + text;
                             }
                         }
