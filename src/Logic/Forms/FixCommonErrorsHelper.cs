@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             // "...foobar" / "... foobar" / ". .. foobar" 
-            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .")|| text.StartsWith("\" ..")|| text.StartsWith("\" . .")))
+            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .") || text.StartsWith("\" ..") || text.StartsWith("\" . .")))
             {
                 int removeLength = 0;
                 while (removeLength + 1 < text.Length && (text[1 + removeLength] == '.' || text[1 + removeLength] == ' '))
@@ -139,17 +139,24 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 }
             }
 
-            if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("— -") || text.Contains("-- -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+            var stringArray = new string[] { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -" };
+            var idx = text.IndexOfAny(stringArray, StringComparison.Ordinal);
+            if (idx >= 0 && Utilities.CountTagInText(text, Environment.NewLine) == 1)
             {
                 string temp = Utilities.AutoBreakLine(text, 99, 33, language);
                 var arr = text.SplitToLines();
                 var arrTemp = temp.SplitToLines();
-                if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith('-') && arrTemp[1].TrimStart().StartsWith('-'))
-                    text = temp;
-                else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal) && arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
-                    text = temp;
+                if (arrTemp.Length == 2)
+                {
+                    var secLine = arr[1].TrimStart();
+                    var secLineTemp = arrTemp[1].TrimStart();
+                    if (!secLine.StartsWith('-') && secLineTemp.StartsWith('-'))
+                        text = temp;
+                    else if (secLine.Length > 3 && text[3] == '>' && !secLine.LineStartsWithHtmlTag(true) && secLineTemp.LineStartsWithHtmlTag(true))
+                        text = temp;
+                }
             }
-            else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("-- -") || text.Contains("— -")) && !text.Contains(Environment.NewLine))
+            else if (idx >= 0 && Utilities.CountTagInText(text, Environment.NewLine) == 0)
             {
                 string temp = Utilities.AutoBreakLine(text, language);
                 var arrTemp = temp.SplitToLines();
