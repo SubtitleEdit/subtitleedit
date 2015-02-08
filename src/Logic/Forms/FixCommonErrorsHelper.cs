@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
 
             // "...foobar" / "... foobar" / ". .. foobar" 
-            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .")|| text.StartsWith("\" ..")|| text.StartsWith("\" . .")))
+            if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .") || text.StartsWith("\" ..") || text.StartsWith("\" . .")))
             {
                 int removeLength = 0;
                 while (removeLength + 1 < text.Length && (text[1 + removeLength] == '.' || text[1 + removeLength] == ' '))
@@ -124,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 {
                     string part0 = noTagLines[0];
                     string part1 = noTagLines[1];
-                    if (part0.Length > 1 && "-—!?.\")]>".Contains(part0[part0.Length - 1]) &&
+                    if (part0.Length > 1 && "-—!?.\")]".Contains(part0[part0.Length - 1]) &&
                         part1.Length > 1 && ("'" + Utilities.UppercaseLetters).Contains(part1[0]))
                     {
                         text = text.Replace(" - ", Environment.NewLine + "- ");
@@ -139,42 +139,44 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 }
             }
 
-            if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("— -") || text.Contains("-- -")) && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+            var stringArray = new string[] { ". -", "! -", "? -", "— -", "-- -", ") -", "] -", "> -" };
+            var idx = text.IndexOfAny(stringArray, StringComparison.Ordinal);
+            if (idx >= 0)
             {
-                string temp = Utilities.AutoBreakLine(text, 99, 33, language);
-                var arr = text.SplitToLines();
-                var arrTemp = temp.SplitToLines();
-                if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith('-') && arrTemp[1].TrimStart().StartsWith('-'))
-                    text = temp;
-                else if (arr.Length == 2 && arrTemp.Length == 2 && !arr[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal) && arrTemp[1].TrimStart().StartsWith("<i>-", StringComparison.Ordinal))
-                    text = temp;
-            }
-            else if ((text.Contains(". -") || text.Contains("! -") || text.Contains("? -") || text.Contains("-- -") || text.Contains("— -")) && !text.Contains(Environment.NewLine))
-            {
-                string temp = Utilities.AutoBreakLine(text, language);
-                var arrTemp = temp.SplitToLines();
-                if (arrTemp.Length == 2)
+                if (Utilities.CountTagInText(text, Environment.NewLine) == 1)
                 {
-                    var secLineTemp = arrTemp[1].TrimStart();
-                    if (secLineTemp.StartsWith('-') || (secLineTemp.Length > 4 && secLineTemp[3] == '-' && secLineTemp[0] == '<' && secLineTemp[2] == '>'))
-                        text = temp;
-                }
-                else
-                {
-                    int index = text.IndexOf(". -", StringComparison.Ordinal);
-                    if (index < 0)
-                        index = text.IndexOf("! -", StringComparison.Ordinal);
-                    if (index < 0)
-                        index = text.IndexOf("? -", StringComparison.Ordinal);
-                    if (index < 0)
-                        index = text.IndexOf("— -", StringComparison.Ordinal);
-                    if (index < 0 && text.IndexOf("-- -", StringComparison.Ordinal) > 0)
-                        index = text.IndexOf("-- -", StringComparison.Ordinal) + 1;
-                    if (index > 0)
+                    string temp = Utilities.AutoBreakLine(text, 99, 33, language);
+                    var arr = text.SplitToLines();
+                    var arrTemp = temp.SplitToLines();
+                    if (arrTemp.Length == 2 && arr.Length == 2)
                     {
-                        text = text.Remove(index + 1, 1).Insert(index + 1, Environment.NewLine);
-                        text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-                        text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                        var secLine = HtmlUtil.RemoveHtmlTags(arr[1]).TrimStart();
+                        var secLineTemp = HtmlUtil.RemoveHtmlTags(arrTemp[1]).TrimStart();
+                        if (secLineTemp.StartsWith('-') && !secLine.StartsWith('-'))
+                            text = temp;
+                    }
+                }
+                else if (Utilities.CountTagInText(text, Environment.NewLine) == 0)
+                {
+                    string temp = Utilities.AutoBreakLine(text, language);
+                    var arrTemp = temp.SplitToLines();
+                    if (arrTemp.Length == 2)
+                    {
+                        var secLineTemp = HtmlUtil.RemoveHtmlTags(arrTemp[1]).TrimStart();
+                        if (secLineTemp.StartsWith('-'))
+                            text = temp;
+                    }
+                    else
+                    {
+                        int index = text.IndexOfAny(new[] { ". -", "! -", "? -", "— -" }, StringComparison.Ordinal);
+                        if (index < 0 && text.IndexOf("-- -", StringComparison.Ordinal) > 0)
+                            index = text.IndexOf("-- -", StringComparison.Ordinal) + 1;
+                        if (index > 0)
+                        {
+                            text = text.Remove(index + 1, 1).Insert(index + 1, Environment.NewLine);
+                            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+                            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+                        }
                     }
                 }
             }
