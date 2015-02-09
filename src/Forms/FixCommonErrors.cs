@@ -2155,55 +2155,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string text = p.Text;
                 string pre = string.Empty;
-                if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
-                {
-                    pre = "<i> ";
-                    text = text.Substring(4);
-                }
-                if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
-                {
-                    pre = "<i>";
-                    text = text.Substring(3);
-                }
-                if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
-                {
-                    pre = "<I> ";
-                    text = text.Substring(4);
-                }
-                if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
-                {
-                    pre = "<I>";
-                    text = text.Substring(3);
-                }
-                if (text.Length > 2 && text.StartsWith('♪'))
-                {
-                    pre = pre + "♪";
-                    text = text.Substring(1);
-                }
-                if (text.Length > 2 && text.StartsWith(' '))
-                {
-                    pre = pre + " ";
-                    text = text.Substring(1);
-                }
-                if (text.Length > 2 && text.StartsWith('♫'))
-                {
-                    pre = pre + "♫";
-                    text = text.Substring(1);
-                }
-                if (text.Length > 2 && text.StartsWith(' '))
-                {
-                    pre = pre + " ";
-                    text = text.Substring(1);
-                }
+
+                text = QuickStrip(text, ref pre);
 
                 var firstLetter = text[0];
-
                 string prevText = " .";
                 if (prev != null)
                     prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
 
                 bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
-                if (prevText == " .")
+                if (!isPrevEndOfLine && prevText == " .")
                     isPrevEndOfLine = true;
                 if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                     (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
@@ -2211,15 +2172,16 @@ namespace Nikse.SubtitleEdit.Forms
                     isPrevEndOfLine)
                 {
                     bool isMatchInKnowAbbreviations = language == "en" &&
-                        (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
-                         prevText.EndsWith(" a.m.", StringComparison.Ordinal) ||
-                         prevText.EndsWith(" p.m.", StringComparison.Ordinal));
+                        (prevText.EndsWith(" o.r.", StringComparison.OrdinalIgnoreCase) ||
+                         prevText.EndsWith(" a.m.", StringComparison.OrdinalIgnoreCase) ||
+                         prevText.EndsWith(" p.m.", StringComparison.OrdinalIgnoreCase) ||
+                         prevText.EndsWith(" e.g.", StringComparison.OrdinalIgnoreCase));
 
                     if (!isMatchInKnowAbbreviations)
                     {
                         if (IsTurkishLittleI(firstLetter, encoding, language))
                             p.Text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") ||
+                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") || text.StartsWith("lD ", StringComparison.Ordinal) ||
                                                       text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
                                                       text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
                             p.Text = pre + "I" + text.Substring(1);
@@ -2236,46 +2198,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string text = arr[1];
                     string pre = string.Empty;
-                    if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
-                    {
-                        pre = "<i> ";
-                        text = text.Substring(4);
-                    }
-                    if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
-                    {
-                        pre = "<i>";
-                        text = text.Substring(3);
-                    }
-                    if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
-                    {
-                        pre = "<I> ";
-                        text = text.Substring(4);
-                    }
-                    if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
-                    {
-                        pre = "<I>";
-                        text = text.Substring(3);
-                    }
-                    if (text.Length > 2 && text.StartsWith('♪'))
-                    {
-                        pre = pre + "♪";
-                        text = text.Substring(1);
-                    }
-                    if (text.Length > 2 && text.StartsWith(' '))
-                    {
-                        pre = pre + " ";
-                        text = text.Substring(1);
-                    }
-                    if (text.Length > 2 && text.StartsWith('♫'))
-                    {
-                        pre = pre + "♫";
-                        text = text.Substring(1);
-                    }
-                    if (text.Length > 2 && text.StartsWith(' '))
-                    {
-                        pre = pre + " ";
-                        text = text.Substring(1);
-                    }
+
+                    text = QuickStrip(text, ref pre);
 
                     char firstLetter = text[0];
                     string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
@@ -2286,15 +2210,16 @@ namespace Nikse.SubtitleEdit.Forms
                         isPrevEndOfLine)
                     {
                         bool isMatchInKnowAbbreviations = language == "en" &&
-                            (prevText.EndsWith(" o.r.", StringComparison.Ordinal) ||
-                             prevText.EndsWith(" a.m.", StringComparison.Ordinal) ||
-                             prevText.EndsWith(" p.m.", StringComparison.Ordinal));
+                            (prevText.EndsWith(" o.r.", StringComparison.OrdinalIgnoreCase) ||
+                             prevText.EndsWith(" a.m.", StringComparison.OrdinalIgnoreCase) ||
+                             prevText.EndsWith(" p.m.", StringComparison.OrdinalIgnoreCase) ||
+                             prevText.EndsWith(" e.g.", StringComparison.OrdinalIgnoreCase));
 
                         if (!isMatchInKnowAbbreviations)
                         {
                             if (IsTurkishLittleI(firstLetter, encoding, language))
                                 text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                            else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                            else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") || text.StartsWith("lD ", StringComparison.Ordinal) ||
                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
                                 text = pre + "I" + text.Substring(1);
@@ -2394,6 +2319,43 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return p.Text;
+        }
+
+        private static string QuickStrip(string text, ref string pre)
+        {
+            if (text.Length > 2 && text[0] == '-')
+            {
+                if (text[1] == ' ')
+                    pre += "- ";
+                else
+                    pre += "-";
+                text = text.Substring(1).TrimStart();
+            }
+            if (text.Length > 3 && text[0] == '<' && text[2] == '>')
+            {
+                if (text[3] == ' ')
+                    pre += "<" + text[1] + ">" + " ";
+                else
+                    pre += "<" + text[1] + ">";
+                text = text.Substring(3).TrimStart();
+            }
+            if (text.Length > 2 && text.StartsWith('♪'))
+            {
+                if (text[2] == ' ')
+                    pre += "♪ ";
+                else
+                    pre = pre + "♪";
+                text = text.Substring(1).TrimStart();
+            }
+            if (text.Length > 2 && text.StartsWith('♫'))
+            {
+                if (text[2] == ' ')
+                    pre += "♫ ";
+                else
+                    pre = pre + "♫";
+                text = text.Substring(1).TrimStart();
+            }
+            return text;
         }
 
         private static bool IsTurkishLittleI(char firstLetter, Encoding encoding, string language)
