@@ -2153,12 +2153,8 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (p.Text != null && p.Text.Length > 1)
             {
-                string text = p.Text;
-                string pre = string.Empty;
-
-                text = QuickStrip(text, ref pre);
-
-                var firstLetter = text[0];
+                var st = new StripableText(p.Text, StripableText.StripPreChars, null);
+                var firstLetter = st.StrippedText[0];
                 string prevText = " .";
                 if (prev != null)
                     prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
@@ -2166,7 +2162,7 @@ namespace Nikse.SubtitleEdit.Forms
                 bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
                 if (!isPrevEndOfLine && prevText == " .")
                     isPrevEndOfLine = true;
-                if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
+                if ((!st.StrippedText.StartsWith("www.", StringComparison.Ordinal) && !st.StrippedText.StartsWith("http:", StringComparison.Ordinal) && !st.StrippedText.StartsWith("https:", StringComparison.Ordinal)) &&
                     (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                     !char.IsDigit(firstLetter) &&
                     isPrevEndOfLine)
@@ -2180,13 +2176,13 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!isMatchInKnowAbbreviations)
                     {
                         if (IsTurkishLittleI(firstLetter, encoding, language))
-                            p.Text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") || text.StartsWith("lD ", StringComparison.Ordinal) ||
-                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
-                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
-                            p.Text = pre + "I" + text.Substring(1);
+                            p.Text = st.Pre + GetTurkishUppercaseLetter(firstLetter, encoding) + st.StrippedText.Substring(1);
+                        else if (language == "en" && (st.StrippedText.StartsWith("l ", StringComparison.Ordinal) || st.StrippedText.StartsWith("l-I", StringComparison.Ordinal) || st.StrippedText.StartsWith("ls ", StringComparison.Ordinal) || st.StrippedText.StartsWith("lnterested") || st.StrippedText.StartsWith("lD ", StringComparison.Ordinal) ||
+                                                      st.StrippedText.StartsWith("lsn't ", StringComparison.Ordinal) || st.StrippedText.StartsWith("ldiot", StringComparison.Ordinal) || st.StrippedText.StartsWith("ln", StringComparison.Ordinal) || st.StrippedText.StartsWith("lm", StringComparison.Ordinal) ||
+                                                      st.StrippedText.StartsWith("ls", StringComparison.Ordinal) || st.StrippedText.StartsWith("lt", StringComparison.Ordinal) || st.StrippedText.StartsWith("lf ", StringComparison.Ordinal) || st.StrippedText.StartsWith("lc", StringComparison.Ordinal) || st.StrippedText.StartsWith("l'm ", StringComparison.Ordinal)) || st.StrippedText.StartsWith("l am ", StringComparison.Ordinal)) // l > I
+                            p.Text = st.Pre + "I" + st.StrippedText.Substring(1);
                         else
-                            p.Text = pre + char.ToUpper(firstLetter) + text.Substring(1);
+                            p.Text = st.Pre + char.ToUpper(firstLetter) + st.StrippedText.Substring(1);
                     }
                 }
             }
@@ -2196,10 +2192,8 @@ namespace Nikse.SubtitleEdit.Forms
                 var arr = p.Text.SplitToLines();
                 if (arr.Length == 2 && arr[1].Length > 1)
                 {
-                    string text = arr[1];
-                    string pre = string.Empty;
-
-                    text = QuickStrip(text, ref pre);
+                    var st = new StripableText(arr[1], StripableText.StripPreChars, null);
+                    var text = st.StrippedText;
 
                     char firstLetter = text[0];
                     string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
@@ -2218,144 +2212,75 @@ namespace Nikse.SubtitleEdit.Forms
                         if (!isMatchInKnowAbbreviations)
                         {
                             if (IsTurkishLittleI(firstLetter, encoding, language))
-                                text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
+                                text = st.Pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
                             else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") || text.StartsWith("lD ", StringComparison.Ordinal) ||
                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
-                                text = pre + "I" + text.Substring(1);
+                                text = st.Pre + "I" + text.Substring(1);
                             else
-                                text = pre + char.ToUpper(firstLetter) + text.Substring(1);
+                                text = st.Pre + char.ToUpper(firstLetter) + text.Substring(1);
                             p.Text = arr[0] + Environment.NewLine + text;
                         }
                     }
 
                     arr = p.Text.SplitToLines();
-                    if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
-                        (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)) &&
-                        !arr[0].StartsWith("--", StringComparison.Ordinal) && !arr[0].StartsWith("<i>--", StringComparison.Ordinal) &&
-                        !arr[1].StartsWith("--", StringComparison.Ordinal) && !arr[1].StartsWith("<i>--", StringComparison.Ordinal))
+                    var newStripPreChars = StripableText.StripPostChars.Replace("-", string.Empty); // '-' isn't included
+
+                    var stFirstLine = new StripableText(arr[0], newStripPreChars, null);
+                    var stSecLine = new StripableText(arr[1], newStripPreChars, null);
+
+                    if ((stFirstLine.StrippedText.StartsWith('-') && stSecLine.StrippedText.StartsWith("- ", StringComparison.Ordinal)) &&
+                        (!stFirstLine.StrippedText.StartsWith("--", StringComparison.Ordinal) && !stSecLine.StrippedText.StartsWith("--", StringComparison.Ordinal)))
                     {
-                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ", StringComparison.Ordinal) && arr[1].Length > 6)
-                        {
-                            p.Text = arr[0] + Environment.NewLine + "<i>- " + char.ToUpper(arr[1][5]) + arr[1].Remove(0, 6);
-                        }
-                        else if (isPrevEndOfLine && arr[1].StartsWith("- ", StringComparison.Ordinal) && arr[1].Length > 3)
-                        {
-                            p.Text = arr[0] + Environment.NewLine + "- " + char.ToUpper(arr[1][2]) + arr[1].Remove(0, 3);
-                        }
+                        if (isPrevEndOfLine && stSecLine.StrippedText.StartsWith("- ", StringComparison.Ordinal) && stSecLine.StrippedText.Length > 3)
+                            p.Text = arr[0] + Environment.NewLine + stSecLine.Pre + "- " + char.ToUpper(stSecLine.StrippedText[2]) + stSecLine.StrippedText.Substring(3);
+
                         arr = p.Text.SplitToLines();
+                        stFirstLine = new StripableText(arr[0], newStripPreChars, null);
 
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
                             prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
                         bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
-                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
-                        {
-                            p.Text = "<i>- " + char.ToUpper(arr[0][5]) + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];
-                        }
-                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ", StringComparison.Ordinal) && arr[0].Length > 3)
-                        {
-                            p.Text = "- " + char.ToUpper(arr[0][2]) + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
-                        }
+
+                        if (isPrevLineEndOfLine && stFirstLine.StrippedText.StartsWith("- ", StringComparison.Ordinal) && stFirstLine.StrippedText.Length > 3)
+                            p.Text = stFirstLine.Pre + "- " + char.ToUpper(stFirstLine.StrippedText[2]) + stFirstLine.StrippedText.Substring(3) + Environment.NewLine + arr[1];
                     }
                 }
             }
 
-            if (p.Text.Length > 4)
+            var newLineIdx = p.Text.IndexOf(Environment.NewLine);
+            if (p.Text.Length > 4 && newLineIdx > 1)
             {
-                int len = 0;
-                int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1, StringComparison.Ordinal);
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "- <i> ♪", 1, StringComparison.Ordinal);
-                    len = "- <i> ♪".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 1, StringComparison.Ordinal);
-                    len = "-".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 1, StringComparison.Ordinal);
-                    len = "<i>-".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 1, StringComparison.Ordinal);
-                    len = "<i> -".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ -", 1, StringComparison.Ordinal);
-                    len = "♪ -".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i> -", 1, StringComparison.Ordinal);
-                    len = "♪ <i> -".Length;
-                }
-                if (indexOfNewLine < 0)
-                {
-                    indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1, StringComparison.Ordinal);
-                    len = "♪ <i>-".Length;
-                }
+                newLineIdx += Environment.NewLine.Length;
+                string text = p.Text.Substring(newLineIdx);
+                var st = new StripableText(text, StripableText.StripPreChars, null);
 
-                if (indexOfNewLine > 0)
+                if (st.StrippedText.Length > 0)
                 {
-                    string text = p.Text.Substring(indexOfNewLine + len);
-                    var st = new StripableText(text);
-
-                    if (st.StrippedText.Length > 0 && IsTurkishLittleI(st.StrippedText[0], encoding, language) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
+                    if (IsTurkishLittleI(st.StrippedText[0], encoding, language) && CanUpper(st.StrippedText, st.Pre, language))
                     {
-                        text = st.Pre + GetTurkishUppercaseLetter(st.StrippedText[0], encoding) + st.StrippedText.Substring(1) + st.Post;
-                        p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
+                        text = st.Pre + GetTurkishUppercaseLetter(st.StrippedText[0], encoding) + st.StrippedText.Substring(1);
+                        p.Text = p.Text.Substring(0, newLineIdx - 2).TrimEnd() + Environment.NewLine + text;
                     }
-                    else if (st.StrippedText.Length > 0 && st.StrippedText[0] != char.ToUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.Contains("..."))
+                    else if (!char.IsUpper(st.StrippedText[0]) && CanUpper(st.StrippedText, st.Pre, language)) // what is like: "...i can't" Uncheck Remove leading.
                     {
-                        text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1) + st.Post;
-                        p.Text = p.Text.Remove(indexOfNewLine + len).Insert(indexOfNewLine + len, text);
+                        text = st.Pre + char.ToUpper(st.StrippedText[0]) + st.StrippedText.Substring(1);
+                        p.Text = p.Text.Substring(0, newLineIdx - 2).TrimEnd() + Environment.NewLine + text;
                     }
                 }
             }
             return p.Text;
         }
 
-        private static string QuickStrip(string text, ref string pre)
+        private static bool CanUpper(string text, string pre, string lang)
         {
-            if (text.Length > 2 && text[0] == '-')
-            {
-                if (text[1] == ' ')
-                    pre += "- ";
-                else
-                    pre += "-";
-                text = text.Substring(1).TrimStart();
-            }
-            if (text.Length > 3 && text[0] == '<' && text[2] == '>')
-            {
-                if (text[3] == ' ')
-                    pre += "<" + text[1] + ">" + " ";
-                else
-                    pre += "<" + text[1] + ">";
-                text = text.Substring(3).TrimStart();
-            }
-            if (text.Length > 2 && text.StartsWith('♪'))
-            {
-                if (text[2] == ' ')
-                    pre += "♪ ";
-                else
-                    pre = pre + "♪";
-                text = text.Substring(1).TrimStart();
-            }
-            if (text.Length > 2 && text.StartsWith('♫'))
-            {
-                if (text[2] == ' ')
-                    pre += "♫ ";
-                else
-                    pre = pre + "♫";
-                text = text.Substring(1).TrimStart();
-            }
-            return text;
+            // ♪ ...no, no, that's not me. ♪ | ...i can't
+            if (!pre.EndsWith('[') && !pre.Contains("...", StringComparison.Ordinal))
+                return true;
+            else if (lang == "en" && pre.Contains("...", StringComparison.Ordinal) && text.Length > 2 && text.Substring(0, 2) == "i ")
+                return true;
+            return false;
         }
 
         private static bool IsTurkishLittleI(char firstLetter, Encoding encoding, string language)
