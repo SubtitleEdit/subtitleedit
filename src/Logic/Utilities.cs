@@ -820,9 +820,7 @@ namespace Nikse.SubtitleEdit.Logic
                 control.BackColor = gs.SubtitleBackgroundColor;
                 control.ForeColor = gs.SubtitleFontColor;
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         public static string RemoveSsaTags(string s)
