@@ -27,8 +27,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public StripableText(string text, string stripStartCharacters, string stripEndCharacters)
         {
-            if (text == null || string.IsNullOrWhiteSpace(text))
-                return;
+            if (text == null)
+                throw new NullReferenceException("Text can't be null");
             OriginalText = text;
 
             Pre = string.Empty;
