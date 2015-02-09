@@ -2138,18 +2138,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
                 string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
 
-                if (oldText != fixedText)
+                if (oldText != fixedText && AllowFix(p, fixAction))
                 {
                     p.Text = fixedText;
-                    if (AllowFix(p, fixAction))
-                    {
-                        fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
+                    fixedStartWithUppercaseLetterAfterParagraphTicked++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             listViewFixes.EndUpdate();
