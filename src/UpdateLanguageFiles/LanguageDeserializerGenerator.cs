@@ -8,8 +8,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string GenerateCSharpXmlDeserializerForLanguage()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine(@"using System.IO;
+            var sb = new StringBuilder(@"using System.IO;
 using System.Xml;
 using System.Text;
 using Nikse.SubtitleEdit.Logic;
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Language CustomDeserializeLanguage(string fileName)
         {
-            var name = new StringBuilder(100);
+            var name = new StringBuilder(100, 1000);
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
 
@@ -63,7 +62,8 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetValue(Language language, XmlReader reader, string name)
         {
             switch (name)
-            {");
+            {
+");
 
             sb.AppendLine(SubElementDeserializer(typeof(Language), "language", string.Empty));
             sb.AppendLine("\t\t\t}");
