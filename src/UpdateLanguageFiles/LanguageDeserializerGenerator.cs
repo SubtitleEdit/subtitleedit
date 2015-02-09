@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (fieldInfo.FieldType.Name == "String")
                     {
                         sb.AppendLine("\t\t\t\tcase \"" + (xmlPath + "/" + fieldInfo.Name).TrimStart('/') + "\":");
-                        sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + ".").TrimStart('.') + fieldInfo.Name + " = reader.Value;");
+                        sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + "." + fieldInfo.Name).TrimStart('.') + " = reader.Value;");
                         sb.AppendLine("\t\t\t\t\tbreak;");
                     }
                 }
@@ -107,8 +107,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (prp.PropertyType.Name == "String")
                     {
-                        sb.AppendLine("\t\t\t\tcase \"" + xmlPath + "/" + prp.Name + "\":");
-                        sb.AppendLine("\t\t\t\t\tlanguage." + xmlPath.Replace("/", ".") + "." + prp.Name + " = reader.Value;");
+                        sb.AppendLine("\t\t\t\tcase \"" + (xmlPath + "/" + prp.Name).TrimStart('/') + "\":");
+                        sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + "." + prp.Name).TrimStart('.') + " = reader.Value;");
                         sb.AppendLine("\t\t\t\t\tbreak;");
                     }
                 }
