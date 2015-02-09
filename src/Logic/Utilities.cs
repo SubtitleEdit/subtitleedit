@@ -748,7 +748,7 @@ namespace Nikse.SubtitleEdit.Logic
                 var endIdx = s.IndexOf('>', idx + 3);
                 if (endIdx < idx)
                     break;
-                var tag = s.Substring(idx, endIdx - idx).ToLower();
+                var tag = s.Substring(idx, endIdx - idx).ToLower(CultureInfo.InvariantCulture);
                 s = s.Remove(idx, endIdx - idx).Insert(idx, tag);
                 idx = s.IndexOfAny(tags, StringComparison.Ordinal);
             }
