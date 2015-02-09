@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class StripableText
     {
+        public const string StripPreChars = " >-\"”“['‘`´¶(♪¿¡.…—#";
+        public const string StripPostChars = " -\"”“]'`´¶)♪.!?:…—#";
         public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
@@ -19,16 +21,18 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public StripableText(string text)
-            : this(text, " >-\"”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
+            : this(text, StripPreChars, StripPostChars)
         {
         }
 
         public StripableText(string text, string stripStartCharacters, string stripEndCharacters)
         {
+            if (text == null || string.IsNullOrWhiteSpace(text))
+                return;
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
+            if (stripStartCharacters != null && text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -61,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             Post = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
+            if (stripEndCharacters != null && text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
             {
                 for (int i = 0; i < 5; i++)
                 {
