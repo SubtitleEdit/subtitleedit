@@ -1064,7 +1064,7 @@ namespace Nikse.SubtitleEdit.Forms
                         text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
                         string oldText = text;
 
-                        text = Utilities.FixInvalidItalicTags(text);
+                        text = HtmlUtil.FixInvalidItalicTags(text);
                         if (text != oldText)
                         {
                             Subtitle.Paragraphs[i].Text = text;
@@ -3011,36 +3011,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[i];
                 var text = p.Text;
-                if (text.Contains("..") && AllowFix(p, fixAction))
+                if (text.Contains("..", StringComparison.Ordinal) && AllowFix(p, fixAction))
                 {
-                    var oldText = text;
-                    if (!text.Contains(Environment.NewLine))
+                    var lines = text.SplitToLines();
+                    var fixedText = string.Empty;
+                    for (int k = 0; k < lines.Length; k++)
                     {
-                        text = FixCommonErrorsHelper.FixEllipsesStartHelper(text);
-                        if (oldText != text)
-                        {
-                            p.Text = text;
-                            fixCount++;
-                            AddFixToListView(p, fixAction, oldText, text);
-                        }
+                        var line = lines[k];
+                        fixedText += Environment.NewLine + FixCommonErrorsHelper.FixEllipsesStartHelper(line);
+                        fixedText = fixedText.TrimStart(Utilities.NewLineChars);
                     }
-                    else
-                    {
-                        var lines = text.SplitToLines();
-                        var fixedParagraph = string.Empty;
-                        for (int k = 0; k < lines.Length; k++)
-                        {
-                            var line = lines[k];
-                            fixedParagraph += Environment.NewLine + FixCommonErrorsHelper.FixEllipsesStartHelper(line);
-                            fixedParagraph = fixedParagraph.Trim();
-                        }
 
-                        if (fixedParagraph != text)
-                        {
-                            p.Text = fixedParagraph;
-                            fixCount++;
-                            AddFixToListView(p, fixAction, oldText, fixedParagraph);
-                        }
+                    if (fixedText != text)
+                    {
+                        p.Text = fixedText;
+                        fixCount++;
+                        AddFixToListView(p, fixAction, text, fixedText);
                     }
                 }
             }

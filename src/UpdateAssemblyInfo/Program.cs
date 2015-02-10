@@ -6,10 +6,8 @@ namespace UpdateAssemblyInfo
 {
     internal class Program
     {
-
         private class Template
         {
-
             private string templateFile;
             private string templateText;
 

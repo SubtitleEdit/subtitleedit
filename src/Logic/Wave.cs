@@ -1,18 +1,18 @@
 ﻿namespace Nikse.SubtitleEdit.Logic
 {
-//    class Wave
-//    {
-//        public Wave(string fileName)
-//        {
-//            RiffParser parser = new RiffParser();
-//            RiffDecodeHeader decoder = new RiffDecodeHeader(parser);
-//            parser.OpenFile(fileName);
-//            if (RiffParser.ckidAVI == parser.FileType)
-//            {
-//                decoder.ProcessMainAVI();
-//                decoder.ProcessMainWAVE();
-//                parser.CloseFile();
-//            }
-//        }
-//    }
+    /*class wave
+    {
+        public wave(string filename)
+        {
+            riffparser parser = new riffparser();
+            riffdecodeheader decoder = new riffdecodeheader(parser);
+            parser.openfile(filename);
+            if (riffparser.ckidavi == parser.filetype)
+            {
+                decoder.processmainavi();
+                decoder.processmainwave();
+                parser.closefile();
+            }
+        }
+    }*/
 }
