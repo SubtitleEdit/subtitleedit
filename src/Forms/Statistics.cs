@@ -174,7 +174,7 @@ https://github.com/SubtitleEdit/subtitleedit
         private static void MostUsedWordsAdd(Dictionary<string, string> hashtable, string lastLine)
         {
             if (lastLine.Contains("< "))
-                lastLine = Utilities.FixInvalidItalicTags(lastLine);
+                lastLine = HtmlUtil.FixInvalidItalicTags(lastLine);
             lastLine = lastLine.Trim('\'');
             lastLine = lastLine.Replace("\"", "");
             lastLine = lastLine.Replace("<i>", "");

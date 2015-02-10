@@ -322,7 +322,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
             if (s.StartsWith("/STYLE VERTICAL(-10)" + Environment.NewLine))
                 s = "{\\an5}" + s.Remove(0, 20).Trim();
-            s = Utilities.FixInvalidItalicTags(s);
+            s = HtmlUtil.FixInvalidItalicTags(s);
             return s;
         }
 

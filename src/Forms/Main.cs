@@ -6505,18 +6505,6 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
         }
 
-        private static string RemoveSsaStyle(string text)
-        {
-            int indexOfBegin = text.IndexOf('{');
-            while (indexOfBegin >= 0 && text.IndexOf('}') > indexOfBegin)
-            {
-                int indexOfEnd = text.IndexOf('}');
-                text = text.Remove(indexOfBegin, (indexOfEnd - indexOfBegin) + 1);
-                indexOfBegin = text.IndexOf('{');
-            }
-            return text;
-        }
-
         private void NormalToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (_subtitle.Paragraphs.Count > 0 && SubtitleListview1.SelectedItems.Count > 0)
@@ -6531,13 +6519,9 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        int indexOfEndBracket = p.Text.IndexOf('}');
-                        if (p.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
-                            p.Text = p.Text.Remove(0, indexOfEndBracket + 1).TrimStart();
+                        p.Text = Utilities.RemoveSsaTags(p.Text);
                         p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         p.Text = RemoveUnicodeCharacters(p.Text);
-                        if (isSsa)
-                            p.Text = RemoveSsaStyle(p.Text);
                         SubtitleListview1.SetText(item.Index, p.Text);
 
                         if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
@@ -6547,8 +6531,6 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 original.Text = HtmlUtil.RemoveHtmlTags(original.Text);
                                 original.Text = original.Text.Replace("♪", string.Empty);
-                                if (isSsa)
-                                    original.Text = RemoveSsaStyle(original.Text);
                                 SubtitleListview1.SetAlternateText(item.Index, original.Text);
                             }
                         }
@@ -7624,7 +7606,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Paragraph currentParagraph = _subtitle.Paragraphs[firstIndex];
                 string text = sb.ToString();
-                text = Utilities.FixInvalidItalicTags(text);
+                text = HtmlUtil.FixInvalidItalicTags(text);
                 text = ChangeAllLinesItalictoSingleItalic(text);
                 text = Utilities.AutoBreakLine(text, Utilities.AutoDetectGoogleLanguage(_subtitle));
                 currentParagraph.Text = text;
