@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.checkBoxFullFrameImage = new System.Windows.Forms.CheckBox();
             this.checkBoxTransAntiAliase = new System.Windows.Forms.CheckBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
             this.numericUpDownLineSpacing = new System.Windows.Forms.NumericUpDown();
@@ -78,6 +79,7 @@
             this.checkBoxSkipEmptyFrameAtStart = new System.Windows.Forms.CheckBox();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.groupBoxExportImage = new System.Windows.Forms.GroupBox();
+            this.panelVlcTemp = new System.Windows.Forms.Panel();
             this.linkLabelPreview = new System.Windows.Forms.LinkLabel();
             this.timerPreview = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStripListView = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -91,7 +93,6 @@
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.panelVlcTemp = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.contextMenuStrip1.SuspendLayout();
             this.groupBoxImageSettings.SuspendLayout();
@@ -163,6 +164,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.checkBoxFullFrameImage);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxTransAntiAliase);
             this.groupBoxImageSettings.Controls.Add(this.labelLineHeight);
             this.groupBoxImageSettings.Controls.Add(this.numericUpDownLineSpacing);
@@ -208,6 +210,16 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // checkBoxFullFrameImage
+            // 
+            this.checkBoxFullFrameImage.AutoSize = true;
+            this.checkBoxFullFrameImage.Location = new System.Drawing.Point(532, 104);
+            this.checkBoxFullFrameImage.Name = "checkBoxFullFrameImage";
+            this.checkBoxFullFrameImage.Size = new System.Drawing.Size(102, 17);
+            this.checkBoxFullFrameImage.TabIndex = 23;
+            this.checkBoxFullFrameImage.Text = "Full frame image";
+            this.checkBoxFullFrameImage.UseVisualStyleBackColor = true;
             // 
             // checkBoxTransAntiAliase
             // 
@@ -790,6 +802,14 @@
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
             // 
+            // panelVlcTemp
+            // 
+            this.panelVlcTemp.Location = new System.Drawing.Point(644, 19);
+            this.panelVlcTemp.Name = "panelVlcTemp";
+            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
+            this.panelVlcTemp.TabIndex = 10;
+            this.panelVlcTemp.Visible = false;
+            // 
             // linkLabelPreview
             // 
             this.linkLabelPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -867,14 +887,6 @@
             this.subtitleListView1.View = System.Windows.Forms.View.Details;
             this.subtitleListView1.SelectedIndexChanged += new System.EventHandler(this.subtitleListView1_SelectedIndexChanged);
             this.subtitleListView1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.subtitleListView1_KeyDown);
-            // 
-            // panelVlcTemp
-            // 
-            this.panelVlcTemp.Location = new System.Drawing.Point(644, 19);
-            this.panelVlcTemp.Name = "panelVlcTemp";
-            this.panelVlcTemp.Size = new System.Drawing.Size(200, 100);
-            this.panelVlcTemp.TabIndex = 10;
-            this.panelVlcTemp.Visible = false;
             // 
             // ExportPngXml
             // 
@@ -979,5 +991,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader5;
         private System.Windows.Forms.LinkLabel linkLabelPreview;
         private System.Windows.Forms.Panel panelVlcTemp;
+        private System.Windows.Forms.CheckBox checkBoxFullFrameImage;
     }
 }
