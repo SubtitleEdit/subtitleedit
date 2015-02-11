@@ -127,6 +127,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public static int IndexOfAny(this string s, string[] words, StringComparison comparionType)
         {
+            if (words == null || string.IsNullOrEmpty(s))
+                return -1;
             for (int i = 0; i < words.Length; i++)
             {
                 var idx = s.IndexOf(words[i], comparionType);
