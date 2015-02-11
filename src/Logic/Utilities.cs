@@ -555,9 +555,9 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             string s = RemoveLineBreaks(text);
-            string temp = HtmlUtil.RemoveHtmlTags(s, true);
+            string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
 
-            if (temp.Length < mergeLinesShorterThan)
+            if (noTagText.Length < mergeLinesShorterThan)
             {
                 var lines = text.SplitToLines();
                 if (lines.Length > 1)
@@ -565,8 +565,8 @@ namespace Nikse.SubtitleEdit.Logic
                     bool isDialog = true;
                     foreach (string line in lines)
                     {
-                        string noTags = HtmlUtil.RemoveHtmlTags(line).Trim();
-                        isDialog = isDialog && (noTags.StartsWith('-') || noTags.StartsWith('—'));
+                        string noTagLine = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
                     }
                     if (isDialog)
                     {
@@ -741,6 +741,18 @@ namespace Nikse.SubtitleEdit.Logic
 
         internal static string RemoveLineBreaks(string s)
         {
+            var tags = new string[] { "<I>", "<U>", "<B>", "<FONT" };
+            var idx = s.IndexOfAny(tags, StringComparison.Ordinal);
+            while (idx >= 0)
+            {
+                var endIdx = s.IndexOf('>', idx + 3);
+                if (endIdx < idx)
+                    break;
+                var tag = s.Substring(idx, endIdx - idx).ToLowerInvariant();
+                s = s.Remove(idx, endIdx - idx).Insert(idx, tag);
+                idx = s.IndexOfAny(tags, StringComparison.Ordinal);
+            }
+
             s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
             s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
