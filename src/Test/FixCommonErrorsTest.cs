@@ -213,11 +213,13 @@ namespace Test
         public void MergeShortLinesHearingImpaired()
         {
             string input = "[engine roaring]" + Environment.NewLine + "[cluck]";
+            string input2 = "<i>engine roaring</i>" + Environment.NewLine + "cluck";
             string expected = input;
+            string expected2 = input2;
 
             var result = FixCommonErrorsHelper.FixShortLines(input);
-
-            Assert.AreEqual(result, expected);
+            var result2 = FixCommonErrorsHelper.FixShortLines(input2);
+            Assert.AreEqual(result, expected); Assert.AreEqual(result2, expected2.Replace(Environment.NewLine, " "));
         }
 
 

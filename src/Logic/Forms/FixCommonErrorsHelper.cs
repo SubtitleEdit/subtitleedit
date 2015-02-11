@@ -424,25 +424,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 post += "<" + text[1] + ">";
                 text = text.Remove(0, 3).TrimStart();
             }
-            if (text.StartsWith("<font ", StringComparison.OrdinalIgnoreCase))
+            if (text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
             {
-                int endIndex = text.IndexOf("\">", StringComparison.Ordinal);
-                if (endIndex > 19 && endIndex < (text.Length - 7))
+                var endIdx = text.IndexOf('>', 5);
+                if (endIdx >= 5 && endIdx < text.Length - 7)
                 {
-                    post += text.Substring(0, endIndex + 2);
-                    text = text.Remove(0, endIndex + 2).TrimStart();
+                    post += text.Substring(0, endIdx + 1);
+                    text = text.Substring(endIdx + 1).TrimStart();
                 }
             }
             if (text.StartsWith(">>", StringComparison.Ordinal) && text.Length > 3)
-            {
-                if (text[2] == ' ')
-                    text = text.Substring(3);
-                else
-                    text = text.Substring(2);
-                text = text.TrimStart();
-            }
-            text = post + text;
-            return text;
+                text = text.TrimStart('>', ' ').TrimStart();
+            return post + text;
         }
 
         internal static string FixShortLines(string text)
@@ -450,8 +443,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine, StringComparison.Ordinal))
                 return text;
 
-            string s = HtmlUtil.RemoveHtmlTags(text);
-            if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && text.Contains(Environment.NewLine))
+            string s = HtmlUtil.RemoveHtmlTags(text, true);
+            if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan)
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
@@ -465,11 +458,9 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     !s.Contains('♫') &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
-                    text != text.ToUpper())
+                    s != s.ToUpper())
                 {
-                    s = text.Replace(Environment.NewLine, " ");
-                    s = s.Replace("  ", " ");
-                    return s;
+                    return text.Replace(Environment.NewLine, " ").Replace("  ", " ");
                 }
             }
             return text;
