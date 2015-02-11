@@ -40,7 +40,7 @@
     <FrameRateX>Ilość klatek na sekundę: {0:0.0###}</FrameRateX>
     <TotalFramesX>Ogółem klatek: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Kodowanie wideo: {0}</VideoEncodingX>
-    <SingleLineLengths>Długość pojedynczej linii:</SingleLineLengths>
+    <SingleLineLengths>Długość pojedynczej linii: </SingleLineLengths>
     <TotalLengthX>Długość całkowita: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Długość całkowita: {0} (linia podzielona!)</TotalLengthXSplitLine>
     <SplitLine>Podziel linię!</SplitLine>
@@ -1303,8 +1303,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <EndsWith>Kończy się na</EndsWith>
     <NoContains>Nie zawiera</NoContains>
     <RegEx>Wyrażenie regularne</RegEx>
-    <UnequalLines>Nierównorzędne linie</UnequalLines>
-    <EqualLines>Równorzędne linie</EqualLines>
+    <UnequalLines>Linie o numerach nieparzystych</UnequalLines>
+    <EqualLines>Linie o numerach parzystych</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Wielokrotne zastąpienia</Title>
