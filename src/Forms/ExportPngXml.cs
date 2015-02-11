@@ -909,24 +909,68 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                        param.Bitmap.Save(fileName, ImageFormat);
-                        imagesSavedCount++;
 
-                        //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
-                        //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
-                        int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                        int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+                        if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                        {
+                            var nbmp = new NikseBitmap(param.Bitmap);
+                            nbmp.ReplaceTransparentWith(Color.Blue);
+                            using (var bmp = nbmp.GetBitmap())
+                            {
+                               // param.Bitmap.Save(fileName, ImageFormat);
+                                imagesSavedCount++;
 
-                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                            left = param.BottomMargin;
-                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                            left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
-                        if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
-                            top = param.BottomMargin;
-                        if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                                //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
+                                //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
+                                int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                                int left = (param.ScreenWidth - param.Bitmap.Width)/2;
 
-                        sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
+                                var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
+                                {
+                                    b.Fill(Color.Blue);
+                                    using (var fullSize = b.GetBitmap())
+                                    {
+                                        if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                                            left = param.BottomMargin;
+                                        else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                                            left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
+                                        if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                                            top = param.BottomMargin;
+                                        if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                                            top = param.ScreenHeight - (param.Bitmap.Height/2);
+
+                                        using (var g = Graphics.FromImage(fullSize))
+                                        {
+                                            g.DrawImage(bmp, left, top);
+                                            g.Dispose();
+                                        }
+                                        fullSize.Save(fileName, ImageFormat);
+                                    }
+                                }
+                                left = 0;
+                                top = 0;
+                                sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.ScreenWidth, top + param.ScreenHeight));
+                            }
+                        }
+                        else
+                        {
+                            param.Bitmap.Save(fileName, ImageFormat);
+                            imagesSavedCount++;
+
+                            //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
+                            //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
+                            int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
+                            int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
+
+                            if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
+                                left = param.BottomMargin;
+                            else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
+                                left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
+                            if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
+                                top = param.BottomMargin;
+                            if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
+                                top = param.ScreenHeight - (param.Bitmap.Height / 2);
+                            sb.AppendLine(string.Format("{0} {1} {2} {3} {4} {5} {6}", Path.GetFileName(fileName), FormatFabTime(param.P.StartTime, param), FormatFabTime(param.P.EndTime, param), left, top, left + param.Bitmap.Width, top + param.Bitmap.Height));
+                        }
                         param.Saved = true;
                     }
                 }
@@ -1303,7 +1347,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
                 return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
-            return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+
+            // drop frame 
+            if (Math.Abs(param.FramesPerSeconds - 24 * (999 / 1000)) < 0.01 ||
+                Math.Abs(param.FramesPerSeconds - 29 * (999 / 1000)) < 0.01 ||
+                Math.Abs(param.FramesPerSeconds - 59 * (999 / 1000)) < 0.01)
+                return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
+
+            return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
         }
 
         private void SetupImageParameters()
@@ -2654,10 +2705,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
 
             bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
+            checkBoxFullFrameImage.Visible = exportType == "FAB";
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
-            comboBoxFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
+            comboBoxFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME" || exportType == "FAB";
             checkBoxTransAntiAliase.Visible = exportType == "VOBSUB";
             if (exportType == "BDNXML")
             {
@@ -2702,6 +2754,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 labelFrameRate.Top = labelLanguage.Top;
                 comboBoxFrameRate.Top = comboBoxLanguage.Top;
+                comboBoxFrameRate.Items.Add("23.976");
+                comboBoxFrameRate.Items.Add("24");
+                comboBoxFrameRate.Items.Add("25");
+                comboBoxFrameRate.Items.Add("29.97");
+                comboBoxFrameRate.Items.Add("50");
+                comboBoxFrameRate.Items.Add("59.94");
+                comboBoxFrameRate.SelectedIndex = 1;
+                comboBoxFrameRate.DropDownStyle = ComboBoxStyle.DropDownList;
+            }
+            else if (exportType == "FAB")
+            {
+                labelFrameRate.Visible = true;
                 comboBoxFrameRate.Items.Add("23.976");
                 comboBoxFrameRate.Items.Add("24");
                 comboBoxFrameRate.Items.Add("25");
