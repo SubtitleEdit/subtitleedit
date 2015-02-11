@@ -313,6 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (comboBoxBorderWidth.SelectedItem.ToString() == Configuration.Settings.Language.ExportPngXml.BorderStyleBoxForEachLine)
                 {
+                    parameter.BoxSingleLine = true;
                     parameter.BackgroundColor = panelBorderColor.BackColor;
                     parameter.BorderWidth = 0;
                 }
