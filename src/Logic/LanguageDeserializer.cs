@@ -19,7 +19,9 @@ namespace Nikse.SubtitleEdit.Logic
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
 
-            using (XmlReader reader = XmlReader.Create(stream))
+            using (XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings {
+                   IgnoreWhitespace = true, IgnoreProcessingInstructions = true, IgnoreComments = true,
+                   DtdProcessing = DtdProcessing.Ignore, CheckCharacters = false, CloseInput = true }))
             {
                 while (reader.Read())
                 {
