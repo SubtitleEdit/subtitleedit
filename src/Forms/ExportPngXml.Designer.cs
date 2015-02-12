@@ -487,7 +487,8 @@
             "Gif",
             "Jpg",
             "Png",
-            "Tiff"});
+            "Tiff",
+            "Tga"});
             this.comboBoxImageFormat.Location = new System.Drawing.Point(532, 78);
             this.comboBoxImageFormat.Name = "comboBoxImageFormat";
             this.comboBoxImageFormat.Size = new System.Drawing.Size(121, 21);

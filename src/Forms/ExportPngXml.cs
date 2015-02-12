@@ -568,7 +568,7 @@ namespace Nikse.SubtitleEdit.Forms
                     imagesSavedCount++;
                     string numberString = string.Format("{0:00000}", imagesSavedCount);
                     string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                    empty.Save(fileName, ImageFormat);
+                    SaveImage(empty, fileName, ImageFormat);
 
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
@@ -773,6 +773,19 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             buttonExport.Enabled = true;
         }
 
+        private void SaveImage(Bitmap bmp, string fileName, ImageFormat imageFormat)
+        {
+            if (Equals(imageFormat, ImageFormat.Icon))
+            {
+                var nikseBitmap = new NikseBitmap(bmp);
+                nikseBitmap.SaveAsTarga(fileName);
+            }
+            else
+            {
+                bmp.Save(fileName, imageFormat);                
+            }
+        }
+
         private void FixStartEndWithSameTimeCode()
         {
             for (int i = 0; i < _subtitle.Paragraphs.Count - 1; i++)
@@ -944,7 +957,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                             g.DrawImage(bmp, left, top);
                                             g.Dispose();
                                         }
-                                        fullSize.Save(fileName, ImageFormat);
+                                        SaveImage(fullSize, fileName, ImageFormat);
                                     }
                                 }
                                 left = 0;
@@ -954,7 +967,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else
                         {
-                            param.Bitmap.Save(fileName, ImageFormat);
+                            SaveImage(param.Bitmap, fileName, ImageFormat);
+
                             imagesSavedCount++;
 
                             //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
@@ -981,7 +995,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     {
                         string numberString = string.Format("IMAGE{0:000}", i);
                         string fileName = Path.Combine(folderBrowserDialog1.SelectedPath, numberString + "." + comboBoxImageFormat.Text.ToLower());
-                        param.Bitmap.Save(fileName, ImageFormat);
+                        SaveImage(param.Bitmap, fileName, ImageFormat);
+
                         imagesSavedCount++;
 
                         const string paragraphWriteFormat = "{0} , {1} , {2}\r\n";
@@ -1106,7 +1121,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         }
                         else
                         {
-                            param.Bitmap.Save(fileName, ImageFormat);
+                            SaveImage(param.Bitmap, fileName, ImageFormat);
                         }
                         imagesSavedCount++;
 
@@ -1340,6 +1355,10 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     imageFormat = ImageFormat.Png;
                 else if (comboBoxImageFormat.SelectedIndex == 5)
                     imageFormat = ImageFormat.Tiff;
+
+                if (string.Compare(comboBoxImageFormat.Text, "tga", StringComparison.OrdinalIgnoreCase) == 0)
+                    return ImageFormat.Icon;
+
                 return imageFormat;
             }
         }
