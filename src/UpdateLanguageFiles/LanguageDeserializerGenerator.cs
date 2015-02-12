@@ -8,8 +8,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string GenerateCSharpXmlDeserializerForLanguage()
         {
-            var sb = new StringBuilder();
-            sb.AppendLine(@"using System.IO;
+            var sb = new StringBuilder(@"using System.IO;
 using System.Xml;
 using System.Text;
 using Nikse.SubtitleEdit.Logic;
@@ -26,7 +25,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Language CustomDeserializeLanguage(string fileName)
         {
-            var name = new StringBuilder(100);
+            var name = new StringBuilder(100, 1000);
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
 
@@ -36,24 +35,17 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (!reader.IsEmptyElement)
-                        {
-                            if (name.Length > 0)
-                                name.Append('/');
-                            if (reader.Depth > 0)
-                                name.Append(reader.Name);
-                        }
+                        if (!reader.IsEmptyElement && reader.Depth > 0)
+                            name.Append('/').Append(reader.Name);
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {
                         if (name.Length > 0)
-                            name.Length -= reader.Name.Length;
-                        if (name.Length > 0)
-                            name.Length -= 1;
+                            name.Length -= reader.Name.Length + 1;
                     }
                     else if (reader.NodeType == XmlNodeType.Text)
                     {
-                        SetValue(language, reader, name.ToString());
+                        SetValue(language, reader, name.ToString(1, name.Length - 1));
                     }
                 }
             }
@@ -63,7 +55,8 @@ namespace Nikse.SubtitleEdit.Logic
         private static void SetValue(Language language, XmlReader reader, string name)
         {
             switch (name)
-            {");
+            {
+");
 
             sb.AppendLine(SubElementDeserializer(typeof(Language), "language", string.Empty));
             sb.AppendLine("\t\t\t}");
@@ -89,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (fieldInfo.FieldType.Name == "String")
                     {
                         sb.AppendLine("\t\t\t\tcase \"" + (xmlPath + "/" + fieldInfo.Name).TrimStart('/') + "\":");
-                        sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + ".").TrimStart('.') + fieldInfo.Name + " = reader.Value;");
+                        sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + "." + fieldInfo.Name).TrimStart('.') + " = reader.Value;");
                         sb.AppendLine("\t\t\t\t\tbreak;");
                     }
                 }
@@ -107,8 +100,8 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (prp.PropertyType.Name == "String")
                     {
-                        sb.AppendLine("\t\t\t\tcase \"" + xmlPath + "/" + prp.Name + "\":");
-                        sb.AppendLine("\t\t\t\t\tlanguage." + xmlPath.Replace("/", ".") + "." + prp.Name + " = reader.Value;");
+                        sb.AppendLine("\t\t\t\tcase \"" + (xmlPath + "/" + prp.Name).TrimStart('/') + "\":");
+                        sb.AppendLine("\t\t\t\t\tlanguage." + (xmlPath.Replace("/", ".") + "." + prp.Name).TrimStart('.') + " = reader.Value;");
                         sb.AppendLine("\t\t\t\t\tbreak;");
                     }
                 }

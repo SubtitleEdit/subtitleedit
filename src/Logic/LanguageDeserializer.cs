@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Language CustomDeserializeLanguage(string fileName)
         {
-            var name = new StringBuilder(100);
+            var name = new StringBuilder(100, 1000);
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
 
@@ -25,24 +25,17 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (!reader.IsEmptyElement)
-                        {
-                            if (name.Length > 0)
-                                name.Append('/');
-                            if (reader.Depth > 0)
-                                name.Append(reader.Name);
-                        }
+                        if (!reader.IsEmptyElement && reader.Depth > 0)
+                            name.Append('/').Append(reader.Name);
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {
                         if (name.Length > 0)
-                            name.Length -= reader.Name.Length;
-                        if (name.Length > 0)
-                            name.Length -= 1;
+                            name.Length -= reader.Name.Length + 1;
                     }
                     else if (reader.NodeType == XmlNodeType.Text)
                     {
-                        SetValue(language, reader, name.ToString());
+                        SetValue(language, reader, name.ToString(1, name.Length - 1));
                     }
                 }
             }
