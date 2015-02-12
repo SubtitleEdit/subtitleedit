@@ -517,7 +517,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (_onlyListFixes || _batchMode)
                 return true;
 
-            return !_notAllowedFixes.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);           
+            return !_notAllowedFixes.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);
         }
 
         public void ShowStatus(string message)
