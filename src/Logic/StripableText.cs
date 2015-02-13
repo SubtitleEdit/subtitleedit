@@ -8,6 +8,8 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class StripableText
     {
+        public const string StripPreChars = " >-\"”“['‘`´¶(♪¿¡.…—#";
+        public const string StripPostChars = " -\"”“]'`´¶)♪.!?:…—#";
         public string Pre { get; set; }
         public string Post { get; set; }
         public string StrippedText { get; set; }
@@ -19,16 +21,18 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public StripableText(string text)
-            : this(text, " >-\"”“['‘`´¶(♪¿¡.…—", " -\"”“]'`´¶)♪.!?:…—")
+            : this(text, StripPreChars, StripPostChars)
         {
         }
 
         public StripableText(string text, string stripStartCharacters, string stripEndCharacters)
         {
+            if (text == null)
+                throw new NullReferenceException("Text can't be null");
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
+            if (stripStartCharacters != null && text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -41,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic
                     // ASS/SSA codes like {\an9}
                     if (text.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        int endIndex = text.IndexOf('}');
+                        int endIndex = text.IndexOf('}', 2);
                         if (endIndex > 0 && (!text.Contains('{') || text.IndexOf('{') > endIndex))
                         {
                             int index = text.IndexOf('}') + 1;
@@ -61,7 +65,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             Post = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
+            if (stripEndCharacters != null && text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
             {
                 for (int i = 0; i < 5; i++)
                 {
@@ -91,7 +95,6 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-
             StrippedText = text;
         }
 
