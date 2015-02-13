@@ -345,6 +345,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         public string RemoveTextFromHearImpaired(string text)
         {
+            if (text == null || string.IsNullOrWhiteSpace(text))
+                return text;
             if (Settings.RemoveWhereContains && Settings.RemoveIfTextContains.Length > 0 && text.Contains(Settings.RemoveIfTextContains))
             {
                 return string.Empty;
