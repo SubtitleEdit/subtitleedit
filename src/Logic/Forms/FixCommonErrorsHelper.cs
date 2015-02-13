@@ -188,7 +188,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
                 return true;
 
-            prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).Trim();
+            prevText = prevText.Replace("♪", string.Empty).Replace("♫", string.Empty).TrimEnd();
             bool isPrevEndOfLine = prevText.Length > 1 &&
                                    !prevText.EndsWith("...", StringComparison.Ordinal) &&
                                    (".!?—".Contains(prevText[prevText.Length - 1]) || // em dash, unicode character
