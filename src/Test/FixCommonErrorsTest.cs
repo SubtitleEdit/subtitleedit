@@ -826,6 +826,18 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void StartWithUppercaseAfterParagraphMusic2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "# you like to move it...");
+                target.FixStartWithUppercaseLetterAfterParagraph();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "# You like to move it...");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal1()
         {
             var prev = new Paragraph("Bye.", 0, 1000);
@@ -844,6 +856,7 @@ namespace Test
             Assert.AreEqual(fixedText, "<i>Bye.</i>");
         }
 
+
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal3()
@@ -858,10 +871,40 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void StartWithUppercaseAfterParagraphNormal4()
         {
+            var prev = new Paragraph("<b>Bye.</b>", 0, 1000);
+            var p = new Paragraph("<b>bye.</b>", 1200, 5000);
+            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
+            Assert.AreEqual(fixedText, "<b>Bye.</b>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void StartWithUppercaseAfterParagraphNormal5()
+        {
             var prev = new Paragraph("Bye.", 0, 1000);
             var p = new Paragraph("bye." + Environment.NewLine + "bye.", 1200, 5000);
             var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
             Assert.AreEqual(fixedText, "Bye." + Environment.NewLine + "Bye.");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void StartWithUppercaseAfterParagraphNormal6()
+        {
+            var prev = new Paragraph("Bye.", 0, 1000);
+            var p = new Paragraph("bye." + Environment.NewLine + "...i can't", 1200, 5000);
+            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
+            Assert.AreEqual("Bye." + Environment.NewLine + "...I can't", fixedText);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void StartWithUppercaseAfterParagraphNormal7()
+        {
+            var prev = new Paragraph("Bye.", 0, 1000);
+            var p = new Paragraph("<b>bye.</b>", 1200, 5000);
+            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
+            Assert.AreEqual(fixedText, "<b>Bye.</b>");
         }
 
         [TestMethod]
@@ -912,6 +955,16 @@ namespace Test
             var p = new Paragraph("<i>- moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- what is it?</i>", 1200, 5000);
             var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
             Assert.AreEqual(fixedText, "<i>- Moss! Jesus Christ!</i>" + Environment.NewLine + "<i>- What is it?</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void StartWithUppercaseAfterParagraphNormalDialog5()
+        {
+            var prev = new Paragraph("Bye.", 0, 1000);
+            var p = new Paragraph("<font color=\"#008040\">- moss! Jesus Christ!</font>" + Environment.NewLine + "<font color=\"#008040\">- what is it?</font>", 1200, 5000);
+            var fixedText = FixCommonErrors.FixStartWithUppercaseLetterAfterParagraph(p, prev, System.Text.Encoding.UTF8, "en");
+            Assert.AreEqual(fixedText, "<font color=\"#008040\">- Moss! Jesus Christ!</font>" + Environment.NewLine + "<font color=\"#008040\">- What is it?</font>");
         }
 
         [TestMethod]
