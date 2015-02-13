@@ -1967,41 +1967,36 @@ namespace Nikse.SubtitleEdit.Forms
                     !@",.!?:;>-])♪♫…".Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
-                    if (tempTrimmed.Length > 0 && !@")]*#¶.!?".Contains(tempTrimmed[tempTrimmed.Length - 1]))
+                    if (tempTrimmed.Length > 0 && !@")]*#¶.!?".Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
                     {
-                        if (p.Text != p.Text.ToUpper())
+                        //don't end the sentence if the next word is an I word as they're always capped.
+                        if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
                         {
-                            //don't end the sentence if the next word is an I word as they're always capped.
-                            if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
+                            //test to see if the first word of the next line is a name
+                            if (!IsName(next.Text.Split(new[] { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' })[0]) && AllowFix(p, fixAction))
                             {
-                                //test to see if the first word of the next line is a name
-                                if (!IsName(next.Text.Split(new[] { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' })[0]))
+                                string oldText = p.Text;
+                                if (p.Text.EndsWith('>'))
                                 {
-                                    if (AllowFix(p, fixAction))
-                                    {
-                                        string oldText = p.Text;
-                                        if (p.Text.EndsWith('>'))
-                                        {
-                                            int lastLessThan = p.Text.LastIndexOf('<');
-                                            if (lastLessThan > 0)
-                                                p.Text = p.Text.Insert(lastLessThan, ".");
-                                        }
-                                        else
-                                        {
-                                            if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
-                                                p.Text = p.Text.TrimEnd('“') + ".“";
-                                            else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
-                                                p.Text = p.Text.TrimEnd('"') + ".\"";
-                                            else
-                                                p.Text += ".";
-                                        }
-                                        if (p.Text != oldText)
-                                        {
-                                            missigPeriodsAtEndOfLine++;
-                                            AddFixToListView(p, fixAction, oldText, p.Text);
-                                        }
-                                    }
+                                    int lastLessThan = p.Text.LastIndexOf('<');
+                                    if (lastLessThan > 0)
+                                        p.Text = p.Text.Insert(lastLessThan, ".");
                                 }
+                                else
+                                {
+                                    if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
+                                        p.Text = p.Text.TrimEnd('“') + ".“";
+                                    else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
+                                        p.Text = p.Text.TrimEnd('"') + ".\"";
+                                    else
+                                        p.Text += ".";
+                                }
+                                if (p.Text != oldText)
+                                {
+                                    missigPeriodsAtEndOfLine++;
+                                    AddFixToListView(p, fixAction, oldText, p.Text);
+                                }
+
                             }
                         }
                     }
@@ -2043,27 +2038,21 @@ namespace Nikse.SubtitleEdit.Forms
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 3, StringComparison.Ordinal);
                     if (indexOfNewLine < 0)
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine > 0)
+                    if (indexOfNewLine > 0 && Configuration.Settings.General.UppercaseLetters.Contains(char.ToUpper(p.Text[indexOfNewLine - 1])) && AllowFix(p, fixAction))
                     {
-                        if (Configuration.Settings.General.UppercaseLetters.Contains(char.ToUpper(p.Text[indexOfNewLine - 1])))
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                string oldText = p.Text;
+                        string oldText = p.Text;
 
-                                string text = p.Text.Substring(0, indexOfNewLine);
-                                var st = new StripableText(text);
-                                if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
-                                    p.Text = p.Text.Insert(indexOfNewLine, "?");
-                                else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡
-                                    p.Text = p.Text.Insert(indexOfNewLine, "!");
-                                else
-                                    p.Text = p.Text.Insert(indexOfNewLine, ".");
+                        string text = p.Text.Substring(0, indexOfNewLine);
+                        var st = new StripableText(text);
+                        if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
+                            p.Text = p.Text.Insert(indexOfNewLine, "?");
+                        else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡
+                            p.Text = p.Text.Insert(indexOfNewLine, "!");
+                        else
+                            p.Text = p.Text.Insert(indexOfNewLine, ".");
 
-                                missigPeriodsAtEndOfLine++;
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
-                        }
+                        missigPeriodsAtEndOfLine++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
@@ -2138,18 +2127,11 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
                 string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
 
-                if (oldText != fixedText)
+                if (oldText != fixedText && AllowFix(p, fixAction))
                 {
                     p.Text = fixedText;
-                    if (AllowFix(p, fixAction))
-                    {
-                        fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
+                    fixedStartWithUppercaseLetterAfterParagraphTicked++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             listViewFixes.EndUpdate();

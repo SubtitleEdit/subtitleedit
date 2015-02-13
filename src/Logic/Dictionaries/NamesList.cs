@@ -137,10 +137,9 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             foreach (XmlNode node in namesDoc.DocumentElement.SelectNodes("name"))
             {
                 string s = node.InnerText.Trim();
-                if (s.Contains(' '))
+                if (s.Contains(' ') && !namesMultiList.Contains(s))
                 {
-                    if (!namesMultiList.Contains(s))
-                        namesMultiList.Add(s);
+                    namesMultiList.Add(s);
                 }
                 else if (!namesList.Contains(s))
                 {
