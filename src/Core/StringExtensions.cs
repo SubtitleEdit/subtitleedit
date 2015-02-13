@@ -39,7 +39,6 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-
         private static bool EndsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
         {
             var len = text.Length;
@@ -53,6 +52,7 @@ namespace Nikse.SubtitleEdit.Core
                 return true;
             return false;
         }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
@@ -61,6 +61,19 @@ namespace Nikse.SubtitleEdit.Core
         public static bool StartsWith(this StringBuilder sb, char c)
         {
             return sb.Length > 0 && sb[0] == c;
+        }
+
+        public static bool StartsWithURL(this string s, StringComparison comparisonType)
+        {
+            if (s.Length < 3)
+                return false;
+
+            if (s.StartsWith("www.", comparisonType) ||
+                s.StartsWith("http:", comparisonType) ||
+                s.StartsWith("https:", comparisonType))
+                return true;
+
+            return false;
         }
 
         public static bool EndsWith(this string s, char c)
