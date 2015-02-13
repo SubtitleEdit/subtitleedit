@@ -2917,12 +2917,12 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = p.Text;
                     string oldText = p.Text;
 
-                    while (text.Contains("---"))
+                    while (text.Contains("---", StringComparison.Ordinal))
                     {
                         text = text.Replace("---", "--");
                     }
 
-                    if (text.Contains("--"))
+                    if (text.Contains("--", StringComparison.Ordinal))
                     {
                         text = text.Replace("--", "... ");
                         text = text.Replace("...  ", "... ");
@@ -2956,12 +2956,11 @@ namespace Nikse.SubtitleEdit.Forms
                     //    text = text.Replace(" ...", "...");
                     //}
 
-                    if (p.Text.StartsWith('—'))
+                    if (text.StartsWith('—') && text.Length > 1)
                     {
-                        text = text.Remove(0, 1);
-                        text = text.Insert(0, "...");
+                        text = text.Substring(1).Insert(0, "...");
                     }
-                    if (p.Text.EndsWith('—'))
+                    if (text.EndsWith('—') && text.Length > 1)
                     {
                         text = text.Substring(0, text.Length - 1) + "...";
                         text = text.Replace(" ...", "...");
