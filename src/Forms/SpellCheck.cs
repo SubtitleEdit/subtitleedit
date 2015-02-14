@@ -287,33 +287,7 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.Save();
             _languageName = LanguageString;
             string dictionary = Utilities.DictionaryFolder + _languageName;
-            _userWordList = new List<string>();
-            _userPhraseList = new List<string>();
-            string fileName = Utilities.DictionaryFolder + _languageName + "_user.xml";
-            if (File.Exists(fileName))
-            {
-                try
-                {
-                    var userWordDictionary = new XmlDocument();
-                    userWordDictionary.Load(fileName);
-                    foreach (XmlNode node in userWordDictionary.DocumentElement.SelectNodes("word"))
-                    {
-                        string word = node.InnerText.Trim().ToLower();
-                        if (word.Contains(' '))
-                            _userPhraseList.Add(word);
-                        else
-                            _userWordList.Add(word);
-                    }
-                }
-                catch (Exception exception)
-                {
-                    MessageBox.Show("Unable to load user dictionary for " + _languageName + " from file: " + fileName + Environment.NewLine +
-                        Environment.NewLine + exception.Source + ": " + exception.Message);
-                }
-            }
-
-            _changeAllDictionary = new Dictionary<string, string>();
-            LoadHunspell(dictionary);
+            LoadDictionaries(Utilities.DictionaryFolder, dictionary);
             _wordsIndex--;
             PrepareNextWord();
         }
@@ -1033,6 +1007,23 @@ namespace Nikse.SubtitleEdit.Forms
                 _languageName = Utilities.AutoDetectLanguageName(_languageName, subtitle);
             string dictionary = Utilities.DictionaryFolder + _languageName;
 
+            LoadDictionaries(dictionaryFolder, dictionary);
+
+
+            _currentIndex = 0;
+            if (startLine >= 0 && startLine < _subtitle.Paragraphs.Count)
+                _currentIndex = startLine;
+            _currentParagraph = _subtitle.Paragraphs[_currentIndex];
+            SetWords(_currentParagraph.Text);
+            _wordsIndex = -1;
+
+            PrepareNextWord();
+        }
+
+        private void LoadDictionaries(string dictionaryFolder, string dictionary)
+        {
+            _changeAllDictionary = new Dictionary<string, string>();
+            _skipAllList = new List<string>();
             _namesList = new NamesList(Configuration.DictionariesFolder, _languageName, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
             _namesEtcList = _namesList.GetNames();
             _namesEtcMultiWordList = _namesList.GetMultiNames();
@@ -1089,14 +1080,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             _changeAllDictionary = new Dictionary<string, string>();
             LoadHunspell(dictionary);
-            _currentIndex = 0;
-            if (startLine >= 0 && startLine < _subtitle.Paragraphs.Count)
-                _currentIndex = startLine;
-            _currentParagraph = _subtitle.Paragraphs[_currentIndex];
-            SetWords(_currentParagraph.Text);
-            _wordsIndex = -1;
-
-            PrepareNextWord();
         }
 
         private void textBoxWord_TextChanged(object sender, EventArgs e)
