@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);
-                if (fi.Length > 1024 + 128 && fi.Length < 1024000) // not too small or too big
+                if (fi.Length >= 1024 + 128 && fi.Length < 1024000) // not too small or too big
                 {
                     try
                     {
