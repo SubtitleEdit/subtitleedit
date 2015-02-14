@@ -119,9 +119,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Success = true;
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return info;
         }
 
@@ -142,9 +140,7 @@ namespace Nikse.SubtitleEdit.Logic
                     info.Success = true;
                 }
             }
-            catch
-            {
-            }
+            catch { }
             return info;
         }
 
@@ -197,12 +193,12 @@ namespace Nikse.SubtitleEdit.Logic
         public static string FormatBytesToDisplayFileSize(long fileSize)
         {
             if (fileSize <= 1024)
-                return string.Format("{0} bytes", fileSize);
+                return string.Format("{0} Bytes", fileSize);
             if (fileSize <= 1024 * 1024)
-                return string.Format("{0} kb", fileSize / 1024);
+                return string.Format("{0} KB", fileSize / 1024);
             if (fileSize <= 1024 * 1024 * 1024)
-                return string.Format("{0:0.0} mb", (float)fileSize / (1024 * 1024));
-            return string.Format("{0:0.0} gb", (float)fileSize / (1024 * 1024 * 1024));
+                return string.Format("{0:0.0} MB", (float)fileSize / (1024 * 1024));
+            return string.Format("{0:0.0} GB", (float)fileSize / (1024 * 1024 * 1024));
         }
 
         public static int GetSubtitleIndex(List<Paragraph> paragraphs, VideoPlayerContainer videoPlayerContainer)

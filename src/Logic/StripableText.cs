@@ -189,13 +189,13 @@ namespace Nikse.SubtitleEdit.Logic
                                           s.EndsWith(':');
 
                 // start with uppercase after music symbol - but only if next line does not start with music symbol
-                if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
+                if (!startWithUppercase && s.Length > 1 && "♪♫'".Contains(s[s.Length - 1]))
                 {
-                    if (!Pre.Contains('♪') && !Pre.Contains('♫'))
+                    if (Pre.Length > 1 && !"♪♫".Contains(Pre[Pre.Length - 1]))
                         startWithUppercase = true;
                 }
 
-                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
+                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("...", StringComparison.Ordinal))
                 {
                     StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
                 }
@@ -258,7 +258,7 @@ namespace Nikse.SubtitleEdit.Logic
                         {
                             if (s == ']' && sb.ToString().IndexOf('[') > 1)
                             { // I [Motor roaring] love you!
-                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf('[') - 1).Trim();
+                                string temp = sb.ToString(0, sb.ToString().IndexOf('[') - 1).Trim();
                                 if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1]))
                                     lastWasBreak = true;
                             }
@@ -277,6 +277,5 @@ namespace Nikse.SubtitleEdit.Logic
             else
                 ReplaceNames2Fix(replaceIds, originalNames);
         }
-
     }
 }
