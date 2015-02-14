@@ -183,7 +183,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             return text;
         }
 
-        public static bool IsPrevoiusTextEndOfParagraph(string prevText)
+        public static bool IsPreviousTextEndOfParagraph(string prevText)
         {
             if (string.IsNullOrEmpty(prevText) || prevText.Length < 3)
                 return true;

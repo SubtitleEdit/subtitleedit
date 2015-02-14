@@ -82,7 +82,7 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = FixCasing(p.Text, lastLine, namesEtc);
 
                 // fix casing of English alone i to I
-                if (radioButtonNormal.Checked && language.StartsWith("en") && p.Text.Contains('i'))
+                if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal) && p.Text.Contains('i'))
                 {
                     Match match = AloneI.Match(p.Text);
                     while (match.Success)
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 prev = p.Text[match.Index - 1].ToString(CultureInfo.InvariantCulture);
                             if (match.Index + 1 < p.Text.Length)
                                 next = p.Text[match.Index + 1].ToString(CultureInfo.InvariantCulture);
-                            if (prev != ">" && next != ">")
+                            if (prev != "<" || next != ">")
                             {
                                 string oldText = p.Text;
                                 p.Text = p.Text.Substring(0, match.Index) + "I";
@@ -106,7 +106,6 @@ namespace Nikse.SubtitleEdit.Forms
                         match = match.NextMatch();
                     }
                 }
-
                 lastLine = p.Text;
             }
         }
@@ -123,7 +122,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     // first all to lower
                     text = text.ToLower().Trim();
-                    while (text.Contains("  "))
+                    while (text.Contains("  ", StringComparison.Ordinal))
                         text = text.Replace("  ", " ");
                     text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
                     text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
@@ -142,13 +141,21 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.Replace("<B>", "<b>");
                 text = text.Replace("</B>", "</b>");
                 text = text.Replace("<U>", "<u>");
-                text = text.Replace("<U>", "</u>");
-                text = text.Replace("<FONT COLOR>", "<font color>");
+                text = text.Replace("</U>", "</u>");
+                var idx = text.IndexOf("<FONT", StringComparison.Ordinal);
+                while (idx >= 0)
+                {
+                    var endIdx = text.IndexOf('>', idx + 5);
+                    if (endIdx < idx)
+                        break;
+                    text = text.Substring(0, endIdx - idx).ToLowerInvariant() + text.Substring(endIdx);
+                    idx = text.IndexOf("<FONT", StringComparison.Ordinal);
+                }
                 text = text.Replace("</FONT>", "</font>");
             }
             else if (radioButtonLowercase.Checked)
             {
-                text = text.ToLower();
+                text = text.ToLowerInvariant();
             }
             if (original != text)
                 _noOfLinesChanged++;
