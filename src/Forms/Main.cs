@@ -473,7 +473,8 @@ namespace Nikse.SubtitleEdit.Forms
                 audioVisualizer.Color = Configuration.Settings.VideoControls.WaveformColor;
                 audioVisualizer.BackgroundColor = Configuration.Settings.VideoControls.WaveformBackgroundColor;
                 audioVisualizer.TextColor = Configuration.Settings.VideoControls.WaveformTextColor;
-                audioVisualizer.TextSize = (float)Configuration.Settings.VideoControls.WaveformTextSize;
+                audioVisualizer.TextSize = Configuration.Settings.VideoControls.WaveformTextSize;
+                audioVisualizer.TextBold = Configuration.Settings.VideoControls.WaveformTextBold;
                 audioVisualizer.MouseWheelScrollUpIsForward = Configuration.Settings.VideoControls.WaveformMouseWheelScrollUpIsForward;
                 audioVisualizer.AllowOverlap = Configuration.Settings.VideoControls.WaveformAllowOverlap;
                 audioVisualizer.ClosenessForBorderSelection = Configuration.Settings.VideoControls.WaveformBorderHitMs;
