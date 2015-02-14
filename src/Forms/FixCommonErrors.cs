@@ -2191,7 +2191,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (prev != null)
                     prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
 
-                bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
+                bool isPrevEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
                 if (prevText == " .")
                     isPrevEndOfLine = true;
                 if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
@@ -2268,7 +2268,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     char firstLetter = text[0];
                     string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
-                    bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
+                    bool isPrevEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
                     if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                         (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                         !prevText.EndsWith("...", StringComparison.Ordinal) &&
@@ -2312,7 +2312,7 @@ namespace Nikse.SubtitleEdit.Forms
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
                             prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
-                        bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
+                        bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
                         if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
                         {
                             p.Text = "<i>- " + char.ToUpper(arr[0][5]) + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];

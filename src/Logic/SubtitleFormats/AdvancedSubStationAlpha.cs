@@ -779,7 +779,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         string effect = string.Empty;
                         var layer = 0;
 
-                        string[] splittedLine;                        
+                        string[] splittedLine;
                         if (s.StartsWith("dialog:", StringComparison.Ordinal))
                             splittedLine = line.Remove(0, 7).Split(',');
                         else if (s.StartsWith("dialogue:", StringComparison.Ordinal))
@@ -811,8 +811,8 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         {
                             var p = new Paragraph
                             {
-                                StartTime = GetTimeCodeFromString(start), 
-                                EndTime = GetTimeCodeFromString(end), 
+                                StartTime = GetTimeCodeFromString(start),
+                                EndTime = GetTimeCodeFromString(end),
                                 Text = GetFormattedText(text)
                             };
 
