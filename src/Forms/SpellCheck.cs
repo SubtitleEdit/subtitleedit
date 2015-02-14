@@ -1009,7 +1009,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             LoadDictionaries(dictionaryFolder, dictionary);
 
-
             _currentIndex = 0;
             if (startLine >= 0 && startLine < _subtitle.Paragraphs.Count)
                 _currentIndex = startLine;
