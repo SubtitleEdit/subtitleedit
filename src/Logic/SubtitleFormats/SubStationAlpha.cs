@@ -392,8 +392,8 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         {
                             var p = new Paragraph
                             {
-                                StartTime = GetTimeCodeFromString(start), 
-                                EndTime = GetTimeCodeFromString(end), 
+                                StartTime = GetTimeCodeFromString(start),
+                                EndTime = GetTimeCodeFromString(end),
                                 Text = AdvancedSubStationAlpha.GetFormattedText(text)
                             };
 
