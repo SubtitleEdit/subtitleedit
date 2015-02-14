@@ -605,7 +605,6 @@ namespace Nikse.SubtitleEdit.Forms
                             _prefix = "`";
                             _currentWord = _currentWord.Substring(1);
                         }
-
                     }
                     if (_namesEtcList.Contains(_currentWord)
                         || (_currentWord.StartsWith('\'') || _currentWord.EndsWith('\'')) && _namesEtcList.Contains(_currentWord.Trim('\'')))
@@ -653,9 +652,9 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (_currentWord.Length > 1)
                         {
                             correct = DoSpell(_currentWord);
-                            if (!correct && (_currentWord.EndsWith('\'') || _currentWord.EndsWith('`')))
+                            if (!correct && "`'".Contains(_currentWord[_currentWord.Length - 1]))
                                 correct = DoSpell(_currentWord.TrimEnd('\'').TrimEnd('`'));
-                            if (!correct && _currentWord.EndsWith("'s") && _currentWord.Length > 4)
+                            if (!correct && _currentWord.EndsWith("'s", StringComparison.Ordinal) && _currentWord.Length > 4)
                                 correct = DoSpell(_currentWord.TrimEnd('s').TrimEnd('\''));
                             if (!correct && _currentWord.EndsWith('\'') && DoSpell(_currentWord.TrimEnd('\'')))
                             {
@@ -668,14 +667,14 @@ namespace Nikse.SubtitleEdit.Forms
                             correct = false;
                             if (_currentWord == "'")
                                 correct = true;
-                            else if (_languageName.StartsWith("en_") && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
+                            else if (_languageName.StartsWith("en_", StringComparison.Ordinal) && (_currentWord.Equals("a", StringComparison.OrdinalIgnoreCase) || _currentWord == "I"))
                                 correct = true;
-                            else if (_languageName.StartsWith("da_") && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
+                            else if (_languageName.StartsWith("da_", StringComparison.Ordinal) && _currentWord.Equals("i", StringComparison.OrdinalIgnoreCase))
                                 correct = true;
                         }
 
                         if (!correct && Configuration.Settings.Tools.SpellCheckEnglishAllowInQuoteAsIng &&
-                            _languageName.StartsWith("en_") && _currentWord.EndsWith("in'", StringComparison.OrdinalIgnoreCase))
+                            _languageName.StartsWith("en_", StringComparison.Ordinal) && _currentWord.EndsWith("in'", StringComparison.OrdinalIgnoreCase))
                         {
                             correct = DoSpell(_currentWord.TrimEnd('\'') + "g");
                         }
@@ -696,22 +695,19 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
+                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S" && !_currentWord.ToUpper().StartsWith("HTTP", StringComparison.Ordinal)) //TODO: get fixed nhunspell
                                     suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
-                                if (_languageName.StartsWith("fr_") && (_currentWord.StartsWith("I'") || _currentWord.StartsWith("I’")))
+                                if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
                                 {
-                                    if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2]))
+                                    if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2]) && _currentSpellCheckWord.Index > 3)
                                     {
-                                        if (_currentSpellCheckWord.Index > 3)
+                                        string ending = _currentParagraph.Text.Substring(0, _currentSpellCheckWord.Index - 1).Trim();
+                                        if (ending.Length > 1 && !".!?".Contains(ending[ending.Length - 1]))
                                         {
-                                            string ending = _currentParagraph.Text.Substring(0, _currentSpellCheckWord.Index - 1).Trim();
-                                            if (!ending.EndsWith('.') && !ending.EndsWith('!') && !ending.EndsWith('?'))
+                                            for (int i = 0; i < suggestions.Count; i++)
                                             {
-                                                for (int i = 0; i < suggestions.Count; i++)
-                                                {
-                                                    if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
-                                                        suggestions[i] = @"l" + suggestions[i].Substring(1);
-                                                }
+                                                if (suggestions[i].StartsWith("L'") || suggestions[i].StartsWith("L’"))
+                                                    suggestions[i] = @"l" + suggestions[i].Substring(1);
                                             }
                                         }
                                     }
@@ -721,7 +717,7 @@ namespace Nikse.SubtitleEdit.Forms
                             suggestions.Remove(_currentWord);
                             if (_currentWord.Length == 1)
                             {
-                                if ((_currentWord == "L") && _languageName.StartsWith("en_"))
+                                if ((_currentWord == "L") && _languageName.StartsWith("en_", StringComparison.Ordinal))
                                 {
                                     suggestions.Remove("I");
                                     suggestions.Insert(0, "I");
