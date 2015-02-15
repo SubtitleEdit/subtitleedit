@@ -1077,7 +1077,7 @@ namespace Nikse.SubtitleEdit.Logic
         }
 
         public void SaveAsTarga(string fileName)
-        {           
+        {
             // TGA header (18-byte fixed header)
             byte[] header =
              {
