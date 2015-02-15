@@ -150,7 +150,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OverwriteExistingFiles>Přepsat stávající soubory</OverwriteExistingFiles>
     <Style>Styl...</Style>
     <ConvertOptions>Volby převodu</ConvertOptions>
-    <RemoveFormatting>Odebrat tagy formátování</RemoveFormatting>
+    <RemoveFormatting>Odebrat značky formátování</RemoveFormatting>
     <RemoveTextForHI>Odebrat text pro sluchově postižené</RemoveTextForHI>
     <OverwriteOriginalFiles>Přepsat původní soubory (nová přípona při změně formátu)</OverwriteOriginalFiles>
     <RedoCasing>Znovu velikost písmen</RedoCasing>
@@ -491,7 +491,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixOverlappingDisplayTimes>Opravit překrývání časů zobrazení</FixOverlappingDisplayTimes>
     <FixShortDisplayTimes>Opravit krátké časy zobrazení</FixShortDisplayTimes>
     <FixLongDisplayTimes>Opravit dlouhé časy zobrazení</FixLongDisplayTimes>
-    <FixInvalidItalicTags>Opravit neplatné tagy kurzívy</FixInvalidItalicTags>
+    <FixInvalidItalicTags>Opravit neplatné značky kurzívy</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Odebrat nepotřebné mezery</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Odebrat nepotřebné tečky</RemoveUnneededPeriods>
     <FixMissingSpaces>Opravit chybějící mezery</FixMissingSpaces>
@@ -540,7 +540,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <XLineBreaksAdded>Přidáno {0} zalomení řádků</XLineBreaksAdded>
     <BreakLongLine>Zalomit dlouhý řádek</BreakLongLine>
     <FixLongDisplayTime>Opravit dlouhý čas zobrazení</FixLongDisplayTime>
-    <FixInvalidItalicTag>Opravit neplatný tag kurzívy</FixInvalidItalicTag>
+    <FixInvalidItalicTag>Opravit neplatnou značku kurzívy</FixInvalidItalicTag>
     <FixShortDisplayTime>Opravit krátký čas zobrazení</FixShortDisplayTime>
     <FixOverlappingDisplayTime>Opravit překrývající čas zobrazení</FixOverlappingDisplayTime>
     <FixInvalidItalicTagsExample>&lt;i&gt;Co je mi do toho.&lt;i&gt; -&gt; &lt;i&gt;Co je mi do toho.&lt;/i&gt;</FixInvalidItalicTagsExample>
@@ -555,7 +555,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <UnableToFixTextXY>Nelze opravit text číslo {0}: {1}</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Opraveno {0} překrývajících se časových kódů</XOverlappingTimestampsFixed>
     <XDisplayTimesProlonged>Prodlouženo {0} časů zobrazení</XDisplayTimesProlonged>
-    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných tagů HTML</XInvalidHtmlTagsFixed>
+    <XInvalidHtmlTagsFixed>Opraveno {0} neplatných značek HTML</XInvalidHtmlTagsFixed>
     <XDisplayTimesShortned>Zkráceno {0} časů zobrazení</XDisplayTimesShortned>
     <XLinesUnbreaked>Zrušeno zalomení {0} řádků</XLinesUnbreaked>
     <UnneededSpace>Nadbytečná mezera</UnneededSpace>
@@ -1102,8 +1102,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <SpellCheck>Kontrola pravopisu</SpellCheck>
     <BeforeSpellCheck>Před kontrolou pravopisu</BeforeSpellCheck>
     <SpellCheckChangedXToY>Kontrola pravopisu: Změněno '{0}' na '{1}'</SpellCheckChangedXToY>
-    <BeforeAddingTagX>Před přidáním tagu &lt;{0}&gt;</BeforeAddingTagX>
-    <TagXAdded>Přidány tagy &lt;{0}&gt;</TagXAdded>
+    <BeforeAddingTagX>Před přidáním značky &lt;{0}&gt;</BeforeAddingTagX>
+    <TagXAdded>Přidány značky &lt;{0}&gt;</TagXAdded>
     <LineXOfY>řádek {0} z {1}</LineXOfY>
     <XLinesSavedAsY>{0} řádků uloženo jako {1}</XLinesSavedAsY>
     <XLinesDeleted>{0} řádků odstraněno</XLinesDeleted>
@@ -1303,8 +1303,8 @@ Pokračovat?</SubtitleAppendPrompt>
     <EndsWith>Končí</EndsWith>
     <NoContains>Neobsahuje</NoContains>
     <RegEx>Regulární výraz</RegEx>
-    <UnequalLines>Nestejné řádky</UnequalLines>
-    <EqualLines>Stejné řádky</EqualLines>
+    <UnequalLines>Řádky s lichými čísly</UnequalLines>
+    <EqualLines>Řádky se sudými čísly</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Hromadné nahrazení</Title>
@@ -1684,6 +1684,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Přesunout první slovo z dalšího řádku titulku nahoru</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Výběr na malá písmena</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Výběr na velká písmena</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Přepnout automatické trvání</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automaticky zalomit text</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Zrušit zalomení textu</MainTextBoxUnbreak>
     <MainFileSaveAll>Uložit vše</MainFileSaveAll>
@@ -1799,11 +1800,11 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <LengthInFormatXinCharactersY>Počet znaků jako {0}: {1:#,###,##0}</LengthInFormatXinCharactersY>
     <NumberOfCharactersInTextOnly>Počet znaků pouze v textu: {0:#,###,##0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Celkem znaků za sekundu: {0:0.0} za sekundu</TotalCharsPerSecond>
-    <NumberOfItalicTags>Počet tagů kurzíva: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Počet tagů tučně: {0}</NumberOfBoldTags>
-    <NumberOfUnderlineTags>Počet tagů podtrženě: {0}</NumberOfUnderlineTags>
-    <NumberOfFontTags>Počet tagů písma: {0}</NumberOfFontTags>
-    <NumberOfAlignmentTags>Počet tagů zarovnání: {0}</NumberOfAlignmentTags>
+    <NumberOfItalicTags>Počet značek kurzívy: {0}</NumberOfItalicTags>
+    <NumberOfBoldTags>Počet značek tučně: {0}</NumberOfBoldTags>
+    <NumberOfUnderlineTags>Počet značek podtrženě: {0}</NumberOfUnderlineTags>
+    <NumberOfFontTags>Počet značek písma: {0}</NumberOfFontTags>
+    <NumberOfAlignmentTags>Počet značek zarovnání: {0}</NumberOfAlignmentTags>
     <LineLengthMinimum>Minimální délka titulku: {0}</LineLengthMinimum>
     <LineLengthMaximum>Maximální délka titulku: {0}</LineLengthMaximum>
     <LineLengthAverage>Průměrná délka titulku: {0}</LineLengthAverage>
