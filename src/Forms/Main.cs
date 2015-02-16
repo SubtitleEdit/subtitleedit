@@ -482,7 +482,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (double zoomCounter = AudioVisualizer.ZoomMininum; zoomCounter <= AudioVisualizer.ZoomMaxinum + (0.001); zoomCounter += 0.1)
                 {
                     int percent = (int)Math.Round((zoomCounter * 100));
-                    ComboBoxZoomItem item = new ComboBoxZoomItem() { Text = percent + "%", ZoomFactor = zoomCounter };
+                    ComboBoxZoomItem item = new ComboBoxZoomItem { Text = percent + "%", ZoomFactor = zoomCounter };
                     toolStripComboBoxWaveform.Items.Add(item);
                     if (percent == 100)
                         toolStripComboBoxWaveform.SelectedIndex = toolStripComboBoxWaveform.Items.Count - 1;
@@ -15676,7 +15676,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (update.Action == "MSG")
                         {
-                            _networkSession.ChatLog.Add(new NikseWebServiceSession.ChatEntry() { User = update.User, Message = update.Text });
+                            _networkSession.ChatLog.Add(new NikseWebServiceSession.ChatEntry { User = update.User, Message = update.Text });
                             if (_networkChat == null || _networkChat.IsDisposed)
                             {
                                 _networkChat = new NetworkChat();
