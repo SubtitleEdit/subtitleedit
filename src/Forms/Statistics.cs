@@ -350,7 +350,7 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private void buttonExport_Click(object sender, EventArgs e)
         {
-            var saveFile = new SaveFileDialog() { Filter = "Text files (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" };
+            var saveFile = new SaveFileDialog { Filter = "Text files (*.txt)|*.txt|NFO files (*.nfo)|*.nfo" };
             if (saveFile.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 string fileName = saveFile.FileName;

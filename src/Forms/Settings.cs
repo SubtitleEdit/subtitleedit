@@ -112,12 +112,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
-            numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-            numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+            numericUpDownDurationMin.Value = gs.SubtitleMinimumDisplayMilliseconds;
+            numericUpDownDurationMax.Value = gs.SubtitleMaximumDisplayMilliseconds;
 
-            if (Configuration.Settings.General.MininumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
-                Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
-                numericUpDownMinGapMs.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+            if (gs.MininumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
+                gs.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
+                numericUpDownMinGapMs.Value = gs.MininumMillisecondsBetweenLines;
 
             if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
 
-            textBoxVlcPath.Text = Configuration.Settings.General.VlcLocation;
+            textBoxVlcPath.Text = gs.VlcLocation;
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
             textBoxVlcPath.Width = buttonVlcPathBrowse.Left - textBoxVlcPath.Left - 5;
 
@@ -305,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTimeCodeMode.Items.Clear();
             comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMS);
             comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSFF);
-            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            if (gs.UseTimeFormatHHMMSSFF)
                 comboBoxTimeCodeMode.SelectedIndex = 1;
             else
                 comboBoxTimeCodeMode.SelectedIndex = 0;
@@ -329,7 +329,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelVideoPlayerMPlayer.Text = language.MPlayerDescription;
             radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
             labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
-            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+            gs.VlcLocation = textBoxVlcPath.Text;
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
@@ -462,8 +462,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditTextAndPause);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditText);
 
-            if (Configuration.Settings.General.ListViewDoubleClickAction >= 0 && Configuration.Settings.General.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
-                comboBoxListViewDoubleClickEvent.SelectedIndex = Configuration.Settings.General.ListViewDoubleClickAction;
+            if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
+                comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
 
             if (gs.AutoBackupSeconds == 60)
                 comboBoxAutoBackup.SelectedIndex = 1;
@@ -474,7 +474,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxAutoBackup.SelectedIndex = 0;
 
-            checkBoxCheckForUpdates.Checked = Configuration.Settings.General.CheckForUpdates;
+            checkBoxCheckForUpdates.Checked = gs.CheckForUpdates;
 
             if (gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
                 comboBoxSpellChecker.SelectedIndex = 1;
@@ -595,8 +595,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
-            checkBoxUseFFmpeg.Checked = Configuration.Settings.General.UseFFmpegForWaveExtraction;
-            textBoxFFmpegPath.Text = Configuration.Settings.General.FFmpegLocation;
+            checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
+            textBoxFFmpegPath.Text = gs.FFmpegLocation;
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.MergeSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
             generalNode.Nodes.Add(language.MergeSelectedLinesOnlyFirstText + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
@@ -798,8 +798,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
             buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
 
-            _oldVlcLocation = Configuration.Settings.General.VlcLocation;
-            _oldVlcLocationRelative = Configuration.Settings.General.VlcLocationRelative;
+            _oldVlcLocation = gs.VlcLocation;
+            _oldVlcLocationRelative = gs.VlcLocationRelative;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
@@ -1059,10 +1059,10 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 gs.AutoBackupSeconds = 0;
 
-            Configuration.Settings.General.CheckForUpdates = checkBoxCheckForUpdates.Checked;
+            gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
 
             if (comboBoxTimeCodeMode.Visible)
-                Configuration.Settings.General.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
+                gs.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
 
             if (comboBoxSpellChecker.SelectedIndex == 1)
                 gs.SpellChecker = "word";
@@ -1189,8 +1189,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
-            Configuration.Settings.General.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
-            Configuration.Settings.General.FFmpegLocation = textBoxFFmpegPath.Text;
+            gs.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
+            gs.FFmpegLocation = textBoxFFmpegPath.Text;
 
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)

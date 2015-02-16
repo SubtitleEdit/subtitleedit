@@ -782,7 +782,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             }
             else
             {
-                bmp.Save(fileName, imageFormat);                
+                bmp.Save(fileName, imageFormat);
             }
         }
 
@@ -1368,7 +1368,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             if (param.Bitmap.Width == 720 && param.Bitmap.Width == 480) // NTSC
                 return string.Format("{0:00};{1:00};{2:00};{3:00}", time.Hours, time.Minutes, time.Seconds, SubtitleFormat.MillisecondsToFramesMaxFrameRate(time.Milliseconds));
 
-            // drop frame 
+            // drop frame
             if (Math.Abs(param.FramesPerSeconds - 24 * (999 / 1000)) < 0.01 ||
                 Math.Abs(param.FramesPerSeconds - 29 * (999 / 1000)) < 0.01 ||
                 Math.Abs(param.FramesPerSeconds - 59 * (999 / 1000)) < 0.01)
