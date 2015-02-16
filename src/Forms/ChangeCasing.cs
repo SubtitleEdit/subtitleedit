@@ -82,28 +82,28 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = FixCasing(p.Text, lastLine, namesEtc);
 
                 // fix casing of English alone i to I
-                if (radioButtonNormal.Checked && language.StartsWith("en") && p.Text.Contains('i'))
+                if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
                 {
-                    Match match = AloneI.Match(p.Text);
-                    while (match.Success)
+                    int indexOfI = p.Text.IndexOf('i');
+                    while (indexOfI >= 0)
                     {
-                        if (p.Text[match.Index] == 'i')
+                        string prev = " ";
+                        if (indexOfI > 0)
+                            prev = p.Text[indexOfI - 1].ToString(CultureInfo.InvariantCulture);
+                        if ("¿¡♪♫> ".Contains(prev))
                         {
-                            string prev = string.Empty;
-                            string next = string.Empty;
-                            if (match.Index > 0)
-                                prev = p.Text[match.Index - 1].ToString(CultureInfo.InvariantCulture);
-                            if (match.Index + 1 < p.Text.Length)
-                                next = p.Text[match.Index + 1].ToString(CultureInfo.InvariantCulture);
-                            if (prev != ">" && next != ">")
+                            string next = " ";
+                            if (indexOfI + 1 < p.Text.Length)
+                                next = p.Text[indexOfI + 1].ToString(CultureInfo.InvariantCulture);
+                            if (" <!?.:;♪♫".Contains(next))
                             {
-                                string oldText = p.Text;
-                                p.Text = p.Text.Substring(0, match.Index) + "I";
-                                if (match.Index + 1 < oldText.Length)
-                                    p.Text += oldText.Substring(match.Index + 1);
+                                p.Text = p.Text.Remove(indexOfI, 1).Insert(indexOfI, "I");
                             }
                         }
-                        match = match.NextMatch();
+                        if (indexOfI + 1 < p.Text.Length)
+                            indexOfI = p.Text.IndexOf('i', indexOfI + 1);
+                        else
+                            indexOfI = -1;
                     }
                 }
 
