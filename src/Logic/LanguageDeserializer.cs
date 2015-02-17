@@ -243,6 +243,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Style":
                     language.General.Style = reader.Value;
                     break;
+                case "General/StyleLanguage":
+                    language.General.StyleLanguage = reader.Value;
+                    break;
+                case "General/Character":
+                    language.General.Character = reader.Value;
+                    break;
                 case "General/Class":
                     language.General.Class = reader.Value;
                     break;
@@ -2370,6 +2376,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/MergedShortLinesX":
                     language.Main.MergedShortLinesX = reader.Value;
                     break;
+                case "Main/BeforeDurationsBridgeGap":
+                    language.Main.BeforeDurationsBridgeGap = reader.Value;
+                    break;
                 case "Main/BeforeSetMinimumDisplayTimeBetweenParagraphs":
                     language.Main.BeforeSetMinimumDisplayTimeBetweenParagraphs = reader.Value;
                     break;
@@ -2552,6 +2561,21 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/ErrorLoadSrr":
                     language.Main.ErrorLoadSrr = reader.Value;
+                    break;
+                case "Main/NoSupportEncryptedVobSub":
+                    language.Main.NoSupportEncryptedVobSub = reader.Value;
+                    break;
+                case "Main/NoSupportHereBluRaySup":
+                    language.Main.NoSupportHereBluRaySup = reader.Value;
+                    break;
+                case "Main/NoSupportHereDvdSup":
+                    language.Main.NoSupportHereDvdSup = reader.Value;
+                    break;
+                case "Main/NoSupportHereVobSub":
+                    language.Main.NoSupportHereVobSub = reader.Value;
+                    break;
+                case "Main/NoSupportHereDivx":
+                    language.Main.NoSupportHereDivx = reader.Value;
                     break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
@@ -3056,6 +3080,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/SamiSetStyle":
                     language.Main.Menu.ContextMenu.SamiSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/NuendoSetStyle":
+                    language.Main.Menu.ContextMenu.NuendoSetStyle = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/Cut":
                     language.Main.Menu.ContextMenu.Cut = reader.Value;
