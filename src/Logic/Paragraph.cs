@@ -151,9 +151,16 @@ namespace Nikse.SubtitleEdit.Logic
 
         public override bool Equals(object obj)
         {
+            if (obj == null || !(obj is Paragraph))
+                return false;
             var p2 = (Paragraph)obj;
             return this.StartTime.TotalMilliseconds == p2.StartTime.TotalMilliseconds &&
                this.EndTime.TotalMilliseconds == p2.EndTime.TotalMilliseconds && this.Text == p2.Text;
+        }
+
+        public override int GetHashCode()
+        {
+            return this.StartTime.TotalMilliseconds.GetHashCode() ^ this.Text.GetHashCode();
         }
     }
 }
