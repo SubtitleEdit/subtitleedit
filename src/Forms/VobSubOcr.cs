@@ -7026,7 +7026,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxModiMethod.Visible = false;
             groupBoxNOCR.Visible = false;
 
-            //groupBox.Visible = true;
+            groupBox.Visible = true;
             groupBox.BringToFront();
             groupBox.Left = comboBoxOcrMethod.Left;
             groupBox.Top = 50;
