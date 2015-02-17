@@ -241,6 +241,7 @@
             // 
             // labelInfo
             // 
+            this.labelInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.labelInfo.AutoSize = true;
             this.labelInfo.Location = new System.Drawing.Point(12, 400);
             this.labelInfo.Name = "labelInfo";
