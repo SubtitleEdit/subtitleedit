@@ -37,6 +37,8 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.comboBoxLeftRightMargin = new System.Windows.Forms.ComboBox();
+            this.labelLeftRightMargin = new System.Windows.Forms.Label();
             this.checkBoxFullFrameImage = new System.Windows.Forms.CheckBox();
             this.checkBoxTransAntiAliase = new System.Windows.Forms.CheckBox();
             this.labelLineHeight = new System.Windows.Forms.Label();
@@ -130,7 +132,7 @@
             // 
             this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonExport.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonExport.Location = new System.Drawing.Point(742, 566);
+            this.buttonExport.Location = new System.Drawing.Point(742, 602);
             this.buttonExport.Name = "buttonExport";
             this.buttonExport.Size = new System.Drawing.Size(126, 21);
             this.buttonExport.TabIndex = 6;
@@ -143,7 +145,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(874, 566);
+            this.buttonCancel.Location = new System.Drawing.Point(874, 602);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 0;
@@ -154,7 +156,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(12, 566);
+            this.progressBar1.Location = new System.Drawing.Point(12, 602);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(724, 21);
             this.progressBar1.TabIndex = 5;
@@ -164,6 +166,8 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.comboBoxLeftRightMargin);
+            this.groupBoxImageSettings.Controls.Add(this.labelLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxFullFrameImage);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxTransAntiAliase);
             this.groupBoxImageSettings.Controls.Add(this.labelLineHeight);
@@ -206,10 +210,81 @@
             this.groupBoxImageSettings.Controls.Add(this.checkBoxSkipEmptyFrameAtStart);
             this.groupBoxImageSettings.Location = new System.Drawing.Point(12, 218);
             this.groupBoxImageSettings.Name = "groupBoxImageSettings";
-            this.groupBoxImageSettings.Size = new System.Drawing.Size(937, 161);
+            this.groupBoxImageSettings.Size = new System.Drawing.Size(937, 191);
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // comboBoxLeftRightMargin
+            // 
+            this.comboBoxLeftRightMargin.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxLeftRightMargin.FormattingEnabled = true;
+            this.comboBoxLeftRightMargin.Items.AddRange(new object[] {
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "11",
+            "12",
+            "13",
+            "14",
+            "15",
+            "16",
+            "17",
+            "18",
+            "19",
+            "20",
+            "21",
+            "22",
+            "23",
+            "24",
+            "25",
+            "26",
+            "27",
+            "28",
+            "29",
+            "30",
+            "31",
+            "32",
+            "33",
+            "34",
+            "35",
+            "36",
+            "37",
+            "38",
+            "39",
+            "40",
+            "41",
+            "42",
+            "43",
+            "44",
+            "45",
+            "46",
+            "47",
+            "48",
+            "49",
+            "50"});
+            this.comboBoxLeftRightMargin.Location = new System.Drawing.Point(100, 159);
+            this.comboBoxLeftRightMargin.Name = "comboBoxLeftRightMargin";
+            this.comboBoxLeftRightMargin.Size = new System.Drawing.Size(121, 21);
+            this.comboBoxLeftRightMargin.TabIndex = 57;
+            this.comboBoxLeftRightMargin.SelectedIndexChanged += new System.EventHandler(this.comboBoxLeftRightMargin_SelectedIndexChanged);
+            // 
+            // labelLeftRightMargin
+            // 
+            this.labelLeftRightMargin.AutoSize = true;
+            this.labelLeftRightMargin.Location = new System.Drawing.Point(10, 162);
+            this.labelLeftRightMargin.Name = "labelLeftRightMargin";
+            this.labelLeftRightMargin.Size = new System.Drawing.Size(84, 13);
+            this.labelLeftRightMargin.TabIndex = 56;
+            this.labelLeftRightMargin.Text = "Left/right margin";
             // 
             // checkBoxFullFrameImage
             // 
@@ -797,9 +872,9 @@
             this.groupBoxExportImage.Controls.Add(this.panelVlcTemp);
             this.groupBoxExportImage.Controls.Add(this.linkLabelPreview);
             this.groupBoxExportImage.Controls.Add(this.pictureBox1);
-            this.groupBoxExportImage.Location = new System.Drawing.Point(13, 386);
+            this.groupBoxExportImage.Location = new System.Drawing.Point(13, 415);
             this.groupBoxExportImage.Name = "groupBoxExportImage";
-            this.groupBoxExportImage.Size = new System.Drawing.Size(936, 174);
+            this.groupBoxExportImage.Size = new System.Drawing.Size(936, 181);
             this.groupBoxExportImage.TabIndex = 1;
             this.groupBoxExportImage.TabStop = false;
             // 
@@ -893,7 +968,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(955, 592);
+            this.ClientSize = new System.Drawing.Size(955, 628);
             this.Controls.Add(this.subtitleListView1);
             this.Controls.Add(this.groupBoxExportImage);
             this.Controls.Add(this.groupBoxImageSettings);
@@ -993,5 +1068,7 @@
         private System.Windows.Forms.LinkLabel linkLabelPreview;
         private System.Windows.Forms.Panel panelVlcTemp;
         private System.Windows.Forms.CheckBox checkBoxFullFrameImage;
+        private System.Windows.Forms.ComboBox comboBoxLeftRightMargin;
+        private System.Windows.Forms.Label labelLeftRightMargin;
     }
 }

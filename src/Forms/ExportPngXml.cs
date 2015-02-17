@@ -47,6 +47,7 @@ namespace Nikse.SubtitleEdit.Forms
             public int Depth3D { get; set; }
             public double FramesPerSeconds { get; set; }
             public int BottomMargin { get; set; }
+            public int LeftRightMargin { get; set; }
             public bool Saved { get; set; }
             public ContentAlignment Alignment { get; set; }
             public Color BackgroundColor { get; set; }
@@ -242,7 +243,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Height = parameter.ScreenHeight,
                     IsForced = parameter.Forced
                 };
-                parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.Alignment);
+                parameter.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, parameter.Bitmap, parameter.FramesPerSeconds, parameter.BottomMargin, parameter.LeftRightMargin, parameter.Alignment);
             }
         }
 
@@ -266,6 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
                 Bitmap = null,
                 FramesPerSeconds = FrameRate,
                 BottomMargin = comboBoxBottomMargin.SelectedIndex,
+                LeftRightMargin = comboBoxLeftRightMargin.SelectedIndex,
                 Saved = false,
                 Alignment = ContentAlignment.BottomCenter,
                 Type3D = comboBox3D.SelectedIndex,
@@ -424,7 +426,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_exportType == "BLURAYSUP")
                     binarySubtitleFile = new FileStream(saveFileDialog1.FileName, FileMode.Create);
                 else if (_exportType == "VOBSUB")
-                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
+                    vobSubWriter = new VobSubWriter(saveFileDialog1.FileName, width, height, comboBoxBottomMargin.SelectedIndex, comboBoxLeftRightMargin.SelectedIndex, 32, _subtitleColor, _borderColor, !checkBoxTransAntiAliase.Checked, IfoParser.ArrayOfLanguage[comboBoxLanguage.SelectedIndex], IfoParser.ArrayOfLanguageCode[comboBoxLanguage.SelectedIndex]);
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = _subtitle.Paragraphs.Count - 1;
@@ -456,7 +458,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 Width = mp.ScreenWidth,
                                 Height = mp.ScreenHeight
                             };
-                            mp.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, mp.Bitmap, mp.FramesPerSeconds, mp.BottomMargin, mp.Alignment);
+                            mp.Buffer = Logic.BluRaySup.BluRaySupPicture.CreateSupFrame(brSub, mp.Bitmap, mp.FramesPerSeconds, mp.BottomMargin, mp.LeftRightMargin, mp.Alignment);
                         }
 
                         imagesSavedCount = WriteParagraph(width, sb, border, height, imagesSavedCount, vobSubWriter, binarySubtitleFile, mp, i);
@@ -944,9 +946,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                     using (var fullSize = b.GetBitmap())
                                     {
                                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                            left = param.BottomMargin;
+                                            left = param.LeftRightMargin;
                                         else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                            left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
+                                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -977,9 +979,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
 
                             if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                                left = param.BottomMargin;
+                                left = param.LeftRightMargin;
                             else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                                left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
+                                left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
                             if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                 top = param.BottomMargin;
                             if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -1172,9 +1174,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
                         int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
-                            left = param.BottomMargin;
+                            left = param.LeftRightMargin;
                         else if (param.Alignment == ContentAlignment.BottomRight || param.Alignment == ContentAlignment.MiddleRight || param.Alignment == ContentAlignment.TopRight)
-                            left = param.ScreenWidth - param.Bitmap.Width - param.BottomMargin;
+                            left = param.ScreenWidth - param.Bitmap.Width - param.LeftRightMargin;
                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                             top = param.BottomMargin;
                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
@@ -2662,6 +2664,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelFrameRate.Text = Configuration.Settings.Language.General.FrameRate;
             labelHorizontalAlign.Text = Configuration.Settings.Language.ExportPngXml.Align;
             labelBottomMargin.Text = Configuration.Settings.Language.ExportPngXml.BottomMargin;
+            labelLeftRightMargin.Text = Configuration.Settings.Language.ExportPngXml.LeftRightMargin;
             if (Configuration.Settings.Language.ExportPngXml.Left != null &&
                 Configuration.Settings.Language.ExportPngXml.Center != null &&
                 Configuration.Settings.Language.ExportPngXml.Right != null)
@@ -2813,11 +2816,18 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 comboBoxBottomMargin.Visible = true;
                 labelBottomMargin.Visible = true;
+
+                comboBoxLeftRightMargin.Visible = true;
+                labelLeftRightMargin.Visible = true;
+                comboBoxLeftRightMargin.SelectedIndex = 10;
             }
             else
             {
                 comboBoxBottomMargin.Visible = false;
                 labelBottomMargin.Visible = false;
+
+                comboBoxLeftRightMargin.Visible = false;
+                labelLeftRightMargin.Visible = false;
             }
 
             checkBoxSkipEmptyFrameAtStart.Visible = exportType == "IMAGE/FRAME";
@@ -3038,9 +3048,9 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 if (comboBoxHAlign.Visible)
                 {
                     if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
-                        pictureBox1.Left = int.Parse(comboBoxBottomMargin.Text);
+                        pictureBox1.Left = int.Parse(comboBoxLeftRightMargin.Text);
                     else if (alignment == ContentAlignment.BottomRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.TopRight)
-                        pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxBottomMargin.Text);
+                        pictureBox1.Left = w - bmp.Width - int.Parse(comboBoxLeftRightMargin.Text);
 
                     if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.MiddleCenter || alignment == ContentAlignment.MiddleRight)
                         pictureBox1.Top = (groupBoxExportImage.Height - 4 - bmp.Height) / 2;
@@ -3821,6 +3831,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 Cursor = Cursors.Default;
                 linkLabelPreview.Enabled = true;
             }
+        }
+
+        private void comboBoxLeftRightMargin_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
         }
 
     }

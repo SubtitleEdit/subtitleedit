@@ -418,6 +418,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Right</Right>
     <Center>Center</Center>
     <BottomMargin>Bottom margin</BottomMargin>
+    <LeftRightMargin>Left/right margin</LeftRightMargin>
     <SaveBluRraySupAs>Choose Blu-ray sup file name</SaveBluRraySupAs>
     <SaveVobSubAs>Choose VobSub file name</SaveVobSubAs>
     <SaveFabImageScriptAs>Choose Blu-ray sup file name</SaveFabImageScriptAs>

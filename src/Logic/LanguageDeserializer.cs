@@ -1083,6 +1083,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/BottomMargin":
                     language.ExportPngXml.BottomMargin = reader.Value;
                     break;
+                case "ExportPngXml/LeftRightMargin":
+                    language.ExportPngXml.LeftRightMargin = reader.Value;
+                    break;
                 case "ExportPngXml/SaveBluRraySupAs":
                     language.ExportPngXml.SaveBluRraySupAs = reader.Value;
                     break;
