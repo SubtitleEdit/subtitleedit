@@ -148,5 +148,12 @@ namespace Nikse.SubtitleEdit.Logic
                 return (60.0 / Duration.TotalSeconds) * wordCount;
             }
         }
+
+        public override bool Equals(object obj)
+        {
+            var p2 = (Paragraph)obj;
+            return this.StartTime.TotalMilliseconds == p2.StartTime.TotalMilliseconds &&
+               this.EndTime.TotalMilliseconds == p2.EndTime.TotalMilliseconds && this.Text == p2.Text;
+        }
     }
 }

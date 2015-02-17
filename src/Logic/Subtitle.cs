@@ -438,9 +438,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             foreach (Paragraph item in _paragraphs)
             {
-                if (p.StartTime.TotalMilliseconds == item.StartTime.TotalMilliseconds &&
-                    p.EndTime.TotalMilliseconds == item.EndTime.TotalMilliseconds &&
-                    p.Text == item.Text)
+                if (p.Equals(item))
                     return item;
             }
             return null;
