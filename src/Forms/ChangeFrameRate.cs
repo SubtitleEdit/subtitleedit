@@ -11,15 +11,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            comboBoxFrameRateFrom.Items.Add((23.976).ToString());
-            comboBoxFrameRateFrom.Items.Add((24.0).ToString());
-            comboBoxFrameRateFrom.Items.Add((25.0).ToString());
-            comboBoxFrameRateFrom.Items.Add((29.97).ToString());
+            comboBoxFrameRateFrom.Items.Add(23.976);
+            comboBoxFrameRateFrom.Items.Add(24.0);
+            comboBoxFrameRateFrom.Items.Add(25.0);
+            comboBoxFrameRateFrom.Items.Add(29.97);
 
-            comboBoxFrameRateTo.Items.Add((23.976).ToString());
-            comboBoxFrameRateTo.Items.Add((24.0).ToString());
-            comboBoxFrameRateTo.Items.Add((25.0).ToString());
-            comboBoxFrameRateTo.Items.Add((29.97).ToString());
+            comboBoxFrameRateTo.Items.Add(23.976);
+            comboBoxFrameRateTo.Items.Add(24.0);
+            comboBoxFrameRateTo.Items.Add(25.0);
+            comboBoxFrameRateTo.Items.Add(29.97);
 
             LanguageStructure.ChangeFrameRate language = Configuration.Settings.Language.ChangeFrameRate;
             Text = language.Title;
