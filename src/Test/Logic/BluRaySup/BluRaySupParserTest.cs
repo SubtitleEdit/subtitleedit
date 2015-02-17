@@ -24,11 +24,11 @@ namespace Test.Logic.BluRaySup
                     Width = 1080,
                     Height = 720
                 };
-                var buffer = BluRaySupPicture.CreateSupFrame(brSub, new Bitmap(100, 20), 25, 10, ContentAlignment.BottomCenter);
+                var buffer = BluRaySupPicture.CreateSupFrame(brSub, new Bitmap(100, 20), 10, 25, 10, ContentAlignment.BottomCenter);
                 binarySubtitleFile.Write(buffer, 0, buffer.Length);
                 brSub.StartTime = 2000;
                 brSub.EndTime = 3000;
-                buffer = BluRaySupPicture.CreateSupFrame(brSub, new Bitmap(100, 20), 25, 10, ContentAlignment.BottomCenter);
+                buffer = BluRaySupPicture.CreateSupFrame(brSub, new Bitmap(100, 20), 10, 25, 10, ContentAlignment.BottomCenter);
                 binarySubtitleFile.Write(buffer, 0, buffer.Length);
             }
 
