@@ -69,6 +69,8 @@
             public string ControlsWindowTitle { get; set; }
             public string Advanced { get; set; }
             public string Style { get; set; }
+            public string StyleLanguage { get; set; }
+            public string Character { get; set; }
             public string Class { get; set; }
             public string GeneralText { get; set; }
             public string LineNumber { get; set; }
@@ -477,7 +479,7 @@
             public string Right { get; set; }
             public string Center { get; set; }
             public string BottomMargin { get; set; }
-            public string LeftRightMargin { get; set; }            
+            public string LeftRightMargin { get; set; }
             public string SaveBluRraySupAs { get; set; }
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
@@ -973,6 +975,7 @@
             public string BeforeMergeShortLines { get; set; }
             public string BeforeSplitLongLines { get; set; }
             public string MergedShortLinesX { get; set; }
+            public string BeforeDurationsBridgeGap { get; set; }
             public string BeforeSetMinimumDisplayTimeBetweenParagraphs { get; set; }
             public string XMinimumDisplayTimeBetweenParagraphsChanged { get; set; }
             public string BeforeImportText { get; set; }
@@ -1034,6 +1037,11 @@
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
             public string ErrorLoadSrr { get; set; }
+            public string NoSupportEncryptedVobSub { get; set; }
+            public string NoSupportHereBluRaySup { get; set; }
+            public string NoSupportHereDvdSup { get; set; }
+            public string NoSupportHereVobSub { get; set; }
+            public string NoSupportHereDivx { get; set; }
 
             public class MainMenu
             {
@@ -1244,6 +1252,7 @@
                     public string TimedTextStyles { get; set; }
                     public string TimedTextSetLanguage { get; set; }
                     public string SamiSetStyle { get; set; }
+                    public string NuendoSetStyle { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }

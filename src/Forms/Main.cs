@@ -1303,28 +1303,29 @@ namespace Nikse.SubtitleEdit.Forms
             labelAdjustTip.Text = _language.VideoControls.CreateTip;
 
             //waveform
-            addParagraphHereToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.AddParagraphHere;
-            addParagraphAndPasteToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.AddParagraphHereAndPasteText;
-            deleteParagraphToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.DeleteParagraph;
-            toolStripMenuItemFocusTextbox.Text = Configuration.Settings.Language.Waveform.FocusTextBox;
+            var languageWaveform = Configuration.Settings.Language.Waveform;
+            addParagraphHereToolStripMenuItem.Text = languageWaveform.AddParagraphHere;
+            addParagraphAndPasteToolStripMenuItem.Text = languageWaveform.AddParagraphHereAndPasteText;
+            deleteParagraphToolStripMenuItem.Text = languageWaveform.DeleteParagraph;
+            toolStripMenuItemFocusTextbox.Text = languageWaveform.FocusTextBox;
 
-            splitToolStripMenuItem1.Text = Configuration.Settings.Language.Waveform.Split;
-            mergeWithPreviousToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.MergeWithPrevious;
-            mergeWithNextToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.MergeWithNext;
-            toolStripMenuItemWaveformPlaySelection.Text = Configuration.Settings.Language.Waveform.PlaySelection;
-            showWaveformAndSpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.ShowWaveformAndSpectrogram;
-            showOnlyWaveformToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.ShowWaveformOnly;
-            showOnlySpectrogramToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.ShowSpectrogramOnly;
-            seekSilenceToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.SeekSilence;
-            guessTimeCodesToolStripMenuItem.Text = Configuration.Settings.Language.Waveform.GuessTimeCodes;
+            splitToolStripMenuItem1.Text = languageWaveform.Split;
+            mergeWithPreviousToolStripMenuItem.Text = languageWaveform.MergeWithPrevious;
+            mergeWithNextToolStripMenuItem.Text = languageWaveform.MergeWithNext;
+            toolStripMenuItemWaveformPlaySelection.Text = languageWaveform.PlaySelection;
+            showWaveformAndSpectrogramToolStripMenuItem.Text = languageWaveform.ShowWaveformAndSpectrogram;
+            showOnlyWaveformToolStripMenuItem.Text = languageWaveform.ShowWaveformOnly;
+            showOnlySpectrogramToolStripMenuItem.Text = languageWaveform.ShowSpectrogramOnly;
+            seekSilenceToolStripMenuItem.Text = languageWaveform.SeekSilence;
+            guessTimeCodesToolStripMenuItem.Text = languageWaveform.GuessTimeCodes;
 
-            toolStripButtonWaveformZoomOut.ToolTipText = Configuration.Settings.Language.Waveform.ZoomOut;
-            toolStripButtonWaveformZoomIn.ToolTipText = Configuration.Settings.Language.Waveform.ZoomIn;
+            toolStripButtonWaveformZoomOut.ToolTipText = languageWaveform.ZoomOut;
+            toolStripButtonWaveformZoomIn.ToolTipText = languageWaveform.ZoomIn;
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
-                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveformAndSpectrogram;
+                audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveformAndSpectrogram;
             else
-                audioVisualizer.WaveformNotLoadedText = Configuration.Settings.Language.Waveform.ClickToAddWaveform;
+                audioVisualizer.WaveformNotLoadedText = languageWaveform.ClickToAddWaveform;
         }
 
         private void SetFormatToSubRip()
@@ -3301,9 +3302,9 @@ namespace Nikse.SubtitleEdit.Forms
                     if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.Class);
                     else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
-                        SubtitleListview1.ShowExtraColumn("Style / Language");
+                        SubtitleListview1.ShowExtraColumn(_languageGeneral.StyleLanguage);
                     else if (format.Name == "Nuendo")
-                        SubtitleListview1.ShowExtraColumn("Character"); //TODO: Put in language xml file
+                        SubtitleListview1.ShowExtraColumn(_languageGeneral.Character);
                     else
                         SubtitleListview1.ShowExtraColumn(_languageGeneral.Style);
 
@@ -5573,12 +5574,12 @@ namespace Nikse.SubtitleEdit.Forms
                     toolStripMenuItemSetLanguage.DropDownItems.Add("-");
                 }
 
-                toolStripMenuItemSetLanguage.DropDownItems.Add("New");
+                toolStripMenuItemSetLanguage.DropDownItems.Add(_language.New);
                 var newItem = (ToolStripMenuItem)toolStripMenuItemSetLanguage.DropDownItems[toolStripMenuItemSetLanguage.DropDownItems.Count - 1];
                 var moreLanguages = new List<string>();
                 foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
                 {
-                    if (!languages.Contains(x.TwoLetterISOLanguageName.ToLower()) && !languages.Contains(x.TwoLetterISOLanguageName.ToLower()))
+                    if (!languages.Contains(x.TwoLetterISOLanguageName.ToLower()) && !languages.Contains(x.ThreeLetterISOLanguageName.ToLower()))
                         moreLanguages.Add(x.TwoLetterISOLanguageName.ToLower());
                 }
                 moreLanguages.Sort();
@@ -5627,7 +5628,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 setStylesForSelectedLinesToolStripMenuItem.Visible = styles.Count > 1;
                 toolStripMenuItemAssStyles.Visible = false;
-                setStylesForSelectedLinesToolStripMenuItem.Text = "Set character"; //TODO: Set language _language.Menu.ContextMenu.TimedTextStyles;
+                setStylesForSelectedLinesToolStripMenuItem.Text = _language.Menu.ContextMenu.NuendoSetStyle;
             }
             else
             {
@@ -8805,7 +8806,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
             {
-                MessageBox.Show("Encrypted VobSub content not supported");
+                MessageBox.Show(_language.NoSupportEncryptedVobSub);
             }
 
             ShowStatus(_language.ParsingMatroskaFile);
@@ -8898,7 +8899,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
             {
-                MessageBox.Show("Encrypted vobsub content not supported");
+                MessageBox.Show(_language.NoSupportEncryptedVobSub);
             }
 
             ShowStatus(_language.ParsingMatroskaFile);
@@ -11065,7 +11066,7 @@ namespace Nikse.SubtitleEdit.Forms
             return new string(charArray);
         }
 
-        private static string ReverseParethesis(string s)
+        private static string ReverseParenthesis(string s)
         {
             const string k = "@__<<>___@";
 
@@ -11118,9 +11119,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 if (startsWithItalic)
                     newLines.Append("<i>");
-                newLines.Append(ReverseParethesis(post.ToString()));
+                newLines.Append(ReverseParenthesis(post.ToString()));
                 newLines.Append(s2.Substring(pre.Length, s2.Length - (pre.Length + post.Length)));
-                newLines.Append(ReverseParethesis(ReverseString(pre.ToString())));
+                newLines.Append(ReverseParenthesis(ReverseString(pre.ToString())));
                 if (endsWithItalic)
                     newLines.Append("</i>");
                 newLines.AppendLine();
@@ -11601,10 +11602,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 Environment.NewLine +
                                 exception.StackTrace, "Error loading language file");
                 Configuration.Settings.Language = new Language(); // default is en-US
+                Configuration.Settings.General.Language = null;
                 _languageGeneral = Configuration.Settings.Language.General;
                 _language = Configuration.Settings.Language.Main;
                 InitializeLanguage();
-                Configuration.Settings.General.Language = null;
             }
         }
 
@@ -12068,7 +12069,7 @@ namespace Nikse.SubtitleEdit.Forms
                     //TODO: Check for mkv etc
                     if (Path.GetExtension(fileName).Equals(".sub", StringComparison.OrdinalIgnoreCase) && IsVobSubFile(fileName, false))
                     {
-                        MessageBox.Show("VobSub files not supported here");
+                        MessageBox.Show(_language.NoSupportHereVobSub);
                         return;
                     }
 
@@ -12076,12 +12077,12 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (FileUtil.IsBluRaySup(fileName))
                         {
-                            MessageBox.Show("Blu-ray sup files not supported here");
+                            MessageBox.Show(_language.NoSupportHereBluRaySup);
                             return;
                         }
                         else if (FileUtil.IsSpDvdSup(fileName))
                         {
-                            MessageBox.Show("DVD sup files not supported here");
+                            MessageBox.Show(_language.NoSupportHereDvdSup);
                             return;
                         }
                     }
@@ -12126,7 +12127,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (Path.GetExtension(fileName).Equals(".divx", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".avi", StringComparison.OrdinalIgnoreCase))
                     {
-                        MessageBox.Show("Divx files not supported here");
+                        MessageBox.Show(_language.NoSupportHereDivx);
                         return;
                     }
 
@@ -16899,7 +16900,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     toolStripMenuItemWebVttVoice.DropDownItems.Add(style, null, WebVTTSetVoiceTextBox);
                 }
-                toolStripMenuItemWebVttVoice.DropDownItems.Add("Set new voice...", null, WebVTTSetNewVoiceTextBox); //TODO: Translate
+                toolStripMenuItemWebVttVoice.DropDownItems.Add(_language.Menu.ContextMenu.WebVTTSetNewVoice, null, WebVTTSetNewVoiceTextBox);
             }
             else
             {
@@ -18865,7 +18866,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!string.IsNullOrEmpty(form.OcrFileName))
                     {
-                        MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines); //TODO: Fix text
+                        MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
                         OpenSubtitle(form.OcrFileName, null);
                     }
                 }
@@ -18940,7 +18941,7 @@ namespace Nikse.SubtitleEdit.Forms
                     int index = FirstSelectedIndex;
                     if (index < 0)
                         index = 0;
-                    MakeHistoryForUndo("Before bridge small gaps"); //TODO: Fix text in SE 3.4
+                    MakeHistoryForUndo(_language.BeforeDurationsBridgeGap);
                     _subtitle.Paragraphs.Clear();
                     foreach (Paragraph p in form.FixedSubtitle.Paragraphs)
                         _subtitle.Paragraphs.Add(p);
