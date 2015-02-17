@@ -1,9 +1,9 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -82,31 +82,26 @@ namespace Nikse.SubtitleEdit.Forms
                 // fix casing of English alone i to I
                 if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
                 {
-                    int indexOfI = p.Text.IndexOf('i');
-                    while (indexOfI >= 0)
-                    {
-                        string prev = " ";
-                        if (indexOfI > 0)
-                            prev = p.Text[indexOfI - 1].ToString(CultureInfo.InvariantCulture);
-                        if ("¿¡♪♫> ".Contains(prev))
-                        {
-                            string next = " ";
-                            if (indexOfI + 1 < p.Text.Length)
-                                next = p.Text[indexOfI + 1].ToString(CultureInfo.InvariantCulture);
-                            if (" <!?.:;♪♫".Contains(next))
-                            {
-                                p.Text = p.Text.Remove(indexOfI, 1).Insert(indexOfI, "I");
-                            }
-                        }
-                        if (indexOfI + 1 < p.Text.Length)
-                            indexOfI = p.Text.IndexOf('i', indexOfI + 1);
-                        else
-                            indexOfI = -1;
-                    }
+                    p.Text = FixEnglishAloneILowerToUpper(p.Text);
                 }
 
                 lastLine = p.Text;
             }
+        }
+
+        public static string FixEnglishAloneILowerToUpper(string text)
+        {
+            for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
+            {
+                if (indexOfI == 0 || " >¡¿♪♫([".Contains(text[indexOfI - 1]))
+                {
+                    if (indexOfI + 1 == text.Length || " <!?.:;,♪♫)]".Contains(text[indexOfI + 1]))
+                    {
+                        text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                    }
+                }
+            }
+            return text;
         }
 
         private string FixCasing(string text, string lastLine, List<string> namesEtc)
