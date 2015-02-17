@@ -591,6 +591,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Center = "Center",
                 Right = "Right",
                 BottomMargin = "Bottom margin",
+                LeftRightMargin = "Left/right margin",
                 SaveBluRraySupAs = "Choose Blu-ray sup file name",
                 SaveVobSubAs = "Choose VobSub file name",
                 SaveFabImageScriptAs = "Choose Blu-ray sup file name",

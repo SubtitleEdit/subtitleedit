@@ -267,9 +267,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <param name="bmp">Bitmap</param>
         /// <param name="fps">Frames per second</param>
         /// <param name="bottomMargin">Image bottom margin</param>
+        /// <param name="leftOrRightMargin">Image left/right margin</param>
         /// <param name="alignment">Alignment of image</param>
         /// <returns>Byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, ContentAlignment alignment)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment)
         {
             var bm = new NikseBitmap(bmp);
             var colorPalette = GetBitmapPalette(bm);
@@ -360,10 +361,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             size += numAddPackets * headerOdsNext.Length;
             size += (2 + palSize * 5) /* PDS */;
             size += rleBuf.Length;
-
-            int leftOrRightMargin = bottomMargin;
-            if (leftOrRightMargin > 20)
-                leftOrRightMargin = 20;
 
             switch (alignment)
             {
