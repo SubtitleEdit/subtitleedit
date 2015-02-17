@@ -3035,7 +3035,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     }
                 }
 
-                if (_exportType == "BDNXML" || _exportType == "BLURAYSUP" || _exportType == "VOBSUB")
+                if (comboBoxHAlign.Visible)
                 {
                     if (alignment == ContentAlignment.BottomLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft)
                         pictureBox1.Left = int.Parse(comboBoxBottomMargin.Text);
