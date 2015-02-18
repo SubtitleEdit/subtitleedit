@@ -556,7 +556,7 @@ namespace Nikse.SubtitleEdit.Logic
                     var next = subtitle.GetParagraphOrDefault(i);
                     if (next != null && a.EndTime.TotalMilliseconds >= next.StartTime.TotalMilliseconds)
                     {
-                        a.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        a.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                 }
                 return subtitle;

@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SubtitleLineMaximumLength { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
-        public int MininumMillisecondsBetweenLines { get; set; }
+        public int MinimumMillisecondsBetweenLines { get; set; }
         public int SetStartEndHumanDelay { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
@@ -567,7 +567,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleLineMaximumLength = 43;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
-            MininumMillisecondsBetweenLines = 24;
+            MinimumMillisecondsBetweenLines = 24;
             SetStartEndHumanDelay = 100;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25.0;
@@ -647,7 +647,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool WaveformMouseWheelScrollUpIsForward { get; set; }
         public bool GenerateSpectrogram { get; set; }
         public string SpectrogramAppearance { get; set; }
-        public int WaveformMininumSampleRate { get; set; }
+        public int WaveformMinimumSampleRate { get; set; }
         public double WaveformSeeksSilenceDurationSeconds { get; set; }
         public int WaveformSeeksSilenceMaxVolume { get; set; }
 
@@ -673,7 +673,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformDoubleClickOnNonParagraphAction = string.Empty;
             WaveformMouseWheelScrollUpIsForward = true;
             SpectrogramAppearance = "OneColorGradient";
-            WaveformMininumSampleRate = 126;
+            WaveformMinimumSampleRate = 126;
             WaveformSeeksSilenceDurationSeconds = 0.3;
             WaveformSeeksSilenceMaxVolume = 10;
         }
@@ -1316,9 +1316,11 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleMaximumDisplayMilliseconds");
             if (subNode != null)
                 settings.General.SubtitleMaximumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText);
-            subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
+            subNode = node.SelectSingleNode("MinimumMillisecondsBetweenLines");
+            if (subNode == null) // TODO: Remove in 3.5
+                subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
             if (subNode != null)
-                settings.General.MininumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
+                settings.General.MinimumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SetStartEndHumanDelay");
             if (subNode != null)
                 settings.General.SetStartEndHumanDelay = Convert.ToInt32(subNode.InnerText);
@@ -2051,9 +2053,11 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpectrogramAppearance");
             if (subNode != null)
                 settings.VideoControls.SpectrogramAppearance = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveformMininumSampleRate");
+            subNode = node.SelectSingleNode("WaveformMinimumSampleRate");
+            if (subNode == null) // TODO: Remove in 3.5
+                subNode = node.SelectSingleNode("WaveformMininumSampleRate");
             if (subNode != null)
-                settings.VideoControls.WaveformMininumSampleRate = Convert.ToInt32(subNode.InnerText);
+                settings.VideoControls.WaveformMinimumSampleRate = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceDurationSeconds");
             if (subNode != null)
                 settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
@@ -2690,7 +2694,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MinimumMillisecondsBetweenLines", settings.General.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
@@ -2947,7 +2951,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString());
                 textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
                 textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
-                textWriter.WriteElementString("WaveformMininumSampleRate", settings.VideoControls.WaveformMininumSampleRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
