@@ -1257,6 +1257,16 @@ namespace Test
             actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
             Assert.AreEqual(actual, expected);
         }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartDontChange()
+        {
+            const string input = "- I...";
+            string actual = FixCommonErrorsHelper.FixEllipsesStartHelper(input);
+            Assert.AreEqual(actual, input);
+        }        
+
         #endregion Ellipses start
 
         #region FixDoubleGreater
@@ -1265,10 +1275,10 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixDoubleGreaterThanTest2()
         {
-            string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
-            string input2 = "<b>>>Hello world!</b>\r\n<i>>>Hello</i>";
-            string input3 = "<u>>>Hello world!</u>\r\n<b>>>Hello</b>";
-            string input4 = "<font color=\"#008040\">>>Hello world!</font>\r\n<font color=\"#008040\">>>Hello</font>";
+            const string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
+            const string input2 = "<b>>>Hello world!</b>\r\n<i>>>Hello</i>";
+            const string input3 = "<u>>>Hello world!</u>\r\n<b>>>Hello</b>";
+            const string input4 = "<font color=\"#008040\">>>Hello world!</font>\r\n<font color=\"#008040\">>>Hello</font>";
 
             const string expected1 = "<i>Hello world!</i>\r\n<i>Hello</i>";
             const string expected2 = "<b>Hello world!</b>\r\n<i>Hello</i>";
