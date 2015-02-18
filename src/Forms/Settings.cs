@@ -115,9 +115,9 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownDurationMin.Value = gs.SubtitleMinimumDisplayMilliseconds;
             numericUpDownDurationMax.Value = gs.SubtitleMaximumDisplayMilliseconds;
 
-            if (gs.MininumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
-                gs.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
-                numericUpDownMinGapMs.Value = gs.MininumMillisecondsBetweenLines;
+            if (gs.MinimumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
+                gs.MinimumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
+                numericUpDownMinGapMs.Value = gs.MinimumMillisecondsBetweenLines;
 
             if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
@@ -1048,7 +1048,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
             gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
-            gs.MininumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
+            gs.MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
 
             if (comboBoxAutoBackup.SelectedIndex == 1)
                 gs.AutoBackupSeconds = 60;

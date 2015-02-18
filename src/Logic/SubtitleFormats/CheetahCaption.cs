@@ -295,7 +295,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.StartTime = DecodeTimestamp(buffer, i + 2);
 
                     if (last != null && last.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
-                        last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
                     p.EndTime = DecodeTimestamp(buffer, i + 6);
 

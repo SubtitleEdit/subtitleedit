@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// <summary>
     /// http://www.theneitherworld.com/mcpoodle/SCC_TOOLS/DOCS/SCC_FORMAT.HTML
     /// § 15.119 47 CFR Ch. I (10–1–10 Edition) (pdf)
-    /// Maxinum four lines + max 32 characters on each line
+    /// Maximum four lines + max 32 characters on each line
     /// </summary>
     public class ScenaristClosedCaptions : SubtitleFormat
     {
