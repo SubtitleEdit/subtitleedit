@@ -66,6 +66,9 @@ namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
         {
             ReadSegmentInfoAndTracks();
 
+            if (_tracks == null)
+                return new List<MatroskaTrackInfo>();
+
             return subtitleOnly
                 ? _tracks.Where(t => t.IsSubtitle).ToList()
                 : _tracks;

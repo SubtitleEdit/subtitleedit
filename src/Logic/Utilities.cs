@@ -3325,7 +3325,12 @@ namespace Nikse.SubtitleEdit.Logic
                             graphicsStarted = true;
                         }
                     }
-                    subtitle.Header = header.ToString();
+                    subtitle.Header = header.ToString().TrimEnd();
+                    if (!subtitle.Header.Contains("[events]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        subtitle.Header += Environment.NewLine + Environment.NewLine + "[Events]" + Environment.NewLine;
+                    }
+
                 }
             }
             else
