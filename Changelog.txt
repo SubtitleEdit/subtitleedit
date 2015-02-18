@@ -2,13 +2,16 @@
 
 3.4.6 (xth March 2015) BETA
 * NEW:
-   * Added new subtitle format
+   * Added new subtitle formats (Sami Youtube and more)
    * Added waveform text size/bold to UI
    * Added filter to "Batch convert"
    * Added new shortcut: Copy text from original to current - thx megasmile
    * Added export functionality form "Statics" window - thx Ivandrofly
-   * Added format "Sami YouTube"
    * Added custom shortcut for toggle textbox auto-duration - thx Tony
+   * Added full frame option for export of FAB image script
+   * Added TGA output to export of images - thx Øjvind
+   * Added left/right margin to export of images - thx Øjvind
+   * Support for input VobSub/Bluray-sup input in command line convert - thx lafe
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Updated Czech translation - thx Trottel
@@ -17,6 +20,9 @@
    * Updated German/French translations - thx xylographe
    * Taskbar icon progress info for batch-convert/dvd-rip/matroska+TS-import  
 * FIXED:
+   * Fixed bugs in ASS/SSA loading - thx kotuwa
+   * Fixed bug in spell check with auto change casing of http -  thx Ivandrofly
+   * Change language in "Spell check" dialog now loads correct language lists - thx Sami 
    * Fixed missing rule for "Fix invalid italic tags" - thx Ivandrofly
    * Fixed possible freeze in video player text - thx Mafu
    * Fixed crash in 'Merge lines with same time code' - thx Miguel
@@ -30,6 +36,8 @@
    * Some fixes for unknown subtitle 17 - thx Pedro
    * Timed Text now keeps separate text element div tags separate - thx Krystian
    * Some fixes for .chk files - thx Mark
+   * Fixed bug in reading ASS/SSA from Matroska files
+   * Can now read EBU STL files with only one line - thx Stefan
    * + Many minor fixes from Ivandrofly and xylographe
 
 
