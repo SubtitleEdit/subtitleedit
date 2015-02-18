@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Globalization;
 using System.Text;
 using System.Xml;
-using Nikse.SubtitleEdit.Forms;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -511,7 +510,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     int start = text.IndexOf(@"{\c", StringComparison.Ordinal);
                     int end = text.IndexOf('}', start);
-                    if (end > 0 && !text.Substring(start).StartsWith("{\\c}", StringComparison.Ordinal))
+                    if (end > 0 && !text.Substring(start).StartsWith("{\\c}", StringComparison.Ordinal) && !text.Substring(start).StartsWith("{\\clip", StringComparison.Ordinal))
                     {
                         string color = text.Substring(start + 4, end - (start + 4));
                         string extraTags = string.Empty;
@@ -706,7 +705,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 {
                     // skip empty and comment lines
                 }
-                else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
+                else if (line.TrimStart().StartsWith("dialog:", StringComparison.OrdinalIgnoreCase) || line.TrimStart().StartsWith("dialogue:", StringComparison.OrdinalIgnoreCase)) // fix faulty font tags...
                 {
                     eventsStarted = true;
                     fontsStarted = false;
@@ -780,10 +779,11 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         string effect = string.Empty;
                         var layer = 0;
 
-                        string[] splittedLine;
-
+                        string[] splittedLine;                        
                         if (s.StartsWith("dialog:", StringComparison.Ordinal))
-                            splittedLine = line.Substring(10).Split(',');
+                            splittedLine = line.Remove(0, 7).Split(',');
+                        else if (s.StartsWith("dialogue:", StringComparison.Ordinal))
+                            splittedLine = line.Remove(0, 9).Split(',');
                         else
                             splittedLine = line.Split(',');
 
@@ -809,11 +809,13 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
                         try
                         {
-                            var p = new Paragraph();
+                            var p = new Paragraph
+                            {
+                                StartTime = GetTimeCodeFromString(start), 
+                                EndTime = GetTimeCodeFromString(end), 
+                                Text = GetFormattedText(text)
+                            };
 
-                            p.StartTime = GetTimeCodeFromString(start);
-                            p.EndTime = GetTimeCodeFromString(end);
-                            p.Text = GetFormattedText(text);
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
                             if (!string.IsNullOrEmpty(actor))
