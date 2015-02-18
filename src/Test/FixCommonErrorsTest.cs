@@ -1265,7 +1265,7 @@ namespace Test
             const string input = "- I...";
             string actual = FixCommonErrorsHelper.FixEllipsesStartHelper(input);
             Assert.AreEqual(actual, input);
-        }        
+        }
 
         #endregion Ellipses start
 
