@@ -48,8 +48,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFrameRate.SelectedIndex = 5;
             else
                 comboBoxFrameRate.SelectedIndex = 3;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds))
-                groupBoxFrameInfo.Visible = false;
         }
 
         private void FixLargeFonts()
@@ -72,8 +70,10 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             _subtitle = subtitle;
-            numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
-            //            GeneratePreview();
+            numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines != 0
+                                                           ? Configuration.Settings.General.MinimumMillisecondsBetweenLines
+                                                           : 1;
+            //GeneratePreview();
         }
 
         private void GeneratePreview()
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMinMillisecondsBetweenLines_ValueChanged(object sender, EventArgs e)
         {
             GeneratePreview();
-            Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
         }
 
         private void checkBoxShowOnlyChangedLines_CheckedChanged(object sender, EventArgs e)
@@ -149,20 +149,15 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMinMillisecondsBetweenLines.ValueChanged -= numericUpDownMinMillisecondsBetweenLines_ValueChanged;
             GeneratePreview();
             numericUpDownMinMillisecondsBetweenLines.ValueChanged += numericUpDownMinMillisecondsBetweenLines_ValueChanged;
-            Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
         }
 
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds))
-                return;
-
-            double frameRate = 25.0;
-            string s = comboBoxFrameRate.Text;
-            s = s.Replace(",", ".").Trim();
-            double d;
-            if (double.TryParse(s, NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out d))
-                frameRate = d;
+            double frameRate;
+            if (!double.TryParse(comboBoxFrameRate.Text.Trim().Replace(',', '.'),
+                                 NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out frameRate))
+                frameRate = 25.0;
 
             long ms = (long)Math.Round(1000 / frameRate);
             labelOneFrameIsXMS.Text = string.Format(Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.OneFrameXisYMilliseconds, frameRate, ms);

@@ -46,8 +46,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxMs.Value = 100;
             }
-            if (Configuration.Settings.General.MininumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
-                numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+            if (Configuration.Settings.General.MinimumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MinimumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
+                numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
             GeneratePreview();
         }

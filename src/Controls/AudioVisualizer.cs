@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Controls
         }
 
         public int ClosenessForBorderSelection = 15;
-        private const int MininumSelectionMilliseconds = 100;
+        private const int MinimumSelectionMilliseconds = 100;
 
         private long _buttonDownTimeTicks;
         private int _mouseMoveLastX = -1;
@@ -111,8 +111,8 @@ namespace Nikse.SubtitleEdit.Controls
         private System.ComponentModel.BackgroundWorker _spectrogramBackgroundWorker;
         public Keys InsertAtVideoPositionShortcut = Keys.None;
         public bool MouseWheelScrollUpIsForward = true;
-        public const double ZoomMininum = 0.1;
-        public const double ZoomMaxinum = 2.5;
+        public const double ZoomMinimum = 0.1;
+        public const double ZoomMaximum = 2.5;
         private double _zoomFactor = 1.0; // 1.0=no zoom
         public double ZoomFactor
         {
@@ -122,10 +122,10 @@ namespace Nikse.SubtitleEdit.Controls
             }
             set
             {
-                if (value < ZoomMininum)
-                    _zoomFactor = ZoomMininum;
-                else if (value > ZoomMaxinum)
-                    _zoomFactor = ZoomMaxinum;
+                if (value < ZoomMinimum)
+                    _zoomFactor = ZoomMinimum;
+                else if (value > ZoomMaximum)
+                    _zoomFactor = ZoomMaximum;
                 else
                     _zoomFactor = value;
                 Invalidate();
@@ -878,7 +878,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (curIdx > 0)
                         {
                             var prev = _subtitle.Paragraphs[curIdx - 1];
-                            if (prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines < milliseconds)
+                            if (prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < milliseconds)
                                 _mouseDownParagraph.StartTime.TotalMilliseconds = milliseconds;
                         }
                         else
@@ -891,7 +891,7 @@ namespace Nikse.SubtitleEdit.Controls
                         if (curIdx < _subtitle.Paragraphs.Count - 1)
                         {
                             var next = _subtitle.Paragraphs[curIdx + 1];
-                            if (milliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
+                            if (milliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines < next.StartTime.TotalMilliseconds)
                                 _mouseDownParagraph.EndTime.TotalMilliseconds = milliseconds;
                         }
                         else
@@ -1029,9 +1029,9 @@ namespace Nikse.SubtitleEdit.Controls
                     }
                 }
                 if (prev != null)
-                    _wholeParagraphMinMilliseconds = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    _wholeParagraphMinMilliseconds = prev.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 if (next != null)
-                    _wholeParagraphMaxMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    _wholeParagraphMaxMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
             }
         }
 
@@ -1046,11 +1046,11 @@ namespace Nikse.SubtitleEdit.Controls
                 {
                     if (curIdx > 0)
                     {
-                        _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        _wholeParagraphMinMilliseconds = _subtitle.Paragraphs[curIdx - 1].EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                     if (curIdx < _subtitle.Paragraphs.Count - 1)
                     {
-                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        _wholeParagraphMaxMilliseconds = _subtitle.Paragraphs[curIdx + 1].StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                 }
             }
@@ -1240,7 +1240,7 @@ namespace Nikse.SubtitleEdit.Controls
                         _prevParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex - 1);
                         _nextParagraph = _subtitle.GetParagraphOrDefault(subtitleIndex + 1);
 
-                        if (_firstMove && Math.Abs(oldMouseMoveLastX - e.X) < Configuration.Settings.General.MininumMillisecondsBetweenLines && GetParagraphAtMilliseconds(milliseconds) == null)
+                        if (_firstMove && Math.Abs(oldMouseMoveLastX - e.X) < Configuration.Settings.General.MinimumMillisecondsBetweenLines && GetParagraphAtMilliseconds(milliseconds) == null)
                         {
                             if (_mouseDownParagraphType == MouseDownParagraphType.Start && _prevParagraph != null && Math.Abs(_mouseDownParagraph.StartTime.TotalMilliseconds - _prevParagraph.EndTime.TotalMilliseconds) <= ClosenessForBorderSelection + 15)
                                 return; // do not decide which paragraph to move yet
@@ -1272,7 +1272,7 @@ namespace Nikse.SubtitleEdit.Controls
 
                         if (_mouseDownParagraphType == MouseDownParagraphType.Start)
                         {
-                            if (_mouseDownParagraph.EndTime.TotalMilliseconds - milliseconds > MininumSelectionMilliseconds)
+                            if (_mouseDownParagraph.EndTime.TotalMilliseconds - milliseconds > MinimumSelectionMilliseconds)
                             {
                                 if (AllowMovePrevOrNext)
                                     SetMinAndMaxMoveStart();
@@ -1304,7 +1304,7 @@ namespace Nikse.SubtitleEdit.Controls
                         }
                         else if (_mouseDownParagraphType == MouseDownParagraphType.End)
                         {
-                            if (milliseconds - _mouseDownParagraph.StartTime.TotalMilliseconds > MininumSelectionMilliseconds)
+                            if (milliseconds - _mouseDownParagraph.StartTime.TotalMilliseconds > MinimumSelectionMilliseconds)
                             {
                                 if (AllowMovePrevOrNext)
                                     SetMinAndMaxMoveEnd();
@@ -1892,7 +1892,7 @@ namespace Nikse.SubtitleEdit.Controls
             return v / count;
         }
 
-        internal void GenerateTimeCodes(double startFromSeconds, int mininumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
+        internal void GenerateTimeCodes(double startFromSeconds, int minimumVolumePercent, int maximumVolumePercent, int defaultMilliseconds)
         {
             int begin = SecondsToXPosition(startFromSeconds);
 
@@ -1902,11 +1902,11 @@ namespace Nikse.SubtitleEdit.Controls
             average = average / (_wavePeaks.AllSamples.Count - begin);
 
             var maxThreshold = (int)(_wavePeaks.DataMaxValue * (maximumVolumePercent / 100.0));
-            var silenceThreshold = (int)(average * (mininumVolumePercent / 100.0));
+            var silenceThreshold = (int)(average * (minimumVolumePercent / 100.0));
 
             int length50Ms = SecondsToXPosition(0.050);
             double secondsPerParagraph = defaultMilliseconds / 1000.0;
-            int minBetween = SecondsToXPosition(Configuration.Settings.General.MininumMillisecondsBetweenLines / 1000.0);
+            int minBetween = SecondsToXPosition(Configuration.Settings.General.MinimumMillisecondsBetweenLines / 1000.0);
             bool subtitleOn = false;
             int i = begin;
             while (i < _wavePeaks.AllSamples.Count)

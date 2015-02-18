@@ -940,7 +940,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (p.SetMinDisplayTimeBetweenSubtitles)
             {
-                double minumumMillisecondsBetweenLines = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                double minumumMillisecondsBetweenLines = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 for (int i = 0; i < p.Subtitle.Paragraphs.Count - 1; i++)
                 {
                     Paragraph current = p.Subtitle.GetParagraphOrDefault(i);

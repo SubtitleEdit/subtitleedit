@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 text = text.TrimStart('.').TrimStart();
             }
 
-            // "...foobar" / "... foobar" / ". .. foobar" 
+            // "...foobar" / "... foobar" / ". .. foobar"
             if (text.StartsWith("\"") && (text.StartsWith("\"..") || text.StartsWith("\". .") || text.StartsWith("\" ..") || text.StartsWith("\" . .")))
             {
                 int removeLength = 0;
