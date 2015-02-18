@@ -88,7 +88,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public int MininumLength
+        public int MinimumLength
         {
             get
             {
@@ -100,15 +100,15 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (Configuration.Settings.Tools.MergeLinesShorterThan > MininumLength)
-                    return MininumLength - 1;
+                if (Configuration.Settings.Tools.MergeLinesShorterThan > MinimumLength)
+                    return MinimumLength - 1;
                 return Configuration.Settings.Tools.MergeLinesShorterThan;
             }
         }
 
         private void AutoBalance()
         {
-            int minLength = MininumLength;
+            int minLength = MinimumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
 
             Subtitle sub = new Subtitle();

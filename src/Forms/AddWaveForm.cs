@@ -227,7 +227,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             var waveFile = new WavePeakGenerator(targetFile);
 
-            int sampleRate = Configuration.Settings.VideoControls.WaveformMininumSampleRate; // Normally 128
+            int sampleRate = Configuration.Settings.VideoControls.WaveformMinimumSampleRate; // Normally 128
             while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
 

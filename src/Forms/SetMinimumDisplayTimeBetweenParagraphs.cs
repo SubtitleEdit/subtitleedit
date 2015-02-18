@@ -70,8 +70,8 @@ namespace Nikse.SubtitleEdit.Forms
         public void Initialize(Subtitle subtitle)
         {
             _subtitle = subtitle;
-            numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines != 0
-                                                           ? Configuration.Settings.General.MininumMillisecondsBetweenLines
+            numericUpDownMinMillisecondsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines != 0
+                                                           ? Configuration.Settings.General.MinimumMillisecondsBetweenLines
                                                            : 1;
             //GeneratePreview();
         }
@@ -136,7 +136,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void numericUpDownMinMillisecondsBetweenLines_ValueChanged(object sender, EventArgs e)
         {
             GeneratePreview();
-            Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
         }
 
         private void checkBoxShowOnlyChangedLines_CheckedChanged(object sender, EventArgs e)
@@ -149,7 +149,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMinMillisecondsBetweenLines.ValueChanged -= numericUpDownMinMillisecondsBetweenLines_ValueChanged;
             GeneratePreview();
             numericUpDownMinMillisecondsBetweenLines.ValueChanged += numericUpDownMinMillisecondsBetweenLines_ValueChanged;
-            Configuration.Settings.General.MininumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
+            Configuration.Settings.General.MinimumMillisecondsBetweenLines = (int)numericUpDownMinMillisecondsBetweenLines.Value;
         }
 
         private void comboBoxFrameRate_SelectedIndexChanged(object sender, EventArgs e)

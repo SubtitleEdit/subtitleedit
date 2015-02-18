@@ -219,9 +219,9 @@ namespace Nikse.SubtitleEdit.Forms
                                 var arr = text.SplitToLines();
                                 if (arr.Length == 2)
                                 {
-                                    int spacing1 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
-                                    int spacing2 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
-                                    if (Configuration.Settings.General.MininumMillisecondsBetweenLines % 2 == 1)
+                                    int spacing1 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
+                                    int spacing2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
+                                    if (Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2 == 1)
                                         spacing2++;
 
                                     var newParagraph1 = new Paragraph(p);
