@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Sterowanie - {0}</ControlsWindowTitle>
     <Advanced>Zaawansowane</Advanced>
     <Style>Styl</Style>
+    <StyleLanguage>Styl / Język</StyleLanguage>
+    <Character>Znak</Character>
     <Class>Klasa</Class>
     <GeneralText>Ogólne</GeneralText>
     <LineNumber>Nr linii</LineNumber>
@@ -323,7 +325,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -418,6 +420,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Do prawej</Right>
     <Center>Do środka</Center>
     <BottomMargin>Dolny margines</BottomMargin>
+    <LeftRightMargin>Lewy/prawy margines</LeftRightMargin>
     <SaveBluRraySupAs>Wybierz nazwę pliku Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Wybierz nazwę pliku VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Wybierz nazwę pliku Blu-ray sup</SaveFabImageScriptAs>
@@ -883,6 +886,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Style tekstu synchronicznego...</TimedTextStyles>
         <TimedTextSetLanguage>Tekst synchroniczny - ustaw język</TimedTextSetLanguage>
         <SamiSetStyle>Sami - ustaw klasę</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - zestaw znaków</NuendoSetStyle>
         <Cut>Wytnij</Cut>
         <Copy>Kopiuj</Copy>
         <Paste>Wklej</Paste>
@@ -899,7 +903,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnDeleteText>Usuń tekst</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Usuń tekst i przesuń komórki do góry</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Wstaw pusty tekst i przesuń komórki w dół</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Wstaw teks z napisów...</ColumnInsertTextFromSubtitle>
+        <ColumnInsertTextFromSubtitle>Wstaw tekst z napisów...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importuj tekst i przesuń komórki w dół</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Wklej ze schowka...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Kopiuj tekst z oryginału do aktualnego</ColumnCopyOriginalTextToCurrent>
@@ -1167,7 +1171,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeSortX>Przed sortowaniem: {0}</BeforeSortX>
     <SortedByX>Wykonano sortowanie wg: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Przed automatycznym zrównoważeniem zaznaczonych linii</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Ilość linii z automatycznym zrównoważeniem: {0}</NumberOfLinesAutoBalancedX>
+    <NumberOfLinesAutoBalancedX>Ilość automatycznie równoważonych linii: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Przed usunięciem łamania linii w zaznaczonych liniach</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Ilość linii z usuniętym łamaniem linii: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotnymi zastąpieniami</BeforeMultipleReplace>
@@ -1185,6 +1189,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Przed połączeniem krótkich linii</BeforeMergeShortLines>
     <BeforeSplitLongLines>Przed podziałem długich linii</BeforeSplitLongLines>
     <MergedShortLinesX>Ilość połączonych linii: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Przed zmostkowaniem małych przerw</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Przed ustawieniem minimalnego czasu wyświetlania pomiędzy napisami</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Ilość zmienionych linii z minimalnym czasem wyświetlania pomiędzy napisami: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Przed importem zwykłego tekstu</BeforeImportText>
@@ -1246,6 +1251,11 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
     <ErrorLoadPng>Ten plik wydaje się być plikiem PNG. W Subtitle Edit nie można otworzyć plików PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
+    <NoSupportEncryptedVobSub>Zaszyfrowana zawartość VobSub nie jest obsługiwana.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Pliki Blu-ray sup nie są tutaj obsługiwane.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>Pliki DVD sup nie są tutaj obsługiwane.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>Pliki VobSub nie są tutaj obsługiwane.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Pliki DivX nie są tutaj obsługiwane.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -1685,6 +1695,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Przenieś pierwsze słowo z następnej linii napisów do góry</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Zaznacz do wielkich liter</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Przełącz na automatyczny czas trwania</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
     <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
@@ -1764,8 +1775,8 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <LineMaximumLength>Maksymalna długość linii</LineMaximumLength>
     <LineContinuationBeginEndStrings>Znak kontynuacji na początku/końcu linii</LineContinuationBeginEndStrings>
     <NumberOfSplits>Ilość podzielonych: {0}</NumberOfSplits>
-    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków</LongestSingleLineIsXAtY>
-    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków</LongestLineIsXAtY>
+    <LongestSingleLineIsXAtY>Najdłuższą pojedynczą linią jest linia o nr {1} - zawiera {0} znaków </LongestSingleLineIsXAtY>
+    <LongestLineIsXAtY>Ogólnie najdłuższą linią jest linia o nr {1} - zawiera {0} znaków </LongestLineIsXAtY>
   </SplitLongLines>
   <SplitSubtitle>
     <Title>Podziel napisy</Title>
