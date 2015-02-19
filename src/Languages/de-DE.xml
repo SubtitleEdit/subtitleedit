@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Steuerung - {0}</ControlsWindowTitle>
     <Advanced>Erweitert</Advanced>
     <Style>Stil</Style>
+    <StyleLanguage>Stil / Sprache</StyleLanguage>
+    <Character>Charakter</Character>
     <Class>Klasse</Class>
     <GeneralText>Allgemein</GeneralText>
     <LineNumber>Text#</LineNumber>
@@ -417,7 +419,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Left>Links</Left>
     <Right>Rechts</Right>
     <Center>Zentriert</Center>
-    <BottomMargin>Unten</BottomMargin>
+    <BottomMargin>Rand unten</BottomMargin>
+    <LeftRightMargin>Rand links/rechts</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub Dateiname wählen</SaveVobSubAs>
     <SaveFabImageScriptAs>Blu-ray sup Dateiname wählen</SaveFabImageScriptAs>
@@ -882,6 +885,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Zeitlich festgelegte Textstile...</TimedTextStyles>
         <TimedTextSetLanguage>Zeitlich festgelegte Textsprache</TimedTextSetLanguage>
         <SamiSetStyle>Sami Klasse festlegen</SamiSetStyle>
+        <NuendoSetStyle>Nuendo Charakter festlegen</NuendoSetStyle>
         <Cut>Ausschneiden</Cut>
         <Copy>Kopieren</Copy>
         <Paste>Einfügen</Paste>
@@ -1184,6 +1188,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Vor Verbinden kurzer Texte</BeforeMergeShortLines>
     <BeforeSplitLongLines>Vor Trennen langer Texte</BeforeSplitLongLines>
     <MergedShortLinesX>Verbundene Texte: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Vor überbrücken kurzer Zeitabstände</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Vor Setzen des Minimalabstands zwischen Text</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Texte mit geänderten Minimalabstand: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Vor Text Import</BeforeImportText>
@@ -1245,6 +1250,11 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
     <ErrorLoadPng>Diese Datei ist ein PNG Bild. Subtitle Edit kann keine PNG Dateien öffnen.</ErrorLoadPng>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
+    <NoSupportEncryptedVobSub>Verschlüsselte VobSub-Untertitel können nicht verarbeitet werden.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Blu-ray sup Dateien sind hier nicht erlaubt.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>DVD sup Dateien sind hier nicht erlaubt.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>VobSub-Dateien sind hier nicht erlaubt.</NoSupportHereVobSub>
+    <NoSupportHereDivx>DivX-Dateien sind hier nicht erlaubt.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -1683,6 +1693,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Auswahl in Großbuchstaben</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Auto Dauer umlegen</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
     <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
