@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Controle - {0}</ControlsWindowTitle>
     <Advanced>Geavanceerd</Advanced>
     <Style>Stĳl</Style>
+    <StyleLanguage>Stĳl / Taal</StyleLanguage>
+    <Character>Karakter</Character>
     <Class>Klasse</Class>
     <GeneralText>Algemeen</GeneralText>
     <LineNumber>Tekstnummer</LineNumber>
@@ -279,7 +281,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FontEffect>Effect</FontEffect>
     <FontEffectColor>Effectkleur</FontEffectColor>
     <FontSize>Grootte</FontSize>
-    <TopBottomMargin>Boven/onder marge</TopBottomMargin>
+    <TopBottomMargin>Boven- en ondermarge</TopBottomMargin>
     <FadeUpTime>Fade-in tĳd</FadeUpTime>
     <FadeDownTime>Fade-out tĳd</FadeDownTime>
     <ZPosition>Z-positie</ZPosition>
@@ -418,6 +420,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Rechts</Right>
     <Center>Midden</Center>
     <BottomMargin>Ondermarge</BottomMargin>
+    <LeftRightMargin>Linker- en rechtermarge</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup-bestandsnaam kiezen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub bestandsnaam kiezen</SaveVobSubAs>
     <SaveFabImageScriptAs>Blu-ray sup-bestandsnaam kiezen</SaveFabImageScriptAs>
@@ -882,6 +885,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Getimede tekst stĳlen...</TimedTextStyles>
         <TimedTextSetLanguage>Getimede tekst - taal instellen</TimedTextSetLanguage>
         <SamiSetStyle>Sami - klasse instellen</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - karakter instellen</NuendoSetStyle>
         <Cut>K&amp;nippen</Cut>
         <Copy>&amp;Kopiëren</Copy>
         <Paste>&amp;Plakken</Paste>
@@ -1142,8 +1146,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <BeforeChangeFrameRate>Vóór beeldsnelheidswĳziging</BeforeChangeFrameRate>
     <BeforeAdjustSpeedInPercent>Vóór procentuele beeldsnelheidswĳziging</BeforeAdjustSpeedInPercent>
     <FrameRateChangedFromXToY>Beeldsnelheid gewĳzigd van {0} tot {1}</FrameRateChangedFromXToY>
-    <IdxFileNotFoundWarning>{0} niet gevonden! VobSub bestand toch importeren?</IdxFileNotFoundWarning>
-    <InvalidVobSubHeader>Ongeldig beginblok voor VobSub bestand: {0}</InvalidVobSubHeader>
+    <IdxFileNotFoundWarning>{0} niet gevonden! VobSub-bestand toch importeren?</IdxFileNotFoundWarning>
+    <InvalidVobSubHeader>Ongeldig beginblok voor VobSub-bestand: {0}</InvalidVobSubHeader>
     <OpenVobSubFile>VobSub (sub/idx) ondertitel openen...</OpenVobSubFile>
     <VobSubFiles>VobSub ondertitelbestanden</VobSubFiles>
     <OpenBluRaySupFile>Blu-ray sup-bestand openen...</OpenBluRaySupFile>
@@ -1183,6 +1187,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Vóór samenvoegen korte regels</BeforeMergeShortLines>
     <BeforeSplitLongLines>Vóór opdelen lange regels</BeforeSplitLongLines>
     <MergedShortLinesX>Aantal samengevoegde regels: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Vóór overbruggen tĳdsduurhiaten</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Vóór bepalen minimum-weergavetĳd tussen ondertitels</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Aantal teksten met gewĳzigde minimum-weergavetĳd: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Vóór platte tekst import</BeforeImportText>
@@ -1244,6 +1249,11 @@ Verder gaan?</SubtitleAppendPrompt>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
     <ErrorLoadPng>Dit is een png-afbeeldingsbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
     <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
+    <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>U kunt hier geen blu-ray sup-bestand opgeven.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>U kunt hier geen dvd sup-bestand opgeven.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>U kunt hier geen VobSub-bestand opgeven.</NoSupportHereVobSub>
+    <NoSupportHereDivx>U kunt hier geen divx- of avi-bestand opgeven.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
@@ -1864,9 +1874,9 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <BottomRight>Onder/rechts</BottomRight>
     <Colors>Kleuren</Colors>
     <Margins>Marges</Margins>
-    <MarginLeft>Marge links</MarginLeft>
-    <MarginRight>Marge rechts</MarginRight>
-    <MarginVertical>Marge verticaal</MarginVertical>
+    <MarginLeft>Linkermarge</MarginLeft>
+    <MarginRight>Rechtermarge</MarginRight>
+    <MarginVertical>Verticale marge</MarginVertical>
     <Border>Grens</Border>
     <PlusShadow>+ Schaduw</PlusShadow>
     <OpaqueBox>Opaque doos (gebruikt rand kleur)</OpaqueBox>

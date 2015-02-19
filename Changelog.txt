@@ -11,7 +11,7 @@
    * Added full frame option for export of FAB image script
    * Added TGA output to export of images - thx Øjvind
    * Added left/right margin to export of images - thx Øjvind
-   * Support for input VobSub/Bluray-sup input in command line convert - thx lafe
+   * Support for VobSub/Bluray-sup input in command line convert - thx lafe
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Updated Czech translation - thx Trottel
