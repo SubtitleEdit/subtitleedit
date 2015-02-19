@@ -42,8 +42,8 @@
     <VideoEncodingX>Videocodering: {0}</VideoEncodingX>
     <SingleLineLengths>Regellengten:</SingleLineLengths>
     <TotalLengthX>Totale lengte: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Totale lengte: {0} (regel opdelen!)</TotalLengthXSplitLine>
-    <SplitLine>Regel opdelen!</SplitLine>
+    <TotalLengthXSplitLine>Totale lengte: {0} (splitsen!)</TotalLengthXSplitLine>
+    <SplitLine>Splits regel!</SplitLine>
     <NotAvailable>Niet beschikbaar</NotAvailable>
     <OverlapPreviousLineX>Overlap vorige ({0:#,##0.###})</OverlapPreviousLineX>
     <OverlapX>Overlap ({0:#,##0.###})</OverlapX>
@@ -65,7 +65,7 @@
     <ControlsWindowTitle>Controle - {0}</ControlsWindowTitle>
     <Advanced>Geavanceerd</Advanced>
     <Style>Stĳl</Style>
-    <StyleLanguage>Stĳl / Taal</StyleLanguage>
+    <StyleLanguage>Stĳl / taal</StyleLanguage>
     <Character>Karakter</Character>
     <Class>Klasse</Class>
     <GeneralText>Algemeen</GeneralText>
@@ -159,6 +159,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Converteren</Convert>
     <NothingToConvert>Niets te converteren</NothingToConvert>
     <PleaseChooseOutputFolder>Doelmap kiezen a.u.b.</PleaseChooseOutputFolder>
+    <NotConverted>Mislukt</NotConverted>
     <Converted>Geconverteerd</Converted>
     <ConvertedX>Geconverteerd ({0})</ConvertedX>
     <Settings>Instellingen</Settings>
@@ -169,11 +170,15 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Inclusief submappen</Recursive>
     <SetMinMsBetweenSubtitles>Bepaal min. millisec. tussen ondertitels</SetMinMsBetweenSubtitles>
     <PlainText>Platte tekst</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>Filteren</Filter>
     <FilterSkipped>Door filter uitgesloten</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip bestanden zonder UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Meer dan twee regels per ondertitel</FilterMoreThanTwoLines>
     <FilterContains>Tekst bevat...</FilterContains>
+    <FixCommonErrorsErrorX>Fouten verbeteren: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Meerdere vervangen: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Automatisch uitlĳnen: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -859,7 +864,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <CheckForUpdates>Naar &amp;updates zoeken...</CheckForUpdates>
         <Title>&amp;Help</Title>
         <Help>&amp;Hulp</Help>
-        <About>&amp;Over</About>
+        <About>&amp;Over...</About>
       </Help>
       <ToolBar>
         <New>Nieuw</New>
@@ -907,8 +912,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnPasteFromClipboard>Plakken vanuit klembord...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Tekst van origineel naar huidige kopiëren</ColumnCopyOriginalTextToCurrent>
         <Split>Afbreken</Split>
-        <MergeSelectedLines>Geselecteerde tekst samenvoegen</MergeSelectedLines>
-        <MergeSelectedLinesAsDialog>Geselecteerd tekst als dialoog samenvoegen</MergeSelectedLinesAsDialog>
+        <MergeSelectedLines>Tekstselectie samenvoegen</MergeSelectedLines>
+        <MergeSelectedLinesAsDialog>Tekstselectie als dialoog samenvoegen</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Met vorige tekst samenvoegen</MergeWithLineBefore>
         <MergeWithLineAfter>Met volgende tekst samenvoegen</MergeWithLineAfter>
         <Normal>Normaal</Normal>
@@ -916,18 +921,18 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Color>Kleur...</Color>
         <FontName>Lettertype...</FontName>
         <Alignment>Uitlĳnen...</Alignment>
-        <AutoBalanceSelectedLines>Auto balans (geselecteerde tekst)...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Regeleinden van geselecteerde tekst verwĳderen...</RemoveLineBreaksFromSelectedLines>
+        <AutoBalanceSelectedLines>Tekstselectie uitbalanceren...</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Regeleinden uit tekstselectie verwĳderen...</RemoveLineBreaksFromSelectedLines>
         <TypewriterEffect>Typemachine effect...</TypewriterEffect>
         <KaraokeEffect>Karaoke effect...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Geselecteerde tekst eerder/later tonen...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Visuele sync - geselecteerde regels...</VisualSyncSelectedLines>
-        <GoogleAndMicrosoftTranslateSelectedLine>Originele tekst met Google/Microsoft vertalen</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Geselecteerde tekst met Google vertalen...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Weergavetĳd van selectie aanpassen...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Gangbare fouten in geselecteerde tekst corrigeren...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Hoofd-/kleine letters in geselecteerde tekst wĳzigen...</ChangeCasingForSelectedLines>
-        <SaveSelectedLines>Geselecteerde tekst opslaan als...</SaveSelectedLines>
+        <ShowSelectedLinesEarlierLater>Tekstselectie eerder/later tonen...</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Tekstselectie visueel synchroniseren...</VisualSyncSelectedLines>
+        <GoogleAndMicrosoftTranslateSelectedLine>Originele tekst via Google/Microsoft vertalen</GoogleAndMicrosoftTranslateSelectedLine>
+        <GoogleTranslateSelectedLines>Tekstselectie via Google vertalen...</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Tĳdsduur van tekstselectie aanpassen...</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Gangbare fouten in tekstselectie corrigeren...</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Hoofd-/kleine letters in tekstselectie wĳzigen...</ChangeCasingForSelectedLines>
+        <SaveSelectedLines>Tekstselectie opslaan als...</SaveSelectedLines>
         <WebVTTSetNewVoice>Nieuwe stem instellen...</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Stemmen verwĳderen</WebVTTRemoveVoices>
       </ContextMenu>
@@ -940,14 +945,14 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <UndoChangesInEditPanel>Wĳzigingen ongedaan maken</UndoChangesInEditPanel>
       <Previous>Vorige</Previous>
       <Next>Volgende</Next>
-      <AutoBreak>Auto afbreken</AutoBreak>
-      <Unbreak>Niet afbreken</Unbreak>
+      <AutoBreak>Afbreken</AutoBreak>
+      <Unbreak>Samenvoegen</Unbreak>
     </Controls>
     <VideoControls>
       <Translate>Vertalen</Translate>
       <Create>Aanmaken</Create>
       <Adjust>Aanpassen</Adjust>
-      <SelectCurrentElementWhilePlaying>Ondertitel selectie synchroon met afspelen</SelectCurrentElementWhilePlaying>
+      <SelectCurrentElementWhilePlaying>Ondertitelselectie synchroon met afspelen</SelectCurrentElementWhilePlaying>
       <AutoRepeat>Automatisch herhalen</AutoRepeat>
       <AutoRepeatOn>Automatisch herhalen</AutoRepeatOn>
       <AutoRepeatCount>Aantal herhalingen</AutoRepeatCount>
@@ -960,7 +965,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
       <PlayCurrent>&amp;Afspelen</PlayCurrent>
       <Next>Volge&amp;nde &gt;</Next>
       <Playing>Speelt...</Playing>
-      <RepeatingLastTime>Herhalen... laatste keer</RepeatingLastTime>
+      <RepeatingLastTime>Laatste keer herhalen...</RepeatingLastTime>
       <RepeatingXTimesLeft>Nog {0} keer herhalen...</RepeatingXTimesLeft>
       <AutoContinueInOneSecond>Automatisch doorgaan na één seconde</AutoContinueInOneSecond>
       <AutoContinueInXSeconds>Automatisch doorgaan na {0} seconden</AutoContinueInXSeconds>
@@ -1535,7 +1540,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MPlayerDescription>MPlayer2/Mplayer</MPlayerDescription>
     <VlcMediaPlayer>VLC media player</VlcMediaPlayer>
     <VlcMediaPlayerDescription>libvlc.dll van VLC media player 1.1.0 of nieuwer</VlcMediaPlayerDescription>
-    <VlcBrowseToLabel>VLC pad (alleen nodig als je met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
+    <VlcBrowseToLabel>VLC pad (alleen nodig als u met de draagbare versie van VLC werkt)</VlcBrowseToLabel>
     <ShowStopButton>Toon stopknop</ShowStopButton>
     <ShowMuteButton>Toon mute-knop</ShowMuteButton>
     <ShowFullscreenButton>Toon volledig scherm knop</ShowFullscreenButton>
