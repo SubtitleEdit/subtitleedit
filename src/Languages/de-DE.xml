@@ -159,6 +159,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Umwandeln</Convert>
     <NothingToConvert>Nichts umzuwandeln!</NothingToConvert>
     <PleaseChooseOutputFolder>Bitte Ausgabeordner wählen</PleaseChooseOutputFolder>
+    <NotConverted>Gescheitert</NotConverted>
     <Converted>Umgewandelt</Converted>
     <ConvertedX>Umgewandelt ({0})</ConvertedX>
     <Settings>Einstellungen</Settings>
@@ -169,11 +170,15 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Unterordner einschließen</Recursive>
     <SetMinMsBetweenSubtitles>Min. Millisekunden zwischen Untertitel</SetMinMsBetweenSubtitles>
     <PlainText>Text</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>Dateifilter</Filter>
     <FilterSkipped>Vom Filter ausgeschlossen</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip Dateien ohne UTF-8 Bytereihenfolge-Markierung</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Texte mit mehr als zwei Zeilen</FilterMoreThanTwoLines>
     <FilterContains>Text enthält...</FilterContains>
+    <FixCommonErrorsErrorX>Fehler korrigieren: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Mehrfach ersetzen: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Text ausbalancieren: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
