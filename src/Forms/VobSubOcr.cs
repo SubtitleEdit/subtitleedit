@@ -5936,7 +5936,7 @@ namespace Nikse.SubtitleEdit.Forms
                             (!oneColorText.Contains('•') || line.Contains('•')) &&
                             (!oneColorText.Contains(')') || line.Contains(')')) &&
                             Utilities.CountTagInText(oneColorText, '(') < 2 && Utilities.CountTagInText(oneColorText, ')') < 2 &&
-                            Utilities.CountTagInText(oneColorText, Environment.NewLine) < 3)
+                            Utilities.GetNumberOfLines(oneColorText) < 4)
                         {
                             int modiCorrectWords;
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(oneColorText, out modiCorrectWords);
@@ -6311,7 +6311,7 @@ namespace Nikse.SubtitleEdit.Forms
                             (!modiText.Contains('•') || line.Contains('•')) &&
                             (!modiText.Contains(')') || line.Contains(')')) &&
                             Utilities.CountTagInText(modiText, '(') < 2 && Utilities.CountTagInText(modiText, ')') < 2 &&
-                            Utilities.CountTagInText(modiText, Environment.NewLine) < 3)
+                            Utilities.GetNumberOfLines(modiText) < 4)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
                             //if (modiWordsNotFound > 0)
@@ -6740,8 +6740,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void FixVerticalScrollBars(TextBox tb)
         {
-            var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine) + 1;
-            if (lineCount > 5)
+            if (Utilities.GetNumberOfLines(tb.Text) > 5)
                 tb.ScrollBars = ScrollBars.Vertical;
             else
                 tb.ScrollBars = ScrollBars.None;

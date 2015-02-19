@@ -106,7 +106,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     else
                     {
                         var st = new StripableText(pre);
-                        if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && removedInFirstLine && Utilities.CountTagInText(line, ':') == 1 &&
+                        if (count == 1 && Utilities.GetNumberOfLines(text) == 2 && removedInFirstLine && Utilities.CountTagInText(line, ':') == 1 &&
                             ".?!".IndexOf(newText[newText.Length - 1]) < 0 && ".</i>!</i>?</i>".IndexOf(newText.Substring(newText.Length - ".</i>".Length), StringComparison.Ordinal) < 0 &&
                             line != line.ToUpper())
                         {
@@ -123,7 +123,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             else
                                 newText = newText + Environment.NewLine + line;
                         }
-                        else if (count == 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(line, ':') == 1 &&
+                        else if (count == 1 && Utilities.GetNumberOfLines(text) == 2 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(line, ':') == 1 &&
                             ".?!".IndexOf(newText[newText.Length - 1]) < 0 && ".</i>!</i>?</i>".IndexOf(newText.Substring(newText.Length - ".</i>".Length), StringComparison.Ordinal) < 0 &&
                             line != line.ToUpper())
                         {
@@ -254,7 +254,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 count++;
             }
             newText = newText.Trim();
-            if (noOfNames > 0 && Utilities.CountTagInText(newText, Environment.NewLine) == 1)
+            if (noOfNames > 0 && Utilities.GetNumberOfLines(newText) == 2)
             {
                 int indexOfDialogChar = newText.IndexOf('-');
                 bool insertDash = true;
@@ -310,7 +310,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 if (st.Pre.Contains('-'))
                     newText = st.Pre.Replace("-", string.Empty) + st.StrippedText + st.Post;
             }
-            else if (Utilities.CountTagInText(newText, Environment.NewLine) == 1 && removedInFirstLine == false && removedInSecondLine)
+            else if (Utilities.GetNumberOfLines(newText) == 2 && removedInFirstLine == false && removedInSecondLine)
             {
                 string noTags = HtmlUtil.RemoveHtmlTags(newText, true).Trim();
                 bool insertDash = noTags.StartsWith('-') && Utilities.CountTagInText(noTags, '-') == 1;
@@ -437,7 +437,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             text = RemoveHearImpairedTags(text);
 
             // fix 3 lines to two liners - if only two lines
-            if (noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 2)
+            if (noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 3)
             {
                 string[] a = HtmlUtil.RemoveHtmlTags(text).Replace(" ", string.Empty).Split(new[] { '!', '?', '.' }, StringSplitOptions.RemoveEmptyEntries);
                 if (a.Length == 2)
@@ -456,7 +456,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                 }
             }
 
-            if (!text.StartsWith('-') && noOfNamesRemoved >= 1 && Utilities.CountTagInText(text, Environment.NewLine) == 1)
+            if (!text.StartsWith('-') && noOfNamesRemoved >= 1 && Utilities.GetNumberOfLines(text) == 2)
             {
                 string[] arr = text.Split(Utilities.NewLineChars);
                 string part0 = arr[0].Trim().Replace("</i>", string.Empty).Trim();

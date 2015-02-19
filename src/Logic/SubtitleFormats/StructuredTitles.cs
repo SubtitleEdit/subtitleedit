@@ -111,7 +111,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
                 else if (p != null)
                 {
-                    if (p.Text != null && Utilities.CountTagInText(p.Text, Environment.NewLine) > 2)
+                    if (p.Text != null && Utilities.GetNumberOfLines(p.Text) > 3)
                     {
                         _errorCount++;
                     }

@@ -56,8 +56,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text.Add(0x14);
                     text.Add(0x54);
                     text.Add(0x17);
-                    int noNewLines = Utilities.CountTagInText(p.Text, Environment.NewLine);
-                    if (noNewLines == 0)
+                    int noOfLines = Utilities.GetNumberOfLines(p.Text);
+                    if (noOfLines == 1)
                         text.Add(0x22); // 1 line?
                     else
                         text.Add(0x21); // 2 lines?

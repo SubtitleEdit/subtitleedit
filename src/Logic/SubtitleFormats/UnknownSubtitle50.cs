@@ -59,7 +59,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = p.Text;
-                if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
+                if (Utilities.GetNumberOfLines(text) > 2)
                     text = Utilities.AutoBreakLine(text);
                 text = HtmlUtil.RemoveHtmlTags(text, true);
                 if (p.Text.Contains("<i>"))

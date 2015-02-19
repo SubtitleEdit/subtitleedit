@@ -1729,13 +1729,13 @@ namespace Nikse.SubtitleEdit.Forms
                             if (prev == null || !prev.Text.Contains('"'))
                                 p.Text = "\"" + p.Text;
                         }
-                        else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.CountTagInText(p.Text, Environment.NewLine) == 1)
+                        else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.GetNumberOfLines(p.Text) == 2)
                         {
                             if (next == null || !next.Text.Contains('"'))
                                 p.Text = p.Text + "\"";
                         }
                         else if ((p.Text.Contains(Environment.NewLine + "\"") || p.Text.Contains(Environment.NewLine + "-\"") || p.Text.Contains(Environment.NewLine + "- \"")) &&
-                                 Utilities.CountTagInText(p.Text, Environment.NewLine) == 1 && p.Text.Length > 3)
+                                 Utilities.GetNumberOfLines(p.Text) == 2 && p.Text.Length > 3)
                         {
                             if (next == null || !next.Text.Contains('"'))
                             {
@@ -2846,7 +2846,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (Utilities.CountTagInText(p.Text, Environment.NewLine) > 1 && AllowFix(p, fixAction))
+                if (Utilities.GetNumberOfLines(p.Text) > 2 && AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
                     p.Text = Utilities.AutoBreakLine(p.Text);
