@@ -6682,11 +6682,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (e.Modifiers == Keys.Control && e.KeyCode == (Keys.LButton | Keys.ShiftKey))
                 return;
 
-            int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
+            int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewText.Text);
 
             //Utilities.CheckAutoWrap(textBoxListViewText, e, numberOfNewLines);
 
-            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
+            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
                 e.SuppressKeyPress = true;
             }
@@ -16430,11 +16430,11 @@ namespace Nikse.SubtitleEdit.Forms
             if (_subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count < 1)
                 return;
 
-            int numberOfNewLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
+            int numberOfLines = Utilities.GetNumberOfLines(textBoxListViewTextAlternate.Text);
 
             //Utilities.CheckAutoWrap(textBoxListViewTextAlternate, e, numberOfNewLines);
 
-            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfNewLines > 1)
+            if (e.KeyCode == Keys.Enter && e.Modifiers == Keys.None && numberOfLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
             {
                 e.SuppressKeyPress = true;
             }
