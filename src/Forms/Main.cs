@@ -6190,12 +6190,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var format = GetCurrentSubtitleFormat();
             bool useExtraForStyle = format.HasStyleSupport;
+            var formatType = format.GetType();
             var styles = new List<string>();
-            if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
+            if (formatType == typeof(AdvancedSubStationAlpha) || formatType == typeof(SubStationAlpha))
                 styles = AdvancedSubStationAlpha.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(TimedText10) || format.GetType() == typeof(ItunesTimedText))
+            else if (formatType == typeof(TimedText10) || formatType == typeof(ItunesTimedText))
                 styles = TimedText10.GetStylesFromHeader(_subtitle.Header);
-            else if (format.GetType() == typeof(Sami) || format.GetType() == typeof(SamiModern))
+            else if (formatType == typeof(Sami) || formatType == typeof(SamiModern))
                 styles = Sami.GetStylesFromHeader(_subtitle.Header);
             string style = "Default";
             if (styles.Count > 0)
@@ -6483,32 +6484,25 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonNextClick(object sender, EventArgs e)
         {
-            if (_subtitle.Paragraphs.Count > 0)
-            {
-                int firstSelectedIndex = 0;
-                if (SubtitleListview1.SelectedItems.Count > 0)
-                    firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
-
-                firstSelectedIndex++;
-                Paragraph p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                if (p != null)
-                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
-            }
+            MoveNextPrevious(0);
         }
 
         private void ButtonPreviousClick(object sender, EventArgs e)
         {
-            if (_subtitle.Paragraphs.Count > 0)
-            {
-                int firstSelectedIndex = 1;
-                if (SubtitleListview1.SelectedItems.Count > 0)
-                    firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+            MoveNextPrevious(1);
+        }
 
-                firstSelectedIndex--;
-                Paragraph p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
-                if (p != null)
-                    SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
-            }
+        private void MoveNextPrevious(int firstSelectedIndex)
+        {
+            if (_subtitle.Paragraphs.Count == 0)
+                return;
+            var temp = firstSelectedIndex;
+            if (SubtitleListview1.SelectedItems.Count > 0)
+                firstSelectedIndex = SubtitleListview1.SelectedItems[0].Index;
+            firstSelectedIndex = temp == 0 ? firstSelectedIndex + 1 : firstSelectedIndex - 1;
+            Paragraph p = _subtitle.GetParagraphOrDefault(firstSelectedIndex);
+            if (p != null)
+                SubtitleListview1.SelectIndexAndEnsureVisible(firstSelectedIndex);
         }
 
         private static string RemoveSsaStyle(string text)
@@ -6570,8 +6564,7 @@ namespace Nikse.SubtitleEdit.Forms
             IList<char> uCharList = new List<char>() { '♫', '♪', '☺', '☹', '♥', '©', '☮', '☯', 'Σ', '∞', '≡', '⇒', 'π' };
             foreach (char uChar in uCharList)
             {
-                var idx = text.IndexOf(uChar);
-                if (idx >= 0)
+                if (text.IndexOf(uChar) >= 0)
                     text = text.Replace(uChar, ' ');
             }
             text = text.Trim();
@@ -6625,11 +6618,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void FixVerticalScrollBars(TextBox tb)
         {
-            var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine) + 1;
-            if (lineCount > 3)
-                tb.ScrollBars = ScrollBars.Vertical;
-            else
-                tb.ScrollBars = ScrollBars.None;
+            tb.ScrollBars = Utilities.GetNumberOfLines(tb.Text) + 1 > 3 ? ScrollBars.Vertical : ScrollBars.None;
         }
 
         private void TextBoxListViewTextTextChanged(object sender, EventArgs e)
@@ -6717,7 +6706,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (textBoxListViewText.SelectionLength == 0)
                 {
-                    if (textBoxListViewText.Text.Contains("<i>"))
+                    if (textBoxListViewText.Text.Contains("<i>", StringComparison.Ordinal))
                     {
                         textBoxListViewText.Text = HtmlUtil.RemoveOpenCloseTags(textBoxListViewText.Text, HtmlUtil.TagItalic);
                     }
@@ -6751,29 +6740,23 @@ namespace Nikse.SubtitleEdit.Forms
                 GoToNextSynaxError();
                 e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSelectionToLower == e.KeyData) // selection to lowercase
+            else if (_mainTextBoxSelectionToLower == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to lowercase
             {
-                if (textBoxListViewText.SelectionLength > 0)
-                {
-                    int start = textBoxListViewText.SelectionStart;
-                    int length = textBoxListViewText.SelectionLength;
-                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
-                    textBoxListViewText.SelectionStart = start;
-                    textBoxListViewText.SelectionLength = length;
-                    e.SuppressKeyPress = true;
-                }
+                int start = textBoxListViewText.SelectionStart;
+                int length = textBoxListViewText.SelectionLength;
+                textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToLower();
+                textBoxListViewText.SelectionStart = start;
+                textBoxListViewText.SelectionLength = length;
+                e.SuppressKeyPress = true;
             }
-            else if (_mainTextBoxSelectionToUpper == e.KeyData) // selection to uppercase
+            else if (_mainTextBoxSelectionToUpper == e.KeyData && textBoxListViewText.SelectionLength > 0) // selection to uppercase
             {
-                if (textBoxListViewText.SelectionLength > 0)
-                {
-                    int start = textBoxListViewText.SelectionStart;
-                    int length = textBoxListViewText.SelectionLength;
-                    textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToUpper();
-                    textBoxListViewText.SelectionStart = start;
-                    textBoxListViewText.SelectionLength = length;
-                    e.SuppressKeyPress = true;
-                }
+                int start = textBoxListViewText.SelectionStart;
+                int length = textBoxListViewText.SelectionLength;
+                textBoxListViewText.SelectedText = textBoxListViewText.SelectedText.ToUpper();
+                textBoxListViewText.SelectionStart = start;
+                textBoxListViewText.SelectionLength = length;
+                e.SuppressKeyPress = true;
             }
             else if (_mainTextBoxToggleAutoDuration == e.KeyData) // toggle auto-duration
             {
@@ -6884,13 +6867,13 @@ namespace Nikse.SubtitleEdit.Forms
                         if (firstWord.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
-                            dialogMarker = (firstWord.StartsWith("- ") ? "- " : "-");
+                            dialogMarker = (firstWord.StartsWith("- ", StringComparison.Ordinal) ? "- " : "-");
                             // Remove the dialog marker from the first word.
                             firstWord = firstWord.Remove(0, dialogMarker.Length);
                         }
 
                         // If the second subtitle starts with "...":
-                        Boolean nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...");
+                        Boolean nextSubtitleStartsWithEllipsis = firstWord.StartsWith("...", StringComparison.Ordinal);
                         if (nextSubtitleStartsWithEllipsis)
                         {
                             // Remove "..." from the beginning of first word.
@@ -6994,7 +6977,7 @@ namespace Nikse.SubtitleEdit.Forms
                         if (next.Text.StartsWith('-'))
                         {
                             // Save the dialog marker ("-" or "- ").
-                            dialogMarker = (next.Text.StartsWith("- ") ? "- " : "-");
+                            dialogMarker = (next.Text.StartsWith("- ", StringComparison.Ordinal) ? "- " : "-");
                             // Remove the dialog marker from the next subtitle.
                             next.Text = next.Text.Remove(0, dialogMarker.Length);
                         }
@@ -18184,7 +18167,7 @@ namespace Nikse.SubtitleEdit.Forms
                 string fname = saveFileDialog1.FileName;
                 if (string.IsNullOrEmpty(fname))
                     fname = "ATS";
-                if (!fname.EndsWith(".txt"))
+                if (!fname.EndsWith(".txt", StringComparison.Ordinal))
                     fname += ".txt";
                 string fileNameTimeCode = fname.Insert(fname.Length - 4, "_timecode");
                 string fileNameText = fname.Insert(fname.Length - 4, "_text");
@@ -18257,7 +18240,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!extOk)
                             {
                                 if (fileName.EndsWith('.'))
-                                    fileName = fileName.Substring(0, _fileName.Length - 1);
+                                    fileName = fileName.TrimEnd('.');
                                 fileName += format.Extension;
                             }
 
@@ -18360,7 +18343,7 @@ namespace Nikse.SubtitleEdit.Forms
             var tmp = new Subtitle();
             var format = new SubRip();
             var list = new List<string>();
-            foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string line in text.SplitToLines())
                 list.Add(line);
             format.LoadSubtitle(tmp, list, null);
 
@@ -18373,7 +18356,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     if (tmp.Paragraphs.Count == 0)
                     {
-                        foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
+                        foreach (string line in text.SplitToLines())
                             tmp.Paragraphs.Add(new Paragraph(0, 0, line));
                     }
 
