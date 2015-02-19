@@ -295,7 +295,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Nächster Abstand in Sekunden</GapToNext>
     <BridgeGapsSmallerThanXPart1>Überbrücke Abstände kleiner als</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>Millisekunden</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. Millisekunden zwischen Text</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. Millisekunden zwischen Text</MinMillisecondsBetweenLines>
     <ProlongEndTime>Vorheriger Text nutzt Abstandszeit</ProlongEndTime>
     <DivideEven>Texte teilen Abstandszeit</DivideEven>
   </DurationsBridgeGaps>

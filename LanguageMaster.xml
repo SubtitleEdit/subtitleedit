@@ -300,7 +300,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Gap to next in seconds</GapToNext>
     <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milliseconds between lines</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milliseconds between lines</MinMillisecondsBetweenLines>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>

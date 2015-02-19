@@ -278,7 +278,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Buit següent</GapToNext>
     <BridgeGapsSmallerThanXPart1>Uneix buits més menuts de</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegons</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisegons entre línies</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisegons entre línies</MinMillisecondsBetweenLines>
     <ProlongEndTime>Text anterior pren tot el temps buit</ProlongEndTime>
     <DivideEven>Temps buit dividit entre texts</DivideEven>
   </DurationsBridgeGaps>

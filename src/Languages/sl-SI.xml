@@ -288,7 +288,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <GapToNext>Poveži na naslednjega v sekundah</GapToNext>
     <BridgeGapsSmallerThanXPart1>Poveži intervale manjše od</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekunde</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisekund med vrsticami</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisekund med vrsticami</MinMillisecondsBetweenLines>
     <ProlongEndTime>Prejšnje besedilo prevzame ves čas intervala</ProlongEndTime>
     <DivideEven>Besedilo deli čase intervala</DivideEven>
   </DurationsBridgeGaps>

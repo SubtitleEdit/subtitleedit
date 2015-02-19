@@ -777,8 +777,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart2":
                     language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2 = reader.Value;
                     break;
-                case "DurationsBridgeGaps/MinMsBetweenLines":
-                    language.DurationsBridgeGaps.MinMsBetweenLines = reader.Value;
+                case "DurationsBridgeGaps/MinMillisecondsBetweenLines":
+                    language.DurationsBridgeGaps.MinMillisecondsBetweenLines = reader.Value;
                     break;
                 case "DurationsBridgeGaps/ProlongEndTime":
                     language.DurationsBridgeGaps.ProlongEndTime = reader.Value;

@@ -282,7 +282,7 @@
     <GapToNext>ช่องว่างก่อนถึงเวลาถัดไปเป็นวินาที</GapToNext>
     <BridgeGapsSmallerThanXPart1>รวมช่องว่างที่น้อยกว่า</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>มิลลิวินาที</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>มิลลิวินาทีน้อยสุดระหว่างบรรทัด</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>มิลลิวินาทีน้อยสุดระหว่างบรรทัด</MinMillisecondsBetweenLines>
     <ProlongEndTime>ข้อความก่อนหน้าครอบคลุมช่องว่างหมดแล้ว</ProlongEndTime>
     <DivideEven>ข้อความแบ่งช่องว่างออกจากกัน</DivideEven>
   </DurationsBridgeGaps>
