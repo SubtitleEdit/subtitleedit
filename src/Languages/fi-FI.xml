@@ -272,7 +272,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Siltaa seuraavaan</GapToNext>
     <BridgeGapsSmallerThanXPart1>Siltaa välit, joiden kesto on alle</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisekuntia</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Rivien välinen minimiaika (ms.)</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Rivien välinen minimiaika (ms.)</MinMillisecondsBetweenLines>
     <ProlongEndTime>Täytä aikaväli edellisellä tekstillä</ProlongEndTime>
     <DivideEven>Jaa aikaväli tekstien kesken</DivideEven>
   </DurationsBridgeGaps>

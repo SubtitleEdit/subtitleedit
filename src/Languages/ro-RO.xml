@@ -282,7 +282,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <GapToNext>Pauză până la următoarea în secunde</GapToNext>
     <BridgeGapsSmallerThanXPart1>Pauze șuntate mai mici decât</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisecunde</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Milisecunde minime între linii</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Milisecunde minime între linii</MinMillisecondsBetweenLines>
     <ProlongEndTime>Textul precedent preia toată pauza</ProlongEndTime>
     <DivideEven>Textele divid timpul pauzei</DivideEven>
   </DurationsBridgeGaps>

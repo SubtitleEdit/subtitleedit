@@ -72,6 +72,7 @@
     <LineNumber>Line#</LineNumber>
     <Before>Before</Before>
     <After>After</After>
+    <Error>Error</Error>
     <Size>Size</Size>
   </General>
   <About>
@@ -169,11 +170,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Include sub folders</Recursive>
     <SetMinMsBetweenSubtitles>Set min. milliseconds between subtitles</SetMinMsBetweenSubtitles>
     <PlainText>Plain text</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>Filter</Filter>
     <FilterSkipped>Skipped by filter</FilterSkipped>
     <FilterSrtNoUtf8BOM>SubRip (.srt) files without UTF-8 BOM header</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>More than two lines in one subtitle</FilterMoreThanTwoLines>
     <FilterContains>Text contains...</FilterContains>
+    <FixCommonErrorsErrorX>Fix common errors: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Multiple replace: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Auto balance: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -295,7 +300,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Gap to next in seconds</GapToNext>
     <BridgeGapsSmallerThanXPart1>Bridge gaps smaller than</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliseconds</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milliseconds between lines</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milliseconds between lines</MinMillisecondsBetweenLines>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>

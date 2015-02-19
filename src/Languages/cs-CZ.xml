@@ -293,7 +293,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Mezera do dalšího v sekundách</GapToNext>
     <BridgeGapsSmallerThanXPart1>Překlenout mezery menší než</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisekund mezi řádky</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisekund mezi řádky</MinMillisecondsBetweenLines>
     <ProlongEndTime>Předchozí text zabere celý čas mezery</ProlongEndTime>
     <DivideEven>Texty si rozdělí čas mezery</DivideEven>
   </DurationsBridgeGaps>

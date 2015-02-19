@@ -281,7 +281,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <GapToNext>与下一行的间隔时间</GapToNext>
     <BridgeGapsSmallerThanXPart1>桥接的间隔时长小于</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>毫秒</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>行间最小毫秒数</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>行间最小毫秒数</MinMillisecondsBetweenLines>
     <ProlongEndTime>间隔时间分配给前一行</ProlongEndTime>
     <DivideEven>间隔时间均分给前后两行</DivideEven>
   </DurationsBridgeGaps>

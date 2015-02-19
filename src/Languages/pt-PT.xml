@@ -295,7 +295,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Ir para o próximo intervalo em segundos</GapToNext>
     <BridgeGapsSmallerThanXPart1>Colmatar os intervalos menores do que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milissegundos</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milissegundos entre as linhas</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milissegundos entre as linhas</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texto anterior com todos os tempos de intervalo</ProlongEndTime>
     <DivideEven>Texto divide o tempo do intervalo</DivideEven>
   </DurationsBridgeGaps>

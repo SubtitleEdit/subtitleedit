@@ -295,7 +295,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Przerwa do następnego w sekundach</GapToNext>
     <BridgeGapsSmallerThanXPart1>Mostkuj przerwy mniejsze niż</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisekund między liniami</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisekund między liniami</MinMillisecondsBetweenLines>
     <ProlongEndTime>Poprzedni tekst zajmuje cały czas przerwy</ProlongEndTime>
     <DivideEven>Teksty rozdzielane są czasem trwania przerwy</DivideEven>
   </DurationsBridgeGaps>
