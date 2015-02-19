@@ -713,7 +713,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (bluRaySubtitles.Count > 0)
                         {
-                            item.SubItems[3].Text = "OCR...";
+                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
                             {
                                 vobSubOcr.FileName = Path.GetFileName(fileName);
@@ -723,7 +723,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (isVobSub)
                         {
-                            item.SubItems[3].Text = "OCR...";
+                            item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.Ocr;
                             using (var vobSubOcr = new VobSubOcr())
                             {
                                 vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr);
@@ -891,7 +891,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    p.Error = "FCE ERROR: " + exception.Message;
+                    p.Error = string.Format(Configuration.Settings.Language.BatchConvert.FixCommonErrorsErrorX, exception.Message);
                 }
             }
             if (p.MultipleReplaceActive)
@@ -912,7 +912,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    p.Error = "MultipleReplace error: " + exception.Message;
+                    p.Error = string.Format(Configuration.Settings.Language.BatchConvert.MultipleReplaceErrorX, exception.Message);
                 }
             }
             if (p.SplitLongLinesActive)
@@ -923,7 +923,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    p.Error = "AutoBalance error: " + exception.Message;
+                    p.Error = string.Format(Configuration.Settings.Language.BatchConvert.AutoBalanceErrorX, exception.Message);
                 }
             }
             if (p.AutoBalanceActive)
@@ -935,7 +935,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 catch (Exception exception)
                 {
-                    p.Error = "AutoBalance error: " + exception.Message;
+                    p.Error = string.Format(Configuration.Settings.Language.BatchConvert.AutoBalanceErrorX, exception.Message);
                 }
             }
             if (p.SetMinDisplayTimeBetweenSubtitles)
@@ -982,7 +982,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    p.Item.SubItems[3].Text = "ERROR";
+                    p.Item.SubItems[3].Text = Configuration.Settings.Language.General.Error;
                 }
                 IncrementAndShowProgress();
                 if (progressBar1.Value == progressBar1.Maximum)

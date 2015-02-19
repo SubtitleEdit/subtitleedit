@@ -264,6 +264,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/After":
                     language.General.After = reader.Value;
                     break;
+                case "General/Error":
+                    language.General.Error = reader.Value;
+                    break;
                 case "General/Size":
                     language.General.Size = reader.Value;
                     break;
@@ -468,6 +471,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/PlainText":
                     language.BatchConvert.PlainText = reader.Value;
                     break;
+                case "BatchConvert/Ocr":
+                    language.BatchConvert.Ocr = reader.Value;
+                    break;
                 case "BatchConvert/Filter":
                     language.BatchConvert.Filter = reader.Value;
                     break;
@@ -482,6 +488,15 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BatchConvert/FilterContains":
                     language.BatchConvert.FilterContains = reader.Value;
+                    break;
+                case "BatchConvert/FixCommonErrorsErrorX":
+                    language.BatchConvert.FixCommonErrorsErrorX = reader.Value;
+                    break;
+                case "BatchConvert/MultipleReplaceErrorX":
+                    language.BatchConvert.MultipleReplaceErrorX = reader.Value;
+                    break;
+                case "BatchConvert/AutoBalanceErrorX":
+                    language.BatchConvert.AutoBalanceErrorX = reader.Value;
                     break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
@@ -762,8 +777,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart2":
                     language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2 = reader.Value;
                     break;
-                case "DurationsBridgeGaps/MinMsBetweenLines":
-                    language.DurationsBridgeGaps.MinMsBetweenLines = reader.Value;
+                case "DurationsBridgeGaps/MinMillisecondsBetweenLines":
+                    language.DurationsBridgeGaps.MinMillisecondsBetweenLines = reader.Value;
                     break;
                 case "DurationsBridgeGaps/ProlongEndTime":
                     language.DurationsBridgeGaps.ProlongEndTime = reader.Value;

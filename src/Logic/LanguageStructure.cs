@@ -76,6 +76,7 @@
             public string LineNumber { get; set; }
             public string Before { get; set; }
             public string After { get; set; }
+            public string Error { get; set; }
             public string Size { get; set; }
         }
 
@@ -184,11 +185,15 @@
             public string Recursive { get; set; }
             public string SetMinMsBetweenSubtitles { get; set; }
             public string PlainText { get; set; }
+            public string Ocr { get; set; }
             public string Filter  { get; set; }
             public string FilterSkipped  { get; set; }
             public string FilterSrtNoUtf8BOM { get; set; }
             public string FilterMoreThanTwoLines  { get; set; }
             public string FilterContains  { get; set; }
+            public string FixCommonErrorsErrorX { get; set; }
+            public string MultipleReplaceErrorX { get; set; }
+            public string AutoBalanceErrorX { get; set; }
         }
 
         public class Beamer
@@ -338,7 +343,7 @@
             public string GapToNext { get; set; }
             public string BridgeGapsSmallerThanXPart1 { get; set; }
             public string BridgeGapsSmallerThanXPart2 { get; set; }
-            public string MinMsBetweenLines { get; set; }
+            public string MinMillisecondsBetweenLines { get; set; }
             public string ProlongEndTime { get; set; }
             public string DivideEven { get; set; }
         }

@@ -282,7 +282,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Ecart prochain en secondes</GapToNext>
     <BridgeGapsSmallerThanXPart1>Combler les espaces plus petits que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisecondes</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Minimum de millisecondes entre les lignes</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Minimum de millisecondes entre les lignes</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texte précédent prend tous le temps de l'espace</ProlongEndTime>
     <DivideEven>Textes partages le temps de l'espace</DivideEven>
   </DurationsBridgeGaps>

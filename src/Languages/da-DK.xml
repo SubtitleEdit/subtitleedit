@@ -288,7 +288,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Gap til næste</GapToNext>
     <BridgeGapsSmallerThanXPart1>Lap huller mindre end</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisekunder</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. millisekunder mellem linjer</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. millisekunder mellem linjer</MinMillisecondsBetweenLines>
     <ProlongEndTime>Forrige tekst tager alle tiden</ProlongEndTime>
     <DivideEven>Tid deles</DivideEven>
   </DurationsBridgeGaps>

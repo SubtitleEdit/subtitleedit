@@ -181,6 +181,7 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumber = "Line#",
                 Before = "Before",
                 After = "After",
+                Error = "Error",
                 Size = "Size",
             };
 
@@ -298,11 +299,15 @@ namespace Nikse.SubtitleEdit.Logic
                 Recursive = "Include sub folders",
                 SetMinMsBetweenSubtitles = "Set min. milliseconds between subtitles",
                 PlainText = "Plain text",
+                Ocr = "OCR...",
                 Filter = "Filter",
                 FilterSkipped = "Skipped by filter",
                 FilterSrtNoUtf8BOM = "SubRip (.srt) files without UTF-8 BOM header",
                 FilterMoreThanTwoLines = "More than two lines in one subtitle",
                 FilterContains = "Text contains...",
+                FixCommonErrorsErrorX = "Fix common errors: {0}",
+                MultipleReplaceErrorX = "Multiple replace: {0}",
+                AutoBalanceErrorX = "Auto balance: {0}",
             };
 
             Beamer = new LanguageStructure.Beamer
@@ -452,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic
                 GapToNext = "Gap to next in seconds",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
-                MinMsBetweenLines = "Min. milliseconds between lines",
+                MinMillisecondsBetweenLines = "Min. milliseconds between lines",
                 ProlongEndTime = "Previous text takes all gap time",
                 DivideEven = "Texts divides gap time",
             };

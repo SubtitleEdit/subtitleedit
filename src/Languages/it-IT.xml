@@ -282,7 +282,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Spazio vuoto al successivo</GapToNext>
     <BridgeGapsSmallerThanXPart1>Riempi spazi vuoti più piccoli di</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisecondi</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Millisec. min. tra le linee</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Millisec. min. tra le linee</MinMillisecondsBetweenLines>
     <ProlongEndTime>Il testo precedente prende tutto il tempo di vuoto</ProlongEndTime>
     <DivideEven>I testi si suddividono il tempo vuoto</DivideEven>
   </DurationsBridgeGaps>

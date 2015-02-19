@@ -32,7 +32,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxMs.Left = labelBridgePart1.Left + labelBridgePart1.Width + 4;
             labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
             labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
-            labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines;
+            labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMillisecondsBetweenLines;
             numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;

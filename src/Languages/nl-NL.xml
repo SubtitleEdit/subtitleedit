@@ -295,7 +295,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Hiaat naar volgende</GapToNext>
     <BridgeGapsSmallerThanXPart1>Hiaten kleiner dan</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliseconden overbruggen</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milliseconden tussen teksten</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milliseconden tussen teksten</MinMillisecondsBetweenLines>
     <ProlongEndTime>Hiaattĳd toewĳzen aan vorige tekst</ProlongEndTime>
     <DivideEven>Hiaattĳd verdelen over beide teksten</DivideEven>
   </DurationsBridgeGaps>
