@@ -277,7 +277,7 @@ Post@: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Hutsartetu hurrengora</GapToNext>
     <BridgeGapsSmallerThanXPart1>Zubitu hutsarte txikiagoak:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>segundumilaen</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Gutx. segundumilaen lerroen artean</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Gutx. segundumilaen lerroen artean</MinMillisecondsBetweenLines>
     <ProlongEndTime>Aurreko idazkiak hutsarte denbora guztia hartzen du</ProlongEndTime>
     <DivideEven>Idazkiak hutsarte denbora zatitzen du</DivideEven>
   </DurationsBridgeGaps>

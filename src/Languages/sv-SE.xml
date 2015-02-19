@@ -278,7 +278,7 @@ E-post: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Lucka till nästa i sekunder</GapToNext>
     <BridgeGapsSmallerThanXPart1>Brygga luckor mindre än</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisekunder</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. millisekunder mellan rader</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. millisekunder mellan rader</MinMillisecondsBetweenLines>
     <ProlongEndTime>Föregående text tar all tidslucka</ProlongEndTime>
     <DivideEven>Text uppdelar tidsluckor</DivideEven>
   </DurationsBridgeGaps>

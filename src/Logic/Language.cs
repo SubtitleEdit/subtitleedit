@@ -457,7 +457,7 @@ namespace Nikse.SubtitleEdit.Logic
                 GapToNext = "Gap to next in seconds",
                 BridgeGapsSmallerThanXPart1 = "Bridge gaps smaller than",
                 BridgeGapsSmallerThanXPart2 = "milliseconds",
-                MinMsBetweenLines = "Min. milliseconds between lines",
+                MinMillisecondsBetweenLines = "Min. milliseconds between lines",
                 ProlongEndTime = "Previous text takes all gap time",
                 DivideEven = "Texts divides gap time",
             };

@@ -284,7 +284,7 @@ https://github.com/SubtitleEdit/subtitleedit
     <GapToNext>К следующему разрыву в сек.</GapToNext>
     <BridgeGapsSmallerThanXPart1>Убрать разрывы менее</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>миллисекунд</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Минимум мс между строками</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Минимум мс между строками</MinMillisecondsBetweenLines>
     <ProlongEndTime>Занять время разрыва предыдущим текстом</ProlongEndTime>
     <DivideEven>Разделить тексты временным разрывом</DivideEven>
   </DurationsBridgeGaps>

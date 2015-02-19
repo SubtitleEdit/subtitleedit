@@ -281,7 +281,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Κενό για το επόμενο σε δευτερόλεπτα</GapToNext>
     <BridgeGapsSmallerThanXPart1>Γεφύρωση κενών μικρότερων από</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>χιλιοστά δευτερολέπτου</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Ελάχιστα χιλ. δευτερολέπτου μεταξύ των γραμμών</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Ελάχιστα χιλ. δευτερολέπτου μεταξύ των γραμμών</MinMillisecondsBetweenLines>
     <ProlongEndTime>Το προηγούμενο κείμενο παίρνει όλα τα κενά χρόνου</ProlongEndTime>
     <DivideEven>Το κείμενο χωρίζει τα κενά χρόνου</DivideEven>
   </DurationsBridgeGaps>

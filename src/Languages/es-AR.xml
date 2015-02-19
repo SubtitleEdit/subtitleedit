@@ -257,7 +257,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Brecha para el siguiente en segundos</GapToNext>
     <BridgeGapsSmallerThanXPart1>Brechas puente más pequeño que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisegundos entre líneas</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisegundos entre líneas</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texto anterior se lleva todo el tiempo brecha</ProlongEndTime>
     <DivideEven>Textos divide el tiempo brecha</DivideEven>
   </DurationsBridgeGaps>

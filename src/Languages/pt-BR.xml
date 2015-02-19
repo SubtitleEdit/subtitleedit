@@ -282,7 +282,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>No próximo intervalo</GapToNext>
     <BridgeGapsSmallerThanXPart1>Ligar intervalos menores que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Mín. milisegundos entre linhas</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Mín. milisegundos entre linhas</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texto anterior assume todo o intervalo</ProlongEndTime>
     <DivideEven>Texto divide o intervalo</DivideEven>
   </DurationsBridgeGaps>

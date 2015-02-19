@@ -282,7 +282,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Sonraki boşluklar</GapToNext>
     <BridgeGapsSmallerThanXPart1>daha küçük boşluk köprüle</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>mili saniyeler</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Satırlar arasında minimum milisaniye</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Satırlar arasında minimum milisaniye</MinMillisecondsBetweenLines>
     <ProlongEndTime>Bir önceki metin tüm boşlukları alır</ProlongEndTime>
     <DivideEven>Metinler arası boşluk süresi</DivideEven>
   </DurationsBridgeGaps>
