@@ -89,7 +89,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             success = true;
                         }
                     }
-                    if (!isTimeCode && !string.IsNullOrWhiteSpace(line) && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                    if (!isTimeCode && !string.IsNullOrWhiteSpace(line) && lastParagraph != null && Utilities.GetNumberOfLines(lastParagraph.Text) < 5)
                     {
                         lastParagraph.Text = (lastParagraph.Text + Environment.NewLine + line).Trim();
                         success = true;

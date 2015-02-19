@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         success = true;
                     }
                 }
-                else if (lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                else if (lastParagraph != null && Utilities.GetNumberOfLines(lastParagraph.Text) < 5)
                 {
                     lastParagraph.Text += Environment.NewLine + line.Trim();
                     success = true;

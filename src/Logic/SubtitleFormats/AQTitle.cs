@@ -53,10 +53,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 string text = Utilities.RemoveSsaTags(p.Text);
-                int newLines = Utilities.CountTagInText(text, Environment.NewLine);
-                if (newLines > 1)
+                int noOfLines = Utilities.GetNumberOfLines(text);
+                if (noOfLines > 2)
                     text = Utilities.AutoBreakLine(text);
-                else if (newLines == 0)
+                else if (noOfLines == 1)
                     text += Environment.NewLine;
 
                 sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), text, Environment.NewLine));

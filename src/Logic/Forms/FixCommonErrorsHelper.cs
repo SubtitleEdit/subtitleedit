@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var idx = text.IndexOfAny(stringArray, StringComparison.Ordinal);
             if (idx >= 0)
             {
-                if (Utilities.CountTagInText(text, Environment.NewLine) == 1)
+                if (Utilities.GetNumberOfLines(text) == 2)
                 {
                     string temp = Utilities.AutoBreakLine(text, 99, 33, language);
                     var arr = text.SplitToLines();
@@ -156,7 +156,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             text = temp;
                     }
                 }
-                else if (Utilities.CountTagInText(text, Environment.NewLine) == 0)
+                else if (Utilities.GetNumberOfLines(text) == 1)
                 {
                     string temp = Utilities.AutoBreakLine(text, language);
                     var arrTemp = temp.SplitToLines();
