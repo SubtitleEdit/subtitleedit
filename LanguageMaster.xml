@@ -72,7 +72,6 @@
     <LineNumber>Line#</LineNumber>
     <Before>Before</Before>
     <After>After</After>
-    <Error>Error</Error>
     <Size>Size</Size>
   </General>
   <About>
@@ -160,6 +159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Convert</Convert>
     <NothingToConvert>Nothing to convert!</NothingToConvert>
     <PleaseChooseOutputFolder>Please choose output folder</PleaseChooseOutputFolder>
+    <NotConverted>Failed</NotConverted>
     <Converted>Converted</Converted>
     <ConvertedX>Converted ({0})</ConvertedX>
     <Settings>Settings</Settings>

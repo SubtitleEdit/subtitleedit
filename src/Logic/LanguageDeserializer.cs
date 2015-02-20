@@ -264,9 +264,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/After":
                     language.General.After = reader.Value;
                     break;
-                case "General/Error":
-                    language.General.Error = reader.Value;
-                    break;
                 case "General/Size":
                     language.General.Size = reader.Value;
                     break;
@@ -440,6 +437,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BatchConvert/PleaseChooseOutputFolder":
                     language.BatchConvert.PleaseChooseOutputFolder = reader.Value;
+                    break;
+                case "BatchConvert/NotConverted":
+                    language.BatchConvert.NotConverted = reader.Value;
                     break;
                 case "BatchConvert/Converted":
                     language.BatchConvert.Converted = reader.Value;

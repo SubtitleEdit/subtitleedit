@@ -181,7 +181,6 @@ namespace Nikse.SubtitleEdit.Logic
                 LineNumber = "Line#",
                 Before = "Before",
                 After = "After",
-                Error = "Error",
                 Size = "Size",
             };
 
@@ -288,6 +287,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Style = "Style...",
                 NothingToConvert = "Nothing to convert!",
                 PleaseChooseOutputFolder = "Please choose output folder",
+                NotConverted = "Failed",
                 Converted = "Converted",
                 ConvertedX = "Converted ({0})",
                 Settings = "Settings",
