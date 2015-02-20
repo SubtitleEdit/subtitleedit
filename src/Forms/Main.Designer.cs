@@ -2962,7 +2962,7 @@
             "15"});
             this.comboBoxAutoContinue.Location = new System.Drawing.Point(6, 59);
             this.comboBoxAutoContinue.Name = "comboBoxAutoContinue";
-            this.comboBoxAutoContinue.Size = new System.Drawing.Size(91, 21);
+            this.comboBoxAutoContinue.Size = new System.Drawing.Size(96, 21);
             this.comboBoxAutoContinue.TabIndex = 2;
             // 
             // labelAutoContinueDelay
@@ -3055,7 +3055,7 @@
             this.buttonPlayPrevious.Name = "buttonPlayPrevious";
             this.buttonPlayPrevious.Size = new System.Drawing.Size(75, 21);
             this.buttonPlayPrevious.TabIndex = 2;
-            this.buttonPlayPrevious.Text = "<< Prevoius";
+            this.buttonPlayPrevious.Text = "<< Previous";
             this.buttonPlayPrevious.UseVisualStyleBackColor = true;
             this.buttonPlayPrevious.Click += new System.EventHandler(this.buttonPlayPrevious_Click);
             // 
