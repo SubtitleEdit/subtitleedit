@@ -361,7 +361,6 @@ namespace Nikse.SubtitleEdit.Forms
                             format = avidStl;
                         }
                     }
-
                 }
 
                 if (format == null)
@@ -420,9 +419,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 listViewInputFiles.Items.Add(item);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
@@ -474,8 +471,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private SubtitleFormat GetCurrentSubtitleFormat()
         {
-            var format = Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString());
-            return format ?? new SubRip();
+            return Utilities.GetSubtitleFormatByFriendlyName(comboBoxSubtitleFormats.SelectedItem.ToString()) ?? new SubRip();
         }
 
         private void buttonConvert_Click(object sender, EventArgs e)
@@ -655,8 +651,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
                             {
-                                if (sub.Paragraphs[0].Text.StartsWith("29.") || sub.Paragraphs[0].Text.StartsWith("23.") ||
-                                sub.Paragraphs[0].Text.StartsWith("29,") || sub.Paragraphs[0].Text.StartsWith("23,") ||
+                                if (sub.Paragraphs[0].Text.StartsWith("29.", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23.", StringComparison.Ordinal) ||
+                                sub.Paragraphs[0].Text.StartsWith("29,", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23,", StringComparison.Ordinal) ||
                                 sub.Paragraphs[0].Text == "24" || sub.Paragraphs[0].Text == "25" ||
                                 sub.Paragraphs[0].Text == "30" || sub.Paragraphs[0].Text == "60")
                                     sub.Paragraphs.RemoveAt(0);
@@ -746,7 +742,6 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else
                         {
-
                             foreach (Paragraph p in sub.Paragraphs)
                             {
                                 if (checkBoxRemoveTextForHI.Checked)
@@ -756,10 +751,10 @@ namespace Nikse.SubtitleEdit.Forms
                                 if (checkBoxRemoveFormatting.Checked)
                                 {
                                     p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
-                                    if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[5] == '}')
-                                        p.Text = p.Text.Remove(0, 6);
-                                    if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[4] == '}')
-                                        p.Text = p.Text.Remove(0, 5);
+                                    if (p.Text.Length > 6 && p.Text[0] == '{' && (p.Text[4] == '}' || p.Text[5] == '}'))
+                                    {
+                                        p.Text = p.Text.Remove(0, p.Text[4] == '}' ? 5 : 6);
+                                    }
                                 }
                             }
                             sub.RemoveEmptyLines();
@@ -810,9 +805,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Application.DoEvents();
                 }
-                catch
-                {
-                }
+                catch { }
                 System.Threading.Thread.Sleep(100);
             }
             _converting = false;
@@ -992,14 +985,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ComboBoxSubtitleFormatsSelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name || comboBoxSubtitleFormats.Text == new SubStationAlpha().Name)
-            {
-                buttonStyles.Visible = true;
-            }
-            else
-            {
-                buttonStyles.Visible = false;
-            }
+            buttonStyles.Visible = comboBoxSubtitleFormats.Text == new AdvancedSubStationAlpha().Name || comboBoxSubtitleFormats.Text == new SubStationAlpha().Name;
             _assStyle = null;
             _ssaStyle = null;
         }
@@ -1265,9 +1251,7 @@ namespace Nikse.SubtitleEdit.Forms
                             return;
                     }
                 }
-                catch
-                {
-                }
+                catch { }
             }
             if (checkBoxScanFolderRecursive.Checked)
             {
@@ -1292,8 +1276,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (e.KeyCode == Keys.Escape && _converting)
                 _abort = true;
+            else if (e.KeyCode == Keys.Escape)
+                this.Close();
         }
 
         private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
@@ -1309,6 +1295,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             textBoxFilter.Visible = comboBoxFilter.SelectedIndex == 3;
         }
-
     }
 }
