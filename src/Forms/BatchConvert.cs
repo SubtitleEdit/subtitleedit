@@ -124,15 +124,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
 
-            comboBoxFrameRateFrom.Items.Add((23.976).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateFrom.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateFrom.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateFrom.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateFrom.Items.Add(23.976);
+            comboBoxFrameRateFrom.Items.Add(24.0);
+            comboBoxFrameRateFrom.Items.Add(25.0);
+            comboBoxFrameRateFrom.Items.Add(29.97);
 
-            comboBoxFrameRateTo.Items.Add((23.976).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateTo.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateTo.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateTo.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateTo.Items.Add(23.976);
+            comboBoxFrameRateTo.Items.Add(24.0);
+            comboBoxFrameRateTo.Items.Add(25.0);
+            comboBoxFrameRateTo.Items.Add(29.97);
 
             FixLargeFonts();
 
