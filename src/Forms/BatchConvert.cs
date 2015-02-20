@@ -71,30 +71,30 @@ namespace Nikse.SubtitleEdit.Forms
 
             progressBar1.Visible = false;
             labelStatus.Text = string.Empty;
-            var l = Configuration.Settings.Language.BatchConvert;
-            Text = l.Title;
-            groupBoxInput.Text = l.Input;
-            labelChooseInputFiles.Text = l.InputDescription;
-            groupBoxOutput.Text = l.Output;
-            labelChooseOutputFolder.Text = l.ChooseOutputFolder;
-            checkBoxOverwrite.Text = l.OverwriteExistingFiles;
+            var lang = Configuration.Settings.Language.BatchConvert;
+            Text = lang.Title;
+            groupBoxInput.Text = lang.Input;
+            labelChooseInputFiles.Text = lang.InputDescription;
+            groupBoxOutput.Text = lang.Output;
+            labelChooseOutputFolder.Text = lang.ChooseOutputFolder;
+            checkBoxOverwrite.Text = lang.OverwriteExistingFiles;
             labelOutputFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             labelEncoding.Text = Configuration.Settings.Language.Main.Controls.FileEncoding;
-            buttonStyles.Text = l.Style;
-            groupBoxConvertOptions.Text = l.ConvertOptions;
-            checkBoxRemoveFormatting.Text = l.RemoveFormatting;
-            checkBoxFixCasing.Text = l.RedoCasing;
-            checkBoxRemoveTextForHI.Text = l.RemoveTextForHI;
-            checkBoxOverwriteOriginalFiles.Text = l.OverwriteOriginalFiles;
+            buttonStyles.Text = lang.Style;
+            groupBoxConvertOptions.Text = lang.ConvertOptions;
+            checkBoxRemoveFormatting.Text = lang.RemoveFormatting;
+            checkBoxFixCasing.Text = lang.RedoCasing;
+            checkBoxRemoveTextForHI.Text = lang.RemoveTextForHI;
+            checkBoxOverwriteOriginalFiles.Text = lang.OverwriteOriginalFiles;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderFormat.Text = Configuration.Settings.Language.Main.Controls.SubtitleFormat;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
-            columnHeaderStatus.Text = l.Status;
+            columnHeaderStatus.Text = lang.Status;
             linkLabelOpenOutputFolder.Text = Configuration.Settings.Language.Main.Menu.File.Open;
-            buttonSearchFolder.Text = l.ScanFolder;
-            buttonConvert.Text = l.Convert;
+            buttonSearchFolder.Text = lang.ScanFolder;
+            buttonConvert.Text = lang.Convert;
             buttonCancel.Text = Configuration.Settings.Language.General.Ok;
-            checkBoxScanFolderRecursive.Text = l.Recursive;
+            checkBoxScanFolderRecursive.Text = lang.Recursive;
             checkBoxScanFolderRecursive.Left = buttonSearchFolder.Left - checkBoxScanFolderRecursive.Width - 5;
 
             groupBoxChangeFrameRate.Text = Configuration.Settings.Language.ChangeFrameRate.Title;
@@ -152,7 +152,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             comboBoxSubtitleFormats.SelectedIndex = selectedFormatIndex;
-            comboBoxSubtitleFormats.Items.Add(l.PlainText);
+            comboBoxSubtitleFormats.Items.Add(lang.PlainText);
 
             comboBoxEncoding.Items.Clear();
             int encodingSelectedIndex = 0;
@@ -182,24 +182,24 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxRemoveFormatting.Checked = Configuration.Settings.Tools.BatchConvertRemoveFormatting;
             checkBoxRemoveTextForHI.Checked = Configuration.Settings.Tools.BatchConvertRemoveTextForHI;
             checkBoxSetMinimumDisplayTimeBetweenSubs.Checked = Configuration.Settings.Tools.BatchConvertSetMinDisplayTimeBetweenSubtitles;
-            buttonRemoveTextForHiSettings.Text = l.Settings;
-            buttonFixCommonErrorSettings.Text = l.Settings;
-            buttonMultipleReplaceSettings.Text = l.Settings;
+            buttonRemoveTextForHiSettings.Text = lang.Settings;
+            buttonFixCommonErrorSettings.Text = lang.Settings;
+            buttonMultipleReplaceSettings.Text = lang.Settings;
             checkBoxFixCommonErrors.Text = Configuration.Settings.Language.FixCommonErrors.Title;
             checkBoxMultipleReplace.Text = Configuration.Settings.Language.MultipleReplace.Title;
-            checkBoxAutoBalance.Text = l.AutoBalance;
-            checkBoxSplitLongLines.Text = l.SplitLongLines;
+            checkBoxAutoBalance.Text = lang.AutoBalance;
+            checkBoxSplitLongLines.Text = lang.SplitLongLines;
             radioButtonShowEarlier.Text = Configuration.Settings.Language.ShowEarlierLater.ShowEarlier;
             radioButtonShowLater.Text = Configuration.Settings.Language.ShowEarlierLater.ShowLater;
-            checkBoxSetMinimumDisplayTimeBetweenSubs.Text = l.SetMinMsBetweenSubtitles;
+            checkBoxSetMinimumDisplayTimeBetweenSubs.Text = lang.SetMinMsBetweenSubtitles;
 
             _removeTextForHearingImpaired = new Logic.Forms.RemoveTextForHI(new Logic.Forms.RemoveTextForHISettings());
 
-            labelFilter.Text = l.Filter;
+            labelFilter.Text = lang.Filter;
             comboBoxFilter.Items[0] = Configuration.Settings.Language.General.AllFiles;
-            comboBoxFilter.Items[1] = l.FilterSrtNoUtf8BOM;
-            comboBoxFilter.Items[2] = l.FilterMoreThanTwoLines;
-            comboBoxFilter.Items[3] = l.FilterContains;
+            comboBoxFilter.Items[1] = lang.FilterSrtNoUtf8BOM;
+            comboBoxFilter.Items[2] = lang.FilterMoreThanTwoLines;
+            comboBoxFilter.Items[3] = lang.FilterContains;
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
