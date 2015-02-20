@@ -253,13 +253,13 @@ namespace Nikse.SubtitleEdit.Forms
                         return;
                 }
 
-                var fi = new FileInfo(fileName);
+                var fLen = new FileInfo(fileName).Length;
                 var item = new ListViewItem(fileName);
-                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fi.Length));
+                item.SubItems.Add(Utilities.FormatBytesToDisplayFileSize(fLen));
 
                 SubtitleFormat format = null;
                 var sub = new Subtitle();
-                if (fi.Length < 1024 * 1024) // max 1 mb
+                if (fLen < 1024 * 1024) // max 1 mb
                 {
                     Encoding encoding;
                     format = sub.LoadSubtitle(fileName, out encoding, null);
