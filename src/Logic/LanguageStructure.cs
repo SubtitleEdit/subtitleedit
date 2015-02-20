@@ -76,7 +76,6 @@
             public string LineNumber { get; set; }
             public string Before { get; set; }
             public string After { get; set; }
-            public string Error { get; set; }
             public string Size { get; set; }
         }
 
@@ -175,6 +174,7 @@
             public string Convert { get; set; }
             public string NothingToConvert { get; set; }
             public string PleaseChooseOutputFolder { get; set; }
+            public string NotConverted { get; set; }
             public string Converted { get; set; }
             public string ConvertedX { get; set; }
             public string Settings { get; set; }
