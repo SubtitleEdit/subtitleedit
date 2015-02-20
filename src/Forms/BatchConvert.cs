@@ -982,7 +982,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    p.Item.SubItems[3].Text = Configuration.Settings.Language.General.Error;
+                    p.Item.SubItems[3].Text = Configuration.Settings.Language.BatchConvert.NotConverted;
                 }
                 IncrementAndShowProgress();
                 if (progressBar1.Value == progressBar1.Maximum)
