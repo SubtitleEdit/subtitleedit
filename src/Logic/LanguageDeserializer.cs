@@ -2577,6 +2577,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadSrr":
                     language.Main.ErrorLoadSrr = reader.Value;
                     break;
+                case "Main/ErrorLoadTorrent":
+                    language.Main.ErrorLoadTorrent = reader.Value;
+                    break;
                 case "Main/NoSupportEncryptedVobSub":
                     language.Main.NoSupportEncryptedVobSub = reader.Value;
                     break;
