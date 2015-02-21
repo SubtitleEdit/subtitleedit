@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core
         public const string TagFont = "font";
         public const string TagCyrillicI = "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
-        private static readonly Regex _tagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
+        private static readonly Regex TagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
 
         /// <summary>
         /// Remove all of the specified opening and closing tags from the source HTML string.
@@ -35,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core
             // < /tag*>
             // </ tag*>
             // < / tag*>
-            return _tagOpenRegex.Replace(
+            return TagOpenRegex.Replace(
                 source,
                 m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value);
         }
@@ -365,7 +365,7 @@ namespace Nikse.SubtitleEdit.Core
             if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
                 s = Utilities.FixInvalidItalicTags(s);
 
-            return HtmlUtil.RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
+            return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
         }
 
         public static string RemoveHtmlTags(string s, bool alsoSsaTags)
@@ -379,6 +379,33 @@ namespace Nikse.SubtitleEdit.Core
                 s = Utilities.RemoveSsaTags(s);
 
             return s;
+        }
+
+        public static bool IsUrl(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains(".") || text.Contains(" "))
+                return false;
+
+            var allLower = text.ToLower();
+            if (allLower.StartsWith("http://") || allLower.StartsWith("https://") || allLower.StartsWith("www.") || allLower.EndsWith(".org") || allLower.EndsWith(".com") || allLower.EndsWith(".net"))
+                return true;
+
+            if (allLower.Contains(".org/") || allLower.Contains(".com/") || allLower.Contains(".net/"))
+                return true;
+
+            return false;
+        }
+
+        public static bool StartsWithUrl(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return false;
+
+            var arr = text.Trim().TrimEnd('.').TrimEnd().Split();
+            if (arr.Length == 0)
+                return false;
+
+            return IsUrl(arr[0]);
         }
     }
 }
