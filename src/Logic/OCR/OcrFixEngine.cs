@@ -836,7 +836,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
                     {
-                        if (!StartsWithUrl(st.StrippedText))
+                        if (!HtmlUtil.StartsWithUrl(st.StrippedText))
                         {
                             var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
                             if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
@@ -930,34 +930,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return input;
-        }
-
-        private static bool IsUrl(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains(".") || text.Contains(" "))
-                return false;
-
-            var allLower = text.ToLower();
-            if (allLower.StartsWith("www.") || allLower.EndsWith(".org") || allLower.EndsWith(".com") || allLower.EndsWith(".net"))
-                return true;
-
-            if (allLower.Contains(".org/") || allLower.Contains(".com/") || allLower.Contains(".net/"))
-                return true;
-
-            return false;
-        }
-
-        private static bool StartsWithUrl(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return false;
-
-            var arr = text.Trim().TrimEnd('.').TrimEnd().Split();
-            if (arr.Length == 0)
-                return false;
-
-            return IsUrl(arr[0]);
-        }
+        }       
 
         public string FixOcrErrorViaLineReplaceList(string input)
         {
