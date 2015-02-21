@@ -890,9 +890,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Texto cronometrado - Definir estilo</TimedTextSetStyle>
         <TimedTextStyles>Texto cronometrado estilos...</TimedTextStyles>
-        <TimedTextSetLanguage>Texto cronometrado - definir o idioma</TimedTextSetLanguage>
+        <TimedTextSetLanguage>Texto cronometrado - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
-        <NuendoSetStyle>Nuendo - definir caractere</NuendoSetStyle>
+        <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
