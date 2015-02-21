@@ -159,6 +159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
+    <NotConverted>Nie powiodło się</NotConverted>
     <Converted>Przekonwertowano</Converted>
     <ConvertedX>Przekonwertowano ({0})</ConvertedX>
     <Settings>Ustawienia</Settings>
@@ -169,11 +170,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Uwzględnij podfoldery</Recursive>
     <SetMinMsBetweenSubtitles>Ustaw minimum ms między napisami</SetMinMsBetweenSubtitles>
     <PlainText>Zwykły tekst</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>Filtr</Filter>
     <FilterSkipped>Pomijanie przez filtr</FilterSkipped>
     <FilterSrtNoUtf8BOM>Pliki SubRip (.srt) bez nagłówka UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
     <FilterContains>Tekst zawiera...</FilterContains>
+    <FixCommonErrorsErrorX>Poprawiono najczęstsze błędy: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Wielokrotne zastąpienia: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
@@ -895,9 +900,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Automatyczny czas trwania (aktualna linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
-        <InsertBefore>Wstaw przed</InsertBefore>
-        <InsertAfter>Wstaw po</InsertAfter>
-        <InsertSubtitleAfter>Wstaw napis po tej linii...</InsertSubtitleAfter>
+        <InsertBefore>Wstaw linię przed</InsertBefore>
+        <InsertAfter>Wstaw linię po</InsertAfter>
+        <InsertSubtitleAfter>Wstaw z pliku po tej linii...</InsertSubtitleAfter>
         <CopyToClipboard>Kopiuj do schowka jako tekst</CopyToClipboard>
         <Column>Kolumna</Column>
         <ColumnDeleteText>Usuń tekst</ColumnDeleteText>
@@ -1047,7 +1052,7 @@ Chcesz zacząć jeszcze raz od początku dokumentu z kontynuacją wyszukiwania i
     <BeforeReplace>Przed zastąpieniem: {0}</BeforeReplace>
     <MatchFoundX>Znalezione zgodności: {0}</MatchFoundX>
     <NoMatchFoundX>Brak zgodności: {0}</NoMatchFoundX>
-    <FoundNothingToReplace>FoNie znaleziono nic do zastąpienia</FoundNothingToReplace>
+    <FoundNothingToReplace>Nie znaleziono nic do zastąpienia</FoundNothingToReplace>
     <ReplaceCountX>Ilość zastąpień: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Znaleziono zgodność w linii {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Wykonano tylko jedno zastąpienie.</OneReplacementMade>
@@ -1171,7 +1176,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeSortX>Przed sortowaniem: {0}</BeforeSortX>
     <SortedByX>Wykonano sortowanie wg: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Przed automatycznym zrównoważeniem zaznaczonych linii</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Ilość automatycznie równoważonych linii: {0}</NumberOfLinesAutoBalancedX>
+    <NumberOfLinesAutoBalancedX>Ilość automatycznie zrównoważonych linii: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Przed usunięciem łamania linii w zaznaczonych liniach</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Ilość linii z usuniętym łamaniem linii: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotnymi zastąpieniami</BeforeMultipleReplace>
