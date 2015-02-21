@@ -103,7 +103,7 @@ namespace UpdateAssemblyInfo
         private static string GetGitPath()
         {
             var envPath = Environment.GetEnvironmentVariable("PATH");
-            if (!string.IsNullOrWhiteSpace(envPath))
+            if (!string.IsNullOrWhiteSpace(envPath) && envPath.IndexOf("git.exe", StringComparison.Ordinal) > 0)
             {
                 foreach (var p in envPath.Split(Path.PathSeparator))
                 {
@@ -113,7 +113,7 @@ namespace UpdateAssemblyInfo
                 }
             }
 
-            var gitPath = Path.Combine("Git", "bin", "git.exe");
+            var gitPath = "Git\\bin\\git.exe";
 
             var envProgramFiles = Environment.GetEnvironmentVariable("ProgramFiles");
             if (!string.IsNullOrWhiteSpace(envProgramFiles))
@@ -165,7 +165,7 @@ namespace UpdateAssemblyInfo
                         return path;
                 }
             }
-            catch {}
+            catch { }
 
             Console.WriteLine("WARNING: Might not be able to run Git command line tool!");
             return "git";
