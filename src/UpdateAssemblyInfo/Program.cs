@@ -31,7 +31,6 @@ namespace UpdateAssemblyInfo
             {
                 File.WriteAllText(target, templateText, Encoding.UTF8);
             }
-
         }
 
         private static int Main(string[] args)
