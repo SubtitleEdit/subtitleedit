@@ -6624,7 +6624,7 @@ namespace Nikse.SubtitleEdit.Forms
         }
 
         private static void FixVerticalScrollBars(TextBox tb)
-        {                        
+        {
             if (Utilities.GetNumberOfLines(tb.Text) > 3)
                 tb.ScrollBars = ScrollBars.Vertical;
             else

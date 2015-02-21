@@ -930,7 +930,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return input;
-        }       
+        }
 
         public string FixOcrErrorViaLineReplaceList(string input)
         {
