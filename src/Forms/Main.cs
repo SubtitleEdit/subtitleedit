@@ -2310,6 +2310,13 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                // check for BitTorrent file
+                if (format == null && fi.Length > 50 && FileUtil.IsTorrentFile(fileName))
+                {
+                    MessageBox.Show(_language.ErrorLoadTorrent);
+                    return;
+                }
+
                 if (format == null && fi.Length < 100 * 1000000 && TransportStreamParser.IsDvbSup(fileName))
                 {
                     ImportSubtitleFromDvbSupFile(fileName);

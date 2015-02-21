@@ -1159,6 +1159,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ErrorLoadZip = "This file seems to be a compressed .zip file. Subtitle Edit cannot open compressed files.",
                 ErrorLoadPng = "This file seems to be a PNG image file. Subtitle Edit cannot open PNG files.",
                 ErrorLoadSrr = "This file seems to be a ReScene .srr file - not a subtitle file.",
+                ErrorLoadTorrent = "This file seems to be a BitTorrent file - not a subtitle file.",
                 NoSupportEncryptedVobSub = "Encrypted VobSub content is not supported.",
                 NoSupportHereBluRaySup = "Blu-ray sup files are not supported here.",
                 NoSupportHereDvdSup = "DVD sup files are not supported here.",
