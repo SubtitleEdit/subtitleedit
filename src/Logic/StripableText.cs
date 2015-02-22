@@ -201,19 +201,10 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (makeUppercaseAfterBreak &&
-                (StrippedText.Contains('.') ||
-                StrippedText.Contains('!') ||
-                StrippedText.Contains('?') ||
-                StrippedText.Contains(':') ||
-                StrippedText.Contains(';') ||
-                StrippedText.Contains(')') ||
-                StrippedText.Contains(']') ||
-                StrippedText.Contains('}') ||
-                StrippedText.Contains('(') ||
-                StrippedText.Contains('[') ||
-                StrippedText.Contains('{')))
+            if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', '}', '}', '(', '[', '{' }) >= 0)
             {
+                const string breakAfterChars = @".!?:;)]}([{";
+                                               
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -240,7 +231,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            if (@".!?:;)]}([{".Contains(s))
+                            if (breakAfterChars.Contains(s))
                             {
                                 sb.Append(s);
                             }
@@ -254,7 +245,7 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                     {
                         sb.Append(s);
-                        if (@".!?:;)]}([{".Contains(s))
+                        if (breakAfterChars.Contains(s))
                         {
                             if (s == ']' && sb.ToString().IndexOf('[') > 1)
                             { // I [Motor roaring] love you!
