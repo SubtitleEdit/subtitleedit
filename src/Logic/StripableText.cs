@@ -39,14 +39,15 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     // ASS/SSA codes like {\an9}
-                    if (text.StartsWith("{\\", StringComparison.Ordinal))
+                    int endIndex = text.IndexOf('}');
+                    if (endIndex > 0 && text.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        int endIndex = text.IndexOf('}');
-                        if (endIndex > 0 && (!text.Contains('{') || text.IndexOf('{') > endIndex))
+                        int startIndex = text.IndexOf('}', 1);
+                        if (startIndex == -1 || startIndex > endIndex)
                         {
-                            int index = text.IndexOf('}') + 1;
-                            Pre += text.Substring(0, index);
-                            text = text.Substring(index);
+                            startIndex++;
+                            Pre += text.Substring(0, startIndex);
+                            text = text.Substring(startIndex);
                         }
                     }
 
