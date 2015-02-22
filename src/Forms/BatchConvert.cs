@@ -124,15 +124,15 @@ namespace Nikse.SubtitleEdit.Forms
 
             timeUpDownAdjust.MaskedTextBox.Text = "000000000";
 
-            comboBoxFrameRateFrom.Items.Add((23.976).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateFrom.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateFrom.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateFrom.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateFrom.Items.Add(23.976);
+            comboBoxFrameRateFrom.Items.Add(24.0);
+            comboBoxFrameRateFrom.Items.Add(25.0);
+            comboBoxFrameRateFrom.Items.Add(29.97);
 
-            comboBoxFrameRateTo.Items.Add((23.976).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateTo.Items.Add((24.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateTo.Items.Add((25.0).ToString(CultureInfo.InvariantCulture));
-            comboBoxFrameRateTo.Items.Add((29.97).ToString(CultureInfo.InvariantCulture));
+            comboBoxFrameRateTo.Items.Add(23.976);
+            comboBoxFrameRateTo.Items.Add(24.0);
+            comboBoxFrameRateTo.Items.Add(25.0);
+            comboBoxFrameRateTo.Items.Add(29.97);
 
             FixLargeFonts();
 
@@ -655,8 +655,8 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (sub != null && sub.Paragraphs.Count > 0 && sub.Paragraphs[0].Duration.TotalMilliseconds < 1001)
                             {
-                                if (sub.Paragraphs[0].Text.StartsWith("29.") || sub.Paragraphs[0].Text.StartsWith("23.") ||
-                                sub.Paragraphs[0].Text.StartsWith("29,") || sub.Paragraphs[0].Text.StartsWith("23,") ||
+                                if (sub.Paragraphs[0].Text.StartsWith("29.", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23.", StringComparison.Ordinal) ||
+                                sub.Paragraphs[0].Text.StartsWith("29,", StringComparison.Ordinal) || sub.Paragraphs[0].Text.StartsWith("23,", StringComparison.Ordinal) ||
                                 sub.Paragraphs[0].Text == "24" || sub.Paragraphs[0].Text == "25" ||
                                 sub.Paragraphs[0].Text == "30" || sub.Paragraphs[0].Text == "60")
                                     sub.Paragraphs.RemoveAt(0);
@@ -755,11 +755,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 if (checkBoxRemoveFormatting.Checked)
                                 {
-                                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
-                                    if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[5] == '}')
-                                        p.Text = p.Text.Remove(0, 6);
-                                    if (p.Text.StartsWith('{') && p.Text.Length > 6 && p.Text[4] == '}')
-                                        p.Text = p.Text.Remove(0, 5);
+                                    p.Text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                                 }
                             }
                             sub.RemoveEmptyLines();
