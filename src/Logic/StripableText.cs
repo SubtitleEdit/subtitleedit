@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', '}', '}', '(', '[', '{' }) >= 0)
+            if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }) >= 0)
             {
                 const string breakAfterChars = @".!?:;)]}([{";
                                                
