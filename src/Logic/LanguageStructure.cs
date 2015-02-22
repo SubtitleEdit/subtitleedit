@@ -1042,7 +1042,7 @@
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
             public string ErrorLoadSrr { get; set; }
-            public string ErrorLoadTorrent { get; set; }            
+            public string ErrorLoadTorrent { get; set; }
             public string NoSupportEncryptedVobSub { get; set; }
             public string NoSupportHereBluRaySup { get; set; }
             public string NoSupportHereDvdSup { get; set; }
