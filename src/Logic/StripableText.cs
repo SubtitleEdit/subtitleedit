@@ -35,19 +35,19 @@ namespace Nikse.SubtitleEdit.Logic
                     while (text.Length > 0 && stripStartCharacters.Contains(text[0]))
                     {
                         Pre += text[0];
-                        text = text.Substring(1);
+                        text = text.Remove(0, 1);
                     }
 
                     // ASS/SSA codes like {\an9}
                     int endIndex = text.IndexOf('}');
                     if (endIndex > 0 && text.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        int startIndex = text.IndexOf('}', 1);
-                        if (startIndex == -1 || startIndex > endIndex)
+                        int nextStartIndex = text.IndexOf('{', 2);
+                        if (nextStartIndex == -1 || nextStartIndex > endIndex)
                         {
-                            startIndex++;
-                            Pre += text.Substring(0, startIndex);
-                            text = text.Substring(startIndex);
+                            endIndex++;
+                            Pre += text.Substring(0, endIndex);
+                            text = text.Remove(0, endIndex);
                         }
                     }
 
@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         int index = text.IndexOf('>') + 1;
                         Pre += text.Substring(0, index);
-                        text = text.Substring(index);
+                        text = text.Remove(0, index);
                     }
                 }
             }
