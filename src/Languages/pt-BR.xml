@@ -1545,7 +1545,7 @@ podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
-    <NamesIgnoreLists>Nomes a serem ignorarados (caso sensitivo)</NamesIgnoreLists>
+    <NamesIgnoreLists>Nomes a serem ignorados (caso sensitivo)</NamesIgnoreLists>
     <AddNameEtc>Adicionar nome</AddNameEtc>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>
