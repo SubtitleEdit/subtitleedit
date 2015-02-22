@@ -6,7 +6,6 @@ namespace UpdateLanguageFiles
 {
     internal class Program
     {
-
         private static string workInProgress = "Updating language files...";
 
         private static int Main(string[] args)
