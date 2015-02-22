@@ -87,7 +87,6 @@ namespace Nikse.SubtitleEdit.Forms
             TimeCode tc = timeUpDownAdjust.TimeCode;
             if (tc != null && tc.TotalMilliseconds > 0)
             {
-
                 _adjustCallback.Invoke(-tc.TotalMilliseconds, GetSelectionChoice());
                 _totalAdjustment = TimeSpan.FromMilliseconds(_totalAdjustment.TotalMilliseconds - tc.TotalMilliseconds);
                 ShowTotalAdjustMent();
@@ -125,6 +124,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Configuration.Settings.Tools.LastShowEarlierOrLaterSelection = GetSelectionChoice().ToString();
         }
-
     }
 }

@@ -42,7 +42,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (text.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         int endIndex = text.IndexOf('}');
-                        if (endIndex > 0 && (!text.Contains('{') || text.IndexOf('{') > endIndex))
+                        if (endIndex > 0 && (!text.Substring(1).Contains('{') || text.IndexOf('{') > endIndex))
                         {
                             int index = text.IndexOf('}') + 1;
                             Pre += text.Substring(0, index);
