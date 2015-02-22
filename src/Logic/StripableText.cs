@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-
     public class StripableText
     {
         public string Pre { get; set; }
@@ -278,5 +277,9 @@ namespace Nikse.SubtitleEdit.Logic
                 ReplaceNames2Fix(replaceIds, originalNames);
         }
 
+        public override string ToString()
+        {
+            return Pre + StrippedText + Post;
+        }
     }
 }
