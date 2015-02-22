@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.5</Version>
-    <TranslatedBy> ------------------------------------------------------------------------------------------------
+    <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:moob@live.com.pt</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -890,9 +890,9 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AdvancedSubStationAlphaStyles>Advanced Sub Station Alpha estilos...</AdvancedSubStationAlphaStyles>
         <TimedTextSetStyle>Texto cronometrado - Definir estilo</TimedTextSetStyle>
         <TimedTextStyles>Texto cronometrado estilos...</TimedTextStyles>
-        <TimedTextSetLanguage>Texto cronometrado - definir o idioma</TimedTextSetLanguage>
+        <TimedTextSetLanguage>Texto cronometrado - Definir o idioma</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Definir classe</SamiSetStyle>
-        <NuendoSetStyle>Nuendo - definir caractere</NuendoSetStyle>
+        <NuendoSetStyle>Nuendo - Definir caractere</NuendoSetStyle>
         <Cut>Cortar</Cut>
         <Copy>Copiar</Copy>
         <Paste>Colar</Paste>
@@ -2037,7 +2037,7 @@ Manter as alterações?</KeepChangesMessage>
   <VobSubOcrSetItalicFactor>
     <Title>Definir um factor itálico</Title>
     <Description>Ajustar o valor até que o estilo do texto seja normal e não itálico. Note-se que a imagem original deve ser itálico.</Description>
-  </VobSubOcrSetItalicFactor>  
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
