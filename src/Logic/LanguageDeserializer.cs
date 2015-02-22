@@ -4788,6 +4788,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "SplitLongLines/LineContinuationBeginEndStrings":
                     language.SplitLongLines.LineContinuationBeginEndStrings = reader.Value;
                     break;
+                case "SplitLongLines/Narrator":
+                    language.SplitLongLines.Narrator = reader.Value;
+                    break;
+                case "SplitLongLines/Dialogue":
+                    language.SplitLongLines.Dialogue = reader.Value;
+                    break;
                 case "SplitLongLines/NumberOfSplits":
                     language.SplitLongLines.NumberOfSplits = reader.Value;
                     break;

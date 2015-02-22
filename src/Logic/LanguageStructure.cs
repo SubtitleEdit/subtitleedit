@@ -1042,7 +1042,7 @@
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
             public string ErrorLoadSrr { get; set; }
-            public string ErrorLoadTorrent { get; set; }            
+            public string ErrorLoadTorrent { get; set; }
             public string NoSupportEncryptedVobSub { get; set; }
             public string NoSupportHereBluRaySup { get; set; }
             public string NoSupportHereDvdSup { get; set; }
@@ -1961,6 +1961,8 @@
             public string SingleLineMaximumLength { get; set; }
             public string LineMaximumLength { get; set; }
             public string LineContinuationBeginEndStrings { get; set; }
+            public string Narrator { get; set; }
+            public string Dialogue { get; set; }
             public string NumberOfSplits { get; set; }
             public string LongestSingleLineIsXAtY { get; set; }
             public string LongestLineIsXAtY { get; set; }

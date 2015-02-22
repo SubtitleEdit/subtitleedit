@@ -54,6 +54,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.SingleLineMaximumLength;
             labelLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.LineMaximumLength;
             labelLineContinuationBeginEnd.Text = Configuration.Settings.Language.SplitLongLines.LineContinuationBeginEndStrings;
+            checkBoxNarrator.Text = Configuration.Settings.Language.SplitLongLines.Narrator;
+            checkBoxDialogue.Text = Configuration.Settings.Language.SplitLongLines.Dialogue;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
