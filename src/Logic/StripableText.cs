@@ -5,7 +5,6 @@ using System.Text;
 
 namespace Nikse.SubtitleEdit.Logic
 {
-
     public class StripableText
     {
         public string Pre { get; set; }
@@ -177,45 +176,28 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
 
-                bool startWithUppercase = string.IsNullOrEmpty(s) ||
-                                          s.EndsWith('.') ||
-                                          s.EndsWith('!') ||
-                                          s.EndsWith('?') ||
+                bool startWithUppercase = string.IsNullOrEmpty(s) || (s.Length > 0 && "?.)]:!".Contains(s[s.Length - 1]) ||
                                           s.EndsWith(". ♪", StringComparison.Ordinal) ||
                                           s.EndsWith("! ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith("? ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith(']') ||
-                                          s.EndsWith(')') ||
-                                          s.EndsWith(':');
+                                          s.EndsWith("? ♪", StringComparison.Ordinal));
 
                 // start with uppercase after music symbol - but only if next line does not start with music symbol
-                if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
+                if (!startWithUppercase && (s.Length > 0 && "♪♫".Contains(s[s.Length - 1])))
                 {
                     if (!Pre.Contains('♪') && !Pre.Contains('♫'))
                         startWithUppercase = true;
                 }
-
-                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("..."))
+                if (startWithUppercase && StrippedText.Length > 0 && !Pre.Contains("...", StringComparison.Ordinal))
                 {
                     StrippedText = char.ToUpper(StrippedText[0]) + StrippedText.Substring(1);
                 }
             }
 
-            if (makeUppercaseAfterBreak &&
-                (StrippedText.Contains('.') ||
-                StrippedText.Contains('!') ||
-                StrippedText.Contains('?') ||
-                StrippedText.Contains(':') ||
-                StrippedText.Contains(';') ||
-                StrippedText.Contains(')') ||
-                StrippedText.Contains(']') ||
-                StrippedText.Contains('}') ||
-                StrippedText.Contains('(') ||
-                StrippedText.Contains('[') ||
-                StrippedText.Contains('{')))
+            if (StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', '}', '}', '(', '[', '{' }) >= 0)
             {
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
+                const string sChars = @".!?:;)]}([{";
                 for (int i = 0; i < StrippedText.Length; i++)
                 {
                     var s = StrippedText[i];
@@ -240,7 +222,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            if (@".!?:;)]}([{".Contains(s))
+                            if (sChars.Contains(s))
                             {
                                 sb.Append(s);
                             }
@@ -254,7 +236,7 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                     {
                         sb.Append(s);
-                        if (@".!?:;)]}([{".Contains(s))
+                        if (sChars.Contains(s))
                         {
                             if (s == ']' && sb.ToString().IndexOf('[') > 1)
                             { // I [Motor roaring] love you!
@@ -278,5 +260,9 @@ namespace Nikse.SubtitleEdit.Logic
                 ReplaceNames2Fix(replaceIds, originalNames);
         }
 
+        public override string ToString()
+        {
+            return Pre + StrippedText + Post;
+        }
     }
 }
