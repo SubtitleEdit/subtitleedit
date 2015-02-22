@@ -76,12 +76,14 @@
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
-    <AboutText1>Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
+    <AboutText1>
+Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
 자유롭게 배포할 수 있으며 수정해서 사용할 수 있습니다.
 C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
 최신 버전은 홈페이지(www.nikse.dk)를 방문하시기 바랍니다.
 귀하의 의견은 아래 이메일 주소로 접수되며 언제나 환영합니다.
-이메일 주소: mailto:nikse.dk@gmail.com</AboutText1>
+이메일 주소: mailto:nikse.dk@gmail.com
+   </AboutText1>
   </About>
   <AddToNames>
     <Title>이름/기타 목록에 단어 추가</Title>
@@ -155,7 +157,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Convert>변환</Convert>
     <NothingToConvert>변환할 것이 없습니다!</NothingToConvert>
     <PleaseChooseOutputFolder>출력 폴더를 선택하십시오!</PleaseChooseOutputFolder>
-    <Converted>변환됐습니다!</Converted>
+    <NotConverted>실패함</NotConverted>
+    <Converted>변환됨</Converted>
     <ConvertedX>({0}) 변환 완료!</ConvertedX>
     <Settings>설정</Settings>
     <SplitLongLines>긴 줄 분할</SplitLongLines>
@@ -165,11 +168,15 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Recursive>하위 폴더 포함</Recursive>
     <SetMinMsBetweenSubtitles>자막 사이의 분과 밀리초 설정</SetMinMsBetweenSubtitles>
     <PlainText>일반 텍스트</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>필터</Filter>
     <FilterSkipped>필터에서 제외</FilterSkipped>
     <FilterSrtNoUtf8BOM>UTF-8에서 BOM 표식 없는 subRip(.srt) 파일</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>한 자막 당 두 개 이상의 줄</FilterMoreThanTwoLines>
     <FilterContains>텍스트 포함...</FilterContains>
+    <FixCommonErrorsErrorX>일반적인 오류 수정: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -1248,6 +1255,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
     <ErrorLoadPng>이 파일은 PNG 이미지 파일 같습니다. Subtitle Edit는 PNG 파일을 열 수 없습니다.</ErrorLoadPng>
     <ErrorLoadSrr>이 파일은 ReScene.srr 파일인 것 같습니다 - 자막 파일이 아닙니다.</ErrorLoadSrr>
+    <ErrorLoadTorrent>이 파일은 비트토렌트 파일인 것 같습니다 - 자막 파일은 아닙니다.</ErrorLoadTorrent>
     <NoSupportEncryptedVobSub>암호화된 VobSub 콘텐츠는 지원되지 않습니다.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Blu-ray sup 파일은 여기서 지원되지 않습니다.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>DVD sup 파일은 여기서 지원되지 않습니다.</NoSupportHereDvdSup>
