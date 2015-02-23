@@ -4,7 +4,6 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class BmpReader
     {
-
         public string HeaderId { get; private set; }
         public UInt32 HeaderFileSize { get; private set; }
         public UInt32 OffsetToPixelArray { get; private set; }
@@ -16,7 +15,5 @@ namespace Nikse.SubtitleEdit.Logic
             HeaderFileSize = BitConverter.ToUInt32(buffer, 2);
             OffsetToPixelArray = BitConverter.ToUInt32(buffer, 0xa);
         }
-
     }
-
 }

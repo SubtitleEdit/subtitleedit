@@ -965,6 +965,5 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             }
             return sb.ToString();
         }
-
     }
 }

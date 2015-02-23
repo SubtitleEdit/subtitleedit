@@ -267,6 +267,5 @@ namespace Nikse.SubtitleEdit.Logic
                 FindTextHistory.Remove(findText);
             FindTextHistory.Add(findText);
         }
-
     }
 }

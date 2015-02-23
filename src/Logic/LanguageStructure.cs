@@ -186,11 +186,11 @@
             public string SetMinMsBetweenSubtitles { get; set; }
             public string PlainText { get; set; }
             public string Ocr { get; set; }
-            public string Filter  { get; set; }
-            public string FilterSkipped  { get; set; }
+            public string Filter { get; set; }
+            public string FilterSkipped { get; set; }
             public string FilterSrtNoUtf8BOM { get; set; }
-            public string FilterMoreThanTwoLines  { get; set; }
-            public string FilterContains  { get; set; }
+            public string FilterMoreThanTwoLines { get; set; }
+            public string FilterContains { get; set; }
             public string FixCommonErrorsErrorX { get; set; }
             public string MultipleReplaceErrorX { get; set; }
             public string AutoBalanceErrorX { get; set; }
@@ -2296,6 +2296,5 @@
             public string Title { get; set; }
             public string VoiceName { get; set; }
         }
-
     }
 }

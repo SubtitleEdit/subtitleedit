@@ -482,7 +482,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-
         /// <summary>
         /// Gets a argument from the command line
         /// </summary>
@@ -715,6 +714,5 @@ namespace Nikse.SubtitleEdit.Logic
                 outputFileName = Path.ChangeExtension(outputFileName, Guid.NewGuid() + extension);
             return outputFileName;
         }
-
     }
 }

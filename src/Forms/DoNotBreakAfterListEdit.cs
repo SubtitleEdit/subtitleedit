@@ -226,6 +226,5 @@ namespace Nikse.SubtitleEdit
             if (e.KeyCode == Keys.Enter)
                 buttonAddNamesEtc_Click(sender, e);
         }
-
     }
 }
