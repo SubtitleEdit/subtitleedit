@@ -52,11 +52,12 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     // tags like <i> or <font face="Segoe Print" color="#ff0000">
-                    if (text.StartsWith('<') && text.IndexOf('>') < (text.Length - 7))
+                    endIndex = text.IndexOf('>');
+                    if (text.StartsWith('<') && endIndex >= 2)
                     {
-                        int index = text.IndexOf('>') + 1;
-                        Pre += text.Substring(0, index);
-                        text = text.Remove(0, index);
+                        endIndex++;
+                        Pre += text.Substring(0, endIndex);
+                        text = text.Remove(0, endIndex);
                     }
                 }
             }
