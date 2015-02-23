@@ -35,28 +35,29 @@ namespace Nikse.SubtitleEdit.Logic
                     while (text.Length > 0 && stripStartCharacters.Contains(text[0]))
                     {
                         Pre += text[0];
-                        text = text.Remove(0, 1);
+                        text = text.Substring(1);
                     }
 
                     // ASS/SSA codes like {\an9}
                     int endIndex = text.IndexOf('}');
-                    if (endIndex > 0 && text.StartsWith("{\\", StringComparison.Ordinal))
+                    if (endIndex > 2 && text.StartsWith("{\\", StringComparison.Ordinal))
                     {
                         int nextStartIndex = text.IndexOf('{', 2);
                         if (nextStartIndex == -1 || nextStartIndex > endIndex)
                         {
                             endIndex++;
                             Pre += text.Substring(0, endIndex);
-                            text = text.Remove(0, endIndex);
+                            text = text.Substring(endIndex);
                         }
                     }
 
                     // tags like <i> or <font face="Segoe Print" color="#ff0000">
-                    if (text.StartsWith('<') && text.IndexOf('>') < (text.Length - 7))
+                    endIndex = text.IndexOf('>');
+                    if (text.StartsWith('<') && endIndex >= 2)
                     {
-                        int index = text.IndexOf('>') + 1;
-                        Pre += text.Substring(0, index);
-                        text = text.Remove(0, index);
+                        endIndex++;
+                        Pre += text.Substring(0, endIndex);
+                        text = text.Substring(endIndex);
                     }
                 }
             }
@@ -205,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }) >= 0)
             {
                 const string breakAfterChars = @".!?:;)]}([{";
-                                               
+
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -269,6 +270,5 @@ namespace Nikse.SubtitleEdit.Logic
             else
                 ReplaceNames2Fix(replaceIds, originalNames);
         }
-
     }
 }

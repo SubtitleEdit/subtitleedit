@@ -16,6 +16,24 @@ namespace Test.Logic
         }
 
         [TestMethod]
+        public void StripableTextItalic2()
+        {
+            var st = new StripableText("<i>O</i>");
+            Assert.AreEqual(st.Pre, "<i>");
+            Assert.AreEqual(st.Post, "</i>");
+            Assert.AreEqual(st.StrippedText, "O");
+        }
+
+        [TestMethod]
+        public void StripableTextItalic3()
+        {
+            var st = new StripableText("<i>Hi!");
+            Assert.AreEqual(st.Pre, "<i>");
+            Assert.AreEqual(st.Post, "!");
+            Assert.AreEqual(st.StrippedText, "Hi");
+        }
+
+        [TestMethod]
         public void StripableTextAss()
         {
             var st = new StripableText("{\\an9}Hi!");
@@ -32,6 +50,5 @@ namespace Test.Logic
             Assert.AreEqual(st.Post, "!</font>");
             Assert.AreEqual(st.StrippedText, "Hi");
         }
-
     }
 }
