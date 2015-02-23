@@ -2463,6 +2463,5 @@ Keep changes?",
         {
             File.WriteAllText(fileName, GetCurrentLanguageAsXml(), Encoding.UTF8);
         }
-
     }
 }

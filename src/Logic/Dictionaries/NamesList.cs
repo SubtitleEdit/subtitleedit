@@ -251,6 +251,5 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
             }
             return false;
         }
-
     }
 }

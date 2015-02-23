@@ -613,6 +613,5 @@ namespace Nikse.SubtitleEdit.Logic
                 ReleaseManagedResources();
             }
         }
-
     }
 }

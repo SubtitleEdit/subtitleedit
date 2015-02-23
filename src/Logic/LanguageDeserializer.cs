@@ -12,16 +12,21 @@ namespace Nikse.SubtitleEdit.Logic
 
     public class LanguageDeserializer // NOTE: This class is AUTO-GENERATED!!!!
     {
-
         public static Language CustomDeserializeLanguage(string fileName)
         {
             var name = new StringBuilder(100, 1000);
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
 
-            using (XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings {
-                   IgnoreWhitespace = true, IgnoreProcessingInstructions = true, IgnoreComments = true,
-                   DtdProcessing = DtdProcessing.Ignore, CheckCharacters = false, CloseInput = true }))
+            using (XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings
+            {
+                IgnoreWhitespace = true,
+                IgnoreProcessingInstructions = true,
+                IgnoreComments = true,
+                DtdProcessing = DtdProcessing.Ignore,
+                CheckCharacters = false,
+                CloseInput = true
+            }))
             {
                 while (reader.Read())
                 {
@@ -5574,7 +5579,6 @@ namespace Nikse.SubtitleEdit.Logic
                 case "WebVttNewVoice/VoiceName":
                     language.WebVttNewVoice.VoiceName = reader.Value;
                     break;
-
             }
         }
     }
