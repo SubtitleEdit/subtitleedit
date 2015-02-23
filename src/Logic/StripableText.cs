@@ -30,8 +30,11 @@ namespace Nikse.SubtitleEdit.Logic
             Pre = string.Empty;
             if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
             {
-                for (int i = 0; i < 5; i++)
+                int beginLength;
+                do
                 {
+                    beginLength = text.Length;
+
                     while (text.Length > 0 && stripStartCharacters.Contains(text[0]))
                     {
                         Pre += text[0];
@@ -60,20 +63,24 @@ namespace Nikse.SubtitleEdit.Logic
                         text = text.Remove(0, endIndex);
                     }
                 }
+                while (text.Length < beginLength);
             }
 
             Post = string.Empty;
             if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
             {
-                for (int i = 0; i < 5; i++)
+                int beginLength;
+                do
                 {
+                    beginLength = text.Length;
+
                     while (text.Length > 0 && stripEndCharacters.Contains(text[text.Length - 1]))
                     {
                         Post = text[text.Length - 1] + Post;
                         text = text.Substring(0, text.Length - 1);
                     }
 
-                    if (text.EndsWith('>'))
+                    if (text.Length >= 4 && text[text.Length - 1] == '>')
                     {
                         // tags </i> </b> </u>
                         if (text.EndsWith("</i>", StringComparison.OrdinalIgnoreCase) ||
@@ -92,6 +99,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
+                while (text.Length < beginLength);
             }
 
             StrippedText = text;
@@ -206,7 +214,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }) >= 0)
             {
                 const string breakAfterChars = @".!?:;)]}([{";
-                                               
+
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
