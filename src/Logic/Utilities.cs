@@ -3185,18 +3185,17 @@ namespace Nikse.SubtitleEdit.Logic
                 .Replace("</U>", "</u>")
                 .Replace("</FONT>", "</font>");
 
-            if (text.Contains("<FONT", StringComparison.Ordinal))
+            var idx = text.IndexOf("<FONT", StringComparison.Ordinal);
+            while (idx >= 0)
             {
-                var idx = text.IndexOf("<FONT ", StringComparison.Ordinal);
-                while (idx > -1)
-                {
-                    var endIdx = text.IndexOf('>', idx);
-                    if (endIdx == -1) break;
-                    var lowerFont = text.Substring(idx, endIdx - idx + 1).ToLower();
-                    text = text.Remove(idx, endIdx - idx + 1).Insert(idx, lowerFont);
-                    idx = text.IndexOf("<FONT ", endIdx, StringComparison.Ordinal);
-                }
+                var endIdx = text.IndexOf('>', idx + 5);
+                if (endIdx < 5) break;
+                endIdx++;
+                var lowerFont = text.Substring(idx, endIdx - idx).ToLowerInvariant();
+                text = text.Remove(idx, endIdx - idx).Insert(idx, lowerFont);
+                idx = text.IndexOf("<FONT", endIdx, StringComparison.Ordinal);
             }
+
             var closeTag = string.Empty;
             switch (openTag)
             {
@@ -3211,7 +3210,7 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
             }
 
-            if (closeTag.Length == 0 && openTag.Contains("<font ", StringComparison.Ordinal))
+            if (closeTag.Length == 0 && openTag.Contains("<font", StringComparison.Ordinal))
                 closeTag = "</font>";
 
             // Open tags
@@ -3472,6 +3471,5 @@ namespace Nikse.SubtitleEdit.Logic
             }
             return lines;
         }
-
     }
 }
