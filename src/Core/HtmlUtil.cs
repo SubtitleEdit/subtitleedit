@@ -356,13 +356,10 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string RemoveHtmlTags(string s)
         {
-            if (s == null)
-                return null;
-
-            if (s.Length < 3 || s.IndexOf('<') < 0)
+            if (s == null || s.Length < 3 || s.IndexOf('<') < 0)
                 return s;
 
-            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
+            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0 || s.IndexOf(" >", StringComparison.Ordinal) >= 2)
                 s = Utilities.FixInvalidItalicTags(s);
 
             return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
@@ -374,26 +371,24 @@ namespace Nikse.SubtitleEdit.Core
                 return null;
 
             s = RemoveHtmlTags(s);
-
-            if (alsoSsaTags)
-                s = Utilities.RemoveSsaTags(s);
-
-            return s;
+            return alsoSsaTags ? Utilities.RemoveSsaTags(s) : s;
         }
 
         public static bool IsUrl(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains(".") || text.Contains(" "))
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains('.') || text.Contains(' '))
                 return false;
 
             var allLower = text.ToLower();
-            if (allLower.StartsWith("http://") || allLower.StartsWith("https://") || allLower.StartsWith("www.") || allLower.EndsWith(".org") || allLower.EndsWith(".com") || allLower.EndsWith(".net"))
+            if (allLower.StartsWith("http://", StringComparison.Ordinal) ||
+                allLower.StartsWith("https://", StringComparison.Ordinal) ||
+                allLower.StartsWith("www.", StringComparison.Ordinal) ||
+                allLower.EndsWith(".org", StringComparison.Ordinal) ||
+                allLower.EndsWith(".com", StringComparison.Ordinal) ||
+                allLower.EndsWith(".net", StringComparison.Ordinal))
                 return true;
 
-            if (allLower.Contains(".org/") || allLower.Contains(".com/") || allLower.Contains(".net/"))
-                return true;
-
-            return false;
+            return allLower.Contains(".org/", StringComparison.Ordinal) || allLower.Contains(".com/", StringComparison.Ordinal) || allLower.Contains(".net/", StringComparison.Ordinal);
         }
 
         public static bool StartsWithUrl(string text)
