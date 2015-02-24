@@ -193,11 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                             int index = newText.IndexOf(findWhat, StringComparison.OrdinalIgnoreCase);
                             while (index >= 0)
                             {
-                                if (index < newText.Length)
-                                    newText = newText.Substring(0, index) + replaceWith + newText.Substring(index + findWhat.Length);
-                                else
-                                    newText = newText.Substring(0, index) + replaceWith;
-
+                                newText = newText.Substring(0, index) + replaceWith + newText.Remove(0, index + findWhat.Length);
                                 hit = true;
                                 index = newText.IndexOf(findWhat, index + replaceWith.Length, StringComparison.OrdinalIgnoreCase);
                             }
