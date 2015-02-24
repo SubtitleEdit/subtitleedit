@@ -545,13 +545,17 @@ namespace Nikse.SubtitleEdit.Logic
                 return text;
 
             // do not autobreak dialogs
-            if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
+            if ((text.Contains('-') || text.Contains(':')) && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
+                const string endLineChars = ".?!)]";
                 var noTagLines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
                 if (noTagLines.Length == 2)
                 {
                     var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
+                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && endLineChars.Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
+                        return text;
+                    var idx = noTagLines[1].IndexOf(':');
+                    if (arr0.Length > 1 && (endLineChars.Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')) && !Utilities.IsBetweenNumbers(noTagLines[1], idx))
                         return text;
                 }
             }

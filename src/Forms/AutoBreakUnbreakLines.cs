@@ -4,6 +4,7 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Drawing;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Forms
                 for (int i = start; i <= max; i++)
                     comboBoxConditions.Items.Add(i.ToString(CultureInfo.InvariantCulture));
 
-                int index = Configuration.Settings.Tools.MergeLinesShorterThan - (start + 1);
+                int index = Configuration.Settings.Tools.MergeLinesShorterThan - 11;
                 if (index > 0 && index < max)
                     comboBoxConditions.SelectedIndex = index;
                 else
@@ -120,7 +121,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine))
+                if (p.Text.Length > minLength || p.Text.Contains(Environment.NewLine, StringComparison.Ordinal))
                 {
                     string text = Utilities.AutoBreakLine(p.Text, 5, MergeLinesShorterThan, language);
                     if (text != p.Text)

@@ -48,6 +48,17 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void AutoBreakLine5()
+        {
+            Configuration.Settings.General.SubtitleLineMaximumLength = 43;
+            string s1 = "Housing reform!\r\nWoman: <i>Yeah!</i>";
+            string s2 = Utilities.AutoBreakLine(s1);
+            string target = s1;
+            Assert.AreEqual(target, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLine5DoNoBreakAtPeriod()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
