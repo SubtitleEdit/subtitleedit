@@ -106,5 +106,14 @@ namespace Test.Logic
             Assert.AreEqual(st.StrippedText, "Hi");
         }
 
+        [TestMethod]
+        public void StripableTextItalicAndMore()
+        {
+            var st = new StripableText("<i>...<b>Hi!</b></i>");
+            Assert.AreEqual(st.Pre, "<i>...<b>");
+            Assert.AreEqual(st.Post, "!</b></i>");
+            Assert.AreEqual(st.StrippedText, "Hi");
+        }
+
     }
 }
