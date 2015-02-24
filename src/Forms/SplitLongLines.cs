@@ -325,9 +325,10 @@ namespace Nikse.SubtitleEdit.Forms
             if (text == null || text.Trim().Length == 0)
                 return false;
             var noTagText = HtmlUtil.RemoveHtmlTags(text).Trim();
-            if (checkBoxDialogue.Checked && text.Contains(Environment.NewLine))
+            if (checkBoxDialogue.Checked && noTagText.Contains(Environment.NewLine))
             {
-                if (noTagText[0] == '-' && noTagText.Contains(Environment.NewLine + "-") && "?.!)]".Contains(noTagText[noTagText.Length - 1]))
+                var firstLine = noTagText.Substring(0, noTagText.IndexOf(Environment.NewLine)).TrimEnd();
+                if (noTagText[0] == '-' && noTagText.Contains(Environment.NewLine + "-", StringComparison.Ordinal) && "?.!)]".Contains(firstLine[firstLine.Length - 1]))
                     return true;
             }
             if (checkBoxNarrator.Checked && noTagText.IndexOf(':') > 0)
