@@ -42,7 +42,7 @@
     <VideoEncodingX>Videocodering: {0}</VideoEncodingX>
     <SingleLineLengths>Regellengten:</SingleLineLengths>
     <TotalLengthX>Totale lengte: {0}</TotalLengthX>
-    <TotalLengthXSplitLine>Totale lengte: {0} (Regel opdelen!)</TotalLengthXSplitLine>
+    <TotalLengthXSplitLine>Totale lengte: {0} (regel opdelen!)</TotalLengthXSplitLine>
     <SplitLine>Regel opdelen!</SplitLine>
     <NotAvailable>Niet beschikbaar</NotAvailable>
     <OverlapPreviousLineX>Overlap vorige ({0:#,##0.###})</OverlapPreviousLineX>
@@ -1005,7 +1005,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SaveSubtitleAs>Ondertitel opslaan als...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>Originele ondertitel opslaan als...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>Geen ondertitel geladen</NoSubtitleLoaded>
-    <VisualSyncSelectedLines>Visuele sync – tekstselectie</VisualSyncSelectedLines>
+    <VisualSyncSelectedLines>Visuele sync - tekstselectie</VisualSyncSelectedLines>
     <VisualSyncTitle>Visuele synchronisatie</VisualSyncTitle>
     <BeforeVisualSync>Vóór visuele sync</BeforeVisualSync>
     <VisualSyncPerformedOnSelectedLines>Visuele sync uitgevoerd op tekstselectie</VisualSyncPerformedOnSelectedLines>
