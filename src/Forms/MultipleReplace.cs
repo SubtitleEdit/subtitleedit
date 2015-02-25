@@ -100,7 +100,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void MultipleReplace_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)
-                DialogResult = DialogResult.Cancel;
+                buttonCancel_Click(null, null);
             else if (e.KeyCode == Keys.F1)
                 Utilities.ShowHelp("#multiple_replace");
         }
@@ -264,7 +264,7 @@ namespace Nikse.SubtitleEdit.Forms
             return Configuration.Settings.Language.MultipleReplace.Normal;
         }
 
-        private void ButtonOkClick(object sender, EventArgs e)
+        private void buttonOK_Click(object sender, EventArgs e)
         {
             ResetUncheckLines();
             SaveReplaceList(true);
