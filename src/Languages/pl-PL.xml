@@ -40,7 +40,7 @@
     <FrameRateX>Ilość klatek na sekundę: {0:0.0###}</FrameRateX>
     <TotalFramesX>Ogółem klatek: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Kodowanie wideo: {0}</VideoEncodingX>
-    <SingleLineLengths>Długość pojedynczej linii:</SingleLineLengths>
+    <SingleLineLengths>Długość pojedynczej linii: </SingleLineLengths>
     <TotalLengthX>Długość całkowita: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Długość całkowita: {0} (linia podzielona!)</TotalLengthXSplitLine>
     <SplitLine>Podziel linię!</SplitLine>
@@ -330,7 +330,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -1256,6 +1256,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
     <ErrorLoadPng>Ten plik wydaje się być plikiem PNG. W Subtitle Edit nie można otworzyć plików PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
     <NoSupportEncryptedVobSub>Zaszyfrowana zawartość VobSub nie jest obsługiwana.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Pliki Blu-ray sup nie są tutaj obsługiwane.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Pliki DVD sup nie są tutaj obsługiwane.</NoSupportHereDvdSup>
