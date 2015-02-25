@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Ovládání - {0}</ControlsWindowTitle>
     <Advanced>Pokročilé</Advanced>
     <Style>Styl</Style>
+    <StyleLanguage>Styl / Jazyk</StyleLanguage>
+    <Character>Znak</Character>
     <Class>Třída</Class>
     <GeneralText>Všeobecné</GeneralText>
     <LineNumber>Č. řádku</LineNumber>
@@ -157,6 +159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Převést</Convert>
     <NothingToConvert>Není co převést!</NothingToConvert>
     <PleaseChooseOutputFolder>Vyberte výstupní složku</PleaseChooseOutputFolder>
+    <NotConverted>Nezdařilo se</NotConverted>
     <Converted>Převedeno</Converted>
     <ConvertedX>Převedeno ({0})</ConvertedX>
     <Settings>Nastavení</Settings>
@@ -167,11 +170,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Včetně podsložek</Recursive>
     <SetMinMsBetweenSubtitles>Nastavit min. milisekund mezi titulky</SetMinMsBetweenSubtitles>
     <PlainText>Prostý text</PlainText>
+    <Ocr>OCR...</Ocr>
     <Filter>Filtr</Filter>
     <FilterSkipped>Přeskočeno filtrem</FilterSkipped>
     <FilterSrtNoUtf8BOM>Soubory SubRip (.srt) bez hlavičky UTF-8 BOM</FilterSrtNoUtf8BOM>
     <FilterMoreThanTwoLines>Více než dva řádky v jednom titulku</FilterMoreThanTwoLines>
     <FilterContains>Text obsahuje...</FilterContains>
+    <FixCommonErrorsErrorX>Opravit běžné chyby: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Hromadné nahrazení: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Automatické vyvážení: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -418,6 +425,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Vpravo</Right>
     <Center>Na střed</Center>
     <BottomMargin>Dolní okraj</BottomMargin>
+    <LeftRightMargin>Levý nebo pravý okraj</LeftRightMargin>
     <SaveBluRraySupAs>Vyberte název souboru Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Vyberte název souboru VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Vyberte název souboru Blu-ray sup</SaveFabImageScriptAs>
@@ -883,6 +891,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Styly časovaného textu...</TimedTextStyles>
         <TimedTextSetLanguage>Časovaný text - nastavit jazyk</TimedTextSetLanguage>
         <SamiSetStyle>Sami - nastavit třídu</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - nastavit znak</NuendoSetStyle>
         <Cut>Vyjmout</Cut>
         <Copy>Kopírovat</Copy>
         <Paste>Vložit</Paste>
@@ -1185,6 +1194,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Před sloučením krátkých řádků</BeforeMergeShortLines>
     <BeforeSplitLongLines>Před rozdělením dlouhých řádků</BeforeSplitLongLines>
     <MergedShortLinesX>Počet sloučených řádků: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Před překlenutím malých mezer</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Před nastavením minimálního času zobrazení mezi titulky</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Počet změněných řádků s minimálním časem zobrazení mezi titulky: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Před importováním prostého textu</BeforeImportText>
@@ -1242,10 +1252,16 @@ Pokračovat?</SubtitleAppendPrompt>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Titulek se stejnými časovými kódy má jiné číslo řádku ({0}) než aktuální titulek ({1}) - přesto pokračovat?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analýza datového proudu přenosu - čekejte...</ParsingTransportStream>
     <ErrorLoadIdx>Nelze přečíst nebo upravit soubory .idx. Soubory .idx jsou součástí páru souborů idx/sub (tzv. VobSub) a Subtitle Edit může otevřít soubor .sub.</ErrorLoadIdx>
-    <ErrorLoadRar>Soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
-    <ErrorLoadZip>Soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
-    <ErrorLoadPng>Soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
-    <ErrorLoadSrr>Soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
+    <ErrorLoadRar>Tento soubor se zdá být komprimovaným souborem .rar. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadRar>
+    <ErrorLoadZip>Tento soubor se zdá být komprimovaným souborem .zip. Subtitle Edit neumí otvírat komprimované soubory.</ErrorLoadZip>
+    <ErrorLoadPng>Tento soubor se zdá být obrazovým souborem PNG. Subtitle Edit neumí otvírat soubory PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Tento soubor se zdá být souborem ReScene .srr - není to soubor titulků.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Tento soubor se zdá být souborem BitTorrentu - není to soubor titulků.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>Šifrovaný obsah VobSub není podporován.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Soubory Blu-ray sup zde nejsou podporovány.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>Soubory DVD sup zde nejsou podporovány.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>Soubory VobSub zde nejsou podporovány.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Soubory DivX zde nejsou podporovány.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Vybrat titulky ze souboru Matroska</Title>
