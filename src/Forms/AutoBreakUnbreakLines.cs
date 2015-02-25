@@ -216,7 +216,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = _paragraphs[i];
                 if (!IsFixAllowed(p))
+                {
                     _paragraphs.Remove(p);
+                    i--;
+                }
             }
             DialogResult = DialogResult.OK;
         }
