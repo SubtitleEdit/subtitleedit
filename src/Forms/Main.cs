@@ -263,6 +263,30 @@ namespace Nikse.SubtitleEdit.Forms
             SetCurrentFormat(new SubRip());
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            Graphics g = this.CreateGraphics();
+            try
+            {
+                // avoid weird looking layout for high DPI
+                if (g.DpiX > 120)
+                {
+                    Font = new Font(Font.FontFamily, (float)(Font.Size * g.DpiX / 96.0));
+
+                    numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 15;
+                    numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
+                    labelDuration.Left = numericUpDownDuration.Left - 3;
+                    labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
+                }
+            }
+            finally
+            {
+                g.Dispose();
+            }
+            
+            base.OnLoad(e);
+        }
+
         public Main()
         {
             try
@@ -12850,7 +12874,7 @@ namespace Nikse.SubtitleEdit.Forms
             var textSize = graphics.MeasureString(buttonPlayPrevious.Text, Font);
             if (textSize.Height > buttonPlayPrevious.Height - 4)
             {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
                 Utilities.SetButtonHeight(this, newButtonHeight, 1);
 
                 // List view
