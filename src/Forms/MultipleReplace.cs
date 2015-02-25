@@ -425,11 +425,6 @@ namespace Nikse.SubtitleEdit.Forms
             moveDownToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveTopToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
             moveBottomToolStripMenuItem.Visible = listViewReplaceList.Items.Count > 1 && listViewReplaceList.SelectedItems.Count == 1;
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToBottom))
-                moveBottomToolStripMenuItem.Visible = false;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.MultipleReplace.MoveToTop))
-                moveTopToolStripMenuItem.Visible = false;
         }
 
         private void moveUpToolStripMenuItem_Click(object sender, EventArgs e)
