@@ -53,14 +53,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        public void Initialize(Subtitle subtitle, bool autoBalance)
+        public void Initialize(List<Paragraph> paragraphs, bool autoBalance)
         {
             _modeAutoBalance = autoBalance;
-            _paragraphs = new List<Paragraph>();
-
-            foreach (Paragraph p in subtitle.Paragraphs)
-                _paragraphs.Add(p);
-
+            _paragraphs = paragraphs;
             if (autoBalance)
             {
                 labelCondition.Text = Configuration.Settings.Language.AutoBreakUnbreakLines.OnlyBreakLinesLongerThan;
