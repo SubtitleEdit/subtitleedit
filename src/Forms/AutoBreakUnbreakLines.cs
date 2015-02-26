@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text != null && p.Text.Contains(Environment.NewLine) && p.Text.Length > minLength)
+                if (p.Text != null && p.Text.Length > minLength && p.Text.Contains(Environment.NewLine))
                 {
                     string text = p.Text.Replace(Environment.NewLine, " ");
                     while (text.Contains("  "))
