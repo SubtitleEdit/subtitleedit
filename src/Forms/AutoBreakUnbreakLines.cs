@@ -181,10 +181,20 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool IsFixAllowed(Paragraph p)
         {
-            foreach (ListViewItem item in listViewFixes.Items)
+            var lastIndex = listViewFixes.Items.Count - 1;
+            var firstIndex = 0;
+            while (firstIndex <= lastIndex)
             {
-                if (item.Tag.ToString() == p.ToString())
+                var index = (firstIndex + lastIndex) >> 1;
+                var item = listViewFixes.Items[index];
+                var mPrph = (Paragraph)item.Tag;
+
+                if (mPrph.ID == p.ID)
                     return item.Checked;
+                if (mPrph.Number < p.Number)
+                    firstIndex = index + 1;
+                else
+                    lastIndex = index - 1;
             }
             return false;
         }
