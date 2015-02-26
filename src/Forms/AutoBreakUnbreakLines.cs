@@ -201,11 +201,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            for (int i = _paragraphs.Count - 1; i > 0; i--)
+            for (int i = _paragraphs.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _paragraphs[i];
-                if (!IsFixAllowed(p))
-                    _paragraphs.Remove(p);
+                if (IsFixAllowed(_paragraphs[i]))
+                    _paragraphs.RemoveAt(i);
             }
             DialogResult = DialogResult.OK;
         }
