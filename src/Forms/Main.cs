@@ -11626,7 +11626,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var selectedLines = new Subtitle();
                 foreach (int index in SubtitleListview1.SelectedIndices)
                     selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                autoBreakUnbreakLines.Initialize(selectedLines, true);
+                autoBreakUnbreakLines.Initialize(selectedLines.Paragraphs, true);
 
                 if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedParagraphs.Count > 0)
                 {
@@ -11666,7 +11666,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var selectedLines = new Subtitle();
                 foreach (int index in SubtitleListview1.SelectedIndices)
                     selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
-                autoBreakUnbreakLines.Initialize(selectedLines, false);
+                autoBreakUnbreakLines.Initialize(selectedLines.Paragraphs, false);
 
                 if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedParagraphs.Count > 0)
                 {
