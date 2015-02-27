@@ -1041,6 +1041,7 @@ namespace Nikse.SubtitleEdit.Logic
                 MatroskaFiles = "Matroska files",
                 NoSubtitlesFound = "No subtitles found",
                 NotAValidMatroskaFileX = "This is not a valid Matroska file: {0}",
+                BlurayNotSubtitlesFound = "Blu-ray sup file does not contain any subtitles or contains errors - try demuxing again.",
                 ParsingMatroskaFile = "Parsing Matroska file. Please wait...",
                 ParsingTransportStreamFile = "Parsing Transport Stream file. Please wait...",
                 BeforeImportFromMatroskaFile = "Before import subtitle from Matroska file",
