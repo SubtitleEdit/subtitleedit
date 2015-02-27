@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (displayTime < minDisplayTime)
                 {
                     Paragraph next = _working.GetParagraphOrDefault(i + 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds))
+                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds) && AllowFix(p))
                     {
                         string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + minDisplayTime;
