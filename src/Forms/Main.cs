@@ -11652,7 +11652,7 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                 autoBreakUnbreakLines.Initialize(selectedLines, true);
 
-                if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedParagraphs.Count > 0)
+                if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedText.Count > 0)
                 {
                     MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
                     string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
@@ -11660,18 +11660,16 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
                         Paragraph p = _subtitle.GetParagraphOrDefault(index);
-
-                        int indexFixed = autoBreakUnbreakLines.FixedParagraphs.IndexOf(p);
-                        if (indexFixed >= 0)
+                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.ID))
                         {
-                            p.Text = Utilities.AutoBreakLine(p.Text, 5, autoBreakUnbreakLines.MergeLinesShorterThan, language);
+                            p.Text = autoBreakUnbreakLines.FixedText[p.ID];
                             SubtitleListview1.SetText(index, p.Text);
                             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }
                     }
                     SubtitleListview1.EndUpdate();
                     RefreshSelectedParagraph();
-                    ShowStatus(string.Format(_language.NumberOfLinesAutoBalancedX, autoBreakUnbreakLines.FixedParagraphs.Count));
+                    ShowStatus(string.Format(_language.NumberOfLinesAutoBalancedX, autoBreakUnbreakLines.FixedText.Count));
                 }
             }
         }
@@ -11692,7 +11690,7 @@ namespace Nikse.SubtitleEdit.Forms
                     selectedLines.Paragraphs.Add(_subtitle.Paragraphs[index]);
                 autoBreakUnbreakLines.Initialize(selectedLines, false);
 
-                if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedParagraphs.Count > 0)
+                if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedText.Count > 0)
                 {
                     MakeHistoryForUndo(_language.BeforeRemoveLineBreaksInSelectedLines);
 
@@ -11700,18 +11698,17 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
                         Paragraph p = _subtitle.GetParagraphOrDefault(index);
-
-                        int indexFixed = autoBreakUnbreakLines.FixedParagraphs.IndexOf(p);
-                        if (indexFixed >= 0)
+                        if (autoBreakUnbreakLines.FixedText.ContainsKey(p.ID))
                         {
-                            p.Text = Utilities.UnbreakLine(p.Text);
+                            p.Text = autoBreakUnbreakLines.FixedText[p.ID];
                             SubtitleListview1.SetText(index, p.Text);
                             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }
+
                     }
                     SubtitleListview1.EndUpdate();
                     RefreshSelectedParagraph();
-                    ShowStatus(string.Format(_language.NumberOfWithRemovedLineBreakX, autoBreakUnbreakLines.FixedParagraphs.Count));
+                    ShowStatus(string.Format(_language.NumberOfWithRemovedLineBreakX, autoBreakUnbreakLines.FixedText.Count));
                 }
             }
         }

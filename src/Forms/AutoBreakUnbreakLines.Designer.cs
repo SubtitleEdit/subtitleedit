@@ -123,7 +123,6 @@
             this.comboBoxConditions.Name = "comboBoxConditions";
             this.comboBoxConditions.Size = new System.Drawing.Size(150, 21);
             this.comboBoxConditions.TabIndex = 8;
-            this.comboBoxConditions.SelectedIndexChanged += new System.EventHandler(this.ComboBoxConditionsSelectedIndexChanged);
             // 
             // labelCondition
             // 
