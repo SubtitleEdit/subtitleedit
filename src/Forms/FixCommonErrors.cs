@@ -1295,123 +1295,108 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // missing space after comma ","
                 Match match = FixMissingSpacesReComma.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
+
+                    if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
+                        doFix = false;
+
+                    if (doFix && AllowFix(p, fixAction))
                     {
-                        bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
-
-                        if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
-                            doFix = false;
-
-                        if (doFix && AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        match = match.NextMatch();
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    match = match.NextMatch();
                 }
 
                 bool allowFix = AllowFix(p, fixAction);
 
                 // missing space after "?"
                 match = FixMissingSpacesReQuestionMark.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
                 }
 
                 // missing space after "!"
                 match = FixMissingSpacesReExclamation.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
                 }
 
                 // missing space after ":"
                 match = FixMissingSpacesReColon.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    int start = match.Index;
+                    start -= 4;
+                    if (start < 0)
+                        start = 0;
+                    int indexOfStartCodeTag = p.Text.IndexOf('{', start);
+                    int indexOfEndCodeTag = p.Text.IndexOf('}', start);
+                    if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
                     {
-                        int start = match.Index;
-                        start -= 4;
-                        if (start < 0)
-                            start = 0;
-                        int indexOfStartCodeTag = p.Text.IndexOf('{', start);
-                        int indexOfEndCodeTag = p.Text.IndexOf('}', start);
-                        if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
-                        {
-                            // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
-                        }
-                        else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        match = FixMissingSpacesReColon.Match(p.Text, match.Index + 1);
+                        // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
                     }
+                    else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
+                    {
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                    match = FixMissingSpacesReColon.Match(p.Text, match.Index + 1);
                 }
 
                 // missing space after period "."
                 match = FixMissingSpacesRePeriod.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
+                        !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
+                        !UrlCom.IsMatch(p.Text) &&
+                        !UrlNet.IsMatch(p.Text) &&
+                        !UrlOrg.IsMatch(p.Text)) // urls are skipped
                     {
-                        if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
-                            !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
-                            !UrlCom.IsMatch(p.Text) &&
-                            !UrlNet.IsMatch(p.Text) &&
-                            !UrlOrg.IsMatch(p.Text)) // urls are skipped
+                        bool isMatchAbbreviation = false;
+
+                        string word = GetWordFromIndex(p.Text, match.Index);
+                        if (Utilities.CountTagInText(word, '.') > 1)
+                            isMatchAbbreviation = true;
+
+                        if (!isMatchAbbreviation && word.Contains('@')) // skip emails
+                            isMatchAbbreviation = true;
+
+                        if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
+                            isMatchAbbreviation = true;
+
+                        if (!isMatchAbbreviation && AllowFix(p, fixAction))
                         {
-                            bool isMatchAbbreviation = false;
-
-                            string word = GetWordFromIndex(p.Text, match.Index);
-                            if (Utilities.CountTagInText(word, '.') > 1)
-                                isMatchAbbreviation = true;
-
-                            if (!isMatchAbbreviation && word.Contains('@')) // skip emails
-                                isMatchAbbreviation = true;
-
-                            if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
-                                isMatchAbbreviation = true;
-
-                            if (!isMatchAbbreviation && AllowFix(p, fixAction))
-                            {
-                                missingSpaces++;
-                                string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
+                            missingSpaces++;
+                            string oldText = p.Text;
+                            p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
+                            AddFixToListView(p, fixAction, oldText, p.Text);
                         }
-                        match = match.NextMatch();
                     }
+                    match = match.NextMatch();
                 }
 
                 if (!p.Text.StartsWith("--", StringComparison.Ordinal))
