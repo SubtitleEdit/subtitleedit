@@ -2223,6 +2223,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/NotAValidMatroskaFileX":
                     language.Main.NotAValidMatroskaFileX = reader.Value;
                     break;
+                case "Main/BlurayNotSubtitlesFound":
+                    language.Main.BlurayNotSubtitlesFound = reader.Value;
+                    break;
                 case "Main/ParsingMatroskaFile":
                     language.Main.ParsingMatroskaFile = reader.Value;
                     break;

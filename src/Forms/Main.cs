@@ -15100,6 +15100,10 @@ namespace Nikse.SubtitleEdit.Forms
             var subtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
             if (subtitles.Count == 0)
             {
+                string msg = _language.BlurayNotSubtitlesFound + Environment.NewLine + Environment.NewLine + log.ToString();
+                if (msg.Length > 800)
+                    msg = msg.Substring(0, 800);
+                MessageBox.Show(msg.Trim() + "...");
                 return;
             }
 
