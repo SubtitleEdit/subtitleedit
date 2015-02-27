@@ -640,7 +640,8 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (AllowFix(p, fixAction0) && string.IsNullOrEmpty(p.Text))
+                var text = HtmlUtil.RemoveHtmlTags(p.Text).Trim();
+                if (AllowFix(p, fixAction0) && string.IsNullOrEmpty(text))
                 {
                     Subtitle.Paragraphs.RemoveAt(i);
                     emptyLinesRemoved++;
