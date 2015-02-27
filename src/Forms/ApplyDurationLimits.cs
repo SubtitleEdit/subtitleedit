@@ -128,7 +128,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Subtitle unfixables = new Subtitle();
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
-            int noOfShortDisplayTimes = 0;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
@@ -142,14 +141,13 @@ namespace Nikse.SubtitleEdit.Forms
                 if (displayTime < minDisplayTime)
                 {
                     Paragraph next = _working.GetParagraphOrDefault(i + 1);
-                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds))
+                    if (next == null || (p.StartTime.TotalMilliseconds + minDisplayTime < next.StartTime.TotalMilliseconds) && AllowFix(p))
                     {
                         string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + minDisplayTime;
 
                         string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         _totalFixes++;
-                        noOfShortDisplayTimes++;
                         AddFixToListView(p, before, after);
                     }
                     else
@@ -165,23 +163,18 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixLongDisplayTimes()
         {
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixLongDisplayTime;
-            int noOfLongDisplayTimes = 0;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
                 double displayTime = p.Duration.TotalMilliseconds;
                 double maxDisplayTime = (double)numericUpDownDurationMax.Value;
-                if (displayTime > maxDisplayTime)
+                if (displayTime > maxDisplayTime && AllowFix(p))
                 {
-                    if (AllowFix(p))
-                    {
-                        string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
-                        string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        _totalFixes++;
-                        noOfLongDisplayTimes++;
-                        AddFixToListView(p, before, after);
-                    }
+                    string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
+                    string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                    _totalFixes++;
+                    AddFixToListView(p, before, after);
                 }
             }
         }
