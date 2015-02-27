@@ -168,16 +168,13 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = _working.Paragraphs[i];
                 double displayTime = p.Duration.TotalMilliseconds;
                 double maxDisplayTime = (double)numericUpDownDurationMax.Value;
-                if (displayTime > maxDisplayTime)
+                if (displayTime > maxDisplayTime && AllowFix(p))
                 {
-                    if (AllowFix(p))
-                    {
-                        string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
-                        string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
-                        _totalFixes++;
-                        AddFixToListView(p, before, after);
-                    }
+                    string before = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
+                    string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
+                    _totalFixes++;
+                    AddFixToListView(p, before, after);
                 }
             }
         }
