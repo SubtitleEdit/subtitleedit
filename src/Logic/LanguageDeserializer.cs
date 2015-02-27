@@ -4938,6 +4938,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Statistics/CharactersPerSecondAverage":
                     language.Statistics.CharactersPerSecondAverage = reader.Value;
                     break;
+                case "Statistics/Export":
+                    language.Statistics.Export = reader.Value;
+                    break;
                 case "SubStationAlphaProperties/Title":
                     language.SubStationAlphaProperties.Title = reader.Value;
                     break;
