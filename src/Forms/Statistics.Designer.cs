@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class Statistics
+    sealed partial class Statistics
     {
         /// <summary>
         /// Required designer variable.
@@ -48,7 +48,7 @@
             this.buttonOK.Location = new System.Drawing.Point(642, 632);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 2;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -100,7 +100,7 @@
             this.labelMostUsedLines.Location = new System.Drawing.Point(329, 27);
             this.labelMostUsedLines.Name = "labelMostUsedLines";
             this.labelMostUsedLines.Size = new System.Drawing.Size(80, 13);
-            this.labelMostUsedLines.TabIndex = 6;
+            this.labelMostUsedLines.TabIndex = 2;
             this.labelMostUsedLines.Text = "Most used lines";
             // 
             // labelMostUsedWords
@@ -109,7 +109,7 @@
             this.labelMostUsedWords.Location = new System.Drawing.Point(6, 27);
             this.labelMostUsedWords.Name = "labelMostUsedWords";
             this.labelMostUsedWords.Size = new System.Drawing.Size(87, 13);
-            this.labelMostUsedWords.TabIndex = 5;
+            this.labelMostUsedWords.TabIndex = 0;
             this.labelMostUsedWords.Text = "Most used words";
             // 
             // textBoxMostUsedLines
@@ -123,7 +123,7 @@
             this.textBoxMostUsedLines.ReadOnly = true;
             this.textBoxMostUsedLines.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxMostUsedLines.Size = new System.Drawing.Size(367, 183);
-            this.textBoxMostUsedLines.TabIndex = 1;
+            this.textBoxMostUsedLines.TabIndex = 3;
             // 
             // textBoxMostUsedWords
             // 
@@ -135,14 +135,14 @@
             this.textBoxMostUsedWords.ReadOnly = true;
             this.textBoxMostUsedWords.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxMostUsedWords.Size = new System.Drawing.Size(320, 183);
-            this.textBoxMostUsedWords.TabIndex = 0;
+            this.textBoxMostUsedWords.TabIndex = 1;
             // 
             // buttonExport
             // 
-            this.buttonExport.Location = new System.Drawing.Point(561, 632);
+            this.buttonExport.Location = new System.Drawing.Point(534, 632);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(75, 23);
-            this.buttonExport.TabIndex = 7;
+            this.buttonExport.Size = new System.Drawing.Size(102, 23);
+            this.buttonExport.TabIndex = 2;
             this.buttonExport.Text = "Export";
             this.buttonExport.UseVisualStyleBackColor = true;
             this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);

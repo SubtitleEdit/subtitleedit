@@ -1835,6 +1835,7 @@ can edit in same subtitle file (collaboration)</Information>
     <CharactersPerSecondMinimum>Characters/sec - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Characters/sec - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Characters/sec - average: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Export...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha properties</Title>

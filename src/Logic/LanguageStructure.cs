@@ -2023,6 +2023,7 @@
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }
+            public string Export { get; set; }            
         }
 
         public class SubStationAlphaProperties
