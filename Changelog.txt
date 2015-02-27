@@ -6,7 +6,7 @@
    * Added waveform text size/bold to UI
    * Added filter to "Batch convert"
    * Added new shortcut: Copy text from original to current - thx megasmile
-   * Added export functionality form "Statics" window - thx Ivandrofly
+   * Added export functionality form "Statistics" window - thx Ivandrofly
    * Added custom shortcut for toggle textbox auto-duration - thx Tony
    * Added full frame option for export of FAB image script
    * Added TGA output to export of images - thx Øjvind
@@ -18,7 +18,10 @@
    * Updated Korean translation - thx domddol
    * Updated Brazilian Portuguese translation - thx Igor
    * Updated German/French translations - thx xylographe
+   * Updated Polish translation - thx admas
+   * Updated Portuguese translation - thx moob
    * Taskbar icon progress info for batch-convert/dvd-rip/matroska+TS-import  
+   * Improved speed for Auto-balance/unbreak lines - thx Ivandrofly   
 * FIXED:
    * Fixed bugs in ASS/SSA loading - thx kotuwa
    * Fixed bug in spell check with auto change casing of http -  thx Ivandrofly
@@ -38,6 +41,9 @@
    * Some fixes for .chk files - thx Mark
    * Fixed bug in reading ASS/SSA from Matroska files
    * Can now read EBU STL files with only one line - thx Stefan
+   * Fixed handling of bad Blu-ray sup files - thx The Snyper
+   * Fixed typo in Brazilian translation - thx Rubens
+   * Fixed bug in mplayer2 subtitle format - thx Maciek
    * + Many minor fixes from Ivandrofly and xylographe
 
 
