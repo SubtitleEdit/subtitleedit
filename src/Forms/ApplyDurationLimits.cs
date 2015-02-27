@@ -128,7 +128,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Subtitle unfixables = new Subtitle();
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixShortDisplayTime;
-            int noOfShortDisplayTimes = 0;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
@@ -149,7 +148,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                         string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         _totalFixes++;
-                        noOfShortDisplayTimes++;
                         AddFixToListView(p, before, after);
                     }
                     else
@@ -165,7 +163,6 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixLongDisplayTimes()
         {
             string fixAction = Configuration.Settings.Language.FixCommonErrors.FixLongDisplayTime;
-            int noOfLongDisplayTimes = 0;
             for (int i = 0; i < _working.Paragraphs.Count; i++)
             {
                 Paragraph p = _working.Paragraphs[i];
@@ -179,7 +176,6 @@ namespace Nikse.SubtitleEdit.Forms
                         p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + maxDisplayTime;
                         string after = p.StartTime.ToShortString() + " --> " + p.EndTime.ToShortString() + " - " + p.Duration.ToShortString();
                         _totalFixes++;
-                        noOfLongDisplayTimes++;
                         AddFixToListView(p, before, after);
                     }
                 }
