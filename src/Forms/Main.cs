@@ -11631,7 +11631,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (autoBreakUnbreakLines.ShowDialog() == DialogResult.OK && autoBreakUnbreakLines.FixedParagraphs.Count > 0)
                 {
                     MakeHistoryForUndo(_language.BeforeAutoBalanceSelectedLines);
-                    string language = Utilities.AutoDetectGoogleLanguage(_subtitle);
                     SubtitleListview1.BeginUpdate();
                     foreach (int index in SubtitleListview1.SelectedIndices)
                     {
@@ -11640,7 +11639,7 @@ namespace Nikse.SubtitleEdit.Forms
                         int indexFixed = autoBreakUnbreakLines.FixedParagraphs.IndexOf(p);
                         if (indexFixed >= 0)
                         {
-                            p.Text = Utilities.AutoBreakLine(p.Text, 5, autoBreakUnbreakLines.MergeLinesShorterThan, language);
+                            p.Text = autoBreakUnbreakLines.FixedText[p.Number];
                             SubtitleListview1.SetText(index, p.Text);
                             SubtitleListview1.SyntaxColorLine(_subtitle.Paragraphs, index, p);
                         }

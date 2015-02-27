@@ -4,11 +4,13 @@ using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using System.Collections.Generic;
 using System.Drawing;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public partial class AutoBreakUnbreakLines : PositionAndSizeForm
     {
+        private Dictionary<int, string> _fixedText;
         private List<Paragraph> _paragraphs;
         private int _changes;
         private bool _modeAutoBalance;
@@ -16,6 +18,11 @@ namespace Nikse.SubtitleEdit.Forms
         public int Changes
         {
             get { return _changes; }
+        }
+
+        public Dictionary<int, string> FixedText
+        {
+            get { return _fixedText; }
         }
 
         public List<Paragraph> FixedParagraphs
@@ -110,11 +117,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             int minLength = MinimumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
+            _fixedText = new Dictionary<int, string>();
 
             Subtitle sub = new Subtitle();
             foreach (Paragraph p in _paragraphs)
                 sub.Paragraphs.Add(p);
             string language = Utilities.AutoDetectGoogleLanguage(sub);
+            sub = null;
 
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
@@ -126,6 +135,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
+                        _fixedText.Add(p.Number, text);
                         _changes++;
                     }
                 }
@@ -142,10 +152,10 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             foreach (Paragraph p in _paragraphs)
             {
-                if (p.Text != null && p.Text.Contains(Environment.NewLine) && p.Text.Length > minLength)
+                if (p.Text != null && p.Text.Length > minLength && p.Text.Contains(Environment.NewLine))
                 {
                     string text = p.Text.Replace(Environment.NewLine, " ");
-                    while (text.Contains("  "))
+                    while (text.Contains("  ", StringComparison.Ordinal))
                         text = text.Replace("  ", " ");
 
                     if (text != p.Text)
@@ -179,23 +189,13 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Add(item);
         }
 
-        private bool IsFixAllowed(Paragraph p)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.Tag.ToString() == p.ToString())
-                    return item.Checked;
-            }
-            return false;
-        }
-
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            for (int i = _paragraphs.Count - 1; i > 0; i--)
+            _paragraphs = new List<Paragraph>();
+            foreach (ListViewItem item in this.listViewFixes.Items)
             {
-                Paragraph p = _paragraphs[i];
-                if (!IsFixAllowed(p))
-                    _paragraphs.Remove(p);
+                if (item.Checked)
+                    _paragraphs.Add((Paragraph)item.Tag);
             }
             DialogResult = DialogResult.OK;
         }
