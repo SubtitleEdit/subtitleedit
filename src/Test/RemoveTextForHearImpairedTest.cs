@@ -766,6 +766,25 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextBeforeColonTest1()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            target.Settings.RemoveTextBeforeColon = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            target.Settings.RemoveTextBeforeColon = true;
+            const string text = "SKOTT AVFYRADE: 760\r\nFORDON FÖRSTÖRDA: 12";
+            const string expected = "760\r\n12";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextRemoveDashBeforeSquareBrackets()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();

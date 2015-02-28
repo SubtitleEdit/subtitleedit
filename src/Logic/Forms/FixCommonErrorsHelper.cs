@@ -451,14 +451,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
                 s = s.TrimStart('-');
-                if (!s.Contains('.') &&
-                    !s.Contains('?') &&
-                    !s.Contains('!') &&
-                    !s.Contains(':') &&
-                    !s.Contains(';') &&
-                    !s.Contains('-') &&
-                    !s.Contains('♪') &&
-                    !s.Contains('♫') &&
+                if (s.IndexOfAny(new[] { '.', '?', '!', ':', ';', '-', '♪', '♫' }) < 0 &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
                     s != s.ToUpper())
