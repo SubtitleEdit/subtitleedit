@@ -1136,6 +1136,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska-bestanden</MatroskaFiles>
     <NoSubtitlesFound>Geen ondertitels gevonden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Dit is geen geldig Matroska-bestand: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Geen ondertitels gevonden in dit blu-ray sup-bestand. U kunt proberen opnieuw te demultiplexen.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Matroska-bestand analyseren. Even geduld a.u.b.</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Transportstroom analyseren. Even geduld a.u.b.</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vóór ondertitelimport uit Matroska-bestand</BeforeImportFromMatroskaFile>
@@ -1832,6 +1833,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <CharactersPerSecondMinimum>Tekens/sec. - minimum: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Tekens/sec. - maximum: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Tekens/sec. - gemiddeld: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exporteren...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced SubStation Alpha eigenschappen</Title>
