@@ -153,7 +153,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                             if (remove && Settings.ColonSeparateLine)
                             {
-                                if (indexOfColon == line.Length - 1 || line.Substring(indexOfColon + 1).StartsWith(Environment.NewLine, StringComparison.Ordinal))
+                                if (indexOfColon == line.Length - 1 || (count == 0 && Utilities.GetNumberOfLines(text) == 2))
                                     remove = true;
                                 else
                                     remove = false;
