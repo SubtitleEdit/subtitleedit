@@ -223,7 +223,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                         if (Utilities.IsBetweenNumbers(s2, colonIndex))
                                             endIndex = 0;
                                         if (endIndex < 0)
-                                            s2 = s2.Remove(0, colonIndex - endIndex + 1);
+                                            s2 = s2.Remove(0, colonIndex - endIndex);
                                         else if (endIndex > 0)
                                             s2 = s2.Remove(endIndex + 1, colonIndex - endIndex);
                                     }
