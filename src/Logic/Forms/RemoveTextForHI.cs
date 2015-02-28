@@ -220,11 +220,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     if (!Settings.RemoveTextBeforeColonOnlyUppercase || start == start.ToUpper())
                                     {
                                         int endIndex = start.LastIndexOfAny(new[] { '.', '!', '?' });
-                                        if (colonIndex > 0 && colonIndex < s2.Length - 1)
-                                        {
-                                            if (char.IsDigit(s2[colonIndex - 1]) && char.IsDigit(s2[colonIndex + 1]))
-                                                endIndex = 0;
-                                        }
+                                        if (Utilities.IsBetweenNumbers(s2, colonIndex))
+                                            endIndex = 0;
                                         if (endIndex < 0)
                                             s2 = s2.Remove(0, colonIndex - endIndex);
                                         else if (endIndex > 0)
