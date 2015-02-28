@@ -1134,6 +1134,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MatroskaFiles>Matroska 파일</MatroskaFiles>
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
     <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Blu-ray sup 파일에 어떠한 자막도 들어 있지 않거나 오류가 있습니다 - 다시 추출하십시오.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Matroska 파일의 구문을 분석하는 중...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>전송 스트림 파일의 구문을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
@@ -1833,6 +1834,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
+    <Export>내보내기...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>* Advanced Sub Station Alpha(.ass)의 속성</Title>
