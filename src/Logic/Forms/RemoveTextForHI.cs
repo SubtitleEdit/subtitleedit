@@ -162,7 +162,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             if (remove)
                             {
                                 var content = line.Substring(indexOfColon + 1).Trim();
-                                if (content.Length > 0)
+                                if (HtmlUtil.RemoveHtmlTags(content, true).Length > 0)
                                 {
                                     if (pre.Contains("<i>") && content.Contains("</i>"))
                                         newText = newText + Environment.NewLine + "<i>" + content;
