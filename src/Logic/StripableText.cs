@@ -134,8 +134,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
                 while (start >= 0 && start < lower.Length)
                 {
-                    bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
+                    bool startOk = (start == 0) || ("-\"'> ".Contains(lower[start - 1])) ||
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
                     if (startOk)
@@ -187,19 +186,13 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
 
-                bool startWithUppercase = string.IsNullOrEmpty(s) ||
-                                          s.EndsWith('.') ||
-                                          s.EndsWith('!') ||
-                                          s.EndsWith('?') ||
+                bool startWithUppercase = string.IsNullOrEmpty(s) || ".!?)]:".Contains(s[s.Length - 1]) ||
                                           s.EndsWith(". ♪", StringComparison.Ordinal) ||
                                           s.EndsWith("! ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith("? ♪", StringComparison.Ordinal) ||
-                                          s.EndsWith(']') ||
-                                          s.EndsWith(')') ||
-                                          s.EndsWith(':');
+                                          s.EndsWith("? ♪", StringComparison.Ordinal);
 
                 // start with uppercase after music symbol - but only if next line does not start with music symbol
-                if (!startWithUppercase && (s.EndsWith('♪') || s.EndsWith('♫')))
+                if (!startWithUppercase && (s.Length > 1 && "♪♫".Contains(s[s.Length - 1])))
                 {
                     if (!Pre.Contains('♪') && !Pre.Contains('♫'))
                         startWithUppercase = true;
