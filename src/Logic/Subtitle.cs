@@ -458,8 +458,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int RemoveEmptyLines()
         {
-            int count = 0;
-            if (_paragraphs.Count > 0)
+            int count = _paragraphs.Count;
+            if (count > 0)
             {
                 int firstNumber = _paragraphs[0].Number;
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
@@ -468,14 +468,12 @@ namespace Nikse.SubtitleEdit.Logic
                     string s = p.Text.Trim();
 
                     if (s.Length == 0)
-                    {
                         _paragraphs.RemoveAt(i);
-                        count++;
-                    }
                 }
-                Renumber(firstNumber);
+                if (count != _paragraphs.Count)
+                    Renumber(firstNumber);
             }
-            return count;
+            return count - _paragraphs.Count;
         }
 
         /// <summary>
