@@ -106,8 +106,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     else
                     {
                         var st = new StripableText(pre);
-                        if (count == 1 && Utilities.GetNumberOfLines(text) == 2 && removedInFirstLine && Utilities.CountTagInText(line, ':') == 1 &&
-                            ".?!".IndexOf(newText[newText.Length - 1]) < 0 && ".</i>!</i>?</i>".IndexOf(newText.Substring(newText.Length - ".</i>".Length), StringComparison.Ordinal) < 0 &&
+                        if (count == 1 && removedInFirstLine && Utilities.CountTagInText(line, ':') == 1 &&
+                            ".?!".IndexOf(newText[newText.Length - 1]) < 0 && newText.LineEndsWithHtmlTag(true) &&
                             line != line.ToUpper())
                         {
                             if (pre.Contains("<i>") && line.Contains("</i>"))
@@ -123,8 +123,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             else
                                 newText = newText + Environment.NewLine + line;
                         }
-                        else if (count == 1 && Utilities.GetNumberOfLines(text) == 2 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(line, ':') == 1 &&
-                            ".?!".IndexOf(newText[newText.Length - 1]) < 0 && ".</i>!</i>?</i>".IndexOf(newText.Substring(newText.Length - ".</i>".Length), StringComparison.Ordinal) < 0 &&
+                        else if (count == 1 && indexOfColon > 15 && line.Substring(0, indexOfColon).Contains(' ') && Utilities.CountTagInText(line, ':') == 1 &&
+                            ".?!".IndexOf(newText[newText.Length - 1]) < 0 && newText.LineEndsWithHtmlTag(true) &&
                             line != line.ToUpper())
                         {
                             if (pre.Contains("<i>") && line.Contains("</i>"))
