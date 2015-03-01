@@ -347,8 +347,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
         {
             Paragraph p = subtitle.Paragraphs[i];
             string text = p.Text;
-            var textCache = HtmlUtil.RemoveHtmlTags(text.TrimStart());
-            if (textCache.StartsWith('-') || textCache.Contains(Environment.NewLine + "-"))
+            var noTagText = HtmlUtil.RemoveHtmlTags(text.TrimStart());
+            if (noTagText.StartsWith('-') || noTagText.Contains(Environment.NewLine + "-"))
             {
                 Paragraph prev = subtitle.GetParagraphOrDefault(i - 1);
 
@@ -416,6 +416,25 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     }
                 }
             }
+            else if (noTagText.Contains(Environment.NewLine) && Utilities.CountTagInText(noTagText, ':') == 2)
+            {
+                var noTagLines = noTagText.SplitToLines();
+                var line1 = noTagLines[0];
+                var line2 = noTagLines[1];
+
+                bool add = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(line1) && IsPreviousTextEndOfParagraph(line2);
+
+                if (add && line1.Length > 1 && line2.Length > 2)
+                {
+                    var idx1 = line1.IndexOf(':', 1);
+                    var idx2 = line2.IndexOf(':', 1);
+                    if ((idx1 >= 1 && idx2 >= 1) && (!Utilities.IsBetweenNumbers(line1, idx1) && !Utilities.IsBetweenNumbers(line2, idx2)))
+                    {
+                        text = "- " + text.Insert(text.IndexOf(Environment.NewLine) + 2, "- ");
+                    }
+                }
+            }
+
             return text;
         }
 
