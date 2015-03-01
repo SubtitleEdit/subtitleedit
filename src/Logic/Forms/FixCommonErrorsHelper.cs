@@ -360,14 +360,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     if (startHyphenCount == 1 && totalSpaceHyphen == 0)
                     {
                         var parts = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
-                        if (parts.Length == 2)
+                        var part0 = parts[0].TrimEnd();
+                        if (parts.Length == 2 && part0.Length > 0)
                         {
-                            var part0 = parts[0].TrimEnd();
-                            bool doAdd = "!?.".Contains(part0[part0.Length - 1]) || language == "ko";
-                            if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':') && !doAdd)
-                                doAdd = false;
-                            if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':') && !doAdd)
-                                doAdd = false;
+                            bool doAdd = ")]!?.".Contains(part0[part0.Length - 1]) || language == "ko";
+                            if (!doAdd)
+                            {
+                                if (parts[0].TrimStart().StartsWith('-') && parts[1].Contains(':'))
+                                    doAdd = false;
+                                if (parts[1].TrimStart().StartsWith('-') && parts[0].Contains(':'))
+                                    doAdd = false;
+                            }
 
                             if (doAdd)
                             {
