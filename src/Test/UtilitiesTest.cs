@@ -332,23 +332,32 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddTest()
         {
-            var test1 = @"<font color=""#008080"">- Foobar.
-Foobar.</font>";
-            var expected1 = @"<font color=""#008080"">- Foobar.
-- Foobar.</font>";
+            var test1 = "<font color=\"#008080\">- Foobar.\r\nFoobar.</font>";
+            var expected1 = "<font color=\"#008080\">- Foobar.\r\n- Foobar.</font>";
 
-            var test2 = @"<i>Foobar.</i>
-- Foobar.";
-            var expected2 = @"<i>- Foobar.</i>
-- Foobar.";
+            var test2 = "<i>Foobar.</i>\r\n- Foobar.";
+            var expected2 = "<i>- Foobar.</i>\r\n- Foobar.";
+
+            var test3 = "- (CROWD SPEAKINGINDISTINCTLY)\r\nBOY: Hello.";
+            var expected3 = "- (CROWD SPEAKINGINDISTINCTLY)\r\n- BOY: Hello.";
+
+            var test4 = "- [CROWD SPEAKINGINDISTINCTLY]\r\nBOY: Hello.";
+            var expected4 = "- [CROWD SPEAKINGINDISTINCTLY]\r\n- BOY: Hello.";
+
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
             sub.Paragraphs.Add(new Paragraph(test2, 0000, 11111));
+            sub.Paragraphs.Add(new Paragraph(test3, 0000, 11111));
+            sub.Paragraphs.Add(new Paragraph(test4, 0000, 11111));
 
             string output1 = FixCommonErrorsHelper.FixHyphensAdd(sub, 0, "en");
             string output2 = FixCommonErrorsHelper.FixHyphensAdd(sub, 1, "en");
+            string output3 = FixCommonErrorsHelper.FixHyphensAdd(sub, 2, "en");
+            string output4 = FixCommonErrorsHelper.FixHyphensAdd(sub, 3, "en");
 
             Assert.AreEqual(output1, expected1); Assert.AreEqual(output2, expected2);
+
+            Assert.AreEqual(output3, expected3); Assert.AreEqual(output4, expected4);
         }
 
         [TestMethod]
