@@ -1138,6 +1138,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <MatroskaFiles>Pliki Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nie znaleziono napisów</NoSubtitlesFound>
     <NotAValidMatroskaFileX>To nie jest poprawny plik Matroska: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Plik Blu-ray sup nie zawiera żadnych napisów lub zawiera błędy - spróbuj ponownie użyć demuksera.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Proszę czekać, analizuję składnię pliku Matroska...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Parsowanie pliku Transport Stream. Proszę czekać...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Przed importem napisów z pliku Matroska</BeforeImportFromMatroskaFile>
@@ -1835,6 +1836,7 @@ może edytować ten sam plik z napisami (współpracować)</Information>
     <CharactersPerSecondMinimum>Znaków/sekundę - minimalnie: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Znaków/sekundę - maksymalnie: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Znaków/sekundę - średnio: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Eksport...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Właściwości Advanced Sub Station Alpha</Title>
