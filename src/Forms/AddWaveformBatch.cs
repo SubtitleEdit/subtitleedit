@@ -346,5 +346,12 @@ namespace Nikse.SubtitleEdit.Forms
                 _abort = true;
         }
 
+        private void contextMenuStripFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (listViewInputFiles.Items.Count == 0)
+                e.Cancel = true;
+            removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
+        }
+
     }
 }
