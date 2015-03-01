@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(_subtitle, Configuration.Settings.Language.General.CurrentSubtitle, h2.Subtitle, descr2);
-                    compareForm.Show();
+                    compareForm.ShowDialog(this);
                 }
             }
         }
@@ -143,7 +143,7 @@ namespace Nikse.SubtitleEdit.Forms
                 using (var compareForm = new Compare())
                 {
                     compareForm.Initialize(h1.Subtitle, descr1, h2.Subtitle, descr2);
-                    compareForm.Show();
+                    compareForm.ShowDialog(this);
                 }
             }
         }
