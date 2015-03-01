@@ -353,6 +353,20 @@ Foobar.</font>";
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixHyphensAddTest2()
+        {
+            var test1 = "Narrator1: Hello!\r\nNarrator2: Hi!";
+            var expected1 = "- Narrator1: Hello!\r\n- Narrator2: Hi!";
+            var sub = new Subtitle();
+            sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
+
+            string output1 = FixCommonErrorsHelper.FixHyphensAdd(sub, 0, "en");
+
+            Assert.AreEqual(output1, expected1);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveLineBreaks1()
         {
             string result = Utilities.RemoveLineBreaks("Hey" + Environment.NewLine + "you!");
