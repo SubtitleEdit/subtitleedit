@@ -77,7 +77,7 @@
   <About>
     <Title>Über Subtitle Edit</Title>
     <AboutText1>Subtitle Edit ist Freie Software unter der GNU Public License.
-Sie dürfen Sie frei verbreiten, verändern und verwenden.
+Sie dürfen sie frei verbreiten, verändern und verwenden.
 
 Der C# Quelltext ist erhältlich unter https://github.com/SubtitleEdit/subtitleedit
 
@@ -1137,12 +1137,13 @@ Fortfahren?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska Dateien</MatroskaFiles>
     <NoSubtitlesFound>Keine Untertitel gefunden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ungültige Matroska Datei: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Keine Untertitel gefunden in diese Blu-ray sup Datei - erneutes Demultiplexen versuchen.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Untersuche Matroska Datei. Bitte warten...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Untersuche Transport Stream Datei. Bitte warten...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vor Import der Untertitel aus Matroska Datei</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Untertitel importiert aus Matroska Datei</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ablegen der Datei '{0}' nicht möglich - Datei ist zu groß</DropFileXNotAccepted>
-    <DropOnlyOneFile>Du kannst nur eine Datei ablegen</DropOnlyOneFile>
+    <DropOnlyOneFile>Sie können nur eine Datei ablegen</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Vor Texterstellung/Anpassung</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Untertitel öffnen...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Vor Ändern der Groß-/Kleinschreibung</BeforeChangeCasing>
@@ -1833,6 +1834,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <CharactersPerSecondMinimum>Zeichen/Sek - Minimum:          {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Zeichen/Sek - Maximum:          {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Zeichen/Sek - Durchschnitt:     {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportiere...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Erweiterte SSA Eigenschaften</Title>
