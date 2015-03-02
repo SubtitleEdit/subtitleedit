@@ -18,7 +18,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<int> _differences;
         private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-        private string _language1;
+        private string _language;
 
         public Compare()
         {
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Filter = Utilities.GetOpenDialogFilter();
             subtitleListView1.SelectIndexAndEnsureVisible(0);
             subtitleListView2.SelectIndexAndEnsureVisible(0);
-            _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+            _language = Utilities.AutoDetectGoogleLanguage(_subtitle1);
         }
 
         public void Initialize(Subtitle subtitle1, string subtitleFileName1, Subtitle subtitle2, string subtitleFileName2)
@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle2 = subtitle2;
             labelSubtitle2.Text = subtitleFileName2;
 
-            _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+            _language = Utilities.AutoDetectGoogleLanguage(_subtitle1);
             CompareSubtitles();
 
             if (string.IsNullOrEmpty(subtitleFileName1))
@@ -140,7 +140,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = openFileDialog1.FileName;
-                _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+                _language = Utilities.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
@@ -421,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool GetBreakToLetter()
         {
-            if (_language1 != null && (_language1 == "jp" || _language1 == "zh"))
+            if (_language != null && (_language == "jp" || _language == "zh"))
                 return true;
             return false;
         }
@@ -873,7 +873,7 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitleListView1.SelectIndexAndEnsureVisible(0);
                 subtitleListView2.SelectIndexAndEnsureVisible(0);
                 labelSubtitle1.Text = filePath;
-                _language1 = Utilities.AutoDetectGoogleLanguage(_subtitle1);
+                _language = Utilities.AutoDetectGoogleLanguage(_subtitle1);
                 if (_subtitle1.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
