@@ -416,8 +416,8 @@ namespace Nikse.SubtitleEdit.Forms
                 startIndex = result.IndexOf("<span title=", startIndex, StringComparison.Ordinal);
                 while (startIndex > 0)
                 {
-                    startIndex = result.IndexOf('>', startIndex);
-                    if (startIndex > 0)
+                    startIndex = result.IndexOf('>', startIndex + 12);
+                    if (startIndex >= 12)
                     {
                         startIndex++;
                         int endIndex = result.IndexOf("</span>", startIndex, StringComparison.Ordinal);
@@ -593,7 +593,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
             comboBox.Items.Add(new ComboBoxItem("UKRAINIAN", "uk"));
             comboBox.Items.Add(new ComboBoxItem("URDU", "ur"));
-            comboBox.Items.Add(new ComboBoxItem("UZBEK" , "uz"));
+            comboBox.Items.Add(new ComboBoxItem("UZBEK", "uz"));
             //            comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
             comboBox.Items.Add(new ComboBoxItem("VIETNAMESE", "vi"));
             comboBox.Items.Add(new ComboBoxItem("WELSH", "cy"));
