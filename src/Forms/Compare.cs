@@ -585,7 +585,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = i;
                     richTextBox1.SelectionLength = 1;
-                    richTextBox1.SelectionBackColor = Color.Red;
+                    richTextBox1.SelectionColor = Color.Red;
                     if (string.IsNullOrWhiteSpace(richTextBox1.SelectedText))
                         richTextBox1.SelectionBackColor = Color.Red;
                 }
@@ -627,7 +627,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     richTextBox1.SelectionStart = richTextBox2.Text.Length;
                     richTextBox1.SelectionLength = richTextBox1.Text.Length - richTextBox2.Text.Length;
-                    richTextBox1.SelectionBackColor = Color.Red;
+                    richTextBox1.SelectionColor = Color.Red;
                 }
             }
             else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
