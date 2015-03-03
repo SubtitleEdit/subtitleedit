@@ -159,11 +159,12 @@ namespace Nikse.SubtitleEdit.Forms
         public int RemoveTextFromHearImpaired()
         {
             int count = 0;
-            for (int i = _subtitle.Paragraphs.Count - 1; i >= 0; i--)
+            for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
-                Paragraph p = _subtitle.Paragraphs[i];
-                if (IsFixAllowed(p))
+                var item = listViewFixes.Items[i];
+                if (item.Checked)
                 {
+                    Paragraph p = (Paragraph)item.Tag;
                     _removeTextForHILib.Settings = GetSettings();
                     string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                     if (string.IsNullOrEmpty(newText))
@@ -178,16 +179,6 @@ namespace Nikse.SubtitleEdit.Forms
                 }
             }
             return count;
-        }
-
-        private bool IsFixAllowed(Paragraph p)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.Tag.ToString() == p.ToString())
-                    return item.Checked;
-            }
-            return false;
         }
 
         private void CheckBoxRemoveTextBetweenCheckedChanged(object sender, EventArgs e)
@@ -282,7 +273,8 @@ namespace Nikse.SubtitleEdit.Forms
                 RemoveTextBetweenBrackets = checkBoxRemoveTextBetweenBrackets.Checked,
                 RemoveTextBetweenQuestionMarks = checkBoxRemoveTextBetweenQuestionMarks.Checked,
                 RemoveTextBetweenParentheses = checkBoxRemoveTextBetweenParentheses.Checked,
-                CustomStart = comboBoxCustomStart.Text, CustomEnd = comboBoxCustomEnd.Text
+                CustomStart = comboBoxCustomStart.Text,
+                CustomEnd = comboBoxCustomEnd.Text
             };
             return settings;
         }
