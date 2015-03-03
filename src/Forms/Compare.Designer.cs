@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelSubtitle2
             // 
             this.labelSubtitle2.AutoSize = true;
-            this.labelSubtitle2.Location = new System.Drawing.Point(492, 31);
+            this.labelSubtitle2.Location = new System.Drawing.Point(491, 32);
             this.labelSubtitle2.Name = "labelSubtitle2";
             this.labelSubtitle2.Size = new System.Drawing.Size(30, 13);
             this.labelSubtitle2.TabIndex = 3;
