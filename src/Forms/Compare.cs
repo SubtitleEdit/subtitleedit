@@ -202,37 +202,28 @@ namespace Nikse.SubtitleEdit.Forms
                 max = sub2.Paragraphs.Count;
             while (index < max)
             {
-                if (p1 != null && p2 != null)
+                if ((p1 != null && p2 != null) && (p1.ToString() != p2.ToString()) && (GetColumnsEqualExceptNumber(p1, p2) == 0))
                 {
-                    if (p1.ToString() == p2.ToString())
+                    int oldIndex = index;
+                    for (int i = 1; oldIndex + i < max; i++)
                     {
-                    }
-                    else
-                    {
-                        if (GetColumnsEqualExceptNumber(p1, p2) == 0)
+                        if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(index + i), p2) > 1)
                         {
-                            int oldIndex = index;
-                            for (int i = 1; oldIndex + i < max; i++)
+                            for (int j = 0; j < i; j++)
                             {
-                                if (GetColumnsEqualExceptNumber(sub1.GetParagraphOrDefault(index + i), p2) > 1)
-                                {
-                                    for (int j = 0; j < i; j++)
-                                    {
-                                        sub2.Paragraphs.Insert(index, new Paragraph());
-                                        index++;
-                                    }
-                                    break;
-                                }
-                                if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
-                                {
-                                    for (int j = 0; j < i; j++)
-                                    {
-                                        sub1.Paragraphs.Insert(index, new Paragraph());
-                                        index++;
-                                    }
-                                    break;
-                                }
+                                sub2.Paragraphs.Insert(index, new Paragraph());
+                                index++;
                             }
+                            break;
+                        }
+                        if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
+                        {
+                            for (int j = 0; j < i; j++)
+                            {
+                                sub1.Paragraphs.Insert(index, new Paragraph());
+                                index++;
+                            }
+                            break;
                         }
                     }
                 }
@@ -343,7 +334,6 @@ namespace Nikse.SubtitleEdit.Forms
                                     subtitleListView2.SetBackgroundColor(index, Color.LightGreen,
                                                                          SubtitleListView.ColumnIndexText);
                                 }
-
                                 if (p1.Number != p2.Number)
                                 {
                                     subtitleListView1.SetBackgroundColor(index, Color.LightYellow,
@@ -356,9 +346,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        if (p1 != null && p1.Text != null)
+                        if (p1 != null && !string.IsNullOrEmpty(p1.Text))
                             totalWords += Utilities.SplitForChangedCalc(p1.Text, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter()).Length;
-                        else if (p2 != null && p2.Text != null)
+                        else if (p2 != null && !string.IsNullOrEmpty(p2.Text))
                             totalWords += Utilities.SplitForChangedCalc(p2.Text, checkBoxIgnoreLineBreaks.Checked, GetBreakToLetter()).Length;
                         _differences.Add(index);
                     }
