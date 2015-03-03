@@ -556,6 +556,38 @@ namespace Test
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections12()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            const string text = "Well, boy, I'm — Uh —";
+            const string expected = "Well, boy, I'm —";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }        
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveInterjections13()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            string text = "- What?" + Environment.NewLine + "- Uh —";
+            const string expected = "What?";
+            string actual = target.RemoveInterjections(text);
+            Assert.AreEqual(expected, actual);
+        }        
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveColonOnlyOnSeparateLine()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
