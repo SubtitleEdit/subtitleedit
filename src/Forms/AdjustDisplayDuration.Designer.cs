@@ -93,7 +93,6 @@
             this.radioButtonAutoRecalculate.TabIndex = 2;
             this.radioButtonAutoRecalculate.Text = "Recalculate";
             this.radioButtonAutoRecalculate.UseVisualStyleBackColor = true;
-            this.radioButtonAutoRecalculate.CheckedChanged += new System.EventHandler(this.radioButtonradioButtonAutoRecalculate_CheckedChanged);
             // 
             // comboBoxPercent
             // 
@@ -196,7 +195,6 @@
             this.labelNote.Size = new System.Drawing.Size(279, 13);
             this.labelNote.TabIndex = 7;
             this.labelNote.Text = "Note: Display time will not overlap start time of next text";
-            this.labelNote.Click += new System.EventHandler(this.labelNote_Click);
             // 
             // labelAddInPercent
             // 
@@ -263,7 +261,6 @@
             0,
             0,
             0});
-            this.numericUpDownMaxCharsSec.ValueChanged += new System.EventHandler(this.numericUpDownMaxCharsSec_ValueChanged);
             // 
             // labelMaxCharsPerSecond
             // 
@@ -273,7 +270,6 @@
             this.labelMaxCharsPerSecond.Size = new System.Drawing.Size(80, 13);
             this.labelMaxCharsPerSecond.TabIndex = 5;
             this.labelMaxCharsPerSecond.Text = "Max. chars/sec";
-            this.labelMaxCharsPerSecond.Click += new System.EventHandler(this.labelMaxCharsPerSecond_Click);
             // 
             // AdjustDisplayDuration
             // 
@@ -300,7 +296,6 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Adjust display time";
-            this.Load += new System.EventHandler(this.AdjustDisplayDuration_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FormAdjustDisplayTime_KeyDown);
             this.groupBoxAdjustVia.ResumeLayout(false);
             this.groupBoxAdjustVia.PerformLayout();
