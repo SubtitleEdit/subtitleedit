@@ -767,12 +767,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                 "</Events>" + Environment.NewLine +
                                 "</BDN>");
                     XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
+                    doc.PreserveWhitespace = true;
                     events.InnerXml = sb.ToString();
-                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), doc.OuterXml);
+                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), FormatUtf8Xml(doc), Encoding.UTF8);                    
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
             }
             buttonExport.Enabled = true;
+        }
+
+        static private string FormatUtf8Xml(XmlDocument doc)
+        {
+            var sb = new StringBuilder();
+            using (var writer = XmlWriter.Create(sb, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            {
+                doc.Save(writer);
+            }
+            return sb.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim(); // "replace hack" due to missing ecoding
         }
 
         private void SaveImage(Bitmap bmp, string fileName, ImageFormat imageFormat)
