@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.5</Version>
-    <TranslatedBy>------------------------------------------------------------------------------------------------
+    <TranslatedBy> ------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:moob@live.com.pt</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -427,7 +427,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Direita</Right>
     <Center>Centro</Center>
     <BottomMargin>Margem inferior</BottomMargin>
-    <LeftRightMargin>Margem esquerda/direita</LeftRightMargin>
+    <LeftRightMargin>Margem esq./dto.</LeftRightMargin>
     <SaveBluRraySupAs>Escolha o nome do ficheiro Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Escolha o nome do ficheiro VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Escolha o nome do ficheiro Blu-ray sup</SaveFabImageScriptAs>
@@ -1139,6 +1139,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <MatroskaFiles>Ficheiros Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nenhuma legenda encontrada</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ficheiro Matroska (.mkv) inválido: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>O ficheiro Blu-ray sup não contém quaisquer legendas ou contém erros - tente demultiplexar novamente.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>A analisar o ficheiro Matroska (.mkv). Por favor, aguarde...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>A analisar o ficheiro Transport Stream. Por favor, aguarde...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Antes de importar legenda do ficheiro Matroska (.mkv)</BeforeImportFromMatroskaFile>
@@ -1256,7 +1257,8 @@ Deseja continuar?</SubtitleAppendPrompt>
     <ErrorLoadRar>Este ficheiro parece ser um ficheiro comprimido .rar. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadRar>
     <ErrorLoadZip>Este ficheiro parece ser um ficheiro comprimido .zip. O Subtitle Edit não pode abrir ficheiros comprimidos.</ErrorLoadZip>
     <ErrorLoadPng>Este ficheiro parece ser um ficheiro de imagem no formato PNG. O Subtitle Edit não pode abrir ficheiros PNG.</ErrorLoadPng>
-    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não um ficheiro de legenda.</ErrorLoadSrr>
+    <ErrorLoadSrr>Este ficheiro parece ser um ficheiro ReScene (.srr) - não é um ficheiro de legenda.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Este ficheiro parece ser um ficheiro BitTorrent - não é um ficheiro de legenda.</ErrorLoadTorrent>
     <NoSupportEncryptedVobSub>Conteúdo encriptado do VobSub não é suportado.</NoSupportEncryptedVobSub>
     <NoSupportHereBluRaySup>Ficheiros Blu-ray sup não são suportados aqui.</NoSupportHereBluRaySup>
     <NoSupportHereDvdSup>Ficheiros DVD sup não são suportados aqui.</NoSupportHereDvdSup>
@@ -1834,6 +1836,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <CharactersPerSecondMinimum>Caracteres/seg - mínimo: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caracteres/seg - máximo: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caracteres/seg - médio: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportar...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Advanced Sub Station Alpha propriedades</Title>
@@ -2037,7 +2040,7 @@ Manter as alterações?</KeepChangesMessage>
   <VobSubOcrSetItalicFactor>
     <Title>Definir um factor itálico</Title>
     <Description>Ajustar o valor até que o estilo do texto seja normal e não itálico. Note-se que a imagem original deve ser itálico.</Description>
-  </VobSubOcrSetItalicFactor>
+  </VobSubOcrSetItalicFactor>  
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
