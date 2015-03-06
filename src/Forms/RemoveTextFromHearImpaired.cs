@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                     if (string.IsNullOrEmpty(newText))
                     {
-                        _subtitle.Paragraphs.RemoveAt(i);
+                        _subtitle.Paragraphs.Remove(p);
                     }
                     else
                     {
