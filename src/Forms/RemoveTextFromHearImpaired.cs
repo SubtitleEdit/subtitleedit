@@ -158,6 +158,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public int RemoveTextFromHearImpaired()
         {
+            _removeTextForHILib.Settings = GetSettings();
             int count = 0;
             for (int i = listViewFixes.Items.Count - 1; i >= 0; i--)
             {
@@ -165,7 +166,6 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     Paragraph p = (Paragraph)item.Tag;
-                    _removeTextForHILib.Settings = GetSettings();
                     string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                     if (string.IsNullOrEmpty(newText))
                     {
