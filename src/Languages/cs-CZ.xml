@@ -258,7 +258,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Porovnat titulky</Title>
     <PreviousDifference>&amp;Předchozí rozdíl</PreviousDifference>
     <NextDifference>&amp;Další rozdíl</NextDifference>
-    <SubtitlesNotAlike>itulky nemajpodobnost</SubtitlesNotAlike>
+    <SubtitlesNotAlike>Titulky nemají žádné podobnosti</SubtitlesNotAlike>
     <XNumberOfDifference>Počet rozdílů: {0}</XNumberOfDifference>
     <XNumberOfDifferenceAndPercentChanged>Počet rozdílů: {0} ({1} % slov změněno)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Počet rozdílů: {0} ({1} % písmen změněno)</XNumberOfDifferenceAndPercentLettersChanged>
