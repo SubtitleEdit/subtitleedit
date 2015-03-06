@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 g.Dispose();
             }
-            
+
             base.OnLoad(e);
         }
 
@@ -2958,7 +2958,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
                         // only allow current extension or ".txt"
-                        string ext = Path.GetExtension(_fileName).ToLower();
+                        string ext = Path.GetExtension(_fileName).ToLowerInvariant();
                         bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                         if (!extOk)
                         {
@@ -3017,31 +3017,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!isUnicode)
                 {
-                    const string defHyphen = "-"; // - Hyphen-minus (\u002D) (Basic Latin)
-                    const string defColon = ":"; // : Colon (\uu003A) (Basic Latin)
-
-                    // Hyphens
-                    allText = allText.Replace("\u2043", defHyphen); // ⁃ Hyphen bullet (\u2043)
-                    allText = allText.Replace("\u2010", defHyphen); // ‐ Hyphen (\u2010)
-                    allText = allText.Replace("\u2012", defHyphen); // ‒ Figure dash (\u2012)
-                    allText = allText.Replace("\u2013", defHyphen); // – En dash (\u2013)
-                    allText = allText.Replace("\u2014", defHyphen); // — Em dash (\u2014)
-                    allText = allText.Replace("\u2015", defHyphen); // ― Horizontal bar (\u2015)
-
-                    // Colons:
-                    allText = allText.Replace("\u02F8", defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
-                    allText = allText.Replace("\uFF1A", defColon); // ： Fullwidth Colon (\uFF1A)
-                    allText = allText.Replace("\uF313", defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
-
-                    // Others
-                    allText = allText.Replace("…", "...");
-                    allText = allText.Replace("♪", "#");
-                    allText = allText.Replace("♫", "#");
-
-                    // Spaces
-                    allText = allText.Replace("\u00A0", " "); // No-Break Space
-                    allText = allText.Replace("\u200B", string.Empty); // Zero Width Space
-                    allText = allText.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
+                    allText = NormalizeUnicode(allText);
                 }
 
                 bool containsNegativeTime = false;
@@ -3147,11 +3123,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (!isUnicode)
                 {
-                    allText = allText.Replace("—", "-"); // mdash, code 8212
-                    allText = allText.Replace("―", "-"); // mdash, code 8213
-                    allText = allText.Replace("…", "...");
-                    allText = allText.Replace("♪", "#");
-                    allText = allText.Replace("♫", "#");
+                    allText = NormalizeUnicode(allText);
                 }
 
                 bool containsNegativeTime = false;
@@ -3179,6 +3151,36 @@ namespace Nikse.SubtitleEdit.Forms
                 MessageBox.Show(string.Format(_language.UnableToSaveSubtitleX, _fileName));
                 return DialogResult.Cancel;
             }
+        }
+
+        public string NormalizeUnicode(string text)
+        {
+            const string defHyphen = "-"; // - Hyphen-minus (\u002D) (Basic Latin)
+            const string defColon = ":"; // : Colon (\uu003A) (Basic Latin)
+
+            // Hyphens
+            text = text.Replace("\u2043", defHyphen); // ⁃ Hyphen bullet (\u2043)
+            text = text.Replace("\u2010", defHyphen); // ‐ Hyphen (\u2010)
+            text = text.Replace("\u2012", defHyphen); // ‒ Figure dash (\u2012)
+            text = text.Replace("\u2013", defHyphen); // – En dash (\u2013)
+            text = text.Replace("\u2014", defHyphen); // — Em dash (\u2014)
+            text = text.Replace("\u2015", defHyphen); // ― Horizontal bar (\u2015)
+
+            // Colons:
+            text = text.Replace("\u02F8", defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
+            text = text.Replace("\uFF1A", defColon); // ： Fullwidth Colon (\uFF1A)
+            text = text.Replace("\uF313", defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
+
+            // Others
+            text = text.Replace("…", "...");
+            text = text.Replace("♪", "#");
+            text = text.Replace("♫", "#");
+
+            // Spaces
+            text = text.Replace("\u00A0", " "); // No-Break Space
+            text = text.Replace("\u200B", string.Empty); // Zero Width Space
+            text = text.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
+            return text;
         }
 
         private void NewToolStripMenuItemClick(object sender, EventArgs e)
