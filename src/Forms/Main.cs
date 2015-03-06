@@ -283,7 +283,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 g.Dispose();
             }
-            
+
             base.OnLoad(e);
         }
 
@@ -2958,7 +2958,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (saveFileDialog1.FilterIndex == index + 1)
                     {
                         // only allow current extension or ".txt"
-                        string ext = Path.GetExtension(_fileName).ToLower();
+                        string ext = Path.GetExtension(_fileName).ToLowerInvariant();
                         bool extOk = ext.Equals(format.Extension, StringComparison.OrdinalIgnoreCase) || format.AlternateExtensions.Contains(ext) || ext == ".txt";
                         if (!extOk)
                         {
