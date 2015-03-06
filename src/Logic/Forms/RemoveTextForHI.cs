@@ -31,35 +31,33 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             while (i < newText.Length)
             {
                 string s = newText.Substring(i);
-                if (i > 5 && s.Length > 2 && (s.StartsWith('.') || s.StartsWith('!') || s.StartsWith('?')))
+                if (i >= 5 && s.Length > 2 && (s[0] == ('.') || s[0] == ('!') || s[0] == ('?')) &&
+                    (s[1] == ' ' || (s.Length > 3 && s.Substring(1, 3).StartsWith("<i>", StringComparison.Ordinal)) || (s.Length > 4 && s.Substring(1, 4).StartsWith("</i>", StringComparison.Ordinal))))
                 {
-                    if (s[1] == ' ' || s.Substring(1).StartsWith("<i>") || s.Substring(1).StartsWith("</i>"))
+                    string pre = " ";
+                    if (s.Substring(1).StartsWith("<i>"))
+                        pre = "<i>";
+                    else if (s.Substring(1).StartsWith(" <i>"))
+                        pre = " <i>";
+                    else if (s.Substring(1).StartsWith("</i>"))
+                        pre = "</i>";
+
+                    s = s.Remove(0, 1 + pre.Length);
+                    if (s.StartsWith(' ') && s.Length > 1)
                     {
-                        string pre = " ";
-                        if (s.Substring(1).StartsWith("<i>"))
-                            pre = "<i>";
-                        else if (s.Substring(1).StartsWith(" <i>"))
-                            pre = " <i>";
-                        else if (s.Substring(1).StartsWith("</i>"))
-                            pre = "</i>";
+                        pre += " ";
+                        s = s.Remove(0, 1);
+                    }
 
-                        s = s.Remove(0, 1 + pre.Length);
-                        if (s.StartsWith(' ') && s.Length > 1)
-                        {
-                            pre += " ";
-                            s = s.Remove(0, 1);
-                        }
-
-                        if (HasHearImpariedTagsAtStart(s))
-                        {
-                            s = RemoveStartEndTags(s);
-                            newText = newText.Substring(0, i + 1) + pre + " " + s;
-                            newText = newText.Replace("<i></i>", string.Empty);
-                            newText = newText.Replace("<i> </i>", " ");
-                            newText = newText.Replace("  ", " ");
-                            newText = newText.Replace("  ", " ");
-                            newText = newText.Replace(" " + Environment.NewLine, Environment.NewLine);
-                        }
+                    if (HasHearImpariedTagsAtStart(s))
+                    {
+                        s = RemoveStartEndTags(s);
+                        newText = newText.Substring(0, i + 1) + pre + " " + s;
+                        newText = newText.Replace("<i></i>", string.Empty);
+                        newText = newText.Replace("<i> </i>", " ");
+                        newText = newText.Replace("  ", " ");
+                        newText = newText.Replace("  ", " ");
+                        newText = newText.Replace(" " + Environment.NewLine, Environment.NewLine);
                     }
                 }
                 i++;
@@ -964,11 +962,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             while (start >= 0 && end > start)
             {
                 text = text.Remove(start, (end - start) + 1);
-                start = text.IndexOf(startTag, StringComparison.Ordinal);
+                start = text.IndexOf(startTag, start, StringComparison.Ordinal);
                 if (start >= 0 && start < text.Length - 1)
-                    end = text.IndexOf(endTag, start, StringComparison.Ordinal);
+                    end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
                 else
-                    end = -1;
+                    break;
             }
             return text.Replace(" " + Environment.NewLine, Environment.NewLine).TrimEnd();
         }
