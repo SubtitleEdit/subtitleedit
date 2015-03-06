@@ -1,9 +1,9 @@
-﻿using System.Globalization;
-using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
@@ -13,6 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Subtitle _subtitle;
         private readonly LanguageStructure.RemoveTextFromHearImpaired _language;
         private RemoveTextForHI _removeTextForHILib;
+        private string[] _fixes;
 
         public FormRemoveTextForHearImpaired()
         {
@@ -109,16 +110,17 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
             int count = 0;
-            int prevIndex = -1;
-            foreach (Paragraph p in _subtitle.Paragraphs)
+            _fixes = new string[_subtitle.Paragraphs.Count];
+            for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
-                prevIndex++;
-                _removeTextForHILib.WarningIndex = prevIndex;
+                Paragraph p = _subtitle.Paragraphs[index];
+                _removeTextForHILib.WarningIndex = index -1;
                 string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                 if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
                 {
                     count++;
                     AddToListView(p, newText);
+                    _fixes[index] = newText;
                 }
             }
             listViewFixes.EndUpdate();
@@ -164,9 +166,9 @@ namespace Nikse.SubtitleEdit.Forms
                 var item = listViewFixes.Items[i];
                 if (item.Checked)
                 {
-                    Paragraph p = (Paragraph)item.Tag;
-                    string newText = item.SubItems[3].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
-                    if (string.IsNullOrEmpty(newText))
+                    var p = (Paragraph)item.Tag;
+                    string newText = _fixes[i];
+                    if (string.IsNullOrWhiteSpace(newText))
                     {
                         _subtitle.Paragraphs.Remove(p);
                     }
