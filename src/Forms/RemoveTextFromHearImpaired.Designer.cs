@@ -32,10 +32,10 @@
             this.buttonCancel = new System.Windows.Forms.Button();
             this.groupBoxLinesFound = new System.Windows.Forms.GroupBox();
             this.listViewFixes = new System.Windows.Forms.ListView();
-            this.columnHeader4 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader5 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader7 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader8 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderApply = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderLine = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderBefore = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeaderAfter = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.checkBoxRemoveTextBeforeColon = new System.Windows.Forms.CheckBox();
             this.groupBoxRemoveTextConditions = new System.Windows.Forms.GroupBox();
             this.checkBoxRemoveIfAllUppercase = new System.Windows.Forms.CheckBox();
@@ -101,10 +101,10 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listViewFixes.CheckBoxes = true;
             this.listViewFixes.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader4,
-            this.columnHeader5,
-            this.columnHeader7,
-            this.columnHeader8});
+            this.columnHeaderApply,
+            this.columnHeaderLine,
+            this.columnHeaderBefore,
+            this.columnHeaderAfter});
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(6, 17);
             this.listViewFixes.Name = "listViewFixes";
@@ -113,25 +113,25 @@
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
             // 
-            // columnHeader4
+            // columnHeaderApply
             // 
-            this.columnHeader4.Text = "Apply";
-            this.columnHeader4.Width = 45;
+            this.columnHeaderApply.Text = "Apply";
+            this.columnHeaderApply.Width = 45;
             // 
-            // columnHeader5
+            // columnHeaderLine
             // 
-            this.columnHeader5.Text = "Line#";
-            this.columnHeader5.Width = 61;
+            this.columnHeaderLine.Text = "Line#";
+            this.columnHeaderLine.Width = 61;
             // 
-            // columnHeader7
+            // columnHeaderBefore
             // 
-            this.columnHeader7.Text = "Before";
-            this.columnHeader7.Width = 251;
+            this.columnHeaderBefore.Text = "Before";
+            this.columnHeaderBefore.Width = 251;
             // 
-            // columnHeader8
+            // columnHeaderAfter
             // 
-            this.columnHeader8.Text = "After";
-            this.columnHeader8.Width = 266;
+            this.columnHeaderAfter.Text = "After";
+            this.columnHeaderAfter.Width = 266;
             // 
             // checkBoxRemoveTextBeforeColon
             // 
@@ -140,7 +140,7 @@
             this.checkBoxRemoveTextBeforeColon.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveTextBeforeColon.Location = new System.Drawing.Point(241, 26);
             this.checkBoxRemoveTextBeforeColon.Name = "checkBoxRemoveTextBeforeColon";
-            this.checkBoxRemoveTextBeforeColon.Size = new System.Drawing.Size(169, 17);
+            this.checkBoxRemoveTextBeforeColon.Size = new System.Drawing.Size(175, 17);
             this.checkBoxRemoveTextBeforeColon.TabIndex = 10;
             this.checkBoxRemoveTextBeforeColon.Text = "Remove text before a colon (:)";
             this.checkBoxRemoveTextBeforeColon.UseVisualStyleBackColor = true;
@@ -182,7 +182,7 @@
             this.checkBoxRemoveIfAllUppercase.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveIfAllUppercase.Location = new System.Drawing.Point(241, 102);
             this.checkBoxRemoveIfAllUppercase.Name = "checkBoxRemoveIfAllUppercase";
-            this.checkBoxRemoveIfAllUppercase.Size = new System.Drawing.Size(143, 17);
+            this.checkBoxRemoveIfAllUppercase.Size = new System.Drawing.Size(142, 17);
             this.checkBoxRemoveIfAllUppercase.TabIndex = 13;
             this.checkBoxRemoveIfAllUppercase.Text = "Remove uppercase lines";
             this.checkBoxRemoveIfAllUppercase.UseVisualStyleBackColor = true;
@@ -193,7 +193,7 @@
             this.checkBoxColonSeparateLine.AutoSize = true;
             this.checkBoxColonSeparateLine.Location = new System.Drawing.Point(261, 69);
             this.checkBoxColonSeparateLine.Name = "checkBoxColonSeparateLine";
-            this.checkBoxColonSeparateLine.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxColonSeparateLine.Size = new System.Drawing.Size(137, 17);
             this.checkBoxColonSeparateLine.TabIndex = 12;
             this.checkBoxColonSeparateLine.Text = "Only if on separate line";
             this.checkBoxColonSeparateLine.UseVisualStyleBackColor = true;
@@ -214,7 +214,7 @@
             this.checkBoxRemoveInterjections.AutoSize = true;
             this.checkBoxRemoveInterjections.Location = new System.Drawing.Point(241, 172);
             this.checkBoxRemoveInterjections.Name = "checkBoxRemoveInterjections";
-            this.checkBoxRemoveInterjections.Size = new System.Drawing.Size(128, 17);
+            this.checkBoxRemoveInterjections.Size = new System.Drawing.Size(130, 17);
             this.checkBoxRemoveInterjections.TabIndex = 16;
             this.checkBoxRemoveInterjections.Text = "Remove interjections ";
             this.checkBoxRemoveInterjections.UseVisualStyleBackColor = true;
@@ -249,7 +249,7 @@
             this.checkBoxRemoveWhereContains.AutoSize = true;
             this.checkBoxRemoveWhereContains.Location = new System.Drawing.Point(241, 135);
             this.checkBoxRemoveWhereContains.Name = "checkBoxRemoveWhereContains";
-            this.checkBoxRemoveWhereContains.Size = new System.Drawing.Size(148, 17);
+            this.checkBoxRemoveWhereContains.Size = new System.Drawing.Size(153, 17);
             this.checkBoxRemoveWhereContains.TabIndex = 14;
             this.checkBoxRemoveWhereContains.Text = "Remove text if it contains:";
             this.checkBoxRemoveWhereContains.UseVisualStyleBackColor = true;
@@ -290,7 +290,7 @@
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.AutoSize = true;
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.Location = new System.Drawing.Point(261, 46);
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.Name = "checkBoxRemoveTextBeforeColonOnlyUppercase";
-            this.checkBoxRemoveTextBeforeColonOnlyUppercase.Size = new System.Drawing.Size(153, 17);
+            this.checkBoxRemoveTextBeforeColonOnlyUppercase.Size = new System.Drawing.Size(151, 17);
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.TabIndex = 11;
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.Text = "Only if text is UPPERCASE";
             this.checkBoxRemoveTextBeforeColonOnlyUppercase.UseVisualStyleBackColor = true;
@@ -301,7 +301,7 @@
             this.checkBoxOnlyIfInSeparateLine.AutoSize = true;
             this.checkBoxOnlyIfInSeparateLine.Location = new System.Drawing.Point(21, 172);
             this.checkBoxOnlyIfInSeparateLine.Name = "checkBoxOnlyIfInSeparateLine";
-            this.checkBoxOnlyIfInSeparateLine.Size = new System.Drawing.Size(133, 17);
+            this.checkBoxOnlyIfInSeparateLine.Size = new System.Drawing.Size(137, 17);
             this.checkBoxOnlyIfInSeparateLine.TabIndex = 9;
             this.checkBoxOnlyIfInSeparateLine.Text = "Only if on separate line";
             this.checkBoxOnlyIfInSeparateLine.UseVisualStyleBackColor = true;
@@ -326,7 +326,7 @@
             this.checkBoxRemoveTextBetweenQuestionMarks.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveTextBetweenQuestionMarks.Location = new System.Drawing.Point(20, 115);
             this.checkBoxRemoveTextBetweenQuestionMarks.Name = "checkBoxRemoveTextBetweenQuestionMarks";
-            this.checkBoxRemoveTextBetweenQuestionMarks.Size = new System.Drawing.Size(82, 17);
+            this.checkBoxRemoveTextBetweenQuestionMarks.Size = new System.Drawing.Size(76, 17);
             this.checkBoxRemoveTextBetweenQuestionMarks.TabIndex = 4;
             this.checkBoxRemoveTextBetweenQuestionMarks.Text = "\"?\" and \"?\"";
             this.checkBoxRemoveTextBetweenQuestionMarks.UseVisualStyleBackColor = true;
@@ -339,7 +339,7 @@
             this.checkBoxRemoveTextBetweenParentheses.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveTextBetweenParentheses.Location = new System.Drawing.Point(20, 69);
             this.checkBoxRemoveTextBetweenParentheses.Name = "checkBoxRemoveTextBetweenParentheses";
-            this.checkBoxRemoveTextBetweenParentheses.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxRemoveTextBetweenParentheses.Size = new System.Drawing.Size(74, 17);
             this.checkBoxRemoveTextBetweenParentheses.TabIndex = 2;
             this.checkBoxRemoveTextBetweenParentheses.Text = "\"(\" and \")\"";
             this.checkBoxRemoveTextBetweenParentheses.UseVisualStyleBackColor = true;
@@ -352,7 +352,7 @@
             this.checkBoxRemoveTextBetweenBrackets.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveTextBetweenBrackets.Location = new System.Drawing.Point(20, 92);
             this.checkBoxRemoveTextBetweenBrackets.Name = "checkBoxRemoveTextBetweenBrackets";
-            this.checkBoxRemoveTextBetweenBrackets.Size = new System.Drawing.Size(78, 17);
+            this.checkBoxRemoveTextBetweenBrackets.Size = new System.Drawing.Size(76, 17);
             this.checkBoxRemoveTextBetweenBrackets.TabIndex = 3;
             this.checkBoxRemoveTextBetweenBrackets.Text = "\"{\" and \"}\"";
             this.checkBoxRemoveTextBetweenBrackets.UseVisualStyleBackColor = true;
@@ -365,7 +365,7 @@
             this.checkBoxRemoveTextBetweenSquares.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxRemoveTextBetweenSquares.Location = new System.Drawing.Point(20, 45);
             this.checkBoxRemoveTextBetweenSquares.Name = "checkBoxRemoveTextBetweenSquares";
-            this.checkBoxRemoveTextBetweenSquares.Size = new System.Drawing.Size(76, 17);
+            this.checkBoxRemoveTextBetweenSquares.Size = new System.Drawing.Size(74, 17);
             this.checkBoxRemoveTextBetweenSquares.TabIndex = 1;
             this.checkBoxRemoveTextBetweenSquares.Text = "\"[\" and \"]\"";
             this.checkBoxRemoveTextBetweenSquares.UseVisualStyleBackColor = true;
@@ -414,10 +414,10 @@
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.GroupBox groupBoxLinesFound;
         private System.Windows.Forms.ListView listViewFixes;
-        private System.Windows.Forms.ColumnHeader columnHeader4;
-        private System.Windows.Forms.ColumnHeader columnHeader5;
-        private System.Windows.Forms.ColumnHeader columnHeader7;
-        private System.Windows.Forms.ColumnHeader columnHeader8;
+        private System.Windows.Forms.ColumnHeader columnHeaderApply;
+        private System.Windows.Forms.ColumnHeader columnHeaderLine;
+        private System.Windows.Forms.ColumnHeader columnHeaderBefore;
+        private System.Windows.Forms.ColumnHeader columnHeaderAfter;
         private System.Windows.Forms.CheckBox checkBoxRemoveTextBeforeColon;
         private System.Windows.Forms.GroupBox groupBoxRemoveTextConditions;
         private System.Windows.Forms.CheckBox checkBoxRemoveTextBetweenCustomTags;

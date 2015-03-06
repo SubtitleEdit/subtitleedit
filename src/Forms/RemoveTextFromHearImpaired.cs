@@ -234,9 +234,9 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)
         {
-            int availableWidth = listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width + 20);
-            listViewFixes.Columns[2].Width = availableWidth / 2;
-            listViewFixes.Columns[3].Width = availableWidth / 2;
+            int availableWidth = listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20);
+            columnHeaderBefore.Width = availableWidth / 2;
+            columnHeaderAfter.Width = availableWidth / 2;
         }
 
         private void checkBoxRemoveTextBeforeColon_CheckedChanged(object sender, EventArgs e)
