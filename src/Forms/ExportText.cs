@@ -53,14 +53,11 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxEncoding.Items.Add(Encoding.UTF8.EncodingName);
             foreach (EncodingInfo ei in Encoding.GetEncodings())
             {
-                if (ei.Name != Encoding.UTF8.BodyName)
+                if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
                 {
-                    if (ei.Name != Encoding.UTF8.BodyName && ei.CodePage >= 949 && !ei.DisplayName.Contains("EBCDIC") && ei.CodePage != 1047)
-                    {
-                        comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
-                        if (ei.Name == Configuration.Settings.General.DefaultEncoding)
-                            encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
-                    }
+                    comboBoxEncoding.Items.Add(ei.CodePage + ": " + ei.DisplayName);
+                    if (ei.Name == Configuration.Settings.General.DefaultEncoding)
+                        encodingSelectedIndex = comboBoxEncoding.Items.Count - 1;
                 }
             }
             comboBoxEncoding.SelectedIndex = encodingSelectedIndex;
@@ -109,14 +106,12 @@ namespace Nikse.SubtitleEdit.Forms
                         sb.AppendLine();
                     else
                         sb.Append(' ');
-
                 }
                 string s = p.Text;
                 if (removeStyling)
                 {
                     s = HtmlUtil.RemoveHtmlTags(s, true);
                 }
-
                 if (formatUnbreak)
                 {
                     sb.Append(s.Replace(Environment.NewLine, " ").Replace("  ", " "));
