@@ -165,7 +165,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (item.Checked)
                 {
                     Paragraph p = (Paragraph)item.Tag;
-                    string newText = columnHeaderAfter.Text;
+                    string newText = item.SubItems[3].Text.Replace(Configuration.Settings.General.ListViewLineSeparatorString, Environment.NewLine);
                     if (string.IsNullOrEmpty(newText))
                     {
                         _subtitle.Paragraphs.Remove(p);
