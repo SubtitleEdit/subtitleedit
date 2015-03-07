@@ -883,22 +883,18 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (Settings.RemoveTextBetweenSquares)
             {
-                text = RemoveTextBetweenTags("[", "]:", text);
                 text = RemoveTextBetweenTags("[", "]", text);
             }
             if (Settings.RemoveTextBetweenBrackets)
             {
-                text = RemoveTextBetweenTags("{", "}:", text);
                 text = RemoveTextBetweenTags("{", "}", text);
             }
             if (Settings.RemoveTextBetweenQuestionMarks)
             {
-                text = RemoveTextBetweenTags("?", "?:", text);
                 text = RemoveTextBetweenTags("?", "?", text);
             }
             if (Settings.RemoveTextBetweenParentheses)
             {
-                text = RemoveTextBetweenTags("(", "):", text);
                 text = RemoveTextBetweenTags("(", ")", text);
             }
             if (Settings.RemoveTextBetweenCustomTags && Settings.CustomStart.Length > 0 && Settings.CustomEnd.Length > 0)
@@ -962,12 +958,17 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             while (start >= 0 && end > start)
             {
                 text = text.Remove(start, (end - start) + 1);
+                if (text.Length > 0 && text[start] == ':')
+                {
+                    text = text.Remove(start, 1);
+                }
                 start = text.IndexOf(startTag, start, StringComparison.Ordinal);
                 if (start >= 0 && start < text.Length - 1)
                     end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
                 else
                     break;
             }
+            text = text.Replace("  ", " ");
             return text.Replace(" " + Environment.NewLine, Environment.NewLine).TrimEnd();
         }
 
