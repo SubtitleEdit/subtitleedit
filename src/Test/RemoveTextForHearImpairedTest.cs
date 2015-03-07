@@ -1043,6 +1043,19 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextHiAndColon()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveTextBetweenParentheses = true;
+            const string text = "I'm trying to! (MASTER): Faster now. evacuate.";
+            const string expected = "I'm trying to! Faster now. evacuate.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }        
+
         #region Additional test attributes
 
         //
