@@ -1833,6 +1833,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "JoinSubtitles/TotalNumberOfLinesX":
                     language.JoinSubtitles.TotalNumberOfLinesX = reader.Value;
                     break;
+                case "JoinSubtitles/Note":
+                    language.JoinSubtitles.Note = reader.Value;
+                    break;
                 case "Main/SaveChangesToUntitled":
                     language.Main.SaveChangesToUntitled = reader.Value;
                     break;
