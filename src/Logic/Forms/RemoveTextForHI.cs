@@ -964,6 +964,13 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             while (start >= 0 && end > start)
             {
                 text = text.Remove(start, (end - start) + 1);
+                if (start > 3 && start < text.Length - 1 &&
+                    text.Substring(0, start + 1).EndsWith(" :") &&
+                    ".!?".Contains(text[start - 2]))
+                {
+                    text = text.Remove(start - 1, 2);
+                }
+
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
                 if (start >= 0 && start < text.Length - 1)
                     end = text.IndexOf(endTag, start, StringComparison.Ordinal);
