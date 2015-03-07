@@ -44,6 +44,7 @@
    * Fixed handling of bad Blu-ray sup files - thx The Snyper
    * Fixed typo in Brazilian translation - thx Rubens
    * Fixed bug in mplayer2 subtitle format - thx Maciek
+   * Fixed bug preventing compare from working in "History" window - thx xylographe
    * + Many minor fixes from Ivandrofly and xylographe
 
 
