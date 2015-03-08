@@ -2,16 +2,16 @@
 
 3.4.6 (xth March 2015) BETA
 * NEW:
-   * Added new subtitle formats (Sami Youtube and more)
+   * Added new subtitle formats (Sami YouTube and more)
    * Added waveform text size/bold to UI
    * Added filter to "Batch convert"
    * Added new shortcut: Copy text from original to current - thx megasmile
-   * Added export functionality form "Statistics" window - thx Ivandrofly
+   * Added export functionality to "Statistics" window - thx Ivandrofly
    * Added custom shortcut for toggle textbox auto-duration - thx Tony
    * Added full frame option for export of FAB image script
    * Added TGA output to export of images - thx Øjvind
    * Added left/right margin to export of images - thx Øjvind
-   * Support for VobSub/Bluray-sup input in command line convert - thx lafe
+   * Support for VobSub/Blu-ray sup input in command line convert - thx lafe
 * IMPROVED:
    * Updated French translation - thx JM GBT
    * Updated Czech translation - thx Trottel
