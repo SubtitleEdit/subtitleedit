@@ -356,14 +356,8 @@ namespace Nikse.SubtitleEdit.Core
 
         public static string RemoveHtmlTags(string s)
         {
-            if (s == null)
-                return null;
-
-            if (s.Length < 3 || s.IndexOf('<') < 0)
+            if (string.IsNullOrEmpty(s) || s.IndexOf('<') < 0)
                 return s;
-
-            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
-                s = Utilities.FixInvalidItalicTags(s);
 
             return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
         }
