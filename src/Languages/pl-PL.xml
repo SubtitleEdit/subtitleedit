@@ -697,6 +697,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nazwa pliku</FileName>
     <Join>Połącz</Join>
     <TotalNumberOfLinesX>Całkowita ilość linii: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Uwaga: Pliki muszą zawierać poprawne kody czasowe</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
