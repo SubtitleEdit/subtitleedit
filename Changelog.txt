@@ -28,7 +28,7 @@
    * Change language in "Spell check" dialog now loads correct language lists - thx Sami 
    * Fixed missing rule for "Fix invalid italic tags" - thx Ivandrofly
    * Fixed possible freeze in video player text - thx Mafu
-   * Fixed crash in 'Merge lines with same time code' - thx Miguel
+   * Fixed crash in "Merge lines with same time code" - thx Miguel
    * Frame rate reading fix for format "Timed Text" - thx SwK
    * Keep line style when converting from "Timed Text" to ASS - thx SwK
    * Fixed Alt+Drag issue in waveform - thx Leon
@@ -36,8 +36,8 @@
    * Disabled native video player subtitles in MPlayer - thx larvanitis
    * Handle possible crash in "Batch convert" - thx Ivandrofly
    * "Multiple replace" remove line if only tag remains - thx Ivandrofly
-   * Some fixes for unknown subtitle 17 - thx Pedro
-   * Timed Text now keeps separate text element div tags separate - thx Krystian
+   * Some fixes for "unknown subtitle 17" - thx Pedro
+   * "Timed Text" now keeps separate text element div tags separate - thx Krystian
    * Some fixes for .chk files - thx Mark
    * Fixed bug in reading ASS/SSA from Matroska files
    * Can now read EBU STL files with only one line - thx Stefan
