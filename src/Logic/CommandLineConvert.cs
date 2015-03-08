@@ -547,6 +547,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 bool targetFormatFound = false;
                 string outputFileName;
+                bool exitLoop = false;
                 foreach (SubtitleFormat sf in formats)
                 {
                     if (sf.IsTextBased && (sf.Name.Replace(" ", string.Empty).Equals(toFormat, StringComparison.OrdinalIgnoreCase) || sf.Name.Replace(" ", string.Empty).Equals(toFormat.Replace(" ", string.Empty), StringComparison.OrdinalIgnoreCase)))
@@ -566,6 +567,7 @@ namespace Nikse.SubtitleEdit.Logic
                             using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
                             {
                                 file.Write(sub.ToText(sf));
+                                exitLoop = true;
                             } // save and close it
                         }
                         else if (targetEncoding == Encoding.UTF8 && (format.GetType() == typeof(TmpegEncAW5) || format.GetType() == typeof(TmpegEncXml)))
@@ -574,6 +576,7 @@ namespace Nikse.SubtitleEdit.Logic
                             using (var file = new StreamWriter(outputFileName, false, outputEnc)) // open file with encoding
                             {
                                 file.Write(sub.ToText(sf));
+                                exitLoop = true;
                             } // save and close it
                         }
                         else
@@ -581,6 +584,7 @@ namespace Nikse.SubtitleEdit.Logic
                             try
                             {
                                 File.WriteAllText(outputFileName, sub.ToText(sf), targetEncoding);
+                                exitLoop = true;
                             }
                             catch (Exception ex)
                             {
@@ -610,10 +614,13 @@ namespace Nikse.SubtitleEdit.Logic
                                         s += "_" + className + format.Extension;
                                     outputFileName = FormatOutputFileNameForBatchConvert(s, sf.Extension, outputFolder, overwrite);
                                     File.WriteAllText(outputFileName, newSub.ToText(sf), targetEncoding);
+                                    exitLoop = true;
                                 }
                             }
                         }
                         Console.WriteLine(" done.");
+                        if (exitLoop)
+                            break;
                     }
                 }
                 if (!targetFormatFound)
