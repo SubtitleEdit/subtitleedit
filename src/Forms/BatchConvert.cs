@@ -876,13 +876,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     using (var fixCommonErrors = new FixCommonErrors())
                     {
-                        fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
-                        p.Subtitle = fixCommonErrors.FixedSubtitle;
-                    }
-                    using (var fixCommonErrors = new FixCommonErrors())
-                    {
-                        fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
-                        p.Subtitle = fixCommonErrors.FixedSubtitle;
+                        for (int i = 0; i < 3; i++)
+                        {
+                            fixCommonErrors.RunBatch(p.Subtitle, p.Format, p.Encoding, Configuration.Settings.Tools.BatchConvertLanguage);
+                            p.Subtitle = fixCommonErrors.FixedSubtitle;
+                        }
                     }
                 }
                 catch (Exception exception)
@@ -941,8 +939,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph current = p.Subtitle.GetParagraphOrDefault(i);
                     Paragraph next = p.Subtitle.GetParagraphOrDefault(i + 1);
-                    if (next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds < minumumMillisecondsBetweenLines)
-                        current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - minumumMillisecondsBetweenLines;
+                    var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
+                    if (gapsBetween < minumumMillisecondsBetweenLines)
+                        current.EndTime.TotalMilliseconds = gapsBetween;
                 }
             }
             e.Result = p;
