@@ -614,6 +614,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                         Console.WriteLine(" done.");
+                        break;
                     }
                 }
                 if (!targetFormatFound)
