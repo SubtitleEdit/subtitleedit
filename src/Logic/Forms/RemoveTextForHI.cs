@@ -853,7 +853,12 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (text != oldText && lines.Length == 1 && Utilities.GetNumberOfLines(oldText) == 2)
             {
-                if (oldText.StartsWith("-") &&
+                if (oldText.StartsWith("-", StringComparison.Ordinal) &&
+                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains("!" + Environment.NewLine) || oldText.Contains("?" + Environment.NewLine)))
+                {
+                    text = text.TrimStart('-').TrimStart();
+                }
+                else if (oldText.Contains(Environment.NewLine + "-") &&
                     (oldText.Contains("." + Environment.NewLine) || oldText.Contains("!" + Environment.NewLine) || oldText.Contains("?" + Environment.NewLine)))
                 {
                     text = text.TrimStart('-').TrimStart();
