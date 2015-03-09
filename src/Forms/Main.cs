@@ -14561,7 +14561,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (files.Length == 1)
             {
                 string fileName = files[0];
-                string ext = Path.GetExtension(fileName).ToLower();
+                string ext = Path.GetExtension(fileName).ToLowerInvariant();
                 if (Utilities.GetVideoFileFilter(true).Contains(ext))
                 {
                     if (string.IsNullOrEmpty(_fileName))
