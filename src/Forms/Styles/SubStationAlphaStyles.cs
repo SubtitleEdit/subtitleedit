@@ -135,7 +135,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-
                 // Draw background
                 const int rectangleSize = 9;
                 for (int y = 0; y < bmp.Height; y += rectangleSize)
@@ -326,7 +325,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (var line in _header.Split(Utilities.NewLineChars, StringSplitOptions.None))
             {
                 string s = line.Trim().ToLower();
-                if (s.StartsWith("format:"))
+                if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -342,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                     sb.AppendLine(line);
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:"))
+                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -402,9 +401,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Replace(Environment.NewLine, "\n").Split('\n');
             var lines = new List<string>();
-            foreach (string line in lineArray)
+            foreach (string line in text.SplitToLines())
                 lines.Add(line);
             format.LoadSubtitle(sub, lines, string.Empty);
             _header = sub.Header;

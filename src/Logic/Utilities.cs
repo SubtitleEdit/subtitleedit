@@ -3451,7 +3451,7 @@ namespace Nikse.SubtitleEdit.Logic
                 lines.Add(cp.Text);
             }
 
-            foreach (string l in footer.ToString().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in footer.ToString().SplitToLines())
                 lines.Add(l);
 
             format.LoadSubtitle(subtitle, lines, fileName);

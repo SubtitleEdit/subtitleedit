@@ -28,7 +28,6 @@ namespace Nikse.SubtitleEdit.Logic
                 return true;
 
             return false;
-
         }
 
         public override string ToString()
