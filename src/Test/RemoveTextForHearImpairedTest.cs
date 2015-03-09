@@ -1056,6 +1056,48 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }        
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextDontLeaveDoubleDash()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "- Mr. Harding?" + Environment.NewLine + "Uh--";
+            const string expected = "Mr. Harding?";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextDontLeaveDot()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "- Mr. Harding?" + Environment.NewLine + "- Mm-hm. Oh.";
+            const string expected = "Mr. Harding?";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextDontLeaveExl()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "-Sit down. Sit down." + Environment.NewLine + "-Oh! Oh!";
+            const string expected = "Sit down. Sit down.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+
+        
+
         #region Additional test attributes
 
         //

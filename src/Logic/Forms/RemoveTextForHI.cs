@@ -841,6 +841,24 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                     return lines[0];
                 }
             }
+            if (lines.Length == 2 && lines[1].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty).Trim().Length == 0)
+            {
+                text = lines[0];
+                lines = text.SplitToLines();
+            }
+            else if (lines.Length == 2 && lines[0].Replace(".", string.Empty).Replace("?", string.Empty).Replace("!", string.Empty).Replace("-", string.Empty).Replace("—", string.Empty).Trim().Length == 0)
+            {
+                text = lines[1];
+                lines = text.SplitToLines();
+            }
+            if (text != oldText && lines.Length == 1 && Utilities.GetNumberOfLines(oldText) == 2)
+            {
+                if (oldText.StartsWith("-") &&
+                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains("!" + Environment.NewLine) || oldText.Contains("?" + Environment.NewLine)))
+                {
+                    text = text.TrimStart('-').TrimStart();
+                }
+            }
 
             return text;
         }
