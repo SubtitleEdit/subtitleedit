@@ -1434,7 +1434,8 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string newText = p.Text;
                         int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-                        if (start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
+                        bool isAfterAssTag = newText.Contains("{\\") && start > 0 && newText[start - 1] == '}';
+                        if (!isAfterAssTag && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
                         {
                             if (indexOfFontTag < 0 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
