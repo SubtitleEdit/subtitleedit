@@ -1095,8 +1095,18 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
-
-        
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextRememberDialogueTag()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBetweenCustomTags = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "Oh." + Environment.NewLine + "-I'm awfully tired.";
+            const string expected = "I'm awfully tired.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
 
         #region Additional test attributes
 
