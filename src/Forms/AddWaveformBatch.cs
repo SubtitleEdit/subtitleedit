@@ -9,7 +9,7 @@ using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public sealed partial class AddWaveformBatch : Form
+    public sealed partial class AddWaveformBatch : PositionAndSizeForm
     {
 
         private int _delayInMilliseconds;
