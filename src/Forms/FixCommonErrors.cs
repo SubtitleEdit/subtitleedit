@@ -1236,7 +1236,7 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixUnneededPeriods()
         {
             string fixAction = _language.UnneededPeriod;
-            int unneededPeriods = 0;
+            int unneededPeriodsFixed = 0;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
@@ -1246,42 +1246,42 @@ namespace Nikse.SubtitleEdit.Forms
                     if (p.Text.Contains("!." + Environment.NewLine))
                     {
                         p.Text = p.Text.Replace("!." + Environment.NewLine, "!" + Environment.NewLine);
-                        unneededPeriods++;
+                        unneededPeriodsFixed++;
                     }
                     if (p.Text.Contains("?." + Environment.NewLine))
                     {
                         p.Text = p.Text.Replace("?." + Environment.NewLine, "?" + Environment.NewLine);
-                        unneededPeriods++;
+                        unneededPeriodsFixed++;
                     }
                     if (p.Text.EndsWith("!.", StringComparison.Ordinal))
                     {
                         p.Text = p.Text.TrimEnd('.');
-                        unneededPeriods++;
+                        unneededPeriodsFixed++;
                     }
                     if (p.Text.EndsWith("?.", StringComparison.Ordinal))
                     {
                         p.Text = p.Text.TrimEnd('.');
-                        unneededPeriods++;
+                        unneededPeriodsFixed++;
                     }
                     if (p.Text.Contains("!. "))
                     {
                         p.Text = p.Text.Replace("!. ", "! ");
-                        unneededPeriods++;
+                        unneededPeriodsFixed++;
                     }
                     if (p.Text.Contains("?. "))
                     {
                         p.Text = p.Text.Replace("?. ", "? ");
-                        unneededPeriods++;
+                        unneededPeriodsFixed++;
                     }
 
-                    if (unneededPeriods > 0)
+                    if (p.Text != oldText)
                         AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (unneededPeriods > 0)
+            if (unneededPeriodsFixed > 0)
             {
-                _totalFixes += unneededPeriods;
-                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriods));
+                _totalFixes += unneededPeriodsFixed;
+                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriodsFixed));                
             }
         }
 
