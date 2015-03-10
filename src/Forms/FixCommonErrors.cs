@@ -1281,7 +1281,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (unneededPeriodsFixed > 0)
             {
                 _totalFixes += unneededPeriodsFixed;
-                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriodsFixed));                
+                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriodsFixed));
             }
         }
 

@@ -212,11 +212,11 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
-            if (e.Item == null) 
+            if (e.Item == null)
                 return;
 
             var p = e.Item.Tag as Paragraph;
-            if (p == null) 
+            if (p == null)
                 return;
 
             if (e.Item.Checked)
