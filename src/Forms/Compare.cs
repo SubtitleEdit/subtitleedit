@@ -19,6 +19,7 @@ namespace Nikse.SubtitleEdit.Forms
         private Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
         private string _language1;
+        private bool _swappedSides;
 
         public Compare()
         {
@@ -664,19 +665,31 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void Compare_Resize(object sender, EventArgs e)
         {
+            SuspendLayout();
+
             subtitleListView1.Width = (Width / 2) - 20;
-
-            subtitleListView2.Left = (Width / 2) - 3;
             subtitleListView2.Width = (Width / 2) - 20;
-            labelSubtitle2.Left = subtitleListView2.Left;
-            buttonOpenSubtitle2.Left = subtitleListView2.Left;
+            richTextBox1.Width = subtitleListView1.Width;
+            richTextBox2.Width = subtitleListView2.Width;
 
+            if (_swappedSides)
+            {
+                subtitleListView1.Left = (Width / 2) - 3;
+                richTextBox1.Left = subtitleListView1.Left;
+                labelSubtitle1.Left = subtitleListView1.Left;
+                buttonOpenSubtitle1.Left = subtitleListView1.Left;
+            }
+            else
+            {
+                subtitleListView2.Left = (Width / 2) - 3;
+                richTextBox2.Left = subtitleListView2.Left;
+                labelSubtitle2.Left = subtitleListView2.Left;
+                buttonOpenSubtitle2.Left = subtitleListView2.Left;
+            }
             subtitleListView1.Height = Height - (subtitleListView1.Top + 140);
             subtitleListView2.Height = Height - (subtitleListView2.Top + 140);
 
-            richTextBox1.Width = subtitleListView1.Width;
-            richTextBox2.Width = subtitleListView2.Width;
-            richTextBox2.Left = subtitleListView2.Left;
+            ResumeLayout();
         }
 
         private void ButtonPreviousDifferenceClick(object sender, EventArgs e)
@@ -726,6 +739,31 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+        }
+
+        private void ButtonSwapSides_Click(object sender, EventArgs e)
+        {
+            var location = buttonOpenSubtitle1.Location;
+            buttonOpenSubtitle1.Location = buttonOpenSubtitle2.Location;
+            buttonOpenSubtitle2.Location = location;
+            
+            location = labelSubtitle1.Location;
+            labelSubtitle1.Location = labelSubtitle2.Location;
+            labelSubtitle2.Location = location;
+            
+            location = subtitleListView1.Location;
+            subtitleListView1.Location = subtitleListView2.Location;
+            subtitleListView2.Location = location;
+            
+            location = richTextBox1.Location;
+            richTextBox1.Location = richTextBox2.Location;
+            richTextBox2.Location = location;
+
+            _swappedSides = !_swappedSides;
+            if (_swappedSides)
+                buttonSwapSides.Text = "⇆";
+            else
+                buttonSwapSides.Text = "⇄";
         }
 
         private void Timer1Tick(object sender, EventArgs e)
@@ -911,5 +949,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             Clipboard.SetText(sender.Text);
         }
+
     }
 }
