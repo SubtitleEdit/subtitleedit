@@ -258,13 +258,13 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Ondertitels vergelĳken</Title>
     <PreviousDifference>&amp;Vorig verschil</PreviousDifference>
     <NextDifference>Volge&amp;nd verschil</NextDifference>
-    <SubtitlesNotAlike>Ondertitels hebben geen overeenkomsten</SubtitlesNotAlike>
+    <SubtitlesNotAlike>Volledig verschillende ondertitels</SubtitlesNotAlike>
     <XNumberOfDifference>Aantal verschillen: {0}</XNumberOfDifference>
     <XNumberOfDifferenceAndPercentChanged>Aantal verschillen: {0} ({1}% woorden gewĳzigd)</XNumberOfDifferenceAndPercentChanged>
     <XNumberOfDifferenceAndPercentLettersChanged>Aantal verschillen: {0} ({1}% letters gewĳzigd)</XNumberOfDifferenceAndPercentLettersChanged>
     <ShowOnlyDifferences>Alleen verschillen tonen</ShowOnlyDifferences>
-    <IgnoreLineBreaks>Regeleinden negeren</IgnoreLineBreaks>
-    <OnlyLookForDifferencesInText>Alleen naar tekstverschillen zoeken</OnlyLookForDifferencesInText>
+    <IgnoreLineBreaks>Regelafbrekingen negeren</IgnoreLineBreaks>
+    <OnlyLookForDifferencesInText>Alleen tekstverschillen</OnlyLookForDifferencesInText>
     <CannotCompareWithImageBasedSubtitles>Vergelĳken met op beeld gebaseerde ondertitels is niet mogelĳk</CannotCompareWithImageBasedSubtitles>
   </CompareSubtitles>
   <DCinemaProperties>
@@ -696,6 +696,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Bestandsnaam</FileName>
     <Join>Samenvoegen</Join>
     <TotalNumberOfLinesX>Totaal aantal regels: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Opmerking: de tĳdcodes in de bestanden moeten al juist zĳn</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -1609,7 +1610,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <LastMinusX>Laatste - {0}</LastMinusX>
     <FixCommonerrors>Fouten corrigeren</FixCommonerrors>
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
-    <MusicSymbol>Muzieksymbolen</MusicSymbol>
+    <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korte weergavetĳd corrigeren - sta verplaatsen starttĳd toe</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>

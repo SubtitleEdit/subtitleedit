@@ -3,7 +3,7 @@
   <General>
     <Title>Subtitle Edit</Title>
     <Version>3.4.5</Version>
-    <TranslatedBy> ------------------------------------------------------------------------------------------------
+    <TranslatedBy>------------------------------------------------------------------------------------------------
 Traduzido para Português de Portugal, por moob
 Email: mailto:imhotepimhotep8@gmail.com</TranslatedBy>
     <CultureName>pt-PT</CultureName>
@@ -2041,7 +2041,7 @@ Manter as alterações?</KeepChangesMessage>
   <VobSubOcrSetItalicFactor>
     <Title>Definir um factor itálico</Title>
     <Description>Ajustar o valor até que o estilo do texto seja normal e não itálico. Note-se que a imagem original deve ser itálico.</Description>
-  </VobSubOcrSetItalicFactor>  
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Clique para adicionar forma de onda</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Clique para adicionar forma de onda/espectrograma</ClickToAddWaveformAndSpectrogram>
