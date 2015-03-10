@@ -696,6 +696,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Dateiname</FileName>
     <Join>Verbinden</Join>
     <TotalNumberOfLinesX>Gesamte Zeilen: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Hinweis: Dateien sollten passenden Zeitstempel enthalten</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
