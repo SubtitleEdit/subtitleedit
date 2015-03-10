@@ -107,8 +107,7 @@ namespace Nikse.SubtitleEdit.Logic
                     sb.Append('0');
                 sb.Append(',');
             }
-            string s = sb.ToString().Trim();
-            return s.Substring(0, s.Length - 1);
+            return sb.ToString(0, sb.Length - 1).Trim();
         }
 
         internal string ToRawAss(string styleFormat)
@@ -169,8 +168,7 @@ namespace Nikse.SubtitleEdit.Logic
                     sb.Append('0');
                 sb.Append(',');
             }
-            string s = sb.ToString().Trim();
-            return s.Substring(0, s.Length - 1);
+            return sb.ToString(0, sb.Length - 1).Trim();
         }
     }
 }
