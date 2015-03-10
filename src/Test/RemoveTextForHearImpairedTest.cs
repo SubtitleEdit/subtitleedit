@@ -568,7 +568,7 @@ namespace Test
             const string expected = "Well, boy, I'm —";
             string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
-        }        
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -584,7 +584,7 @@ namespace Test
             const string expected = "What?";
             string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
-        }        
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
@@ -1054,7 +1054,7 @@ namespace Test
             const string expected = "I'm trying to! Faster now. evacuate.";
             string actual = target.RemoveTextFromHearImpaired(text);
             Assert.AreEqual(expected, actual);
-        }        
+        }
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
