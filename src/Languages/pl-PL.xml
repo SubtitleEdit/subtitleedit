@@ -40,7 +40,7 @@
     <FrameRateX>Ilość klatek na sekundę: {0:0.0###}</FrameRateX>
     <TotalFramesX>Ogółem klatek: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>Kodowanie wideo: {0}</VideoEncodingX>
-    <SingleLineLengths>Długość pojedynczej linii: </SingleLineLengths>
+    <SingleLineLengths>Długość pojedynczej linii:</SingleLineLengths>
     <TotalLengthX>Długość całkowita: {0}</TotalLengthX>
     <TotalLengthXSplitLine>Długość całkowita: {0} (linia podzielona!)</TotalLengthXSplitLine>
     <SplitLine>Podziel linię!</SplitLine>
@@ -330,7 +330,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
