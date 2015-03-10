@@ -769,7 +769,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     XmlNode events = doc.DocumentElement.SelectSingleNode("Events");
                     doc.PreserveWhitespace = true;
                     events.InnerXml = sb.ToString();
-                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), FormatUtf8Xml(doc), Encoding.UTF8);                    
+                    File.WriteAllText(Path.Combine(folderBrowserDialog1.SelectedPath, "BDN_Index.xml"), FormatUtf8Xml(doc), Encoding.UTF8);
                     MessageBox.Show(string.Format(Configuration.Settings.Language.ExportPngXml.XImagesSavedInY, imagesSavedCount, folderBrowserDialog1.SelectedPath));
                 }
             }
