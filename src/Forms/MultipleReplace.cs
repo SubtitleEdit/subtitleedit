@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using Nikse.SubtitleEdit.Core;
+﻿using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
@@ -183,7 +182,7 @@ namespace Nikse.SubtitleEdit.Forms
                         string searchType = item.SubItems[3].Text;
                         var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
                         replaceExpressions.Add(mpi);
-                        if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression && !_compiledRegExList.ContainsKey(findWhat))
+                        if (mpi.SearchType == ReplaceExpression.SearchRegEx && !_compiledRegExList.ContainsKey(findWhat))
                         {
                             _compiledRegExList.Add(findWhat, new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
                         }
