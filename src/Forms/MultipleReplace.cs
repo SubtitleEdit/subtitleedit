@@ -1,16 +1,39 @@
-﻿using System;
+﻿using System.Diagnostics;
+using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic;
 using System.Xml;
-using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class MultipleReplace : PositionAndSizeForm
     {
+
+        internal class ReplaceExpression
+        {
+            internal const int SearchNormal = 0;
+            internal const int SearchRegEx = 1;
+            internal const int SearchCaseSensitive = 2;
+
+            internal string FindWhat { get; set; }
+            internal string ReplaceWith { get; set; }
+            internal int SearchType { get; set; }
+
+            internal ReplaceExpression(string findWhat, string replaceWith, string searchType)
+            {
+                FindWhat = findWhat;
+                ReplaceWith = replaceWith;
+                if (string.CompareOrdinal(searchType, Configuration.Settings.Language.MultipleReplace.RegularExpression) == 0)
+                    SearchType = SearchRegEx;
+                else if (string.CompareOrdinal(searchType, Configuration.Settings.Language.MultipleReplace.CaseSensitive) == 0)
+                    SearchType = SearchCaseSensitive;
+            }
+        }
+
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
         public const string SearchTypeRegularExpression = "RegularExpression";
@@ -148,55 +171,61 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Clear();
             FixCount = 0;
             DeleteIndices = new List<int>();
+            var replaceExpressions = new HashSet<ReplaceExpression>();
+            foreach (ListViewItem item in listViewReplaceList.Items)
+            {
+                if (item.Checked)
+                {
+                    string findWhat = item.SubItems[1].Text;
+                    if (!string.IsNullOrWhiteSpace(findWhat))
+                    {
+                        string replaceWith = item.SubItems[2].Text.Replace(@"\n", Environment.NewLine);
+                        string searchType = item.SubItems[3].Text;
+                        var mpi = new ReplaceExpression(findWhat, replaceWith, searchType);
+                        replaceExpressions.Add(mpi);
+                        if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression && !_compiledRegExList.ContainsKey(findWhat))
+                        {
+                            _compiledRegExList.Add(findWhat, new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline));
+                        }
+                    }
+                }
+            }
+            
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 bool hit = false;
                 string newText = p.Text;
-
-                foreach (ListViewItem item in listViewReplaceList.Items)
+                foreach (ReplaceExpression item in replaceExpressions)
                 {
-                    if (item.Checked && item.SubItems[1].Text.Length > 0)
+                    if (item.SearchType == ReplaceExpression.SearchCaseSensitive)
                     {
-                        string findWhat = item.SubItems[1].Text;
-                        string replaceWith = item.SubItems[2].Text.Replace(@"\n", Environment.NewLine);
-                        string searchType = item.SubItems[3].Text;
-                        if (searchType == Configuration.Settings.Language.MultipleReplace.CaseSensitive)
+                        if (newText.Contains(item.FindWhat))
                         {
-                            if (newText.Contains(findWhat))
-                            {
-                                hit = true;
-                                newText = newText.Replace(findWhat, replaceWith);
-                            }
+                            hit = true;
+                            newText = newText.Replace(item.FindWhat, item.ReplaceWith);
                         }
-                        else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
+                    }
+                    else if (item.SearchType == ReplaceExpression.SearchRegEx)
+                    {
+                        Regex r = _compiledRegExList[item.FindWhat];
+                        if (r.IsMatch(newText))
                         {
-                            Regex r;
-                            if (_compiledRegExList.ContainsKey(findWhat))
-                            {
-                                r = _compiledRegExList[findWhat];
-                            }
-                            else
-                            {
-                                r = new Regex(findWhat, RegexOptions.Compiled | RegexOptions.Multiline);
-                                _compiledRegExList.Add(findWhat, r);
-                            }
-
-                            string result = r.Replace(newText, replaceWith);
+                            string result = r.Replace(newText, item.ReplaceWith);
                             if (result != newText)
                             {
                                 hit = true;
                                 newText = result;
                             }
                         }
-                        else
+                    }
+                    else
+                    {
+                        int index = newText.IndexOf(item.FindWhat, StringComparison.OrdinalIgnoreCase);
+                        while (index >= 0)
                         {
-                            int index = newText.IndexOf(findWhat, StringComparison.OrdinalIgnoreCase);
-                            while (index >= 0)
-                            {
-                                hit = true;
-                                newText = newText.Remove(index, findWhat.Length).Insert(index, replaceWith);
-                                index = newText.IndexOf(findWhat, index + replaceWith.Length, StringComparison.OrdinalIgnoreCase);
-                            }
+                            hit = true;
+                            newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
+                            index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
                         }
                     }
                 }
