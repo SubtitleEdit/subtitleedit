@@ -16,7 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
         private XmlDocument _pluginDoc = new XmlDocument();
         private string _downloadedPluginName;
         private readonly LanguageStructure.PluginsGet _language;
-        //        bool _firstTry = true;
+        // bool _firstTry = true;
         private List<string> _updateAllListUrls;
         private List<string> _updateAllListNames;
         private bool _updatingAllPlugins = false;
@@ -103,6 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             _updateAllListUrls = new List<string>();
             _updateAllListNames = new List<string>();
+            listViewGetPlugins.BeginUpdate();
             try
             {
                 _pluginDoc.LoadXml(e.Result);
@@ -129,8 +130,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                     foreach (ListViewItem installed in listViewInstalledPlugins.Items)
                     {
-                        if (installed.Text.TrimEnd('.') == node.SelectSingleNode("Name").InnerText.TrimEnd('.') &&
-                            installed.SubItems[2].Text.Replace(",", ".") != node.SelectSingleNode("Version").InnerText.Replace(",", "."))
+                        var installedVer = double.Parse(installed.SubItems[2].Text.Replace(",", "."));
+                        var currentVer = double.Parse(node.SelectSingleNode("Version").InnerText.Replace(",", "."));
+
+                        if (installed.Text == node.SelectSingleNode("Name").InnerText.Trim('.') && installedVer < currentVer)
                         {
                             //item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
@@ -146,6 +149,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show(string.Format(_language.UnableToDownloadPluginListX, exception.Source + ": " + exception.Message + Environment.NewLine + Environment.NewLine + exception.StackTrace));
             }
+            listViewGetPlugins.EndUpdate();
+
             if (_updateAllListUrls.Count > 0)
             {
                 buttonUpdateAll.BackColor = Color.LightGreen;
@@ -163,9 +168,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (!Directory.Exists(path))
                 return;
 
+            listViewInstalledPlugins.BeginUpdate();
             listViewInstalledPlugins.Items.Clear();
-            string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
-            foreach (string pluginFileName in pluginFiles)
+            foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
             {
                 string name, description, text, shortcut, actionType;
                 decimal version;
@@ -188,6 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
+            listViewInstalledPlugins.EndUpdate();
         }
 
         private void buttonDownload_Click(object sender, EventArgs e)
