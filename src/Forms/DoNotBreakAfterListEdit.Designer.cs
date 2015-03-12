@@ -1,6 +1,6 @@
-﻿namespace Nikse.SubtitleEdit
+﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class DoNotBreakAfterListEdit
+    sealed partial class DoNotBreakAfterListEdit
     {
         /// <summary>
         /// Required designer variable.
@@ -56,7 +56,7 @@
             this.groupBoxNamesIgonoreLists.Location = new System.Drawing.Point(12, 54);
             this.groupBoxNamesIgonoreLists.Name = "groupBoxNamesIgonoreLists";
             this.groupBoxNamesIgonoreLists.Size = new System.Drawing.Size(313, 304);
-            this.groupBoxNamesIgonoreLists.TabIndex = 3;
+            this.groupBoxNamesIgonoreLists.TabIndex = 2;
             this.groupBoxNamesIgonoreLists.TabStop = false;
             // 
             // radioButtonRegEx
@@ -66,7 +66,7 @@
             this.radioButtonRegEx.Location = new System.Drawing.Point(83, 279);
             this.radioButtonRegEx.Name = "radioButtonRegEx";
             this.radioButtonRegEx.Size = new System.Drawing.Size(115, 17);
-            this.radioButtonRegEx.TabIndex = 28;
+            this.radioButtonRegEx.TabIndex = 5;
             this.radioButtonRegEx.Text = "Regular expression";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
             this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
@@ -79,7 +79,7 @@
             this.radioButtonText.Location = new System.Drawing.Point(6, 279);
             this.radioButtonText.Name = "radioButtonText";
             this.radioButtonText.Size = new System.Drawing.Size(46, 17);
-            this.radioButtonText.TabIndex = 27;
+            this.radioButtonText.TabIndex = 4;
             this.radioButtonText.TabStop = true;
             this.radioButtonText.Text = "Text";
             this.radioButtonText.UseVisualStyleBackColor = true;
@@ -90,7 +90,7 @@
             this.buttonRemoveNoBreakAfter.Location = new System.Drawing.Point(230, 19);
             this.buttonRemoveNoBreakAfter.Name = "buttonRemoveNoBreakAfter";
             this.buttonRemoveNoBreakAfter.Size = new System.Drawing.Size(75, 23);
-            this.buttonRemoveNoBreakAfter.TabIndex = 22;
+            this.buttonRemoveNoBreakAfter.TabIndex = 1;
             this.buttonRemoveNoBreakAfter.Text = "Remove";
             this.buttonRemoveNoBreakAfter.UseVisualStyleBackColor = true;
             this.buttonRemoveNoBreakAfter.Click += new System.EventHandler(this.buttonRemoveNameEtc_Click);
@@ -104,7 +104,7 @@
             this.listBoxNoBreakAfter.Name = "listBoxNoBreakAfter";
             this.listBoxNoBreakAfter.SelectionMode = System.Windows.Forms.SelectionMode.MultiExtended;
             this.listBoxNoBreakAfter.Size = new System.Drawing.Size(218, 225);
-            this.listBoxNoBreakAfter.TabIndex = 20;
+            this.listBoxNoBreakAfter.TabIndex = 0;
             this.listBoxNoBreakAfter.SelectedIndexChanged += new System.EventHandler(this.listBoxNamesEtc_SelectedIndexChanged);
             // 
             // textBoxNoBreakAfter
@@ -113,7 +113,7 @@
             this.textBoxNoBreakAfter.Location = new System.Drawing.Point(6, 250);
             this.textBoxNoBreakAfter.Name = "textBoxNoBreakAfter";
             this.textBoxNoBreakAfter.Size = new System.Drawing.Size(218, 20);
-            this.textBoxNoBreakAfter.TabIndex = 24;
+            this.textBoxNoBreakAfter.TabIndex = 2;
             this.textBoxNoBreakAfter.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBoxNoBreakAfter_KeyDown);
             // 
             // buttonAddNoBreakAfter
@@ -122,7 +122,7 @@
             this.buttonAddNoBreakAfter.Location = new System.Drawing.Point(230, 248);
             this.buttonAddNoBreakAfter.Name = "buttonAddNoBreakAfter";
             this.buttonAddNoBreakAfter.Size = new System.Drawing.Size(75, 23);
-            this.buttonAddNoBreakAfter.TabIndex = 26;
+            this.buttonAddNoBreakAfter.TabIndex = 3;
             this.buttonAddNoBreakAfter.Text = "Add";
             this.buttonAddNoBreakAfter.UseVisualStyleBackColor = true;
             this.buttonAddNoBreakAfter.Click += new System.EventHandler(this.buttonAddNamesEtc_Click);
@@ -134,7 +134,7 @@
             this.comboBoxDictionaries.Location = new System.Drawing.Point(12, 27);
             this.comboBoxDictionaries.Name = "comboBoxDictionaries";
             this.comboBoxDictionaries.Size = new System.Drawing.Size(224, 21);
-            this.comboBoxDictionaries.TabIndex = 19;
+            this.comboBoxDictionaries.TabIndex = 1;
             this.comboBoxDictionaries.SelectedIndexChanged += new System.EventHandler(this.comboBoxDictionaries_SelectedIndexChanged);
             // 
             // labelLanguage
@@ -143,7 +143,7 @@
             this.labelLanguage.Location = new System.Drawing.Point(12, 11);
             this.labelLanguage.Name = "labelLanguage";
             this.labelLanguage.Size = new System.Drawing.Size(55, 13);
-            this.labelLanguage.TabIndex = 20;
+            this.labelLanguage.TabIndex = 0;
             this.labelLanguage.Text = "Language";
             // 
             // buttonOK
@@ -153,7 +153,7 @@
             this.buttonOK.Location = new System.Drawing.Point(166, 369);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 21;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -166,7 +166,7 @@
             this.buttonCancel.Location = new System.Drawing.Point(250, 369);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
-            this.buttonCancel.TabIndex = 22;
+            this.buttonCancel.TabIndex = 4;
             this.buttonCancel.Text = "C&ancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             // 

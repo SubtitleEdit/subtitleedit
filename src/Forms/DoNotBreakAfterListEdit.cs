@@ -1,17 +1,17 @@
-﻿using Nikse.SubtitleEdit.Logic;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Xml;
-using System.IO;
+using Nikse.SubtitleEdit.Logic;
 
-namespace Nikse.SubtitleEdit
+namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class DoNotBreakAfterListEdit : Form
+    public sealed partial class DoNotBreakAfterListEdit : Form
     {
-        private List<string> _languages = new List<string>();
+        private readonly List<string> _languages = new List<string>();
         private List<NoBreakAfterItem> _noBreakAfterList = new List<NoBreakAfterItem>();
 
         public DoNotBreakAfterListEdit()
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit
                     {
                         if (node.Attributes["RegEx"] != null && node.Attributes["RegEx"].InnerText.Equals("true", StringComparison.OrdinalIgnoreCase))
                         {
-                            Regex r = new Regex(node.InnerText, RegexOptions.Compiled);
+                            var r = new Regex(node.InnerText, RegexOptions.Compiled);
                             _noBreakAfterList.Add(new NoBreakAfterItem(r, node.InnerText));
                         }
                         else
@@ -161,17 +161,7 @@ namespace Nikse.SubtitleEdit
 
             foreach (NoBreakAfterItem nbai in _noBreakAfterList)
             {
-                if (nbai.Regex == null && item.Regex == null)
-                {
-                    if (nbai.Text == item.Text)
-                    {
-                        MessageBox.Show("Text already defined");
-                        textBoxNoBreakAfter.Focus();
-                        textBoxNoBreakAfter.SelectAll();
-                        return;
-                    }
-                }
-                else if (nbai.Regex != null && item.Regex != null)
+                if ((nbai.Regex == null && item.Regex == null) || (nbai.Regex != null && item.Regex != null) && nbai.Text == item.Text)
                 {
                     MessageBox.Show("Text already defined");
                     textBoxNoBreakAfter.Focus();
@@ -208,16 +198,9 @@ namespace Nikse.SubtitleEdit
             {
                 NoBreakAfterItem item = _noBreakAfterList[idx];
                 textBoxNoBreakAfter.Text = item.Text;
-                if (item.Regex != null)
-                {
-                    radioButtonRegEx.Checked = false;
-                    radioButtonText.Checked = true;
-                }
-                else
-                {
-                    radioButtonRegEx.Checked = true;
-                    radioButtonText.Checked = false;
-                }
+                bool isRegEx = item.Regex != null;
+                radioButtonRegEx.Checked = isRegEx;
+                radioButtonText.Checked = !isRegEx;
             }
         }
 
