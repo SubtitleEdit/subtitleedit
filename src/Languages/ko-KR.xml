@@ -693,6 +693,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FileName>파일 이름</FileName>
     <Join>등록</Join>
     <TotalNumberOfLinesX>총 라인 수: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>주의: 파일이 올바른 타임코드를 가지고 있어야 합니다.</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -999,7 +1000,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SaveChangesToX>{0} 이름으로 저장하시겠습니까?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>현재의 원본 자막을 다른 이름으로 저장하시겠습니까?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>원본 자막을 {0} 이름으로 저장하시겠습니까?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>자막 저장...</SaveSubtitleAs>
+    <SaveSubtitleAs> 자막 저장...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>원본 자막 다른 이름으로 저장...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>로드된 자막이 없습니다!</NoSubtitleLoaded>
     <VisualSyncSelectedLines>시각 동기화 - 선택한 줄</VisualSyncSelectedLines>
@@ -1085,7 +1086,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleTranslated>자막이 번역됨!</SubtitleTranslated>
     <TranslateSwedishToDanish>현재 로드된 스웨덴어 자막을 덴마크어로 번역</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>현재 로드된 자막이 스웨덴어가 확실합니까?
-스웨덴어가 맞으면 덴마크어로 번역될 것입니다.</TranslateSwedishToDanishWarning>
+스웨덴어가 맞으면 덴마크어로 번역될 것입니다.
+    </TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>www.nikse.dk/mt를 통해 번역하는 중...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>스웨덴어를 덴마크어로 번역 전</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>스웨덴어를 덴마크어로 번역했습니다!</TranslationFromSwedishToDanishComplete>
@@ -1132,7 +1134,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MatroskaFiles>Matroska 파일</MatroskaFiles>
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
     <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
-    <BlurayNotSubtitlesFound>Blu-ray sup 파일에 어떠한 자막도 들어 있지 않거나 오류가 있습니다 - 다시 추출하십시오.</BlurayNotSubtitlesFound>
+    <BlurayNotSubtitlesFound>Blu-ray sup 파일에 어떠한 자막도 들어 있지 않거나 오류입니다 - 다시 추출하십시오.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Matroska 파일의 구문을 분석하는 중...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>전송 스트림 파일의 구문을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
@@ -1715,7 +1717,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TitleAll>* 모든 줄 빠르게/느리게 표시</TitleAll>
     <ShowEarlier>빠르게</ShowEarlier>
     <ShowLater>느리게</ShowLater>
-    <TotalAdjustmentX>☞ 싱크 합계: {0} 초</TotalAdjustmentX>
+    <TotalAdjustmentX> ☞ 싱크 합계: {0} 초</TotalAdjustmentX>
     <AllLines>모든 줄</AllLines>
     <SelectedLinesOnly>선택한 줄</SelectedLinesOnly>
     <SelectedLinesAndForward>선택한 줄 이후</SelectedLinesAndForward>
