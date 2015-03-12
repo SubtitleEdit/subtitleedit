@@ -32,16 +32,13 @@ namespace Nikse.SubtitleEdit
             {
                 try
                 {
-
                     string s = Path.GetFileName(fileName);
                     string languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
                     comboBoxDictionaries.Items.Add(ci.EnglishName + " (" + ci.NativeName + ")");
                     _languages.Add(fileName);
                 }
-                catch
-                {
-                }
+                catch { }
             }
             if (comboBoxDictionaries.Items.Count > 0)
                 comboBoxDictionaries.SelectedIndex = 0;
@@ -208,16 +205,10 @@ namespace Nikse.SubtitleEdit
             {
                 NoBreakAfterItem item = _noBreakAfterList[idx];
                 textBoxNoBreakAfter.Text = item.Text;
-                if (item.Regex != null)
-                {
-                    radioButtonRegEx.Checked = false;
-                    radioButtonText.Checked = true;
-                }
-                else
-                {
-                    radioButtonRegEx.Checked = true;
-                    radioButtonText.Checked = false;
-                }
+
+                var noBreakType = item.Regex != null;
+                radioButtonRegEx.Checked = noBreakType;
+                radioButtonText.Checked = !noBreakType;
             }
         }
 
