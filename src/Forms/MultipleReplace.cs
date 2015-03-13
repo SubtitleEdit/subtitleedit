@@ -209,26 +209,26 @@ namespace Nikse.SubtitleEdit.Forms
                         Regex r = _compiledRegExList[item.FindWhat];
                         if (r.IsMatch(newText))
                         {
-                            string result = r.Replace(newText, item.ReplaceWith);
-                            if (result != newText)
-                            {
-                                hit = true;
-                                newText = result;
-                            }
+                            hit = true;
+                            newText = r.Replace(newText, item.ReplaceWith);
                         }
                     }
                     else
                     {
                         int index = newText.IndexOf(item.FindWhat, StringComparison.OrdinalIgnoreCase);
-                        while (index >= 0)
+                        if (index >= 0)
                         {
                             hit = true;
-                            newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
-                            index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
+                            do
+                            {
+                                newText = newText.Remove(index, item.FindWhat.Length).Insert(index, item.ReplaceWith);
+                                index = newText.IndexOf(item.FindWhat, index + item.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
+                            }
+                            while (index >= 0);
                         }
                     }
                 }
-                if (hit)
+                if (hit && newText != p.Text)
                 {
                     FixCount++;
                     AddToPreviewListView(p, newText);
