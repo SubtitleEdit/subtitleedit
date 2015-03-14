@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
 
                                     var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
-                                    if (italicStart1 >= 0 && italicStart1 < 10 & newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
+                                    if (italicStart1 >= 0 && italicStart1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
                                         newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
                                     {
                                         newParagraph1.Text += "</i>";
