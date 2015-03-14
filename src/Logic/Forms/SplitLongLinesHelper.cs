@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                                     }
 
                                     var indexOfItalicOpen1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
-                                    if (indexOfItalicOpen1 >= 0 && indexOfItalicOpen1 < 10 & newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
+                                    if (indexOfItalicOpen1 >= 0 && indexOfItalicOpen1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
                                         newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
                                     {
                                         newParagraph1.Text += "</i>";

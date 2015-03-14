@@ -10076,13 +10076,13 @@ namespace Nikse.SubtitleEdit.Forms
                 AutoBalanceLinesAndAllow2PlusLines();
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoom)
+            else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformVerticalZoom)
             {
                 if (audioVisualizer.VerticalZoomPercent >= 0.1)
                     audioVisualizer.VerticalZoomPercent -= 0.05;
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformVerticalZoomOut)
+            else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformVerticalZoomOut)
             {
                 if (audioVisualizer.VerticalZoomPercent < 1)
                     audioVisualizer.VerticalZoomPercent += 0.05;
