@@ -407,5 +407,24 @@ namespace Nikse.SubtitleEdit.Core
 
             return IsUrl(arr[0]);
         }
+
+        internal static string FixUpperTags(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+            var tags = new string[] { "<I>", "<U>", "<B>", "<FONT", "</I>", "</U>", "</B>", "</FONT>" };
+            var idx = text.IndexOfAny(tags, StringComparison.Ordinal);
+            while (idx >= 0)
+            {
+                var endIdx = text.IndexOf('>', idx + 2);
+                if (endIdx < idx)
+                    break;
+                var tag = text.Substring(idx, endIdx - idx).ToLowerInvariant();
+                text = text.Remove(idx, endIdx - idx).Insert(idx, tag);
+                idx = text.IndexOfAny(tags, StringComparison.Ordinal);
+            }
+            return text;
+        }
+
     }
 }
