@@ -36,12 +36,12 @@ namespace Nikse.SubtitleEdit.Forms
         public const string SearchTypeNormal = "Normal";
         public const string SearchTypeCaseSensitive = "CaseSensitive";
         public const string SearchTypeRegularExpression = "RegularExpression";
+        private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
         private readonly Dictionary<string, Regex> _compiledRegExList = new Dictionary<string, Regex>();
         private Subtitle _subtitle;
+        public List<int> DeleteIndices { get; private set; }
         public Subtitle FixedSubtitle { get; private set; }
         public int FixCount { get; private set; }
-        private readonly List<MultipleSearchAndReplaceSetting> _oldMultipleSearchAndReplaceList = new List<MultipleSearchAndReplaceSetting>();
-        public List<int> DeleteIndices = new List<int>();
 
         public MultipleReplace()
         {
@@ -114,7 +114,6 @@ namespace Nikse.SubtitleEdit.Forms
                 _oldMultipleSearchAndReplaceList.Add(item);
             }
 
-            GeneratePreview();
             if (subtitle.Paragraphs == null || subtitle.Paragraphs.Count == 0)
                 groupBoxLinesFound.Enabled = false;
         }
@@ -166,10 +165,10 @@ namespace Nikse.SubtitleEdit.Forms
         {
             Cursor = Cursors.WaitCursor;
             FixedSubtitle = new Subtitle(_subtitle);
+            DeleteIndices = new List<int>();
+            FixCount = 0;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
-            FixCount = 0;
-            DeleteIndices = new List<int>();
             var replaceExpressions = new HashSet<ReplaceExpression>();
             foreach (ListViewItem item in listViewReplaceList.Items)
             {
@@ -189,7 +188,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            
+
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 bool hit = false;
@@ -234,7 +233,7 @@ namespace Nikse.SubtitleEdit.Forms
                     AddToPreviewListView(p, newText);
                     int index = _subtitle.GetIndex(p);
                     FixedSubtitle.Paragraphs[index].Text = newText;
-                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || HtmlUtil.RemoveHtmlTags(newText, true).Trim().Length == 0))
+                    if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(newText, true))))
                     {
                         DeleteIndices.Add(index);
                     }
@@ -372,7 +371,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (textBoxFind.Text.Length > 0)
             {
-
                 if (radioButtonRegEx.Checked && !Utilities.IsValidRegex(textBoxFind.Text))
                 {
                     MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
@@ -611,5 +609,6 @@ namespace Nikse.SubtitleEdit.Forms
             }
             DialogResult = DialogResult.Cancel;
         }
+
     }
 }
