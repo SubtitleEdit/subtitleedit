@@ -137,5 +137,28 @@ namespace Nikse.SubtitleEdit.Core
             }
             return -1;
         }
+
+        public static string FixExtraEspaces(this string s)
+        {
+            if (string.IsNullOrEmpty(s) || s.Trim().Length == 0)
+                return s;
+
+            while (s.Contains("  "))
+                s = s.Replace("  ", " ");
+            return s;
+        }
+
+        public static bool ContainsLetter(this string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return false;
+
+            foreach (var c in s)
+            {
+                if (char.IsLetter(c))
+                    return true;
+            }
+            return false;
+        }
     }
 }
