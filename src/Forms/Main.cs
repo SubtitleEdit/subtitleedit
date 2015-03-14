@@ -17380,7 +17380,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
             {
                 int index = _listViewTextUndoIndex;
-                if (_listViewAlternateTextTicks == -1 || !this.CanFocus | _subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count == 0 || index < 0 || index >= _subtitleAlternate.Paragraphs.Count)
+                if (_listViewAlternateTextTicks == -1 || !this.CanFocus || _subtitleAlternate == null || _subtitleAlternate.Paragraphs.Count == 0 || index < 0 || index >= _subtitleAlternate.Paragraphs.Count)
                     return;
 
                 if ((DateTime.Now.Ticks - _listViewAlternateTextTicks) > 10000 * 700) // only if last typed char was entered > 700 milliseconds
