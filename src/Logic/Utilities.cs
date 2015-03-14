@@ -767,10 +767,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace(" </b>", "</b> ");
             s = s.Replace(" </u>", "</u> ");
             s = s.Replace(" </font>", "</font> ");
-            s = s.Replace("   ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
+            s = s.FixExtraEspaces();
             return s.Trim();
         }
 
