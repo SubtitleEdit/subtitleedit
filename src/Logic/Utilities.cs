@@ -844,11 +844,11 @@ namespace Nikse.SubtitleEdit.Logic
             int k = s.IndexOf('{');
             while (k >= 0)
             {
-                int l = s.IndexOf('}', k);
+                int l = s.IndexOf('}', k + 1);
                 if (l > k)
                 {
                     s = s.Remove(k, l - k + 1);
-                    if (s.Length > 1 && s.Length > k)
+                    if (s.Length > k)
                         k = s.IndexOf('{', k);
                     else
                         break;
@@ -959,10 +959,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
             }
-            catch
-            {
-
-            }
+            catch { }
             return encoding;
         }
 
@@ -1554,12 +1551,8 @@ namespace Nikse.SubtitleEdit.Logic
                         if (count > bestCount)
                             languageName = shortName;
                         break;
-                    case "pt_PT": // Portuguese
-                        count = GetCount(text, "não", "Não", "Estás", "Então", "isso", "com");
-                        if (count > bestCount)
-                            languageName = shortName;
-                        break;
-                    case "pt_BR": // Portuguese (Brasil)
+                    case "pt_PT":
+                    case "pt_BR": // Portuguese (Brasil) | Portuguese
                         count = GetCount(text, "não", "Não", "Estás", "Então", "isso", "com");
                         if (count > bestCount)
                             languageName = shortName;
@@ -1582,11 +1575,11 @@ namespace Nikse.SubtitleEdit.Logic
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             foreach (string line in text.SplitToLines())
             {
-                string s = HtmlUtil.RemoveHtmlTags(line, true);
-                if (s.Length > maxLength)
-                    maxLength = s.Length;
+                if (line.Length > maxLength)
+                    maxLength = line.Length;
             }
             return maxLength;
         }
@@ -2537,12 +2530,10 @@ namespace Nikse.SubtitleEdit.Logic
             foreach (string line in lines)
             {
                 string s = line.Trim();
-                for (int i = 0; i < s.Length; i++)
+                var chars = new char[] { ')', '(' };
+                for (int i = s.IndexOfAny(chars); i >= 0; i = s.IndexOfAny(chars, i + 1))
                 {
-                    if (s[i] == ')')
-                        s = s.Remove(i, 1).Insert(i, "(");
-                    else if (s[i] == '(')
-                        s = s.Remove(i, 1).Insert(i, ")");
+                    s = s.Remove(i, 1);
                 }
 
                 bool numbersOn = false;
@@ -2568,9 +2559,9 @@ namespace Nikse.SubtitleEdit.Logic
                 if (numbersOn)
                 {
                     int i = s.Length;
-                    s = s.Remove(i - numbers.Length, numbers.Length).Insert(i - numbers.Length, numbers);
+                    var startFrom = i - numbers.Length;
+                    s = s.Remove(startFrom, numbers.Length).Insert(startFrom, numbers);
                 }
-
                 sb.AppendLine(s);
             }
             return sb.ToString().Trim();
@@ -2992,10 +2983,8 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-            if (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            if (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
@@ -3143,7 +3132,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (idx + 1 < text.Length && idx != -1)
                         idx = text.IndexOf("- ", idx + 1, StringComparison.Ordinal);
                     else
-                        idx = -1;
+                        break;
                 }
             }
 
@@ -3153,7 +3142,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int idxp = text.IndexOf('"');
 
                 //"Foo " bar.
-                if ((idxp >= 0 && idxp < idx) & AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
+                if ((idxp >= 0 && idxp < idx) && AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
                 {
                     text = text.Remove(idx, 1);
                 }
@@ -3410,7 +3399,7 @@ namespace Nikse.SubtitleEdit.Logic
                                    "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
             }
             lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
