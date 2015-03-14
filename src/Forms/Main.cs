@@ -10088,12 +10088,12 @@ namespace Nikse.SubtitleEdit.Forms
                     audioVisualizer.VerticalZoomPercent += 0.05;
                 e.SuppressKeyPress = true;
             }
-            if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformZoomIn)
+            if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformZoomIn)
             {
                 audioVisualizer.ZoomIn();
                 e.SuppressKeyPress = true;
             }
-            if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformZoomOut)
+            if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformZoomOut)
             {
                 audioVisualizer.ZoomOut();
                 e.SuppressKeyPress = true;
@@ -10102,17 +10102,17 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 PlayFirstSelectedSubtitle();
             }
-            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformPlaySelection)
+            else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformPlaySelection)
             {
                 toolStripMenuItemWaveformPlaySelection_Click(null, null);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceForward)
+            else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformSearchSilenceForward)
             {
                 audioVisualizer.FindDataBelowThreshold(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;
             }
-            else if (audioVisualizer != null && audioVisualizer.Visible & e.KeyData == _waveformSearchSilenceBack)
+            else if (audioVisualizer != null && audioVisualizer.Visible && e.KeyData == _waveformSearchSilenceBack)
             {
                 audioVisualizer.FindDataBelowThresholdBack(Configuration.Settings.VideoControls.WaveformSeeksSilenceMaxVolume, Configuration.Settings.VideoControls.WaveformSeeksSilenceDurationSeconds);
                 e.SuppressKeyPress = true;

@@ -3153,7 +3153,7 @@ namespace Nikse.SubtitleEdit.Logic
                 int idxp = text.IndexOf('"');
 
                 //"Foo " bar.
-                if ((idxp >= 0 && idxp < idx) & AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
+                if ((idxp >= 0 && idxp < idx) && AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
                 {
                     text = text.Remove(idx, 1);
                 }
