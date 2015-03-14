@@ -725,7 +725,6 @@ namespace Test
         #region Fix unneeded spaces
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -737,7 +736,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces2()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -750,7 +748,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -762,7 +759,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -774,7 +770,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUneededSpaces5()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -788,7 +783,6 @@ namespace Test
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUneededSpaces6()
         {
             using (var target = GetFixCommonErrorsLib())
