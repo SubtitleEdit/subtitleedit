@@ -753,7 +753,7 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace(" </b>", "</b> ");
             s = s.Replace(" </u>", "</u> ");
             s = s.Replace(" </font>", "</font> ");
-            s = s.FixExtraEspaces();
+            s = s.FixExtraSpaces();
             return s.Trim();
         }
 
@@ -895,7 +895,7 @@ namespace Nikse.SubtitleEdit.Logic
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
+                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLower().Replace('\'', '"').Contains("encoding=\"utf-8\""))
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
@@ -1062,7 +1062,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         try
                         {
-                            var ci = new CultureInfo(name.Replace("_", "-"));
+                            var ci = new CultureInfo(name.Replace('_', '-'));
                             name = ci.DisplayName + " [" + name + "]";
                         }
                         catch (Exception exception)
@@ -1579,10 +1579,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
 
-            const string ZeroWidthSpace = "\u200B";
+            const string zeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(ZeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -2442,7 +2442,7 @@ namespace Nikse.SubtitleEdit.Logic
         {
             // pre-process for + sign space formatting since System.Uri doesn't handle it
             // plus literals are encoded as %2b normally so this should be safe
-            text = text.Replace("+", " ");
+            text = text.Replace('+', ' ');
             return Uri.UnescapeDataString(text);
         }
 
@@ -2960,14 +2960,14 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string text, string language)
         {
-            const string ZeroWidthSpace = "\u200B";
+            const string zeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
             const string noBreakSpace = "\u00A0";
             const string operatingSystemCommand = "\u009D";
 
             text = text.Trim();
 
-            text = text.Replace(ZeroWidthSpace, string.Empty);
+            text = text.Replace(zeroWidthSpace, string.Empty);
             text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
             text = text.Replace(noBreakSpace, " ");
             text = text.Replace(operatingSystemCommand, string.Empty);
@@ -3027,7 +3027,7 @@ namespace Nikse.SubtitleEdit.Logic
                 text = text.Replace(" ,", ",");
 
             if (text.EndsWith(" .", StringComparison.Ordinal))
-                text = text.Substring(0, text.Length - " .".Length) + ".";
+                text = text.Remove(text.Length - 2, 1);
 
             if (text.EndsWith(" \"", StringComparison.Ordinal))
                 text = text.Remove(text.Length - 2, 1);

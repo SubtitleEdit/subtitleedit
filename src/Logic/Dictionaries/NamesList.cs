@@ -240,7 +240,7 @@ namespace Nikse.SubtitleEdit.Logic.Dictionaries
                 return false;
 
             text = text.Replace(Environment.NewLine, " ");
-            text = text.FixExtraEspaces();
+            text = text.FixExtraSpaces();
 
             foreach (string s in _namesMultiList)
             {

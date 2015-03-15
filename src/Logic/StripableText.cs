@@ -260,7 +260,7 @@ namespace Nikse.SubtitleEdit.Logic
                             var idx = sb.ToString().IndexOf('[');
                             if (s == ']' && idx > 1)
                             { // I [Motor roaring] love you!
-                                string temp = sb.ToString().Substring(0, idx - 1).Trim();
+                                string temp = sb.ToString(0, idx - 1).Trim();
                                 if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1]))
                                     lastWasBreak = true;
                             }
