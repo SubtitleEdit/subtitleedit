@@ -521,14 +521,11 @@ namespace Nikse.SubtitleEdit.Logic
             int currentCount = 0;
             foreach (string word in words)
             {
-                if (currentCount + word.Length + 3 > average)
+                if (currentCount + word.Length + 3 > average && currentIdx < count)
                 {
-                    if (currentIdx < count)
-                    {
-                        list.Add(currentCount);
-                        currentIdx++;
-                        currentCount = 0;
-                    }
+                    list.Add(currentCount);
+                    currentIdx++;
+                    currentCount = 0;
                 }
                 currentCount += word.Length + 1;
             }
