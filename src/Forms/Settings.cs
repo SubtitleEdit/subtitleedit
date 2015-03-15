@@ -409,6 +409,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddOcrFix.Text = language.AddPair;
             groupBoxWordListLocation.Text = language.Location;
             checkBoxNamesEtcOnline.Text = language.UseOnlineNamesEtc;
+            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
 
             groupBoxProxySettings.Text = language.ProxyServerSettings;
             labelProxyAddress.Text = language.ProxyAddress;
@@ -2541,6 +2542,15 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string dictionaryFolder = Utilities.DictionaryFolder;
+            if (!Directory.Exists(dictionaryFolder))
+                Directory.CreateDirectory(dictionaryFolder);
+
+            System.Diagnostics.Process.Start(dictionaryFolder);
         }
 
     }
