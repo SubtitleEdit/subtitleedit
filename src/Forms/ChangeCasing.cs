@@ -130,14 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var st = new StripableText(text);
                 text = st.Pre + st.StrippedText.ToUpper() + st.Post;
-                text = text.Replace("<I>", "<i>");
-                text = text.Replace("</I>", "</i>");
-                text = text.Replace("<B>", "<b>");
-                text = text.Replace("</B>", "</b>");
-                text = text.Replace("<U>", "<u>");
-                text = text.Replace("<U>", "</u>");
-                text = text.Replace("<FONT COLOR>", "<font color>");
-                text = text.Replace("</FONT>", "</font>");
+                text = HtmlUtil.FixUpperTags(text); // tags inside text
             }
             else if (radioButtonLowercase.Checked)
             {
