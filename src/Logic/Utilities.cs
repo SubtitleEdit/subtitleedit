@@ -2973,7 +2973,8 @@ namespace Nikse.SubtitleEdit.Logic
             text = text.Replace(ZeroWidthSpace, string.Empty);
             text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
             text = text.Replace(noBreakSpace, " ");
-            text = text.Replace(operatingSystemCommand, string.Empty); // some kind of hidden space!!!
+            text = text.Replace(operatingSystemCommand, string.Empty);
+            text = text.Replace('\t', ' ');
 
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");

@@ -725,7 +725,6 @@ namespace Test
         #region Fix unneeded spaces
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -736,16 +735,19 @@ namespace Test
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces2()
         {
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, " To be, or not to be!");
                 target.FixUnneededSpaces();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, " To be, or not to be!");
+                var expected = "To be, or not to be!";
+                Assert.AreEqual(expected, target.Subtitle.Paragraphs[0].Text);
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -756,6 +758,7 @@ namespace Test
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -776,6 +779,18 @@ namespace Test
                 target.FixUnneededSpaces();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
                 Assert.AreEqual(target.Subtitle.Paragraphs[1].Text, expected);
+            }
+        }
+
+        [TestMethod]
+        public void FixUneededSpaces6()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Foo bar.";
+                InitializeFixCommonErrorsLine(target, "Foo \t\tbar.");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
             }
         }
 
