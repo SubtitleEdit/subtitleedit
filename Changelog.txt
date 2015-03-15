@@ -21,7 +21,8 @@
    * Updated Polish translation - thx admas
    * Updated Portuguese translation - thx moob
    * Taskbar icon progress info for batch-convert/dvd-rip/matroska+TS-import  
-   * Improved speed for Auto-balance/unbreak lines - thx Ivandrofly   
+   * Improved speed for "Auto-balance/unbreak lines" - thx Ivandrofly
+   * Improved speed for "Multiple replace"   
 * FIXED:
    * Fixed bugs in ASS/SSA loading - thx kotuwa
    * Fixed bug in spell check with auto change casing of http -  thx Ivandrofly
@@ -45,6 +46,7 @@
    * Fixed typo in Brazilian translation - thx Rubens
    * Fixed bug in mplayer2 subtitle format - thx Maciek
    * Fixed bug preventing compare from working in "History" window - thx xylographe
+   * Fix for Advanced Substation Alpha loading - thx Vic
    * + Many minor fixes from Ivandrofly and xylographe
 
 
