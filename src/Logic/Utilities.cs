@@ -521,14 +521,11 @@ namespace Nikse.SubtitleEdit.Logic
             int currentCount = 0;
             foreach (string word in words)
             {
-                if (currentCount + word.Length + 3 > average)
+                if (currentCount + word.Length + 3 > average && currentIdx < count)
                 {
-                    if (currentIdx < count)
-                    {
-                        list.Add(currentCount);
-                        currentIdx++;
-                        currentCount = 0;
-                    }
+                    list.Add(currentCount);
+                    currentIdx++;
+                    currentCount = 0;
                 }
                 currentCount += word.Length + 1;
             }
@@ -3163,27 +3160,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string RemoveSpaceBeforeAfterTag(string text, string openTag)
         {
-            text = text
-                .Replace("<I>", "<i>")
-                .Replace("<B>", "<b>")
-                .Replace("<U>", "<u>")
-                .Replace("</I>", "</i>")
-                .Replace("</B>", "</b")
-                .Replace("</U>", "</u>")
-                .Replace("</FONT>", "</font>");
-
-            if (text.Contains("<FONT", StringComparison.Ordinal))
-            {
-                var idx = text.IndexOf("<FONT ", StringComparison.Ordinal);
-                while (idx > -1)
-                {
-                    var endIdx = text.IndexOf('>', idx);
-                    if (endIdx == -1) break;
-                    var lowerFont = text.Substring(idx, endIdx - idx + 1).ToLower();
-                    text = text.Remove(idx, endIdx - idx + 1).Insert(idx, lowerFont);
-                    idx = text.IndexOf("<FONT ", endIdx, StringComparison.Ordinal);
-                }
-            }
+            text = HtmlUtil.FixUpperTags(text);
             var closeTag = string.Empty;
             switch (openTag)
             {
