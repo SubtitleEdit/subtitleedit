@@ -160,5 +160,12 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult = DialogResult.OK;
         }
 
+        private void radioButtonCheckChanged_Click(object sender, EventArgs e)
+        {
+            var isNormalCasing = sender == radioButtonNormal;
+            checkBoxFixNames.Enabled = isNormalCasing;
+            checkBoxOnlyAllUpper.Enabled = isNormalCasing;
+        }
+
     }
 }

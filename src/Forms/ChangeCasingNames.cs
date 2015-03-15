@@ -35,6 +35,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            listViewFixes.Resize += delegate
+            {
+                var width = (listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width)) / 2;
+                listViewFixes.Columns[2].Width = width;
+                listViewFixes.Columns[3].Width = width;
+            };
             FixLargeFonts();
         }
 
