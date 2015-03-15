@@ -134,16 +134,12 @@ namespace Nikse.SubtitleEdit.Forms
             // Will contains both one word names and multi names
             var namesEtcList = namesList.GetAllNames();
 
-            if (language.StartsWith("en"))
+            if (language.StartsWith("en", StringComparison.Ordinal))
             {
-                if (namesEtcList.Contains("Black"))
-                    namesEtcList.Remove("Black");
-                if (namesEtcList.Contains("Bill"))
-                    namesEtcList.Remove("Bill");
-                if (namesEtcList.Contains("Long"))
-                    namesEtcList.Remove("Long");
-                if (namesEtcList.Contains("Don"))
-                    namesEtcList.Remove("Don");
+                namesEtcList.Remove("Black");
+                namesEtcList.Remove("Bill");
+                namesEtcList.Remove("Long");
+                namesEtcList.Remove("Don");
             }
 
             var sb = new StringBuilder();
