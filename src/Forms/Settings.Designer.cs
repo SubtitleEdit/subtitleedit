@@ -286,6 +286,7 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
+            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -2500,6 +2501,7 @@
             // 
             // groupBoxWordLists
             // 
+            this.groupBoxWordLists.Controls.Add(this.linkLabelOpenDictionaryFolder);
             this.groupBoxWordLists.Controls.Add(this.groupBoxOcrFixList);
             this.groupBoxWordLists.Controls.Add(this.groupBoxUserWordList);
             this.groupBoxWordLists.Controls.Add(this.groupBoxWordListLocation);
@@ -2633,7 +2635,7 @@
             this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesEtcOnline);
             this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 316);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
-            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 110);
+            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 82);
             this.groupBoxWordListLocation.TabIndex = 8;
             this.groupBoxWordListLocation.TabStop = false;
             this.groupBoxWordListLocation.Text = "Location";
@@ -3346,6 +3348,17 @@
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
             // 
+            // linkLabelOpenDictionaryFolder
+            // 
+            this.linkLabelOpenDictionaryFolder.AutoSize = true;
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(7, 409);
+            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
+            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
+            this.linkLabelOpenDictionaryFolder.TabIndex = 29;
+            this.linkLabelOpenDictionaryFolder.TabStop = true;
+            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
+            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
+            // 
             // Settings
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -3711,5 +3724,6 @@
         private System.Windows.Forms.Label labelWaveformTextSize;
         private System.Windows.Forms.CheckBox checkBoxWaveformTextBold;
         private System.Windows.Forms.ComboBox comboBoxWaveformTextSize;
+        private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
     }
 }
