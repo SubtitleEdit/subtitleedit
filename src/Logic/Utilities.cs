@@ -3160,27 +3160,7 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static string RemoveSpaceBeforeAfterTag(string text, string openTag)
         {
-            text = text
-                .Replace("<I>", "<i>")
-                .Replace("<B>", "<b>")
-                .Replace("<U>", "<u>")
-                .Replace("</I>", "</i>")
-                .Replace("</B>", "</b")
-                .Replace("</U>", "</u>")
-                .Replace("</FONT>", "</font>");
-
-            if (text.Contains("<FONT", StringComparison.Ordinal))
-            {
-                var idx = text.IndexOf("<FONT ", StringComparison.Ordinal);
-                while (idx > -1)
-                {
-                    var endIdx = text.IndexOf('>', idx);
-                    if (endIdx == -1) break;
-                    var lowerFont = text.Substring(idx, endIdx - idx + 1).ToLower();
-                    text = text.Remove(idx, endIdx - idx + 1).Insert(idx, lowerFont);
-                    idx = text.IndexOf("<FONT ", endIdx, StringComparison.Ordinal);
-                }
-            }
+            text = HtmlUtil.FixUpperTags(text);
             var closeTag = string.Empty;
             switch (openTag)
             {
