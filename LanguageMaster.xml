@@ -1333,7 +1333,7 @@ Continue?</SubtitleAppendPrompt>
     <RegularExpression>Regular expression</RegularExpression>
     <LinesFoundX>Lines found: {0}</LinesFoundX>
     <Delete>Delete</Delete>
-    <Add>Add</Add>
+    <Add>&amp;Add</Add>
     <Update>&amp;Update</Update>
     <Enabled>Enabled</Enabled>
     <SearchType>Search type</SearchType>
@@ -1342,7 +1342,7 @@ Continue?</SubtitleAppendPrompt>
     <Export>Export...</Export>
     <ImportRulesTitle>Import replace rule(s) from...</ImportRulesTitle>
     <ExportRulesTitle>Export replace rule(s) to...</ExportRulesTitle>
-    <Rules>Export rules</Rules>
+    <Rules>Find and replace rules</Rules>
     <MoveToTop>Move to top</MoveToTop>
     <MoveToBottom>Move to bottom</MoveToBottom>
   </MultipleReplace>
