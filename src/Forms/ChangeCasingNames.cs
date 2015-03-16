@@ -94,23 +94,25 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _subtitle.Paragraphs)
             {
                 string text = p.Text;
-                foreach (ListViewItem item in listViewNames.Items)
+                if (!string.IsNullOrWhiteSpace(text))
                 {
-                    string name = item.SubItems[1].Text;
-
-                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
-                    if (textNoTags != textNoTags.ToUpper())
+                    foreach (ListViewItem item in listViewNames.Items)
                     {
-                        if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
+                        string name = item.SubItems[1].Text;
+                        if (item.Checked && name.Length > 1 && name.ToLower() != name && text.Contains(name, StringComparison.OrdinalIgnoreCase))
                         {
-                            var st = new StripableText(text);
-                            st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
-                            text = st.MergedString;
+                            string textNoTags = HtmlUtil.RemoveHtmlTags(text, true);
+                            if (textNoTags != textNoTags.ToUpper())
+                            {
+                                var st = new StripableText(text);
+                                st.FixCasing(new List<string> { name }, true, false, false, string.Empty);
+                                text = st.MergedString;
+                            }
                         }
                     }
+                    if (text != p.Text)
+                        AddToPreviewListView(p, text);
                 }
-                if (text != p.Text)
-                    AddToPreviewListView(p, text);
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.LinesFoundX, listViewFixes.Items.Count);
@@ -154,41 +156,25 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (Paragraph p in _subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
             string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
-            string textToLower = text.ToLower();
+            listViewNames.BeginUpdate();
             foreach (string name in namesEtcList)
             {
-                int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
-                if (startIndex >= 0)
+                if (name.Length > 1 && name != name.ToLower())
                 {
-                    while (startIndex >= 0 && startIndex < text.Length &&
-                           textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
+                    int startIndex = text.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                    while (startIndex >= 0)
                     {
-                        bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
-                                       (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture)));
-
-                        if (startOk)
+                        if (text.Substring(startIndex, name.Length) != name && !_usedNames.Contains(name) && Utilities.StartEndOkay(text, name, startIndex)) // do not add names where casing already is correct
                         {
-                            int end = startIndex + name.Length;
-                            bool endOk = end <= text.Length;
-                            if (endOk)
-                                endOk = end == text.Length || (@" ,.!?:;')-<""" + Environment.NewLine).Contains(text[end]);
-
-                            if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
-                            {
-                                if (!_usedNames.Contains(name))
-                                {
-                                    _usedNames.Add(name);
-                                    AddToListViewNames(name);
-                                    break; // break while
-                                }
-                            }
+                            _usedNames.Add(name);
+                            AddToListViewNames(name);
+                            break; // break while
                         }
-
-                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
+                        startIndex = text.IndexOf(name, startIndex + name.Length, StringComparison.OrdinalIgnoreCase);
                     }
                 }
             }
+            listViewNames.EndUpdate();
             groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
         }
 

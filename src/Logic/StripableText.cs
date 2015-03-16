@@ -127,44 +127,30 @@ namespace Nikse.SubtitleEdit.Logic
                 Post = Post.Remove(0, 1);
             }
 
-            string lower = StrippedText.ToLower();
-
+            string strippedLower = StrippedText.ToLower();
             foreach (string name in namesEtc)
             {
-                int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
-                while (start >= 0 && start < lower.Length)
+                int start = strippedLower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
+                while (start >= 0 && start < strippedLower.Length)
                 {
-                    bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
-                                   Environment.NewLine.EndsWith(lower[start - 1]);
-
-                    if (startOk)
+                    if (Utilities.StartEndOkay(strippedLower, name, start))
                     {
-                        int end = start + name.Length;
-                        bool endOk = end <= lower.Length;
-                        if (endOk)
-                            endOk = end == lower.Length || (@" ,.!?:;')- <""" + Environment.NewLine).Contains(lower[end]);
-
-                        if (endOk && StrippedText.Length >= start + name.Length)
-                        {
-                            string originalName = StrippedText.Substring(start, name.Length);
-                            originalNames.Add(originalName);
-                            StrippedText = StrippedText.Remove(start, name.Length);
-                            StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name));
-                            lower = StrippedText.ToLower();
-                        }
+                        string originalName = StrippedText.Substring(start, name.Length);
+                        originalNames.Add(originalName);
+                        StrippedText = StrippedText.Remove(start, name.Length).Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name));
+                        strippedLower = StrippedText.ToLower();
                     }
-                    if (start + 3 > lower.Length)
-                        start = lower.Length + 1;
+                    if (start + 3 > strippedLower.Length)
+                        start = strippedLower.Length + 1;
                     else
-                        start = lower.IndexOf(name.ToLower(), start + 3, StringComparison.Ordinal);
+                        start = strippedLower.IndexOf(name, start + 3, StringComparison.OrdinalIgnoreCase);
                 }
             }
 
             if (StrippedText.EndsWith('.'))
             {
                 Post = "." + Post;
-                StrippedText = StrippedText.TrimEnd('.');
+                StrippedText = StrippedText.Remove(strippedLower.Length - 1, 1);
             }
         }
 
