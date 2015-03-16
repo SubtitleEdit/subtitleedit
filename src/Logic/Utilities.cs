@@ -3437,5 +3437,23 @@ namespace Nikse.SubtitleEdit.Logic
             return lines;
         }
 
+        internal static bool StartEndOkay(string text, string name, int startIdx)
+        {
+            if (string.IsNullOrWhiteSpace(text) || string.IsNullOrWhiteSpace(name) || startIdx < 0)
+                return false;
+
+            var postIdx = startIdx - 1;
+            bool startOk = (startIdx == 0) || (text[postIdx] == ' ') || (text[postIdx] == '-') || (text[postIdx] == '(') || (text[postIdx] == '[') ||
+                           (text[postIdx] == '"') || (text[postIdx] == '\'') || (text[postIdx] == '>') ||
+                           (Environment.NewLine.EndsWith(text[postIdx].ToString(CultureInfo.InvariantCulture)));
+
+            if (startOk)
+            {
+                int end = startIdx + name.Length;
+                return (end == text.Length || (end < text.Length && (@" ,.!?:;')]-<""" + Environment.NewLine).Contains(text[end])));
+            }
+            return false;
+        }
+
     }
 }
