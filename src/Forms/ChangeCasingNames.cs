@@ -86,6 +86,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void GeneratePreview()
         {
+            if (listViewNames.Items == null || listViewNames.Items.Count == 0)
+                return;
             Cursor = Cursors.WaitCursor;
             listViewFixes.BeginUpdate();
             listViewFixes.Items.Clear();
