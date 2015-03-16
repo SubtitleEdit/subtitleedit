@@ -155,6 +155,7 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine(p.Text);
             string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
             string textToLower = text.ToLower();
+            listViewNames.BeginUpdate();
             foreach (string name in namesEtcList)
             {
                 int startIndex = textToLower.IndexOf(name.ToLower(), StringComparison.Ordinal);
@@ -163,32 +164,18 @@ namespace Nikse.SubtitleEdit.Forms
                     while (startIndex >= 0 && startIndex < text.Length &&
                            textToLower.Substring(startIndex).Contains(name.ToLower()) && name.Length > 1 && name != name.ToLower())
                     {
-                        bool startOk = (startIndex == 0) || (text[startIndex - 1] == ' ') || (text[startIndex - 1] == '-') ||
-                                       (text[startIndex - 1] == '"') || (text[startIndex - 1] == '\'') || (text[startIndex - 1] == '>') ||
-                                       (Environment.NewLine.EndsWith(text[startIndex - 1].ToString(CultureInfo.InvariantCulture)));
-
-                        if (startOk)
+                        if (Utilities.StartEndOkay(text, name, startIndex) && text.Substring(startIndex, name.Length) != name && !_usedNames.Contains(name)) // do not add names where casing already is correct
                         {
-                            int end = startIndex + name.Length;
-                            bool endOk = end <= text.Length;
-                            if (endOk)
-                                endOk = end == text.Length || (@" ,.!?:;')-<""" + Environment.NewLine).Contains(text[end]);
-
-                            if (endOk && text.Substring(startIndex, name.Length) != name) // do not add names where casing already is correct
-                            {
-                                if (!_usedNames.Contains(name))
-                                {
-                                    _usedNames.Add(name);
-                                    AddToListViewNames(name);
-                                    break; // break while
-                                }
-                            }
+                            _usedNames.Add(name);
+                            AddToListViewNames(name);
+                            break; // break while
                         }
-
-                        startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
                     }
+
+                    startIndex = textToLower.IndexOf(name.ToLower(), startIndex + 2, StringComparison.Ordinal);
                 }
             }
+            listViewNames.EndUpdate();
             groupBoxNames.Text = string.Format(Configuration.Settings.Language.ChangeCasingNames.NamesFoundInSubtitleX, listViewNames.Items.Count);
         }
 
