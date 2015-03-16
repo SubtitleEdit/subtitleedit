@@ -100,9 +100,9 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Un mot :</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Générer forme à partir des données</Title>
+    <Title>Générer forme d'onde à partir des données</Title>
     <SourceVideoFile>Fichier vidéo source:</SourceVideoFile>
-    <GenerateWaveformData>Générer forme à partir des données</GenerateWaveformData>
+    <GenerateWaveformData>Générer forme d'onde à partir des données</GenerateWaveformData>
     <PleaseWait>Ceci peut prendre quelques minutes - Veuillez patienter...</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player introuvable</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
@@ -113,10 +113,10 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingMinutes>Extraction audio: {0}:{1:00} secondes</ExtractingMinutes>
   </AddWaveform>
   <AddWaveformBatch>
-    <Title>Génération par lots de formes d'onde sonores</Title>
+    <Title>Générer par lots des formes d'onde sonores</Title>
     <ExtractingAudio>Extraction audio...</ExtractingAudio>
     <Calculating>Calculer...</Calculating>
-    <Done>Fini</Done>
+    <Done>&amp;Annuler</Done>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajuster les durées</Title>
@@ -161,7 +161,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
     <NotConverted>Echoué</NotConverted>
     <Converted>Converti</Converted>
-    <ConvertedX>Convertir ({0})</ConvertedX>
+    <ConvertedX>Converti ({0})</ConvertedX>
     <Settings>Configuration</Settings>
     <SplitLongLines>Diviser les longues lignes</SplitLongLines>
     <AutoBalance>Equilibrer les lignes automatiquement</AutoBalance>
@@ -174,11 +174,11 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Filter>Filtre</Filter>
     <FilterSkipped>Filtré</FilterSkipped>
     <FilterSrtNoUtf8BOM>Fichiers SRT sans indicateur d'ordre des octets</FilterSrtNoUtf8BOM>
-    <FilterMoreThanTwoLines>Plus de deux lignes par texte</FilterMoreThanTwoLines>
-    <FilterContains>Contient...</FilterContains>
+    <FilterMoreThanTwoLines>Sous-titres à plus de deux lignes</FilterMoreThanTwoLines>
+    <FilterContains>Texte contenant...</FilterContains>
     <FixCommonErrorsErrorX>Corriger erreurs fréquentes : {0}</FixCommonErrorsErrorX>
-    <MultipleReplaceErrorX>Remplacement multiple : {0}</MultipleReplaceErrorX>
-    <AutoBalanceErrorX>Equilibre automatique des lignes : {0}</AutoBalanceErrorX>
+    <MultipleReplaceErrorX>Remplacements multiples : {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Balance automatique : {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Sous-titre spectateur</Title>
@@ -820,7 +820,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Fermer fichier vidéo</CloseVideo>
         <ImportSceneChanges>Importer changements de scène...</ImportSceneChanges>
         <RemoveSceneChanges>Supprimer changements de scène...</RemoveSceneChanges>
-        <WaveformBatchGenerate>Générer par lots de formes d'onde sonores</WaveformBatchGenerate>
+        <WaveformBatchGenerate>Générer par lots des formes d'onde sonores</WaveformBatchGenerate>
         <ShowHideVideo>Afficher/Masquer vidéo</ShowHideVideo>
         <ShowHideWaveform>Afficher/Masquer diagramme sonore</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Afficher/Masquer les formes d'onde et spectrogramme</ShowHideWaveformAndSpectrogram>
@@ -2046,7 +2046,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
   </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Cliquer pour ajouter une forme sonore</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter onde/spectrogramme</ClickToAddWaveformAndSpectrogram>
     <Seconds>secondes</Seconds>
     <ZoomIn>Zoom avant</ZoomIn>
     <ZoomOut>Zoom arrière</ZoomOut>
