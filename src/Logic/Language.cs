@@ -1584,7 +1584,7 @@ namespace Nikse.SubtitleEdit.Logic
                 RegularExpression = "Regular expression",
                 LinesFoundX = "Lines found: {0}",
                 Delete = "Delete",
-                Add = "Add",
+                Add = "&Add",
                 Update = "&Update",
                 Enabled = "Enabled",
                 SearchType = "Search type",
@@ -1593,7 +1593,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Export = "Export...",
                 ImportRulesTitle = "Import replace rule(s) from...",
                 ExportRulesTitle = "Export replace rule(s) to...",
-                Rules = "Export rules",
+                Rules = "Find and replace rules",
                 MoveToBottom = "Move to bottom",
                 MoveToTop = "Move to top"
             };
