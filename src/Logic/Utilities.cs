@@ -1565,11 +1565,11 @@ namespace Nikse.SubtitleEdit.Logic
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
+            text = HtmlUtil.RemoveHtmlTags(text, true);
             foreach (string line in text.SplitToLines())
             {
-                string s = HtmlUtil.RemoveHtmlTags(line, true);
-                if (s.Length > maxLength)
-                    maxLength = s.Length;
+                if (line.Length > maxLength)
+                    maxLength = line.Length;
             }
             return maxLength;
         }
@@ -2976,10 +2976,8 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-            if (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            if (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
@@ -3127,7 +3125,7 @@ namespace Nikse.SubtitleEdit.Logic
                     if (idx + 1 < text.Length && idx != -1)
                         idx = text.IndexOf("- ", idx + 1, StringComparison.Ordinal);
                     else
-                        idx = -1;
+                        break;
                 }
             }
 
@@ -3374,7 +3372,7 @@ namespace Nikse.SubtitleEdit.Logic
                                    "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
             }
             lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
