@@ -153,9 +153,9 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 AddToReplaceListView(true, textBoxFind.Text, textBoxReplace.Text, EnglishSearchTypeToLocal(searchType));
-                GeneratePreview();
                 textBoxFind.Text = string.Empty;
                 textBoxReplace.Text = string.Empty;
+                GeneratePreview();
                 textBoxFind.Select();
                 SaveReplaceList(false);
             }
@@ -371,38 +371,30 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (textBoxFind.Text.Length > 0)
             {
-                if (radioButtonRegEx.Checked && !Utilities.IsValidRegex(textBoxFind.Text))
+                string searchType = SearchTypeNormal;
+                if (radioButtonCaseSensitive.Checked)
                 {
-                    MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
-                    textBoxFind.Select();
-                    return;
+                    searchType = SearchTypeCaseSensitive;
                 }
-
-                if (textBoxFind.Text.Length > 0)
+                else if (radioButtonRegEx.Checked)
                 {
-                    string searchType = SearchTypeNormal;
-                    if (radioButtonCaseSensitive.Checked)
-                        searchType = SearchTypeCaseSensitive;
-                    else if (radioButtonRegEx.Checked)
+                    searchType = SearchTypeRegularExpression;
+                    if (!Utilities.IsValidRegex(textBoxFind.Text))
                     {
-                        searchType = SearchTypeRegularExpression;
-                        if (!Utilities.IsValidRegex(textBoxFind.Text))
-                        {
-                            MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
-                            textBoxFind.Select();
-                            return;
-                        }
+                        MessageBox.Show(Configuration.Settings.Language.General.RegularExpressionIsNotValid);
+                        textBoxFind.Select();
+                        return;
                     }
-
-                    var item = listViewReplaceList.SelectedItems[0];
-                    item.SubItems[1].Text = textBoxFind.Text;
-                    item.SubItems[2].Text = textBoxReplace.Text;
-                    item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
-
-                    GeneratePreview();
-                    textBoxFind.Select();
-                    SaveReplaceList(false);
                 }
+
+                var item = listViewReplaceList.SelectedItems[0];
+                item.SubItems[1].Text = textBoxFind.Text;
+                item.SubItems[2].Text = textBoxReplace.Text;
+                item.SubItems[3].Text = EnglishSearchTypeToLocal(searchType);
+
+                GeneratePreview();
+                textBoxFind.Select();
+                SaveReplaceList(false);
             }
         }
 
@@ -429,7 +421,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void TextBoxReplaceKeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Enter && textBoxFind.Text.Length > 0 && textBoxReplace.Text.Length > 0)
+            if (e.KeyCode == Keys.Enter)
                 ButtonAddClick(null, null);
         }
 
@@ -516,7 +508,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewReplaceList.Items.Count == 0)
                 return;
 
-            saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ImportRulesTitle;
+            saveFileDialog1.Title = Configuration.Settings.Language.MultipleReplace.ExportRulesTitle;
             saveFileDialog1.Filter = Configuration.Settings.Language.MultipleReplace.Rules + "|*.template";
             if (saveFileDialog1.ShowDialog(this) == DialogResult.OK)
             {
