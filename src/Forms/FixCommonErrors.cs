@@ -1655,11 +1655,11 @@ namespace Nikse.SubtitleEdit.Forms
                             p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
                             p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
                         }
-                        else if (line.Length > 5 && line.EndsWith('"') && line.Contains("- ") && line.IndexOf("- ", StringComparison.Ordinal) < 4)
+                        else if (line.Length > 5 && line.EndsWith('"') && line.Contains("- ", StringComparison.Ordinal) && line.IndexOf("- ", StringComparison.Ordinal) < 4)
                         {
                             p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                         }
-                        else if (line.Contains('"') && line.IndexOf('"') > 2 && line.IndexOf('"') < line.Length - 3)
+                        else if (line.IndexOf('"') > 2 && line.IndexOf('"') < line.Length - 3)
                         {
                             int index = line.IndexOf('"');
                             if (line[index - 1] == ' ')
@@ -1669,7 +1669,7 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else if (line[index + 1] == ' ')
                             {
-                                if (line.Length > 5 && line.Contains("- ") && line.IndexOf("- ", StringComparison.Ordinal) < 4)
+                                if (line.Length > 5 && line.Contains("- ", StringComparison.Ordinal) && line.IndexOf("- ", StringComparison.Ordinal) < 4)
                                     p.Text = p.Text.Insert(line.IndexOf("- ", StringComparison.Ordinal) + 2, "\"");
                             }
                         }
@@ -1680,7 +1680,7 @@ namespace Nikse.SubtitleEdit.Forms
                             {
                                 p.Text = p.Text.Trim() + "\"";
                             }
-                            else if (line.Length > 5 && line.EndsWith('"') && p.Text.Contains(Environment.NewLine + "- "))
+                            else if (line.Length > 5 && line.EndsWith('"') && p.Text.Contains(Environment.NewLine + "- ", StringComparison.Ordinal))
                             {
                                 p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                             }
@@ -1693,7 +1693,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 else if (line[index + 1] == ' ')
                                 {
-                                    if (line.Length > 5 && p.Text.Contains(Environment.NewLine + "- "))
+                                    if (line.Length > 5 && p.Text.Contains(Environment.NewLine + "- ", StringComparison.Ordinal))
                                         p.Text = p.Text.Insert(p.Text.IndexOf(Environment.NewLine + "- ", StringComparison.Ordinal) + Environment.NewLine.Length + 2, "\"");
                                 }
                             }
@@ -1704,6 +1704,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (p.Text.StartsWith('"'))
                         {
                             if (next == null || !next.Text.Contains('"'))
+                                p.Text += "\"";
+                            else if (next != null && Utilities.CountTagInText(next.Text, '"') == 1 && next.Text.StartsWith("\"", StringComparison.Ordinal))
                                 p.Text += "\"";
                         }
                         else if (p.Text.StartsWith("<i>\"", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
@@ -1757,19 +1759,15 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    if (oldText != p.Text)
+                    if (oldText != p.Text && AllowFix(p, fixAction))
                     {
-                        if (AllowFix(p, fixAction))
-                        {
-                            noOfFixes++;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        else
-                        {
-                            p.Text = oldText;
-                        }
+                        noOfFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
-
+                    else
+                    {
+                        p.Text = oldText;
+                    }
                 }
             }
             UpdateFixStatus(noOfFixes, fixAction, _language.XMissingQuotesAdded);
