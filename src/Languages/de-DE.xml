@@ -1701,7 +1701,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Auswahl in Großbuchstaben</MainTextBoxSelectionToUpper>
-    <MainTextBoxToggleAutoDuration>Auto Dauer umlegen</MainTextBoxToggleAutoDuration>
+    <MainTextBoxToggleAutoDuration>Auto Dauer umschalten</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
     <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
