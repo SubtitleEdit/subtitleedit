@@ -134,25 +134,13 @@ namespace Nikse.SubtitleEdit.Logic
                 int start = lower.IndexOf(name, StringComparison.OrdinalIgnoreCase);
                 while (start >= 0 && start < lower.Length)
                 {
-                    bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
-                                   (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
-                                   Environment.NewLine.EndsWith(lower[start - 1]);
-
-                    if (startOk)
+                    if (Utilities.StartEndOkay(lower, name, start) && StrippedText.Length >= start + name.Length)
                     {
-                        int end = start + name.Length;
-                        bool endOk = end <= lower.Length;
-                        if (endOk)
-                            endOk = end == lower.Length || (@" ,.!?:;')- <""" + Environment.NewLine).Contains(lower[end]);
-
-                        if (endOk && StrippedText.Length >= start + name.Length)
-                        {
-                            string originalName = StrippedText.Substring(start, name.Length);
-                            originalNames.Add(originalName);
-                            StrippedText = StrippedText.Remove(start, name.Length);
-                            StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name));
-                            lower = StrippedText.ToLower();
-                        }
+                        string originalName = StrippedText.Substring(start, name.Length);
+                        originalNames.Add(originalName);
+                        StrippedText = StrippedText.Remove(start, name.Length);
+                        StrippedText = StrippedText.Insert(start, GetAndInsertNextId(replaceIds, replaceNames, name));
+                        lower = StrippedText.ToLower();
                     }
                     if (start + 3 > lower.Length)
                         start = lower.Length + 1;
@@ -164,7 +152,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (StrippedText.EndsWith('.'))
             {
                 Post = "." + Post;
-                StrippedText = StrippedText.TrimEnd('.');
+                StrippedText = StrippedText.Remove(StrippedText.Length - 1, 1);
             }
         }
 
