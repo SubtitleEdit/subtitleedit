@@ -138,7 +138,7 @@ namespace Nikse.SubtitleEdit.Core
             return -1;
         }
 
-        public static string FixExtraEspaces(this string s)
+        public static string FixExtraSpaces(this string s)
         {
             if (string.IsNullOrEmpty(s) || s.Trim().Length == 0)
                 return s;
