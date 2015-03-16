@@ -1000,7 +1000,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SaveChangesToX>{0} 이름으로 저장하시겠습니까?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>현재의 원본 자막을 다른 이름으로 저장하시겠습니까?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>원본 자막을 {0} 이름으로 저장하시겠습니까?</SaveChangesToOriginalX>
-    <SaveSubtitleAs> 자막 저장...</SaveSubtitleAs>
+    <SaveSubtitleAs>자막 저장...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>원본 자막 다른 이름으로 저장...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>로드된 자막이 없습니다!</NoSubtitleLoaded>
     <VisualSyncSelectedLines>시각 동기화 - 선택한 줄</VisualSyncSelectedLines>
@@ -1086,8 +1086,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleTranslated>자막이 번역됨!</SubtitleTranslated>
     <TranslateSwedishToDanish>현재 로드된 스웨덴어 자막을 덴마크어로 번역</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>현재 로드된 자막이 스웨덴어가 확실합니까?
-스웨덴어가 맞으면 덴마크어로 번역될 것입니다.
-    </TranslateSwedishToDanishWarning>
+스웨덴어가 맞으면 덴마크어로 번역될 것입니다.</TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>www.nikse.dk/mt를 통해 번역하는 중...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>스웨덴어를 덴마크어로 번역 전</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>스웨덴어를 덴마크어로 번역했습니다!</TranslationFromSwedishToDanishComplete>
@@ -1717,7 +1716,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TitleAll>* 모든 줄 빠르게/느리게 표시</TitleAll>
     <ShowEarlier>빠르게</ShowEarlier>
     <ShowLater>느리게</ShowLater>
-    <TotalAdjustmentX> ☞ 싱크 합계: {0} 초</TotalAdjustmentX>
+    <TotalAdjustmentX>☞ 싱크 합계: {0} 초</TotalAdjustmentX>
     <AllLines>모든 줄</AllLines>
     <SelectedLinesOnly>선택한 줄</SelectedLinesOnly>
     <SelectedLinesAndForward>선택한 줄 이후</SelectedLinesAndForward>

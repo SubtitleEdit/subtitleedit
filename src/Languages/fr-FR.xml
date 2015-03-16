@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Contrôles - {0}</ControlsWindowTitle>
     <Advanced>Avancé</Advanced>
     <Style>Style</Style>
+    <StyleLanguage>Style / Langue</StyleLanguage>
+    <Character>Personnage</Character>
     <Class>Catégorie</Class>
     <GeneralText>Texte général</GeneralText>
     <LineNumber>ligne#</LineNumber>
@@ -110,6 +112,12 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
     <ExtractingMinutes>Extraction audio: {0}:{1:00} secondes</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Génération par lots de formes d'onde sonores</Title>
+    <ExtractingAudio>Extraction audio...</ExtractingAudio>
+    <Calculating>Calculer...</Calculating>
+    <Done>Fini</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajuster les durées</Title>
     <AdjustVia>Ajuster selon</AdjustVia>
@@ -151,7 +159,8 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Convertir</Convert>
     <NothingToConvert>Rien à convertir !</NothingToConvert>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
-    <Converted>Convertir</Converted>
+    <NotConverted>Echoué</NotConverted>
+    <Converted>Converti</Converted>
     <ConvertedX>Convertir ({0})</ConvertedX>
     <Settings>Configuration</Settings>
     <SplitLongLines>Diviser les longues lignes</SplitLongLines>
@@ -161,6 +170,15 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Inclus les sous-dossiers</Recursive>
     <SetMinMsBetweenSubtitles>Définir mini millisec. entre les sous-titres</SetMinMsBetweenSubtitles>
     <PlainText>Texte brut</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Filtre</Filter>
+    <FilterSkipped>Filtré</FilterSkipped>
+    <FilterSrtNoUtf8BOM>Fichiers SRT sans indicateur d'ordre des octets</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Plus de deux lignes par texte</FilterMoreThanTwoLines>
+    <FilterContains>Contient...</FilterContains>
+    <FixCommonErrorsErrorX>Corriger erreurs fréquentes : {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Remplacement multiple : {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Equilibre automatique des lignes : {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Sous-titre spectateur</Title>
@@ -407,6 +425,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Droit</Right>
     <Center>Centre</Center>
     <BottomMargin>Marge inférieure</BottomMargin>
+    <LeftRightMargin>Marges latérales</LeftRightMargin>
     <SaveBluRraySupAs>Enregistrer en tant que Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Enregistrer en tant que VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Enregistrer en tant FabImage Script</SaveFabImageScriptAs>
@@ -678,6 +697,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nom</FileName>
     <Join>Créer</Join>
     <TotalNumberOfLinesX>Nombre total de lignes: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Note : Il faut ajuster les timecodes avant de fusionner les sous-titres</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -735,6 +755,13 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Rétablir</Redo>
         <ShowUndoHistory>Afficher &amp;historique (pour annulation)</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Insérer un symbole unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Insérer caractères de contrôle Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Marque gauche-à-droite (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Marque droite-à-gauche (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Enchâssement gauche-à-droite (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Enchâssement droite-à-gauche (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Forçage gauche-à-droite (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Forçage droite-à-gauche (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>Re&amp;chercher</Find>
         <FindNext>Rechercher &amp;suivant</FindNext>
         <Replace>&amp;Remplacer</Replace>
@@ -793,6 +820,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Fermer fichier vidéo</CloseVideo>
         <ImportSceneChanges>Importer changements de scène...</ImportSceneChanges>
         <RemoveSceneChanges>Supprimer changements de scène...</RemoveSceneChanges>
+        <WaveformBatchGenerate>Générer par lots de formes d'onde sonores</WaveformBatchGenerate>
         <ShowHideVideo>Afficher/Masquer vidéo</ShowHideVideo>
         <ShowHideWaveform>Afficher/Masquer diagramme sonore</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Afficher/Masquer les formes d'onde et spectrogramme</ShowHideWaveformAndSpectrogram>
@@ -864,6 +892,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Timed Text - styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - Configurer langue</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Configurer style</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - Configurer personnage</NuendoSetStyle>
         <Cut>Couper</Cut>
         <Copy>Copier</Copy>
         <Paste>Coller</Paste>
@@ -1105,6 +1134,8 @@ Poursuivre ?</SubtitleAppendPrompt>
     <MatroskaFiles>Fichiers Matroska</MatroskaFiles>
     <NoSubtitlesFound>Aucun sous-titre trouvé</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ce n'est pas un fichier Matroska valide: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Ce fichier Blu-ray sup ne contient pas de sous-titres ou contient des erreurs :
+- tente de répéter le démultiplexage.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Analyse du fichier Matroska. Patientez...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analyse du fichier de flux de transport. Veuillez patienter...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Avant l'importation de sous-titres du fichier Matroska</BeforeImportFromMatroskaFile>
@@ -1161,6 +1192,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Avant de fusionner les lignes courtes</BeforeMergeShortLines>
     <BeforeSplitLongLines>Avant de couper les lignes longues</BeforeSplitLongLines>
     <MergedShortLinesX>Nombre de lignes fusionnées: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Avant de combler les petits écarts entre les durées</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Avant la mise au minimum du temps d'affichage entre les paragraphes</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Nombre de lignes avec le temps mini. d'affichage entre les paragraphes changé: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Avant d'importer le fichier texte</BeforeImportText>
@@ -1230,6 +1262,13 @@ Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
 - Subtitle Edit ne peut pas ouvrir les fichiers PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Ce fichier semble être des métadonnées d'archives ReScene .SRR :
 - Ce n’est pas un fichier de sous-titres.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ce fichier semble être un fichier BitTorrent :
+- Ce n’est pas un fichier de sous-titres.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>Il n'y a pas de support des sous-titres VobSub chiffrées.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Des fichiers Blu-ray sup ne sont pas supporter ici.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>Des fichiers DVD sup ne sont pas supporter ici.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>Des fichiers VobSub ne sont pas supporter ici.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Des fichiers DivX ne sont pas supporter ici.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
@@ -1613,6 +1652,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
     <CopyTextOnly>Copier du texte dans le presse-papier (lignes sélectionnées)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Copier le texte original dans le sous-titre courant</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durée automatique (lignes sélectionnées)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Rétablir RTL Start/Stop</ReverseStartAndEndingForRTL>
     <VerticalZoom>Zoom vertical avant</VerticalZoom>
@@ -1668,6 +1708,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Déplacer le premier mot dans la ligne du sous-titre précédent</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Sélectionner minuscules</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Sélectionner majuscules</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Basculer durée automatique</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Division de texte automatique</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fusionner texte</MainTextBoxUnbreak>
     <MainFileSaveAll>Tout enregistrer</MainFileSaveAll>
@@ -1801,6 +1842,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <CharactersPerSecondMinimum>Caractères/sec - minimum : {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caractères/sec - maximum : {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caractères/sec - moyen : {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exporter...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propriétés Advanced SubStation Alpha</Title>
@@ -1972,6 +2014,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <AutoTransparentBackground>Fond transparent auto.</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Comparer avec l'image actuelle...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Modifier derniers ajouts d'image...</EditLastAdditions>
+    <SetUnitalicFactor>Définir facteur non italique...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversion manuelle d'images en texte</Title>
@@ -1998,6 +2041,9 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Title>Nouvelle Base de données</Title>
     <Message>Nom de la DB d'images :</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Définir facteur non italique</Title>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Cliquer pour ajouter une forme sonore</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
