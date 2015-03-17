@@ -697,6 +697,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Název souboru</FileName>
     <Join>Spojit</Join>
     <TotalNumberOfLinesX>Celkový počet řádků: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Poznámka: Soubory musí již mít správné časové kódy</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -1138,6 +1139,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <MatroskaFiles>Soubory Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nenalezeny žádné titulky</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Toto není platný soubor Matroska: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Soubor Blu-ray sup neobsahuje žádné titulky nebo obsahuje chyby - zkuste znovu demuxovat.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Analýza souboru Matroska. Čekejte...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analýza souboru datového proudu přenosu. Čekejte...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Před importováním titulků ze souboru Matroska</BeforeImportFromMatroskaFile>
@@ -1834,6 +1836,7 @@ upravovat stejný soubor titulků (spolupráce)</Information>
     <CharactersPerSecondMinimum>Znaků za sekundu - minimálně: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Znaků za sekundu - maximálně: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Znaků za sekundu - průměrně: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportovat...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Vlastnosti Advanced Sub Station Alpha</Title>
