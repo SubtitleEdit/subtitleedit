@@ -218,6 +218,7 @@
             this.labelVerifyButton = new System.Windows.Forms.Label();
             this.tabPageWordLists = new System.Windows.Forms.TabPage();
             this.groupBoxWordLists = new System.Windows.Forms.GroupBox();
+            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.groupBoxOcrFixList = new System.Windows.Forms.GroupBox();
             this.textBoxOcrFixValue = new System.Windows.Forms.TextBox();
             this.buttonRemoveOcrFix = new System.Windows.Forms.Button();
@@ -286,7 +287,6 @@
             this.fontDialogSSAStyle = new System.Windows.Forms.FontDialog();
             this.labelStatus = new System.Windows.Forms.Label();
             this.openFileDialogFFmpeg = new System.Windows.Forms.OpenFileDialog();
-            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.tabControlSettings.SuspendLayout();
             this.tabPageGenerel.SuspendLayout();
             this.groupBoxMiscellaneous.SuspendLayout();
@@ -1756,6 +1756,7 @@
             this.textBoxVlcPath.Name = "textBoxVlcPath";
             this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
             this.textBoxVlcPath.TabIndex = 25;
+            this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
             // labelVlcPath
             // 
@@ -2514,6 +2515,17 @@
             this.groupBoxWordLists.TabIndex = 2;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
+            // 
+            // linkLabelOpenDictionaryFolder
+            // 
+            this.linkLabelOpenDictionaryFolder.AutoSize = true;
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(7, 409);
+            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
+            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
+            this.linkLabelOpenDictionaryFolder.TabIndex = 29;
+            this.linkLabelOpenDictionaryFolder.TabStop = true;
+            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
+            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
             // 
             // groupBoxOcrFixList
             // 
@@ -3347,17 +3359,6 @@
             // openFileDialogFFmpeg
             // 
             this.openFileDialogFFmpeg.FileName = "openFileDialog1";
-            // 
-            // linkLabelOpenDictionaryFolder
-            // 
-            this.linkLabelOpenDictionaryFolder.AutoSize = true;
-            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(7, 409);
-            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
-            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
-            this.linkLabelOpenDictionaryFolder.TabIndex = 29;
-            this.linkLabelOpenDictionaryFolder.TabStop = true;
-            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
-            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
             // 
             // Settings
             // 

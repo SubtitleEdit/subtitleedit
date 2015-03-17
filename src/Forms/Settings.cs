@@ -2521,11 +2521,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
-                textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFmpeg.FileName);
-                Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
-                Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
-                radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
+                EnableVlc(openFileDialogFFmpeg.FileName);
             }
+        }
+
+        private void EnableVlc(string fileName)
+        {
+            textBoxVlcPath.Text = Path.GetDirectoryName(fileName);
+            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+            Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
+            radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -2551,6 +2556,19 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(dictionaryFolder);
 
             System.Diagnostics.Process.Start(dictionaryFolder);
+        }
+
+        private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)
+        {
+            try
+            {
+                var path = textBoxVlcPath.Text.Trim('\"');
+                if (path.Length > 3 && Path.IsPathRooted(path) && Path.GetFileName(path).Equals("vlc.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(path))
+                {
+                    EnableVlc(path);
+                }
+            }
+            catch { }
         }
 
     }
