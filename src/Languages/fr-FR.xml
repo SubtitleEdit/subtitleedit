@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Numéro</Number>
     <Text>Texte</Text>
-    <HourMinutesSecondsMilliseconds>heure:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>heure:min:sec:msec</HourMinutesSecondsMilliseconds>
     <Bold>Gras</Bold>
     <Italic>Italique</Italic>
     <Underline>Souligner</Underline>
@@ -985,8 +985,8 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
       <SearchTextOnline>Chercher texte en ligne</SearchTextOnline>
       <GoogleTranslate>Traduction Google</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>
-      <SecondsBackShort>&lt;&lt; s</SecondsBackShort>
-      <SecondsForwardShort>s &gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;&lt; sec</SecondsBackShort>
+      <SecondsForwardShort>sec &gt;&gt;</SecondsForwardShort>
       <VideoPosition>Position vidéo:</VideoPosition>
       <TranslateTip>&lt;alt+flèche haut/bas&gt; pour avancer/reculer d'un sous-titre</TranslateTip>
       <CreateTip>&lt;ctrl+flèche gauche/droite&gt;</CreateTip>
@@ -1347,7 +1347,7 @@ Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <Export>Exporter...</Export>
     <ImportRulesTitle>Règle(s) importation</ImportRulesTitle>
     <ExportRulesTitle>Règle(s) exportation</ExportRulesTitle>
-    <Rules>Règles d'exportation</Rules>
+    <Rules>Règles de remplacement</Rules>
     <MoveToTop>Tout en haut</MoveToTop>
     <MoveToBottom>Tout en bas</MoveToBottom>
   </MultipleReplace>
@@ -1470,10 +1470,10 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
   <SetSyncPoint>
     <Title>Définir point de synchronisation à la ligne {0}</Title>
     <SyncPointTimeCode>Sync. le code de temps</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
-    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 sec</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ sec</HalfASecondBack>
+    <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 sec &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Configuration</Title>
@@ -1936,9 +1936,9 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <StartScene>Scène initiale</StartScene>
     <EndScene>Scène finale</EndScene>
     <Synchronize>Synchroniser</Synchronize>
-    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Lire {0} s puis retour</PlayXSecondsAndBack>
+    <HalfASecondBack>&lt; ½ sec</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 sec</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Lire {0} sec puis retour</PlayXSecondsAndBack>
     <FindText>Rechercher texte</FindText>
     <GoToSubPosition>Aller sous-position</GoToSubPosition>
     <KeepChangesTitle>Conserver les modifications ?</KeepChangesTitle>
@@ -2043,6 +2043,7 @@ peuvent modifier le même fichier de sous-titres (collaboration)</Information>
   </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
     <Title>Définir facteur non italique</Title>
+    <Description>Ramène l'angle d'inclinaison des caractères italiques à zero. Il faut que l'image de référence est italiqué.</Description>
   </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Cliquer pour ajouter une forme sonore</ClickToAddWaveform>

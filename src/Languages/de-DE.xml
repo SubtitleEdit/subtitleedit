@@ -1341,7 +1341,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <Export>Exportiere...</Export>
     <ImportRulesTitle>Importiere Korrekturregeln aus...</ImportRulesTitle>
     <ExportRulesTitle>Exportiere Korrekturregeln nach...</ExportRulesTitle>
-    <Rules>Exportregeln</Rules>
+    <Rules>Textersetzungsregeln</Rules>
     <MoveToTop>Zum Anfang</MoveToTop>
     <MoveToBottom>Zum Ende</MoveToBottom>
   </MultipleReplace>
