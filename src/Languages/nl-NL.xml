@@ -93,7 +93,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
   </AddToNames>
   <AddToOcrReplaceList>
     <Title>Aan OCR-correctielĳst toevoegen</Title>
-    <Description>Paar aan OCR-correctielĳst toevoegen (hoofdlettergevoelig)</Description>
+    <Description>Woordpaar aan OCR-correctielĳst toevoegen (hoofdlettergevoelig)</Description>
   </AddToOcrReplaceList>
   <AddToUserDictionary>
     <Title>Aan gebruikerswoordenboek toevoegen</Title>
@@ -503,8 +503,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <RemoveUnneededPeriods>Onnodige punten verwĳderen</RemoveUnneededPeriods>
     <FixMissingSpaces>Ontbrekende spaties invoegen</FixMissingSpaces>
     <BreakLongLines>Lange regels afbreken</BreakLongLines>
-    <RemoveLineBreaks>Regeleinden in korte teksten met slechts één zin verwĳderen</RemoveLineBreaks>
-    <RemoveLineBreaksAll>Regeleinden in korte teksten (behalve dialogen ) verwĳderen</RemoveLineBreaksAll>
+    <RemoveLineBreaks>Regelafbreking in korte tekst met slechts één zin verwĳderen</RemoveLineBreaks>
+    <RemoveLineBreaksAll>Regelafbreking in korte tekst (behalve dialogen) verwĳderen</RemoveLineBreaksAll>
     <FixUppercaseIInsindeLowercaseWords>Hoofdletter i in klein geschreven woorden (OCR-fout) corrigeren</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Dubbele apostrof ('') door aanhalingsteken (") vervangen</FixDoubleApostrophes>
     <AddPeriods>Punt invoegen indien de volgende regel met een hoofdletter begint</AddPeriods>
@@ -544,7 +544,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FixFirstLetterToUppercaseAfterParagraph>Eerste letter na alinea wordt hoofdletter</FixFirstLetterToUppercaseAfterParagraph>
     <MergeShortLine>Korte regels samenvoegen (enkele zin)</MergeShortLine>
     <MergeShortLineAll>Korte regels samenvoegen (behalve dialogen)</MergeShortLineAll>
-    <XLineBreaksAdded>{0} regeleinden toegevoegd</XLineBreaksAdded>
+    <XLineBreaksAdded>{0} regelafbrekingen toegevoegd</XLineBreaksAdded>
     <BreakLongLine>Lange regel afbreken</BreakLongLine>
     <FixLongDisplayTime>Lange weergavetĳd corrigeren</FixLongDisplayTime>
     <FixInvalidItalicTag>Ongeldige cursief-tag corrigeren</FixInvalidItalicTag>
@@ -649,7 +649,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Afbeeldingen importeren</Title>
     <ImageFiles>Beeldbestanden</ImageFiles>
     <Input>Invoer</Input>
-    <InputDescription>Kies invoer bestanden (blader of sleep-en-plaats)</InputDescription>
+    <InputDescription>Kies invoerbestanden (blader of sleep-en-plaats)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Scènewisselingen importeren</Title>
@@ -670,7 +670,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Splitting>Opdelen</Splitting>
     <AutoSplitText>Tekst automatisch opdelen</AutoSplitText>
     <OneLineIsOneSubtitle>Eén ondertitel per regel</OneLineIsOneSubtitle>
-    <LineBreak>Regeleinde</LineBreak>
+    <LineBreak>Regelafbreking</LineBreak>
     <SplitAtBlankLines>Op lege regels afbreken</SplitAtBlankLines>
     <MergeShortLines>Voortgezette korte regels samenvoegen</MergeShortLines>
     <RemoveEmptyLines>Lege regels verwĳderen</RemoveEmptyLines>
@@ -1185,8 +1185,8 @@ Verder gaan?</SubtitleAppendPrompt>
     <NameXNotAddedToNamesEtcList>De naam '{0}' is NIET toegevoegd aan de naamlĳst</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Het woord '{0}' is toegevoegd aan het woordenboek</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Het woord '{0}' is NIET toegevoegd aan het woordenboek</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded>Paar '{0} -&gt; {1}' is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded>Paar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR-correctielĳst</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>Woordpaar '{0} -&gt; {1}' is toegevoegd aan de OCR-correctielĳst</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Woordpaar '{0} -&gt; {1}' is NIET toegevoegd aan de OCR-correctielĳst</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} teksten geselecteerd</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Ondertitel bevat Unicode muzieknootsymbolen. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Ondertitel bevat Unicode tekens. Bĳ opslaan in ANSI-codering gaan deze verloren. Toch opslaan?</UnicodeCharactersAnsiWarning>
@@ -1254,7 +1254,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Subtitle Edit kan idx-bestanden niet lezen. Die maken deel uit van een sub/idx bestandspaar (ook wel VobSub genoemd). Subtitle Edit kan het sub-bestand openen.</ErrorLoadIdx>
     <ErrorLoadRar>Dit is een rar-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadRar>
     <ErrorLoadZip>Dit is een zip-bestand. Subtitle Edit kan gecomprimeerde bestanden niet openen.</ErrorLoadZip>
-    <ErrorLoadPng>Dit is een png-afbeeldingsbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
+    <ErrorLoadPng>Dit is een png-beeldbestand. Subtitle Edit kan png-bestanden niet openen.</ErrorLoadPng>
     <ErrorLoadSrr>Dit is een ReScene srr-bestand, géén ondertitelbestand.</ErrorLoadSrr>
     <ErrorLoadTorrent>Dit is een BitTorrent bestand, géén ondertitelbestand.</ErrorLoadTorrent>
     <NoSupportEncryptedVobSub>Versleutelde VobSub-bestanden worden niet ondersteund.</NoSupportEncryptedVobSub>
@@ -1340,7 +1340,7 @@ Verder gaan?</SubtitleAppendPrompt>
     <Export>Exporteren...</Export>
     <ImportRulesTitle>Importeer vervangingsregel(s) van...</ImportRulesTitle>
     <ExportRulesTitle>Exporteer vervangingsregel(s) naar...</ExportRulesTitle>
-    <Rules>Exportregels</Rules>
+    <Rules>Tekstvervangingsregels</Rules>
     <MoveToTop>Naar begin</MoveToTop>
     <MoveToBottom>Naar einde</MoveToBottom>
   </MultipleReplace>
@@ -1612,7 +1612,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <MergeLinesShorterThan>Voeg regels samen korter dan</MergeLinesShorterThan>
     <MusicSymbol>Vervangend muzieksymbool</MusicSymbol>
     <MusicSymbolsToReplace>Te vervangen muzieksymbolen (gescheiden door spatie)</MusicSymbolsToReplace>
-    <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
+    <FixCommonOcrErrorsUseHardcodedRules>Gangbare OCR-fouten corrigeren - ook hardgecodeerde regels</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Korte weergavetĳd corrigeren - sta verplaatsen starttĳd toe</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Sneltoetsen</Shortcuts>
     <Shortcut>Sneltoets</Shortcut>
@@ -1742,7 +1742,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SkipAll>Alle &amp;overslaan</SkipAll>
     <AddToUserDictionary>Toevoegen aan gebruikerswoordenboek</AddToUserDictionary>
     <AddToNamesAndIgnoreList>Toevoegen aan naam/ruis-lĳst (hoofdlettergevoelig)</AddToNamesAndIgnoreList>
-    <AddToOcrReplaceList>Paar toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
+    <AddToOcrReplaceList>Toevoegen aan OCR-correctielĳst</AddToOcrReplaceList>
     <Abort>Afbreken</Abort>
     <Use>Hier gebruiken</Use>
     <UseAlways>Altĳd &amp;gebruiken</UseAlways>
@@ -1942,13 +1942,13 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <Tip>Tip: Gebruik &lt;ctrl+pĳl links/rechts&gt; om 100 msec. terug/verder te gaan</Tip>
   </VisualSync>
   <VobSubEditCharacters>
-    <Title>Bewerken beeld vergelĳken databank</Title>
+    <Title>Beeldvergelĳkingsdatabank bewerken</Title>
     <ChooseCharacter>Kies teken(s)</ChooseCharacter>
-    <ImageCompareFiles>Afbeeldingsbestanden vergelĳken</ImageCompareFiles>
+    <ImageCompareFiles>Beeldbestanden vergelĳken</ImageCompareFiles>
     <CurrentCompareImage>Huidig vergelĳk-beeld</CurrentCompareImage>
-    <TextAssociatedWithImage>Tekst geassocieerd met beeld</TextAssociatedWithImage>
+    <TextAssociatedWithImage>Met beeld geassocieerde tekst</TextAssociatedWithImage>
     <IsItalic>Is &amp;cursief</IsItalic>
-    <Update>&amp;Update</Update>
+    <Update>&amp;Bĳwerken</Update>
     <Delete>&amp;Verwĳder</Delete>
     <ImageDoubleSize>Dubbele beeldgrootte</ImageDoubleSize>
     <ImageFileNotFound>Beeldbestand niet gevonden</ImageFileNotFound>
@@ -1957,7 +1957,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
   <VobSubOcr>
     <Title>Importeer/OCR VobSub (sub/idx) ondertitel</Title>
     <TitleBluRay>Importeer/OCR blu-ray (sup) ondertitel</TitleBluRay>
-    <OcrMethod>OCR methode</OcrMethod>
+    <OcrMethod>OCR-methode</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (vereist Microsoft Office)</OcrViaModi>
     <OcrViaTesseract>OCR via Tesseract</OcrViaTesseract>
     <OcrViaNOCR>OCR via nOCR</OcrViaNOCR>
@@ -1992,7 +1992,7 @@ Wĳzigingen behouden?</KeepChangesMessage>
     <GuessesUsed>Gebruikte schattingen</GuessesUsed>
     <UnknownWords>Onbekende woorden</UnknownWords>
     <OcrAutoCorrectionSpellChecking>OCR automatische correctie / spellingcontrole</OcrAutoCorrectionSpellChecking>
-    <FixOcrErrors>Herstel OCR fouten</FixOcrErrors>
+    <FixOcrErrors>Herstel OCR-fouten</FixOcrErrors>
     <ImportTextWithMatchingTimeCodes>Importeer tekst met bĳpassende tĳdcodes...</ImportTextWithMatchingTimeCodes>
     <ImportNewTimeCodes>Importeer nieuwe tĳdcodes.</ImportNewTimeCodes>
     <SaveSubtitleImageAs>Ondertitelbeeld opslaan als...</SaveSubtitleImageAs>
