@@ -330,6 +330,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListViewReplaceListItemChecked(object sender, ItemCheckedEventArgs e)
         {
             GeneratePreview();
+            SaveReplaceList(false);
         }
 
         private void DeleteToolStripMenuItemClick(object sender, EventArgs e)
