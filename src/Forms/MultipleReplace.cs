@@ -492,7 +492,12 @@ namespace Nikse.SubtitleEdit.Forms
             int index = listViewReplaceList.SelectedIndices[0];
             if (index == 0)
                 return;
-            SwapReplaceList(index, 0);
+
+            var item = listViewReplaceList.Items[index];
+            listViewReplaceList.Items.RemoveAt(index);
+            listViewReplaceList.Items.Insert(0, item);
+            GeneratePreview();
+            SaveReplaceList(false);
         }
 
         private void moveBottomToolStripMenuItem_Click(object sender, EventArgs e)
@@ -501,7 +506,12 @@ namespace Nikse.SubtitleEdit.Forms
             int bottomIndex = listViewReplaceList.Items.Count - 1;
             if (index == bottomIndex)
                 return;
-            SwapReplaceList(index, bottomIndex);
+
+            var item = listViewReplaceList.Items[index];
+            listViewReplaceList.Items.RemoveAt(index);
+            listViewReplaceList.Items.Add(item);
+            GeneratePreview();
+            SaveReplaceList(false);
         }
 
         private void ExportClick(object sender, EventArgs e)
