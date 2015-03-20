@@ -940,8 +940,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph current = p.Subtitle.GetParagraphOrDefault(i);
                     Paragraph next = p.Subtitle.GetParagraphOrDefault(i + 1);
                     var gapsBetween = next.StartTime.TotalMilliseconds - current.EndTime.TotalMilliseconds;
-                    if (gapsBetween < minumumMillisecondsBetweenLines)
-                        current.EndTime.TotalMilliseconds = gapsBetween;
+                    if (gapsBetween < minumumMillisecondsBetweenLines && current.Duration.TotalMilliseconds > minumumMillisecondsBetweenLines)
+                    {
+                        current.EndTime.TotalMilliseconds -= (minumumMillisecondsBetweenLines - gapsBetween);
+                    }
                 }
             }
             e.Result = p;
