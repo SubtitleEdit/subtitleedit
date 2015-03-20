@@ -1333,7 +1333,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <RegularExpression>Wyrażenia regularne</RegularExpression>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
     <Delete>Usuń</Delete>
-    <Add>Dodaj</Add>
+    <Add>&amp;Dodaj</Add>
     <Update>Aktualizuj</Update>
     <Enabled>Dostępne</Enabled>
     <SearchType>Typ wyszukiwania</SearchType>
@@ -1342,7 +1342,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <Export>Eksportuj...</Export>
     <ImportRulesTitle>Importuj zasady zastępowania z...</ImportRulesTitle>
     <ExportRulesTitle>Eksportuj zasady zastępowania do...</ExportRulesTitle>
-    <Rules>Eksport zasad</Rules>
+    <Rules>Zasady znajdowania i zastępowania</Rules>
     <MoveToTop>Przenieś na początek</MoveToTop>
     <MoveToBottom>Przenieś na koniec</MoveToBottom>
   </MultipleReplace>
