@@ -161,6 +161,12 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
+        internal void RunFromBatch(Subtitle subtitle)
+        {
+            Initialize(subtitle);
+            GeneratePreview();
+        }
+
         private void GeneratePreview()
         {
             Cursor = Cursors.WaitCursor;

@@ -894,7 +894,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     using (var form = new MultipleReplace())
                     {
-                        form.Initialize(p.Subtitle);
+                        form.RunFromBatch(p.Subtitle);
                         p.Subtitle = form.FixedSubtitle;
 
                         foreach (int deleteIndex in form.DeleteIndices)
