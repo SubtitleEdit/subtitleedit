@@ -185,7 +185,6 @@ namespace Nikse.SubtitleEdit.Forms
                 textBoxReplace.Text = string.Empty;
                 GeneratePreview();
                 textBoxFind.Select();
-                SaveReplaceList(false);
             }
         }
 
@@ -470,7 +469,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void ListViewReplaceList_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             GeneratePreview();
-            SaveReplaceList(false);
         }
 
         private void DeleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -483,7 +481,6 @@ namespace Nikse.SubtitleEdit.Forms
                         listViewReplaceList.Items.RemoveAt(index);
                 }
                 GeneratePreview();
-                SaveReplaceList(false);
             }
         }
 
@@ -535,7 +532,6 @@ namespace Nikse.SubtitleEdit.Forms
 
                 GeneratePreview();
                 textBoxFind.Select();
-                SaveReplaceList(false);
             }
         }
 
@@ -615,7 +611,6 @@ namespace Nikse.SubtitleEdit.Forms
             listViewReplaceList.Items[index].Selected = false;
             listViewReplaceList.Items[index2].Selected = true;
             GeneratePreview();
-            SaveReplaceList(false);
         }
 
         private void MoveDownToolStripMenuItem_Click(object sender, EventArgs e)
@@ -636,7 +631,6 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewReplaceList.Items.RemoveAt(index);
                 listViewReplaceList.Items.Insert(0, item);
                 GeneratePreview();
-                SaveReplaceList(false);
             }
         }
 
@@ -650,7 +644,6 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewReplaceList.Items.RemoveAt(index);
                 listViewReplaceList.Items.Add(item);
                 GeneratePreview();
-                SaveReplaceList(false);
             }
         }
 
@@ -702,6 +695,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
+                SaveReplaceList(false);
                 foreach (XmlNode listNode in doc.DocumentElement.SelectNodes("MultipleSearchAndReplaceList/MultipleSearchAndReplaceItem"))
                 {
                     var item = new MultipleSearchAndReplaceSetting();
@@ -735,7 +729,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             listViewReplaceList.Items.Clear();
             GeneratePreview();
-            Configuration.Settings.MultipleSearchAndReplaceList.Clear();
         }
 
         private void MultipleReplace_Shown(object sender, EventArgs e)
@@ -760,6 +753,10 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 _previewer.Restart = false;
                 _previewer.CancelAsync();
+            }
+            if(e.CloseReason == CloseReason.UserClosing)
+            {
+                SaveReplaceList(false);
             }
         }
 
