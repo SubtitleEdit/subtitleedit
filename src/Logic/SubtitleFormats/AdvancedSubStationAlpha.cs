@@ -51,9 +51,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ass"; }
         }
 
+        public const string NameOfFormat = "Advanced Sub Station Alpha";
+
         public override string Name
         {
-            get { return "Advanced Sub Station Alpha"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -855,7 +857,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            if (newFormat != null && newFormat.Name == new SubStationAlpha().Name)
+            if (newFormat != null && newFormat.Name == SubStationAlpha.NameOfFormat)
             {
                 foreach (Paragraph p in subtitle.Paragraphs)
                 {

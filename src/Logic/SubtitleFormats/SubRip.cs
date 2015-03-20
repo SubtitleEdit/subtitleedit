@@ -31,9 +31,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".srt"; }
         }
 
+        public const string NameOfFormat = "SubRip";
+
         public override string Name
         {
-            get { return "SubRip"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

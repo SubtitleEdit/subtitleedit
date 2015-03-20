@@ -2143,7 +2143,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (format == null || format.Name == new Scenarist().Name)
+                if (format == null || format.Name == Scenarist.NameOfFormat)
                 {
                     try
                     {
@@ -2165,7 +2165,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (format == null || format.Name == new SubRip().Name)
+                if (format == null || format.Name == SubRip.NameOfFormat)
                 {
                     if (_subtitle.Paragraphs.Count > 1)
                     {
@@ -2212,7 +2212,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                if (format == null || format.Name == new Scenarist().Name)
+                if (format == null || format.Name == Scenarist.NameOfFormat)
                 {
                     try
                     {

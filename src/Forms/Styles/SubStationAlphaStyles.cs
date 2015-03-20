@@ -1121,12 +1121,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                openFileDialogImport.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                openFileDialogImport.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
@@ -1207,12 +1207,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                saveFileDialogStyle.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                saveFileDialogStyle.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
