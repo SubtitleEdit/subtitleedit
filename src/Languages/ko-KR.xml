@@ -1330,7 +1330,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RegularExpression>정규 표현식</RegularExpression>
     <LinesFoundX>발견된 줄: {0}</LinesFoundX>
     <Delete>삭제</Delete>
-    <Add>추가</Add>
+    <Add>추가(&amp;A)</Add>
     <Update>업데이트(&amp;U)</Update>
     <Enabled>사용</Enabled>
     <SearchType>검색 유형</SearchType>
@@ -1339,7 +1339,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Export>내보내기</Export>
     <ImportRulesTitle>* 바꾸기 규칙 가져오기</ImportRulesTitle>
     <ExportRulesTitle>* 바꾸기 규칙 내보내기</ExportRulesTitle>
-    <Rules>규칙</Rules>
+    <Rules>찾기 및 바꾸기 규칙</Rules>
     <MoveToTop>맨 위로 이동</MoveToTop>
     <MoveToBottom>맨 아래로 이동</MoveToBottom>
   </MultipleReplace>
