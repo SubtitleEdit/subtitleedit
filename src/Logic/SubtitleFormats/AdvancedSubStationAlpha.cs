@@ -989,9 +989,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                 string hexColor = "#" + s.Substring(4, 2) + s.Substring(2, 2) + s.Substring(0, 2);
                 try
                 {
-                    var c = ColorTranslator.FromHtml(hexColor);
-
-                    return c;
+                    return ColorTranslator.FromHtml(hexColor);
                 }
                 catch
                 {
