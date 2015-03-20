@@ -231,8 +231,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string path = Configuration.PluginsDirectory;
                 if (Directory.Exists(path))
                 {
-                    string[] pluginFiles = Directory.GetFiles(path, "*.DLL");
-                    foreach (string pluginFileName in pluginFiles)
+                    foreach (string pluginFileName in Directory.GetFiles(path, "*.DLL"))
                     {
                         try
                         {
