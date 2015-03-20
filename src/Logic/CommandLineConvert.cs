@@ -218,8 +218,8 @@ namespace Nikse.SubtitleEdit.Logic
 
                                                 if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                                                 {
-                                                    if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
-                                                        toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
+                                                    if (toFormat.ToLower() != AdvancedSubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty) &&
+                                                        toFormat.ToLower() != SubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty))
                                                     {
 
                                                         foreach (SubtitleFormat sf in formats)

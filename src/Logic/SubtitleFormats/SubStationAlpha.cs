@@ -17,9 +17,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ssa"; }
         }
 
+
+        public const string NameOfFormat = "Sub Station Alpha";
+
         public override string Name
         {
-            get { return "Sub Station Alpha"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -434,7 +437,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            if (newFormat != null && newFormat.Name == new AdvancedSubStationAlpha().Name)
+            if (newFormat != null && newFormat.Name == AdvancedSubStationAlpha.NameOfFormat)
             {
                 // do we need any conversion?
             }
