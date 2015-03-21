@@ -34,14 +34,24 @@ namespace Nikse.SubtitleEdit.Forms
             public string FindWhat { get; private set; }
             public string ReplaceWith { get; private set; }
 
-            public FindAndReplaceRule(string findWhat, string replaceWith, string searchType)
+            public FindAndReplaceRule(string findWhat, string replaceWith, string searchType, bool englishSearchType = false)
             {
                 FindWhat = findWhat;
                 ReplaceWith = replaceWith.Replace(@"\n", Environment.NewLine);
-                if (searchType == Configuration.Settings.Language.MultipleReplace.CaseSensitive)
-                    SearchType = SearchCaseSensitive;
-                else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
-                    SearchType = SearchRegularExpression;
+                if (englishSearchType)
+                {
+                    if (searchType == SearchTypeCaseSensitive)
+                        SearchType = SearchCaseSensitive;
+                    else if (searchType == SearchTypeRegularExpression)
+                        SearchType = SearchRegularExpression;
+                }
+                else
+                {
+                    if (searchType == Configuration.Settings.Language.MultipleReplace.CaseSensitive)
+                        SearchType = SearchCaseSensitive;
+                    else if (searchType == Configuration.Settings.Language.MultipleReplace.RegularExpression)
+                        SearchType = SearchRegularExpression;
+                }
             }
         }
 
@@ -123,8 +133,81 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void RunFromBatch(Subtitle subtitle)
         {
-            Initialize(subtitle);
-            GeneratePreview();
+            if (subtitle == null)
+                throw new ArgumentNullException("subtitle");
+
+            FixedSubtitle = new Subtitle(subtitle);
+            DeleteIndices = new List<int>();
+            FixCount = 0;
+
+            var rules = new List<FindAndReplaceRule>();
+            foreach (var item in Configuration.Settings.MultipleSearchAndReplaceList)
+            {
+                if (item.Enabled && item.FindWhat.Length > 0)
+                {
+                    var rule = new FindAndReplaceRule(item.FindWhat, item.ReplaceWith, item.SearchType, true);
+                    rules.Add(rule);
+                    if (rule.SearchType == FindAndReplaceRule.SearchRegularExpression && !_compiledRegexList.ContainsKey(rule.FindWhat))
+                    {
+                        var regex = new Regex(rule.FindWhat, RegexOptions.Compiled | RegexOptions.Multiline);
+                        _compiledRegexList.Add(rule.FindWhat, regex);
+                    }
+                }
+            }
+            if (rules.Count > 0)
+            {
+                foreach (var p in subtitle.Paragraphs)
+                {
+                    var hit = false;
+                    var newText = p.Text;
+
+                    foreach (var rule in rules)
+                    {
+                        if (rule.SearchType == FindAndReplaceRule.SearchCaseSensitive)
+                        {
+                            if (newText.Contains(rule.FindWhat))
+                            {
+                                hit = true;
+                                newText = newText.Replace(rule.FindWhat, rule.ReplaceWith);
+                            }
+                        }
+                        else if (rule.SearchType == FindAndReplaceRule.SearchRegularExpression)
+                        {
+                            var regex = _compiledRegexList[rule.FindWhat];
+                            if (regex.IsMatch(newText))
+                            {
+                                hit = true;
+                                newText = regex.Replace(newText, rule.ReplaceWith);
+                            }
+                        }
+                        else
+                        {
+                            var index = newText.IndexOf(rule.FindWhat, StringComparison.OrdinalIgnoreCase);
+                            if (index >= 0)
+                            {
+                                hit = true;
+                                do
+                                {
+                                    newText = newText.Remove(index, rule.FindWhat.Length).Insert(index, rule.ReplaceWith);
+                                    index = newText.IndexOf(rule.FindWhat, index + rule.ReplaceWith.Length, StringComparison.OrdinalIgnoreCase);
+                                }
+                                while (index >= 0);
+                            }
+                        }
+                    }
+                    if (hit && newText != p.Text)
+                    {
+                        FixCount++;
+                        var index = subtitle.GetIndex(p);
+                        FixedSubtitle.Paragraphs[index].Text = newText;
+                        if (!string.IsNullOrWhiteSpace(p.Text) && (string.IsNullOrWhiteSpace(newText) || string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(newText, true))))
+                        {
+                            DeleteIndices.Add(index);
+                        }
+                    }
+                }
+                DeleteIndices.Reverse();
+            }
         }
 
         public void Initialize(Subtitle subtitle)
