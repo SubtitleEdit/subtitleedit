@@ -129,6 +129,23 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveColonTest6()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.ColonSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            const string text = "<i>♪ (THE CAPITOLS: \"COOL JERK\") ♪</i>";
+            const string expected = text;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         ///     A test for RemoveHIInsideLine
         /// </summary>
