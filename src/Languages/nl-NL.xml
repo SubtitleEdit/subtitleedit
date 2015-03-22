@@ -1229,9 +1229,9 @@ Verder gaan?</SubtitleAppendPrompt>
     <ExportPlainTextAs>Platte tekst exporteren als</ExportPlainTextAs>
     <TextFiles>Tekstbestanden</TextFiles>
     <SubtitleExported>Ondertitel geëxporteerd</SubtitleExported>
-    <LineNumberXErrorReadingFromSourceLineY>Regel {0} - Fout bĳ het lezen: {1}</LineNumberXErrorReadingFromSourceLineY>
+    <LineNumberXErrorReadingFromSourceLineY>Regel {0} - fout bĳ het lezen: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Regel {0} - fout bĳ lezen tĳdcode: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Regel {0} - verwachte ondertitel nummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Regel {0} - verwachtte ondertitel nummer: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Vóór schatten van tĳdcodes</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Vóór auto-weergavetĳd voor selectie</BeforeAutoDuration>
     <BeforeColumnPaste>Vóór invoegen kolom</BeforeColumnPaste>
