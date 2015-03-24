@@ -1328,12 +1328,12 @@ Pokračovat?</SubtitleAppendPrompt>
     <Title>Hromadné nahrazení</Title>
     <FindWhat>Najít</FindWhat>
     <ReplaceWith>Nahradit</ReplaceWith>
-    <Normal>&amp;Normálně</Normal>
+    <Normal>Normálně</Normal>
     <CaseSensitive>Rozlišovat &amp;velikost písmen</CaseSensitive>
     <RegularExpression>&amp;Regulární výraz</RegularExpression>
     <LinesFoundX>Nalezeno řádků: {0}</LinesFoundX>
     <Delete>Odstranit</Delete>
-    <Add>Přidat</Add>
+    <Add>&amp;Přidat</Add>
     <Update>&amp;Aktualizovat</Update>
     <Enabled>Povoleno</Enabled>
     <SearchType>Typ hledání</SearchType>
@@ -1342,7 +1342,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <Export>Exportovat...</Export>
     <ImportRulesTitle>Importovat pravidla nahrazení z...</ImportRulesTitle>
     <ExportRulesTitle>Exportovat pravidla nahrazení do...</ExportRulesTitle>
-    <Rules>Exportovat pravidla</Rules>
+    <Rules>Najít a nahradit pravidla</Rules>
     <MoveToTop>Posunout nahoru</MoveToTop>
     <MoveToBottom>Posunout dolů</MoveToBottom>
   </MultipleReplace>
