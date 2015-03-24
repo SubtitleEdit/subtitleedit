@@ -973,6 +973,7 @@
     <Compile Include="Logic\SubtitleFormats\Titra.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle69.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle72.cs" />
+    <Compile Include="Logic\SubtitleFormats\UnknownSubtitle76.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle75.cs" />
     <Compile Include="Logic\SubtitleFormats\UnknownSubtitle74.cs" />
     <Compile Include="Logic\SubtitleFormats\WebVTTFileWithLineNumber.cs" />
