@@ -6038,66 +6038,71 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 MakeHistoryForUndo(historyText);
-                _subtitleListViewIndex = -1;
-
-                if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
-                {
-                    var alternateIndexes = new List<int>();
-                    foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    {
-                        Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
-                        if (p != null)
-                        {
-                            Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
-                            if (original != null)
-                                alternateIndexes.Add(_subtitleAlternate.GetIndex(original));
-                        }
-                    }
-
-                    alternateIndexes.Reverse();
-                    foreach (int i in alternateIndexes)
-                    {
-                        if (i < _subtitleAlternate.Paragraphs.Count)
-                            _subtitleAlternate.Paragraphs.RemoveAt(i);
-                    }
-                    _subtitleAlternate.Renumber(1);
-                }
-
-                var indexes = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    indexes.Add(item.Index);
-                int firstIndex = SubtitleListview1.SelectedItems[0].Index;
-
-                if (_networkSession != null)
-                {
-                    _networkSession.TimerStop();
-                    NetworkGetSendUpdates(indexes, 0, null);
-                }
-                else
-                {
-                    indexes.Reverse();
-                    foreach (int i in indexes)
-                    {
-                        _subtitle.Paragraphs.RemoveAt(i);
-                        if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
-                            _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
-                    }
-                    _subtitle.Renumber(1);
-                    SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                    if (SubtitleListview1.FirstVisibleIndex == 0)
-                        SubtitleListview1.FirstVisibleIndex = -1;
-                    if (SubtitleListview1.Items.Count > firstIndex)
-                    {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
-                    }
-                    else if (SubtitleListview1.Items.Count > 0)
-                    {
-                        SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
-                    }
-                }
+                DeleteSelectedLines();
 
                 ShowStatus(statusText);
                 ShowSource();
+            }
+        }
+
+        private void DeleteSelectedLines()
+        {
+            _subtitleListViewIndex = -1;
+
+            if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null && _subtitleAlternate.Paragraphs.Count > 0)
+            {
+                var alternateIndexes = new List<int>();
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                {
+                    Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
+                    if (p != null)
+                    {
+                        Paragraph original = Utilities.GetOriginalParagraph(item.Index, p, _subtitleAlternate.Paragraphs);
+                        if (original != null)
+                            alternateIndexes.Add(_subtitleAlternate.GetIndex(original));
+                    }
+                }
+
+                alternateIndexes.Reverse();
+                foreach (int i in alternateIndexes)
+                {
+                    if (i < _subtitleAlternate.Paragraphs.Count)
+                        _subtitleAlternate.Paragraphs.RemoveAt(i);
+                }
+                _subtitleAlternate.Renumber(1);
+            }
+
+            var indexes = new List<int>();
+            foreach (ListViewItem item in SubtitleListview1.SelectedItems)
+                indexes.Add(item.Index);
+            int firstIndex = SubtitleListview1.SelectedItems[0].Index;
+
+            if (_networkSession != null)
+            {
+                _networkSession.TimerStop();
+                NetworkGetSendUpdates(indexes, 0, null);
+            }
+            else
+            {
+                indexes.Reverse();
+                foreach (int i in indexes)
+                {
+                    _subtitle.Paragraphs.RemoveAt(i);
+                    if (_networkSession != null && _networkSession.LastSubtitle != null && i < _networkSession.LastSubtitle.Paragraphs.Count)
+                        _networkSession.LastSubtitle.Paragraphs.RemoveAt(i);
+                }
+                _subtitle.Renumber(1);
+                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                if (SubtitleListview1.FirstVisibleIndex == 0)
+                    SubtitleListview1.FirstVisibleIndex = -1;
+                if (SubtitleListview1.Items.Count > firstIndex)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(firstIndex, true);
+                }
+                else if (SubtitleListview1.Items.Count > 0)
+                {
+                    SubtitleListview1.SelectIndexAndEnsureVisible(SubtitleListview1.Items.Count - 1, true);
+                }
             }
         }
 
@@ -11337,6 +11342,32 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
                         SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+                    }
+                    else if (SubtitleListview1.Items.Count > 1 && tmp.Paragraphs.Count > 0)
+                    {
+                        // multiple lines selected - first delete, then insert
+                        int firstIndex = FirstSelectedIndex;
+                        if (firstIndex >= 0)
+                        {
+                            MakeHistoryForUndo(_language.BeforeInsertLine);
+                            _makeHistoryPaused = true;
+
+                            DeleteSelectedLines();
+                            foreach (Paragraph p in tmp.Paragraphs)
+                            {
+                                _subtitle.Paragraphs.Insert(firstIndex, p);
+                                firstIndex++;
+                            }
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            SubtitleListview1.SelectIndexAndEnsureVisible(0, true);
+
+                            RestartHistory();
+                        }
+                    }
+                    else if (list.Count >= 1 && list.Count < 4)
+                    {
+                        // less than 4 lines of text, just insert into first selected
+                        textBoxListViewText.Text = text.Trim();
                     }
                     else if (list.Count > 1 && list.Count < 2000)
                     {
@@ -18458,7 +18489,10 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                     {
                         for (int i = 0; i + index < _subtitle.Paragraphs.Count && i < tmp.Paragraphs.Count; i++)
-                            _subtitle.Paragraphs[index + i + 1].Text = tmp.Paragraphs[i].Text;
+                        {
+                            if (index + i + 1 < _subtitle.Paragraphs.Count)
+                                _subtitle.Paragraphs[index + i + 1].Text = tmp.Paragraphs[i].Text;
+                        }
                     }
 
                     SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
