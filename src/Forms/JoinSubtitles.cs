@@ -169,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             JoinedSubtitle = new Subtitle();
-            if (JoinedFormat.FriendlyName != new SubRip().FriendlyName)
+            if (JoinedFormat.FriendlyName != SubRip.NameOfFormat)
                 JoinedSubtitle.Header = header;
             foreach (Subtitle sub in subtitles)
             {

@@ -11,16 +11,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     public class Chk : SubtitleFormat
     {
         private readonly Encoding _codePage = Encoding.GetEncoding(850);
-//        private string _languageId = "DEN"; // English
+        // private string _languageId = "DEN"; // English
 
         public override string Extension
         {
             get { return ".chk"; }
         }
 
+        public const string NameOfFormat = "CHK";
+
         public override string Name
         {
-            get { return "CHK"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

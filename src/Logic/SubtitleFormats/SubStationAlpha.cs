@@ -17,7 +17,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ssa"; }
         }
 
-
         public const string NameOfFormat = "Sub Station Alpha";
 
         public override string Name

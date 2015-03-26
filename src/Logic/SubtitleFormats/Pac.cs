@@ -786,9 +786,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".pac"; }
         }
 
+        public const string NameOfFormat = "PAC (Screen Electronics)";
+
         public override string Name
         {
-            get { return "PAC (Screen Electronics)"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
