@@ -17,9 +17,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".cap"; }
         }
 
+        public const string NameOfFormat = "CapMaker Plus";
+
         public override string Name
         {
-            get { return "CapMaker Plus"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

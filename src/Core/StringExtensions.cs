@@ -39,7 +39,6 @@ namespace Nikse.SubtitleEdit.Core
             return false;
         }
 
-
         private static bool EndsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
         {
             var len = text.Length;
@@ -53,6 +52,7 @@ namespace Nikse.SubtitleEdit.Core
                 return true;
             return false;
         }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;

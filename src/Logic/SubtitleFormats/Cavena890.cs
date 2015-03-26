@@ -179,9 +179,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".890"; }
         }
 
+        public const string NameOfFormat = "Cavena 890";
+
         public override string Name
         {
-            get { return "Cavena 890"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

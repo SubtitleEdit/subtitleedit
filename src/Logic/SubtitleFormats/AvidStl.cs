@@ -82,9 +82,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".stl"; }
         }
 
+        public const string NameOfFormat = "Avid STL";
+
         public override string Name
         {
-            get { return "Avid STL"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

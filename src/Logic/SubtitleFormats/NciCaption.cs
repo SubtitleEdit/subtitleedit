@@ -13,9 +13,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".cap"; }
         }
 
+        public const string NameOfFormat = "NCI Caption";
+
         public override string Name
         {
-            get { return "NCI Caption"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

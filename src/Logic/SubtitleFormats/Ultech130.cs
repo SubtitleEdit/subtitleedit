@@ -19,9 +19,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ult"; }
         }
 
+        public const string NameOfFormat = "Ultech 1.30 Caption";
+
         public override string Name
         {
-            get { return "Ultech 1.30 Caption"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased

@@ -943,13 +943,13 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             nbmp.ReplaceTransparentWith(Color.Blue);
                             using (var bmp = nbmp.GetBitmap())
                             {
-                               // param.Bitmap.Save(fileName, ImageFormat);
+                                // param.Bitmap.Save(fileName, ImageFormat);
                                 imagesSavedCount++;
 
                                 //RACE001.TIF 00;00;02;02 00;00;03;15 000 000 720 480
                                 //RACE002.TIF 00;00;05;18 00;00;09;20 000 000 720 480
                                 int top = param.ScreenHeight - (param.Bitmap.Height + param.BottomMargin);
-                                int left = (param.ScreenWidth - param.Bitmap.Width)/2;
+                                int left = (param.ScreenWidth - param.Bitmap.Width) / 2;
 
                                 var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
                                 {
@@ -963,7 +963,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                                         if (param.Alignment == ContentAlignment.TopLeft || param.Alignment == ContentAlignment.TopCenter || param.Alignment == ContentAlignment.TopRight)
                                             top = param.BottomMargin;
                                         if (param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.MiddleCenter || param.Alignment == ContentAlignment.MiddleRight)
-                                            top = param.ScreenHeight - (param.Bitmap.Height/2);
+                                            top = param.ScreenHeight - (param.Bitmap.Height / 2);
 
                                         using (var g = Graphics.FromImage(fullSize))
                                         {
@@ -3475,8 +3475,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             if (_subtitle.Paragraphs.Count > 0 && subtitleListView1.SelectedItems.Count > 0)
             {
-                bool isSsa = _format.FriendlyName == new SubStationAlpha().FriendlyName ||
-                             _format.FriendlyName == new AdvancedSubStationAlpha().FriendlyName;
+                bool isSsa = _format.FriendlyName == SubStationAlpha.NameOfFormat ||
+                             _format.FriendlyName == AdvancedSubStationAlpha.NameOfFormat;
 
                 foreach (ListViewItem item in subtitleListView1.SelectedItems)
                 {
