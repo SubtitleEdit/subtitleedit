@@ -1679,7 +1679,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             sb.Append("¡");
                             k += 3;
                             continue;
-                        }                                   
+                        }
 
                         if (part[0] == '9' || part[0] == '8')
                         {
