@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 }
             }
             subtitle.Renumber(1);
-        }        
+        }
 
         public static TimeCode GetTimeCode(string s)
         {
