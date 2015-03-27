@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
             _format = format;
-            _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;
+            _isSubStationAlpha = _format.FriendlyName == SubStationAlpha.NameOfFormat;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
 

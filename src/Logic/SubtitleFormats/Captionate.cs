@@ -14,9 +14,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".xml"; }
         }
 
+        public const string NameOfFormat = "Captionate";
+
         public override string Name
         {
-            get { return "Captionate"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
