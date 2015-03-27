@@ -5032,10 +5032,9 @@ namespace Nikse.SubtitleEdit.Forms
             dataStream = response.GetResponseStream();
             StreamReader reader = new StreamReader(dataStream);
             string responseFromServer = reader.ReadToEnd();
-            string result = responseFromServer;
             reader.Close();
             response.Close();
-            return result;
+            return responseFromServer;
         }
 
         private void TranslateFromSwedishToDanishToolStripMenuItemClick(object sender, EventArgs e)
@@ -6561,8 +6560,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MakeHistoryForUndo(_language.BeforeSettingFontToNormal);
                 var subFormatName = GetCurrentSubtitleFormat().FriendlyName;
-                bool isSsa = subFormatName == new SubStationAlpha().FriendlyName ||
-                             subFormatName == new AdvancedSubStationAlpha().FriendlyName;
+                bool isSsa = subFormatName == SubStationAlpha.NameOfFormat ||
+                             subFormatName == AdvancedSubStationAlpha.NameOfFormat;
 
                 foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {

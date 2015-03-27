@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             _subtitle = subtitle;
-            _isSubStationAlpha = format.FriendlyName == new SubStationAlpha().FriendlyName;
+            _isSubStationAlpha = format.FriendlyName == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
 
             var l = Configuration.Settings.Language.SubStationAlphaProperties;
