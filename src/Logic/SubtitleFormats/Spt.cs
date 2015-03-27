@@ -13,7 +13,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".spt"; }
         }
 
-        public const string NameOfFormat = "NCI Caption";
+        public const string NameOfFormat = "spt";
 
         public override string Name
         {
