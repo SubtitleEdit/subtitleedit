@@ -2,8 +2,8 @@
 <TestSettings name="Local" id="7d261dd1-82d4-4d46-aba1-c2579198fcfd" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="packages\NHunspell.1.2.5359.26126\content\Hunspellx64.dll" />
-    <DeploymentItem filename="packages\NHunspell.1.2.5359.26126\content\Hunspellx86.dll" />
+    <DeploymentItem filename="packages\NHunspell.1.2.5554.16953\content\Hunspellx64.dll" />
+    <DeploymentItem filename="packages\NHunspell.1.2.5554.16953\content\Hunspellx86.dll" />
   </Deployment>
   <Execution>
     <TestTypeSpecific />
