@@ -54,10 +54,9 @@
       <HintPath>DLLs\Interop.QuartzTypeLib.dll</HintPath>
       <SpecificVersion>False</SpecificVersion>
     </Reference>
-    <Reference Include="NHunspell, Version=1.2.5359.26126, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
-      <HintPath>packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll</HintPath>
-      <Private>False</Private>
+    <Reference Include="NHunspell, Version=1.2.5554.16953, Culture=neutral, PublicKeyToken=1ac793ea843b4366, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -1673,6 +1672,12 @@
     <None Include="Icons\Donate.png" />
     <Content Include="DLLs\Voikkox64.dll" />
     <Content Include="DLLs\Voikkox86.dll" />
+    <None Include="Hunspellx64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Hunspellx86.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <Content Include="Languages\ar-EG.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -1958,8 +1963,8 @@
     <PreBuildEvent>"$(ProjectDir)..\build_helpers.bat" rev &amp;&amp; "$(ProjectDir)..\build_helpers.bat" lang</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5359.26126\content\*.dll" "$(TargetDir)"
-"$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5359.26126\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel</PostBuildEvent>
+    <PostBuildEvent>COPY /Y /V "$(ProjectDir)packages\NHunspell.1.2.5554.16953\content\*.dll" "$(TargetDir)"
+"$(ProjectDir)packages\ILRepack.1.25.0\tools\ILRepack.exe" /out:"$(TargetDir)$(TargetName).exe" "$(TargetDir)$(TargetName).exe" "$(ProjectDir)packages\NHunspell.1.2.5554.16953\lib\net\NHunspell.dll" "$(ProjectDir)packages\zlib.net.1.0.4.0\lib\zlib.net.dll" "$(ProjectDir)DLLs\Interop.QuartzTypeLib.dll" /targetplatform:v4 /internalize /parallel</PostBuildEvent>
   </PropertyGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
