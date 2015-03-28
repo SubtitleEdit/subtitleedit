@@ -676,7 +676,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
         private void MouseTimerTick(object sender, EventArgs e)
         {
             _mouseTimer.Stop();
-            if (_parentForm != null && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
+            if (_parentForm != null && _ownerControl != null && _ownerControl.Visible && _parentForm.ContainsFocus && IsLeftMouseButtonDown())
             {
                 var p = _ownerControl.PointToClient(Control.MousePosition);
                 if (p.X > 0 && p.X < _ownerControl.Width && p.Y > 0 && p.Y < _ownerControl.Height)
