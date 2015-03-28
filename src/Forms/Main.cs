@@ -3155,29 +3155,29 @@ namespace Nikse.SubtitleEdit.Forms
 
         public string NormalizeUnicode(string text)
         {
-            const string defHyphen = "-"; // - Hyphen-minus (\u002D) (Basic Latin)
-            const string defColon = ":"; // : Colon (\uu003A) (Basic Latin)
+            const char defHyphen = '-'; // - Hyphen-minus (\u002D) (Basic Latin)
+            const char defColon = ':'; // : Colon (\uu003A) (Basic Latin)
 
             // Hyphens
-            text = text.Replace("\u2043", defHyphen); // ⁃ Hyphen bullet (\u2043)
-            text = text.Replace("\u2010", defHyphen); // ‐ Hyphen (\u2010)
-            text = text.Replace("\u2012", defHyphen); // ‒ Figure dash (\u2012)
-            text = text.Replace("\u2013", defHyphen); // – En dash (\u2013)
-            text = text.Replace("\u2014", defHyphen); // — Em dash (\u2014)
-            text = text.Replace("\u2015", defHyphen); // ― Horizontal bar (\u2015)
+            text = text.Replace('\u2043', defHyphen); // ⁃ Hyphen bullet (\u2043)
+            text = text.Replace('\u2010', defHyphen); // ‐ Hyphen (\u2010)
+            text = text.Replace('\u2012', defHyphen); // ‒ Figure dash (\u2012)
+            text = text.Replace('\u2013', defHyphen); // – En dash (\u2013)
+            text = text.Replace('\u2014', defHyphen); // — Em dash (\u2014)
+            text = text.Replace('\u2015', defHyphen); // ― Horizontal bar (\u2015)
 
             // Colons:
-            text = text.Replace("\u02F8", defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
-            text = text.Replace("\uFF1A", defColon); // ： Fullwidth Colon (\uFF1A)
-            text = text.Replace("\uF313", defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
+            text = text.Replace('\u02F8', defColon); // ˸ Modifier Letter Raised Colon (\u02F8)
+            text = text.Replace('\uFF1A', defColon); // ： Fullwidth Colon (\uFF1A)
+            text = text.Replace('\uF313', defColon); // ︓ Presentation Form for Vertical Colon (\uF313)
 
             // Others
             text = text.Replace("…", "...");
-            text = text.Replace("♪", "#");
-            text = text.Replace("♫", "#");
+            text = text.Replace('♪', '#');
+            text = text.Replace('♫', '#');
 
             // Spaces
-            text = text.Replace("\u00A0", " "); // No-Break Space
+            text = text.Replace('\u00A0', ' '); // No-Break Space
             text = text.Replace("\u200B", string.Empty); // Zero Width Space
             text = text.Replace("\uFEFF", string.Empty); // Zero Width No-Break Space
             return text;
