@@ -1679,7 +1679,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (File.Exists(fileName))
             {
                 bool videoFileLoaded = false;
-                string ext = Path.GetExtension(fileName).ToLower();
+                string ext = Path.GetExtension(fileName).ToLowerInvariant();
 
                 // save last first visible index + first selected index from listview
                 if (!string.IsNullOrEmpty(_fileName))
@@ -1744,47 +1744,44 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (ext == ".mxf")
+                if (ext == ".mxf" && (FileUtil.IsMaterialExchangeFormat(fileName)))
                 {
-                    if (FileUtil.IsMaterialExchangeFormat(fileName))
+                    var parser = new MxfParser(fileName);
+                    if (parser.IsValid)
                     {
-                        var parser = new MxfParser(fileName);
-                        if (parser.IsValid)
+                        var subtitles = parser.GetSubtitles();
+                        if (subtitles.Count > 0)
                         {
-                            var subtitles = parser.GetSubtitles();
-                            if (subtitles.Count > 0)
+                            SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                            encoding = GetCurrentEncoding();
+                            var list = new List<string>();
+                            foreach (string line in subtitles[0].Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'))
                             {
-                                SetEncoding(Configuration.Settings.General.DefaultEncoding);
-                                encoding = GetCurrentEncoding();
-                                var list = new List<string>();
-                                foreach (string line in subtitles[0].Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'))
-                                {
-                                    list.Add(line);
-                                }
-                                _subtitle = new Subtitle();
-                                var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
-                                SetCurrentFormat(mxfFormat);
-                                _fileName = Path.GetFileNameWithoutExtension(fileName);
-                                SetTitle();
-                                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
-                                _sourceViewChange = false;
-                                _changeSubtitleToString = SerializeSubtitle(_subtitle);
-                                ResetHistory();
-                                SetUndockedWindowsTitle();
-                                _converted = true;
-                                ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
-
-                                ShowSource();
-                                SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
-                                _subtitleListViewIndex = -1;
-                                SubtitleListview1.FirstVisibleIndex = -1;
-                                SubtitleListview1.SelectIndexAndEnsureVisible(0);
-
-                                return;
+                                list.Add(line);
                             }
-                            MessageBox.Show("No subtitles found!");
+                            _subtitle = new Subtitle();
+                            var mxfFormat = _subtitle.ReloadLoadSubtitle(list, null);
+                            SetCurrentFormat(mxfFormat);
+                            _fileName = Path.GetFileNameWithoutExtension(fileName);
+                            SetTitle();
+                            ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName));
+                            _sourceViewChange = false;
+                            _changeSubtitleToString = SerializeSubtitle(_subtitle);
+                            ResetHistory();
+                            SetUndockedWindowsTitle();
+                            _converted = true;
+                            ShowStatus(string.Format(_language.LoadedSubtitleX, _fileName) + " - " + string.Format(_language.ConvertedToX, mxfFormat.FriendlyName));
+
+                            ShowSource();
+                            SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
+                            _subtitleListViewIndex = -1;
+                            SubtitleListview1.FirstVisibleIndex = -1;
+                            SubtitleListview1.SelectIndexAndEnsureVisible(0);
+
                             return;
                         }
+                        MessageBox.Show("No subtitles found!");
+                        return;
                     }
                 }
 
@@ -2451,27 +2448,20 @@ namespace Nikse.SubtitleEdit.Forms
                         audioVisualizer.Invalidate();
                     }
 
-                    if (Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer)
+                    if ((Configuration.Settings.General.ShowVideoPlayer || Configuration.Settings.General.ShowAudioVisualizer) && !Configuration.Settings.General.DisableVideoAutoLoading)
                     {
-                        if (!Configuration.Settings.General.DisableVideoAutoLoading)
+                        if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
                         {
-                            if (!string.IsNullOrEmpty(videoFileName) && File.Exists(videoFileName))
-                            {
-                                OpenVideo(videoFileName);
-                            }
-                            else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
-                            {
-                                TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
-                            }
+                            OpenVideo(videoFileName);
+                        }
+                        else if (!string.IsNullOrEmpty(fileName) && (toolStripButtonToggleVideo.Checked || toolStripButtonToggleWaveform.Checked))
+                        {
+                            TryToFindAndOpenVideoFile(Path.Combine(Path.GetDirectoryName(fileName), Path.GetFileNameWithoutExtension(fileName)));
                         }
                     }
                     videoFileLoaded = _videoFileName != null;
 
-                    if (Configuration.Settings.RecentFiles.Files.Count > 0 &&
-                        Configuration.Settings.RecentFiles.Files[0].FileName == fileName)
-                    {
-                    }
-                    else
+                    if (Configuration.Settings.RecentFiles.Files.Count < 1 || Configuration.Settings.RecentFiles.Files[0].FileName != fileName)
                     {
                         Configuration.Settings.RecentFiles.Add(fileName, _videoFileName, _subtitleAlternateFileName);
                         Configuration.Settings.Save();
