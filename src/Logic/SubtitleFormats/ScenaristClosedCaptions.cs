@@ -1611,28 +1611,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
-            _errorCount = 0;
-            Paragraph p = null;
-            foreach (string line in lines)
-            {
-                string s = line.Trim();
-                var match = RegexTimeCodes.Match(s);
-                if (match.Success)
-                {
-                    TimeCode startTime = ParseTimeCode(s.Substring(0, match.Length - 1));
-                    string text = GetSccText(s.Substring(match.Index), ref _errorCount);
+            LoadParagraphs(subtitle.Paragraphs, lines);
 
-                    if (text == "942c 942c" || text == "942c")
-                    {
-                        p.EndTime = new TimeCode(startTime.TotalMilliseconds);
-                    }
-                    else
-                    {
-                        p = new Paragraph(startTime, new TimeCode(startTime.TotalMilliseconds), text);
-                        subtitle.Paragraphs.Add(p);
-                    }
-                }
-            }
+            Paragraph p;
             for (int i = subtitle.Paragraphs.Count - 2; i >= 0; i--)
             {
                 p = subtitle.GetParagraphOrDefault(i);
@@ -1647,6 +1628,96 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 subtitle.Paragraphs.Remove(p);
 
             subtitle.Renumber(1);
+        }
+
+        private void LoadParagraphs(ICollection<Paragraph> paragraphs, IEnumerable<string> lines)
+        {
+            _errorCount = 0;
+
+            TimeCode paragraphStart = null;
+            TimeCode paragraphEnd = null;
+            string paragraphText = null;
+            string nextParagraphText = null;
+
+            foreach (string line in lines)
+            {
+                string s = line.Trim();
+                var match = RegexTimeCodes.Match(s);
+                if (!match.Success)
+                    continue;
+
+                TimeCode lineTime = ParseTimeCode(s.Substring(0, match.Length - 1));
+                string sccCodes = s.Substring(match.Length);
+                string lineText = GetSccText(sccCodes, ref _errorCount);
+
+                bool singleLineMode = sccCodes.Contains("94ae") && sccCodes.Contains("942f");
+
+                if (singleLineMode)
+                {
+                    /*
+                     * Lines that have both {RCL} "94ae" and {EOC} "942f" have time-adjecent paragraphs.
+                     * {EOC} is the trigger to display the buffered text.
+                     */
+
+                    TimeCode boundary = TimeCodeWithinLine(lineTime, sccCodes, "942f");
+                    if (paragraphStart != null)
+                    {
+                        Paragraph p = new Paragraph(paragraphStart, boundary, paragraphText);
+                        paragraphs.Add(p);
+                    }
+                    paragraphText = lineText;
+                    paragraphStart = boundary;
+                }
+                else
+                {
+                    /*
+                     * In !singleLineMode, use {EDM} "942c" to indicate paragraph end, and {EOC} to
+                     * display the buffered text.
+                     */
+
+                    if (sccCodes.Contains("942c") && paragraphStart != null)
+                    {
+                        paragraphEnd = TimeCodeWithinLine(lineTime, sccCodes, "942c");
+                    }
+
+                    if (sccCodes.Contains("942f"))
+                    {
+                        paragraphStart = TimeCodeWithinLine(lineTime, sccCodes, "942f");
+                    }
+
+                    if (lineText != "")
+                    {
+                        // SCC file may be buffering the next paragraph's text while the current text
+                        // is on-screen.  Capture this line as either the current OR next paragraph.
+                        if (paragraphText == null)
+                            paragraphText = lineText;
+                        else
+                            nextParagraphText = lineText;
+                    }
+
+                    if (paragraphStart != null && paragraphEnd != null)
+                    {
+                        Paragraph p = new Paragraph(paragraphStart, paragraphEnd, paragraphText);
+                        paragraphs.Add(p);
+
+                        paragraphStart = null;
+                        paragraphEnd = null;
+                        paragraphText = nextParagraphText; // move buffered text to current
+                        nextParagraphText = null;          // and clear the buffer
+                    }
+                }
+            }
+        }
+
+        private static TimeCode TimeCodeWithinLine(TimeCode start, string sccCodes, string targetCode)
+        {
+            int offsetFrames = sccCodes.IndexOf(targetCode) / 5;
+            int offsetMs = FramesToMilliseconds(offsetFrames);
+
+            TimeCode result = new TimeCode(start);
+            result.AddTime(offsetMs);
+
+            return result;
         }
 
         public static string GetSccText(string s, ref int errorCount)

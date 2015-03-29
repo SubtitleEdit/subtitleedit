@@ -62,6 +62,11 @@ namespace Nikse.SubtitleEdit.Logic
             _totalMilliseconds = timeSpan.TotalMilliseconds;
         }
 
+        public TimeCode(TimeCode fromCode)
+        {
+            _totalMilliseconds = fromCode.TotalMilliseconds;
+        }
+
         public TimeCode(double totalMilliseconds)
         {
             _totalMilliseconds = totalMilliseconds;
