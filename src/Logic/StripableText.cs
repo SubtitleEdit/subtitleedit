@@ -138,6 +138,9 @@ namespace Nikse.SubtitleEdit.Logic
                                    (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
                                    Environment.NewLine.EndsWith(lower[start - 1]);
 
+                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't"))
+                        startOk = false;
+
                     if (startOk)
                     {
                         int end = start + name.Length;
