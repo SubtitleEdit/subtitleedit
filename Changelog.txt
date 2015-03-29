@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.6 (xth March 2015) BETA
+3.4.6 (29th March 2015) BETA
 * NEW:
    * Added new subtitle formats (Sami YouTube and more)
    * Added waveform text size/bold to UI
@@ -47,6 +47,7 @@
    * Fixed bug in mplayer2 subtitle format - thx Maciek
    * Fixed bug preventing compare from working in "History" window - thx xylographe
    * Fix for Advanced Substation Alpha loading - thx Vic
+   * Fix for unwanted play/pause by click in list view after hiding VLC - thx Ivandrofly
    * + Many minor fixes from Ivandrofly and xylographe
 
 

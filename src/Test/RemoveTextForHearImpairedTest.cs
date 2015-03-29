@@ -1125,6 +1125,32 @@ namespace Test
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextRemoveLineWithColon()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            const string text = "Before:";
+            string expected = string.Empty;
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextRemoveLineWithColon2()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            const string text = "COP 1: Call it in, code four. COP 4: Get him out of here.";
+            const string expected = "Call it in, code four. Get him out of here.";
+            string actual = target.RemoveColon(text);
+            Assert.AreEqual(expected, actual);
+        }
+        
         #region Additional test attributes
 
         //
