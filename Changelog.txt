@@ -1,6 +1,6 @@
 ﻿Subtitle Edit Changelog
 
-3.4.6 (29th March 2015) BETA
+3.4.6 (29th March 2015)
 * NEW:
    * Added new subtitle formats (Sami YouTube and more)
    * Added waveform text size/bold to UI
