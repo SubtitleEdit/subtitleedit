@@ -6858,10 +6858,7 @@
   <PartialLines>
     <!-- Partial lines - but whole words only -->
   </PartialLines>
-  <BeginLines>
-  </BeginLines>
-  <EndLines>
-  </EndLines>
-  <WholeLines>
-  </WholeLines>
+  <BeginLines />
+  <EndLines />
+  <WholeLines />
 </OCRFixReplaceList>
