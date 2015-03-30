@@ -1,4 +1,4 @@
-<NoBreakAfterList>
+﻿<NoBreakAfterList>
   <Item RegEx="True"> [¿¡«]</Item>
   <Item RegEx="True"> [A-ZÁ-ÚÑ]</Item>
   <Item> a</Item>

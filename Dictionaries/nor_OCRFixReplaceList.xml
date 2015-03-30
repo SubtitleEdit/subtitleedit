@@ -1,6 +1,5 @@
 ﻿<OCRFixReplaceList>
-  <WholeWords>
-  </WholeWords>
+  <WholeWords />
   <PartialWords>
     <!-- Will be used to check words not in dictionary -->
     <!-- If new word(s) exists in spelling dictionary, it(they) is accepted -->
@@ -35,9 +34,7 @@
     <WordPart from="í" to="i" />
   </PartialWords>
   <PartialLines />
-  <BeginLines>
-  </BeginLines>
-  <EndLines>
-  </EndLines>
+  <BeginLines />
+  <EndLines />
   <WholeLines />
 </OCRFixReplaceList>
