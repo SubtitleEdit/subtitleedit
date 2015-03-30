@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<ReplaceList>
   <WholeWords>
     <Word from="НЄЙ" to="НЕЙ" />
     <Word from="ОРГЗНИЗМОБ" to="ОРГАНИЗМА" />

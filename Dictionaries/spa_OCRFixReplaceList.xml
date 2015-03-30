@@ -1,4 +1,4 @@
-<ReplaceList>
+﻿<ReplaceList>
   <WholeWords>
     <!--  Abreviaturas simples -->
     <Word from="KBs" to="kB" />
