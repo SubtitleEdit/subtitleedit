@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class PluginsGet
+    sealed partial class PluginsGet
     {
         /// <summary>
         /// Required designer variable.
