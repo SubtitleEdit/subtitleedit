@@ -1390,7 +1390,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (_lastDoNotPrompt != SerializeSubtitle(_subtitle))
                 {
-
                     string promptText = _language.SaveChangesToUntitled;
                     if (!string.IsNullOrEmpty(_fileName))
                         promptText = string.Format(_language.SaveChangesToX, _fileName);
@@ -1414,7 +1413,6 @@ namespace Nikse.SubtitleEdit.Forms
                                 SetTitle();
                                 Configuration.Settings.RecentFiles.Add(_fileName, FirstVisibleIndex, FirstSelectedIndex, _videoFileName, _subtitleAlternateFileName);
                                 Configuration.Settings.Save();
-
                             }
                             else
                             {
