@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Forms
                         var installedVer = Convert.ToDouble(installed.SubItems[2].Text.Replace(",", "."), CultureInfo.InvariantCulture);
                         var currentVer = Convert.ToDouble(node.SelectSingleNode("Version").InnerText.Replace(",", "."), CultureInfo.InvariantCulture);
 
-                        if (installed.Text == node.SelectSingleNode("Name").InnerText.Trim('.') && installedVer < currentVer)
+                        if (string.Compare(installed.Text, node.SelectSingleNode("Name").InnerText.Trim('.'), StringComparison.OrdinalIgnoreCase) == 0 && installedVer < currentVer)
                         {
                             //item.BackColor = Color.LightGreen;
                             installed.BackColor = Color.LightPink;
