@@ -108,7 +108,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else if (!string.IsNullOrWhiteSpace(line))
                     {
                         _errorCount++;
-                        _expecting = ExpectingLine.TimeCodes; // lets go to next paragraph
                     }
                     break;
                 case ExpectingLine.Text:
@@ -136,13 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                return false;
-
-            if (Utilities.IsInteger(text))
-                return false;
-
-            if (RegexTimeCodes.IsMatch(text))
+            if (string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text))
                 return false;
 
             return true;
@@ -150,20 +143,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveBadChars(string line)
         {
-            line = line.Replace("\0", " ");
-
-            return line;
+            return line.Replace('\0', ' ');
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            line = line.Replace(".", ":");
-            line = line.Replace("،", ",");
-            line = line.Replace("¡", ":");
+            line = line.Replace('.', ':');
+            line = line.Replace('،', ',');
+            line = line.Replace('¡', ':');
 
             if (RegexTimeCodes.IsMatch(line))
             {
-                line = line.Replace(",", ":");
+                line = line.Replace(',', ':');
                 string[] parts = line.Replace(" ", string.Empty).Split(':', ',');
                 try
                 {
