@@ -108,7 +108,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     else if (!string.IsNullOrWhiteSpace(line))
                     {
                         _errorCount++;
-                        _expecting = ExpectingLine.TimeCodes; // lets go to next paragraph
                     }
                     break;
                 case ExpectingLine.Text:
