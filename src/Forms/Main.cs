@@ -8870,14 +8870,15 @@ namespace Nikse.SubtitleEdit.Forms
                         inStream.Close();
                     }
 
-                    if (!error)
+                    if (!error && buffer.Length > 2)
                         mergedVobSubPacks.Add(new VobSubMergedPack(buffer, TimeSpan.FromMilliseconds(p.Start), 32, null));
                 }
                 else
                 {
                     mergedVobSubPacks.Add(new VobSubMergedPack(p.Data, TimeSpan.FromMilliseconds(p.Start), 32, null));
                 }
-                mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
+                if (mergedVobSubPacks.Count > 0)
+                    mergedVobSubPacks[mergedVobSubPacks.Count - 1].EndTime = TimeSpan.FromMilliseconds(p.End);
 
                 // fix overlapping (some versions of Handbrake makes overlapping time codes - thx Hawke)
                 if (mergedVobSubPacks.Count > 1 && mergedVobSubPacks[mergedVobSubPacks.Count - 2].EndTime > mergedVobSubPacks[mergedVobSubPacks.Count - 1].StartTime)
