@@ -202,14 +202,14 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveBadChars(string line)
         {
-            return line.Replace("\0", " ");
+            return line.Replace('\0', ' ');
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            line = line.Replace("،", ",");
-            line = line.Replace("", ",");
-            line = line.Replace("¡", ",");
+            line = line.Replace('،', ',');
+            line = line.Replace('', ',');
+            line = line.Replace('¡', ',');
 
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)

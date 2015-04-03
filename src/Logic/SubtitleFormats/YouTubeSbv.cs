@@ -150,20 +150,18 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static string RemoveBadChars(string line)
         {
-            line = line.Replace("\0", " ");
-
-            return line;
+            return line.Replace('\0', ' ');
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            line = line.Replace(".", ":");
-            line = line.Replace("،", ",");
-            line = line.Replace("¡", ":");
+            line = line.Replace('.', ':');
+            line = line.Replace('،', ',');
+            line = line.Replace('¡', ':');
 
             if (RegexTimeCodes.IsMatch(line))
             {
-                line = line.Replace(",", ":");
+                line = line.Replace(',', ':');
                 string[] parts = line.Replace(" ", string.Empty).Split(':', ',');
                 try
                 {
