@@ -135,13 +135,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
-                return false;
-
-            if (Utilities.IsInteger(text))
-                return false;
-
-            if (RegexTimeCodes.IsMatch(text))
+            if (string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || RegexTimeCodes.IsMatch(text))
                 return false;
 
             return true;
