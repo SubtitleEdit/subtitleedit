@@ -2105,9 +2105,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if ((index + 1) == text.Length)
+                index = index + tag.Length;
+                if (index >= text.Length)
                     return count;
-                index = text.IndexOf(tag, index + 1, StringComparison.Ordinal);
+                index = text.IndexOf(tag, index, StringComparison.Ordinal);
             }
             return count;
         }
