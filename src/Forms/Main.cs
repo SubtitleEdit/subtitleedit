@@ -8646,16 +8646,16 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                                 if (subtitleChooser.ShowDialog(this) == DialogResult.OK)
                                 {
-                                    LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false);
-                                    if (Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
+                                    if (LoadMatroskaSubtitle(subtitleList[subtitleChooser.SelectedIndex], matroska, false) &&
+                                        Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
                                         OpenVideo(matroska.Path);
                                 }
                             }
                         }
                         else
                         {
-                            LoadMatroskaSubtitle(subtitleList[0], matroska, false);
-                            if (Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
+                            if (LoadMatroskaSubtitle(subtitleList[0], matroska, false) &&
+                                Path.GetExtension(matroska.Path).Equals(".mkv", StringComparison.OrdinalIgnoreCase))
                                 OpenVideo(matroska.Path);
                         }
                     }
@@ -8738,21 +8738,19 @@ namespace Nikse.SubtitleEdit.Forms
             return subtitle;
         }
 
-        private void LoadMatroskaSubtitle(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, bool batchMode)
+        private bool LoadMatroskaSubtitle(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska, bool batchMode)
         {
             if (matroskaSubtitleInfo.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
             {
                 if (batchMode)
-                    return;
-                LoadVobSubFromMatroska(matroskaSubtitleInfo, matroska);
-                return;
+                    return false;
+                return LoadVobSubFromMatroska(matroskaSubtitleInfo, matroska);
             }
             if (matroskaSubtitleInfo.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
             {
                 if (batchMode)
-                    return;
-                LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska);
-                return;
+                    return false;
+                return LoadBluRaySubFromMatroska(matroskaSubtitleInfo, matroska);
             }
 
             ShowStatus(_language.ParsingMatroskaFile);
@@ -8803,13 +8801,14 @@ namespace Nikse.SubtitleEdit.Forms
             _converted = true;
 
             if (batchMode)
-                return;
+                return true;
 
             SubtitleListview1.Fill(_subtitle, _subtitleAlternate);
             if (_subtitle.Paragraphs.Count > 0)
                 SubtitleListview1.SelectIndexAndEnsureVisible(0);
 
             ShowSource();
+            return true;
         }
 
         public static void CopyStream(Stream input, Stream output)
@@ -8823,7 +8822,7 @@ namespace Nikse.SubtitleEdit.Forms
             output.Flush();
         }
 
-        private void LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
+        private bool LoadVobSubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
             {
@@ -8913,11 +8912,13 @@ namespace Nikse.SubtitleEdit.Forms
                     Text = Title;
 
                     Configuration.Settings.Save();
+                    return true;
                 }
             }
+            return false;
         }
 
-        private void LoadBluRaySubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
+        private bool LoadBluRaySubFromMatroska(MatroskaTrackInfo matroskaSubtitleInfo, MatroskaFile matroska)
         {
             if (matroskaSubtitleInfo.ContentEncodingType == 1)
             {
@@ -9034,8 +9035,10 @@ namespace Nikse.SubtitleEdit.Forms
                     Text = Title;
 
                     Configuration.Settings.Save();
+                    return true;
                 }
             }
+            return false;
         }
 
         private void ImportSubtitleFromDvbSupFile(string fileName)
