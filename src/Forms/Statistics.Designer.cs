@@ -75,7 +75,7 @@
             this.textBoxGeneral.Name = "textBoxGeneral";
             this.textBoxGeneral.ReadOnly = true;
             this.textBoxGeneral.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxGeneral.Size = new System.Drawing.Size(693, 351);
+            this.textBoxGeneral.Size = new System.Drawing.Size(694, 351);
             this.textBoxGeneral.TabIndex = 0;
             // 
             // groupBoxMostUsed
@@ -122,14 +122,14 @@
             this.textBoxMostUsedLines.Name = "textBoxMostUsedLines";
             this.textBoxMostUsedLines.ReadOnly = true;
             this.textBoxMostUsedLines.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxMostUsedLines.Size = new System.Drawing.Size(367, 183);
+            this.textBoxMostUsedLines.Size = new System.Drawing.Size(371, 183);
             this.textBoxMostUsedLines.TabIndex = 3;
             // 
             // textBoxMostUsedWords
             // 
             this.textBoxMostUsedWords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxMostUsedWords.Location = new System.Drawing.Point(6, 43);
+            this.textBoxMostUsedWords.Location = new System.Drawing.Point(9, 43);
             this.textBoxMostUsedWords.Multiline = true;
             this.textBoxMostUsedWords.Name = "textBoxMostUsedWords";
             this.textBoxMostUsedWords.ReadOnly = true;
@@ -139,9 +139,10 @@
             // 
             // buttonExport
             // 
-            this.buttonExport.Location = new System.Drawing.Point(534, 632);
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.Location = new System.Drawing.Point(532, 632);
             this.buttonExport.Name = "buttonExport";
-            this.buttonExport.Size = new System.Drawing.Size(102, 23);
+            this.buttonExport.Size = new System.Drawing.Size(104, 21);
             this.buttonExport.TabIndex = 2;
             this.buttonExport.Text = "Export";
             this.buttonExport.UseVisualStyleBackColor = true;
