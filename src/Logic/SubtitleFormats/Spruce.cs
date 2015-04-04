@@ -157,14 +157,55 @@ $ColorIndex4    = 3
         }
 
         private static string DecodeText(string text)
-        { //TODO: improve end tags
+        {
             text = text.Replace("|", Environment.NewLine);
-            if (text.Contains("^B"))
-                text = text.Replace("^B", "<b>") + "</b>";
-            if (text.Contains("^I"))
-                text = text.Replace("^I", "<i>") + "</i>";
-            if (text.Contains("^U"))
-                text = text.Replace("^U", "<u>") + "</u>";
+
+            //^IBrillstein^I
+            if (text.Contains(Bold))
+            {
+                text = DecoderTextExtension(text, Bold, "<B>");
+            }
+            if (text.Contains(Italic))
+            {
+                text = DecoderTextExtension(text, Italic, "<i>");
+            }
+            if (text.Contains(Underilne))
+            {
+                text = DecoderTextExtension(text, Underilne, "<u>");
+            }
+
+            return text;
+        }
+
+        private static string DecoderTextExtension(string text, string SpruceTag, string htmlOpenTag)
+        {
+            var htmlCloseTag = htmlOpenTag.Insert(1, "/");
+
+            var idx = text.IndexOf(SpruceTag, StringComparison.Ordinal);
+            var c = Utilities.CountTagInText(text, SpruceTag);
+            if (c == 1)
+            {
+                var l = idx + SpruceTag.Length;
+                if (l < text.Length)
+                {
+                    text = text.Replace(SpruceTag, htmlOpenTag) + htmlCloseTag;
+                }
+                else if (l == text.Length) // Brillstein^I
+                {
+                    text = text.Remove(text.Length - Italic.Length);
+                }
+            }
+            else if (c > 1)
+            {
+                var isOpen = true;
+                while (idx >= 0)
+                {
+                    var htmlTag = isOpen ? htmlOpenTag : htmlCloseTag;
+                    text = text.Remove(idx, SpruceTag.Length).Insert(idx, htmlTag);
+                    isOpen = !isOpen;
+                    idx = text.IndexOf(SpruceTag, idx + htmlTag.Length);
+                }
+            }
             return text;
         }
     }
