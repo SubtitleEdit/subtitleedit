@@ -249,8 +249,7 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("...", ".");
             lastLine = lastLine.Replace("..", ".");
             lastLine = lastLine.Replace("-", " ");
-            lastLine = lastLine.Replace("   ", " ");
-            lastLine = lastLine.Replace("  ", " ");
+            lastLine = lastLine.FixExtraSpaces();
             string[] lines = lastLine.Split('.');
 
             foreach (string line in lines)
