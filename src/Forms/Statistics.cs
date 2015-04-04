@@ -262,12 +262,9 @@ https://github.com/SubtitleEdit/subtitleedit
                     hits++;
                     hashtable[s] = hits.ToString(CultureInfo.InvariantCulture);
                 }
-                else if (s.Length > 0)
+                else if (s.Length > 0 && s.Contains(' '))
                 {
-                    if (s.Contains(' '))
-                    {
-                        hashtable.Add(s, "1");
-                    }
+                    hashtable.Add(s, "1");
                 }
             }
         }
