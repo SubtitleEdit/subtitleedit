@@ -8,6 +8,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     public class Spruce : SubtitleFormat
     {
+        private const string Italic = "^I";
+        private const string Bold = "^B";
+        private const string Underilne = "^U";
+
         public override string Extension
         {
             get { return ".stl"; }
@@ -80,14 +84,14 @@ $ColorIndex4    = 3
 
         private static string EncodeText(string text)
         {
-            text = text.Replace("<I>", "<i>").Replace("</I>", "</i>");
+            text = HtmlUtil.FixUpperTags(text);
             bool allItalic = text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1;
-            text = text.Replace("<b>", "^B");
-            text = text.Replace("</b>", string.Empty);
-            text = text.Replace("<i>", "^I");
-            text = text.Replace("</i>", string.Empty);
-            text = text.Replace("<u>", "^U");
-            text = text.Replace("</u>", string.Empty);
+            text = text.Replace("<b>", Bold);
+            text = text.Replace("</b>", Bold);
+            text = text.Replace("<i>", Italic);
+            text = text.Replace("</i>", Italic);
+            text = text.Replace("<u>", Underilne);
+            text = text.Replace("</u>", Underilne);
             if (allItalic)
                 return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
