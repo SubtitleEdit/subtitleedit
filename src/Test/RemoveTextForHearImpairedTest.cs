@@ -1150,7 +1150,7 @@ namespace Test
             string actual = target.RemoveColon(text);
             Assert.AreEqual(expected, actual);
         }
-        
+
         #region Additional test attributes
 
         //

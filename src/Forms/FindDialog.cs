@@ -157,9 +157,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFind.Visible = false;
                 textBoxFind.Visible = true;
                 textBoxFind.Text = selectedText;
-                textBoxFind.SelectAll();                
+                textBoxFind.SelectAll();
             }
-          
+
             if (findHelper != null)
             {
                 if (findHelper.FindType == FindType.RegEx)
