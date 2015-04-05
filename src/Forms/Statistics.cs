@@ -192,11 +192,11 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("<U>", "");
             lastLine = lastLine.Replace("</U>", ".");
 
-            var idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+            var idx = lastLine.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
             var error = false;
             while (idx >= 0)
             {
-                var endIdx = lastLine.IndexOf('>', idx + 6);
+                var endIdx = lastLine.IndexOf('>', idx + 5);
                 if (endIdx < idx)
                 {
                     error = !error;
@@ -204,7 +204,7 @@ https://github.com/SubtitleEdit/subtitleedit
                 }
                 endIdx++;
                 lastLine = lastLine.Remove(idx, (endIdx - idx));
-                idx = lastLine.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+                idx = lastLine.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
             }
             if (!error)
                 lastLine = lastLine.Replace("</font>", ".");
@@ -249,8 +249,7 @@ https://github.com/SubtitleEdit/subtitleedit
             lastLine = lastLine.Replace("...", ".");
             lastLine = lastLine.Replace("..", ".");
             lastLine = lastLine.Replace("-", " ");
-            lastLine = lastLine.Replace("   ", " ");
-            lastLine = lastLine.Replace("  ", " ");
+            lastLine = lastLine.FixExtraSpaces();
             string[] lines = lastLine.Split('.');
 
             foreach (string line in lines)
@@ -263,12 +262,9 @@ https://github.com/SubtitleEdit/subtitleedit
                     hits++;
                     hashtable[s] = hits.ToString(CultureInfo.InvariantCulture);
                 }
-                else if (s.Length > 0)
+                else if (s.Length > 0 && s.Contains(' '))
                 {
-                    if (s.Contains(' '))
-                    {
-                        hashtable.Add(s, "1");
-                    }
+                    hashtable.Add(s, "1");
                 }
             }
         }
