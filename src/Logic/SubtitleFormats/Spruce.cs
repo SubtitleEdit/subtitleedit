@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         private const string Italic = "^I";
         private const string Bold = "^B";
-        private const string Underilne = "^U";
+        private const string Underline = "^U";
 
         public override string Extension
         {
@@ -90,8 +90,8 @@ $ColorIndex4    = 3
             text = text.Replace("</b>", Bold);
             text = text.Replace("<i>", Italic);
             text = text.Replace("</i>", Italic);
-            text = text.Replace("<u>", Underilne);
-            text = text.Replace("</u>", Underilne);
+            text = text.Replace("<u>", Underline);
+            text = text.Replace("</u>", Underline);
             if (allItalic)
                 return text.Replace(Environment.NewLine, "|^I");
             return text.Replace(Environment.NewLine, "|");
@@ -169,9 +169,9 @@ $ColorIndex4    = 3
             {
                 text = DecoderTextExtension(text, Italic, "<i>");
             }
-            if (text.Contains(Underilne))
+            if (text.Contains(Underline))
             {
-                text = DecoderTextExtension(text, Underilne, "<u>");
+                text = DecoderTextExtension(text, Underline, "<u>");
             }
 
             return text;
