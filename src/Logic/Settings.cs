@@ -2859,10 +2859,11 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
                 if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
                 {
+                    const int maximumFindHistoryItems = 10;
                     textWriter.WriteStartElement("FindHistory", "");
                     for (int index = 0; index < settings.Tools.FindHistory.Count; index++)
                     {
-                        if (index < 15) // allow up to 15 entries for find history
+                        if (index < maximumFindHistoryItems)
                         {
                             var text = settings.Tools.FindHistory[index];
                             textWriter.WriteElementString("Text", text);
