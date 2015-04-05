@@ -1798,7 +1798,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string language = GetCurrentWordListLanguage();
             string text = textBoxNameEtc.Text.Trim();
-            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
+            const string mboxTitle = "Invalid Name";
+            if (text.Length <= 1)
+            {
+                MessageBox.Show("Name length must be greater than 1 character", mboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            else if (Utilities.IsInteger(text))
+            {
+                MessageBox.Show(string.Format("Number: {0} can't be added as Name", text), mboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var idx = Contains(text);
+            if (!string.IsNullOrEmpty(language) && idx == -1)
             {
                 var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                 namesList.Add(text);
