@@ -77,7 +77,7 @@
   <About>
     <Title>Tietoja</Title>
     <AboutText1>Subtitle Edit on ilmainen GNU Public License -sovellus,
-jota saa jakaa, muokata ja käyttää vapaasti. 
+jota saa jakaa, muokata ja käyttää vapaasti.
 C#-kielinen  lähdekoodi on saatavilla osoitteesta https://github.com/SubtitleEdit/subtitleedit
 
 Vieraile sivulla www.nikse.dk jotta saat uusimman version.
@@ -602,7 +602,7 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Sanastojen lataustarve</Title>
-    <DescriptionLine1>Oikeinkirjoituksen tarkistus perustuu NHunspell-moottoriin, </DescriptionLine1>
+    <DescriptionLine1>Oikeinkirjoituksen tarkistus perustuu NHunspell-moottoriin,</DescriptionLine1>
     <DescriptionLine2>joka käyttää Open Office:n oikeinkirjoitussanastoja.</DescriptionLine2>
     <GetDictionariesHere>Lataa sanastot täältä:</GetDictionariesHere>
     <OpenOpenOfficeWiki>Open Office Wiki sanastoluettelo.</OpenOpenOfficeWiki>
@@ -1035,14 +1035,10 @@ Sähköposti: mailto:nikse.dk@gmail.com</AboutText1>
     <NewFrameRateUsedToCalculateTimeCodes>Uutta kuvataajuutta ({0}) käytettiin laskettaessa alku-/loppuaikaleimat</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>Uutta kuvataajuutta ({0}) käytettiin laskettaessa alku-/loppukuvien numerot</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Etsittävää kohdetta ei löytynyt.
- Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
+Haluatko aloittaa asiakirjan alusta ja hakea kerran vielä?</FindContinue>
     <FindContinueTitle>Jatketaanko hakua?</FindContinueTitle>
-    <ReplaceContinueNotFound>
-Etsittävää kohdetta ei löytynyt. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
-        </ReplaceContinueNotFound>
-    <ReplaceXContinue>
-Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?
-        </ReplaceXContinue>
+    <ReplaceContinueNotFound>Etsittävää kohdetta ei löytynyt. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?</ReplaceContinueNotFound>
+    <ReplaceXContinue>Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja jatkaa Etsi ja korvaa toimintoa?</ReplaceXContinue>
     <ReplaceContinueTitle>Jatketaanko 'Korvausta'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Etsitään '{0}' riviltä {1}</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' löytyi riviltä {1}</XFoundAtLineNumberY>
@@ -1165,9 +1161,7 @@ Etsittävä kohde korvattu {0} kertaa. Haluatko aloittaa asiakirjan alusta ja ja
     <ShowAllLinesXSecondsLinesLater>Näytä kaikki rivit {0:0.0##} sekuntia myöhemmin</ShowAllLinesXSecondsLinesLater>
     <ShowSelectedLinesXSecondsLinesEarlier>Näytä valitut rivit {0:0.0##} sekuntia aikaisemmin</ShowSelectedLinesXSecondsLinesEarlier>
     <ShowSelectedLinesXSecondsLinesLater>Näytä valitut rivit {0:0.0##} sekuntia myöhemmin</ShowSelectedLinesXSecondsLinesLater>
-    <ShowSelectionAndForwardXSecondsLinesEarlier>
-Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
-        </ShowSelectionAndForwardXSecondsLinesEarlier>
+    <ShowSelectionAndForwardXSecondsLinesEarlier>Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin</ShowSelectionAndForwardXSecondsLinesEarlier>
     <ShowSelectionAndForwardXSecondsLinesLater>Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia myöhemmin</ShowSelectionAndForwardXSecondsLinesLater>
     <ShowSelectedLinesEarlierLaterPerformed>Näytä aikaisemmat/myöhemmät suoritukset valituilla riveillä</ShowSelectedLinesEarlierLaterPerformed>
     <DoubleWordsViaRegEx>Kaksoissanat regexin kautta {0}</DoubleWordsViaRegEx>
@@ -1243,10 +1237,8 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <BeforeDisplaySubtitleJoin>Ennen tekstityksien liittämistä</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Liitetyt tekstitykset</SubtitlesJoined>
     <StatusLog>Tilaloki</StatusLog>
-    <XSceneChangesImported>Tuotu {0} kohtausmuutosta
-    </XSceneChangesImported>
-    <PluginXExecuted>Suoritettiin laajennus '{0}'.
-    </PluginXExecuted>
+    <XSceneChangesImported>Tuotu {0} kohtausmuutosta</XSceneChangesImported>
+    <PluginXExecuted>Suoritettiin laajennus '{0}'.</PluginXExecuted>
     <NotAValidXSubFile>Tiedosto ei ole XSub-muodossa!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Ennen samansisältöisten rivien yhdistämistä</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Aikaleimat sisältävässä tekstityksessä on eri rivimäärä ({0)} kuin nykyisessä tekstityksessä - jatketaanko silti?</ImportTimeCodesDifferentNumberOfLinesWarning>
@@ -1686,8 +1678,7 @@ Näytä valinta ja siitä eteenpäin {0:0.0##} sekuntia aikaisemmin
     <ToggleTranslationMode>Vaihda käännöksen tila</ToggleTranslationMode>
     <SwitchOriginalAndTranslation>Vaihda alkuperäinen ja käännös</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Yhdistä alkuperäinen ja käännös</MergeOriginalAndTranslation>
-    <ShortcutIsAlreadyDefinedX>Pikanäppäin on jo määritelty: {0}
-    </ShortcutIsAlreadyDefinedX>
+    <ShortcutIsAlreadyDefinedX>Pikanäppäin on jo määritelty: {0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Vaihda esikatselussa käännös ja alkuperäinen kuva/ääni</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Sarake, poista teksti</ListViewColumnDelete>
     <ListViewColumnInsert>Sarake, lisää teksti</ListViewColumnInsert>
