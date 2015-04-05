@@ -3792,7 +3792,10 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 _findHelper = findDialog.GetFindDialogHelper(_subtitleListViewIndex);
-                _findHelper.AddHistory(_findHelper.FindText);
+                if (!string.IsNullOrWhiteSpace(_findHelper.FindText))
+                {
+                    Configuration.Settings.Tools.FindHistory.Insert(0, _findHelper.FindText);
+                }
                 ShowStatus(string.Format(_language.SearchingForXFromLineY, _findHelper.FindText, _subtitleListViewIndex + 1));
                 if (tabControlSubtitle.SelectedIndex == TabControlListView)
                 {
@@ -11538,7 +11541,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void FindDoubleWordsToolStripMenuItemClick(object sender, EventArgs e)
         {
             var regex = new Regex(@"\b(\w+)\s+\1\b");
-            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, string.Format(_language.DoubleWordsViaRegEx, regex), new List<string>(), regex, string.Empty, 0, 0, _subtitleListViewIndex);
+            _findHelper = new FindReplaceDialogHelper(FindType.RegEx, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, 0, 0, _subtitleListViewIndex);
 
             ReloadFromSourceView();
             FindNext();

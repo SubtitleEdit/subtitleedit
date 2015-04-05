@@ -11,7 +11,6 @@ namespace Nikse.SubtitleEdit.Forms
     public sealed partial class FindDialog : Form
     {
         private Regex _regEx;
-        private List<string> _history = new List<string>();
 
         public FindDialog()
         {
@@ -61,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(GetFindType(), FindText, _history, _regEx, string.Empty, 200, 300, startLineIndex);
+            return new FindReplaceDialogHelper(GetFindType(), FindText, _regEx, string.Empty, 200, 300, startLineIndex);
         }
 
         private void FormFindDialog_KeyDown(object sender, KeyEventArgs e)
@@ -77,7 +76,6 @@ namespace Nikse.SubtitleEdit.Forms
             string searchText = FindText;
             textBoxFind.Text = searchText;
             comboBoxFind.Text = searchText;
-            _history.Add(searchText);
 
             if (searchText.Length == 0)
             {
@@ -141,18 +139,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         internal void Initialize(string selectedText, FindReplaceDialogHelper findHelper)
         {
-            if (findHelper != null && findHelper.FindTextHistory.Count > 0)
+            if (Configuration.Settings.Tools.FindHistory.Count > 0)
             {
                 textBoxFind.Visible = false;
                 comboBoxFind.Visible = true;
                 comboBoxFind.Text = selectedText;
                 comboBoxFind.SelectAll();
                 comboBoxFind.Items.Clear();
-                _history = new List<string>();
-                foreach (string s in findHelper.FindTextHistory)
+                for (int index = 0; index < Configuration.Settings.Tools.FindHistory.Count; index++)
                 {
+                    string s = Configuration.Settings.Tools.FindHistory[index];
                     comboBoxFind.Items.Add(s);
-                    _history.Add(s);
                 }
             }
             else
@@ -160,9 +157,9 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFind.Visible = false;
                 textBoxFind.Visible = true;
                 textBoxFind.Text = selectedText;
-                textBoxFind.SelectAll();
+                textBoxFind.SelectAll();                
             }
-
+          
             if (findHelper != null)
             {
                 if (findHelper.FindType == FindType.RegEx)
