@@ -163,7 +163,7 @@ $ColorIndex4    = 3
             //^IBrillstein^I
             if (text.Contains(Bold))
             {
-                text = DecoderTextExtension(text, Bold, "<B>");
+                text = DecoderTextExtension(text, Bold, "<b>");
             }
             if (text.Contains(Italic))
             {
