@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubStationAlpha ssa = new SubStationAlpha();
                 var sub = new Subtitle();
                 var lines = new List<string>();
-                foreach (string line in subtitle.ToText(ssa).Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string line in subtitle.ToText(ssa).SplitToLines())
                     lines.Add(line);
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
@@ -62,56 +62,56 @@ namespace Nikse.SubtitleEdit.Forms
                 foreach (string line in header.SplitToLines())
                 {
                     string s = line.ToLower().Trim();
-                    if (s.StartsWith("title:"))
+                    if (s.StartsWith("title:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxTitle.Text = s.Remove(0, 6).Trim();
                     }
-                    else if (s.StartsWith("original script:"))
+                    else if (s.StartsWith("original script:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxOriginalScript.Text = s.Remove(0, 16).Trim();
                     }
-                    else if (s.StartsWith("original translation:"))
+                    else if (s.StartsWith("original translation:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxTranslation.Text = s.Remove(0, 21).Trim();
                     }
-                    else if (s.StartsWith("original editing:"))
+                    else if (s.StartsWith("original editing:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxEditing.Text = s.Remove(0, 17).Trim();
                     }
-                    else if (s.StartsWith("original timing:"))
+                    else if (s.StartsWith("original timing:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxTiming.Text = s.Remove(0, 16).Trim();
                     }
-                    else if (s.StartsWith("synch point:"))
+                    else if (s.StartsWith("synch point:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxSyncPoint.Text = s.Remove(0, 12).Trim();
                     }
-                    else if (s.StartsWith("script updated by:"))
+                    else if (s.StartsWith("script updated by:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxUpdatedBy.Text = s.Remove(0, 18).Trim();
                     }
-                    else if (s.StartsWith("update details:"))
+                    else if (s.StartsWith("update details:", StringComparison.OrdinalIgnoreCase))
                     {
                         textBoxUpdateDetails.Text = s.Remove(0, 15).Trim();
                     }
-                    else if (s.StartsWith("collisions:"))
+                    else if (s.StartsWith("collisions:", StringComparison.OrdinalIgnoreCase))
                     {
                         if (s.Remove(0, 11).Trim() == "reverse")
                             comboBoxCollision.SelectedIndex = 1;
                     }
-                    else if (s.StartsWith("playresx:"))
+                    else if (s.StartsWith("playresx:", StringComparison.OrdinalIgnoreCase))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
                             numericUpDownVideoWidth.Value = number;
                     }
-                    else if (s.StartsWith("playresy:"))
+                    else if (s.StartsWith("playresy:", StringComparison.OrdinalIgnoreCase))
                     {
                         int number;
                         if (int.TryParse(s.Remove(0, 9).Trim(), out number))
                             numericUpDownVideoHeight.Value = number;
                     }
-                    else if (s.StartsWith("scaledborderandshadow:"))
+                    else if (s.StartsWith("scaledborderandshadow:", StringComparison.OrdinalIgnoreCase))
                     {
                         checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes", StringComparison.OrdinalIgnoreCase);
                     }
@@ -165,9 +165,8 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Utilities.NewLineChars);
             var lines = new List<string>();
-            foreach (string line in lineArray)
+            foreach (string line in text.SplitToLines())
                 lines.Add(line);
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();

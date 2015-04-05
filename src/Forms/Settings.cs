@@ -1789,7 +1789,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb != null)
-                return cb.CultureInfo.Name.Replace("-", "_");
+                return cb.CultureInfo.Name.Replace('-', '_');
 
             return null;
         }
