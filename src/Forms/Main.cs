@@ -4,11 +4,13 @@ using Nikse.SubtitleEdit.Forms.Styles;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.BluRaySup;
 using Nikse.SubtitleEdit.Logic.ContainerFormats.MaterialExchangeFormat;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes;
 using Nikse.SubtitleEdit.Logic.Enums;
 using Nikse.SubtitleEdit.Logic.Networking;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
 using Nikse.SubtitleEdit.Logic.TransportStream;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System;
@@ -9283,7 +9285,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool ImportSubtitleFromMp4(string fileName)
         {
-            var mp4Parser = new Logic.Mp4.MP4Parser(fileName);
+            var mp4Parser = new MP4Parser(fileName);
             var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
             if (mp4SubtitleTracks.Count == 0)
             {
@@ -9413,7 +9415,7 @@ namespace Nikse.SubtitleEdit.Forms
             return true;
         }
 
-        private static Subtitle LoadMp4SubtitleForSync(Logic.Mp4.Boxes.Trak mp4SubtitleTrack)
+        private static Subtitle LoadMp4SubtitleForSync(Trak mp4SubtitleTrack)
         {
             var subtitle = new Subtitle();
             if (mp4SubtitleTrack.Mdia.IsVobSubSubtitle)
@@ -9447,7 +9449,7 @@ namespace Nikse.SubtitleEdit.Forms
             return subtitle;
         }
 
-        private void LoadMp4Subtitle(string fileName, Logic.Mp4.Boxes.Trak mp4SubtitleTrack)
+        private void LoadMp4Subtitle(string fileName, Trak mp4SubtitleTrack)
         {
             if (mp4SubtitleTrack.Mdia.IsVobSubSubtitle)
             {
@@ -12187,7 +12189,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if ((Path.GetExtension(fileName).Equals(".mp4", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".m4v", StringComparison.OrdinalIgnoreCase) || Path.GetExtension(fileName).Equals(".3gp", StringComparison.OrdinalIgnoreCase))
                         && fi.Length > 10000)
                     {
-                        var mp4Parser = new Logic.Mp4.MP4Parser(fileName);
+                        var mp4Parser = new MP4Parser(fileName);
                         var mp4SubtitleTracks = mp4Parser.GetSubtitleTracks();
                         if (mp4SubtitleTracks.Count == 0)
                         {

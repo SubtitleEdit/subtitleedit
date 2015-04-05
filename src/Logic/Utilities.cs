@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.ContainerFormats;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -131,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                var mp4Parser = new Mp4.MP4Parser(fileName);
+                var mp4Parser = new MP4Parser(fileName);
                 if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
                 {
                     info.Width = mp4Parser.VideoResolution.X;

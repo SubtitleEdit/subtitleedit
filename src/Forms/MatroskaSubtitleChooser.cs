@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -49,7 +50,7 @@ namespace Nikse.SubtitleEdit.Forms
             listBox1.SelectedIndex = 0;
         }
 
-        internal void Initialize(List<Logic.Mp4.Boxes.Trak> mp4SubtitleTracks)
+        internal void Initialize(List<Trak> mp4SubtitleTracks)
         {
             int i = 0;
             foreach (var track in mp4SubtitleTracks)

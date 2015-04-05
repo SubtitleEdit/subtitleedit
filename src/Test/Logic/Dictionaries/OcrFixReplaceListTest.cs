@@ -3,7 +3,7 @@ using System.IO;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nikse.SubtitleEdit.Logic.Dictionaries;
 
-namespace Test.Logic
+namespace Test.Logic.Dictionaries
 {
     [TestClass]
     public class OcrFixReplaceListTest
