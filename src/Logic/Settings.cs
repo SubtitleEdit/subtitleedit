@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ChangeCasingChoice { get; set; }
         public bool UseNoLineBreakAfter { get; set; }
         public string NoLineBreakAfterEnglish { get; set; }
+        public List<string> FindHistory { get; set; }
 
         public ToolsSettings()
         {
@@ -217,6 +218,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
             UseNoLineBreakAfter = false;
             NoLineBreakAfterEnglish = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing; none; some; my own; your own; his own; her own; our own; their own; I; she; he; as per; as regards; into; onto; than; where as; abaft; aboard; about; above; across; afore; after; against; along; alongside; amid; amidst; among; amongst; anenst; apropos; apud; around; as; aside; astride; at; athwart; atop; barring; before; behind; below; beneath; beside; besides; between; betwixt; beyond; but; by; circa; ca; concerning; despite; down; during; except; excluding; following; for; forenenst; from; given; in; including; inside; into; lest; like; minus; modulo; near; next; of; off; on; onto; opposite; out; outside; over; pace; past; per; plus; pro; qua; regarding; round; sans; save; since; than; through; thru; throughout; thruout; till; to; toward; towards; under; underneath; unlike; until; unto; up; upon; versus; vs; via; vice; with; within; without; considering; respecting; one; two; another; three; our; five; six; seven; eight; nine; ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen; seventeen; eighteen; nineteen; twenty; thirty; forty; fifty; sixty; seventy; eighty; ninety; hundred; thousand; million; billion; trillion; while; however; what; zero; little; enough; after; although; and; as; if; though; although; because; before; both; but; even; how; than; nor; or; only; unless; until; yet; was; were";
+            FindHistory = new List<string>();
             ImportTextLineBreak = "|";
         }
 
@@ -1759,6 +1761,17 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("NoLineBreakAfterEnglish");
             if (subNode != null)
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
+            subNode = node.SelectSingleNode("FindHistory");
+            if (subNode != null)
+            {
+                foreach (XmlNode findItem in subNode.ChildNodes)
+                {
+                    if (findItem.Name == "Text")
+                    {
+                        settings.Tools.FindHistory.Add(findItem.InnerText);
+                    }
+                }
+            }
 
             settings.SubtitleSettings = new SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2844,7 +2857,19 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
-
+                if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
+                {
+                    textWriter.WriteStartElement("FindHistory", "");
+                    for (int index = 0; index < settings.Tools.FindHistory.Count; index++)
+                    {
+                        if (index < 15) // allow up to 15 entries for find history
+                        {
+                            var text = settings.Tools.FindHistory[index];
+                            textWriter.WriteElementString("Text", text);
+                        }
+                    }
+                    textWriter.WriteEndElement();
+                }
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("SubtitleSettings", "");
