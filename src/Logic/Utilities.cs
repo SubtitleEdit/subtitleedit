@@ -336,10 +336,10 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsPartOfNumber(string s, int position)
         {
-            if (string.IsNullOrWhiteSpace(s) || position + 2 > s.Length)
+            if (string.IsNullOrWhiteSpace(s) || position + 1 >= s.Length)
                 return false;
 
-            if (position > 0 && position < s.Length - 1 && @",.".Contains(s[position]))
+            if (position > 0 && @",.".Contains(s[position]))
             {
                 return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
             }
