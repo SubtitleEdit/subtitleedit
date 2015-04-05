@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubStationAlpha ssa = new SubStationAlpha();
                 var sub = new Subtitle();
                 var lines = new List<string>();
-                foreach (string line in subtitle.ToText(ssa).Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string line in subtitle.ToText(ssa).SplitToLines())
                     lines.Add(line);
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
@@ -61,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 foreach (string line in header.SplitToLines())
                 {
-                    string s = line.ToLower().Trim();
+                    string s = line.ToLowerInvariant().Trim();
                     if (s.StartsWith("title:"))
                     {
                         textBoxTitle.Text = s.Remove(0, 6).Trim();
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (s.StartsWith("scaledborderandshadow:"))
                     {
-                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes", StringComparison.OrdinalIgnoreCase);
+                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes");
                     }
                 }
             }
@@ -165,9 +165,8 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Utilities.NewLineChars);
             var lines = new List<string>();
-            foreach (string line in lineArray)
+            foreach (string line in text.SplitToLines())
                 lines.Add(line);
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();
