@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Logic.VideoFormats.Ebml
+﻿namespace Nikse.SubtitleEdit.Logic.ContainerFormats.Ebml
 {
     internal enum ElementId
     {

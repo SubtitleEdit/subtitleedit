@@ -4,9 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Nikse.SubtitleEdit.Core;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Ebml;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Ebml;
 
-namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
+namespace Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska
 {
     internal class MatroskaFile : IDisposable
     {

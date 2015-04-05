@@ -1,4 +1,4 @@
-﻿namespace Nikse.SubtitleEdit.Logic.VideoFormats.Matroska
+﻿namespace Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska
 {
     internal class MatroskaTrackInfo
     {

@@ -1,9 +1,9 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.Ocr;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nikse.SubtitleEdit.Logic.Ocr;
 
-namespace Test
+namespace Test.Logic.Ocr
 {
     [TestClass]
     public class NOcrTest
