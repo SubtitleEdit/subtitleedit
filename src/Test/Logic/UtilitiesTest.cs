@@ -40,7 +40,7 @@ namespace Test.Logic
         public void AutoBreakLine4()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
-            string s1 = "- Seriously, though. Are you being bullied? - Nope.";
+            const string s1 = "- Seriously, though. Are you being bullied? - Nope.";
             string s2 = Utilities.AutoBreakLine(s1);
             string target = "- Seriously, though. Are you being bullied?" + Environment.NewLine + "- Nope.";
             Assert.AreEqual(target, s2);
@@ -51,7 +51,7 @@ namespace Test.Logic
         public void AutoBreakLine5DoNoBreakAtPeriod()
         {
             Configuration.Settings.General.SubtitleLineMaximumLength = 43;
-            string s1 = "Oh, snap, we're still saying the same thing. This is amazing!";
+            const string s1 = "Oh, snap, we're still saying the same thing. This is amazing!";
             string s2 = Utilities.AutoBreakLine(s1);
             string target = "Oh, snap, we're still saying the" + Environment.NewLine + "same thing. This is amazing!";
             Assert.AreEqual(target, s2);
@@ -71,7 +71,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLineDialog1()
         {
-            string s1 = "- Qu'est ce qui se passe ? - Je veux voir ce qu'ils veulent être.";
+            const string s1 = "- Qu'est ce qui se passe ? - Je veux voir ce qu'ils veulent être.";
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual("- Qu'est ce qui se passe ?" + Environment.NewLine + "- Je veux voir ce qu'ils veulent être.", s2);
         }
@@ -80,7 +80,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void AutoBreakLineDialog2()
         {
-            string s1 = "- Je veux voir ce qu'ils veulent être. - Qu'est ce qui se passe ?";
+            const string s1 = "- Je veux voir ce qu'ils veulent être. - Qu'est ce qui se passe ?";
             string s2 = Utilities.AutoBreakLine(s1);
             Assert.AreEqual("- Je veux voir ce qu'ils veulent être." + Environment.NewLine + "- Qu'est ce qui se passe ?", s2);
         }
@@ -89,7 +89,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixInvalidItalicTags2()
         {
-            string s1 = "Gledaj prema kameri i rici <i>zdravo!";
+            const string s1 = "Gledaj prema kameri i rici <i>zdravo!";
             string s2 = Utilities.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "Gledaj prema kameri i rici zdravo!");
         }
@@ -152,7 +152,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixInvalidItalicTags9()
         {
-            string s1 = "FALCONE:<i> I didn't think</i>\r\n<i>it was going to be you,</i>";
+            const string s1 = "FALCONE:<i> I didn't think</i>\r\n<i>it was going to be you,</i>";
             string s2 = Utilities.FixInvalidItalicTags(s1);
             Assert.AreEqual(s2, "FALCONE: <i>I didn't think\r\nit was going to be you,</i>");
         }
@@ -161,7 +161,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesDoubleSpace1()
         {
-            string s1 = "This is  a test";
+            const string s1 = "This is  a test";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, "This is a test");
         }
@@ -170,7 +170,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesDoubleSpace2()
         {
-            string s1 = "This is a test  ";
+            const string s1 = "This is a test  ";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, "This is a test");
         }
@@ -179,7 +179,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesItalics1()
         {
-            string s1 = "<i> This is a test</i>";
+            const string s1 = "<i> This is a test</i>";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, "<i>This is a test</i>");
         }
@@ -188,7 +188,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesItalics2()
         {
-            string s1 = "<i>This is a test </i>";
+            const string s1 = "<i>This is a test </i>";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, "<i>This is a test</i>");
         }
@@ -197,7 +197,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphen1()
         {
-            string s1 = "This is a low- budget job";
+            const string s1 = "This is a low- budget job";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, "This is a low-budget job");
         }
@@ -206,7 +206,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphen2()
         {
-            string s1 = "This is a low- budget job";
+            const string s1 = "This is a low- budget job";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, "This is a low-budget job");
         }
@@ -215,7 +215,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphenDoNotChange1()
         {
-            string s1 = "This is it - and he likes it!";
+            const string s1 = "This is it - and he likes it!";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, s1);
         }
@@ -224,7 +224,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphenDoNotChange2()
         {
-            string s1 = "What are your long- and altitude stats?";
+            const string s1 = "What are your long- and altitude stats?";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, s1);
         }
@@ -233,7 +233,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphenDoNotChange3()
         {
-            string s1 = "Did you buy that first- or second-handed?";
+            const string s1 = "Did you buy that first- or second-handed?";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "en");
             Assert.AreEqual(s2, s1);
         }
@@ -242,7 +242,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphenDoNotChangeDutch1()
         {
-            string s1 = "Wat zijn je voor- en familienaam?";
+            const string s1 = "Wat zijn je voor- en familienaam?";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "nl");
             Assert.AreEqual(s2, s1);
         }
@@ -251,7 +251,7 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphenDoNotChangeDutch2()
         {
-            string s1 = "Was het in het voor- of najaar?";
+            const string s1 = "Was het in het voor- of najaar?";
             string s2 = Utilities.RemoveUnneededSpaces(s1, "nl");
             Assert.AreEqual(s2, s1);
         }
@@ -332,15 +332,12 @@ namespace Test.Logic
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixHyphensAddTest()
         {
-            var test1 = @"<font color=""#008080"">- Foobar.
-Foobar.</font>";
-            var expected1 = @"<font color=""#008080"">- Foobar.
-- Foobar.</font>";
+            string test1 = "<font color=\"#008080\">- Foobar." + Environment.NewLine + "Foobar.</font>";
+            string expected1 = "<font color=\"#008080\">- Foobar." + Environment.NewLine + "- Foobar.</font>";
 
-            var test2 = @"<i>Foobar.</i>
-- Foobar.";
-            var expected2 = @"<i>- Foobar.</i>
-- Foobar.";
+            string test2 = "<i>Foobar.</i>" + Environment.NewLine + "- Foobar.";
+            var expected2 = "<i>- Foobar.</i>" + Environment.NewLine + "- Foobar.";
+
             var sub = new Subtitle();
             sub.Paragraphs.Add(new Paragraph(test1, 0000, 11111));
             sub.Paragraphs.Add(new Paragraph(test2, 0000, 11111));
@@ -348,7 +345,8 @@ Foobar.</font>";
             string output1 = FixCommonErrorsHelper.FixHyphensAdd(sub, 0, "en");
             string output2 = FixCommonErrorsHelper.FixHyphensAdd(sub, 1, "en");
 
-            Assert.AreEqual(output1, expected1); Assert.AreEqual(output2, expected2);
+            Assert.AreEqual(output1, expected1); 
+            Assert.AreEqual(output2, expected2);
         }
 
         [TestMethod]
