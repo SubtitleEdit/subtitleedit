@@ -763,7 +763,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        //                        prev.EndTime.TotalMilliseconds--;
+                        //prev.EndTime.TotalMilliseconds--;
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
