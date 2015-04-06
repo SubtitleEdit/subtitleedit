@@ -4233,12 +4233,7 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (_findHelper.FindType == FindType.RegEx)
                             {
-                                var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
-                                string result = r.Replace(textBoxListViewText.SelectedText, _findHelper.ReplaceText);
-                                if (result != textBoxListViewText.SelectedText)
-                                {
-                                    textBoxListViewText.SelectedText = result;
-                                }
+                                ReplaceViaRegularExpression();
                             }
                             else
                             {
@@ -4328,6 +4323,27 @@ namespace Nikse.SubtitleEdit.Forms
             replaceDialog.Dispose();
         }
 
+        private void ReplaceViaRegularExpression()
+        {
+            var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
+            if (_findHelper.ReplaceText.Contains("$"))
+            {
+                string result = r.Replace(textBoxListViewText.Text, _findHelper.ReplaceText);
+                if (result != textBoxListViewText.Text)
+                {
+                    textBoxListViewText.Text = result;
+                }
+            }
+            else
+            {
+                string result = r.Replace(textBoxListViewText.SelectedText, _findHelper.ReplaceText);
+                if (result != textBoxListViewText.SelectedText)
+                {
+                    textBoxListViewText.SelectedText = result;
+                }
+            }
+        }
+
         private void SetTextForFindAndReplace(bool replace)
         {
             _subtitleListViewIndex = _findHelper.SelectedIndex;
@@ -4353,12 +4369,7 @@ namespace Nikse.SubtitleEdit.Forms
                     textBoxListViewText.SelectionLength = _findHelper.FindTextLength;
                     if (_findHelper.FindType == FindType.RegEx)
                     {
-                        var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
-                        string result = r.Replace(textBoxListViewText.SelectedText, _findHelper.ReplaceText);
-                        if (result != textBoxListViewText.SelectedText)
-                        {
-                            textBoxListViewText.SelectedText = result;
-                        }
+                        ReplaceViaRegularExpression();
                     }
                     else
                     {
