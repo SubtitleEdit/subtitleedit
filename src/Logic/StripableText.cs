@@ -28,7 +28,7 @@ namespace Nikse.SubtitleEdit.Logic
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
+            if (text.Length > 0 && ("<{" + stripStartCharacters).Contains(text[0]))//!Utilities.AllLettersAndNumbers.Contains(text[0]))
             {
                 int beginLength;
                 do
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
 
             Post = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
+            if (text.Length > 0 && (">" + stripEndCharacters).Contains(text[text.Length - 1]))
             {
                 int beginLength;
                 do
