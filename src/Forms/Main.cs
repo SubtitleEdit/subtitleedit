@@ -11112,7 +11112,7 @@ namespace Nikse.SubtitleEdit.Forms
             const string k = "@__<<>___@";
 
             s = s.Replace("(", k);
-            s = s.Replace(")", "(");
+            s = s.Replace(')', '(');
             s = s.Replace(k, ")");
 
             s = s.Replace("[", k);
@@ -11326,7 +11326,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var tmp = new Subtitle();
                     var format = new SubRip();
                     var list = new List<string>();
-                    foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in text.SplitToLines())
                         list.Add(line);
                     format.LoadSubtitle(tmp, list, null);
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
