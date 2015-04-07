@@ -81,6 +81,13 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
+                string ext = Path.GetExtension(fileName).ToLowerInvariant();
+                List<string> nowAllowedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
+                if (string.IsNullOrEmpty(ext) || nowAllowedExtensions.Contains(ext))
+                {
+                    return;
+                }
+
                 foreach (ListViewItem lvi in listViewInputFiles.Items)
                 {
                     if (lvi.Text.Equals(fileName, StringComparison.OrdinalIgnoreCase))
@@ -351,6 +358,32 @@ namespace Nikse.SubtitleEdit.Forms
             if (listViewInputFiles.Items.Count == 0)
                 e.Cancel = true;
             removeToolStripMenuItem.Visible = listViewInputFiles.SelectedItems.Count > 0;
+        }
+
+        private void listViewInputFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            if (_converting)
+            {
+                e.Effect = DragDropEffects.None;
+                return;
+            }
+
+            if (e.Data.GetDataPresent(DataFormats.FileDrop, false))
+                e.Effect = DragDropEffects.All;
+        }
+
+        private void listViewInputFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            if (_converting)
+            {
+                return;
+            }
+
+            var fileNames = (string[])e.Data.GetData(DataFormats.FileDrop);
+            foreach (string fileName in fileNames)
+            {
+                AddInputFile(fileName);
+            }
         }
 
     }
