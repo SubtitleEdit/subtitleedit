@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _index = index;
 
-            LanguageStructure.ChangeCasing language = Configuration.Settings.Language.ChangeCasing;
+            LanguageStructure.Beamer language = Configuration.Settings.Language.Beamer;
             Text = language.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timer1.Stop();
                 Cursor.Show();
                 FormBorderStyle = FormBorderStyle.FixedDialog;
-                BackColor = Control.DefaultBackColor;
+                BackColor = DefaultBackColor;
                 WindowState = FormWindowState.Normal;
                 _showIndex = -2;
                 _fullscreen = false;
