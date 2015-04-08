@@ -14495,7 +14495,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                 {
                     var lines = new List<string>();
-                    foreach (string line in pluginResult.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in pluginResult.SplitToLines())
                         lines.Add(line);
 
                     MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
