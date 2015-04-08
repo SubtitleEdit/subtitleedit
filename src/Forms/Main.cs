@@ -13437,8 +13437,6 @@ namespace Nikse.SubtitleEdit.Forms
                             ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
                         break;
                     case SelectionChoice.AllLines:
-                        ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
-                        break;
                     case SelectionChoice.SelectionAndForward:
                         ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
                         break;
