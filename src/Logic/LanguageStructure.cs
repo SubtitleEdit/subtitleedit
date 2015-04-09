@@ -489,6 +489,10 @@
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
+            public string SaveDigitalCinemaInteropAs { get; set; }
+            public string SavePremiereEdlAs { get; set; }
+            public string SaveFcpAs { get; set; }
+            public string SaveDostAs { get; set; }
             public string SomeLinesWereTooLongX { get; set; }
             public string LineHeight { get; set; }
             public string BoxSingleLine { get; set; }

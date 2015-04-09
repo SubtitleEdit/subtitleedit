@@ -1119,6 +1119,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/SaveDvdStudioProStlAs":
                     language.ExportPngXml.SaveDvdStudioProStlAs = reader.Value;
                     break;
+                case "ExportPngXml/SaveDigitalCinemaInteropAs":
+                    language.ExportPngXml.SaveDigitalCinemaInteropAs = reader.Value;
+                    break;
+                case "ExportPngXml/SavePremiereEdlAs":
+                    language.ExportPngXml.SavePremiereEdlAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveFcpAs":
+                    language.ExportPngXml.SaveFcpAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveDostAs":
+                    language.ExportPngXml.SaveDostAs = reader.Value;
+                    break;
                 case "ExportPngXml/SomeLinesWereTooLongX":
                     language.ExportPngXml.SomeLinesWereTooLongX = reader.Value;
                     break;
