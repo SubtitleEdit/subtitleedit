@@ -13437,8 +13437,6 @@ namespace Nikse.SubtitleEdit.Forms
                             ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
                         break;
                     case SelectionChoice.AllLines:
-                        ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
-                        break;
                     case SelectionChoice.SelectionAndForward:
                         ShowEarlierOrLaterParagraph(adjustMilliseconds, i);
                         break;
@@ -13638,10 +13636,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(selectedText))
                 {
                     selectedText = selectedText.Trim();
-                    selectedText = selectedText.TrimEnd('.');
-                    selectedText = selectedText.TrimEnd(',');
-                    selectedText = selectedText.TrimEnd('!');
-                    selectedText = selectedText.TrimEnd('?');
+                    selectedText = selectedText.TrimEnd('.', ',', '!', '?');
                     selectedText = selectedText.Trim();
                     if (!string.IsNullOrEmpty(selectedText) && selectedText != textBoxSearchWord.Text)
                     {
@@ -14498,7 +14493,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(pluginResult) && pluginResult.Length > 10 && text != pluginResult)
                 {
                     var lines = new List<string>();
-                    foreach (string line in pluginResult.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in pluginResult.SplitToLines())
                         lines.Add(line);
 
                     MakeHistoryForUndo(string.Format(_language.BeforeRunningPluginXVersionY, name, version));
