@@ -177,21 +177,8 @@ https://github.com/SubtitleEdit/subtitleedit
         {
             if (lastLine.Contains("< "))
                 lastLine = Utilities.FixInvalidItalicTags(lastLine);
-            lastLine = lastLine.Trim('\'');
-            lastLine = lastLine.Replace("\"", "");
-            lastLine = lastLine.Replace("<i>", "");
-            lastLine = lastLine.Replace("</i>", ".");
-            lastLine = lastLine.Replace("<I>", "");
-            lastLine = lastLine.Replace("</I>", ".");
-            lastLine = lastLine.Replace("<b>", "");
-            lastLine = lastLine.Replace("</b>", ".");
-            lastLine = lastLine.Replace("<B>", "");
-            lastLine = lastLine.Replace("</B>", ".");
-            lastLine = lastLine.Replace("<u>", "");
-            lastLine = lastLine.Replace("</u>", ".");
-            lastLine = lastLine.Replace("<U>", "");
-            lastLine = lastLine.Replace("</U>", ".");
 
+            lastLine = ReplaceTagWithDot(lastLine);
             var idx = lastLine.IndexOf("<font", StringComparison.OrdinalIgnoreCase);
             var error = false;
             while (idx >= 0)
@@ -230,25 +217,15 @@ https://github.com/SubtitleEdit/subtitleedit
 
         private static void MostUsedLinesAdd(Dictionary<string, string> hashtable, string lastLine)
         {
-            lastLine = lastLine.Trim('\'');
-            lastLine = lastLine.Replace("\"", "");
-            lastLine = lastLine.Replace("<i>", "");
-            lastLine = lastLine.Replace("</i>", ".");
-            lastLine = lastLine.Replace("<I>", "");
-            lastLine = lastLine.Replace("</I>", ".");
-            lastLine = lastLine.Replace("<b>", "");
-            lastLine = lastLine.Replace("</b>", ".");
-            lastLine = lastLine.Replace("<B>", "");
-            lastLine = lastLine.Replace("</B>", ".");
-            lastLine = lastLine.Replace("<u>", "");
-            lastLine = lastLine.Replace("</u>", ".");
-            lastLine = lastLine.Replace("<U>", "");
-            lastLine = lastLine.Replace("</U>", ".");
+            lastLine = ReplaceTagWithDot(lastLine);
             lastLine = lastLine.Replace('!', '.');
             lastLine = lastLine.Replace('?', '.');
+
             lastLine = lastLine.Replace("...", ".");
-            lastLine = lastLine.Replace("..", ".");
-            lastLine = lastLine.Replace("-", " ");
+            while (lastLine.Contains(".."))
+                lastLine = lastLine.Replace("..", ".");
+
+            lastLine = lastLine.Replace('-', ' ');
             lastLine = lastLine.FixExtraSpaces();
             string[] lines = lastLine.Split('.');
 
@@ -267,6 +244,26 @@ https://github.com/SubtitleEdit/subtitleedit
                     hashtable.Add(s, "1");
                 }
             }
+        }
+
+        private static string ReplaceTagWithDot(string s)
+        {
+            const string strDot = ".";
+            s = s.Trim('\'');
+            s = s.Replace("\"", string.Empty);
+            s = s.Replace("<i>", string.Empty);
+            s = s.Replace("</i>", strDot);
+            s = s.Replace("<I>", string.Empty);
+            s = s.Replace("</I>", strDot);
+            s = s.Replace("<b>", string.Empty);
+            s = s.Replace("</b>", strDot);
+            s = s.Replace("<B>", string.Empty);
+            s = s.Replace("</B>", strDot);
+            s = s.Replace("<u>", string.Empty);
+            s = s.Replace("</u>", strDot);
+            s = s.Replace("<U>", string.Empty);
+            s = s.Replace("</U>", strDot);
+            return s;
         }
 
         private void CalculateMostUsedWords()
