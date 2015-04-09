@@ -378,28 +378,28 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else if (_exportType == "FCP")
             {
-                saveFileDialog1.Title = "Save FCP XML as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveFcpAs;
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveFcpAs;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
             else if (_exportType == "DOST")
             {
-                saveFileDialog1.Title = "Save DOST XML as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDostAs;
                 saveFileDialog1.DefaultExt = "*.dost";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Dost files|*.dost";
             }
             else if (_exportType == "DCINEMA_INTEROP")
             {
-                saveFileDialog1.Title = "Save D-Cinema interop as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SaveDigitalCinemaInteropAs;
                 saveFileDialog1.DefaultExt = "*.xml";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "Xml files|*.xml";
             }
             else if (_exportType == "EDL")
             {
-                saveFileDialog1.Title = "Save EDL file as..."; //TODO: Configuration.Settings.Language.ExportPngXml.SaveDostAs;
+                saveFileDialog1.Title = Configuration.Settings.Language.ExportPngXml.SavePremiereEdlAs;
                 saveFileDialog1.DefaultExt = "*.edl";
                 saveFileDialog1.AddExtension = true;
                 saveFileDialog1.Filter = "EDL files|*.edl";
