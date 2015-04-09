@@ -81,9 +81,9 @@ namespace Nikse.SubtitleEdit.Forms
         {
             try
             {
-                string ext = Path.GetExtension(fileName).ToLowerInvariant();
-                List<string> nowAllowedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
-                if (string.IsNullOrEmpty(ext) || nowAllowedExtensions.Contains(ext))
+                var ext = Path.GetExtension(fileName).ToLowerInvariant();
+                var excludedExtensions = new List<string> { ".srt", ".txt", ".exe", ".ass", ".sub", ".jpg", ".png", ".zip", ".rar" };
+                if (string.IsNullOrEmpty(ext) || excludedExtensions.Contains(ext))
                 {
                     return;
                 }
