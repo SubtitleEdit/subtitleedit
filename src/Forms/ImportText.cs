@@ -398,18 +398,15 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (first.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
-                            first.Append(' ');
-                            first.Append(word);
+                            first.Append(' ' + word);
                         }
                         else if (second.Length + word.Length < Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
-                            second.Append(' ');
-                            second.Append(word);
+                            second.Append(' ' + word);
                         }
                         else
                         {
-                            third.Append(' ');
-                            third.Append(word);
+                            third.Append(' ' + word);
                         }
                     }
                     if (first.Length <= Configuration.Settings.General.SubtitleLineMaximumLength &&
