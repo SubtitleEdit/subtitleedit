@@ -2000,7 +2000,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         baseLinePadding = 0;
                 }
 
-                //TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
+                // TODO: Better baseline - test http://bobpowell.net/formattingtext.aspx
                 //float baselineOffset=font.SizeInPoints/font.FontFamily.GetEmHeight(font.Style)*font.FontFamily.GetCellAscent(font.Style);
                 //float baselineOffsetPixels = g.DpiY/72f*baselineOffset;
                 //baseLinePadding = (int)Math.Round(baselineOffsetPixels);
@@ -2050,7 +2050,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             parameter.SubtitleColor = Utilities.GetColorFromFontString(text, parameter.SubtitleColor);
                         }
 
-                        text = HtmlUtil.RemoveHtmlTags(text, true); //TODO: Perhaps check single color...
+                        text = HtmlUtil.RemoveHtmlTags(text, true); // TODO: Perhaps check single color...
                         var brush = new SolidBrush(parameter.BorderColor);
                         int x = 3;
                         const int y = 3;

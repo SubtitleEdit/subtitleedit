@@ -148,7 +148,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes
                     fs.Seek((long)offset, SeekOrigin.Begin);
                     data = new byte[textSize + 2];
                     fs.Read(data, 0, data.Length);
-                    SubPictures.Add(new SubPicture(data)); //TODO: where is palette?
+                    SubPictures.Add(new SubPicture(data)); // TODO: Where is palette?
                 }
             }
             else

@@ -385,11 +385,11 @@ namespace Nikse.SubtitleEdit.Forms
                                 {
                                     if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        //TODO: convert from VobSub image based format!
+                                        // TODO: Convert from VobSub image based format!
                                     }
                                     else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                     {
-                                        //TODO: convert from Blu-ray image based format!
+                                        // TODO: Convert from Blu-ray image based format!
                                     }
                                     else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                     {
@@ -695,11 +695,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     {
                                         if (track.CodecId.Equals("S_VOBSUB", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            //TODO: convert from VobSub image based format!
+                                            // TODO: Convert from VobSub image based format!
                                         }
                                         else if (track.CodecId.Equals("S_HDMV/PGS", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            //TODO: convert from Blu-ray image based format!
+                                            // TODO: Convert from Blu-ray image based format!
                                         }
                                         else if (track.CodecId.Equals("S_TEXT/UTF8", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/SSA", StringComparison.OrdinalIgnoreCase) || track.CodecId.Equals("S_TEXT/ASS", StringComparison.OrdinalIgnoreCase))
                                         {

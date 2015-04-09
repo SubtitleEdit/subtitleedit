@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
                                 int parameterAreaSize = _data[commandIndex + 1]; // this should be enough??? (no larger than 255 bytes)
                                 if (colorLookUpTable != null)
                                 {
-                                    //TODO: set fourColors
+                                    // TODO: Set fourColors
                                 }
                                 commandIndex += parameterAreaSize;
                             }

@@ -96,7 +96,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             }
 
             _dataBuffer = new byte[dataSize + 1];
-            Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from  dataIndex ?????
+            Buffer.BlockCopy(buffer, dataIndex - 1, _dataBuffer, 0, _dataBuffer.Length); // why subtract one from dataIndex???
         }
 
         public DvbSubPes(int index, byte[] buffer)
@@ -261,7 +261,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
             if (ClutDefinitions.Count > 0)
                 return ClutDefinitions[0];
 
-            return null; //TODO: Return default clut
+            return null; // TODO: Return default clut
         }
 
         public Point GetImagePosition(ObjectDataSegment ods)

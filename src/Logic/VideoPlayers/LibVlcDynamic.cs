@@ -626,7 +626,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
 
             if (!string.IsNullOrEmpty(videoFileName))
             {
-                string[] initParameters = { "--no-sub-autodetect-file" }; // , "--ffmpeg-hw" }; //, "--no-video-title-show" }; //TODO: Put in options/config file
+                string[] initParameters = { "--no-sub-autodetect-file" }; // , "--ffmpeg-hw" }; //, "--no-video-title-show" }; // TODO: Put in options/config file
                 _libVlc = _libvlc_new(initParameters.Length, initParameters);
                 IntPtr media = _libvlc_media_new_path(_libVlc, Encoding.UTF8.GetBytes(videoFileName + "\0"));
                 _mediaPlayer = _libvlc_media_player_new_from_media(media);
