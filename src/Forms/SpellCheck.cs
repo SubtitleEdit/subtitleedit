@@ -633,7 +633,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (_namesEtcListUppercase.Contains(_currentWord)
                         || _namesEtcListWithApostrophe.Contains(_currentWord)
-                        || _namesList.IsInNamesEtcMultiWordList(_currentParagraph.Text, _currentWord)) //TODO: verify this!
+                        || _namesList.IsInNamesEtcMultiWordList(_currentParagraph.Text, _currentWord)) // TODO: Verify this!
                     {
                         _noOfNamesEtc++;
                     }
@@ -695,8 +695,8 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S" && !_currentWord.ToUpper().StartsWith("HTTP", StringComparison.Ordinal)) //TODO: get fixed nhunspell
-                                    suggestions = DoSuggest(_currentWord); //TODO: 0.9.6 fails on "Lt'S"
+                                if (_currentWord.ToUpper() != "LT'S" && _currentWord.ToUpper() != "SOX'S" && !_currentWord.ToUpper().StartsWith("HTTP", StringComparison.Ordinal)) // TODO: Get fixed nhunspell
+                                    suggestions = DoSuggest(_currentWord); // TODO: 0.9.6 fails on "Lt'S"
                                 if (_languageName.StartsWith("fr_", StringComparison.Ordinal) && (_currentWord.StartsWith("I'", StringComparison.Ordinal) || _currentWord.StartsWith("I’", StringComparison.Ordinal)))
                                 {
                                     if (_currentWord.Length > 3 && Utilities.LowercaseLetters.Contains(_currentWord[2]) && _currentSpellCheckWord.Index > 3)

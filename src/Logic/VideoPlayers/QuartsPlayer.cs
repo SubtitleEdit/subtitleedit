@@ -203,7 +203,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 info.TotalMilliseconds = iMediaPosition.Duration * 1000;
                 info.TotalSeconds = iMediaPosition.Duration;
                 info.TotalFrames = info.TotalSeconds * info.FramesPerSecond;
-                info.VideoCodec = string.Empty; // TODO... get real codec names from quartzFilgraphManager.FilterCollection;
+                info.VideoCodec = string.Empty; // TODO: Get real codec names from quartzFilgraphManager.FilterCollection;
 
                 Marshal.ReleaseComObject(quartzFilgraphManager);
             }

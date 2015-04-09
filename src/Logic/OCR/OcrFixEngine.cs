@@ -1132,7 +1132,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             else
                             {
-                                if (word.ToUpper() != "LT'S" && word.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
+                                if (word.ToUpper() != "LT'S" && word.ToUpper() != "SOX'S") // TODO: Get fixed nhunspell
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                             }
 
