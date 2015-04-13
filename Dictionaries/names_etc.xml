@@ -8,10 +8,8 @@ This file is generated/updated by Multi Translator
   <name>2A</name>
   <name>3D</name>
   <name>7-Eleven</name>
-  <name>A'Dayle</name>
   <name>A.M.</name>
   <name>AAA</name>
-  <name>AFIS</name>
   <name>Aaliyah</name>
   <name>Aaron</name>
   <name>Aarons</name>
@@ -49,6 +47,7 @@ This file is generated/updated by Multi Translator
   <name>Adamas</name>
   <name>Adams</name>
   <name>Adan</name>
+  <name>A'Dayle</name>
   <name>Addams</name>
   <name>Adderall</name>
   <name>Addie</name>
@@ -65,9 +64,9 @@ This file is generated/updated by Multi Translator
   <name>Adolfo</name>
   <name>Adolphus</name>
   <name>Adrian</name>
-  <name>Adrian's</name>
   <name>Adriana</name>
   <name>Adrianna</name>
+  <name>Adrian's</name>
   <name>Adriel</name>
   <name>Advair</name>
   <name>Advenna Avis</name>
@@ -77,6 +76,7 @@ This file is generated/updated by Multi Translator
   <name>Afghan</name>
   <name>Afghanistan</name>
   <name>Afghans</name>
+  <name>AFIS</name>
   <name>Africa</name>
   <name>African</name>
   <name>Agatha</name>
@@ -196,9 +196,9 @@ This file is generated/updated by Multi Translator
   <name>Amy</name>
   <name>Amys</name>
   <name>Ana</name>
-  <name>Ana's</name>
   <name>Anabeth</name>
   <name>Anakin</name>
+  <name>Ana's</name>
   <name>Anastasia</name>
   <name>Anchorage</name>
   <name>Anders</name>
@@ -385,10 +385,6 @@ This file is generated/updated by Multi Translator
   <name>Aziz</name>
   <name>Azkaban</name>
   <name>Azkadellia</name>
-  <name>BBC</name>
-  <name>BIOS</name>
-  <name>BMW</name>
-  <name>BP</name>
   <name>Babcock</name>
   <name>Babtista</name>
   <name>Babylon</name>
@@ -472,6 +468,7 @@ This file is generated/updated by Multi Translator
   <name>Bayner</name>
   <name>Baze</name>
   <name>Bazile</name>
+  <name>BBC</name>
   <name>Beals</name>
   <name>Beastie Boys</name>
   <name>Beatles</name>
@@ -591,6 +588,7 @@ This file is generated/updated by Multi Translator
   <name>Billys</name>
   <name>Bilskrot</name>
   <name>Bingley</name>
+  <name>BIOS</name>
   <name>Birmingham</name>
   <name>Bismarck</name>
   <name>Bissau-Guinean</name>
@@ -612,6 +610,7 @@ This file is generated/updated by Multi Translator
   <name>Blighty</name>
   <name>Bluetooth</name>
   <name>Blyth</name>
+  <name>BMW</name>
   <name>Bo</name>
   <name>Bob</name>
   <name>Bobbi</name>
@@ -660,6 +659,7 @@ This file is generated/updated by Multi Translator
   <name>Bowlett</name>
   <name>Boyd</name>
   <name>Boyko</name>
+  <name>BP</name>
   <name>Brad</name>
   <name>Braden</name>
   <name>Bradford</name>
@@ -790,6 +790,7 @@ This file is generated/updated by Multi Translator
   <name>Burmese</name>
   <name>Burnett</name>
   <name>Burnetts</name>
+  <name>burrito</name>
   <name>Burrows</name>
   <name>Burt</name>
   <name>Burton</name>
@@ -808,17 +809,6 @@ This file is generated/updated by Multi Translator
   <name>Byzantium</name>
   <name>C.O.</name>
   <name>C.T.</name>
-  <name>CBI</name>
-  <name>CBS</name>
-  <name>CDC</name>
-  <name>CEOs</name>
-  <name>CIA</name>
-  <name>CIA's</name>
-  <name>CIAs</name>
-  <name>CNN</name>
-  <name>COD</name>
-  <name>CSI</name>
-  <name>CTU</name>
   <name>Caballero</name>
   <name>Caden</name>
   <name>Cadillac</name>
@@ -960,6 +950,9 @@ This file is generated/updated by Multi Translator
   <name>Cayman</name>
   <name>Cayman Islands</name>
   <name>Caymans</name>
+  <name>CBI</name>
+  <name>CBS</name>
+  <name>CDC</name>
   <name>Cece</name>
   <name>Ceci</name>
   <name>Cecil</name>
@@ -976,6 +969,8 @@ This file is generated/updated by Multi Translator
   <name>Centerville</name>
   <name>Centipedophile</name>
   <name>Central African Republic</name>
+  <name>cents</name>
+  <name>CEOs</name>
   <name>Cerberus</name>
   <name>Cerilla</name>
   <name>Cesar</name>
@@ -999,6 +994,7 @@ This file is generated/updated by Multi Translator
   <name>Charlotte</name>
   <name>Charmaine</name>
   <name>Chavez</name>
+  <name>Chávez</name>
   <name>Chaz</name>
   <name>Chehalis</name>
   <name>Chekhov</name>
@@ -1067,8 +1063,10 @@ This file is generated/updated by Multi Translator
   <name>Chucky Cheese</name>
   <name>Chun-Li</name>
   <name>Churchill</name>
-  <name>Chávez</name>
+  <name>CIA</name>
   <name>Cialis</name>
+  <name>CIAs</name>
+  <name>CIA's</name>
   <name>Cicero</name>
   <name>Cincinnati</name>
   <name>Cindy</name>
@@ -1095,6 +1093,7 @@ This file is generated/updated by Multi Translator
   <name>Clayton</name>
   <name>Claytons</name>
   <name>Clementine</name>
+  <name>Clémentine</name>
   <name>Cleo</name>
   <name>Cleopatra</name>
   <name>Cleveland</name>
@@ -1107,7 +1106,7 @@ This file is generated/updated by Multi Translator
   <name>Clintons</name>
   <name>Clomid</name>
   <name>Clyde</name>
-  <name>Clémentine</name>
+  <name>CNN</name>
   <name>Cobb</name>
   <name>Coby</name>
   <name>Coca</name>
@@ -1115,6 +1114,7 @@ This file is generated/updated by Multi Translator
   <name>Cochran</name>
   <name>Cochrane</name>
   <name>Cocos Islands</name>
+  <name>COD</name>
   <name>Cody</name>
   <name>Codys</name>
   <name>Cohen</name>
@@ -1126,8 +1126,8 @@ This file is generated/updated by Multi Translator
   <name>Colin</name>
   <name>Colleen</name>
   <name>Collier</name>
-  <name>Collier's</name>
   <name>Colliers</name>
+  <name>Collier's</name>
   <name>Collin</name>
   <name>Collins</name>
   <name>Colombia</name>
@@ -1183,6 +1183,7 @@ This file is generated/updated by Multi Translator
   <name>Costa Rican</name>
   <name>Costa Ricans</name>
   <name>Costanza</name>
+  <name>Côte d'Ivoire</name>
   <name>Cottle</name>
   <name>Coumadin</name>
   <name>Couric</name>
@@ -1214,6 +1215,8 @@ This file is generated/updated by Multi Translator
   <name>Crozier</name>
   <name>Cruella</name>
   <name>Cruz</name>
+  <name>CSI</name>
+  <name>CTU</name>
   <name>Cuba</name>
   <name>Cuban</name>
   <name>Cubans</name>
@@ -1234,27 +1237,16 @@ This file is generated/updated by Multi Translator
   <name>Czech</name>
   <name>Czech Republic</name>
   <name>Czechs</name>
-  <name>Côte d'Ivoire</name>
-  <name>D'Alessandro</name>
-  <name>D'Artagnan</name>
-  <name>D'Haran</name>
-  <name>D'Harans</name>
   <name>D.C.</name>
-  <name>DC</name>
-  <name>DEA</name>
-  <name>DJs</name>
-  <name>DNA</name>
-  <name>DNB</name>
-  <name>DOJ</name>
-  <name>DVD</name>
-  <name>DVDs</name>
+  <name>D’Haran</name>
+  <name>D’Harans</name>
   <name>Da Vinci</name>
-  <name>DaVinci</name>
   <name>Dabneys</name>
   <name>Daisy</name>
   <name>Daisys</name>
   <name>Dakota</name>
   <name>Dale</name>
+  <name>D'Alessandro</name>
   <name>Dalgaard</name>
   <name>Dallas</name>
   <name>Dallin</name>
@@ -1305,6 +1297,8 @@ This file is generated/updated by Multi Translator
   <name>Darrion</name>
   <name>Darrius</name>
   <name>Darryl</name>
+  <name>d'Artagnan</name>
+  <name>D'Artagnan</name>
   <name>Darwin</name>
   <name>Darwins</name>
   <name>Daryl</name>
@@ -1322,6 +1316,7 @@ This file is generated/updated by Multi Translator
   <name>Davidson</name>
   <name>Davies</name>
   <name>Davin</name>
+  <name>DaVinci</name>
   <name>Davion</name>
   <name>Davis</name>
   <name>Davy</name>
@@ -1330,8 +1325,8 @@ This file is generated/updated by Multi Translator
   <name>Dawsons</name>
   <name>Dayton</name>
   <name>Daytona</name>
-  <name>DeMarco</name>
-  <name>DeWitt</name>
+  <name>DC</name>
+  <name>DEA</name>
   <name>Deacon</name>
   <name>Dean</name>
   <name>Deandra</name>
@@ -1363,6 +1358,7 @@ This file is generated/updated by Multi Translator
   <name>Delia</name>
   <name>Dell</name>
   <name>Dellon</name>
+  <name>DeMarco</name>
   <name>Demetri</name>
   <name>Demetrius</name>
   <name>Demitrius</name>
@@ -1400,22 +1396,22 @@ This file is generated/updated by Multi Translator
   <name>Devyn</name>
   <name>Dewar's</name>
   <name>Dewey</name>
+  <name>DeWitt</name>
   <name>Dex</name>
   <name>Dexter</name>
   <name>Dexters</name>
   <name>Dhara</name>
+  <name>D'Haran</name>
+  <name>D'Harans</name>
   <name>Dharavi</name>
   <name>Dharma</name>
-  <name>DiCaprio</name>
-  <name>DiLeo</name>
-  <name>DiMaggio</name>
-  <name>DiNozzo</name>
   <name>Diakos</name>
   <name>Diana</name>
   <name>Dianas</name>
   <name>Diane</name>
   <name>Diaz</name>
   <name>Diazepam</name>
+  <name>DiCaprio</name>
   <name>Dickie</name>
   <name>Dickies</name>
   <name>Dickinson</name>
@@ -1425,17 +1421,22 @@ This file is generated/updated by Multi Translator
   <name>Diggorys</name>
   <name>Dilaurentise</name>
   <name>Dilaurentises</name>
+  <name>DiLeo</name>
   <name>Dillan</name>
   <name>Dillinger's</name>
   <name>Dillon</name>
+  <name>DiMaggio</name>
   <name>Dimitri</name>
   <name>Dimitris</name>
   <name>Dina</name>
   <name>Dingwall</name>
+  <name>DiNozzo</name>
   <name>Dion</name>
   <name>Diovan</name>
   <name>Disney</name>
   <name>Disneyland</name>
+  <name>d'Ivoire</name>
+  <name>divxsweden</name>
   <name>Dixie</name>
   <name>Dixon</name>
   <name>Dixons</name>
@@ -1443,8 +1444,11 @@ This file is generated/updated by Multi Translator
   <name>Djiboutian</name>
   <name>Djiboutians</name>
   <name>Djingis</name>
+  <name>DJs</name>
   <name>Dmitri</name>
   <name>Dmitrij</name>
+  <name>DNA</name>
+  <name>DNB</name>
   <name>Dobby</name>
   <name>Doctore</name>
   <name>Dodgers</name>
@@ -1452,6 +1456,7 @@ This file is generated/updated by Multi Translator
   <name>Dogen</name>
   <name>Doheny</name>
   <name>Doherty</name>
+  <name>DOJ</name>
   <name>Dollhouse</name>
   <name>Dolly</name>
   <name>Dolores</name>
@@ -1539,23 +1544,20 @@ This file is generated/updated by Multi Translator
   <name>Duris</name>
   <name>Durmstrang</name>
   <name>Dusseldorf</name>
+  <name>Düsseldorf</name>
   <name>Dustin</name>
   <name>Dutch</name>
   <name>Duxbury</name>
+  <name>DVD</name>
+  <name>DVDs</name>
   <name>Dwayne</name>
   <name>Dwight</name>
   <name>Dylan</name>
   <name>Dylans</name>
   <name>Dylon</name>
   <name>Dyson</name>
-  <name>Düsseldorf</name>
-  <name>D’Haran</name>
-  <name>D’Harans</name>
   <name>E.R.</name>
   <name>E.R.P.</name>
-  <name>EKG</name>
-  <name>EMT</name>
-  <name>ESPN</name>
   <name>Earl</name>
   <name>East Timor</name>
   <name>East Timor Timor-Leste</name>
@@ -1568,7 +1570,6 @@ This file is generated/updated by Multi Translator
   <name>Ecuador</name>
   <name>Ecuadorian</name>
   <name>Ecuadorians</name>
-  <name>Ed's</name>
   <name>Eddie</name>
   <name>Eddies</name>
   <name>Edgar</name>
@@ -1581,6 +1582,7 @@ This file is generated/updated by Multi Translator
   <name>Edmond</name>
   <name>Edmonton</name>
   <name>Edmund</name>
+  <name>Ed's</name>
   <name>Eduardo</name>
   <name>Edward</name>
   <name>Edwards</name>
@@ -1594,6 +1596,7 @@ This file is generated/updated by Multi Translator
   <name>Eileen</name>
   <name>Einstein</name>
   <name>Ekberg</name>
+  <name>EKG</name>
   <name>El</name>
   <name>El Salvador</name>
   <name>El Segundo</name>
@@ -1646,6 +1649,7 @@ This file is generated/updated by Multi Translator
   <name>Emmet</name>
   <name>Emmett</name>
   <name>Emory</name>
+  <name>EMT</name>
   <name>Enbrel</name>
   <name>Enfield</name>
   <name>Engelbert</name>
@@ -1688,15 +1692,16 @@ This file is generated/updated by Multi Translator
   <name>Escuinapa</name>
   <name>Esperanza</name>
   <name>Espinosa</name>
+  <name>ESPN</name>
   <name>Espresso</name>
   <name>Esteban</name>
   <name>Estebans</name>
   <name>Estevezs</name>
+  <name>Estévezs</name>
   <name>Esther</name>
   <name>Estonia</name>
   <name>Estonian</name>
   <name>Estonians</name>
-  <name>Estévezs</name>
   <name>Ethan</name>
   <name>Ethans</name>
   <name>Ethel</name>
@@ -1729,8 +1734,6 @@ This file is generated/updated by Multi Translator
   <name>Excalibur</name>
   <name>Ezekiel</name>
   <name>F.I.T</name>
-  <name>FBI</name>
-  <name>FBI's</name>
   <name>Faber</name>
   <name>Facebook</name>
   <name>Fairbanks</name>
@@ -1760,6 +1763,8 @@ This file is generated/updated by Multi Translator
   <name>Fawkes</name>
   <name>Fawn</name>
   <name>Fayed</name>
+  <name>FBI</name>
+  <name>FBI's</name>
   <name>February</name>
   <name>Federal Bureau of Investigation</name>
   <name>Federated</name>
@@ -1788,6 +1793,7 @@ This file is generated/updated by Multi Translator
   <name>Filipino</name>
   <name>Filippa</name>
   <name>Fillmore</name>
+  <name>filmfix</name>
   <name>FilmFixSubCrew</name>
   <name>Finch</name>
   <name>Finland</name>
@@ -1852,6 +1858,7 @@ This file is generated/updated by Multi Translator
   <name>Francis</name>
   <name>Francisco</name>
   <name>Franciscos</name>
+  <name>François</name>
   <name>Francophile</name>
   <name>Frangelico</name>
   <name>Frankenstein</name>
@@ -1865,7 +1872,6 @@ This file is generated/updated by Multi Translator
   <name>Fransisco</name>
   <name>Fransiscos</name>
   <name>Franz</name>
-  <name>François</name>
   <name>Fraser</name>
   <name>Frawley</name>
   <name>Frazier</name>
@@ -1908,8 +1914,6 @@ This file is generated/updated by Multi Translator
   <name>Furneaux</name>
   <name>Fuschida</name>
   <name>Futuna</name>
-  <name>GPS</name>
-  <name>GSW</name>
   <name>Gabbi</name>
   <name>Gabby</name>
   <name>Gabe</name>
@@ -1955,8 +1959,8 @@ This file is generated/updated by Multi Translator
   <name>Garrisson</name>
   <name>Garson</name>
   <name>Gary</name>
-  <name>Gary's</name>
   <name>Garys</name>
+  <name>Gary's</name>
   <name>Gatwick</name>
   <name>Gauguin</name>
   <name>Gaul</name>
@@ -1967,13 +1971,13 @@ This file is generated/updated by Multi Translator
   <name>Gemenon</name>
   <name>Gemma</name>
   <name>Geneva</name>
+  <name>Genevé</name>
+  <name>Genève</name>
   <name>Geneviere</name>
   <name>Genevieve</name>
   <name>Genevive</name>
-  <name>Genevé</name>
   <name>Genkai</name>
   <name>Gentse Feesten</name>
-  <name>Genève</name>
   <name>Geodon</name>
   <name>Geoff</name>
   <name>Geoffrey</name>
@@ -2058,6 +2062,7 @@ This file is generated/updated by Multi Translator
   <name>Gordons</name>
   <name>Gore</name>
   <name>Gotham</name>
+  <name>GPS</name>
   <name>Graceland</name>
   <name>Gracie</name>
   <name>Graham</name>
@@ -2067,8 +2072,8 @@ This file is generated/updated by Multi Translator
   <name>Graysmith</name>
   <name>Grayson</name>
   <name>Graystone</name>
-  <name>Graystone's</name>
   <name>Graystones</name>
+  <name>Graystone's</name>
   <name>Great Britain</name>
   <name>Great Lakes</name>
   <name>Greece</name>
@@ -2099,6 +2104,7 @@ This file is generated/updated by Multi Translator
   <name>Griselda</name>
   <name>Grisham</name>
   <name>Grissom</name>
+  <name>Grønland</name>
   <name>Grossman</name>
   <name>Grote Markt</name>
   <name>Groucho</name>
@@ -2106,7 +2112,7 @@ This file is generated/updated by Multi Translator
   <name>Gryff</name>
   <name>Gryffindor</name>
   <name>Gryffindors</name>
-  <name>Grønland</name>
+  <name>GSW</name>
   <name>Guadalajara</name>
   <name>Guadeloupe</name>
   <name>Guam</name>
@@ -2157,8 +2163,6 @@ This file is generated/updated by Multi Translator
   <name>Gwildors</name>
   <name>Gwyneth</name>
   <name>Gwynn</name>
-  <name>HIV</name>
-  <name>HP</name>
   <name>Hadas</name>
   <name>Hades</name>
   <name>Hadley</name>
@@ -2324,6 +2328,7 @@ This file is generated/updated by Multi Translator
   <name>Hitchcock</name>
   <name>Hitler</name>
   <name>Hitlers</name>
+  <name>HIV</name>
   <name>Hjalte</name>
   <name>Hobart</name>
   <name>Hobbes</name>
@@ -2363,6 +2368,7 @@ This file is generated/updated by Multi Translator
   <name>Howard</name>
   <name>Howards</name>
   <name>Howie</name>
+  <name>HP</name>
   <name>Hubbard</name>
   <name>Huben</name>
   <name>Huber</name>
@@ -2389,31 +2395,29 @@ This file is generated/updated by Multi Translator
   <name>Hutchins</name>
   <name>Hyatt</name>
   <name>Hyde</name>
-  <name>I'd</name>
-  <name>I'll</name>
-  <name>I'm</name>
-  <name>I've</name>
-  <name>IBM</name>
-  <name>ID</name>
-  <name>ID's</name>
-  <name>III</name>
-  <name>IQ</name>
-  <name>IRS</name>
   <name>Ian</name>
   <name>Ians</name>
   <name>Ibiza</name>
+  <name>IBM</name>
   <name>Ibrahim</name>
   <name>Iceland</name>
   <name>Icelander</name>
   <name>Icelanders</name>
   <name>Icelandic</name>
+  <name>I'd</name>
+  <name>ID</name>
   <name>Idaho</name>
+  <name>ID's</name>
   <name>Igor</name>
+  <name>III</name>
   <name>Ikea</name>
   <name>Ilana</name>
   <name>Ilithyia</name>
+  <name>I'll</name>
   <name>Illinois</name>
   <name>Ilsa</name>
+  <name>I'm</name>
+  <name>iMac</name>
   <name>Impreza</name>
   <name>Incubator</name>
   <name>India</name>
@@ -2433,7 +2437,14 @@ This file is generated/updated by Multi Translator
   <name>Internet</name>
   <name>Interpool</name>
   <name>Iowa</name>
+  <name>iPad</name>
+  <name>iPads</name>
+  <name>iPhone</name>
+  <name>iPhones</name>
+  <name>iPod</name>
+  <name>iPods</name>
   <name>Ipswich</name>
+  <name>IQ</name>
   <name>Irak</name>
   <name>Iran</name>
   <name>Iraq</name>
@@ -2445,6 +2456,7 @@ This file is generated/updated by Multi Translator
   <name>Irina</name>
   <name>Irish</name>
   <name>Irma</name>
+  <name>IRS</name>
   <name>Irv</name>
   <name>Irving</name>
   <name>Irvings</name>
@@ -2476,6 +2488,8 @@ This file is generated/updated by Multi Translator
   <name>Italian</name>
   <name>Italians</name>
   <name>Italy</name>
+  <name>iTouch</name>
+  <name>iTunes</name>
   <name>Itzel</name>
   <name>Itzhak</name>
   <name>Ivan</name>
@@ -2484,6 +2498,7 @@ This file is generated/updated by Multi Translator
   <name>Ivanov</name>
   <name>Ivanova</name>
   <name>Ivanovich</name>
+  <name>I've</name>
   <name>Ivoirian</name>
   <name>Ivoirians</name>
   <name>Ivorian</name>
@@ -2495,11 +2510,11 @@ This file is generated/updated by Multi Translator
   <name>Izzy</name>
   <name>Jabba the Hut</name>
   <name>Jack</name>
-  <name>Jack's</name>
   <name>Jackie</name>
   <name>Jackman</name>
   <name>Jacko</name>
   <name>Jacks</name>
+  <name>Jack's</name>
   <name>Jackson</name>
   <name>Jacksons</name>
   <name>Jacksonville</name>
@@ -2510,6 +2525,7 @@ This file is generated/updated by Multi Translator
   <name>Jad</name>
   <name>Jaden</name>
   <name>Jagermeister</name>
+  <name>Jägermeister</name>
   <name>Jagger</name>
   <name>Jaggy</name>
   <name>Jaguar</name>
@@ -2561,17 +2577,17 @@ This file is generated/updated by Multi Translator
   <name>Jaspers</name>
   <name>Jaxson</name>
   <name>Jay</name>
-  <name>Jay-Z</name>
   <name>Jayden</name>
+  <name>Jay-Z</name>
   <name>Jean</name>
   <name>Jean-Baptiste</name>
+  <name>Jeanette</name>
   <name>Jean-Jacques</name>
   <name>Jean-Luc</name>
-  <name>Jean-Pierre</name>
-  <name>Jeanette</name>
   <name>Jeanne</name>
   <name>Jeannette</name>
   <name>Jeannie</name>
+  <name>Jean-Pierre</name>
   <name>Jebadiah</name>
   <name>Jedediah</name>
   <name>Jedediahs</name>
@@ -2641,9 +2657,9 @@ This file is generated/updated by Multi Translator
   <name>Jodie</name>
   <name>Jody</name>
   <name>Joe</name>
-  <name>Joe's</name>
   <name>Joel</name>
   <name>Joes</name>
+  <name>Joe's</name>
   <name>Joey</name>
   <name>Joeys</name>
   <name>Johanne</name>
@@ -2668,14 +2684,15 @@ This file is generated/updated by Multi Translator
   <name>Jonathan</name>
   <name>Jones</name>
   <name>Jonestown</name>
-  <name>Jor-El</name>
-  <name>Jor-Els</name>
   <name>Jordan</name>
   <name>Jordanian</name>
   <name>Jordanians</name>
   <name>Jordans</name>
+  <name>Jor-El</name>
+  <name>Jor-Els</name>
   <name>Jorge</name>
   <name>Jose</name>
+  <name>José</name>
   <name>Josef</name>
   <name>Josefina</name>
   <name>Josefine</name>
@@ -2688,7 +2705,6 @@ This file is generated/updated by Multi Translator
   <name>Joshua</name>
   <name>Joshuas</name>
   <name>Josie</name>
-  <name>José</name>
   <name>Jotunheim</name>
   <name>Joyce</name>
   <name>Jr</name>
@@ -2720,8 +2736,6 @@ This file is generated/updated by Multi Translator
   <name>Justin</name>
   <name>Justins</name>
   <name>Juvederm</name>
-  <name>Jägermeister</name>
-  <name>K-Mart</name>
   <name>Kaden</name>
   <name>Kahlan</name>
   <name>Kahlua</name>
@@ -2863,6 +2877,7 @@ This file is generated/updated by Multi Translator
   <name>Kiyoshi</name>
   <name>Klaus</name>
   <name>Klum</name>
+  <name>K-Mart</name>
   <name>Kmetko</name>
   <name>Knicks</name>
   <name>Knowles</name>
@@ -2894,8 +2909,8 @@ This file is generated/updated by Multi Translator
   <name>Krypton</name>
   <name>Kryptonian</name>
   <name>Kryptonians</name>
-  <name>Ku-Klux-Klan</name>
   <name>Kuchinashi</name>
+  <name>Ku-Klux-Klan</name>
   <name>Kumar</name>
   <name>Kumbaya</name>
   <name>Kunoichi</name>
@@ -2903,10 +2918,10 @@ This file is generated/updated by Multi Translator
   <name>Kurdistan</name>
   <name>Kurt</name>
   <name>Kurtzberg</name>
-  <name>Kuwa-chan</name>
   <name>Kuwabara</name>
   <name>Kuwabara-kun</name>
   <name>Kuwabara-san</name>
+  <name>Kuwa-chan</name>
   <name>Kuwait</name>
   <name>Kuwaiti</name>
   <name>Kwon</name>
@@ -2918,24 +2933,23 @@ This file is generated/updated by Multi Translator
   <name>Kyrgyzstan</name>
   <name>Kyrgyzstani</name>
   <name>L.A.</name>
-  <name>LAN</name>
-  <name>LAPD</name>
-  <name>LSD</name>
   <name>LaBelle</name>
-  <name>LaClaire</name>
-  <name>LaFleur</name>
   <name>Lacey</name>
   <name>Lachlan</name>
+  <name>LaClaire</name>
   <name>Lacombe</name>
   <name>Lacy</name>
   <name>LadiesMan217</name>
   <name>Laelia</name>
+  <name>Lærke</name>
   <name>Lafayette</name>
   <name>Lafferty</name>
+  <name>LaFleur</name>
   <name>Lagos</name>
   <name>Lake Shore</name>
   <name>Lakers</name>
   <name>Lamictal</name>
+  <name>LAN</name>
   <name>Lana</name>
   <name>Lanarca</name>
   <name>Lancaster</name>
@@ -2958,6 +2972,7 @@ This file is generated/updated by Multi Translator
   <name>Laos</name>
   <name>Laotian</name>
   <name>Laotians</name>
+  <name>LAPD</name>
   <name>Lara</name>
   <name>Lara-El</name>
   <name>Larissa</name>
@@ -2997,10 +3012,10 @@ This file is generated/updated by Multi Translator
   <name>Lebanon</name>
   <name>Lecter</name>
   <name>Lee</name>
-  <name>Lee's</name>
   <name>Leeds</name>
   <name>Leela</name>
   <name>Leena</name>
+  <name>Lee's</name>
   <name>Lefevre</name>
   <name>Legatus</name>
   <name>Leia</name>
@@ -3016,6 +3031,7 @@ This file is generated/updated by Multi Translator
   <name>Lennon</name>
   <name>Lennox</name>
   <name>Lenny</name>
+  <name>lenovo</name>
   <name>Lentulus</name>
   <name>Leo</name>
   <name>Leon</name>
@@ -3045,9 +3061,9 @@ This file is generated/updated by Multi Translator
   <name>Lex</name>
   <name>Lexapro</name>
   <name>Lexi</name>
-  <name>Lexi's</name>
   <name>Lexie</name>
   <name>Lexington</name>
+  <name>Lexi's</name>
   <name>Lexus</name>
   <name>Leyte</name>
   <name>Liam</name>
@@ -3124,6 +3140,7 @@ This file is generated/updated by Multi Translator
   <name>Longbottom</name>
   <name>Lonnie</name>
   <name>Lopez</name>
+  <name>López</name>
   <name>Lord Milori</name>
   <name>Lorena</name>
   <name>Lorens</name>
@@ -3146,8 +3163,9 @@ This file is generated/updated by Multi Translator
   <name>Lowery</name>
   <name>Lowrey</name>
   <name>Loxley</name>
-  <name>Loxley's</name>
   <name>Loxleys</name>
+  <name>Loxley's</name>
+  <name>LSD</name>
   <name>Lubov</name>
   <name>Luc</name>
   <name>Luca</name>
@@ -3185,10 +3203,10 @@ This file is generated/updated by Multi Translator
   <name>Luthorcorp</name>
   <name>Luthors</name>
   <name>Lux</name>
-  <name>Lux's</name>
   <name>Luxembourg</name>
   <name>Luxembourgers</name>
   <name>Luxor</name>
+  <name>Lux's</name>
   <name>Lycaner</name>
   <name>Lydia</name>
   <name>Lyla</name>
@@ -3201,32 +3219,28 @@ This file is generated/updated by Multi Translator
   <name>Lynns</name>
   <name>Lyon</name>
   <name>Lyrica</name>
-  <name>Lærke</name>
-  <name>López</name>
-  <name>MI6</name>
-  <name>MTAC</name>
   <name>Maasai</name>
   <name>Mac</name>
   <name>Mac OS</name>
   <name>MacArthur</name>
   <name>MacArthurs</name>
+  <name>Macau</name>
   <name>MacBeth</name>
   <name>MacDonald</name>
   <name>MacDowell</name>
+  <name>Macedonia</name>
+  <name>Macedonian</name>
+  <name>Macedonians</name>
   <name>MacGregors</name>
   <name>MacGyver</name>
+  <name>Macha</name>
+  <name>Machas</name>
   <name>MacKenzie</name>
+  <name>Mackinaws</name>
   <name>MacLaine</name>
   <name>MacMillan</name>
   <name>MacMurray</name>
   <name>MacPherson</name>
-  <name>Macau</name>
-  <name>Macedonia</name>
-  <name>Macedonian</name>
-  <name>Macedonians</name>
-  <name>Macha</name>
-  <name>Machas</name>
-  <name>Mackinaws</name>
   <name>Macy</name>
   <name>Madacorp</name>
   <name>Madacorps</name>
@@ -3250,8 +3264,8 @@ This file is generated/updated by Multi Translator
   <name>Maguire</name>
   <name>Maholevec</name>
   <name>Maia</name>
-  <name>Maia's</name>
   <name>Maias</name>
+  <name>Maia's</name>
   <name>Maimonides</name>
   <name>Maine</name>
   <name>Maison</name>
@@ -3386,8 +3400,8 @@ This file is generated/updated by Multi Translator
   <name>Marvin</name>
   <name>Marx</name>
   <name>Mary</name>
-  <name>Mary-Anne</name>
   <name>Maryann</name>
+  <name>Mary-Anne</name>
   <name>Maryland</name>
   <name>Marys</name>
   <name>Masahashi</name>
@@ -3473,8 +3487,8 @@ This file is generated/updated by Multi Translator
   <name>McCullough</name>
   <name>McDonagh</name>
   <name>McDonald</name>
-  <name>McDonald's</name>
   <name>McDonalds</name>
+  <name>McDonald's</name>
   <name>McDow</name>
   <name>McErgie</name>
   <name>McEwan</name>
@@ -3504,6 +3518,7 @@ This file is generated/updated by Multi Translator
   <name>McKittrick</name>
   <name>McLaggen</name>
   <name>McLaughlin</name>
+  <name>Mclntyre</name>
   <name>McLovin</name>
   <name>McLuhan</name>
   <name>McMahon</name>
@@ -3521,9 +3536,8 @@ This file is generated/updated by Multi Translator
   <name>McStarley</name>
   <name>McTeag</name>
   <name>McTorrent</name>
-  <name>McVeigh</name>
-  <name>Mclntyre</name>
   <name>Mcullough</name>
+  <name>McVeigh</name>
   <name>Meade</name>
   <name>Medicus</name>
   <name>Medvedev</name>
@@ -3536,6 +3550,7 @@ This file is generated/updated by Multi Translator
   <name>Mei</name>
   <name>Mel</name>
   <name>Melanie</name>
+  <name>Mélanie</name>
   <name>Melatonin</name>
   <name>Melbourne</name>
   <name>Melinda</name>
@@ -3570,6 +3585,7 @@ This file is generated/updated by Multi Translator
   <name>Mexican</name>
   <name>Mexicans</name>
   <name>Mexico</name>
+  <name>MI6</name>
   <name>Mia</name>
   <name>Miami</name>
   <name>Mias</name>
@@ -3655,6 +3671,7 @@ This file is generated/updated by Multi Translator
   <name>Monaco</name>
   <name>Monday</name>
   <name>Monegasque</name>
+  <name>Monégasque</name>
   <name>Moneypenny</name>
   <name>Mongolia</name>
   <name>Mongolian</name>
@@ -3676,7 +3693,6 @@ This file is generated/updated by Multi Translator
   <name>Montreal</name>
   <name>Montréal</name>
   <name>Montserrat</name>
-  <name>Monégasque</name>
   <name>Moore</name>
   <name>Moores</name>
   <name>Mor'du</name>
@@ -3707,6 +3723,7 @@ This file is generated/updated by Multi Translator
   <name>Mr.</name>
   <name>Mrs.</name>
   <name>Ms.</name>
+  <name>MTAC</name>
   <name>Mueller</name>
   <name>Muggles</name>
   <name>Muhammed</name>
@@ -3715,6 +3732,8 @@ This file is generated/updated by Multi Translator
   <name>Mullholand</name>
   <name>Mumbai</name>
   <name>Munchausen</name>
+  <name>Münchausens</name>
+  <name>München</name>
   <name>Mundy</name>
   <name>Munich</name>
   <name>Muray</name>
@@ -3727,29 +3746,15 @@ This file is generated/updated by Multi Translator
   <name>Murrays</name>
   <name>Muslim</name>
   <name>Mussolini</name>
-  <name>MySpace</name>
   <name>Myanmar</name>
   <name>Myanmar, Burma</name>
   <name>Myers</name>
   <name>Myka</name>
   <name>Mykas</name>
+  <name>MySpace</name>
   <name>Mystic Falls</name>
-  <name>Mélanie</name>
-  <name>Münchausens</name>
-  <name>München</name>
   <name>N.P.H.</name>
   <name>N.Y</name>
-  <name>NASA</name>
-  <name>NATO</name>
-  <name>NBT</name>
-  <name>NCIS</name>
-  <name>NFL</name>
-  <name>NHL</name>
-  <name>NORAD</name>
-  <name>NSA</name>
-  <name>NY</name>
-  <name>NYC</name>
-  <name>NYPD</name>
   <name>Naboo</name>
   <name>Nadeshiko</name>
   <name>Nadia</name>
@@ -3774,6 +3779,7 @@ This file is generated/updated by Multi Translator
   <name>Naomi</name>
   <name>Napoleon</name>
   <name>Narcissa</name>
+  <name>NASA</name>
   <name>Nash</name>
   <name>Nashville</name>
   <name>Nashville-Davidson</name>
@@ -3787,6 +3793,7 @@ This file is generated/updated by Multi Translator
   <name>Nathaniel</name>
   <name>Nathans</name>
   <name>Nathanson</name>
+  <name>NATO</name>
   <name>Natolly</name>
   <name>Natollys</name>
   <name>Nauru</name>
@@ -3796,6 +3803,8 @@ This file is generated/updated by Multi Translator
   <name>Naylin</name>
   <name>Nazi</name>
   <name>Nazis</name>
+  <name>NBT</name>
+  <name>NCIS</name>
   <name>Neal</name>
   <name>Nebraska</name>
   <name>Neidermeyer</name>
@@ -3839,6 +3848,8 @@ This file is generated/updated by Multi Translator
   <name>Newtons</name>
   <name>Nexium</name>
   <name>Nez</name>
+  <name>NFL</name>
+  <name>NHL</name>
   <name>Niamey</name>
   <name>Nicaragua</name>
   <name>Nicaraguan</name>
@@ -3895,6 +3906,7 @@ This file is generated/updated by Multi Translator
   <name>Nogales</name>
   <name>Noh</name>
   <name>Nokia</name>
+  <name>NORAD</name>
   <name>Noras</name>
   <name>Nordirland</name>
   <name>Nordkorea</name>
@@ -3919,45 +3931,40 @@ This file is generated/updated by Multi Translator
   <name>Norwich</name>
   <name>Notthingham</name>
   <name>Nottingham</name>
-  <name>Nottingham's</name>
   <name>Nottinghams</name>
+  <name>Nottingham's</name>
   <name>November</name>
+  <name>NSA</name>
   <name>Nunez</name>
   <name>Nussbaum</name>
+  <name>NY</name>
+  <name>NYC</name>
   <name>Nymphadora</name>
-  <name>O'Barry</name>
-  <name>O'Boyle</name>
-  <name>O'Brian</name>
-  <name>O'Connell</name>
-  <name>O'Conner</name>
-  <name>O'Conners</name>
-  <name>O'Donnell</name>
-  <name>O'Hara</name>
-  <name>O'Hare</name>
-  <name>O'Leary</name>
-  <name>O'Malley</name>
-  <name>O'Malleys</name>
-  <name>O'Mally</name>
-  <name>O'Neal</name>
-  <name>O'Neill</name>
-  <name>O'Reilly</name>
-  <name>O'Sullivan</name>
-  <name>O'Toole</name>
-  <name>O'neal</name>
+  <name>NYPD</name>
   <name>O.R.</name>
   <name>O2</name>
   <name>Oakland</name>
   <name>Obama</name>
+  <name>O'Barry</name>
   <name>Obi-Wan</name>
+  <name>O'Boyle</name>
+  <name>O'Brian</name>
   <name>OckeJ</name>
+  <name>O'Connell</name>
+  <name>O'Conner</name>
+  <name>O'Conners</name>
   <name>October</name>
   <name>Odessa</name>
+  <name>O'Donnell</name>
+  <name>O'Hara</name>
+  <name>O'Hare</name>
   <name>Ohio</name>
   <name>Ojai</name>
   <name>Okla</name>
   <name>Oklahoma</name>
   <name>Okubo</name>
   <name>Old Navy</name>
+  <name>O'Leary</name>
   <name>Olek</name>
   <name>Olga</name>
   <name>Olin</name>
@@ -3976,10 +3983,16 @@ This file is generated/updated by Multi Translator
   <name>Olympics</name>
   <name>Olympus</name>
   <name>Omaha</name>
+  <name>O'Malley</name>
+  <name>O'Malleys</name>
+  <name>O'Mally</name>
   <name>Oman</name>
   <name>Omani</name>
   <name>Omar</name>
   <name>Omni</name>
+  <name>O'neal</name>
+  <name>O'Neal</name>
+  <name>O'Neill</name>
   <name>Ontario</name>
   <name>Onya</name>
   <name>Ophelia</name>
@@ -3987,6 +4000,7 @@ This file is generated/updated by Multi Translator
   <name>Oppenheimers</name>
   <name>Oprah</name>
   <name>Oregon</name>
+  <name>O'Reilly</name>
   <name>Orfeus</name>
   <name>Orin</name>
   <name>Orlando</name>
@@ -4002,7 +4016,10 @@ This file is generated/updated by Multi Translator
   <name>Osbourne</name>
   <name>Oscar</name>
   <name>Oskar</name>
+  <name>Østrig</name>
+  <name>O'Sullivan</name>
   <name>Otis</name>
+  <name>O'Toole</name>
   <name>Otto</name>
   <name>Ovidius</name>
   <name>Owen</name>
@@ -4010,15 +4027,9 @@ This file is generated/updated by Multi Translator
   <name>Oxford</name>
   <name>Oxfords</name>
   <name>P.M.</name>
-  <name>PC</name>
-  <name>PDA</name>
-  <name>PLO</name>
-  <name>PR</name>
-  <name>PSP</name>
-  <name>PTSD</name>
   <name>Pablo</name>
-  <name>PacMan</name>
   <name>Pacino</name>
+  <name>PacMan</name>
   <name>Paddington</name>
   <name>Padmé</name>
   <name>Paige</name>
@@ -4096,11 +4107,13 @@ This file is generated/updated by Multi Translator
   <name>Paxil</name>
   <name>Paxton</name>
   <name>Paxtons</name>
-  <name>PayPal</name>
   <name>Payne</name>
   <name>Paypal</name>
+  <name>PayPal</name>
   <name>Payson</name>
   <name>Payton</name>
+  <name>PC</name>
+  <name>PDA</name>
   <name>Pearlman</name>
   <name>Pearson</name>
   <name>Pedersen</name>
@@ -4154,11 +4167,11 @@ This file is generated/updated by Multi Translator
   <name>Philadelphia</name>
   <name>Phileas</name>
   <name>Philip</name>
-  <name>Philip's</name>
   <name>Philippa</name>
   <name>Philippe</name>
   <name>Philippines</name>
   <name>Philips</name>
+  <name>Philip's</name>
   <name>Phillies</name>
   <name>Phillip</name>
   <name>Phillips</name>
@@ -4186,6 +4199,7 @@ This file is generated/updated by Multi Translator
   <name>Plavix</name>
   <name>PlayStation</name>
   <name>Plaza</name>
+  <name>PLO</name>
   <name>Plymouth</name>
   <name>Poland</name>
   <name>Polen</name>
@@ -4217,6 +4231,7 @@ This file is generated/updated by Multi Translator
   <name>Poul</name>
   <name>Powell</name>
   <name>Pozarsky</name>
+  <name>PR</name>
   <name>Prada</name>
   <name>Praetorians</name>
   <name>Prag</name>
@@ -4249,6 +4264,8 @@ This file is generated/updated by Multi Translator
   <name>Provigil</name>
   <name>Prozac</name>
   <name>Prue</name>
+  <name>PSP</name>
+  <name>PTSD</name>
   <name>Puckett</name>
   <name>Puente Antiguo</name>
   <name>Puerta</name>
@@ -4297,29 +4314,29 @@ This file is generated/updated by Multi Translator
   <name>Ramigani</name>
   <name>Ramirez</name>
   <name>Ramon</name>
+  <name>Ramón</name>
   <name>Ramona</name>
   <name>Ramsey</name>
-  <name>Ramón</name>
   <name>Randall</name>
   <name>Randolph</name>
   <name>Randy</name>
   <name>Ranssyn</name>
   <name>Ranzino</name>
   <name>Raph</name>
-  <name>Raph's</name>
   <name>Raphael</name>
+  <name>Raph's</name>
   <name>Raquel</name>
   <name>Rasmus</name>
   <name>Rasmussens</name>
   <name>Rasputin</name>
   <name>Rasta Monsta</name>
   <name>Raul</name>
-  <name>Ray's</name>
+  <name>Raúl</name>
   <name>Raylan</name>
   <name>Raylene</name>
   <name>Raymond</name>
   <name>Rayna</name>
-  <name>Raúl</name>
+  <name>Ray's</name>
   <name>Reagan</name>
   <name>Reaney</name>
   <name>Rebecca</name>
@@ -4347,11 +4364,11 @@ This file is generated/updated by Multi Translator
   <name>Renata</name>
   <name>Renault</name>
   <name>Renee</name>
+  <name>Renée</name>
   <name>Renforth</name>
   <name>Renfro</name>
   <name>Reno</name>
   <name>Renshaw</name>
-  <name>Renée</name>
   <name>Republic</name>
   <name>Republicans</name>
   <name>Reston</name>
@@ -4377,8 +4394,8 @@ This file is generated/updated by Multi Translator
   <name>Ricardo</name>
   <name>Ricardus</name>
   <name>Richard</name>
-  <name>Richard's</name>
   <name>Richards</name>
+  <name>Richard's</name>
   <name>Richardson</name>
   <name>Richie</name>
   <name>Richmond</name>
@@ -4500,16 +4517,10 @@ This file is generated/updated by Multi Translator
   <name>Rwandan</name>
   <name>Rwandese</name>
   <name>Ryan</name>
-  <name>Ryan's</name>
   <name>Ryans</name>
+  <name>Ryan's</name>
   <name>Rydell</name>
   <name>S.H.I.E.L.D.</name>
-  <name>SARS</name>
-  <name>SETI</name>
-  <name>SSG</name>
-  <name>SSG-SweSUB</name>
-  <name>SUV</name>
-  <name>SWAT</name>
   <name>Sabina</name>
   <name>Sabrina</name>
   <name>Saddam</name>
@@ -4562,6 +4573,7 @@ This file is generated/updated by Multi Translator
   <name>San</name>
   <name>San Marino</name>
   <name>Sanchez</name>
+  <name>Sánchez</name>
   <name>Sancho</name>
   <name>Sanders</name>
   <name>Sandra</name>
@@ -4581,6 +4593,7 @@ This file is generated/updated by Multi Translator
   <name>Sarayashiki</name>
   <name>Sarno</name>
   <name>Sarno's</name>
+  <name>SARS</name>
   <name>Sasha</name>
   <name>Sashas</name>
   <name>Satan</name>
@@ -4613,8 +4626,8 @@ This file is generated/updated by Multi Translator
   <name>Schwartz</name>
   <name>Schwarzenegger</name>
   <name>Schweitz</name>
-  <name>Sci-Fi</name>
   <name>Scibelli</name>
+  <name>Sci-Fi</name>
   <name>Sciuto</name>
   <name>Scofield</name>
   <name>Scofields</name>
@@ -4658,6 +4671,7 @@ This file is generated/updated by Multi Translator
   <name>Servillia</name>
   <name>Seth</name>
   <name>Seths</name>
+  <name>SETI</name>
   <name>Setsuna</name>
   <name>Seuss</name>
   <name>Severus</name>
@@ -4774,11 +4788,11 @@ This file is generated/updated by Multi Translator
   <name>Slytherin</name>
   <name>Smallville</name>
   <name>Smith</name>
-  <name>Smith-Kingsley</name>
   <name>Smithfield</name>
+  <name>Smith-Kingsley</name>
   <name>Smithson</name>
-  <name>Smithson's</name>
   <name>Smithsonian</name>
+  <name>Smithson's</name>
   <name>Smoller</name>
   <name>Smurf's</name>
   <name>Smythe</name>
@@ -4829,6 +4843,8 @@ This file is generated/updated by Multi Translator
   <name>Springsteen</name>
   <name>Sri</name>
   <name>Sri Lanka</name>
+  <name>SSG</name>
+  <name>SSG-SweSUB</name>
   <name>St.</name>
   <name>St. Pierre</name>
   <name>St1gge</name>
@@ -4880,10 +4896,10 @@ This file is generated/updated by Multi Translator
   <name>Stephens</name>
   <name>Steve</name>
   <name>Steve Jobs</name>
-  <name>Steve-O</name>
   <name>Steven</name>
   <name>Stevens</name>
   <name>Stevenson</name>
+  <name>Steve-O</name>
   <name>Stevie</name>
   <name>Stevies</name>
   <name>Stevo</name>
@@ -4927,6 +4943,7 @@ This file is generated/updated by Multi Translator
   <name>Sussex</name>
   <name>Sutton</name>
   <name>Suttons</name>
+  <name>SUV</name>
   <name>Suvari</name>
   <name>Suzaku</name>
   <name>Suzanne</name>
@@ -4940,16 +4957,17 @@ This file is generated/updated by Multi Translator
   <name>Swanson</name>
   <name>Swansons</name>
   <name>Swarek</name>
+  <name>SWAT</name>
   <name>Swayze</name>
   <name>Swaziland</name>
-  <name>SweSUB</name>
-  <name>SweSub</name>
   <name>Swede</name>
   <name>Sweden</name>
   <name>Swedish</name>
   <name>Sweetwater</name>
   <name>Swender</name>
   <name>Swensen</name>
+  <name>SweSub</name>
+  <name>SweSUB</name>
   <name>Swiss</name>
   <name>Switzerland</name>
   <name>Sybil</name>
@@ -4974,9 +4992,6 @@ This file is generated/updated by Multi Translator
   <name>Syrian</name>
   <name>Syrians</name>
   <name>Syrien</name>
-  <name>Sánchez</name>
-  <name>TV</name>
-  <name>TaZty</name>
   <name>Tabitha</name>
   <name>Tabula Rasa</name>
   <name>Tacoma</name>
@@ -5026,12 +5041,13 @@ This file is generated/updated by Multi Translator
   <name>Tayla</name>
   <name>Taylor</name>
   <name>Taylors</name>
+  <name>TaZty</name>
   <name>Teagues</name>
   <name>Teal'c</name>
   <name>Ted</name>
-  <name>Ted's</name>
   <name>Teddy</name>
   <name>Teds</name>
+  <name>Ted's</name>
   <name>Teenie</name>
   <name>Tel Aviv</name>
   <name>Telia</name>
@@ -5086,7 +5102,6 @@ This file is generated/updated by Multi Translator
   <name>Thuringer</name>
   <name>Thursday</name>
   <name>Thursdays</name>
-  <name>TiVo</name>
   <name>Tibet</name>
   <name>Tibetan</name>
   <name>Tierney</name>
@@ -5112,6 +5127,7 @@ This file is generated/updated by Multi Translator
   <name>Tisch</name>
   <name>Titanic</name>
   <name>Titus</name>
+  <name>TiVo</name>
   <name>Tjaikovskijs</name>
   <name>Tjajkovskij</name>
   <name>Tjernobyl</name>
@@ -5203,6 +5219,7 @@ This file is generated/updated by Multi Translator
   <name>Turner</name>
   <name>Tuscany</name>
   <name>Tuvalu</name>
+  <name>TV</name>
   <name>Twitter</name>
   <name>Ty</name>
   <name>Tylenol</name>
@@ -5217,9 +5234,6 @@ This file is generated/updated by Multi Translator
   <name>U.S.A.</name>
   <name>U.V.</name>
   <name>U2</name>
-  <name>USB</name>
-  <name>USGA</name>
-  <name>USS</name>
   <name>Udaipur</name>
   <name>Uganda</name>
   <name>Ukraine</name>
@@ -5240,13 +5254,14 @@ This file is generated/updated by Multi Translator
   <name>Urameshi-san</name>
   <name>Ursula</name>
   <name>Uruguay</name>
+  <name>USB</name>
+  <name>USGA</name>
   <name>Usher</name>
+  <name>USS</name>
   <name>Utah</name>
   <name>Uzbekistan</name>
   <name>Uzis</name>
   <name>V2</name>
-  <name>VD</name>
-  <name>VFX</name>
   <name>Valarius</name>
   <name>Valda</name>
   <name>Valdemar</name>
@@ -5275,6 +5290,7 @@ This file is generated/updated by Multi Translator
   <name>Vaughan</name>
   <name>Vaughans</name>
   <name>Vaughn</name>
+  <name>VD</name>
   <name>Vegas</name>
   <name>Velazquez</name>
   <name>Venedig</name>
@@ -5289,9 +5305,9 @@ This file is generated/updated by Multi Translator
   <name>Veronica</name>
   <name>Veronicas</name>
   <name>Veronika</name>
+  <name>Véronique</name>
   <name>Vespa</name>
-  <name>ViXen</name>
-  <name>Viagra</name>
+  <name>VFX</name>
   <name>Viagra</name>
   <name>Vic</name>
   <name>Vicki</name>
@@ -5312,6 +5328,7 @@ This file is generated/updated by Multi Translator
   <name>Vincent</name>
   <name>Vincents</name>
   <name>Vincenzi</name>
+  <name>vindaloo</name>
   <name>Vindobona</name>
   <name>Vinnie</name>
   <name>Vinspresso</name>
@@ -5327,6 +5344,7 @@ This file is generated/updated by Multi Translator
   <name>Vivian</name>
   <name>Vivians</name>
   <name>Vivienne</name>
+  <name>ViXen</name>
   <name>Vladimir</name>
   <name>Vladislav</name>
   <name>Vogel</name>
@@ -5339,16 +5357,10 @@ This file is generated/updated by Multi Translator
   <name>Vortac</name>
   <name>Vriess</name>
   <name>Vytorin</name>
-  <name>Véronique</name>
-  <name>WITSEC</name>
-  <name>WLAN</name>
-  <name>WLVU</name>
-  <name>WPK</name>
   <name>Wagner</name>
   <name>Wainwright</name>
   <name>Wakefield</name>
   <name>Wakefields</name>
-  <name>Wal-Mart</name>
   <name>Waldo</name>
   <name>Waldorf</name>
   <name>Waldorfs</name>
@@ -5359,6 +5371,7 @@ This file is generated/updated by Multi Translator
   <name>Wallowski</name>
   <name>Wally</name>
   <name>Walmart</name>
+  <name>Wal-Mart</name>
   <name>Walsh</name>
   <name>Walt</name>
   <name>Walter</name>
@@ -5428,13 +5441,13 @@ This file is generated/updated by Multi Translator
   <name>Whitney</name>
   <name>Whitridge</name>
   <name>Wi Fi</name>
-  <name>Wi-Fi</name>
   <name>Wichita</name>
   <name>Wickerman</name>
   <name>Widmore</name>
   <name>Widmores</name>
   <name>Wien</name>
   <name>Wiesbaden</name>
+  <name>Wi-Fi</name>
   <name>Wii</name>
   <name>Wikipedia</name>
   <name>Wilder</name>
@@ -5465,7 +5478,10 @@ This file is generated/updated by Multi Translator
   <name>Wiskott-Aldrich</name>
   <name>Wisteria</name>
   <name>Witherspoon</name>
+  <name>WITSEC</name>
   <name>Witwicky</name>
+  <name>WLAN</name>
+  <name>WLVU</name>
   <name>Wolfgang</name>
   <name>Wolfie</name>
   <name>Wolverine</name>
@@ -5477,18 +5493,17 @@ This file is generated/updated by Multi Translator
   <name>Wooten</name>
   <name>World-Wide</name>
   <name>Worthwood</name>
+  <name>WPK</name>
   <name>Wright</name>
   <name>Wulfric</name>
   <name>Wuornos</name>
   <name>Wurtzel</name>
+  <name>www.divxsweden.se</name>
+  <name>www.filmfix.se</name>
   <name>Wyatt</name>
   <name>Wyman</name>
   <name>Wymans</name>
   <name>Wyoming</name>
-  <name>X-Men</name>
-  <name>X-ray</name>
-  <name>XJoelX</name>
-  <name>XY</name>
   <name>Xanax</name>
   <name>Xander</name>
   <name>Xander's</name>
@@ -5498,6 +5513,10 @@ This file is generated/updated by Multi Translator
   <name>Xbox One</name>
   <name>Xenical</name>
   <name>Xerox66</name>
+  <name>XJoelX</name>
+  <name>X-Men</name>
+  <name>X-ray</name>
+  <name>XY</name>
   <name>Y.M.C.A</name>
   <name>Yaeko</name>
   <name>Yaekos</name>
@@ -5521,9 +5540,9 @@ This file is generated/updated by Multi Translator
   <name>Yorks</name>
   <name>Yorkshire</name>
   <name>Yosef</name>
-  <name>YouTube</name>
   <name>Yousouf</name>
   <name>Youtube</name>
+  <name>YouTube</name>
   <name>Ystad</name>
   <name>Yucatan</name>
   <name>Yugoslav</name>
@@ -5584,33 +5603,13 @@ This file is generated/updated by Multi Translator
   <name>Zorro</name>
   <name>Zory</name>
   <name>Zoysia</name>
+  <name>zozlow</name>
   <name>Zuazo</name>
   <name>Zuma</name>
   <name>Zurich</name>
+  <name>Zürich</name>
   <name>Zurnigher</name>
   <name>Zyprexa</name>
   <name>Zyrtec</name>
   <name>Zzyzx</name>
-  <name>Zürich</name>
-  <name>burrito</name>
-  <name>cents</name>
-  <name>d'Artagnan</name>
-  <name>d'Ivoire</name>
-  <name>divxsweden</name>
-  <name>filmfix</name>
-  <name>iMac</name>
-  <name>iPad</name>
-  <name>iPads</name>
-  <name>iPhone</name>
-  <name>iPhones</name>
-  <name>iPod</name>
-  <name>iPods</name>
-  <name>iTouch</name>
-  <name>iTunes</name>
-  <name>lenovo</name>
-  <name>vindaloo</name>
-  <name>www.divxsweden.se</name>
-  <name>www.filmfix.se</name>
-  <name>zozlow</name>
-  <name>Østrig</name>
 </ignore_list>
