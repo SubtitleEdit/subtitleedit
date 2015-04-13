@@ -885,7 +885,7 @@ Format: Layer, Start, End, Style, Actor, MarginL, MarginR, MarginV, Effect, Text
                         s = RemoveTag(s, "clip(");
                         s = RemoveTag(s, "pbo(");
 
-                        //TODO: Alignment tags
+                        // TODO: Alignment tags
 
                         s = s.Replace("{}", string.Empty);
 

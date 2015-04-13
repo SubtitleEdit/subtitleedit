@@ -747,7 +747,7 @@ namespace Nikse.SubtitleEdit.Logic
         public NetworkSettings()
         {
             UserName = string.Empty;
-            SessionKey = "DemoSession"; // TODO - leave blank or use guid
+            SessionKey = "DemoSession"; // TODO: Leave blank or use guid
             WebServiceUrl = "http://www.nikse.dk/se/SeService.asmx";
             PollIntervalSeconds = 5;
         }
