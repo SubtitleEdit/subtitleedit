@@ -56,7 +56,7 @@ namespace Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4.Boxes
                     fs.Read(Buffer, 0, Buffer.Length);
                     HandlerType = GetString(8, 4);
                     if (Size > 25)
-                        HandlerName = GetString(24, Buffer.Length - (24 + 5)); // TODO: how to find this?
+                        HandlerName = GetString(24, Buffer.Length - (24 + 5)); // TODO: How to find this?
                 }
                 else if (Name == "mdhd")
                 {

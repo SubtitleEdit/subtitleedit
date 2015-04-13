@@ -345,7 +345,7 @@ namespace Test.Logic
             string output1 = FixCommonErrorsHelper.FixHyphensAdd(sub, 0, "en");
             string output2 = FixCommonErrorsHelper.FixHyphensAdd(sub, 1, "en");
 
-            Assert.AreEqual(output1, expected1); 
+            Assert.AreEqual(output1, expected1);
             Assert.AreEqual(output2, expected2);
         }
 

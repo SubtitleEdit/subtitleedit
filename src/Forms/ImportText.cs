@@ -35,24 +35,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelLineBreak.Text = Configuration.Settings.Language.ImportText.LineBreak;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.LineBreak)) //TODO: Remove in 3.4
-            {
-                labelLineBreak.Visible = false;
-                comboBoxLineBreak.Visible = false;
-            }
             comboBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
             comboBoxLineBreak.Width = groupBoxSplitting.Width - comboBoxLineBreak.Left - 5;
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.OpenTextFiles)) //TODO: Fix in 3.4
-            {
-                checkBoxMultipleFiles.Visible = false;
-            }
-            else
-            {
-                checkBoxMultipleFiles.AutoSize = true;
-                checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
-                checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
-            }
+            checkBoxMultipleFiles.AutoSize = true;
+            checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
+            checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
             listViewInputFiles.Visible = false;
 
             radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
@@ -74,12 +61,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.GenerateTimeCodes)) //TODO: Remove in SE 3.4
-            {
-                checkBoxGenerateTimeCodes.Checked = true;
-                checkBoxGenerateTimeCodes.Visible = false;
-            }
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
                 radioButtonAutoSplit.Checked = true;

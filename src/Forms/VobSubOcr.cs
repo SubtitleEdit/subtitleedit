@@ -3922,7 +3922,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line = threadText;
             }
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4117,7 +4117,7 @@ namespace Nikse.SubtitleEdit.Forms
             line = GetStringWithItalicTags(matches);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4616,7 +4616,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);

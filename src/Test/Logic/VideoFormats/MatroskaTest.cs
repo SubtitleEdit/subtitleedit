@@ -76,7 +76,7 @@ namespace Test.Logic.VideoFormats
                 var tracks = parser.GetTracks(true);
                 var subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[0].TrackNumber), null);
                 Assert.IsTrue(subtitles.Count == 2);
-                //TODO: check bitmaps
+                // TODO: Check bitmaps
 
                 //subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[1].TrackNumber), null);
                 //Assert.IsTrue(subtitles.Count == 2);

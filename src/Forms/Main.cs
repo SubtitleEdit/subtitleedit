@@ -1114,7 +1114,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             toolStripMenuItemVideo.Text = _language.Menu.Video.Title;
             openVideoToolStripMenuItem.Text = _language.Menu.Video.OpenVideo;
-            toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd; //TODO: Remove in SE 3.4
+            toolStripMenuItemOpenDvd.Text = _language.Menu.Video.OpenDvd; // TODO: Remove in SE 3.4
             toolStripMenuItemSetAudioTrack.Text = _language.Menu.Video.ChooseAudioTrack;
             closeVideoToolStripMenuItem.Text = _language.Menu.Video.CloseVideo;
 
@@ -5214,7 +5214,7 @@ namespace Nikse.SubtitleEdit.Forms
                     if (!undo)
                     {
                         if (_subtitle.HistoryItems[_undoIndex].RedoParagraphs != null)
-                        //TODO: sometimes redo paragraphs can be null - how?
+                        // TODO: Sometimes redo paragraphs can be null - how?
                         {
                             _subtitle.Paragraphs.Clear();
                             if (Configuration.Settings.General.AllowEditOfOriginalSubtitle && _subtitleAlternate != null)
@@ -8902,7 +8902,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); //TODO - language???
+                formSubOcr.Initialize(mergedVobSubPacks, idx.Palette, Configuration.Settings.VobSubOcr, null); // TODO: language???
                 if (_loading)
                 {
                     formSubOcr.Icon = (Icon)Icon.Clone();
@@ -9348,14 +9348,14 @@ namespace Nikse.SubtitleEdit.Forms
                         byte[] buffer = new byte[26];
                         f.Read(buffer, 0, 26);
 
-                        if (buffer[2] == 0x3a && // :
-                            buffer[5] == 0x3a && // :
-                            buffer[8] == 0x2e && // .
+                        if (buffer[2]  == 0x3a && // :
+                            buffer[5]  == 0x3a && // :
+                            buffer[8]  == 0x2e && // .
                             buffer[12] == 0x2d && // -
                             buffer[15] == 0x3a && // :
                             buffer[18] == 0x3a && // :
                             buffer[21] == 0x2e && // .
-                            buffer[25] == 0x5d) // ]
+                            buffer[25] == 0x5d)   // ]
                         { // subtitle time code
                             string timeCode = Encoding.ASCII.GetString(buffer, 0, 25);
 
@@ -9399,7 +9399,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             using (var formSubOcr = new VobSubOcr())
             {
-                formSubOcr.Initialize(list, Configuration.Settings.VobSubOcr, fileName); //TODO - language???
+                formSubOcr.Initialize(list, Configuration.Settings.VobSubOcr, fileName); // TODO: language???
                 if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                 {
                     MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
@@ -9477,7 +9477,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 using (var formSubOcr = new VobSubOcr())
                 {
-                    formSubOcr.Initialize(subPicturesWithTimeCodes, Configuration.Settings.VobSubOcr, fileName); //TODO - language???
+                    formSubOcr.Initialize(subPicturesWithTimeCodes, Configuration.Settings.VobSubOcr, fileName); // TODO: language???
                     if (formSubOcr.ShowDialog(this) == DialogResult.OK)
                     {
                         MakeHistoryForUndo(_language.BeforeImportFromMatroskaFile);
@@ -12130,7 +12130,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var sub = new Subtitle();
                     string fileName = openFileDialog1.FileName;
 
-                    //TODO: Check for mkv etc
+                    // TODO: Check for mkv etc
                     if (Path.GetExtension(fileName).Equals(".sub", StringComparison.OrdinalIgnoreCase) && IsVobSubFile(fileName, false))
                     {
                         MessageBox.Show(_language.NoSupportHereVobSub);
@@ -16768,8 +16768,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             //if (autoDuration)
             //{
-            //    //TODO: auto duration
-            //    //TODO: search for start via wave file (must only be minor adjustment)
+            //    // TODO: auto duration
+            //    // TODO: Search for start via wave file (must only be minor adjustment)
             //}
 
             // current movie Position
