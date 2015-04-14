@@ -2963,13 +2963,15 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string text, string language)
         {
+            if (string.IsNullOrWhiteSpace(text))
+                return string.Empty;
+
             const string zeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
             const string noBreakSpace = "\u00A0";
             const string operatingSystemCommand = "\u009D";
 
             text = text.Trim();
-
             text = text.Replace(zeroWidthSpace, string.Empty);
             text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
             text = text.Replace(noBreakSpace, " ");
@@ -2985,21 +2987,24 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
 
-            text = text.Replace(". . ..", "...");
-            text = text.Replace(". ...", "...");
-            text = text.Replace(". .. .", "...");
-            text = text.Replace(". . .", "...");
-            text = text.Replace(". ..", "...");
-            text = text.Replace(".. .", "...");
-            text = text.Replace("....", "...");
-            text = text.Replace("....", "...");
-            text = text.Replace("....", "...");
-            text = text.Replace(" ..." + Environment.NewLine, "..." + Environment.NewLine);
+            const string Ellipses = "...";
+            text = text.Replace(". . ..", Ellipses);
+            text = text.Replace(". ...", Ellipses);
+            text = text.Replace(". .. .", Ellipses);
+            text = text.Replace(". . .", Ellipses);
+            text = text.Replace(". ..", Ellipses);
+            text = text.Replace(".. .", Ellipses);
+            text = text.Replace("....", Ellipses);
+            while (text.Contains("...."))
+                text = text.Replace("....", Ellipses);
+
+            text = text.Replace(" ..." + Environment.NewLine, Ellipses + Environment.NewLine);
             text = text.Replace(Environment.NewLine + "... ", Environment.NewLine + "...");
             text = text.Replace(Environment.NewLine + "<i>... ", Environment.NewLine + "<i>...");
             text = text.Replace(Environment.NewLine + "- ... ", Environment.NewLine + "- ...");
             text = text.Replace(Environment.NewLine + "<i>- ... ", Environment.NewLine + "<i>- ...");
             text = text.Replace(Environment.NewLine + "- ... ", Environment.NewLine + "- ...");
+            text = text.Replace(" -" + Environment.NewLine, "-" + Environment.NewLine);
 
             if (text.StartsWith("... ", StringComparison.Ordinal))
                 text = text.Remove(3, 1);
