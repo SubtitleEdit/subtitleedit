@@ -870,15 +870,25 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             }
             if (text != oldText && lines.Length == 1 && Utilities.GetNumberOfLines(oldText) == 2)
             {
-                if (oldText.StartsWith("-", StringComparison.Ordinal) &&
-                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains("!" + Environment.NewLine) || oldText.Contains("?" + Environment.NewLine)))
+                if ((oldText.StartsWith("-", StringComparison.Ordinal) || oldText.StartsWith("<i>-", StringComparison.Ordinal)) &&
+                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains(".</i>" + Environment.NewLine) ||
+                     oldText.Contains("!" + Environment.NewLine) || oldText.Contains("!</i>" + Environment.NewLine) ||
+                     oldText.Contains("?" + Environment.NewLine) || oldText.Contains("?</i>" + Environment.NewLine)))
                 {
-                    text = text.TrimStart('-').TrimStart();
+                    if (text.StartsWith("<i>-"))
+                        text = "<i>" + text.Remove(0, 4).TrimStart();
+                    else
+                        text = text.TrimStart('-').TrimStart();
                 }
-                else if (oldText.Contains(Environment.NewLine + "-") &&
-                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains("!" + Environment.NewLine) || oldText.Contains("?" + Environment.NewLine)))
+                else if ((oldText.Contains(Environment.NewLine + "-") || oldText.Contains(Environment.NewLine + "<i>-")) &&
+                    (oldText.Contains("." + Environment.NewLine) || oldText.Contains(".</i>" + Environment.NewLine) ||
+                     oldText.Contains("!" + Environment.NewLine) || oldText.Contains("!</i>" + Environment.NewLine) ||
+                     oldText.Contains("?" + Environment.NewLine) || oldText.Contains("?</i>" + Environment.NewLine)))
                 {
-                    text = text.TrimStart('-').TrimStart();
+                    if (text.StartsWith("<i>-"))
+                        text = "<i>" + text.Remove(0, 4).TrimStart();
+                    else
+                        text = text.TrimStart('-').TrimStart();
                 }
             }
 
