@@ -1151,6 +1151,34 @@ namespace Test.Logic.Forms
             Assert.AreEqual(expected, actual);
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextSpeakerWithColonPlusLineWithHyphen()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = false;
+            string text = "WOMAN: <i>Mr. Sportello?</i>" + Environment.NewLine + "- Mm-hm.";
+            string expected = "<i>- Mr. Sportello?</i>" + Environment.NewLine + "- Mm-hm.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void RemoveTextSpeakerWithColonPlusLineWithHyphenAlsoRemoveInterjections()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "WOMAN: <i>Mr. Sportello?</i>" + Environment.NewLine + "- Mm-hm.";
+            string expected = "<i>Mr. Sportello?</i>";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
         #region Additional test attributes
 
         //
