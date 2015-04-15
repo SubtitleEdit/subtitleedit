@@ -222,6 +222,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!found && scriptInfoOn && !remove)
                         sb.AppendLine(tag + ": " + text);
+                    sb = new StringBuilder(sb.ToString().TrimEnd());
+                    sb.AppendLine();
                     sb.AppendLine();
                     scriptInfoOn = false;
                 }
