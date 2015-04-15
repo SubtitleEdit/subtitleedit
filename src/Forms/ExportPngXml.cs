@@ -125,33 +125,37 @@ namespace Nikse.SubtitleEdit.Forms
             return string.Format("{0:00}:{1:00}:{2:00}:{3:00}", tc.Hours, tc.Minutes, tc.Seconds, frames);
         }
 
-        private static ContentAlignment GetAlignmentFromParagraph(Paragraph p, SubtitleFormat format, Subtitle subtitle)
+        private static ContentAlignment GetAlignmentFromParagraph(MakeBitmapParameter p, SubtitleFormat format, Subtitle subtitle)
         {
             var alignment = ContentAlignment.BottomCenter;
-            if (format.HasStyleSupport && !string.IsNullOrEmpty(p.Extra))
+            if (p.AlignLeft)
+                alignment = ContentAlignment.BottomLeft;
+            else if (p.AlignRight)
+                alignment = ContentAlignment.BottomRight;
+
+            if (format.HasStyleSupport && !string.IsNullOrEmpty(p.P.Extra))
             {
                 if (format.GetType() == typeof(SubStationAlpha))
                 {
-                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, subtitle.Header);
+                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.P.Extra, subtitle.Header);
                     alignment = GetSsaAlignment("{\\a" + style.Alignment + "}", alignment);
                 }
                 else if (format.GetType() == typeof(AdvancedSubStationAlpha))
                 {
-                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.Extra, subtitle.Header);
+                    var style = AdvancedSubStationAlpha.GetSsaStyle(p.P.Extra, subtitle.Header);
                     alignment = GetAssAlignment("{\\an" + style.Alignment + "}", alignment);
                 }
             }
 
-            string text = p.Text;
+            string text = p.P.Text;
             if (format.GetType() == typeof(SubStationAlpha) && text.Length > 5)
             {
-                text = p.Text.Substring(0, 6);
+                text = p.P.Text.Substring(0, 6);
                 alignment = GetSsaAlignment(text, alignment);
-
             }
             else if (text.Length > 6)
             {
-                text = p.Text.Substring(0, 6);
+                text = p.P.Text.Substring(0, 6);
                 alignment = GetAssAlignment(text, alignment);
             }
             return alignment;
@@ -282,7 +286,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (index < _subtitle.Paragraphs.Count)
             {
                 parameter.P = _subtitle.Paragraphs[index];
-                parameter.Alignment = GetAlignmentFromParagraph(parameter.P, _format, _subtitle);
+                parameter.Alignment = GetAlignmentFromParagraph(parameter, _format, _subtitle);
                 parameter.Forced = subtitleListView1.Items[index].Checked;
 
                 if (_format.HasStyleSupport && !string.IsNullOrEmpty(parameter.P.Extra))
@@ -940,7 +944,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
                         {
                             var nbmp = new NikseBitmap(param.Bitmap);
-                            nbmp.ReplaceTransparentWith(Color.Blue);
+                            nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
                             using (var bmp = nbmp.GetBitmap())
                             {
                                 // param.Bitmap.Save(fileName, ImageFormat);
@@ -953,7 +957,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                                 var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
                                 {
-                                    b.Fill(Color.Blue);
+                                    b.Fill(panelFullFrameBackground.BackColor);                                  
                                     using (var fullSize = b.GetBitmap())
                                     {
                                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
@@ -2740,6 +2744,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             checkBoxFullFrameImage.Visible = exportType == "FAB";
+            panelFullFrameBackground.Visible = exportType == "FAB";
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
@@ -3034,6 +3039,17 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 MakeBitmapParameter mbp;
                 var bmp = GenerateImageFromTextWithStyle(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], out mbp);
+                if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                {
+                    var nbmp = new NikseBitmap(bmp);
+                    nbmp.ReplaceTransparentWith(panelFullFrameBackground.BackColor);
+                    bmp.Dispose();
+                    bmp = nbmp.GetBitmap();
+                }
+                else
+                {
+                    groupBoxExportImage.BackColor = Control.DefaultBackColor;
+                }
                 pictureBox1.Image = bmp;
 
                 int w = groupBoxExportImage.Width - 4;
@@ -3041,7 +3057,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 pictureBox1.Height = bmp.Height;
                 pictureBox1.Top = groupBoxExportImage.Height - bmp.Height - int.Parse(comboBoxBottomMargin.Text);
                 pictureBox1.Left = (w - bmp.Width) / 2;
-                var alignment = GetAlignmentFromParagraph(_subtitle.Paragraphs[subtitleListView1.SelectedItems[0].Index], _format, _subtitle);
+                var alignment = GetAlignmentFromParagraph(mbp, _format, _subtitle);
 
                 // fix alignment from UI
                 if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
@@ -3088,7 +3104,14 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    groupBoxExportImage.BackColor = groupBoxImageSettings.BackColor;
+                    if (checkBoxFullFrameImage.Visible && checkBoxFullFrameImage.Checked)
+                    {
+                        groupBoxExportImage.BackColor = panelFullFrameBackground.BackColor;
+                    }
+                    else
+                    {
+                        groupBoxExportImage.BackColor = groupBoxImageSettings.BackColor;
+                    }
                 }
             }
         }
@@ -3796,8 +3819,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         nBmp.CropSidesAndBottom(100, Color.Transparent, true);
                         using (var textBmp = nBmp.GetBitmap())
                         {
-
-                            var alignment = GetAlignmentFromParagraph(p, _format, _subtitle);
+                            var bp = MakeMakeBitmapParameter(subtitleListView1.SelectedItems[0].Index, width, height);
+                            var alignment = GetAlignmentFromParagraph(bp, _format, _subtitle);
                             if (comboBoxHAlign.Visible && alignment == ContentAlignment.BottomCenter && _format.GetType() != typeof(AdvancedSubStationAlpha) && _format.GetType() != typeof(SubStationAlpha))
                             {
                                 if (comboBoxHAlign.SelectedIndex == 0)
@@ -3848,6 +3871,23 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         {
             subtitleListView1_SelectedIndexChanged(null, null);
         }
+
+        private void panelFullFrameBackground_Click(object sender, EventArgs e)
+        {
+            using (var colorChooser = new ColorChooser { Color = panelFullFrameBackground.BackColor })
+            {
+                if (colorChooser.ShowDialog() == DialogResult.OK)
+                {
+                    panelFullFrameBackground.BackColor = colorChooser.Color;
+                    subtitleListView1_SelectedIndexChanged(null, null);
+                }
+            }
+        }
+
+        private void checkBoxFullFrameImage_CheckedChanged(object sender, EventArgs e)
+        {
+            subtitleListView1_SelectedIndexChanged(null, null);
+        }   
 
     }
 }
