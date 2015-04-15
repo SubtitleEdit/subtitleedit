@@ -37,6 +37,7 @@
             this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.groupBoxImageSettings = new System.Windows.Forms.GroupBox();
+            this.panelFullFrameBackground = new System.Windows.Forms.Panel();
             this.comboBoxLeftRightMargin = new System.Windows.Forms.ComboBox();
             this.labelLeftRightMargin = new System.Windows.Forms.Label();
             this.checkBoxFullFrameImage = new System.Windows.Forms.CheckBox();
@@ -166,6 +167,7 @@
             // 
             this.groupBoxImageSettings.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxImageSettings.Controls.Add(this.panelFullFrameBackground);
             this.groupBoxImageSettings.Controls.Add(this.comboBoxLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.labelLeftRightMargin);
             this.groupBoxImageSettings.Controls.Add(this.checkBoxFullFrameImage);
@@ -214,6 +216,16 @@
             this.groupBoxImageSettings.TabIndex = 3;
             this.groupBoxImageSettings.TabStop = false;
             this.groupBoxImageSettings.Text = "Image settings";
+            // 
+            // panelFullFrameBackground
+            // 
+            this.panelFullFrameBackground.BackColor = System.Drawing.Color.Blue;
+            this.panelFullFrameBackground.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelFullFrameBackground.Location = new System.Drawing.Point(659, 104);
+            this.panelFullFrameBackground.Name = "panelFullFrameBackground";
+            this.panelFullFrameBackground.Size = new System.Drawing.Size(21, 20);
+            this.panelFullFrameBackground.TabIndex = 58;
+            this.panelFullFrameBackground.Click += new System.EventHandler(this.panelFullFrameBackground_Click);
             // 
             // comboBoxLeftRightMargin
             // 
@@ -295,6 +307,7 @@
             this.checkBoxFullFrameImage.TabIndex = 23;
             this.checkBoxFullFrameImage.Text = "Full frame image";
             this.checkBoxFullFrameImage.UseVisualStyleBackColor = true;
+            this.checkBoxFullFrameImage.CheckedChanged += new System.EventHandler(this.checkBoxFullFrameImage_CheckedChanged);
             // 
             // checkBoxTransAntiAliase
             // 
@@ -1070,5 +1083,6 @@
         private System.Windows.Forms.CheckBox checkBoxFullFrameImage;
         private System.Windows.Forms.ComboBox comboBoxLeftRightMargin;
         private System.Windows.Forms.Label labelLeftRightMargin;
+        private System.Windows.Forms.Panel panelFullFrameBackground;
     }
 }
