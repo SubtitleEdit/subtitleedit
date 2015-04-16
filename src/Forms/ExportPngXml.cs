@@ -809,7 +809,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             {
                 Paragraph p = _subtitle.Paragraphs[i];
                 Paragraph next = _subtitle.Paragraphs[i + 1];
-                if (p.EndTime.TotalMilliseconds == next.StartTime.TotalMilliseconds)
+                if (Math.Abs(p.EndTime.TotalMilliseconds - next.StartTime.TotalMilliseconds) < 0.1)
                     p.EndTime.TotalMilliseconds--;
             }
         }
@@ -1615,9 +1615,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             Color c = parameter.SubtitleColor;
             var colorStack = new Stack<Color>();
             var lastText = new StringBuilder();
-            var sf = new StringFormat();
-            sf.Alignment = StringAlignment.Near;
-            sf.LineAlignment = StringAlignment.Near; // draw the text to a path
+            var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
             var bmp = new Bitmap(parameter.ScreenWidth, 200);
             var g = Graphics.FromImage(bmp);
 
@@ -1835,7 +1833,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                     parameter.BackgroundColor = parameter.BorderColor;
                 }
 
-                int count = 0;
                 bool italicOn = false;
                 string fontTag = string.Empty;
                 foreach (string line in parameter.P.Text.Replace(Environment.NewLine, "\n").Split('\n'))
@@ -1865,7 +1862,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         int w = Math.Max(bmp.Width, lineImage.Width);
                         int h = bmp.Height + lineImage.Height;
 
-                        int l1 = 0;
+                        int l1;
                         if (parameter.AlignLeft)
                             l1 = 0;
                         else if (parameter.AlignRight)
@@ -1873,7 +1870,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else
                             l1 = (int)Math.Round(((w - bmp.Width) / 2.0));
 
-                        int l2 = 0;
+                        int l2;
                         if (parameter.AlignLeft)
                             l2 = 0;
                         else if (parameter.AlignRight)
@@ -1903,7 +1900,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                             g.Dispose();
                         }
                     }
-                    count++;
                 }
                 parameter.P.Text = old;
                 parameter.Type3D = oldType3D;
@@ -2020,7 +2016,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (parameter.AlignRight)
                             lefts.Add(bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) - 15); // calculate via drawing+crop
                         else
-                            lefts.Add((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5) / 2); // calculate via drawing+crop
+                            lefts.Add((float)((bmp.Width - CalcWidthViaDraw(lineNoHtml, parameter) + 5.0) / 2.0)); // calculate via drawing+crop
                     }
                 }
                 else
@@ -2032,13 +2028,11 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                         else if (parameter.AlignRight)
                             lefts.Add(bmp.Width - (TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15));
                         else
-                            lefts.Add((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2);
+                            lefts.Add((float)((bmp.Width - TextDraw.MeasureTextWidth(font, line, parameter.SubtitleFontBold) + 15) / 2.0));
                     }
                 }
 
-                var sf = new StringFormat();
-                sf.Alignment = StringAlignment.Near;
-                sf.LineAlignment = StringAlignment.Near; // draw the text to a path
+                var sf = new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Near };
 
                 using (var g = Graphics.FromImage(bmp))
                 {
@@ -3048,7 +3042,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
                 }
                 else
                 {
-                    groupBoxExportImage.BackColor = Control.DefaultBackColor;
+                    groupBoxExportImage.BackColor = DefaultBackColor;
                 }
                 pictureBox1.Image = bmp;
 
@@ -3118,7 +3112,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void buttonColor_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = false })
+            bool showAlpha = _exportType == "FAB" || _exportType == "BDNXML";
+            using (var colorChooser = new ColorChooser { Color = panelColor.BackColor, ShowAlpha = showAlpha })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
