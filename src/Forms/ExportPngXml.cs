@@ -957,7 +957,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
                                 var b = new NikseBitmap(param.ScreenWidth, param.ScreenHeight);
                                 {
-                                    b.Fill(panelFullFrameBackground.BackColor);                                  
+                                    b.Fill(panelFullFrameBackground.BackColor);
                                     using (var fullSize = b.GetBitmap())
                                     {
                                         if (param.Alignment == ContentAlignment.BottomLeft || param.Alignment == ContentAlignment.MiddleLeft || param.Alignment == ContentAlignment.TopLeft)
@@ -3882,7 +3882,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void checkBoxFullFrameImage_CheckedChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
-        }   
+        }
 
     }
 }

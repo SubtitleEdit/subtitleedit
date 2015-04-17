@@ -428,8 +428,12 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Rand links/rechts</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub Dateiname wählen</SaveVobSubAs>
-    <SaveFabImageScriptAs>Blu-ray sup Dateiname wählen</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB image script Dateiname wählen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop Dateiname wählen</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premiere EDL Dateiname wählen</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml Dateiname wählen</SaveFcpAs>
+    <SaveDostAs>DoStudio dost Dateiname wählen</SaveDostAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
