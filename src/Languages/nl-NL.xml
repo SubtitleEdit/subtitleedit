@@ -428,8 +428,12 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Linker- en rechtermarge</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup-bestand kiezen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub-bestand kiezen</SaveVobSubAs>
-    <SaveFabImageScriptAs>Blu-ray sup-bestand kiezen</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB image script-bestand kiezen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL bestand kiezen</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop-bestand kiezen</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premiere EDL bestand kiezen</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml-bestand kiezen</SaveFcpAs>
+    <SaveDostAs>DoStudio dost-bestand kiezen</SaveDostAs>
     <SomeLinesWereTooLongX>Enkele regels zĳn te lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Regelhoogte</LineHeight>
     <BoxSingleLine>Enkellĳnig kader</BoxSingleLine>
