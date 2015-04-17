@@ -430,6 +430,10 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <SaveVobSubAs>Enregistrer en tant que VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Enregistrer en tant FabImage Script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Enregistrer en tant DVD Studio Pro Stl</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Enregistrer en tant Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Enregistrer en tant Premiere Edl</SavePremiereEdlAs>
+    <SaveFcpAs>Enregistrer en tant Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Enregistrer en tant DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Certaines lignes sont trop longues:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Hauteur de ligne</LineHeight>

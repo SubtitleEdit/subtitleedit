@@ -101,7 +101,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
   <AddToUserDictionary>
     <Title>Adăugare la dicționarul utilizatorului</Title>
     <Description>Adaugă cuvântul în dicționarul utilizatorului</Description>
-
   </AddToUserDictionary>
   <AddWaveform>
     <Title>Generarea datelor audio</Title>
@@ -131,13 +130,11 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <AddSeconds>Adăugă secunde</AddSeconds>
     <SetAsPercent>Setează ca procente din durată</SetAsPercent>
     <Note>Notă: Timpul afișat nu va fi peste timpul de start al textului următor</Note>
-
     <PleaseSelectAValueFromTheDropDownList>Selectează, te rog, o valoare din lista derulantă</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose>- Alege, te rog -</PleaseChoose>
   </AdjustDisplayDuration>
   <ApplyDurationLimits>
     <Title>Aplicarea limitelor de durată</Title>
-
     <FixesAvailable>Corecții disponibile: {0}</FixesAvailable>
     <UnableToFix>Imposibil de corectat: {0}</UnableToFix>
   </ApplyDurationLimits>
@@ -193,7 +190,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <Title>Schimbarea caracterelor</Title>
     <ChangeCasingTo>Schimbă caracterele...</ChangeCasingTo>
     <NormalCasing>Caractere normale. Propozițiile încep cu majusculă.</NormalCasing>
-
     <FixNamesCasing>Corectează caracterele (prin Dictionaries\NamesEtc.xml)</FixNamesCasing>
     <FixOnlyNamesCasing>Corect. doar caract. (prin Dictionaries\NamesEtc.xml)</FixOnlyNamesCasing>
     <OnlyChangeAllUppercaseLines>Schimbă doar toate maj. din liniile identice.</OnlyChangeAllUppercaseLines>
@@ -218,7 +214,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
   <ChangeSpeedInPercent>
     <Title>Corectarea vitezei în procente</Title>
     <Info>Schimbă viteza subtitrării în procente</Info>
-
     <Custom>Particular</Custom>
     <ToDropFrame>La cadrul final</ToDropFrame>
     <FromDropFrame>De la cadrul final</FromDropFrame>
@@ -299,13 +294,11 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FadeDownTime>Atenuarea inferioară a timpului</FadeDownTime>
     <ZPosition>Poziția Z</ZPosition>
     <ZPositionHelp>Numerele pozitive înlătură textul; numerele negative apropie textul; dacă poziția Z=0, atunci este 2D</ZPositionHelp>
-
     <ChooseColor>Alege culoarea...</ChooseColor>
     <Generate>Generează</Generate>
   </DCinemaProperties>
   <DurationsBridgeGaps>
-<Title>Șuntarea pauzelor mici din durate</Title>
-    
+    <Title>Șuntarea pauzelor mici din durate</Title>
     <GapsBridgedX>Numărul pauzelor mici șuntate: {0}</GapsBridgedX>
     <GapToNext>Pauză până la următoarea în secunde</GapToNext>
     <BridgeGapsSmallerThanXPart1>Pauze șuntate mai mici decât</BridgeGapsSmallerThanXPart1>
@@ -397,7 +390,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
   </ExportCustomText>
   <ExportCustomTextFormat>
     <Title>Șablon de formatare text particularizat</Title>
-
     <Template>Șablon</Template>
     <Header>Antet</Header>
     <TextLine>Text simplu (paragraf)</TextLine>
@@ -524,7 +516,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FixUppercaseIInsindeLowercaseWords>Corectează majuscula 'I' în cuvintele cu minusculă (eroare OCR)</FixUppercaseIInsindeLowercaseWords>
     <FixDoubleApostrophes>Corectează apostroful dublu ('') cu ghilimele simple (")</FixDoubleApostrophes>
     <AddPeriods>Adaugă punct după liniile unde următoarea linie începe cu majusculă</AddPeriods>
-
     <StartWithUppercaseLetterAfterParagraph>Începe cu majusculă după paragraf</StartWithUppercaseLetterAfterParagraph>
     <StartWithUppercaseLetterAfterPeriodInsideParagraph>Începe cu majusculă după punctul din interiorul paragrafului</StartWithUppercaseLetterAfterPeriodInsideParagraph>
     <StartWithUppercaseLetterAfterColon>Începe cu majusculă după două puncte/punct și virgulă</StartWithUppercaseLetterAfterColon>
@@ -553,7 +544,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
     <FixesFoundX>Corecturi găsite: {0}</FixesFoundX>
     <XFixesApplied>Corecturi făcute: {0}</XFixesApplied>
     <NothingToFixBut>Nimic de corectat, dar o serie de lucruri ar putea fi îmbunătățite - a se vedea jurnalul de detalii</NothingToFixBut>
-
     <FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>"Corectarea doar a lui 'i' la 'I' (în Engleză)" este bifată, dar subtitrarea încărcată nu pare să fie în engleză.</FixLowercaseIToUppercaseICheckedButCurrentLanguageIsNotEnglish>
     <Continue>Continuă</Continue>
     <ContinueAnyway>Continui oricum?</ContinueAnyway>
@@ -772,13 +762,13 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <Redo>Refacere</Redo>
         <ShowUndoHistory>Arată istoricul (ptr. Anulare)</ShowUndoHistory>
         <InsertUnicodeSymbol>Inserează simbol unicode</InsertUnicodeSymbol>
-    <InsertUnicodeControlCharacters>Inserează caractere de control Unicode</InsertUnicodeControlCharacters>
-        <InsertUnicodeControlCharactersLRM>Marcaj stânga-->dreapta (LRM)</InsertUnicodeControlCharactersLRM>
-        <InsertUnicodeControlCharactersRLM>Marcaj dreapta-->stânga (RLM)</InsertUnicodeControlCharactersRLM>
-        <InsertUnicodeControlCharactersLRE>Începutul încorporării st.-->dr. (LRE)</InsertUnicodeControlCharactersLRE>
-        <InsertUnicodeControlCharactersRLE>Începutul încorporării dr.-->st. (RLE)</InsertUnicodeControlCharactersRLE>
-        <InsertUnicodeControlCharactersLRO>Începutul suprapunerii st.-->dr. (LRO)</InsertUnicodeControlCharactersLRO>
-        <InsertUnicodeControlCharactersRLO>Începutul suprapunerii dr.-->st. (RLO)</InsertUnicodeControlCharactersRLO>
+        <InsertUnicodeControlCharacters>Inserează caractere de control Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Marcaj stânga--&gt;dreapta (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Marcaj dreapta--&gt;stânga (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Începutul încorporării st.--&gt;dr. (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Începutul încorporării dr.--&gt;st. (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Începutul suprapunerii st.--&gt;dr. (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Începutul suprapunerii dr.--&gt;st. (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Caută</Find>
         <FindNext>Mai &amp;caută</FindNext>
         <Replace>&amp;Înlocuiește</Replace>
@@ -909,7 +899,7 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
         <TimedTextStyles>Stiluri de text temporizat...</TimedTextStyles>
         <TimedTextSetLanguage>Text temporizat - setare limbă</TimedTextSetLanguage>
         <SamiSetStyle>Sami - setare clasa</SamiSetStyle>
-       <NuendoSetStyle>Nuendo - setare caracter</NuendoSetStyle>
+        <NuendoSetStyle>Nuendo - setare caracter</NuendoSetStyle>
         <Cut>Decupează</Cut>
         <Copy>Copiază</Copy>
         <Paste>Lipește</Paste>
@@ -1008,7 +998,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
       <TranslateTip>Sfat: Folosește tastele &lt;Alt+↑/↓&gt; ca să ajungi la subtitrarea anterioară/următoare</TranslateTip>
       <CreateTip>Sfat: Folosește tastele &lt;Ctrl+←/→&gt;</CreateTip>
       <AdjustTip>Sfat: Folosește tastele &lt;Alt+↑/↓&gt; ca să ajungi la subtitrarea anterioară/următoare</AdjustTip>
-
       <BeforeChangingTimeInWaveformX>Înaintea schimbării timpului în audio: {0}</BeforeChangingTimeInWaveformX>
       <NewTextInsertAtX>Text nou inserat la {0}</NewTextInsertAtX>
       <Center>Centru</Center>
@@ -1047,7 +1036,6 @@ E-mail la: nikse.dk @gmail.com</AboutText1>
 Fișier valabil doar ptr. citire!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Imposibilă salvarea subtitrării {0}
 Subt. pare incompletă: încearcă o resalvare dacă lucrezi cu o subtitrare valabilă!</UnableToSaveSubtitleX>
-
     <BeforeNew>Înaintea celui nou</BeforeNew>
     <New>Nou</New>
     <BeforeConvertingToX>Înaintea conversiei la {0}</BeforeConvertingToX>
@@ -1060,15 +1048,11 @@ Subt. pare incompletă: încearcă o resalvare dacă lucrezi cu o subtitrare val
     <NewFrameRateUsedToCalculateFrameNumbers>Noua rată a cadrului ({0}) s-a folosit ptr. calculul startului/finalului numărului de cadre</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>Elementul căutat n-a fost găsit.
 Vrei s-o iei de la început și să mai cauți o dată?</FindContinue>
-
-
     <FindContinueTitle>Continui Căutarea?</FindContinueTitle>
     <ReplaceContinueNotFound>Elementul căutat nu s-a găsit. Vrei să continui căutarea
 și înlocuirea de la începutul documentului?</ReplaceContinueNotFound>
-
     <ReplaceXContinue>Elementul căutat a fost înlocuit {0} odată (ori).
 Vrei să continui căutarea și înlocuirea de la începutul documentului?</ReplaceXContinue>
-
     <ReplaceContinueTitle>Se continuă 'Înlocuirea'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Căutarea '{0}' de la numărul liniei {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>'{0}' găsit la numărul liniei {1}</XFoundAtLineNumberY>
@@ -1167,7 +1151,6 @@ Continui?</SubtitleAppendPrompt>
     <BlurayNotSubtitlesFound>Fișierul Blu-ray sup nu conține nicio subtitrare sau erori - încearcă iar demuxing.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Analiza fișierului Matroska. Așteaptă, te rog...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analiza fișierului Transport Stream file. Așteaptă, te rog...</ParsingTransportStreamFile>
-
     <BeforeImportFromMatroskaFile>Înaintea importării subtitrării din fișier Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Subtitrare importată din fișier Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Fișierul lăsat '{0}' neacceptat - fșierul este prea mare</DropFileXNotAccepted>
@@ -1282,7 +1265,7 @@ Continui?</SubtitleAppendPrompt>
     <ErrorLoadIdx>Nu se pot citi/edita fișiere .idx. Fișierele idx sunt o parte a fișierului perche idx/sub (numit și VobSub), iar SE poate deschide fișierul .sub.</ErrorLoadIdx>
     <ErrorLoadRar>Pare-se că fișierul este arhivat (rar). SE nu poate deschide fișiere arhivate.</ErrorLoadRar>
     <ErrorLoadZip>Pare-se că fișierul este arhivat (zip). SE nu poate deschide fișiere arhivate.</ErrorLoadZip>
-   <ErrorLoadPng>Pare-se că fișierul e o imagine PNG. SE nu poate deschide fișiere PNG.</ErrorLoadPng>
+    <ErrorLoadPng>Pare-se că fișierul e o imagine PNG. SE nu poate deschide fișiere PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Pare-se că fișierul e un ReScene .srr - nu o subtitrare.</ErrorLoadSrr>
     <ErrorLoadTorrent>Pare-se că fișierul e un BitTorrent - nu o subtitrare.</ErrorLoadTorrent>
     <NoSupportEncryptedVobSub>Conținutul VobSub criptat neacceptat.</NoSupportEncryptedVobSub>
@@ -1290,19 +1273,14 @@ Continui?</SubtitleAppendPrompt>
     <NoSupportHereDvdSup>Fișierele DVD sup neacceptate.</NoSupportHereDvdSup>
     <NoSupportHereVobSub>Fișierele VobSub neacceptate.</NoSupportHereVobSub>
     <NoSupportHereDivx>Fișierele Divx files neacceptate.</NoSupportHereDivx>
-
-
-
-	</Main>
+  </Main>
   <MatroskaSubtitleChooser>
     <Title>Alegere subtitrare din fișier Matroska</Title>
-
     <PleaseChoose>Sunt mai multe subtitrări: te rog, alege una</PleaseChoose>
     <TrackXLanguageYTypeZ>Pistă audio {0} - {1} - limbă: {2} - tip: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertor de măsură</Title>
-
     <ConvertFrom>Conversie de la</ConvertFrom>
     <ConvertTo>Conversie la</ConvertTo>
     <CopyToClipboard>Copiere în clipboard</CopyToClipboard>
@@ -1332,7 +1310,6 @@ Continui?</SubtitleAppendPrompt>
   </MergedShortLines>
   <MergeTextWithSameTimeCodes>
     <Title>Îmbinare linii cu aceleași coduri de timp</Title>
-
     <MaxDifferenceMilliseconds>Diferență maximă de milisecunde</MaxDifferenceMilliseconds>
     <ReBreakLines>Linii reîntrerupte</ReBreakLines>
     <NumberOfMergesX>Numărul îmbinărilor: {0}</NumberOfMergesX>
@@ -1386,13 +1363,10 @@ Continui?</SubtitleAppendPrompt>
     <Title>Alăturarea unei sesiuni de rețea</Title>
     <Information>Alătură-te sesiunii existente, unde mai multe persoane
 pot edita în același fișier de subtitrare (colaborare)</Information>
-
-
     <Join>Alătură-te</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
     <Title>Informații și jurnal despre sesiunea de rețea</Title>
-
     <Log>Jurnal:</Log>
   </NetworkLogAndInfo>
   <NetworkStart>
@@ -1400,8 +1374,6 @@ pot edita în același fișier de subtitrare (colaborare)</Information>
     <ConnectionTo>Conectare la {0}...</ConnectionTo>
     <Information>Start sesiune nouă, unde mai multe persoane
 pot edita în acelasi fișier de subtitrare (colaborare)</Information>
-
-
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1422,7 +1394,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <Type>Tip</Type>
     <OpenPluginsFolder>Deschide directorul 'Plugin-uri'</OpenPluginsFolder>
     <GetPluginsInfo1>Plugin-urile SE trebuie să fie descărcate în directorul 'Plugin-uri'</GetPluginsInfo1>
-
     <GetPluginsInfo2>Alege plugin-ul și clic pe 'Descărcare'</GetPluginsInfo2>
     <PluginXDownloaded>Plugin {0} descărcat</PluginXDownloaded>
     <Download>&amp;Descărcare</Download>
@@ -1494,7 +1465,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
   </SeekSilence>
   <SetMinimumDisplayTimeBetweenParagraphs>
     <Title>Setare timp minim de afișare între paragrafe</Title>
-
     <PreviewLinesModifiedX>Previz. - subtitrări modificate: {0}</PreviewLinesModifiedX>
     <ShowOnlyModifiedLines>Arată numai linii modificate</ShowOnlyModifiedLines>
     <MinimumMillisecondsBetweenParagraphs>Minim de milisecunde între linii</MinimumMillisecondsBetweenParagraphs>
@@ -1668,7 +1638,6 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <CreateSetEndAddNewAndGoToNew>Setează Sfârșit, adaugă Nou și treci la Nou.</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Corectează prin poziția de final și treci la următoarea</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Corectează finalul și treci mai departe</AdjustSetEndTimeAndGoToNext>
-
     <AdjustSetStartAutoDurationAndGoToNext>Setează Start, auto-durata și treci la următoarea</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Setează Sfârșit, următorul Start și treci la următoarea</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tasta ↓= setează Start-ul, tasta ↑= setează Sfârșitul și treci la următoarea</AdjustStartDownEndUpAndGoToNext>
@@ -1752,12 +1721,10 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
   <SetVideoOffset>
     <Title>Corectare decalare video</Title>
     <Description>Corectare decalare video (subtitrările n-ar trebui să respecte timpul real, de ex. +10 ore)</Description>
-
     <RelativeToCurrentVideoPosition>Raportat la poziția actuală a filmului</RelativeToCurrentVideoPosition>
   </SetVideoOffset>
   <ShowEarlierLater>
     <Title>Arată liniiile selectate mai devreme/mai târziu</Title>
-
     <TitleAll>Arată toate liniile mai devreme/mai târziu</TitleAll>
     <ShowEarlier>Arată mai devreme</ShowEarlier>
     <ShowLater>Arată mai târziu</ShowLater>
@@ -1952,25 +1919,21 @@ pot edita în acelasi fișier de subtitrare (colaborare)</Information>
     <Title>Punct de sincronizare</Title>
     <TitleViaOtherSubtitle>Pct. de sincr. prin altă subtitrare</TitleViaOtherSubtitle>
     <SyncHelp>Setează cel puțin două puncte de sincronizare ptr. sincr. brută</SyncHelp>
-
     <SetSyncPoint>Setează pct. de sincronizare</SetSyncPoint>
     <RemoveSyncPoint>Elimină punct de sincronizare</RemoveSyncPoint>
     <SyncPointsX>Puncte de sincr.: {0}</SyncPointsX>
     <Info>Un punct de sincr. va ajusta poz., două sau  mai multe puncte de sincr. vor ajusta poz. și viteza</Info>
-
     <ApplySync>Aplică</ApplySync>
   </PointSync>
   <TransportStreamSubtitleChooser>
     <Title>Selector flux de transport subtitrare - {0}</Title>
-
     <PidLine>Identificator Pachet de Transport (PID) = {0}, numărul subtitrărilor = {1}</PidLine>
     <SubLine>{0}: {1} -&gt; {2}, {3} imagine(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Tip necunoscut de subtitrare</Title>
     <Message>Dacă vrei corectare, trimite, te rog, un e-mail la: niksedk@gmail.com și include o copie a subtitrării</Message>
-
-	</UnknownSubtitle>
+  </UnknownSubtitle>
   <VisualSync>
     <Title>Sincronizare vizuală</Title>
     <StartScene>Start scenă</StartScene>
@@ -1988,11 +1951,9 @@ Păstrezi schimbările?</KeepChangesMessage>
     <SynchronizationDone>Sincronizare făcută!</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Startul scenei trebuie să fie înaintea sfârșitului scenei!</StartSceneMustComeBeforeEndScene>
     <Tip>Sfat: Tastele &lt;Ctrl+←/→&gt; ptr. mutare 100 ms înapoi/înainte</Tip>
-
-	</VisualSync>
+  </VisualSync>
   <VobSubEditCharacters>
     <Title>Editare imagine comparată cu baza de date</Title>
-
     <ChooseCharacter>Alege caracter(e)</ChooseCharacter>
     <ImageCompareFiles>Fișiere ale imaginii comparate</ImageCompareFiles>
     <CurrentCompareImage>Compară imaginea curentă</CurrentCompareImage>
@@ -2059,8 +2020,7 @@ Păstrezi schimbările?</KeepChangesMessage>
     <InspectCompareMatchesForCurrentImage>Inspect. potrivirile comparate ptr. imaginea curentă...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Editează ultimele modificări la imaginea comparată...</EditLastAdditions>
     <SetUnitalicFactor>Corectează factorul ne-italic...</SetUnitalicFactor>
-
-	</VobSubOcr>
+  </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Imagine manuală pentru text</Title>
     <ShrinkSelection>Reduce selecția</ShrinkSelection>
@@ -2079,15 +2039,13 @@ Păstrezi schimbările?</KeepChangesMessage>
   </VobSubOcrCharacter>
   <VobSubOcrCharacterInspect>
     <Title>Inspectare potriviri comparate ptr. imaginea curentă</Title>
-
     <InspectItems>Inspectează elemente</InspectItems>
     <AddBetterMatch>Adaugă potrivirea mai bună</AddBetterMatch>
   </VobSubOcrCharacterInspect>
   <VobSubOcrNewFolder>
     <Title>Dosar nou</Title>
     <Message>Nume dosar nou ptr. bază de date caractere</Message>
-
-	</VobSubOcrNewFolder>
+  </VobSubOcrNewFolder>
   <VobSubOcrSetItalicFactor>
     <Title>Setare factor ne-italic</Title>
     <Description>Corectează valoare până ce textul e normal și ne-italic. Reține că imaginea originală ar trebui să fie italică.</Description>
