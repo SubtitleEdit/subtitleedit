@@ -76,7 +76,8 @@
   </General>
   <About>
     <Title>* Subtitle Edit 정보</Title>
-    <AboutText1>Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
+    <AboutText1>
+Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
 자유롭게 배포할 수 있으며 수정해서 사용할 수 있습니다.
 C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
 최신 버전은 홈페이지(www.nikse.dk)를 방문하시기 바랍니다.
@@ -424,8 +425,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <LeftRightMargin>좌/우 여백</LeftRightMargin>
     <SaveBluRraySupAs>블루레이 자막 (sup) 파일로 저장</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub 파일로 저장</SaveVobSubAs>
-    <SaveFabImageScriptAs>Fab 이미지 스크립트로 저장</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB 이미지 스크립트 파일 이름 선택</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL로 저장</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop 파일 이름 선택</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premier EDL 파일 이름 선택</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml 파일 이름 선택</SaveFcpAs>
+    <SaveDostAs>DoStudio dost 파일 이름 선택</SaveDostAs>
     <SomeLinesWereTooLongX>너무 긴 줄: {0}</SomeLinesWereTooLongX>
     <LineHeight>줄높이</LineHeight>
     <BoxSingleLine>상자 - 한 줄</BoxSingleLine>
@@ -1000,7 +1005,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SaveChangesToX>{0} 이름으로 저장하시겠습니까?</SaveChangesToX>
     <SaveChangesToUntitledOriginal>현재의 원본 자막을 다른 이름으로 저장하시겠습니까?</SaveChangesToUntitledOriginal>
     <SaveChangesToOriginalX>원본 자막을 {0} 이름으로 저장하시겠습니까?</SaveChangesToOriginalX>
-    <SaveSubtitleAs>자막 저장...</SaveSubtitleAs>
+    <SaveSubtitleAs> 자막 저장...</SaveSubtitleAs>
     <SaveOriginalSubtitleAs>원본 자막 다른 이름으로 저장...</SaveOriginalSubtitleAs>
     <NoSubtitleLoaded>로드된 자막이 없습니다!</NoSubtitleLoaded>
     <VisualSyncSelectedLines>시각 동기화 - 선택한 줄</VisualSyncSelectedLines>
@@ -1086,7 +1091,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <SubtitleTranslated>자막이 번역됨!</SubtitleTranslated>
     <TranslateSwedishToDanish>현재 로드된 스웨덴어 자막을 덴마크어로 번역</TranslateSwedishToDanish>
     <TranslateSwedishToDanishWarning>현재 로드된 자막이 스웨덴어가 확실합니까?
-스웨덴어가 맞으면 덴마크어로 번역될 것입니다.</TranslateSwedishToDanishWarning>
+스웨덴어가 맞으면 덴마크어로 번역될 것입니다.
+    </TranslateSwedishToDanishWarning>
     <TranslatingViaNikseDkMt>www.nikse.dk/mt를 통해 번역하는 중...</TranslatingViaNikseDkMt>
     <BeforeSwedishToDanishTranslation>스웨덴어를 덴마크어로 번역 전</BeforeSwedishToDanishTranslation>
     <TranslationFromSwedishToDanishComplete>스웨덴어를 덴마크어로 번역했습니다!</TranslationFromSwedishToDanishComplete>
@@ -1716,7 +1722,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <TitleAll>* 모든 줄 빠르게/느리게 표시</TitleAll>
     <ShowEarlier>빠르게</ShowEarlier>
     <ShowLater>느리게</ShowLater>
-    <TotalAdjustmentX>☞ 싱크 합계: {0} 초</TotalAdjustmentX>
+    <TotalAdjustmentX> ☞ 싱크 합계: {0} 초</TotalAdjustmentX>
     <AllLines>모든 줄</AllLines>
     <SelectedLinesOnly>선택한 줄</SelectedLinesOnly>
     <SelectedLinesAndForward>선택한 줄 이후</SelectedLinesAndForward>
@@ -2010,8 +2016,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub의 이미지 자막을 텍스트로...</Title>
-    <ShrinkSelection>선택 영역 축소</ShrinkSelection>
-    <ExpandSelection>선택 영역 확대</ExpandSelection>
+    <ShrinkSelection>선택 영역 축소(&amp;D)</ShrinkSelection>
+    <ExpandSelection>선택 영역 확대(&amp;E)</ExpandSelection>
     <SubtitleImage>이미지 자막</SubtitleImage>
     <Characters>문자:</Characters>
     <CharactersAsText>문자 입력</CharactersAsText>
