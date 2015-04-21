@@ -2565,7 +2565,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string ToSuperscript(string text)
         {
             var sb = new StringBuilder();
-            var superscript = new List<char>{
+            IList<char> superscript = new List<char>{
                                               '⁰',
                                               '¹',
                                               '²',
@@ -2625,7 +2625,7 @@ namespace Nikse.SubtitleEdit.Logic
                                               'ᵁ',
                                               'ᵂ'
                                             };
-            var normal = new List<char>{
+            IList<char> normal = new List<char>{
                                          '0', // "⁰"
                                          '1', // "¹"
                                          '2', // "²"
@@ -2700,7 +2700,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string ToSubscript(string text)
         {
             var sb = new StringBuilder();
-            var subcript = new List<char>{
+            IList<char> subcript = new List<char>{
                                            '₀',
                                            '₁',
                                            '₂',
@@ -2725,7 +2725,7 @@ namespace Nikse.SubtitleEdit.Logic
                                            'ᵥ',
                                            'ₓ',
                                             };
-            var normal = new List<char>
+            IList<char> normal = new List<char>
                              {
                                '0',  // "₀"
                                '1',  // "₁"
