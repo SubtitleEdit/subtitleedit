@@ -1861,6 +1861,22 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (format == null)
                 {
+                    var pns = new Pns();
+                    if (pns.IsMine(null, fileName))
+                    {
+                        pns.LoadSubtitle(_subtitle, null, fileName);
+                        _oldSubtitleFormat = pns;
+                        SetCurrentFormat(Configuration.Settings.General.DefaultSubtitleFormat);
+                        SetEncoding(Configuration.Settings.General.DefaultEncoding);
+                        encoding = GetCurrentEncoding();
+                        justConverted = true;
+                        format = GetCurrentSubtitleFormat();
+                    }
+                }
+
+
+                if (format == null)
+                {
                     var cavena890 = new Cavena890();
                     if (cavena890.IsMine(null, fileName))
                     {

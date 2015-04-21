@@ -902,6 +902,7 @@
     <Compile Include="Logic\Ocr\OcrImage.cs" />
     <Compile Include="Logic\Ocr\NOcrPoint.cs" />
     <Compile Include="Logic\Ocr\SpellCheckOcrTextResult.cs" />
+    <Compile Include="Logic\SubtitleFormats\Pns.cs" />
     <Compile Include="Logic\SubtitleFormats\PacUnicode.cs" />
     <Compile Include="Logic\Settings.cs" />
     <Compile Include="Logic\Enums\SubtitleSortCriteria.cs" />
