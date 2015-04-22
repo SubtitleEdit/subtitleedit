@@ -88,6 +88,10 @@ namespace Nikse.SubtitleEdit.Forms
         public ExportPngXml()
         {
             InitializeComponent();
+
+            var toolTip = new ToolTip { ShowAlways = true };
+            toolTip.SetToolTip(panelFullFrameBackground, Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor);
+
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
             _borderColor = Configuration.Settings.Tools.ExportBorderColor;
@@ -2738,7 +2742,6 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             bool showImageFormat = exportType == "FAB" || exportType == "IMAGE/FRAME" || exportType == "STL" || exportType == "FCP";
             checkBoxFullFrameImage.Visible = exportType == "FAB";
-            panelFullFrameBackground.Visible = exportType == "FAB";
             comboBoxImageFormat.Visible = showImageFormat;
             labelImageFormat.Visible = showImageFormat;
             labelFrameRate.Visible = exportType == "BDNXML" || exportType == "BLURAYSUP" || exportType == "DOST" || exportType == "IMAGE/FRAME";
@@ -3869,7 +3872,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
         private void panelFullFrameBackground_Click(object sender, EventArgs e)
         {
-            using (var colorChooser = new ColorChooser { Color = panelFullFrameBackground.BackColor })
+            using (var colorChooser = new ColorChooser { Color = panelFullFrameBackground.BackColor, Text = Configuration.Settings.Language.ExportPngXml.ChooseBackgroundColor })
             {
                 if (colorChooser.ShowDialog() == DialogResult.OK)
                 {
@@ -3882,6 +3885,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
         private void checkBoxFullFrameImage_CheckedChanged(object sender, EventArgs e)
         {
             subtitleListView1_SelectedIndexChanged(null, null);
+            panelFullFrameBackground.Visible = checkBoxFullFrameImage.Checked;
         }
 
     }
