@@ -440,6 +440,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxSingleLine>Box - single line</BoxSingleLine>
     <BoxMultiLine>Box - multi line</BoxMultiLine>
     <Forced>Forced</Forced>
+    <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>

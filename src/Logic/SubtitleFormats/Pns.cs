@@ -117,7 +117,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             while (index < buffer.Length - 20)
             {
-
+                // pattern for control codes
                 if (buffer.Length > index + 20 &&
                     buffer[index + 00] == 0 && 
                     buffer[index + 01] == 0 &&
@@ -146,8 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     if (buffer.Length > index + 15 + textLength)
                     {
-//                        string text = Encoding.GetEncoding(1252).GetString(buffer, index + 16, textLength);
-                        string text = Encoding.UTF8.GetString(buffer, index + 16, textLength);
+                        string text = Encoding.UTF8.GetString(buffer, index + 16, textLength); // encoding?
                         text = text.Replace("\r", Environment.NewLine);
                         index += (15 + textLength);
                         var p = new Paragraph(text, startSeconds * 1000 + FramesToMillisecondsMax999(startFrame), endSeconds * 1000 + FramesToMillisecondsMax999(endFrame));

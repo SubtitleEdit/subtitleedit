@@ -612,6 +612,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BoxSingleLine = "Box - single line",
                 BoxMultiLine = "Box - multi line",
                 Forced = "Forced",
+                ChooseBackgroundColor = "Choose background color",
             };
 
             ExportText = new LanguageStructure.ExportText

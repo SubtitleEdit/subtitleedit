@@ -219,12 +219,13 @@
             // 
             // panelFullFrameBackground
             // 
-            this.panelFullFrameBackground.BackColor = System.Drawing.Color.Blue;
+            this.panelFullFrameBackground.BackColor = System.Drawing.Color.Transparent;
             this.panelFullFrameBackground.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelFullFrameBackground.Location = new System.Drawing.Point(659, 104);
             this.panelFullFrameBackground.Name = "panelFullFrameBackground";
             this.panelFullFrameBackground.Size = new System.Drawing.Size(21, 20);
             this.panelFullFrameBackground.TabIndex = 58;
+            this.panelFullFrameBackground.Visible = false;
             this.panelFullFrameBackground.Click += new System.EventHandler(this.panelFullFrameBackground_Click);
             // 
             // comboBoxLeftRightMargin
