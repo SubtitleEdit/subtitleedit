@@ -4342,7 +4342,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ReplaceViaRegularExpression()
         {
             var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
-            if (_findHelper.ReplaceText.Contains("$"))
+            if (_findHelper.ReplaceText.Contains('$'))
             {
                 string result = r.Replace(textBoxListViewText.Text, _findHelper.ReplaceText);
                 if (result != textBoxListViewText.Text)
@@ -4670,9 +4670,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             // we only update selected lines
                             int i = 0;
-                            List<int> deletes = new List<int>();
                             if (_networkSession != null)
                             {
+                                var deletes = new List<int>();
                                 _networkSession.TimerStop();
                                 foreach (int index in SubtitleListview1.SelectedIndices)
                                 {
@@ -4693,24 +4693,19 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                foreach (int index in SubtitleListview1.SelectedIndices)
+                                for (int index = SubtitleListview1.SelectedIndices.Count - 1; index >= 0; index--)
                                 {
                                     var pOld = _subtitle.Paragraphs[index];
                                     var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
                                     if (p == null)
                                     {
-                                        deletes.Add(index);
+                                        _subtitle.Paragraphs.RemoveAt(index);
                                     }
                                     else
                                     {
                                         _subtitle.Paragraphs[index] = p;
                                     }
                                     i++;
-                                }
-                                deletes.Reverse();
-                                foreach (int index in deletes)
-                                {
-                                    _subtitle.Paragraphs.RemoveAt(index);
                                 }
                             }
                             ShowStatus(_language.CommonErrorsFixedInSelectedLines);
@@ -9364,9 +9359,9 @@ namespace Nikse.SubtitleEdit.Forms
                         byte[] buffer = new byte[26];
                         f.Read(buffer, 0, 26);
 
-                        if (buffer[2]  == 0x3a && // :
-                            buffer[5]  == 0x3a && // :
-                            buffer[8]  == 0x2e && // .
+                        if (buffer[2] == 0x3a && // :
+                            buffer[5] == 0x3a && // :
+                            buffer[8] == 0x2e && // .
                             buffer[12] == 0x2d && // -
                             buffer[15] == 0x3a && // :
                             buffer[18] == 0x3a && // :
