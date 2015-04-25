@@ -4805,14 +4805,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
+            double lengthInSeconds = 0;
+            if (mediaPlayer.VideoPlayer != null)
+                lengthInSeconds = mediaPlayer.Duration;
 
             if (Configuration.Settings.Tools.SplitAdvanced)
             {
                 using (var split = new Split())
                 {
-                    double lengthInSeconds = 0;
-                    if (mediaPlayer.VideoPlayer != null)
-                        lengthInSeconds = mediaPlayer.Duration;
                     split.Initialize(_subtitle, _fileName, GetCurrentSubtitleFormat());
                     if (split.ShowDialog(this) == DialogResult.OK)
                     {
@@ -4829,9 +4829,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var splitSubtitle = new SplitSubtitle())
                 {
-                    double lengthInSeconds = 0;
-                    if (mediaPlayer.VideoPlayer != null)
-                        lengthInSeconds = mediaPlayer.Duration;
                     splitSubtitle.Initialize(_subtitle, _fileName, GetCurrentSubtitleFormat(), GetCurrentEncoding(), lengthInSeconds);
                     if (splitSubtitle.ShowDialog(this) == DialogResult.OK)
                     {
