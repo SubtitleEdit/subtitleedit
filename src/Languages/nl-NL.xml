@@ -439,7 +439,6 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxSingleLine>Enkellĳnig kader</BoxSingleLine>
     <BoxMultiLine>Meerlĳnig kader</BoxMultiLine>
     <Forced>Ingebakken</Forced>
-    <ChooseBackgroundColor>Kies achtergrondkleur</ChooseBackgroundColor>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
