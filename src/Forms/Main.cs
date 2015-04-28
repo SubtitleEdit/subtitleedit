@@ -11334,7 +11334,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var tmp = new Subtitle();
                     var format = new SubRip();
                     var list = new List<string>();
-                    foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in text.SplitToLines())
                         list.Add(line);
                     format.LoadSubtitle(tmp, list, null);
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
@@ -14617,8 +14617,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrEmpty(_fileName))
                     {
-                        saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
-                        openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                        var dirName = Path.GetDirectoryName(fileName);
+                        saveFileDialog1.InitialDirectory = dirName;
+                        openFileDialog1.InitialDirectory = dirName;
                     }
                     OpenVideo(fileName);
                 }
