@@ -1195,9 +1195,11 @@
     <Word from="SoBl3lNG" to="SOBBING" />
     <Word from="Sojust" to="So just" />
     <Word from="soldierl" to="soldier!" />
-    <Word from="somethlng" to="somethlng" />
+    <Word from="somethlng" to="something" />
     <Word from="somethlng's" to="something's" />
     <Word from="somez'/7/ng" to="something" />
+    <Word from="somthing" to="something" />
++   <Word from="sumthing" to="something" />
     <Word from="sou/" to="soul" />
     <Word from="SoundofMusic" to="Sound of Music" />
     <Word from="SP/ash" to="Splash" />
