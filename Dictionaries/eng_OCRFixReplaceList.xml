@@ -109,6 +109,7 @@
     <Word from="accldent" to="accident" />
     <Word from="Acool" to="A cool" />
     <Word from="afier" to="after" />
+    <Word from="affraid" to="afraid" />
     <Word from="Afriend" to="A friend" />
     <Word from="afterall" to="after all" />
     <Word from="afterthe" to="after the" />
@@ -1193,6 +1194,7 @@
     <Word from="Smiih" to="Smith" />
     <Word from="so/id" to="solid" />
     <Word from="SoBl3lNG" to="SOBBING" />
+    <Word from="soemtimes" to="sometimes />
     <Word from="Sojust" to="So just" />
     <Word from="soldierl" to="soldier!" />
     <Word from="somethlng" to="somethlng" />
@@ -1361,6 +1363,7 @@
     <Word from="ve/y" to="very" />
     <Word from="veiy" to="very" />
     <Word from="Véry" to="Very" />
+    <Word from="versioin" to="version" />
     <Word from="vi/ay" to="way" />
     <Word from="visitjails" to="visit jails" />
     <Word from="Viva/di's" to="Vivaldi's" />
