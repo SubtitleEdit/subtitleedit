@@ -439,6 +439,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxSingleLine>Enkellĳnig kader</BoxSingleLine>
     <BoxMultiLine>Meerlĳnig kader</BoxMultiLine>
     <Forced>Ingebakken</Forced>
+    <ChooseBackgroundColor>Kies achtergrondkleur</ChooseBackgroundColor>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
@@ -1508,7 +1509,7 @@ hetzelfde ondertitelbestand bewerken (samenwerking)</Information>
     <SubtitleBold>Vet</SubtitleBold>
     <SubtitleCenter>Midden</SubtitleCenter>
     <SubtitleFontColor>Ondertitel tekstkleur</SubtitleFontColor>
-    <SubtitleBackgroundColor>Ondertitel achtergrond kleur</SubtitleBackgroundColor>
+    <SubtitleBackgroundColor>Ondertitel achtergrondkleur</SubtitleBackgroundColor>
     <SpellChecker>Spellingcontrole</SpellChecker>
     <RememberRecentFiles>Onthoud recente bestanden (voor heropenen)</RememberRecentFiles>
     <StartWithLastFileLoaded>Begin met laatst geladen bestand</StartWithLastFileLoaded>
