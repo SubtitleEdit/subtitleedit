@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -37,7 +38,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "\r");
                 sb.AppendLine(string.Format("{0:00}:{1:00}:{2:00}.{3:000}\t{4:00}:{5:00}:{6:00}.{7:000}\t{8:00}:{9:00}:{10:00}.{11:000}\t{12}",
                                             p.StartTime.Hours, p.StartTime.Minutes, p.StartTime.Seconds, p.StartTime.Milliseconds,
@@ -102,7 +103,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
 
                 }
-                if (!isTimeCode && lastParagraph != null && Utilities.CountTagInText(lastParagraph.Text, Environment.NewLine) < 4)
+                if (!isTimeCode && lastParagraph != null && Utilities.GetNumberOfLines(lastParagraph.Text) < 5)
                 {
                     lastParagraph.Text += Environment.NewLine + line.Trim();
                     success = true;

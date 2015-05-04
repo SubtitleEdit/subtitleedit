@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -26,18 +26,11 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             labelEffectColor.Text = l.FontEffectColor;
             buttonFontEffectColor.Text = l.ChooseColor;
             labelFontSize.Text = l.FontSize;
-
-            if (!string.IsNullOrEmpty(l.TopBottomMargin)) //TODO: Remove in SE 3.4
-            {
-                labelTopBottomMargin.Text = l.TopBottomMargin;
-                labelZPosition.Text = l.ZPosition;
-                labelZPositionHelp.Text = l.ZPositionHelp;
-            }
-            if (!string.IsNullOrEmpty(l.FadeUpTime)) //TODO: Remove in SE 3.4
-            {
-                labelFadeUpTime.Text = l.FadeUpTime;
-                labelFadeDownTime.Text = l.FadeDownTime;
-            }
+            labelTopBottomMargin.Text = l.TopBottomMargin;
+            labelZPosition.Text = l.ZPosition;
+            labelZPositionHelp.Text = l.ZPositionHelp;
+            labelFadeUpTime.Text = l.FadeUpTime;
+            labelFadeDownTime.Text = l.FadeDownTime;
 
             foreach (CultureInfo x in CultureInfo.GetCultures(CultureTypes.NeutralCultures))
             {
@@ -68,31 +61,30 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     comboBoxFontEffect.SelectedIndex = 0;
                 panelFontEffectColor.BackColor = ss.CurrentDCinemaFontEffectColor;
                 numericUpDownFontSize.Value = ss.CurrentDCinemaFontSize;
-                if (numericUpDownTopBottomMargin.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaBottomMargin &&
-                   numericUpDownTopBottomMargin.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaBottomMargin)
-                    numericUpDownTopBottomMargin.Value = Configuration.Settings.SubtitleSettings.DCinemaBottomMargin;
+                if (numericUpDownTopBottomMargin.Minimum <= ss.DCinemaBottomMargin &&
+                   numericUpDownTopBottomMargin.Maximum >= ss.DCinemaBottomMargin)
+                    numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
                 else
                     numericUpDownTopBottomMargin.Value = 8;
 
-                if (numericUpDownFadeUp.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime &&
-                   numericUpDownFadeUp.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime)
-                    numericUpDownFadeUp.Value = Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime;
+                if (numericUpDownFadeUp.Minimum <= ss.DCinemaFadeUpTime &&
+                   numericUpDownFadeUp.Maximum >= ss.DCinemaFadeUpTime)
+                    numericUpDownFadeUp.Value = ss.DCinemaFadeUpTime;
                 else
                     numericUpDownFadeUp.Value = 5;
 
-                if (numericUpDownFadeDown.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime &&
-                   numericUpDownFadeDown.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime)
-                    numericUpDownFadeDown.Value = Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime;
+                if (numericUpDownFadeDown.Minimum <= ss.DCinemaFadeDownTime &&
+                   numericUpDownFadeDown.Maximum >= ss.DCinemaFadeDownTime)
+                    numericUpDownFadeDown.Value = ss.DCinemaFadeDownTime;
                 else
                     numericUpDownFadeDown.Value = 5;
 
-                decimal zPosition = (decimal)Configuration.Settings.SubtitleSettings.DCinemaZPosition;
+                decimal zPosition = (decimal)ss.DCinemaZPosition;
                 if (numericUpDownZPosition.Minimum <= zPosition &&
                    numericUpDownZPosition.Maximum >= zPosition)
                     numericUpDownZPosition.Value = zPosition;
                 else
                     numericUpDownZPosition.Value = 0;
-
             }
             FixLargeFonts(buttonCancel);
         }
@@ -142,10 +134,10 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                 ss.CurrentDCinemaFontEffect = string.Empty;
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
-            Configuration.Settings.SubtitleSettings.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
-            Configuration.Settings.SubtitleSettings.DCinemaFadeUpTime = (int)numericUpDownFadeUp.Value;
-            Configuration.Settings.SubtitleSettings.DCinemaFadeDownTime = (int)numericUpDownFadeDown.Value;
-            Configuration.Settings.SubtitleSettings.DCinemaZPosition = (double)numericUpDownZPosition.Value;
+            ss.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
+            ss.DCinemaFadeUpTime = (int)numericUpDownFadeUp.Value;
+            ss.DCinemaFadeDownTime = (int)numericUpDownFadeDown.Value;
+            ss.DCinemaZPosition = (double)numericUpDownZPosition.Value;
 
             DialogResult = DialogResult.OK;
         }

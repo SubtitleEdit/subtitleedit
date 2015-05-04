@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -25,7 +26,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode paragraph = xml.CreateElement("SubtitleItem");
 
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = "<Text><![CDATA[" + paragraph.InnerXml.Replace(Environment.NewLine, "\\n") + "\\n]]></Text>";
 

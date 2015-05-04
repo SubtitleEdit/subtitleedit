@@ -1,10 +1,58 @@
-using System;
+﻿using System;
 using System.Text;
 
 namespace Nikse.SubtitleEdit.Core
 {
     internal static class StringExtensions
     {
+        public static bool LineStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
+        {
+            if (text == null || (!threeLengthTag && !includeFont))
+                return false;
+            return StartsWithHtmlTag(text, threeLengthTag, includeFont);
+        }
+
+        public static bool LineEndsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
+        {
+            if (text == null || text.Length < 6)
+                return false;
+            return EndsWithHtmlTag(text, threeLengthTag, includeFont);
+        }
+
+        public static bool LineBreakStartsWithHtmlTag(this string text, bool threeLengthTag, bool includeFont = false)
+        {
+            if (text == null || (!threeLengthTag && !includeFont))
+                return false;
+            var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+            if (newLineIdx < 0 || text.Length < newLineIdx + 5)
+                return false;
+            text = text.Substring(newLineIdx + 2);
+            return StartsWithHtmlTag(text, threeLengthTag, includeFont);
+        }
+
+        private static bool StartsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
+        {
+            if (threeLengthTag && text.Length > 3 && text[0] == '<' && text[2] == '>' && (text[1] == 'i' || text[1] == 'I' || text[1] == 'u' || text[1] == 'U' || text[1] == 'b' || text[1] == 'B'))
+                return true;
+            if (includeFont && text.Length > 5 && text.StartsWith("<font", StringComparison.OrdinalIgnoreCase))
+                return text.IndexOf('>', 5) >= 5; // <font> or <font color="#000000">
+            return false;
+        }
+
+        private static bool EndsWithHtmlTag(string text, bool threeLengthTag, bool includeFont)
+        {
+            var len = text.Length;
+            if (text[len - 1] != '>')
+                return false;
+
+            // </font> </i>
+            if (threeLengthTag && len > 3 && text[len - 4] == '<' && text[len - 3] == '/')
+                return true;
+            if (includeFont && len > 8 && text[len - 7] == '<' && text[len - 6] == '/')
+                return true;
+            return false;
+        }
+
         public static bool StartsWith(this string s, char c)
         {
             return s.Length > 0 && s[0] == c;
@@ -33,6 +81,11 @@ namespace Nikse.SubtitleEdit.Core
         public static bool Contains(this string source, string value, StringComparison comparisonType)
         {
             return source.IndexOf(value, comparisonType) >= 0;
+        }
+
+        public static string[] SplitToLines(this string source)
+        {
+            return source.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
         }
 
         // http://www.codeproject.com/Articles/43726/Optimizing-string-operations-in-C
@@ -70,6 +123,42 @@ namespace Nikse.SubtitleEdit.Core
                 first = source.IndexOf(c0, ++first, limit - first);
             }
             return -1;
+        }
+
+        public static int IndexOfAny(this string s, string[] words, StringComparison comparionType)
+        {
+            if (words == null || string.IsNullOrEmpty(s))
+                return -1;
+            for (int i = 0; i < words.Length; i++)
+            {
+                var idx = s.IndexOf(words[i], comparionType);
+                if (idx >= 0)
+                    return idx;
+            }
+            return -1;
+        }
+
+        public static string FixExtraSpaces(this string s)
+        {
+            if (string.IsNullOrEmpty(s) || s.Trim().Length == 0)
+                return s;
+
+            while (s.Contains("  "))
+                s = s.Replace("  ", " ");
+            return s;
+        }
+
+        public static bool ContainsLetter(this string s)
+        {
+            if (string.IsNullOrWhiteSpace(s))
+                return false;
+
+            foreach (var c in s)
+            {
+                if (char.IsLetter(c))
+                    return true;
+            }
+            return false;
         }
     }
 }

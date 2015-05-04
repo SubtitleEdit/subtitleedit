@@ -467,7 +467,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             int start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?');
                 if (start < text.Length - 4)
                 {
@@ -490,7 +490,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
                 if (start < text.Length - 5)
                 {
@@ -510,7 +510,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             start = text.IndexOf(tag, StringComparison.Ordinal);
             while (start > 0)
             {
-                lastLine = Utilities.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
+                lastLine = HtmlUtil.RemoveHtmlTags(text.Substring(0, start)).TrimEnd().TrimEnd('-').TrimEnd();
                 endingBeforeThis = string.IsNullOrEmpty(lastLine) || lastLine.EndsWith('.') || lastLine.EndsWith('!') || lastLine.EndsWith('?') || lastLine.EndsWith(".</i>");
                 if (start < text.Length - 8)
                 {
@@ -645,14 +645,14 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
         private string FixLowercaseIToUppercaseI(string input, string lastLine)
         {
             var sb = new StringBuilder();
-            string[] lines = input.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = input.SplitToLines();
             for (int i = 0; i < lines.Length; i++)
             {
                 string l = lines[i];
 
                 if (i > 0)
                     lastLine = lines[i - 1];
-                lastLine = Utilities.RemoveHtmlTags(lastLine);
+                lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
 
                 if (string.IsNullOrEmpty(lastLine) ||
                     lastLine.EndsWith('.') ||
@@ -830,13 +830,13 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                 lastLine.EndsWith(']') ||
                 lastLine.EndsWith('♪'))
             {
-                lastLine = Utilities.RemoveHtmlTags(lastLine);
+                lastLine = HtmlUtil.RemoveHtmlTags(lastLine);
                 var st = new StripableText(input);
                 if (lastLine == null || (!lastLine.EndsWith("...") && !EndsWithAbbreviation(lastLine, abbreviationList)))
                 {
                     if (st.StrippedText.Length > 0 && !char.IsUpper(st.StrippedText[0]) && !st.Pre.EndsWith('[') && !st.Pre.EndsWith('(') && !st.Pre.EndsWith("..."))
                     {
-                        if (!StartsWithUrl(st.StrippedText))
+                        if (!HtmlUtil.StartsWithUrl(st.StrippedText))
                         {
                             var uppercaseLetter = char.ToUpper(st.StrippedText[0]);
                             if (st.StrippedText.Length > 1 && uppercaseLetter == 'L' && @"abcdfghjklmnpqrstvwxz".Contains(st.StrippedText[1]))
@@ -930,33 +930,6 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             }
 
             return input;
-        }
-
-        private static bool IsUrl(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains(".") || text.Contains(" "))
-                return false;
-
-            var allLower = text.ToLower();
-            if (allLower.StartsWith("www.") || allLower.EndsWith(".org") || allLower.EndsWith(".com") || allLower.EndsWith(".net"))
-                return true;
-
-            if (allLower.Contains(".org/") || allLower.Contains(".com/") || allLower.Contains(".net/"))
-                return true;
-
-            return false;
-        }
-
-        private static bool StartsWithUrl(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return false;
-
-            var arr = text.Trim().TrimEnd('.').TrimEnd().Split();
-            if (arr.Length == 0)
-                return false;
-
-            return IsUrl(arr[0]);
         }
 
         public string FixOcrErrorViaLineReplaceList(string input)
@@ -1159,7 +1132,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                             }
                             else
                             {
-                                if (word.ToUpper() != "LT'S" && word.ToUpper() != "SOX'S") //TODO: get fixed nhunspell
+                                if (word.ToUpper() != "LT'S" && word.ToUpper() != "SOX'S") // TODO: Get fixed nhunspell
                                     suggestions = DoSuggest(word); // 0.9.6 fails on "Lt'S"
                             }
 

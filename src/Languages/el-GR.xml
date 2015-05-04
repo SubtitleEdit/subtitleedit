@@ -2,7 +2,7 @@
 <Language Name="Greek">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Μετάφραση από: CrazyRabbit - Κλεάνθης Μανωλόπουλος
 Σχόλια για τη μετάφραση στο: mailto:akis_manolopoulos@hotmail.com</TranslatedBy>
     <CultureName>el-GR</CultureName>
@@ -281,7 +281,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Κενό για το επόμενο σε δευτερόλεπτα</GapToNext>
     <BridgeGapsSmallerThanXPart1>Γεφύρωση κενών μικρότερων από</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>χιλιοστά δευτερολέπτου</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Ελάχιστα χιλ. δευτερολέπτου μεταξύ των γραμμών</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Ελάχιστα χιλ. δευτερολέπτου μεταξύ των γραμμών</MinMillisecondsBetweenLines>
     <ProlongEndTime>Το προηγούμενο κείμενο παίρνει όλα τα κενά χρόνου</ProlongEndTime>
     <DivideEven>Το κείμενο χωρίζει τα κενά χρόνου</DivideEven>
   </DurationsBridgeGaps>
@@ -1333,7 +1333,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <OpenPluginsFolder>Άνοιγμα φακέλου 'Plugins'</OpenPluginsFolder>
     <GetPluginsInfo1>Τα πρόσθετα του Subtitle Edit πρέπει να έχουν κατεβεί στο φάκελο 'Plugins'</GetPluginsInfo1>
     <GetPluginsInfo2>Επιλέξτε πρόσθετο και κάντε κλικ στο 'Κατέβασμα'</GetPluginsInfo2>
-    <PluginXDownloaded> {0} πρόσθετα κατέβηκαν</PluginXDownloaded>
+    <PluginXDownloaded>{0} πρόσθετα κατέβηκαν</PluginXDownloaded>
     <Download>&amp;Κατέβασμα</Download>
     <Remove>&amp;Αφαίρεση</Remove>
     <UpdateAllX>Ενημέρωση όλων ({0})</UpdateAllX>

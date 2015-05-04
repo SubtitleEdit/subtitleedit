@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Logic.VobSub;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Nikse.SubtitleEdit.Logic.VobSub;
-using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -60,7 +60,7 @@ namespace Nikse.SubtitleEdit.Forms
             _mergedVobSubPacks = mergedVobSubPacks;
             _palette = palette;
 
-            List<int> uniqueLanguageStreamIds = new List<int>();
+            var uniqueLanguageStreamIds = new List<int>();
             foreach (var pack in mergedVobSubPacks)
             {
                 if (!uniqueLanguageStreamIds.Contains(pack.StreamId))
@@ -95,7 +95,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ListBox1SelectedIndexChanged(object sender, EventArgs e)
         {
-            SubListBoxItem x = listBox1.Items[listBox1.SelectedIndex] as SubListBoxItem;
+            var x = listBox1.Items[listBox1.SelectedIndex] as SubListBoxItem;
 
             Bitmap bmp = x.SubPack.SubPicture.GetBitmap(_palette, Color.Transparent, Color.Wheat, Color.Black, Color.DarkGray, false);
             if (bmp.Width > pictureBoxImage.Width || bmp.Height > pictureBoxImage.Height)
@@ -143,20 +143,17 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count > -1)
-            {
-                if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
-                    SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
-                else
-                    SelectedLanguageString = null;
+            if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
+                SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
+            else
+                SelectedLanguageString = null;
 
-                SelectedVobSubMergedPacks = new List<VobSubMergedPack>();
-                foreach (var x in listBox1.Items)
-                {
-                    SelectedVobSubMergedPacks.Add((x as SubListBoxItem).SubPack);
-                }
-                DialogResult = DialogResult.OK;
+            SelectedVobSubMergedPacks = new List<VobSubMergedPack>();
+            foreach (var x in listBox1.Items)
+            {
+                SelectedVobSubMergedPacks.Add((x as SubListBoxItem).SubPack);
             }
+            DialogResult = DialogResult.OK;
         }
 
         private void ButtonCancelClick(object sender, EventArgs e)
@@ -175,30 +172,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void buttonSaveAs_Click(object sender, EventArgs e)
         {
-            if (listBox1.Items.Count > -1)
+            if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
+                SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
+            else
+                SelectedLanguageString = null;
+
+            var subs = new List<VobSubMergedPack>();
+            foreach (var x in listBox1.Items)
             {
-                if (_languages != null && comboBoxLanguages.SelectedIndex >= 0 && comboBoxLanguages.SelectedIndex < _languages.Count)
-                    SelectedLanguageString = _languages[comboBoxLanguages.SelectedIndex];
-                else
-                    SelectedLanguageString = null;
-
-                var subs = new List<VobSubMergedPack>();
-                foreach (var x in listBox1.Items)
-                {
-                    subs.Add((x as SubListBoxItem).SubPack);
-                }
-
-                var formSubOcr = new VobSubOcr();
-                formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
-                var subtitle = formSubOcr.ReadyVobSubRip();
-                formSubOcr.Dispose();
-
-                var exportBdnXmlPng = new ExportPngXml();
-                exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
-                exportBdnXmlPng.ShowDialog(this);
-                exportBdnXmlPng.Dispose();
+                subs.Add((x as SubListBoxItem).SubPack);
             }
 
+            var formSubOcr = new VobSubOcr();
+            formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
+            var subtitle = formSubOcr.ReadyVobSubRip();
+            formSubOcr.Dispose();
+
+            var exportBdnXmlPng = new ExportPngXml();
+            exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
+            exportBdnXmlPng.ShowDialog(this);
+            exportBdnXmlPng.Dispose();
         }
 
     }

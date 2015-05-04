@@ -123,13 +123,13 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 0;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string s = Utilities.RemoveHtmlTags(p.Text);
+                string s = HtmlUtil.RemoveHtmlTags(p.Text);
                 if (s.Length > maxLength)
                 {
                     maxLength = s.Length;
                     maxLengthIndex = i;
                 }
-                string[] arr = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = s.SplitToLines();
                 foreach (string line in arr)
                 {
                     if (line.Length > singleLineMaxLengthIndex)
@@ -170,7 +170,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var p = subtitle.GetParagraphOrDefault(i);
                 if (p != null && p.Text != null)
                 {
-                    string oldText = Utilities.RemoveHtmlTags(p.Text);
+                    string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
                     {
                         bool isDialog = false;
@@ -180,7 +180,7 @@ namespace Nikse.SubtitleEdit.Forms
                             dialogText = Utilities.AutoBreakLine(p.Text, 5, 1, language);
 
                             var tempText = p.Text.Replace(Environment.NewLine, " ").Replace("  ", " ");
-                            if (Utilities.CountTagInText(tempText, "-") == 2 && (p.Text.StartsWith("-") || p.Text.StartsWith("<i>-")))
+                            if (Utilities.CountTagInText(tempText, '-') == 2 && (p.Text.StartsWith('-') || p.Text.StartsWith("<i>-")))
                             {
                                 int idx = tempText.IndexOf(". -", StringComparison.Ordinal);
                                 if (idx < 1)
@@ -193,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
 
-                            string[] arr = dialogText.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                            var arr = dialogText.SplitToLines();
                             if (arr.Length == 2 && (arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) && (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")))
                                 isDialog = true;
 
@@ -216,12 +216,12 @@ namespace Nikse.SubtitleEdit.Forms
                                 text = dialogText;
                             if (text.Contains(Environment.NewLine))
                             {
-                                string[] arr = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                                var arr = text.SplitToLines();
                                 if (arr.Length == 2)
                                 {
-                                    int spacing1 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
-                                    int spacing2 = Configuration.Settings.General.MininumMillisecondsBetweenLines / 2;
-                                    if (Configuration.Settings.General.MininumMillisecondsBetweenLines % 2 == 1)
+                                    int spacing1 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
+                                    int spacing2 = Configuration.Settings.General.MinimumMillisecondsBetweenLines / 2;
+                                    if (Configuration.Settings.General.MinimumMillisecondsBetweenLines % 2 == 1)
                                         spacing2++;
 
                                     var newParagraph1 = new Paragraph(p);
@@ -229,9 +229,9 @@ namespace Nikse.SubtitleEdit.Forms
                                     newParagraph1.Text = Utilities.AutoBreakLine(arr[0], language);
 
                                     double middle = p.StartTime.TotalMilliseconds + (p.Duration.TotalMilliseconds / 2);
-                                    if (!string.IsNullOrWhiteSpace(Utilities.RemoveHtmlTags(oldText)))
+                                    if (!string.IsNullOrWhiteSpace(HtmlUtil.RemoveHtmlTags(oldText)))
                                     {
-                                        var startFactor = (double)Utilities.RemoveHtmlTags(newParagraph1.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                                        var startFactor = (double)HtmlUtil.RemoveHtmlTags(newParagraph1.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
                                         if (startFactor < 0.25)
                                             startFactor = 0.25;
                                         if (startFactor > 0.75)
@@ -248,7 +248,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count);
                                     splittedIndexes.Add(splittedSubtitle.Paragraphs.Count + 1);
 
-                                    string p1 = Utilities.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
+                                    string p1 = HtmlUtil.RemoveHtmlTags(newParagraph1.Text).TrimEnd();
                                     if (p1.EndsWith('.') || p1.EndsWith('!') || p1.EndsWith('?') || p1.EndsWith(':') || p1.EndsWith(')') || p1.EndsWith(']') || p1.EndsWith('♪'))
                                     {
                                         if (newParagraph1.Text.StartsWith('-') && newParagraph2.Text.StartsWith('-'))
@@ -292,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
 
                                     var italicStart1 = newParagraph1.Text.IndexOf("<i>", StringComparison.Ordinal);
-                                    if (italicStart1 >= 0 && italicStart1 < 10 & newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
+                                    if (italicStart1 >= 0 && italicStart1 < 10 && newParagraph1.Text.IndexOf("</i>", StringComparison.Ordinal) < 0 &&
                                         newParagraph2.Text.Contains("</i>") && newParagraph2.Text.IndexOf("<i>", StringComparison.Ordinal) < 0)
                                     {
                                         newParagraph1.Text += "</i>";

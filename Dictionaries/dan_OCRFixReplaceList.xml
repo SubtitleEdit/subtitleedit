@@ -1,4 +1,4 @@
-<OCRFixReplaceList>
+﻿<OCRFixReplaceList>
   <WholeWords>
     <Word from="Haner" to="Han er" />
     <Word from="JaveL" to="Javel" />
@@ -623,9 +623,7 @@
     <WordPart from="í" to="i" />
   </PartialWords>
   <PartialLines />
-  <BeginLines>
-  </BeginLines>
-  <EndLines>
-  </EndLines>
+  <BeginLines />
+  <EndLines />
   <WholeLines />
 </OCRFixReplaceList>

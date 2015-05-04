@@ -179,9 +179,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".890"; }
         }
 
+        public const string NameOfFormat = "Cavena 890";
+
         public override string Name
         {
-            get { return "Cavena 890"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -328,9 +330,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             string line1 = string.Empty;
             string line2 = string.Empty;
-            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.SplitToLines();
             if (lines.Length > 2)
-                lines = Utilities.AutoBreakLine(text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                lines = Utilities.AutoBreakLine(text).SplitToLines();
             if (lines.Length > 1)
             {
                 line1 = lines[0];

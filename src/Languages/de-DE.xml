@@ -2,7 +2,7 @@
 <Language Name="Deutsch">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Übersetzt von Christoph Kitsche. Überarbeitet von Nobody.</TranslatedBy>
     <CultureName>de-DE</CultureName>
     <HelpFile />
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Steuerung - {0}</ControlsWindowTitle>
     <Advanced>Erweitert</Advanced>
     <Style>Stil</Style>
+    <StyleLanguage>Stil / Sprache</StyleLanguage>
+    <Character>Charakter</Character>
     <Class>Klasse</Class>
     <GeneralText>Allgemein</GeneralText>
     <LineNumber>Text#</LineNumber>
@@ -75,7 +77,7 @@
   <About>
     <Title>Über Subtitle Edit</Title>
     <AboutText1>Subtitle Edit ist Freie Software unter der GNU Public License.
-Sie dürfen Sie frei verbreiten, verändern und verwenden.
+Sie dürfen sie frei verbreiten, verändern und verwenden.
 
 Der C# Quelltext ist erhältlich unter https://github.com/SubtitleEdit/subtitleedit
 
@@ -110,6 +112,12 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
     <ExtractingMinutes>Extrahiere Audio: {0}.{1:00} Minuten</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Stapelgenerierung von Wellenformdaten</Title>
+    <ExtractingAudio>Audio extrahieren...</ExtractingAudio>
+    <Calculating>Berechnen...</Calculating>
+    <Done>Fertig</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Längen anpassen</Title>
     <AdjustVia>Anpassen über</AdjustVia>
@@ -151,6 +159,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Umwandeln</Convert>
     <NothingToConvert>Nichts umzuwandeln!</NothingToConvert>
     <PleaseChooseOutputFolder>Bitte Ausgabeordner wählen</PleaseChooseOutputFolder>
+    <NotConverted>Fehlgeschlagen</NotConverted>
     <Converted>Umgewandelt</Converted>
     <ConvertedX>Umgewandelt ({0})</ConvertedX>
     <Settings>Einstellungen</Settings>
@@ -161,6 +170,15 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Unterordner einschließen</Recursive>
     <SetMinMsBetweenSubtitles>Min. Millisekunden zwischen Untertitel</SetMinMsBetweenSubtitles>
     <PlainText>Text</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Dateifilter</Filter>
+    <FilterSkipped>Vom Filter ausgeschlossen</FilterSkipped>
+    <FilterSrtNoUtf8BOM>SubRip Dateien ohne UTF-8 Bytereihenfolge-Markierung</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Texte mit mehr als zwei Zeilen</FilterMoreThanTwoLines>
+    <FilterContains>Text enthält...</FilterContains>
+    <FixCommonErrorsErrorX>Fehler korrigieren: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Mehrfach ersetzen: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Text ausbalancieren: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Beamer</Title>
@@ -282,7 +300,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Nächster Abstand in Sekunden</GapToNext>
     <BridgeGapsSmallerThanXPart1>Überbrücke Abstände kleiner als</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>Millisekunden</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. Millisekunden zwischen Text</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. Millisekunden zwischen Text</MinMillisecondsBetweenLines>
     <ProlongEndTime>Vorheriger Text nutzt Abstandszeit</ProlongEndTime>
     <DivideEven>Texte teilen Abstandszeit</DivideEven>
   </DurationsBridgeGaps>
@@ -406,11 +424,16 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <Left>Links</Left>
     <Right>Rechts</Right>
     <Center>Zentriert</Center>
-    <BottomMargin>Unten</BottomMargin>
+    <BottomMargin>Rand unten</BottomMargin>
+    <LeftRightMargin>Rand links/rechts</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup Dateiname wählen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub Dateiname wählen</SaveVobSubAs>
-    <SaveFabImageScriptAs>Blu-ray sup Dateiname wählen</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB image script Dateiname wählen</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL Dateiname wählen</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop Dateiname wählen</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premiere EDL Dateiname wählen</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml Dateiname wählen</SaveFcpAs>
+    <SaveDostAs>DoStudio dost Dateiname wählen</SaveDostAs>
     <SomeLinesWereTooLongX>Einige Zeilen sind zu lang: {0}</SomeLinesWereTooLongX>
     <LineHeight>Zeilenhöhe</LineHeight>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
@@ -677,6 +700,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Dateiname</FileName>
     <Join>Verbinden</Join>
     <TotalNumberOfLinesX>Gesamte Zeilen: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Hinweis: Dateien sollten passenden Zeitstempel enthalten</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -734,6 +758,13 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Wiederherstellen</Redo>
         <ShowUndoHistory>Verlauf (für Rückgängig) anzeigen</ShowUndoHistory>
         <InsertUnicodeSymbol>Unicode Symbol einfügen</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Unicode Steuerzeichen einfügen</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Links-nach-rechts-Zeichen (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Rechts-nach-links-Zeichen (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Links-nach-rechts-Einbettung (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Rechts-nach-links-Einbettung (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Links-nach-rechts-Zwang (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Rechts-nach-links-Zwang (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Suchen</Find>
         <FindNext>&amp;Weitersuchen</FindNext>
         <Replace>&amp;Ersetzen</Replace>
@@ -792,6 +823,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Videodatei schließen</CloseVideo>
         <ImportSceneChanges>Szenenänderungen importieren...</ImportSceneChanges>
         <RemoveSceneChanges>Szenenänderungen entfernen</RemoveSceneChanges>
+        <WaveformBatchGenerate>Wellenforme im Stapel generieren...</WaveformBatchGenerate>
         <ShowHideVideo>Video anzeigen/verbergen</ShowHideVideo>
         <ShowHideWaveform>Wellenform anzeigen/verbergen</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Wellenform und Spektogramm anzeigen/verbergen</ShowHideWaveformAndSpectrogram>
@@ -863,6 +895,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Zeitlich festgelegte Textstile...</TimedTextStyles>
         <TimedTextSetLanguage>Zeitlich festgelegte Textsprache</TimedTextSetLanguage>
         <SamiSetStyle>Sami Klasse festlegen</SamiSetStyle>
+        <NuendoSetStyle>Nuendo Charakter festlegen</NuendoSetStyle>
         <Cut>Ausschneiden</Cut>
         <Copy>Kopieren</Copy>
         <Paste>Einfügen</Paste>
@@ -1109,12 +1142,13 @@ Fortfahren?</SubtitleAppendPrompt>
     <MatroskaFiles>Matroska Dateien</MatroskaFiles>
     <NoSubtitlesFound>Keine Untertitel gefunden</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ungültige Matroska Datei: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Keine Untertitel gefunden in diese Blu-ray sup Datei - erneutes Demultiplexen versuchen.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Untersuche Matroska Datei. Bitte warten...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Untersuche Transport Stream Datei. Bitte warten...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Vor Import der Untertitel aus Matroska Datei</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Untertitel importiert aus Matroska Datei</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Ablegen der Datei '{0}' nicht möglich - Datei ist zu groß</DropFileXNotAccepted>
-    <DropOnlyOneFile>Du kannst nur eine Datei ablegen</DropOnlyOneFile>
+    <DropOnlyOneFile>Sie können nur eine Datei ablegen</DropOnlyOneFile>
     <BeforeCreateAdjustLines>Vor Texterstellung/Anpassung</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Untertitel öffnen...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Vor Ändern der Groß-/Kleinschreibung</BeforeChangeCasing>
@@ -1165,6 +1199,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Vor Verbinden kurzer Texte</BeforeMergeShortLines>
     <BeforeSplitLongLines>Vor Trennen langer Texte</BeforeSplitLongLines>
     <MergedShortLinesX>Verbundene Texte: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Vor überbrücken kurzer Zeitabstände</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Vor Setzen des Minimalabstands zwischen Text</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Texte mit geänderten Minimalabstand: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Vor Text Import</BeforeImportText>
@@ -1226,6 +1261,12 @@ Fortfahren?</SubtitleAppendPrompt>
     <ErrorLoadZip>Diese Datei ist ein .zip Archiv. Subtitle Edit kann keine komprimierten Dateien öffnen.</ErrorLoadZip>
     <ErrorLoadPng>Diese Datei ist ein PNG Bild. Subtitle Edit kann keine PNG Dateien öffnen.</ErrorLoadPng>
     <ErrorLoadSrr>Diese Datei ist eine ReScene .srr Datei - keine Untertiteldatei.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Diese Datei ist eine BitTorrent Datei - keine Untertiteldatei.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>Verschlüsselte VobSub-Untertitel können nicht verarbeitet werden.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Blu-ray sup Dateien sind hier nicht erlaubt.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>DVD sup Dateien sind hier nicht erlaubt.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>VobSub-Dateien sind hier nicht erlaubt.</NoSupportHereVobSub>
+    <NoSupportHereDivx>DivX-Dateien sind hier nicht erlaubt.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Untertitel aus Matroska Datei auswählen</Title>
@@ -1304,7 +1345,7 @@ Fortfahren?</SubtitleAppendPrompt>
     <Export>Exportiere...</Export>
     <ImportRulesTitle>Importiere Korrekturregeln aus...</ImportRulesTitle>
     <ExportRulesTitle>Exportiere Korrekturregeln nach...</ExportRulesTitle>
-    <Rules>Exportregeln</Rules>
+    <Rules>Textersetzungsregeln</Rules>
     <MoveToTop>Zum Anfang</MoveToTop>
     <MoveToBottom>Zum Ende</MoveToBottom>
   </MultipleReplace>
@@ -1609,6 +1650,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <ToggleDialogDashes>Dialog Striche umschalten</ToggleDialogDashes>
     <Alignment>Ausrichtung (gewählte Zeilen)</Alignment>
     <CopyTextOnly>Nur Text in Zwischenablage kopieren (gewählte Zeilen)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Nur Text vom Original im aktuellen Untertitel kopieren</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Auto Dauer (gewählte Zeilen)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Rechts-nach-Links Start/Ende umkehren</ReverseStartAndEndingForRTL>
     <VerticalZoom>Vertikale vergrößern</VerticalZoom>
@@ -1663,6 +1705,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <MainTextBoxMoveFirstWordFromNextUp>Erstes Wort der nächsten Zeile nach oben</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Auswahl in Kleinbuchstaben</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Auswahl in Großbuchstaben</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Auto Dauer umschalten</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Auto Umbruch</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Umbruch entfernen</MainTextBoxUnbreak>
     <MainFileSaveAll>Alles Speichern</MainFileSaveAll>
@@ -1796,6 +1839,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <CharactersPerSecondMinimum>Zeichen/Sek - Minimum:          {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Zeichen/Sek - Maximum:          {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Zeichen/Sek - Durchschnitt:     {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exportiere...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Erweiterte SSA Eigenschaften</Title>
@@ -1969,6 +2013,7 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <AutoTransparentBackground>Auto transparenter Hintergrund</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Untersuche Vergleichstreffer für aktuelles Bild...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Bearbeite letzte Bildvergleiche...</EditLastAdditions>
+    <SetUnitalicFactor>Entkursivierungsfaktor setzen...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Manuelles Bild zu Text</Title>
@@ -1995,6 +2040,10 @@ gleiche Untertiteldatei bearbeiten können (Zusammenarbeit)</Information>
     <Title>Neuer Ordner</Title>
     <Message>Name des neuen Zeichendatenbank Ordners</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Entkursivierungsfaktor setzen</Title>
+    <Description>Anpassen bis zur aufrechten Schriftlage. Das Originalbild muss in Kursivschrift vorliegen.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Klicken um Wellenform hinzuzufügen</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Klicken um Wellenform/Spektogramm hinzuzufügen</ClickToAddWaveformAndSpectrogram>

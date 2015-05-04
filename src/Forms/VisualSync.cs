@@ -81,8 +81,8 @@ namespace Nikse.SubtitleEdit.Forms
             buttonFindTextStart.Text = _language.FindText;
             buttonFindTextEnd.Text = _language.FindText;
             buttonSync.Text = _language.Synchronize;
-            buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            buttonOK.Text = _languageGeneral.Ok;
+            buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
             FixLargeFonts();
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
@@ -195,7 +195,7 @@ namespace Nikse.SubtitleEdit.Forms
             timer1.Start();
             timerProgressBarRefresh.Start();
 
-            if (AudioTrackNumber > -1 && MediaPlayerStart.VideoPlayer is LibVlcDynamic)
+            if (AudioTrackNumber >= 0 && MediaPlayerStart.VideoPlayer is LibVlcDynamic)
             {
                 var libVlc = (LibVlcDynamic)MediaPlayerStart.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;
@@ -216,7 +216,7 @@ namespace Nikse.SubtitleEdit.Forms
             _endStopPosition = _endGoBackPosition + 0.1;
             MediaPlayerEnd.Play();
 
-            if (AudioTrackNumber > -1 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
+            if (AudioTrackNumber >= 0 && MediaPlayerEnd.VideoPlayer is LibVlcDynamic)
             {
                 var libVlc = (LibVlcDynamic)MediaPlayerEnd.VideoPlayer;
                 libVlc.AudioTrackNumber = AudioTrackNumber;

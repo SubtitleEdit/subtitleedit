@@ -16,14 +16,7 @@ namespace Nikse.SubtitleEdit.Forms
             Rectangle screenRectangle = RectangleToScreen(this.ClientRectangle);
             int titleBarHeight = screenRectangle.Top - this.Top;
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Main.DoNotDisplayMessageAgain))
-            {
-                checkBoxDoNotDisplayAgain.Text = Configuration.Settings.Language.Main.DoNotDisplayMessageAgain;
-            }
-            else
-            {
-                checkBoxDoNotDisplayAgain.Visible = false;
-            }
+            checkBoxDoNotDisplayAgain.Text = Configuration.Settings.Language.Main.DoNotDisplayMessageAgain;
 
             this.Text = title;
             labelText.Text = text;

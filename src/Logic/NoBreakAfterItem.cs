@@ -5,8 +5,8 @@ namespace Nikse.SubtitleEdit.Logic
 {
     public class NoBreakAfterItem : IComparable
     {
-        public Regex Regex;
-        public string Text;
+        public readonly Regex Regex;
+        public readonly string Text;
 
         public NoBreakAfterItem(Regex regex, string text)
         {
@@ -24,11 +24,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (Regex != null)
                 return Regex.IsMatch(line);
 
-            if (!string.IsNullOrEmpty(Text) && line.EndsWith(Text))
+            if (!string.IsNullOrEmpty(Text) && line.EndsWith(Text, StringComparison.Ordinal))
                 return true;
 
             return false;
-
         }
 
         public override string ToString()

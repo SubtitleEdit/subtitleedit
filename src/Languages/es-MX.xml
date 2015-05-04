@@ -2,7 +2,7 @@
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Traducido por Francisco Naranjo (paconaranjo)</TranslatedBy>
     <CultureName>es-MX</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -282,7 +282,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Intervalo al siguiente</GapToNext>
     <BridgeGapsSmallerThanXPart1>Puentear intervalos más pequeños de</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Mín. de milisegundos entre líneas</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Mín. de milisegundos entre líneas</MinMillisecondsBetweenLines>
     <ProlongEndTime>El texto anterior lleva todo el intervalo de tiempo</ProlongEndTime>
     <DivideEven>El texto divide el intervalo de tiempo</DivideEven>
   </DurationsBridgeGaps>

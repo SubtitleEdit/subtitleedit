@@ -274,6 +274,10 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC
                 if (File.Exists(path))
                     return path;
 
+                path = @"C:\Program Files (x86)\K-Lite Codec Pack\MPC-HC64\mpc-hc64.exe";
+                if (File.Exists(path))
+                    return path;
+
                 path = @"C:\Program Files (x86)\MPC-HC\mpc-hc64.exe";
                 if (File.Exists(path))
                     return path;

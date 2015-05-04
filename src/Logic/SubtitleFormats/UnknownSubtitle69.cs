@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -45,7 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string text = Utilities.RemoveHtmlTags(p.Text, true);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 string start = p.StartTime.ToHHMMSSFF();
                 string end = p.EndTime.ToHHMMSSFF();
                 string duration = string.Format("{0:00}:{1:00}", p.Duration.Seconds, MillisecondsToFramesMaxFrameRate(p.Duration.Milliseconds));

@@ -87,7 +87,7 @@
             this.labelMaxMillisecondsBetweenLines.Name = "labelMaxMillisecondsBetweenLines";
             this.labelMaxMillisecondsBetweenLines.Size = new System.Drawing.Size(172, 13);
             this.labelMaxMillisecondsBetweenLines.TabIndex = 0;
-            this.labelMaxMillisecondsBetweenLines.Text = "Mininum milliseconds between lines";
+            this.labelMaxMillisecondsBetweenLines.Text = "Minimum milliseconds between lines";
             // 
             // buttonOK
             // 

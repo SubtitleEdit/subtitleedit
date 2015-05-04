@@ -206,7 +206,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var list = new List<string>();
             if (!string.IsNullOrEmpty(header) && header.StartsWith("<style", StringComparison.OrdinalIgnoreCase))
             {
-                foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in header.SplitToLines())
                 {
                     string s = line.Trim();
                     if (s.StartsWith('.') && s.IndexOf(' ') > 2)

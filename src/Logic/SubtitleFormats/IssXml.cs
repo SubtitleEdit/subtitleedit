@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             var xml = new XmlDocument();
             xml.XmlResolver = null;
             xml.LoadXml(xmlStructure);
-            //TODO: set variables...
+            // TODO: Set variables...
             XmlNode trackNode = xml.DocumentElement.SelectSingleNode("TrackList/Track/StItemList");
 
             int number = 1;

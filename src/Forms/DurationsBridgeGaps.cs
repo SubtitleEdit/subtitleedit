@@ -32,12 +32,8 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownMaxMs.Left = labelBridgePart1.Left + labelBridgePart1.Width + 4;
             labelMilliseconds.Text = Configuration.Settings.Language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2;
             labelMilliseconds.Left = numericUpDownMaxMs.Left + numericUpDownMaxMs.Width + 4;
-            labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines;
+            labelMinMsBetweenLines.Text = Configuration.Settings.Language.DurationsBridgeGaps.MinMillisecondsBetweenLines;
             numericUpDownMinMsBetweenLines.Left = labelMinMsBetweenLines.Left + labelMinMsBetweenLines.Width + 4;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.DurationsBridgeGaps.MinMsBetweenLines))
-            {
-                numericUpDownMinMsBetweenLines.Visible = false; //TODO: Remove in SE 3.4
-            }
             radioButtonProlongEndTime.Text = Configuration.Settings.Language.DurationsBridgeGaps.ProlongEndTime;
             radioButtonDivideEven.Text = Configuration.Settings.Language.DurationsBridgeGaps.DivideEven;
 
@@ -50,8 +46,8 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 numericUpDownMaxMs.Value = 100;
             }
-            if (Configuration.Settings.General.MininumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
-                numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+            if (Configuration.Settings.General.MinimumMillisecondsBetweenLines >= 1 && Configuration.Settings.General.MinimumMillisecondsBetweenLines <= numericUpDownMinMsBetweenLines.Maximum)
+                numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
             GeneratePreview();
         }

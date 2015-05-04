@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         private int _audioTrackNumber = -1;
         private readonly Keys _mainGeneralGoToNextSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle);
         private readonly Keys _mainGeneralGoToPrevSubtitle = Utilities.GetKeys(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle);
-
+        private string _subtitleFileName;
         public string VideoFileName { get; private set; }
 
         public SetSyncPoint()
@@ -58,6 +58,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, int index, string videoFileName, int audioTrackNumber)
         {
+            _subtitleFileName = subtitleFileName;
             _subtitle = subtitle;
             _audioTrackNumber = audioTrackNumber;
             subtitleListView1.Fill(subtitle);
@@ -103,7 +104,24 @@ namespace Nikse.SubtitleEdit.Forms
             openFileDialog1.Title = Configuration.Settings.Language.General.OpenVideoFileTitle;
             openFileDialog1.FileName = string.Empty;
             openFileDialog1.Filter = Utilities.GetVideoFileFilter(false);
-            openFileDialog1.FileName = string.Empty;
+            if (File.Exists(_subtitleFileName))
+            {
+                var videoFileExt = Utilities.GetVideoFileFilter(false);
+                foreach (var file in (Directory.GetFiles(Path.GetDirectoryName(_subtitleFileName))))
+                {
+                    if (file.EndsWith(".nfo", StringComparison.OrdinalIgnoreCase)
+                        || file.EndsWith(".srt", StringComparison.OrdinalIgnoreCase)
+                        || file.EndsWith(".sub", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                    if (videoFileExt.Contains(Path.GetExtension(file)))
+                    {
+                        openFileDialog1.InitialDirectory = Path.GetDirectoryName(file);
+                        break;
+                    }
+                }
+            }
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 _audioTrackNumber = -1;
@@ -151,7 +169,7 @@ namespace Nikse.SubtitleEdit.Forms
                 videoPlayerContainer1.RefreshProgressBar();
             }
 
-            if (_audioTrackNumber > -1 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic)
+            if (_audioTrackNumber >= 0 && videoPlayerContainer1.VideoPlayer is LibVlcDynamic)
             {
                 var libVlc = (LibVlcDynamic)videoPlayerContainer1.VideoPlayer;
                 libVlc.AudioTrackNumber = _audioTrackNumber;

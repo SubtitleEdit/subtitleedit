@@ -2,7 +2,7 @@
 <Language Name="Bulgarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Превод на български: Ivo Ivanov и JJD</TranslatedBy>
     <CultureName>bg-BG</CultureName>
     <HelpFile />
@@ -278,7 +278,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Прескочи до следващо</GapToNext>
     <BridgeGapsSmallerThanXPart1>Прескок времетраения по-малки от</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>милисекунди</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Мин. милисекунди между субтитърите</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Мин. милисекунди между субтитърите</MinMillisecondsBetweenLines>
     <ProlongEndTime>Предния текст взема времетраенето</ProlongEndTime>
     <DivideEven>Текста дели времетраенето</DivideEven>
   </DurationsBridgeGaps>

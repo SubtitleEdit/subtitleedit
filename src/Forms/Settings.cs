@@ -112,12 +112,12 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAutoWrapWhileTyping.Checked = gs.AutoWrapLineWhileTyping;
             textBoxShowLineBreaksAs.Text = gs.ListViewLineSeparatorString;
 
-            numericUpDownDurationMin.Value = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
-            numericUpDownDurationMax.Value = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+            numericUpDownDurationMin.Value = gs.SubtitleMinimumDisplayMilliseconds;
+            numericUpDownDurationMax.Value = gs.SubtitleMaximumDisplayMilliseconds;
 
-            if (Configuration.Settings.General.MininumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
-                Configuration.Settings.General.MininumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
-                numericUpDownMinGapMs.Value = Configuration.Settings.General.MininumMillisecondsBetweenLines;
+            if (gs.MinimumMillisecondsBetweenLines >= numericUpDownMinGapMs.Minimum &&
+                gs.MinimumMillisecondsBetweenLines <= numericUpDownMinGapMs.Maximum)
+                numericUpDownMinGapMs.Value = gs.MinimumMillisecondsBetweenLines;
 
             if (gs.VideoPlayer.Trim().Equals("VLC", StringComparison.OrdinalIgnoreCase) && LibVlcDynamic.IsInstalled)
                 radioButtonVideoPlayerVLC.Checked = true;
@@ -141,7 +141,7 @@ namespace Nikse.SubtitleEdit.Forms
             if (Nikse.SubtitleEdit.Logic.VideoPlayers.MpcHC.MpcHc.GetMpcHcFileName() == null)
                 radioButtonVideoPlayerMpcHc.Enabled = false;
 
-            textBoxVlcPath.Text = Configuration.Settings.General.VlcLocation;
+            textBoxVlcPath.Text = gs.VlcLocation;
             textBoxVlcPath.Left = labelVideoPlayerVLC.Left + labelVideoPlayerVLC.Width + 5;
             textBoxVlcPath.Width = buttonVlcPathBrowse.Left - textBoxVlcPath.Left - 5;
 
@@ -264,11 +264,6 @@ namespace Nikse.SubtitleEdit.Forms
             labelMinDuration.Text = language.DurationMinimumMilliseconds;
             labelMaxDuration.Text = language.DurationMaximumMilliseconds;
             labelMinGapMs.Text = language.MinimumGapMilliseconds;
-            if (string.IsNullOrEmpty(language.MinimumGapMilliseconds))
-            {
-                labelMinGapMs.Visible = false;
-                numericUpDownMinGapMs.Visible = false;
-            }
             if (labelSubMaxLen.Left + labelSubMaxLen.Width > numericUpDownSubtitleLineMaximumLength.Left)
                 numericUpDownSubtitleLineMaximumLength.Left = labelSubMaxLen.Left + labelSubMaxLen.Width + 3;
             if (labelMaxCharsPerSecond.Left + labelMaxCharsPerSecond.Width > numericUpDownMaxCharsSec.Left)
@@ -310,7 +305,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxTimeCodeMode.Items.Clear();
             comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSMS);
             comboBoxTimeCodeMode.Items.Add(language.TimeCodeModeHHMMSSFF);
-            if (Configuration.Settings.General.UseTimeFormatHHMMSSFF)
+            if (gs.UseTimeFormatHHMMSSFF)
                 comboBoxTimeCodeMode.SelectedIndex = 1;
             else
                 comboBoxTimeCodeMode.SelectedIndex = 0;
@@ -327,21 +322,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelDirectShowDescription.Text = language.DirectShowDescription;
 
-            if (!string.IsNullOrEmpty(language.MpcHc))
-            {
-                radioButtonVideoPlayerMpcHc.Text = language.MpcHc;
-                labelMpcHcDescription.Text = language.MpcHcDescription;
-            }
+            radioButtonVideoPlayerMpcHc.Text = language.MpcHc;
+            labelMpcHcDescription.Text = language.MpcHcDescription;
 
             radioButtonVideoPlayerMPlayer.Text = language.MPlayer;
             labelVideoPlayerMPlayer.Text = language.MPlayerDescription;
-            if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
-            {
-                radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
-                labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
-            }
-            if (!string.IsNullOrEmpty(language.VlcMediaPlayer))
-                Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+            radioButtonVideoPlayerVLC.Text = language.VlcMediaPlayer;
+            labelVideoPlayerVLC.Text = language.VlcMediaPlayerDescription;
+            gs.VlcLocation = textBoxVlcPath.Text;
 
             checkBoxVideoPlayerShowStopButton.Text = language.ShowStopButton;
             checkBoxVideoPlayerShowMuteButton.Text = language.ShowMuteButton;
@@ -361,21 +349,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxAllowOverlap.Text = language.WaveformAllowOverlap;
             checkBoxWaveformHoverFocus.Text = language.WaveformFocusMouseEnter;
             checkBoxListViewMouseEnterFocus.Text = language.WaveformListViewFocusMouseEnter;
-            if (string.IsNullOrEmpty(language.WaveformListViewFocusMouseEnter)) //TODO: Remove in SE 3.4
-            {
-                checkBoxWaveformHoverFocus.Visible = false;
-                checkBoxListViewMouseEnterFocus.Visible = false;
-            }
             labelWaveformBorderHitMs1.Text = language.WaveformBorderHitMs1;
             labelWaveformBorderHitMs2.Text = language.WaveformBorderHitMs2;
             numericUpDownWaveformBorderHitMs.Left = labelWaveformBorderHitMs1.Left + labelWaveformBorderHitMs1.Width;
             labelWaveformBorderHitMs2.Left = numericUpDownWaveformBorderHitMs.Left + numericUpDownWaveformBorderHitMs.Width + 2;
-            if (string.IsNullOrEmpty(language.WaveformBorderHitMs1))
-            {
-                labelWaveformBorderHitMs1.Visible = false;
-                numericUpDownWaveformBorderHitMs.Visible = false;
-                labelWaveformBorderHitMs2.Visible = false;
-            }
 
             buttonWaveformGridColor.Text = language.WaveformGridColor;
             buttonWaveformColor.Text = language.WaveformColor;
@@ -388,38 +365,24 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxSpectrogramAppearance.Items.Clear();
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramOneColorGradient);
             comboBoxSpectrogramAppearance.Items.Add(language.SpectrogramClassic);
-            if (string.IsNullOrEmpty(language.WaveformTextFontSize))
-            {
-                labelWaveformTextSize.Visible = false;
-                comboBoxWaveformTextSize.Visible = false;
-                checkBoxWaveformTextBold.Visible = false;
-            }
-            else
-            {
-                labelWaveformTextSize.Text = language.WaveformTextFontSize;
-                comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
-                checkBoxWaveformTextBold.Left = comboBoxWaveformTextSize.Left + comboBoxWaveformTextSize.Width + 5;
-            }
+            labelWaveformTextSize.Text = language.WaveformTextFontSize;
+            comboBoxWaveformTextSize.Left = labelWaveformTextSize.Left + labelWaveformTextSize.Width + 5;
+            checkBoxWaveformTextBold.Text = language.SubtitleBold;
+            checkBoxWaveformTextBold.Left = comboBoxWaveformTextSize.Left + comboBoxWaveformTextSize.Width + 5;
 
             buttonWaveformsFolderEmpty.Text = language.WaveformAndSpectrogramsFolderEmpty;
             InitializeWaveformsAndSpectrogramsFolderEmpty(language);
 
-            if (!string.IsNullOrEmpty(language.WaveformFFmpegPath)) //TODO: Remove in SE 3.4
-            {
-                checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
-                labelFFmpegPath.Text = language.WaveformFFmpegPath;
-            }
+            checkBoxUseFFmpeg.Text = language.WaveformUseFFmpeg;
+            labelFFmpegPath.Text = language.WaveformFFmpegPath;
 
             groupBoxSsaStyle.Text = language.SubStationAlphaStyle;
             buttonSSAChooseFont.Text = language.ChooseFont;
             buttonSSAChooseColor.Text = language.ChooseColor;
 
-            if (language.SsaOutline != null) // TODO: Remove in SE 3.4
-            {
-                labelSsaOutline.Text = language.SsaOutline;
-                labelSsaShadow.Text = language.SsaShadow;
-                checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
-            }
+            labelSsaOutline.Text = language.SsaOutline;
+            labelSsaShadow.Text = language.SsaShadow;
+            checkBoxSsaOpaqueBox.Text = language.SsaOpaqueBox;
             groupBoxPreview.Text = Configuration.Settings.Language.General.Preview;
 
             numericUpDownSsaOutline.Left = labelSsaOutline.Left + labelSsaOutline.Width + 4;
@@ -446,6 +409,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddOcrFix.Text = language.AddPair;
             groupBoxWordListLocation.Text = language.Location;
             checkBoxNamesEtcOnline.Text = language.UseOnlineNamesEtc;
+            linkLabelOpenDictionaryFolder.Text = Configuration.Settings.Language.GetDictionaries.OpenDictionariesFolder;
 
             groupBoxProxySettings.Text = language.ProxyServerSettings;
             labelProxyAddress.Text = language.ProxyAddress;
@@ -480,16 +444,10 @@ namespace Nikse.SubtitleEdit.Forms
             labelToolsMusicSymbolsToReplace.Text = language.MusicSymbolsToReplace;
             checkBoxFixCommonOcrErrorsUsingHardcodedRules.Text = language.FixCommonOcrErrorsUseHardcodedRules;
             checkBoxFixShortDisplayTimesAllowMoveStartTime.Text = language.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime;
-            if (string.IsNullOrEmpty(language.FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime))
-                checkBoxFixShortDisplayTimesAllowMoveStartTime.Visible = false; // TODO: remove in SE 3.4
             groupBoxSpellCheck.Text = language.SpellCheck;
             checkBoxSpellCheckAutoChangeNames.Text = Configuration.Settings.Language.SpellCheck.AutoFixNames;
             checkBoxSpellCheckOneLetterWords.Text = Configuration.Settings.Language.SpellCheck.CheckOneLetterWords;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.SpellCheck.CheckOneLetterWords)) // TODO: remove in SE 3.4
-                checkBoxSpellCheckOneLetterWords.Visible = false;
             checkBoxTreatINQuoteAsING.Text = Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.SpellCheck.TreatINQuoteAsING)) // TODO: remove in SE 3.4
-                checkBoxTreatINQuoteAsING.Visible = false;
 
             groupBoxToolsMisc.Text = language.Miscellaneous;
             checkBoxUseDoNotBreakAfterList.Text = language.UseDoNotBreakAfterList;
@@ -505,9 +463,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditTextAndPause);
             comboBoxListViewDoubleClickEvent.Items.Add(language.MainListViewEditText);
 
-            if (Configuration.Settings.General.ListViewDoubleClickAction >= 0 && Configuration.Settings.General.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
-                comboBoxListViewDoubleClickEvent.SelectedIndex =
-                    Configuration.Settings.General.ListViewDoubleClickAction;
+            if (gs.ListViewDoubleClickAction >= 0 && gs.ListViewDoubleClickAction < comboBoxListViewDoubleClickEvent.Items.Count)
+                comboBoxListViewDoubleClickEvent.SelectedIndex = gs.ListViewDoubleClickAction;
 
             if (gs.AutoBackupSeconds == 60)
                 comboBoxAutoBackup.SelectedIndex = 1;
@@ -518,7 +475,7 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 comboBoxAutoBackup.SelectedIndex = 0;
 
-            checkBoxCheckForUpdates.Checked = Configuration.Settings.General.CheckForUpdates;
+            checkBoxCheckForUpdates.Checked = gs.CheckForUpdates;
 
             if (gs.SpellChecker.Contains("word", StringComparison.OrdinalIgnoreCase))
                 comboBoxSpellChecker.SelectedIndex = 1;
@@ -639,26 +596,21 @@ namespace Nikse.SubtitleEdit.Forms
             if (Configuration.Settings.VideoControls.WaveformBorderHitMs >= numericUpDownWaveformBorderHitMs.Minimum &&
                 Configuration.Settings.VideoControls.WaveformBorderHitMs <= numericUpDownWaveformBorderHitMs.Maximum)
                 numericUpDownWaveformBorderHitMs.Value = Configuration.Settings.VideoControls.WaveformBorderHitMs;
-            checkBoxUseFFmpeg.Checked = Configuration.Settings.General.UseFFmpegForWaveExtraction;
-            textBoxFFmpegPath.Text = Configuration.Settings.General.FFmpegLocation;
+            checkBoxUseFFmpeg.Checked = gs.UseFFmpegForWaveExtraction;
+            textBoxFFmpegPath.Text = gs.FFmpegLocation;
             var generalNode = new TreeNode(Configuration.Settings.Language.General.GeneralText);
             generalNode.Nodes.Add(language.MergeSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLines));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText))
-                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
+            generalNode.Nodes.Add(language.MergeSelectedLinesOnlyFirstText + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText));
             generalNode.Nodes.Add(language.MergeOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralMergeOriginalAndTranslation));
             generalNode.Nodes.Add(language.ToggleTranslationMode + GetShortcutText(Configuration.Settings.Shortcuts.GeneralToggleTranslationMode));
             generalNode.Nodes.Add(language.SwitchOriginalAndTranslation + GetShortcutText(Configuration.Settings.Shortcuts.GeneralSwitchOriginalAndTranslation));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle))
-                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle + GetShortcutText(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected));
+            generalNode.Nodes.Add(language.WaveformPlayFirstSelectedSubtitle + GetShortcutText(Configuration.Settings.Shortcuts.GeneralPlayFirstSelected));
             generalNode.Nodes.Add(language.GoToFirstSelectedLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToNextEmptyLine))
-                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNextEmptyLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine));
-            generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle));
-            generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToCurrentSubtitleStart))
-                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToCurrentSubtitleStart + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToCurrentSubtitleEnd))
-                generalNode.Nodes.Add(Configuration.Settings.Language.Settings.GoToCurrentSubtitleEnd + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
+            generalNode.Nodes.Add(language.GoToNextEmptyLine + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine));
+            generalNode.Nodes.Add(language.GoToNext + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToNextSubtitle));
+            generalNode.Nodes.Add(language.GoToPrevious + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToPrevSubtitle));
+            generalNode.Nodes.Add(language.GoToCurrentSubtitleStart + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle));
+            generalNode.Nodes.Add(language.GoToCurrentSubtitleEnd + GetShortcutText(Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle));
             treeViewShortcuts.Nodes.Add(generalNode);
 
             var fileNode = new TreeNode(Configuration.Settings.Language.Main.Menu.File.Title);
@@ -669,8 +621,7 @@ namespace Nikse.SubtitleEdit.Forms
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAs));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.SaveOriginal + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveOriginal));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.SaveOriginalSubtitleAs + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveOriginalAs));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainFileSaveAll))
-                fileNode.Nodes.Add(Configuration.Settings.Language.Settings.MainFileSaveAll + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAll));
+            fileNode.Nodes.Add(language.MainFileSaveAll + GetShortcutText(Configuration.Settings.Shortcuts.MainFileSaveAll));
             fileNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu + GetShortcutText(Configuration.Settings.Shortcuts.MainFileExportEbu));
             treeViewShortcuts.Nodes.Add(fileNode);
 
@@ -683,8 +634,8 @@ namespace Nikse.SubtitleEdit.Forms
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.MultipleReplace + GetShortcutText(Configuration.Settings.Shortcuts.MainEditMultipleReplace));
             editNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Edit.GoToSubtitleNumber + GetShortcutText(Configuration.Settings.Shortcuts.MainEditGoToLineNumber));
             editNode.Nodes.Add(Configuration.Settings.Language.VobSubOcr.RightToLeft + GetShortcutText(Configuration.Settings.Shortcuts.MainEditRightToLeft));
-            editNode.Nodes.Add(Configuration.Settings.Language.Settings.ReverseStartAndEndingForRTL + GetShortcutText(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL));
-            editNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleTranslationAndOriginalInPreviews + GetShortcutText(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews));
+            editNode.Nodes.Add(language.ReverseStartAndEndingForRTL + GetShortcutText(Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL));
+            editNode.Nodes.Add(language.ToggleTranslationAndOriginalInPreviews + GetShortcutText(Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews));
             treeViewShortcuts.Nodes.Add(editNode);
 
             var toolsNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Tools.Title);
@@ -695,27 +646,23 @@ namespace Nikse.SubtitleEdit.Forms
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.SplitLongLines + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsSplitLongLines));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Tools.MergeShortLines + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsMergeShortLines));
             toolsNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.AutoDurationCurrentLine + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsAutoDuration));
-            toolsNode.Nodes.Add(Configuration.Settings.Language.Settings.ShowBeamer + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsBeamer));
+            toolsNode.Nodes.Add(language.ShowBeamer + GetShortcutText(Configuration.Settings.Shortcuts.MainToolsBeamer));
             treeViewShortcuts.Nodes.Add(toolsNode);
 
             var videoNode = new TreeNode(Configuration.Settings.Language.Main.Menu.Video.Title);
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.TogglePlayPause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Pause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPause));
+            videoNode.Nodes.Add(language.TogglePlayPause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPlayPauseToggle));
+            videoNode.Nodes.Add(language.Pause + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoPause));
             videoNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.Video.ShowHideVideo + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoShowHideVideo));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Frame))
-                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack1Frame + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1FrameLeft));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Frame))
-                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward1Frame + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1FrameRight));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsLeft));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsRight));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsLeft));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsRight));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Second))
-                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoBack1Second + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1000MsLeft));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Second))
-                videoNode.Nodes.Add(Configuration.Settings.Language.Settings.GoForward1Second + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1000MsRight));
-            videoNode.Nodes.Add(Configuration.Settings.Language.Settings.Fullscreen + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoFullscreen));
+            videoNode.Nodes.Add(language.ToggleDockUndockOfVideoControls + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoToggleVideoControls));
+            videoNode.Nodes.Add(language.GoBack1Frame + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1FrameLeft));
+            videoNode.Nodes.Add(language.GoForward1Frame + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1FrameRight));
+            videoNode.Nodes.Add(language.GoBack100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsLeft));
+            videoNode.Nodes.Add(language.GoForward100Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo100MsRight));
+            videoNode.Nodes.Add(language.GoBack500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsLeft));
+            videoNode.Nodes.Add(language.GoForward500Milliseconds + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo500MsRight));
+            videoNode.Nodes.Add(language.GoBack1Second + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1000MsLeft));
+            videoNode.Nodes.Add(language.GoForward1Second + GetShortcutText(Configuration.Settings.Shortcuts.MainVideo1000MsRight));
+            videoNode.Nodes.Add(language.Fullscreen + GetShortcutText(Configuration.Settings.Shortcuts.MainVideoFullscreen));
             treeViewShortcuts.Nodes.Add(videoNode);
 
             var spellCheckNode = new TreeNode(Configuration.Settings.Language.Main.Menu.SpellCheck.Title);
@@ -735,37 +682,31 @@ namespace Nikse.SubtitleEdit.Forms
             listViewNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewItalic));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertAfter));
             listViewNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertBefore + GetShortcutText(Configuration.Settings.Shortcuts.MainInsertBefore));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.MergeDialog + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialog));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToggleFocus));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ToggleDialogDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.AutoDurationSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnDelete + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnInsert + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnInsertText));
-            listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewColumnPaste + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnPaste));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ListViewFocusWaveform))
-                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewFocusWaveform + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.ListViewGoToNextError))
-                listViewNode.Nodes.Add(Configuration.Settings.Language.Settings.ListViewGoToNextError + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
+            listViewNode.Nodes.Add(language.MergeDialog + GetShortcutText(Configuration.Settings.Shortcuts.MainMergeDialog));
+            listViewNode.Nodes.Add(language.ToggleFocus + GetShortcutText(Configuration.Settings.Shortcuts.MainToggleFocus));
+            listViewNode.Nodes.Add(language.ToggleDialogDashes + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewToggleDashes));
+            listViewNode.Nodes.Add(language.Alignment + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAlignment));
+            listViewNode.Nodes.Add(language.CopyTextOnly + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyText));
+            listViewNode.Nodes.Add(language.CopyTextOnlyFromOriginalToCurrent + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent));
+            listViewNode.Nodes.Add(language.AutoDurationSelectedLines + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewAutoDuration));
+            listViewNode.Nodes.Add(language.ListViewColumnDelete + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnDeleteText));
+            listViewNode.Nodes.Add(language.ListViewColumnInsert + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnInsertText));
+            listViewNode.Nodes.Add(language.ListViewColumnPaste + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewColumnPaste));
+            listViewNode.Nodes.Add(language.ListViewFocusWaveform + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewFocusWaveform));
+            listViewNode.Nodes.Add(language.ListViewGoToNextError + GetShortcutText(Configuration.Settings.Shortcuts.MainListViewGoToNextError));
             treeViewShortcuts.Nodes.Add(listViewNode);
 
-            var textBoxNode = new TreeNode(Configuration.Settings.Language.Settings.TextBox);
+            var textBoxNode = new TreeNode(language.TextBox);
             textBoxNode.Nodes.Add(Configuration.Settings.Language.General.Italic + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxItalic));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown))
-                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp))
-                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower))
-                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper))
-                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
+            textBoxNode.Nodes.Add(language.MainTextBoxMoveLastWordDown + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown));
+            textBoxNode.Nodes.Add(language.MainTextBoxMoveFirstWordFromNextUp + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp));
+            textBoxNode.Nodes.Add(language.MainTextBoxSelectionToLower + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower));
+            textBoxNode.Nodes.Add(language.MainTextBoxSelectionToUpper + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper));
+            textBoxNode.Nodes.Add(language.MainTextBoxToggleAutoDuration + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration));
             textBoxNode.Nodes.Add(Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxInsertAfter));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxAutoBreak))
-                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxAutoBreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainTextBoxUnbreak))
-                textBoxNode.Nodes.Add(Configuration.Settings.Language.Settings.MainTextBoxUnbreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
+            textBoxNode.Nodes.Add(language.MainTextBoxAutoBreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxAutoBreak));
+            textBoxNode.Nodes.Add(language.MainTextBoxUnbreak + GetShortcutText(Configuration.Settings.Shortcuts.MainTextBoxUnbreak));
             treeViewShortcuts.Nodes.Add(textBoxNode);
 
             var createNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Create);
@@ -773,55 +714,46 @@ namespace Nikse.SubtitleEdit.Forms
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.PlayFromJustBeforeText + GetShortcutText(Configuration.Settings.Shortcuts.MainCreatePlayFromJustBefore));
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetStart));
             createNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEnd));
-            createNode.Nodes.Add(Configuration.Settings.Language.Settings.MainCreateStartDownEndUp + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
-            createNode.Nodes.Add(Configuration.Settings.Language.Settings.CreateSetEndAddNewAndGoToNew + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew));
+            createNode.Nodes.Add(language.MainCreateStartDownEndUp + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateStartDownEndUp));
+            createNode.Nodes.Add(language.CreateSetEndAddNewAndGoToNew + GetShortcutText(Configuration.Settings.Shortcuts.MainCreateSetEndAddNewAndGoToNew));
             treeViewShortcuts.Nodes.Add(createNode);
 
             var translateNote = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Translate);
-            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch1 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
-            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch2 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
-            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch3 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));
-            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch4 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4));
-            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch5 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5));
-            translateNote.Nodes.Add(Configuration.Settings.Language.Settings.CustomSearch6 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6));
+            translateNote.Nodes.Add(language.CustomSearch1 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch1));
+            translateNote.Nodes.Add(language.CustomSearch2 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch2));
+            translateNote.Nodes.Add(language.CustomSearch3 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch3));
+            translateNote.Nodes.Add(language.CustomSearch4 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch4));
+            translateNote.Nodes.Add(language.CustomSearch5 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch5));
+            translateNote.Nodes.Add(language.CustomSearch6 + GetShortcutText(Configuration.Settings.Shortcuts.MainTranslateCustomSearch6));
             treeViewShortcuts.Nodes.Add(translateNote);
 
             var adjustNode = new TreeNode(Configuration.Settings.Language.Main.VideoControls.Adjust);
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetstartTimeAndOffsetOfRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest));
-            if (string.IsNullOrWhiteSpace(Configuration.Settings.Language.Settings.AdjustSetEndTimeAndGoToNext))
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
-            else
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext));
+            adjustNode.Nodes.Add(language.AdjustSetEndTimeAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext));
+            adjustNode.Nodes.Add(language.AdjustViaEndAutoStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustViaEndAutoStartAndGoToNext));
+            adjustNode.Nodes.Add(language.AdjustSetStartAutoDurationAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext));
+            adjustNode.Nodes.Add(language.AdjustSetEndNextStartAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext));
+            adjustNode.Nodes.Add(language.AdjustStartDownEndUpAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetStartTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStart));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration))
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration));
+            adjustNode.Nodes.Add(language.AdjustSetStartTimeKeepDuration + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration));
             adjustNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.SetEndTime + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEnd));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsForward + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
-            adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSelected100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest))
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext))
-                adjustNode.Nodes.Add(Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext));
+            adjustNode.Nodes.Add(language.AdjustSelected100MsForward + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward));
+            adjustNode.Nodes.Add(language.AdjustSelected100MsBack + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack));
+            adjustNode.Nodes.Add(language.AdjustSetEndAndOffsetTheRest + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest));
+            adjustNode.Nodes.Add(language.AdjustSetEndAndOffsetTheRestAndGoToNext + GetShortcutText(Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext));
             treeViewShortcuts.Nodes.Add(adjustNode);
 
-            var audioVisualizerNode = new TreeNode(Configuration.Settings.Language.Settings.WaveformAndSpectrogram);
+            var audioVisualizerNode = new TreeNode(language.WaveformAndSpectrogram);
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Waveform.ZoomIn + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomIn));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Waveform.ZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformZoomOut));
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoom + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoomOut))
-                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.VerticalZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut));
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
-            audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayNewSelection))
-                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
+            audioVisualizerNode.Nodes.Add(language.VerticalZoom + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoom));
+            audioVisualizerNode.Nodes.Add(language.VerticalZoomOut + GetShortcutText(Configuration.Settings.Shortcuts.WaveformVerticalZoomOut));
+            audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceForward + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceForward));
+            audioVisualizerNode.Nodes.Add(language.WaveformSeekSilenceBack + GetShortcutText(Configuration.Settings.Shortcuts.WaveformSearchSilenceBack));
+            audioVisualizerNode.Nodes.Add(language.WaveformAddTextHere + GetShortcutText(Configuration.Settings.Shortcuts.WaveformAddTextHere));
+            audioVisualizerNode.Nodes.Add(language.WaveformPlayNewSelection + GetShortcutText(Configuration.Settings.Shortcuts.WaveformPlaySelection));
             audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition + GetShortcutText(Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition));
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformFocusListView))
-                audioVisualizerNode.Nodes.Add(Configuration.Settings.Language.Settings.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));
+            audioVisualizerNode.Nodes.Add(language.WaveformFocusListView + GetShortcutText(Configuration.Settings.Shortcuts.WaveformFocusListView));
             treeViewShortcuts.Nodes.Add(audioVisualizerNode);
 
             foreach (TreeNode node in treeViewShortcuts.Nodes)
@@ -867,8 +799,8 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxShortcutKey.Left = labelShortcutKey.Left + labelShortcutKey.Width + 2;
             buttonUpdateShortcut.Left = comboBoxShortcutKey.Left + comboBoxShortcutKey.Width + 15;
 
-            _oldVlcLocation = Configuration.Settings.General.VlcLocation;
-            _oldVlcLocationRelative = Configuration.Settings.General.VlcLocationRelative;
+            _oldVlcLocation = gs.VlcLocation;
+            _oldVlcLocationRelative = gs.VlcLocationRelative;
 
             labelPlatform.Text = (IntPtr.Size * 8) + "-bit";
         }
@@ -1117,7 +1049,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             gs.SubtitleMinimumDisplayMilliseconds = (int)numericUpDownDurationMin.Value;
             gs.SubtitleMaximumDisplayMilliseconds = (int)numericUpDownDurationMax.Value;
-            gs.MininumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
+            gs.MinimumMillisecondsBetweenLines = (int)numericUpDownMinGapMs.Value;
 
             if (comboBoxAutoBackup.SelectedIndex == 1)
                 gs.AutoBackupSeconds = 60;
@@ -1128,10 +1060,10 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 gs.AutoBackupSeconds = 0;
 
-            Configuration.Settings.General.CheckForUpdates = checkBoxCheckForUpdates.Checked;
+            gs.CheckForUpdates = checkBoxCheckForUpdates.Checked;
 
             if (comboBoxTimeCodeMode.Visible)
-                Configuration.Settings.General.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
+                gs.UseTimeFormatHHMMSSFF = comboBoxTimeCodeMode.SelectedIndex == 1;
 
             if (comboBoxSpellChecker.SelectedIndex == 1)
                 gs.SpellChecker = "word";
@@ -1258,8 +1190,8 @@ namespace Nikse.SubtitleEdit.Forms
             Configuration.Settings.VideoControls.WaveformFocusOnMouseEnter = checkBoxWaveformHoverFocus.Checked;
             Configuration.Settings.VideoControls.WaveformListViewFocusOnMouseEnter = checkBoxListViewMouseEnterFocus.Checked;
             Configuration.Settings.VideoControls.WaveformBorderHitMs = Convert.ToInt32(numericUpDownWaveformBorderHitMs.Value);
-            Configuration.Settings.General.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
-            Configuration.Settings.General.FFmpegLocation = textBoxFFmpegPath.Text;
+            gs.UseFFmpegForWaveExtraction = checkBoxUseFFmpeg.Checked;
+            gs.FFmpegLocation = textBoxFFmpegPath.Text;
 
             //Main General
             foreach (TreeNode node in treeViewShortcuts.Nodes[0].Nodes)
@@ -1270,11 +1202,11 @@ namespace Nikse.SubtitleEdit.Forms
                     string text = node.Text.Substring(0, indexOfBracket).Trim();
                     if (text == Configuration.Settings.Language.Settings.GoToFirstSelectedLine.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralGoToFirstSelectedLine = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoToNextEmptyLine) && text == (Configuration.Settings.Language.Settings.GoToNextEmptyLine).Replace("&", string.Empty))
+                    else if (text == (Configuration.Settings.Language.Settings.GoToNextEmptyLine).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralGoToNextEmptyLine = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.MergeSelectedLines.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralMergeSelectedLines = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText) && text == Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MergeSelectedLinesOnlyFirstText.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralMergeSelectedLinesOnlyFirstText = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleTranslationMode.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralToggleTranslationMode = GetShortcut(node.Text);
@@ -1290,7 +1222,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.GeneralGoToStartOfCurrentSubtitle = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoToCurrentSubtitleEnd.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralGoToEndOfCurrentSubtitle = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle) && text == (Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle).Replace("&", string.Empty))
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformPlayFirstSelectedSubtitle).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.GeneralPlayFirstSelected = GetShortcut(node.Text);
                 }
             }
@@ -1315,7 +1247,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainFileSaveOriginal = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.SaveOriginalSubtitleAs.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSaveOriginalAs = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.MainFileSaveAll) && text == Configuration.Settings.Language.Settings.MainFileSaveAll.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainFileSaveAll.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileSaveAll = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Main.Menu.File.Export + " -> " + Configuration.Settings.Language.Main.Menu.File.ExportEbu).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainFileExportEbu = GetShortcut(node.Text);
@@ -1344,7 +1276,7 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainEditGoToLineNumber = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.VobSubOcr.RightToLeft.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainEditRightToLeft = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.ReverseStartAndEndingForRTL != null && text == Configuration.Settings.Language.Settings.ReverseStartAndEndingForRTL.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ReverseStartAndEndingForRTL.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainEditReverseStartAndEndingForRTL = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleTranslationAndOriginalInPreviews.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainEditToggleTranslationOriginalInPreviews = GetShortcut(node.Text);
@@ -1386,9 +1318,9 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideoShowHideVideo = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ToggleDockUndockOfVideoControls.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoToggleVideoControls = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Frame) && text == Configuration.Settings.Language.Settings.GoBack1Frame.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.GoBack1Frame.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo1FrameLeft = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Frame) && text == Configuration.Settings.Language.Settings.GoForward1Frame.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.GoForward1Frame.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo1FrameRight = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoBack100Milliseconds.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo100MsLeft = GetShortcut(node.Text);
@@ -1398,9 +1330,9 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainVideo500MsLeft = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.GoForward500Milliseconds.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo500MsRight = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoBack1Second) && text == Configuration.Settings.Language.Settings.GoBack1Second.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.GoBack1Second.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo1000MsLeft = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.GoForward1Second) && text == Configuration.Settings.Language.Settings.GoForward1Second.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.GoForward1Second.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideo1000MsRight = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.Fullscreen.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainVideoFullscreen = GetShortcut(node.Text);
@@ -1465,6 +1397,8 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewAlignment = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.CopyTextOnly.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewCopyText = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Settings.CopyTextOnlyFromOriginalToCurrent.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.AutoDurationSelectedLines.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewAutoDuration = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ListViewColumnDelete.Replace("&", string.Empty))
@@ -1473,9 +1407,9 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainListViewColumnInsertText = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Settings.ListViewColumnPaste.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewColumnPaste = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.ListViewFocusWaveform != null && text == Configuration.Settings.Language.Settings.ListViewFocusWaveform.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ListViewFocusWaveform.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewFocusWaveform = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.ListViewGoToNextError != null && text == Configuration.Settings.Language.Settings.ListViewGoToNextError.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.ListViewGoToNextError.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainListViewGoToNextError = GetShortcut(node.Text);
                 }
             }
@@ -1490,19 +1424,21 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainTextBoxItalic = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.SplitLineAtCursorPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSplitAtCursor = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown != null && text == Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxMoveLastWordDown.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxMoveLastWordDown = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp != null && text == Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxMoveFirstWordFromNextUp.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower != null && text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToLower.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSelectionToLower = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper != null && text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxSelectionToUpper.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxSelectionToUpper = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter != null && text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxToggleAutoDuration.Replace("&", string.Empty))
+                        Configuration.Settings.Shortcuts.MainTextBoxToggleAutoDuration = GetShortcut(node.Text);
+                    else if (text == Configuration.Settings.Language.Main.Menu.ContextMenu.InsertAfter.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxInsertAfter = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MainTextBoxAutoBreak != null && text == Configuration.Settings.Language.Settings.MainTextBoxAutoBreak.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxAutoBreak.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxAutoBreak = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.MainTextBoxUnbreak != null && text == Configuration.Settings.Language.Settings.MainTextBoxUnbreak.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.MainTextBoxUnbreak.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainTextBoxUnbreak = GetShortcut(node.Text);
                 }
             }
@@ -1561,25 +1497,25 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.MainAdjustSetStartAndOffsetTheRest = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTimeAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEndAndGotoNext = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSetStartAutoDurationAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStartAutoDurationAndGoToNext = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSetEndNextStartAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEndNextStartAndGoToNext = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustStartDownEndUpAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustStartDownEndUpAndGoToNext = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetStartTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStart = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration != null && text == Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSetStartTimeKeepDuration.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetStartKeepDuration = GetShortcut(node.Text);
                     else if (text == Configuration.Settings.Language.Main.VideoControls.SetEndTime.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEnd = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSelected100MsForward != null && text == Configuration.Settings.Language.Settings.AdjustSelected100MsForward.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSelected100MsForward.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSelected100MsForward = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSelected100MsBack != null && text == Configuration.Settings.Language.Settings.AdjustSelected100MsBack.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSelected100MsBack.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSelected100MsBack = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest != null && text == Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRest.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRest = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext != null && text == Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.AdjustSetEndAndOffsetTheRestAndGoToNext.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainAdjustSetEndAndOffsetTheRestAndGoToNext = GetShortcut(node.Text);
                 }
             }
@@ -1594,11 +1530,11 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformZoomIn = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Waveform.ZoomOut).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformZoomOut = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.WaveformPlayNewSelection) && text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
+                    else if (text == (Configuration.Settings.Language.Settings.WaveformPlayNewSelection).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformPlaySelection = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.VerticalZoom).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoom = GetShortcut(node.Text);
-                    else if (!string.IsNullOrEmpty(Configuration.Settings.Language.Settings.VerticalZoomOut) && text == (Configuration.Settings.Language.Settings.VerticalZoomOut).Replace("&", string.Empty))
+                    else if (text == (Configuration.Settings.Language.Settings.VerticalZoomOut).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformVerticalZoomOut = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformSeekSilenceForward).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceForward = GetShortcut(node.Text);
@@ -1606,9 +1542,9 @@ namespace Nikse.SubtitleEdit.Forms
                         Configuration.Settings.Shortcuts.WaveformSearchSilenceBack = GetShortcut(node.Text);
                     else if (text == (Configuration.Settings.Language.Settings.WaveformAddTextHere).Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformAddTextHere = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition != null && text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Main.VideoControls.InsertNewSubtitleAtVideoPosition.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.MainWaveformInsertAtCurrentPosition = GetShortcut(node.Text);
-                    else if (Configuration.Settings.Language.Settings.WaveformFocusListView != null && text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
+                    else if (text == Configuration.Settings.Language.Settings.WaveformFocusListView.Replace("&", string.Empty))
                         Configuration.Settings.Shortcuts.WaveformFocusListView = GetShortcut(node.Text);
 
                 }
@@ -1853,7 +1789,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             var cb = comboBoxWordListLanguage.Items[comboBoxWordListLanguage.SelectedIndex] as ComboBoxLanguage;
             if (cb != null)
-                return cb.CultureInfo.Name.Replace("-", "_");
+                return cb.CultureInfo.Name.Replace('-', '_');
 
             return null;
         }
@@ -2585,11 +2521,16 @@ namespace Nikse.SubtitleEdit.Forms
             }
             if (openFileDialogFFmpeg.ShowDialog(this) == DialogResult.OK)
             {
-                textBoxVlcPath.Text = Path.GetDirectoryName(openFileDialogFFmpeg.FileName);
-                Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
-                Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
-                radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
+                EnableVlc(openFileDialogFFmpeg.FileName);
             }
+        }
+
+        private void EnableVlc(string fileName)
+        {
+            textBoxVlcPath.Text = Path.GetDirectoryName(fileName);
+            Configuration.Settings.General.VlcLocation = textBoxVlcPath.Text;
+            Configuration.Settings.General.VlcLocationRelative = GetRelativePath(textBoxVlcPath.Text);
+            radioButtonVideoPlayerVLC.Enabled = LibVlcDynamic.IsInstalled;
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
@@ -2606,6 +2547,28 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 form.ShowDialog(this);
             }
+        }
+
+        private void linkLabelOpenDictionaryFolder_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string dictionaryFolder = Utilities.DictionaryFolder;
+            if (!Directory.Exists(dictionaryFolder))
+                Directory.CreateDirectory(dictionaryFolder);
+
+            System.Diagnostics.Process.Start(dictionaryFolder);
+        }
+
+        private void textBoxVlcPath_MouseLeave(object sender, EventArgs e)
+        {
+            try
+            {
+                var path = textBoxVlcPath.Text.Trim('\"');
+                if (path.Length > 3 && Path.IsPathRooted(path) && Path.GetFileName(path).Equals("vlc.exe", StringComparison.OrdinalIgnoreCase) && File.Exists(path))
+                {
+                    EnableVlc(path);
+                }
+            }
+            catch { }
         }
 
     }

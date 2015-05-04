@@ -385,9 +385,9 @@ namespace Nikse.SubtitleEdit.Logic
                     }
 
                     Paragraph next = GetParagraphOrDefault(i + 1);
-                    if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MininumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
+                    if (next != null && p.StartTime.TotalMilliseconds + duration + Configuration.Settings.General.MinimumMillisecondsBetweenLines > next.StartTime.TotalMilliseconds)
                     {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                         if (p.Duration.TotalMilliseconds <= 0)
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + 1;
                     }
@@ -458,8 +458,8 @@ namespace Nikse.SubtitleEdit.Logic
 
         public int RemoveEmptyLines()
         {
-            int count = 0;
-            if (_paragraphs.Count > 0)
+            int count = _paragraphs.Count;
+            if (count > 0)
             {
                 int firstNumber = _paragraphs[0].Number;
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
@@ -468,14 +468,12 @@ namespace Nikse.SubtitleEdit.Logic
                     string s = p.Text.Trim();
 
                     if (s.Length == 0)
-                    {
                         _paragraphs.RemoveAt(i);
-                        count++;
-                    }
                 }
-                Renumber(firstNumber);
+                if (count != _paragraphs.Count)
+                    Renumber(firstNumber);
             }
-            return count;
+            return count - _paragraphs.Count;
         }
 
         /// <summary>

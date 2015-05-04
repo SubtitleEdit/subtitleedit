@@ -12,18 +12,17 @@ namespace Nikse.SubtitleEdit.Forms
         private List<Paragraph> _paragraphs;
         private int _changes;
         private bool _modeAutoBalance;
+        private HashSet<string> _notAllowedFixes = new HashSet<string>();
+
+        private Dictionary<string, string> _fixedText = new Dictionary<string, string>();
+        public Dictionary<string, string> FixedText
+        {
+            get { return _fixedText; }
+        }
 
         public int Changes
         {
             get { return _changes; }
-        }
-
-        public List<Paragraph> FixedParagraphs
-        {
-            get
-            {
-                return _paragraphs;
-            }
         }
 
         public AutoBreakUnbreakLines()
@@ -86,9 +85,10 @@ namespace Nikse.SubtitleEdit.Forms
 
                 Unbreak();
             }
+            comboBoxConditions.SelectedIndexChanged += ComboBoxConditionsSelectedIndexChanged;
         }
 
-        public int MininumLength
+        public int MinimumLength
         {
             get
             {
@@ -100,18 +100,21 @@ namespace Nikse.SubtitleEdit.Forms
         {
             get
             {
-                if (Configuration.Settings.Tools.MergeLinesShorterThan > MininumLength)
-                    return MininumLength - 1;
+                if (Configuration.Settings.Tools.MergeLinesShorterThan > MinimumLength)
+                    return MinimumLength - 1;
                 return Configuration.Settings.Tools.MergeLinesShorterThan;
             }
         }
 
         private void AutoBalance()
         {
-            int minLength = MininumLength;
+            listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
+            _notAllowedFixes = new HashSet<string>();
+            _fixedText = new Dictionary<string, string>();
+            int minLength = MinimumLength;
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleAutoBreak;
 
-            Subtitle sub = new Subtitle();
+            var sub = new Subtitle();
             foreach (Paragraph p in _paragraphs)
                 sub.Paragraphs.Add(p);
             string language = Utilities.AutoDetectGoogleLanguage(sub);
@@ -126,16 +129,21 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
+                        _fixedText.Add(p.ID, text);
                         _changes++;
                     }
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
+            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
         private void Unbreak()
         {
+            listViewFixes.ItemChecked -= listViewFixes_ItemChecked;
+            _notAllowedFixes = new HashSet<string>();
+            _fixedText = new Dictionary<string, string>();
             int minLength = int.Parse(comboBoxConditions.Items[comboBoxConditions.SelectedIndex].ToString());
             Text = Configuration.Settings.Language.AutoBreakUnbreakLines.TitleUnbreak;
             listViewFixes.BeginUpdate();
@@ -151,12 +159,14 @@ namespace Nikse.SubtitleEdit.Forms
                     if (text != p.Text)
                     {
                         AddToListView(p, text);
+                        _fixedText.Add(p.ID, text);
                         _changes++;
                     }
                 }
             }
             listViewFixes.EndUpdate();
             groupBoxLinesFound.Text = string.Format(Configuration.Settings.Language.AutoBreakUnbreakLines.LinesFoundX, listViewFixes.Items.Count);
+            listViewFixes.ItemChecked += listViewFixes_ItemChecked;
         }
 
         private void AutoBreakUnbreakLinesKeyDown(object sender, KeyEventArgs e)
@@ -179,23 +189,15 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.Items.Add(item);
         }
 
-        private bool IsFixAllowed(Paragraph p)
-        {
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.Tag.ToString() == p.ToString())
-                    return item.Checked;
-            }
-            return false;
-        }
-
         private void ButtonOkClick(object sender, EventArgs e)
         {
-            for (int i = _paragraphs.Count - 1; i > 0; i--)
+            for (int i = _paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = _paragraphs[i];
-                if (!IsFixAllowed(p))
-                    _paragraphs.Remove(p);
+                if (_notAllowedFixes.Contains(p.ID))
+                {
+                    _fixedText.Remove(p.ID);
+                }
             }
             DialogResult = DialogResult.OK;
         }
@@ -207,5 +209,21 @@ namespace Nikse.SubtitleEdit.Forms
             else
                 Unbreak();
         }
+
+        private void listViewFixes_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            if (e.Item == null)
+                return;
+
+            var p = e.Item.Tag as Paragraph;
+            if (p == null)
+                return;
+
+            if (e.Item.Checked)
+                _notAllowedFixes.Remove(p.ID);
+            else
+                _notAllowedFixes.Add(p.ID);
+        }
+
     }
 }

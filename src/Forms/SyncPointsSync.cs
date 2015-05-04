@@ -339,7 +339,6 @@ namespace Nikse.SubtitleEdit.Forms
                     minIndex = endIndex;
                 }
             }
-            _synchronizationPoints = new SortedDictionary<int, TimeSpan>();
             SubtitleListview1.Fill(_subtitle);
             RefreshSynchronizationPointsUI();
         }

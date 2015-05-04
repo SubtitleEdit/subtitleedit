@@ -42,13 +42,19 @@ namespace Nikse.SubtitleEdit.Forms
             this.labelStatus = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.richTextBox2 = new System.Windows.Forms.RichTextBox();
+            this.contextMenuStrip2 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.copyTextToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.checkBoxShowOnlyDifferences = new System.Windows.Forms.CheckBox();
             this.checkBoxOnlyListDifferencesInText = new System.Windows.Forms.CheckBox();
             this.checkBoxIgnoreLineBreaks = new System.Windows.Forms.CheckBox();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.subtitleListView2 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
             this.subtitleListView1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.contextMenuStrip1.SuspendLayout();
+            this.contextMenuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
             // buttonOK
@@ -65,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
             // labelSubtitle2
             // 
             this.labelSubtitle2.AutoSize = true;
-            this.labelSubtitle2.Location = new System.Drawing.Point(492, 31);
+            this.labelSubtitle2.Location = new System.Drawing.Point(491, 32);
             this.labelSubtitle2.Name = "labelSubtitle2";
             this.labelSubtitle2.Size = new System.Drawing.Size(30, 13);
             this.labelSubtitle2.TabIndex = 3;
@@ -148,6 +154,7 @@ namespace Nikse.SubtitleEdit.Forms
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox1.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox1.ContextMenuStrip = this.contextMenuStrip1;
             this.richTextBox1.Location = new System.Drawing.Point(8, 486);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ReadOnly = true;
@@ -155,16 +162,47 @@ namespace Nikse.SubtitleEdit.Forms
             this.richTextBox1.TabIndex = 6;
             this.richTextBox1.Text = "";
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(169, 26);
+            // 
+            // copyTextToolStripMenuItem
+            // 
+            this.copyTextToolStripMenuItem.Name = "copyTextToolStripMenuItem";
+            this.copyTextToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.copyTextToolStripMenuItem.Size = new System.Drawing.Size(168, 22);
+            this.copyTextToolStripMenuItem.Text = "Copy Text";
+            this.copyTextToolStripMenuItem.Click += new System.EventHandler(this.copyTextToolStripMenuItem_Click);
+            // 
             // richTextBox2
             // 
             this.richTextBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.richTextBox2.BackColor = System.Drawing.SystemColors.Control;
+            this.richTextBox2.ContextMenuStrip = this.contextMenuStrip2;
             this.richTextBox2.Location = new System.Drawing.Point(490, 485);
             this.richTextBox2.Name = "richTextBox2";
             this.richTextBox2.ReadOnly = true;
             this.richTextBox2.Size = new System.Drawing.Size(478, 43);
             this.richTextBox2.TabIndex = 7;
             this.richTextBox2.Text = "";
+            // 
+            // contextMenuStrip2
+            // 
+            this.contextMenuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.copyTextToolStripMenuItem1});
+            this.contextMenuStrip2.Name = "contextMenuStrip2";
+            this.contextMenuStrip2.Size = new System.Drawing.Size(169, 26);
+            // 
+            // copyTextToolStripMenuItem1
+            // 
+            this.copyTextToolStripMenuItem1.Name = "copyTextToolStripMenuItem1";
+            this.copyTextToolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.copyTextToolStripMenuItem1.Size = new System.Drawing.Size(168, 22);
+            this.copyTextToolStripMenuItem1.Text = "Copy Text";
+            this.copyTextToolStripMenuItem1.Click += new System.EventHandler(this.copyTextToolStripMenuItem1_Click);
             // 
             // checkBoxShowOnlyDifferences
             // 
@@ -285,6 +323,8 @@ namespace Nikse.SubtitleEdit.Forms
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Compare_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Compare_KeyDown);
             this.Resize += new System.EventHandler(this.Compare_Resize);
+            this.contextMenuStrip1.ResumeLayout(false);
+            this.contextMenuStrip2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -310,5 +350,9 @@ namespace Nikse.SubtitleEdit.Forms
         private System.Windows.Forms.CheckBox checkBoxOnlyListDifferencesInText;
         private System.Windows.Forms.CheckBox checkBoxIgnoreLineBreaks;
         private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip2;
+        private System.Windows.Forms.ToolStripMenuItem copyTextToolStripMenuItem1;
     }
 }

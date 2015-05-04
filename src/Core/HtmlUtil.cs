@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Core
 {
@@ -17,7 +18,7 @@ namespace Nikse.SubtitleEdit.Core
         public const string TagFont = "font";
         public const string TagCyrillicI = "\u0456"; // Cyrillic Small Letter Byelorussian-Ukrainian i (http://graphemica.com/%D1%96)
 
-        private static readonly Regex _tagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
+        private static readonly Regex TagOpenRegex = new Regex(@"<\s*(?:/\s*)?(\w+)[^>]*>", RegexOptions.Compiled);
 
         /// <summary>
         /// Remove all of the specified opening and closing tags from the source HTML string.
@@ -34,7 +35,7 @@ namespace Nikse.SubtitleEdit.Core
             // < /tag*>
             // </ tag*>
             // < / tag*>
-            return _tagOpenRegex.Replace(
+            return TagOpenRegex.Replace(
                 source,
                 m => tags.Contains(m.Groups[1].Value, StringComparer.OrdinalIgnoreCase) ? string.Empty : m.Value);
         }
@@ -352,5 +353,80 @@ namespace Nikse.SubtitleEdit.Core
             }
             return encoded.ToString();
         }
+
+        public static string RemoveHtmlTags(string s)
+        {
+            if (s == null)
+                return null;
+
+            if (s.Length < 3 || s.IndexOf('<') < 0)
+                return s;
+
+            if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
+                s = Utilities.FixInvalidItalicTags(s);
+
+            return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
+        }
+
+        public static string RemoveHtmlTags(string s, bool alsoSsaTags)
+        {
+            if (s == null)
+                return null;
+
+            s = RemoveHtmlTags(s);
+
+            if (alsoSsaTags)
+                s = Utilities.RemoveSsaTags(s);
+
+            return s;
+        }
+
+        public static bool IsUrl(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text.Length < 6 || !text.Contains('.') || text.Contains(' '))
+                return false;
+
+            var allLower = text.ToLower();
+            if (allLower.StartsWith("http://", StringComparison.Ordinal) || allLower.StartsWith("https://", StringComparison.Ordinal) ||
+                allLower.StartsWith("www.", StringComparison.Ordinal) || allLower.EndsWith(".org", StringComparison.Ordinal) ||
+                allLower.EndsWith(".com", StringComparison.Ordinal) || allLower.EndsWith(".net", StringComparison.Ordinal))
+                return true;
+
+            if (allLower.Contains(".org/") || allLower.Contains(".com/") || allLower.Contains(".net/"))
+                return true;
+
+            return false;
+        }
+
+        public static bool StartsWithUrl(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text))
+                return false;
+
+            var arr = text.Trim().TrimEnd('.').TrimEnd().Split();
+            if (arr.Length == 0)
+                return false;
+
+            return IsUrl(arr[0]);
+        }
+
+        internal static string FixUpperTags(string text)
+        {
+            if (string.IsNullOrEmpty(text))
+                return text;
+            var tags = new string[] { "<I>", "<U>", "<B>", "<FONT", "</I>", "</U>", "</B>", "</FONT>" };
+            var idx = text.IndexOfAny(tags, StringComparison.Ordinal);
+            while (idx >= 0)
+            {
+                var endIdx = text.IndexOf('>', idx + 2);
+                if (endIdx < idx)
+                    break;
+                var tag = text.Substring(idx, endIdx - idx).ToLowerInvariant();
+                text = text.Remove(idx, endIdx - idx).Insert(idx, tag);
+                idx = text.IndexOfAny(tags, StringComparison.Ordinal);
+            }
+            return text;
+        }
+
     }
 }

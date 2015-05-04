@@ -2,7 +2,7 @@
 <Language Name="Polish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Tłumaczenie Adam Malich (mailto: adam_malich@gizycko.mm.pl)</TranslatedBy>
     <CultureName>pl-PL</CultureName>
     <HelpFile>http://potplayer.pl/ccount/click.php?id=10</HelpFile>
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Sterowanie - {0}</ControlsWindowTitle>
     <Advanced>Zaawansowane</Advanced>
     <Style>Styl</Style>
+    <StyleLanguage>Styl / Język</StyleLanguage>
+    <Character>Znak</Character>
     <Class>Klasa</Class>
     <GeneralText>Ogólne</GeneralText>
     <LineNumber>Nr linii</LineNumber>
@@ -110,6 +112,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Wyodrębnione audio: {0:0.0} sek.</ExtractingSeconds>
     <ExtractingMinutes>Wyodrębnione audio: {0:0.0} min.</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Zbiorcze generowanie danych wykresu falowego</Title>
+    <ExtractingAudio>Wydobywanie dźwięku...</ExtractingAudio>
+    <Calculating>Obliczanie...</Calculating>
+    <Done>Wykonano</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Dostosuj czasy trwania</Title>
     <AdjustVia>Dostosuj za pomocą</AdjustVia>
@@ -151,6 +159,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Konwertuj</Convert>
     <NothingToConvert>Nie ma nic do konwersji!</NothingToConvert>
     <PleaseChooseOutputFolder>Proszę wybrać folder wyjściowy</PleaseChooseOutputFolder>
+    <NotConverted>Nie powiodło się</NotConverted>
     <Converted>Przekonwertowano</Converted>
     <ConvertedX>Przekonwertowano ({0})</ConvertedX>
     <Settings>Ustawienia</Settings>
@@ -161,6 +170,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Uwzględnij podfoldery</Recursive>
     <SetMinMsBetweenSubtitles>Ustaw minimum ms między napisami</SetMinMsBetweenSubtitles>
     <PlainText>Zwykły tekst</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Filtr</Filter>
+    <FilterSkipped>Pomijanie przez filtr</FilterSkipped>
+    <FilterSrtNoUtf8BOM>Pliki SubRip (.srt) bez nagłówka UTF-8 BOM</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Więcej, niż dwie linie w jednym napisie</FilterMoreThanTwoLines>
+    <FilterContains>Tekst zawiera...</FilterContains>
+    <FixCommonErrorsErrorX>Poprawiono najczęstsze błędy: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Wielokrotne zastąpienia: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Automatyczne równoważenie linii: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Projektor</Title>
@@ -282,7 +300,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Przerwa do następnego w sekundach</GapToNext>
     <BridgeGapsSmallerThanXPart1>Mostkuj przerwy mniejsze niż</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekund</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisekund między liniami</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisekund między liniami</MinMillisecondsBetweenLines>
     <ProlongEndTime>Poprzedni tekst zajmuje cały czas przerwy</ProlongEndTime>
     <DivideEven>Teksty rozdzielane są czasem trwania przerwy</DivideEven>
   </DurationsBridgeGaps>
@@ -312,7 +330,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Wybierz języka</Title>
     <ChooseLanguageStreamId>Wybierz język (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>Nieznany język</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>Obraz napisów {0}/{1}  -  {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>Obraz napisów</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -407,6 +425,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Do prawej</Right>
     <Center>Do środka</Center>
     <BottomMargin>Dolny margines</BottomMargin>
+    <LeftRightMargin>Lewy/prawy margines</LeftRightMargin>
     <SaveBluRraySupAs>Wybierz nazwę pliku Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Wybierz nazwę pliku VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Wybierz nazwę pliku Blu-ray sup</SaveFabImageScriptAs>
@@ -508,7 +527,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FixHyphensAdd>Popraw (dodając myślnik) pary linii z tylko jednym myślnikiem (-)</FixHyphensAdd>
     <FixHyphen>Popraw linie rozpoczynające się myślnikiem (-)</FixHyphen>
     <XHyphensFixed>Usunięto myślników: {0}</XHyphensFixed>
-    <AddMissingQuotesExample>"Jak się masz? -&gt; "Jak się masz?"</AddMissingQuotesExample>
+    <AddMissingQuotesExample>"Jak się masz?  --&gt; "Jak się masz?"</AddMissingQuotesExample>
     <XMissingQuotesAdded>Dodano brakujących cudzysłowów: {0}</XMissingQuotesAdded>
     <Fix3PlusLines>Popraw napisy z więcej niż dwiema liniami</Fix3PlusLines>
     <Fix3PlusLine>Popraw napis z więcej niż dwiema liniami</Fix3PlusLine>
@@ -678,6 +697,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nazwa pliku</FileName>
     <Join>Połącz</Join>
     <TotalNumberOfLinesX>Całkowita ilość linii: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Uwaga: Pliki muszą zawierać poprawne kody czasowe</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -735,6 +755,13 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Ponów</Redo>
         <ShowUndoHistory>Pokaż historię (do cofania zmian)</ShowUndoHistory>
         <InsertUnicodeSymbol>Wstaw symbol Unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Wstaw znaki kontrolne Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Znak od-lewej-do-prawej (LDP)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Znak od-prawej-do-lewej (PDL)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Początek osadzania od-lewej-do-prawej (OLP)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Początek osadzania od-prawej-do-lewej (OPL)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Początek nadpisywania od-lewej-do-prawej (NLP)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Początek nadpisywania od-prawej-do-lewej (NPL)</InsertUnicodeControlCharactersRLO>
         <Find>&amp;Znajdź</Find>
         <FindNext>Znajdź &amp;następny</FindNext>
         <Replace>Za&amp;stąp</Replace>
@@ -778,7 +805,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Ascending>Rosnąco</Ascending>
         <Descending>Malejąco</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>Utwórz nowe (puste) tłumaczenie dla aktualnych napisów</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Konwersja masowa...</BatchConvert>
+        <BatchConvert>Konwersja zbiorcza...</BatchConvert>
         <GenerateTimeAsText>Generuj czas jako tekst...</GenerateTimeAsText>
         <MeasurementConverter>Konwerter miar...</MeasurementConverter>
         <SplitSubtitle>Podziel napisy...</SplitSubtitle>
@@ -793,6 +820,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Zamknij plik wideo</CloseVideo>
         <ImportSceneChanges>Importuj zmiany w scenach...</ImportSceneChanges>
         <RemoveSceneChanges>Usuń zmiany w scenach</RemoveSceneChanges>
+        <WaveformBatchGenerate>Zbiorcze generowanie wykresów falowych...</WaveformBatchGenerate>
         <ShowHideVideo>Pokaż/ukryj wideo</ShowHideVideo>
         <ShowHideWaveform>Pokaż/ukryj wykres falowy audio</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Pokaż/ukryj wykres falowy audio i spektrogram</ShowHideWaveformAndSpectrogram>
@@ -864,6 +892,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Style tekstu synchronicznego...</TimedTextStyles>
         <TimedTextSetLanguage>Tekst synchroniczny - ustaw język</TimedTextSetLanguage>
         <SamiSetStyle>Sami - ustaw klasę</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - zestaw znaków</NuendoSetStyle>
         <Cut>Wytnij</Cut>
         <Copy>Kopiuj</Copy>
         <Paste>Wklej</Paste>
@@ -872,15 +901,15 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <AutoDurationCurrentLine>Automatyczny czas trwania (aktualna linia)</AutoDurationCurrentLine>
         <SelectAll>Zaznacz wszystko</SelectAll>
         <InsertFirstLine>Wstaw linię</InsertFirstLine>
-        <InsertBefore>Wstaw przed</InsertBefore>
-        <InsertAfter>Wstaw po</InsertAfter>
-        <InsertSubtitleAfter>Wstaw napis po tej linii...</InsertSubtitleAfter>
+        <InsertBefore>Wstaw linię przed</InsertBefore>
+        <InsertAfter>Wstaw linię po</InsertAfter>
+        <InsertSubtitleAfter>Wstaw z pliku po tej linii...</InsertSubtitleAfter>
         <CopyToClipboard>Kopiuj do schowka jako tekst</CopyToClipboard>
         <Column>Kolumna</Column>
         <ColumnDeleteText>Usuń tekst</ColumnDeleteText>
         <ColumnDeleteTextAndShiftCellsUp>Usuń tekst i przesuń komórki do góry</ColumnDeleteTextAndShiftCellsUp>
         <ColumnInsertEmptyTextAndShiftCellsDown>Wstaw pusty tekst i przesuń komórki w dół</ColumnInsertEmptyTextAndShiftCellsDown>
-        <ColumnInsertTextFromSubtitle>Wstaw teks z napisów...</ColumnInsertTextFromSubtitle>
+        <ColumnInsertTextFromSubtitle>Wstaw tekst z napisów...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importuj tekst i przesuń komórki w dół</ColumnImportTextAndShiftCellsDown>
         <ColumnPasteFromClipboard>Wklej ze schowka...</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Kopiuj tekst z oryginału do aktualnego</ColumnCopyOriginalTextToCurrent>
@@ -1024,7 +1053,7 @@ Chcesz zacząć jeszcze raz od początku dokumentu z kontynuacją wyszukiwania i
     <BeforeReplace>Przed zastąpieniem: {0}</BeforeReplace>
     <MatchFoundX>Znalezione zgodności: {0}</MatchFoundX>
     <NoMatchFoundX>Brak zgodności: {0}</NoMatchFoundX>
-    <FoundNothingToReplace>FoNie znaleziono nic do zastąpienia</FoundNothingToReplace>
+    <FoundNothingToReplace>Nie znaleziono nic do zastąpienia</FoundNothingToReplace>
     <ReplaceCountX>Ilość zastąpień: {0}</ReplaceCountX>
     <NoXFoundAtLineY>Znaleziono zgodność w linii {0}: {1}</NoXFoundAtLineY>
     <OneReplacementMade>Wykonano tylko jedno zastąpienie.</OneReplacementMade>
@@ -1110,7 +1139,9 @@ Kontynuować?</SubtitleAppendPrompt>
     <MatroskaFiles>Pliki Matroska</MatroskaFiles>
     <NoSubtitlesFound>Nie znaleziono napisów</NoSubtitlesFound>
     <NotAValidMatroskaFileX>To nie jest poprawny plik Matroska: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Plik Blu-ray sup nie zawiera żadnych napisów lub zawiera błędy - spróbuj ponownie użyć demuksera.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Proszę czekać, analizuję składnię pliku Matroska...</ParsingMatroskaFile>
+    <ParsingTransportStreamFile>Parsowanie pliku Transport Stream. Proszę czekać...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Przed importem napisów z pliku Matroska</BeforeImportFromMatroskaFile>
     <SubtitleImportedFromMatroskaFile>Zaimportowano napisy z pliku Matroska</SubtitleImportedFromMatroskaFile>
     <DropFileXNotAccepted>Przeciągnięty plik '{0}' nie został zaakceptowany - plik jest zbyt duży</DropFileXNotAccepted>
@@ -1147,7 +1178,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeSortX>Przed sortowaniem: {0}</BeforeSortX>
     <SortedByX>Wykonano sortowanie wg: {0}</SortedByX>
     <BeforeAutoBalanceSelectedLines>Przed automatycznym zrównoważeniem zaznaczonych linii</BeforeAutoBalanceSelectedLines>
-    <NumberOfLinesAutoBalancedX>Ilość linii z automatycznym zrównoważeniem: {0}</NumberOfLinesAutoBalancedX>
+    <NumberOfLinesAutoBalancedX>Ilość automatycznie zrównoważonych linii: {0}</NumberOfLinesAutoBalancedX>
     <BeforeRemoveLineBreaksInSelectedLines>Przed usunięciem łamania linii w zaznaczonych liniach</BeforeRemoveLineBreaksInSelectedLines>
     <NumberOfWithRemovedLineBreakX>Ilość linii z usuniętym łamaniem linii: {0}</NumberOfWithRemovedLineBreakX>
     <BeforeMultipleReplace>Przed wielokrotnymi zastąpieniami</BeforeMultipleReplace>
@@ -1165,6 +1196,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Przed połączeniem krótkich linii</BeforeMergeShortLines>
     <BeforeSplitLongLines>Przed podziałem długich linii</BeforeSplitLongLines>
     <MergedShortLinesX>Ilość połączonych linii: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Przed zmostkowaniem małych przerw</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Przed ustawieniem minimalnego czasu wyświetlania pomiędzy napisami</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Ilość zmienionych linii z minimalnym czasem wyświetlania pomiędzy napisami: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Przed importem zwykłego tekstu</BeforeImportText>
@@ -1225,6 +1257,13 @@ Kontynuować?</SubtitleAppendPrompt>
     <ErrorLoadRar>Ten plik wydaje się być skompresowanym plikiem .rar. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadRar>
     <ErrorLoadZip>Ten plik wydaje się być skompresowanym plikiem .zip. Subtitle Edit nie otwiera plików skompresowanych.</ErrorLoadZip>
     <ErrorLoadPng>Ten plik wydaje się być plikiem PNG. W Subtitle Edit nie można otworzyć plików PNG.</ErrorLoadPng>
+    <ErrorLoadSrr>Ten plik wydaje się być plikiem ReScene .srr - to nie jest plik z napisami.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ten plik wydaje się być plikiem BitTorrent - to nie jest plik z napisami.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>Zaszyfrowana zawartość VobSub nie jest obsługiwana.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Pliki Blu-ray sup nie są tutaj obsługiwane.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>Pliki DVD sup nie są tutaj obsługiwane.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>Pliki VobSub nie są tutaj obsługiwane.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Pliki DivX nie są tutaj obsługiwane.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>Wybierz napisy z pliku Matroska</Title>
@@ -1282,8 +1321,8 @@ Kontynuować?</SubtitleAppendPrompt>
     <EndsWith>Kończy się na</EndsWith>
     <NoContains>Nie zawiera</NoContains>
     <RegEx>Wyrażenie regularne</RegEx>
-    <UnequalLines>Nierównorzędne linie</UnequalLines>
-    <EqualLines>Równorzędne linie</EqualLines>
+    <UnequalLines>Linie o numerach nieparzystych</UnequalLines>
+    <EqualLines>Linie o numerach parzystych</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>Wielokrotne zastąpienia</Title>
@@ -1294,7 +1333,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <RegularExpression>Wyrażenia regularne</RegularExpression>
     <LinesFoundX>Znaleziono linii: {0}</LinesFoundX>
     <Delete>Usuń</Delete>
-    <Add>Dodaj</Add>
+    <Add>&amp;Dodaj</Add>
     <Update>Aktualizuj</Update>
     <Enabled>Dostępne</Enabled>
     <SearchType>Typ wyszukiwania</SearchType>
@@ -1303,7 +1342,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <Export>Eksportuj...</Export>
     <ImportRulesTitle>Importuj zasady zastępowania z...</ImportRulesTitle>
     <ExportRulesTitle>Eksportuj zasady zastępowania do...</ExportRulesTitle>
-    <Rules>Eksport zasad</Rules>
+    <Rules>Zasady znajdowania i zastępowania</Rules>
     <MoveToTop>Przenieś na początek</MoveToTop>
     <MoveToBottom>Przenieś na koniec</MoveToBottom>
   </MultipleReplace>
@@ -1314,7 +1353,7 @@ Kontynuować?</SubtitleAppendPrompt>
   <NetworkJoin>
     <Title>Dołącz do sesji sieciowej</Title>
     <Information>Dołącz do istniejącej sesji, w której wiele osób
- może edytować ten sam plik z napisami (współpracować)</Information>
+może edytować ten sam plik z napisami (współpracować)</Information>
     <Join>Dołącz</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1325,7 +1364,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <Title>Uruchom sesję sieciową</Title>
     <ConnectionTo>Łączenie się z {0}...</ConnectionTo>
     <Information>Rozpocznij nową sesję, w której wiele osób
- może edytować ten sam plik z napisami (współpracować)</Information>
+może edytować ten sam plik z napisami (współpracować)</Information>
     <Start>Start</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1499,7 +1538,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll z folderu system32</DirectShowDescription>
     <ManagedDirectX>Zarządzanie DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback - .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback -  .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1526,6 +1565,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <WaveformSelectedColor>Kolor zaznaczenia</WaveformSelectedColor>
     <WaveformBackgroundColor>Kolor tła</WaveformBackgroundColor>
     <WaveformTextColor>Kolor tekstu</WaveformTextColor>
+    <WaveformTextFontSize>Rozmiar czcionki tekstu</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>Opróżnij foldery "Spectrograms" i "Waveforms"</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>Foldery "Waveforms" i "Spectrograms" zawierają {0} pliki(ów) ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>Spektrogram</Spectrogram>
@@ -1576,7 +1616,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <MusicSymbolsToReplace>Symbole muzyczne do zastąpienia (oddzielone spacją)</MusicSymbolsToReplace>
     <FixCommonOcrErrorsUseHardcodedRules>Popraw częste błędy OCR - także z użyciem sztywnych reguł</FixCommonOcrErrorsUseHardcodedRules>
     <FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>Popraw krótki czas wyświetlania
-    (z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
+(z możliwym przesunięciem czasu rozpoczęcia)</FixCommonerrorsFixShortDisplayTimesAllowMoveStartTime>
     <Shortcuts>Skróty klawiszowe</Shortcuts>
     <Shortcut>Skrót</Shortcut>
     <Control>Ctrl</Control>
@@ -1589,6 +1629,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ToggleDockUndockOfVideoControls>Przełączanie "Zadokuj"/"Oddokuj" panelu wideo</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Ustaw koniec, dodaj nowy i przejdź do nowego</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Dostosuj przy pomocy pozycji końca i przejdź do następnej</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustSetEndTimeAndGoToNext>Ustaw koniec i przejdź do następnej</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Ustaw początek, automatyczny czas trwania i przejdź do następnej</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Ustaw koniec, początek następnej i przejdź do następnej</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Klawisz ↓ = ustaw początek, klawisz ↑ = ustaw koniec i przejdź do następnej</AdjustStartDownEndUpAndGoToNext>
@@ -1607,6 +1648,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <ToggleDialogDashes>Przełącz myślniki dialogów</ToggleDialogDashes>
     <Alignment>Wyrównanie (zaznaczone linie)</Alignment>
     <CopyTextOnly>Kopiuj tylko tekst do schowka (zaznaczone linie)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Kopiuj tekst z oryginału do aktualnego</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Automatyczny czas trwania (zaznaczone linie)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Odwróć start/koniec PDL</ReverseStartAndEndingForRTL>
     <VerticalZoom>Powiększ w pionie</VerticalZoom>
@@ -1661,6 +1703,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <MainTextBoxMoveFirstWordFromNextUp>Przenieś pierwsze słowo z następnej linii napisów do góry</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Zaznacz do małych liter</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Zaznacz do wielkich liter</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Przełącz na automatyczny czas trwania</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Automatyczne łamanie tekstu</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Cofnij łamanie tekstu</MainTextBoxUnbreak>
     <MainFileSaveAll>Zapisz wszystko</MainFileSaveAll>
@@ -1794,6 +1837,7 @@ Kontynuować?</SubtitleAppendPrompt>
     <CharactersPerSecondMinimum>Znaków/sekundę - minimalnie: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Znaków/sekundę - maksymalnie: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Znaków/sekundę - średnio: {0:0.000}</CharactersPerSecondAverage>
+    <Export>Eksport...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Właściwości Advanced Sub Station Alpha</Title>
@@ -1876,7 +1920,7 @@ Kontynuować?</SubtitleAppendPrompt>
   <TransportStreamSubtitleChooser>
     <Title>Selektor napisów strumienia transportowego - {0}</Title>
     <PidLine>Identyfikator Pakietu Transportowego (PID) = {0}, ilość dostępnych napisów = {1}</PidLine>
-    <SubLine>{0}: {1} -&gt; {2}, {3} obrazek(i)</SubLine>
+    <SubLine>{0}:  {1} --&gt; {2},  {3} obrazek(i)</SubLine>
   </TransportStreamSubtitleChooser>
   <UnknownSubtitle>
     <Title>Nieznany typ napisów</Title>
@@ -1967,6 +2011,7 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <AutoTransparentBackground>Auto przezroczyste tło</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Sprawdź porównane zgodności dla bieżącego obrazu...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Edytuj ostatnio dodane porównania obrazów...</EditLastAdditions>
+    <SetUnitalicFactor>Ustaw faktor nie kursywy...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Ręcznie obrazy do tekstu</Title>
@@ -1993,6 +2038,10 @@ Utrzymać te zmiany?</KeepChangesMessage>
     <Title>Nowy folder</Title>
     <Message>Nazwa folderu bazy nowych znaków</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Ustaw faktor nie kursywy</Title>
+    <Description>Dostosuj wartość tak, że styl tekstu jest normalny, a nie kursywą. Należy pamiętać, że oryginalny obraz powinien być kursywą.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Kliknij, aby dodać wykres falowy</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>Kliknij, aby dodać wykres falowy/spektrogram</ClickToAddWaveformAndSpectrogram>

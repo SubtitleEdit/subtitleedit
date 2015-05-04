@@ -62,9 +62,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".cap"; }
         }
 
+        public const string NameOfFormat = "Cheetah Caption";
+
         public override string Name
         {
-            get { return "Cheetah Caption"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -157,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     var textBytes = new List<byte>();
                     var italic = p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>");
-                    text = Utilities.RemoveHtmlTags(text);
+                    text = HtmlUtil.RemoveHtmlTags(text);
                     int j = 0;
                     if (italic)
                         textBytes.Add(0xd0);
@@ -295,7 +297,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p.StartTime = DecodeTimestamp(buffer, i + 2);
 
                     if (last != null && last.EndTime.TotalMilliseconds > p.StartTime.TotalMilliseconds)
-                        last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        last.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
                     p.EndTime = DecodeTimestamp(buffer, i + 6);
 

@@ -64,7 +64,7 @@
   <About>
     <Title>درباره شادوساب</Title>
     <AboutText1>شادوساب كاملا رايگان است كه براي ساخت و ويرايش زيرنويس ايجاد شده
-    و توسط مهدي حسيني برنامه نويسي شده است
+و توسط مهدي حسيني برنامه نويسي شده است
 
 براي دسترسي به اطلاعات بيشتر و برنامه هاي بيشتر به سايت زير وارد شويد
 http://barnamenevisjavan.com
@@ -73,7 +73,7 @@ http://barnamenevisjavan.com
 http://soft98.ir
 پیشنهادات شما را پذیرا هستم.
 
- پست الکترونیکی : mailto:hellas2012@yahoo.com</AboutText1>
+پست الکترونیکی : mailto:hellas2012@yahoo.com</AboutText1>
   </About>
   <AddToNames>
     <Title>اضافه کردن به لیست نام/غیره</Title>
@@ -364,7 +364,7 @@ http://soft98.ir
     <Unbreak>و Unbreak</Unbreak>
     <FixDoubleDash>اصلاح '--' به '...'</FixDoubleDash>
     <FixDoubleGreaterThan>حذف &lt;&lt;</FixDoubleGreaterThan>
-    <FixEllipsesStart> حذف '...'</FixEllipsesStart>
+    <FixEllipsesStart>حذف '...'</FixEllipsesStart>
     <FixMissingOpenBracket>گذاشتن [ فراموش شده</FixMissingOpenBracket>
     <FixMusicNotation>جابجایی علائم موسیقی</FixMusicNotation>
     <XFixDoubleDash>{0} ثابت '--'</XFixDoubleDash>
@@ -449,7 +449,7 @@ http://soft98.ir
         <OpenContainingFolder>باز شامل پوشه</OpenContainingFolder>
         <Compare>مقایسه</Compare>
         <ImportOcrFromDvd>VOB/IFO (DVD) واردات و نام او سی آر از</ImportOcrFromDvd>
-        <ImportOcrVobSubSubtitle> VobSub (فرعی/idx) واردات/او سی آر</ImportOcrVobSubSubtitle>
+        <ImportOcrVobSubSubtitle>VobSub (فرعی/idx) واردات/او سی آر</ImportOcrVobSubSubtitle>
         <ImportBluRaySupFile>واردات/او سی آر ضبط و پخش فایل</ImportBluRaySupFile>
         <ImportSubtitleFromMatroskaFile>MKVزیرنویس واردات از فایل</ImportSubtitleFromMatroskaFile>
         <ImportSubtitleWithManualChosenEncoding>زیرنویس با واردات کتابچه راهنمای انتخاب را پشتیبانی می کند</ImportSubtitleWithManualChosenEncoding>
@@ -470,9 +470,9 @@ http://soft98.ir
         <Title>ویرایش</Title>
         <ShowUndoHistory>تاریخ نمایش برای خنثی سازی</ShowUndoHistory>
         <InsertUnicodeSymbol>درج نماد یونیکد</InsertUnicodeSymbol>
-        <Find> یافتن</Find>
+        <Find>یافتن</Find>
         <FindNext>مشاهده و بعدی</FindNext>
-        <Replace> به جای</Replace>
+        <Replace>به جای</Replace>
         <MultipleReplace>چندگانه و جایگزین</MultipleReplace>
         <GoToSubtitleNumber>برو به تعداد و نام</GoToSubtitleNumber>
       </Edit>
@@ -698,7 +698,7 @@ http://soft98.ir
     <NewFrameRateUsedToCalculateTimeCodes>جدید نرخ فریم ({0}) برای محاسبه شروع/پایان کدهای زمان استفاده شد</NewFrameRateUsedToCalculateTimeCodes>
     <NewFrameRateUsedToCalculateFrameNumbers>جدید نرخ فریم ({0}) برای محاسبه شروع/پایان اعداد قاب مورد استفاده قرار گرفت</NewFrameRateUsedToCalculateFrameNumbers>
     <FindContinue>مورد جستجو یافت نشد.
- آیا می خواهید از بالا از سند و جستجو یک بار دیگر شروع کنم؟</FindContinue>
+آیا می خواهید از بالا از سند و جستجو یک بار دیگر شروع کنم؟</FindContinue>
     <FindContinueTitle>ادامه یافتن؟</FindContinueTitle>
     <XFoundAtLineNumberY>'{0} در بر داشت در شماره خط {1}</XFoundAtLineNumberY>
     <XNotFound>'{0} یافت نشد</XNotFound>
@@ -728,9 +728,9 @@ http://soft98.ir
     <TextingForHearingImpairedRemovedXLines>Texting for hearing impaired removed : {0} lines</TextingForHearingImpairedRemovedXLines>
     <SubtitleSplitted>نام پذیری</SubtitleSplitted>
     <SubtitleAppendPrompt>این نام موجود در حال حاضر به نام لود پیوست که باید
- در حال حاضر در هماهنگی با فایل تصویری می باشد.
+در حال حاضر در هماهنگی با فایل تصویری می باشد.
 
- ادامه؟</SubtitleAppendPrompt>
+ادامه؟</SubtitleAppendPrompt>
     <SubtitleAppendPromptTitle>نام افزودن پرونده</SubtitleAppendPromptTitle>
     <OpenSubtitleToAppend>نام برای اضافه</OpenSubtitleToAppend>
     <AppendViaVisualSyncTitle>همگام تجسمی -- الحاق بخش دوم زیرنویس</AppendViaVisualSyncTitle>

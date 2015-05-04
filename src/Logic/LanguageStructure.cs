@@ -69,6 +69,8 @@
             public string ControlsWindowTitle { get; set; }
             public string Advanced { get; set; }
             public string Style { get; set; }
+            public string StyleLanguage { get; set; }
+            public string Character { get; set; }
             public string Class { get; set; }
             public string GeneralText { get; set; }
             public string LineNumber { get; set; }
@@ -114,6 +116,14 @@
             public string GeneratingSpectrogram { get; set; }
             public string ExtractingSeconds { get; set; }
             public string ExtractingMinutes { get; set; }
+        }
+
+        public class AddWaveformBatch
+        {
+            public string Title { get; set; }
+            public string ExtractingAudio { get; set; }
+            public string Calculating { get; set; }
+            public string Done { get; set; }
         }
 
         public class AdjustDisplayDuration
@@ -164,6 +174,7 @@
             public string Convert { get; set; }
             public string NothingToConvert { get; set; }
             public string PleaseChooseOutputFolder { get; set; }
+            public string NotConverted { get; set; }
             public string Converted { get; set; }
             public string ConvertedX { get; set; }
             public string Settings { get; set; }
@@ -174,6 +185,15 @@
             public string Recursive { get; set; }
             public string SetMinMsBetweenSubtitles { get; set; }
             public string PlainText { get; set; }
+            public string Ocr { get; set; }
+            public string Filter  { get; set; }
+            public string FilterSkipped  { get; set; }
+            public string FilterSrtNoUtf8BOM { get; set; }
+            public string FilterMoreThanTwoLines  { get; set; }
+            public string FilterContains  { get; set; }
+            public string FixCommonErrorsErrorX { get; set; }
+            public string MultipleReplaceErrorX { get; set; }
+            public string AutoBalanceErrorX { get; set; }
         }
 
         public class Beamer
@@ -323,7 +343,7 @@
             public string GapToNext { get; set; }
             public string BridgeGapsSmallerThanXPart1 { get; set; }
             public string BridgeGapsSmallerThanXPart2 { get; set; }
-            public string MinMsBetweenLines { get; set; }
+            public string MinMillisecondsBetweenLines { get; set; }
             public string ProlongEndTime { get; set; }
             public string DivideEven { get; set; }
         }
@@ -464,15 +484,21 @@
             public string Right { get; set; }
             public string Center { get; set; }
             public string BottomMargin { get; set; }
+            public string LeftRightMargin { get; set; }
             public string SaveBluRraySupAs { get; set; }
             public string SaveVobSubAs { get; set; }
             public string SaveFabImageScriptAs { get; set; }
             public string SaveDvdStudioProStlAs { get; set; }
+            public string SaveDigitalCinemaInteropAs { get; set; }
+            public string SavePremiereEdlAs { get; set; }
+            public string SaveFcpAs { get; set; }
+            public string SaveDostAs { get; set; }
             public string SomeLinesWereTooLongX { get; set; }
             public string LineHeight { get; set; }
             public string BoxSingleLine { get; set; }
             public string BoxMultiLine { get; set; }
             public string Forced { get; set; }
+            public string ChooseBackgroundColor { get; set; }            
         }
 
         public class ExportText
@@ -766,6 +792,7 @@
             public string FileName { get; set; }
             public string Join { get; set; }
             public string TotalNumberOfLinesX { get; set; }
+            public string Note { get; set; }
         }
 
         public class Main
@@ -903,6 +930,7 @@
             public string MatroskaFiles { get; set; }
             public string NoSubtitlesFound { get; set; }
             public string NotAValidMatroskaFileX { get; set; }
+            public string BlurayNotSubtitlesFound { get; set; }
             public string ParsingMatroskaFile { get; set; }
             public string ParsingTransportStreamFile { get; set; }
             public string BeforeImportFromMatroskaFile { get; set; }
@@ -959,6 +987,7 @@
             public string BeforeMergeShortLines { get; set; }
             public string BeforeSplitLongLines { get; set; }
             public string MergedShortLinesX { get; set; }
+            public string BeforeDurationsBridgeGap { get; set; }
             public string BeforeSetMinimumDisplayTimeBetweenParagraphs { get; set; }
             public string XMinimumDisplayTimeBetweenParagraphsChanged { get; set; }
             public string BeforeImportText { get; set; }
@@ -1020,6 +1049,12 @@
             public string ErrorLoadZip { get; set; }
             public string ErrorLoadPng { get; set; }
             public string ErrorLoadSrr { get; set; }
+            public string ErrorLoadTorrent { get; set; }
+            public string NoSupportEncryptedVobSub { get; set; }
+            public string NoSupportHereBluRaySup { get; set; }
+            public string NoSupportHereDvdSup { get; set; }
+            public string NoSupportHereVobSub { get; set; }
+            public string NoSupportHereDivx { get; set; }
 
             public class MainMenu
             {
@@ -1079,6 +1114,13 @@
                     public string Redo { get; set; }
                     public string ShowUndoHistory { get; set; }
                     public string InsertUnicodeSymbol { get; set; }
+                    public string InsertUnicodeControlCharacters { get; set; }
+                    public string InsertUnicodeControlCharactersLRM { get; set; }
+                    public string InsertUnicodeControlCharactersRLM { get; set; }
+                    public string InsertUnicodeControlCharactersLRE { get; set; }
+                    public string InsertUnicodeControlCharactersRLE { get; set; }
+                    public string InsertUnicodeControlCharactersLRO { get; set; }
+                    public string InsertUnicodeControlCharactersRLO { get; set; }
                     public string Find { get; set; }
                     public string FindNext { get; set; }
                     public string Replace { get; set; }
@@ -1139,6 +1181,7 @@
                     public string CloseVideo { get; set; }
                     public string ImportSceneChanges { get; set; }
                     public string RemoveSceneChanges { get; set; }
+                    public string WaveformBatchGenerate { get; set; }
                     public string ShowHideVideo { get; set; }
                     public string ShowHideWaveform { get; set; }
                     public string ShowHideWaveformAndSpectrogram { get; set; }
@@ -1222,6 +1265,7 @@
                     public string TimedTextStyles { get; set; }
                     public string TimedTextSetLanguage { get; set; }
                     public string SamiSetStyle { get; set; }
+                    public string NuendoSetStyle { get; set; }
                     public string Cut { get; set; }
                     public string Copy { get; set; }
                     public string Paste { get; set; }
@@ -1778,6 +1822,7 @@
             public string ToggleDialogDashes { get; set; }
             public string Alignment { get; set; }
             public string CopyTextOnly { get; set; }
+            public string CopyTextOnlyFromOriginalToCurrent { get; set; }
             public string AutoDurationSelectedLines { get; set; }
             public string ReverseStartAndEndingForRTL { get; set; }
             public string VerticalZoom { get; set; }
@@ -1832,6 +1877,7 @@
             public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
             public string MainTextBoxSelectionToLower { get; set; }
             public string MainTextBoxSelectionToUpper { get; set; }
+            public string MainTextBoxToggleAutoDuration { get; set; }
             public string MainTextBoxAutoBreak { get; set; }
             public string MainTextBoxUnbreak { get; set; }
             public string MainFileSaveAll { get; set; }
@@ -1983,6 +2029,7 @@
             public string CharactersPerSecondMinimum { get; set; }
             public string CharactersPerSecondMaximum { get; set; }
             public string CharactersPerSecondAverage { get; set; }
+            public string Export { get; set; }
         }
 
         public class SubStationAlphaProperties
@@ -2170,6 +2217,7 @@
             public string AutoTransparentBackground { get; set; }
             public string InspectCompareMatchesForCurrentImage { get; set; }
             public string EditLastAdditions { get; set; }
+            public string SetUnitalicFactor { get; set; }
         }
 
         public class VobSubOcrCharacter
@@ -2201,6 +2249,12 @@
         {
             public string Title { get; set; }
             public string Message { get; set; }
+        }
+
+        public class VobSubOcrSetItalicFactor
+        {
+            public string Title { get; set; }
+            public string Description { get; set; }
         }
 
         public class Waveform

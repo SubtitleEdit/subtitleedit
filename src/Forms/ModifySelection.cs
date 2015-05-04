@@ -47,19 +47,14 @@ namespace Nikse.SubtitleEdit.Forms
 
             FixLargeFonts();
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.Contains)) //TODO: Remove in SE 3.4
-            {
-                comboBoxRule.Items.Clear();
-                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);
-                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.StartsWith);
-                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EndsWith);
-                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.NoContains);
-                comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
-                if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.UnequalLines))
-                    comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.UnequalLines);
-                if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.EqualLines))
-                    comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
-            }
+            comboBoxRule.Items.Clear();
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.Contains);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.StartsWith);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EndsWith);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.NoContains);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.RegEx);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.UnequalLines);
+            comboBoxRule.Items.Add(Configuration.Settings.Language.ModifySelection.EqualLines);
 
             checkBoxCaseSensitive.Checked = Configuration.Settings.Tools.ModifySelectionCaseSensitive;
             textBox1.Text = Configuration.Settings.Tools.ModifySelectionText;
@@ -156,22 +151,22 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (comboBoxRule.SelectedIndex == FunctionContains) // Contains
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
+                            if (checkBoxCaseSensitive.Checked && p.Text.Contains(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionStartsWith) // Starts with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.StartsWith(text, StringComparison.OrdinalIgnoreCase))
+                            if (checkBoxCaseSensitive.Checked && p.Text.StartsWith(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && p.Text.StartsWith(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionEndsWith) // Ends with
                         {
-                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text) || !checkBoxCaseSensitive.Checked && p.Text.EndsWith(text, StringComparison.OrdinalIgnoreCase))
+                            if (checkBoxCaseSensitive.Checked && p.Text.EndsWith(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && p.Text.EndsWith(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionNotContains) // Not contains
                         {
-                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text) || !checkBoxCaseSensitive.Checked && !p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
+                            if (checkBoxCaseSensitive.Checked && !p.Text.Contains(text, StringComparison.Ordinal) || !checkBoxCaseSensitive.Checked && !p.Text.Contains(text, StringComparison.OrdinalIgnoreCase))
                                 AddToListView(p, i);
                         }
                         else if (comboBoxRule.SelectedIndex == FunctionRegEx) // RegEx
@@ -207,10 +202,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             listViewFixes.EndUpdate();
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ModifySelection.MatchingLinesX))
-                groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
-            else
-                groupBoxPreview.Text = string.Format("Matching lines: {0}", listViewFixes.Items.Count); //TODO: Remove in 3.4
+            groupBoxPreview.Text = string.Format(Configuration.Settings.Language.ModifySelection.MatchingLinesX, listViewFixes.Items.Count);
         }
 
         private void ApplySelection()

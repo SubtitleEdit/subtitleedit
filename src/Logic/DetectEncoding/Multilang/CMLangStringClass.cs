@@ -1,4 +1,4 @@
-namespace MultiLanguage
+﻿namespace MultiLanguage
 {
     using System;
     using System.Runtime.CompilerServices;

@@ -1,80 +1,80 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace UpdateAssemblyInfo
 {
     internal class Program
     {
 
-        private static string GetGitPath()
+        private class Template
         {
-            string p = Path.Combine(Environment.GetEnvironmentVariable("ProgramFiles"), @"Git\bin\git.exe");
-            if (File.Exists(p))
-                return p;
 
-            // This variable doesn't get set on every Windows configuration. (@alfaproject vm for example)
-            var programFiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
-            if (programFiles != null)
+            private string templateFile;
+            private string templateText;
+
+            public Template(string path)
             {
-                p = Path.Combine(programFiles, @"Git\bin\git.exe");
-                if (File.Exists(p))
-                    return p;
+                templateFile = path;
             }
 
-            p = @"C:\Program Files\Git\bin\git.exe";
-            if (File.Exists(p))
-                return p;
+            public void Replace(string source, string replacement)
+            {
+                if (templateText == null)
+                {
+                    templateText = File.ReadAllText(templateFile);
+                }
+                templateText = templateText.Replace(source, replacement);
+            }
 
-            p = @"C:\Program Files (x86)\Git\bin\git.exe";
-            if (File.Exists(p))
-                return p;
+            public void Save(string target)
+            {
+                File.WriteAllText(target, templateText, Encoding.UTF8);
+            }
 
-            p = @"C:\Git\bin\git.exe";
-            if (File.Exists(p))
-                return p;
-
-            Console.WriteLine("Warning: Might not be able to find Git command line tool!");
-            return "git";
-        }
-
-        private static void DoUpdateAssembly(string source, string gitHash, string template, string target)
-        {
-            string templateData = File.ReadAllText(template);
-            string fixedData = templateData.Replace(source, gitHash);
-            File.WriteAllText(target, fixedData);
         }
 
         private static int Main(string[] args)
         {
+            var myName = Environment.GetCommandLineArgs()[0];
+            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName)
+                   ? System.Reflection.Assembly.GetEntryAssembly().Location
+                   : myName);
+
             if (args.Length != 2)
             {
-                Console.WriteLine("UpdateAssemblyInfo 1.0");
-                Console.WriteLine("UpdateAssemblyInfo <template with [GITHASH]> <target file>");
-                Console.WriteLine("Wrong number of arguments: " + args.Length);
+                Console.Write("Usage: " + myName + @" <template> <target>
+  <template> Path to the template file with [GITHASH] and [REVNO]
+  <target>   Path to the target file (AssemblyInfo.cs)
+");
                 return 1;
             }
 
             Console.WriteLine("Updating assembly info...");
-            string workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            string template = args[0];
-            string target = args[1];
+            var workingFolder = Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
+            var templateFile = args[0];
+            var targetFile = args[1];
+            var template = new Template(templateFile);
 
             var clrHash = new CommandLineRunner();
-            var rcGitHash = clrHash.RunCommandAndGetOutput(GetGitPath(), "rev-parse --verify HEAD", workingFolder);
             var clrTags = new CommandLineRunner();
-            if (rcGitHash && clrTags.RunCommandAndGetOutput(GetGitPath(), "describe --tags", workingFolder))
+            var gitPath = GetGitPath();
+            string exceptionMessage;
+            if (clrHash.RunCommandAndGetOutput(gitPath, "rev-parse --verify HEAD", workingFolder) &&
+                clrTags.RunCommandAndGetOutput(gitPath, "describe --tags", workingFolder))
             {
                 try
                 {
-                    DoUpdateAssembly("[GITHASH]", clrHash.Result, template, target);
-                    if (!clrTags.Result.Contains("-"))
+                    template.Replace("[GITHASH]", clrHash.Result);
+                    if (clrTags.Result.IndexOf('-') < 0)
                         clrTags.Result += "-0";
-                    DoUpdateAssembly("[REVNO]", clrTags.Result.Split('-')[1], target, target);
+                    template.Replace("[REVNO]", clrTags.Result.Split('-')[1]);
+                    template.Save(targetFile);
                     return 0;
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error: " + e.Message);
+                    exceptionMessage = ex.Message;
                 }
             }
             else
@@ -82,20 +82,93 @@ namespace UpdateAssemblyInfo
                 try
                 {
                     // allow to compile without git
-                    Console.WriteLine("Warning: Could not run Git - build number will be 9999!");
-                    DoUpdateAssembly("[GITHASH]", string.Empty, template, target);
-                    DoUpdateAssembly("[REVNO]", "9999", target, target);
+                    Console.WriteLine("WARNING: Could not run Git - build number will be 9999!");
+                    template.Replace("[GITHASH]", string.Empty);
+                    template.Replace("[REVNO]", "9999");
+                    template.Save(targetFile);
                     return 0;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    Console.WriteLine("Error running Git");
-                    Console.WriteLine(" - Git folder: " + workingFolder);
-                    Console.WriteLine(" - Template: " + template);
-                    Console.WriteLine(" - Target: " + target);
+                    exceptionMessage = ex.Message;
                 }
             }
+            Console.WriteLine(myName + ": Could not update AssemblyInfo: " + exceptionMessage);
+            Console.WriteLine(" - Git folder: " + workingFolder);
+            Console.WriteLine(" - Template: " + templateFile);
+            Console.WriteLine(" - Target: " + targetFile);
             return 1;
+        }
+
+        private static string GetGitPath()
+        {
+            var envPath = Environment.GetEnvironmentVariable("PATH");
+            if (!string.IsNullOrWhiteSpace(envPath))
+            {
+                foreach (var p in envPath.Split(Path.PathSeparator))
+                {
+                    var path = Path.Combine(p, "git.exe");
+                    if (File.Exists(path))
+                        return path;
+                }
+            }
+
+            var gitPath = Path.Combine("Git", "bin", "git.exe");
+
+            var envProgramFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+            if (!string.IsNullOrWhiteSpace(envProgramFiles))
+            {
+                var path = Path.Combine(envProgramFiles, gitPath);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            envProgramFiles = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
+            if (!string.IsNullOrWhiteSpace(envProgramFiles))
+            {
+                var path = Path.Combine(envProgramFiles, gitPath);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            var envSystemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+            if (!string.IsNullOrWhiteSpace(envSystemDrive))
+            {
+                var path = Path.Combine(envSystemDrive, "Program Files", gitPath);
+                if (File.Exists(path))
+                    return path;
+
+                path = Path.Combine(envSystemDrive, "Program Files (x86)", gitPath);
+                if (File.Exists(path))
+                    return path;
+
+                path = Path.Combine(envSystemDrive, gitPath);
+                if (File.Exists(path))
+                    return path;
+            }
+
+            try
+            {
+                var cRoot = new DriveInfo("C").RootDirectory.FullName;
+                if (!cRoot.StartsWith(envSystemDrive, StringComparison.OrdinalIgnoreCase))
+                {
+                    var path = Path.Combine(cRoot, "Program Files", gitPath);
+                    if (File.Exists(path))
+                        return path;
+
+                    path = Path.Combine(cRoot, "Program Files (x86)", gitPath);
+                    if (File.Exists(path))
+                        return path;
+
+                    path = Path.Combine(cRoot, gitPath);
+                    if (File.Exists(path))
+                        return path;
+                }
+            }
+            catch { }
+
+            Console.WriteLine("WARNING: Might not be able to run Git command line tool!");
+            return "git";
         }
 
     }

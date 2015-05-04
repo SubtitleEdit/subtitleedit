@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -79,7 +80,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 XmlNode paragraph = xml.CreateElement("dict");
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
 
                 XmlNode keyNode = xml.CreateElement("key");
                 keyNode.InnerText = "in";
@@ -98,7 +99,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(valueNode);
 
                 int textNo = 0;
-                string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = p.Text.SplitToLines();
                 foreach (string line in lines)
                 {
                     textNo++;

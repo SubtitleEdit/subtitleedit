@@ -91,7 +91,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     text = ",b" + Environment.NewLine + text;
                 if (text.StartsWith("{\\an8}"))
                     text = ",12" + Environment.NewLine + text;
-                text = Utilities.RemoveHtmlTags(text, true);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
                 sb.AppendLine(string.Format(paragraphWriteFormat, text, Environment.NewLine, EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime)));
             }
             return sb.ToString().Trim();
@@ -120,7 +120,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             TimeCode start = DecodeTimeCode(timeParts[0]);
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
-                                p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                                p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = new TimeCode(0, 0, 0, 0);
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);
@@ -137,7 +137,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         {
                             TimeCode start = DecodeTimeCode(timeParts[0]);
                             if (p != null && p.EndTime.TotalMilliseconds == 0)
-                                p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                                p.EndTime.TotalMilliseconds = start.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             TimeCode end = DecodeTimeCode(timeParts[1]);
                             p = MakeTextParagraph(text, p, start, end);
                             subtitle.Paragraphs.Add(p);

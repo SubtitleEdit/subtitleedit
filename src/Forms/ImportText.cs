@@ -35,24 +35,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelLineBreak.Text = Configuration.Settings.Language.ImportText.LineBreak;
             columnHeaderFName.Text = Configuration.Settings.Language.JoinSubtitles.FileName;
             columnHeaderSize.Text = Configuration.Settings.Language.General.Size;
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.LineBreak)) //TODO: Remove in 3.4
-            {
-                labelLineBreak.Visible = false;
-                comboBoxLineBreak.Visible = false;
-            }
             comboBoxLineBreak.Left = labelLineBreak.Left + labelLineBreak.Width + 3;
             comboBoxLineBreak.Width = groupBoxSplitting.Width - comboBoxLineBreak.Left - 5;
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.OpenTextFiles)) //TODO: Fix in 3.4
-            {
-                checkBoxMultipleFiles.Visible = false;
-            }
-            else
-            {
-                checkBoxMultipleFiles.AutoSize = true;
-                checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
-                checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
-            }
+            checkBoxMultipleFiles.AutoSize = true;
+            checkBoxMultipleFiles.Left = buttonOpenText.Left - checkBoxMultipleFiles.Width - 9;
+            checkBoxMultipleFiles.Text = Configuration.Settings.Language.ImportText.OneSubtitleIsOneFile;
             listViewInputFiles.Visible = false;
 
             radioButtonSplitAtBlankLines.Text = Configuration.Settings.Language.ImportText.SplitAtBlankLines;
@@ -74,12 +61,6 @@ namespace Nikse.SubtitleEdit.Forms
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(SubtitleListview1);
             SubtitleListview1.AutoSizeAllColumns(this);
-
-            if (string.IsNullOrEmpty(Configuration.Settings.Language.ImportText.GenerateTimeCodes)) //TODO: Remove in SE 3.4
-            {
-                checkBoxGenerateTimeCodes.Checked = true;
-                checkBoxGenerateTimeCodes.Visible = false;
-            }
 
             if (string.IsNullOrEmpty(Configuration.Settings.Tools.ImportTextSplitting))
                 radioButtonAutoSplit.Checked = true;
@@ -388,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             text = string.Empty;
             if (input.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 3 && input.Length > Configuration.Settings.General.SubtitleLineMaximumLength * 1.5)
             {
-                var breaked = Utilities.AutoBreakLine(input).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var breaked = Utilities.AutoBreakLine(input).SplitToLines();
                 if (breaked.Length == 2 && (breaked[0].Length > Configuration.Settings.General.SubtitleLineMaximumLength || breaked[1].Length > Configuration.Settings.General.SubtitleLineMaximumLength))
                 {
                     var first = new StringBuilder();
@@ -473,13 +454,13 @@ namespace Nikse.SubtitleEdit.Forms
             string threeliner;
             if (CanMakeThreeLiner(out threeliner, sb.ToString()))
             {
-                var parts = threeliner.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = threeliner.SplitToLines();
                 _subtitle.Paragraphs.Add(new Paragraph { Text = parts[0] + Environment.NewLine + parts[1] });
                 _subtitle.Paragraphs.Add(new Paragraph { Text = parts[2].Trim() });
                 return;
             }
 
-            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string text in Utilities.AutoBreakLineMoreThanTwoLines(sb.ToString(), Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty).SplitToLines())
             {
                 if (p == null)
                 {
@@ -554,7 +535,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void AutoSplit(List<string> list, string line)
         {
-            foreach (string split in Utilities.AutoBreakLine(line).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string split in Utilities.AutoBreakLine(line).SplitToLines())
             {
                 if (split.Length <= Configuration.Settings.General.SubtitleLineMaximumLength)
                     list.Add(split);

@@ -201,7 +201,7 @@ namespace Nikse.SubtitleEdit.Logic.TransportStream
                                 endMsList.Add(item.PresentationTimestampToMilliseconds());
                         }
                         //else if (item.DataBuffer[0] == 0x80)
-                        //{ //TODO Load bd sub after 0x80, so we can be sure to get correct time code???
+                        //{ // TODO: Load bd sub after 0x80, so we can be sure to get correct time code???
                         //    endMsList.Add(item.PresentationTimestampToMilliseconds() / 90);
                         //}
                     }

@@ -31,9 +31,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".srt"; }
         }
 
+        public const string NameOfFormat = "SubRip";
+
         public override string Name
         {
-            get { return "SubRip"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -80,7 +82,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 _lineNumber++;
                 string line = lines[i].TrimEnd();
-                line = line.Trim(Convert.ToChar(127)); // 127=delete acscii
+                line = line.Trim('\u007F'); // 127=delete acscii
 
                 string next = string.Empty;
                 if (i + 1 < lines.Count)
@@ -193,29 +195,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private static bool IsText(string text)
         {
-            if (string.IsNullOrWhiteSpace(text))
+            if (string.IsNullOrWhiteSpace(text) || Utilities.IsInteger(text) || _regexTimeCodes.IsMatch(text))
                 return false;
-
-            if (Utilities.IsInteger(text))
-                return false;
-
-            if (_regexTimeCodes.IsMatch(text))
-                return false;
-
             return true;
         }
 
         private static string RemoveBadChars(string line)
         {
-            line = line.Replace("\0", " ");
-            return line;
+            return line.Replace('\0', ' ');
         }
 
         private static bool TryReadTimeCodesLine(string line, Paragraph paragraph)
         {
-            line = line.Replace("،", ",");
-            line = line.Replace("", ",");
-            line = line.Replace("¡", ",");
+            line = line.Replace('،', ',');
+            line = line.Replace('', ',');
+            line = line.Replace('¡', ',');
 
             const string defaultSeparator = " --> ";
             // Fix some badly formatted separator sequences - anything can happen if you manually edit ;)
@@ -233,8 +227,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 line = line.Substring(0, 29);
 
             // removes all extra spaces
-            line = line.Replace(" ", string.Empty).Replace("-->", defaultSeparator);
-            line = line.Trim();
+            line = line.Replace(" ", string.Empty).Replace("-->", defaultSeparator).Trim();
 
             // Fix a few more cases of wrong time codes, seen this: 00.00.02,000 --> 00.00.04,000
             line = line.Replace('.', ':');

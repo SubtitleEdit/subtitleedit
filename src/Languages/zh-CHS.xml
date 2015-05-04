@@ -2,7 +2,7 @@
 <Language Name="简体中文">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>翻译: FeiXJ | Leon Cheung | larsenlouis</TranslatedBy>
     <CultureName>zh-CHS</CultureName>
     <HelpFile />
@@ -281,7 +281,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <GapToNext>与下一行的间隔时间</GapToNext>
     <BridgeGapsSmallerThanXPart1>桥接的间隔时长小于</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>毫秒</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>行间最小毫秒数</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>行间最小毫秒数</MinMillisecondsBetweenLines>
     <ProlongEndTime>间隔时间分配给前一行</ProlongEndTime>
     <DivideEven>间隔时间均分给前后两行</DivideEven>
   </DurationsBridgeGaps>
@@ -1644,8 +1644,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
     <SwitchOriginalAndTranslation>切换原文和翻译</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>合并原文和翻译</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>快捷键已经定义:
-{0}
-</ShortcutIsAlreadyDefinedX>
+{0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>在 视频/音频 预览中切换翻译和原文</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>列，删除文本</ListViewColumnDelete>
     <ListViewColumnInsert>列，插入文本</ListViewColumnInsert>

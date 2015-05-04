@@ -236,7 +236,7 @@ namespace Nikse.SubtitleEdit.Forms
                         try
                         {
                             fs.Seek(position, SeekOrigin.Begin);
-                            bytesRead = fs.Read(buffer, 0, 0x0800);
+                            bytesRead = fs.Read(buffer, 0, 0x800);
                         }
                         catch (IOException exception)
                         {
@@ -267,7 +267,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (IsPrivateStream2(buffer, 0x26))
                         {
-                            if (Helper.GetEndian(buffer, 0x0026, 4) == 0x1bf && Helper.GetEndian(buffer, 0x400, 4) == 0x1bf)
+                            if (Helper.GetEndian(buffer, 0x0026, 4) == 0x1bf && Helper.GetEndian(buffer, 0x0400, 4) == 0x1bf)
                             {
                                 uint vobuSPtm = Helper.GetEndian(buffer, 0x0039, 4);
                                 uint vobuEPtm = Helper.GetEndian(buffer, 0x003d, 4);
@@ -387,7 +387,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonMoveVobUp_Click(object sender, EventArgs e)
         {
-            if (listBoxVobFiles.SelectedIndex > -1 && listBoxVobFiles.SelectedIndex > 0)
+            if (listBoxVobFiles.SelectedIndex > 0)
             {
                 int index = listBoxVobFiles.SelectedIndex;
                 string old = listBoxVobFiles.Items[index].ToString();
@@ -399,7 +399,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonMoveVobDown_Click(object sender, EventArgs e)
         {
-            if (listBoxVobFiles.SelectedIndex > -1 && listBoxVobFiles.SelectedIndex < listBoxVobFiles.Items.Count - 1)
+            if (listBoxVobFiles.SelectedIndex >= 0 && listBoxVobFiles.SelectedIndex < listBoxVobFiles.Items.Count - 1)
             {
                 int index = listBoxVobFiles.SelectedIndex;
                 string old = listBoxVobFiles.Items[index].ToString();
@@ -411,7 +411,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonRemoveVob_Click(object sender, EventArgs e)
         {
-            if (listBoxVobFiles.SelectedIndex > -1)
+            if (listBoxVobFiles.SelectedIndex >= 0)
             {
                 int index = listBoxVobFiles.SelectedIndex;
                 listBoxVobFiles.Items.RemoveAt(index);

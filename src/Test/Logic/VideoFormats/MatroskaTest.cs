@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.IO;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
 
 namespace Test.Logic.VideoFormats
 {
@@ -76,7 +76,7 @@ namespace Test.Logic.VideoFormats
                 var tracks = parser.GetTracks(true);
                 var subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[0].TrackNumber), null);
                 Assert.IsTrue(subtitles.Count == 2);
-                //TODO: check bitmaps
+                // TODO: Check bitmaps
 
                 //subtitles = parser.GetSubtitle(Convert.ToInt32(tracks[1].TrackNumber), null);
                 //Assert.IsTrue(subtitles.Count == 2);

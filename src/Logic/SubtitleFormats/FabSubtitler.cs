@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -40,7 +41,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //00:50:34:22  00:50:39:13
                 //Ich muss dafür sorgen,
                 //dass die Epsteins weiterleben
-                sb.AppendLine(string.Format("{0}  {1}{2}{3}{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, Utilities.RemoveHtmlTags(p.Text)));
+                sb.AppendLine(string.Format("{0}  {1}{2}{3}{2}", EncodeTimeCode(p.StartTime), EncodeTimeCode(p.EndTime), Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text)));
                 index++;
             }
             return sb.ToString();

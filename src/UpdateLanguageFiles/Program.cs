@@ -1,45 +1,58 @@
 ﻿using System;
 using System.IO;
+using System.Text;
 
 namespace UpdateLanguageFiles
 {
     internal class Program
     {
 
+        private static string workInProgress = "Updating language files...";
+
         private static int Main(string[] args)
         {
+            var myName = Environment.GetCommandLineArgs()[0];
+            myName = Path.GetFileNameWithoutExtension(string.IsNullOrWhiteSpace(myName)
+                   ? System.Reflection.Assembly.GetEntryAssembly().Location
+                   : myName);
+
             if (args.Length != 2)
             {
-                Console.WriteLine("UpdateLanguageFiles - wrong number of arguments: " + args.Length);
+                Console.Write("Usage: " + myName + @" <LanguageMaster> <LanguageDeserializer>
+  <LanguageMaster>       Path to the LanguageMaster xml file (LanguageMaster.xml)
+  <LanguageDeserializer> Path to the LanguageDeserializer source code file (LanguageDeserializer.cs)
+");
                 return 1;
             }
 
-            Console.Write("Updating language files...");
+            Console.Write(workInProgress);
 
             try
             {
                 int noOfChanges = 0;
+
                 var language = new Nikse.SubtitleEdit.Logic.Language();
                 language.General.Version = FindVersionNumber();
-                string currentLanguageAsXml = language.GetCurrentLanguageAsXml();
-                string oldLanguageAsXml = File.ReadAllText(args[0]);
-                if (oldLanguageAsXml != currentLanguageAsXml)
+                var languageAsXml = language.GetCurrentLanguageAsXml();
+                var oldLanguageAsXml = string.Empty;
+                if (File.Exists(args[0]))
+                    oldLanguageAsXml = File.ReadAllText(args[0]);
+                if (oldLanguageAsXml != languageAsXml)
                 {
-                    File.WriteAllText(args[0], currentLanguageAsXml);
+                    language.Save(args[0]);
                     noOfChanges++;
-                    Console.Write(" LanguageMaster.xml generated... ");
+                    Console.Write(" {0} generated...", Path.GetFileName(args[0]));
                 }
-                language.Save(args[0]);
 
-                string languageDeserializerContent = Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
-                string languageDeserializerContentOld = string.Empty;
+                var languageDeserializerContent = Nikse.SubtitleEdit.Logic.LanguageDeserializerGenerator.GenerateCSharpXmlDeserializerForLanguage();
+                var oldLanguageDeserializerContent = string.Empty;
                 if (File.Exists(args[1]))
-                    languageDeserializerContentOld = File.ReadAllText(args[1]);
-                if (languageDeserializerContent != languageDeserializerContentOld)
+                    oldLanguageDeserializerContent = File.ReadAllText(args[1]);
+                if (oldLanguageDeserializerContent != languageDeserializerContent)
                 {
-                    File.WriteAllText(args[1], languageDeserializerContent);
+                    File.WriteAllText(args[1], languageDeserializerContent, Encoding.UTF8);
                     noOfChanges++;
-                    Console.Write(" LanguageDeserializer.cs generated... ");
+                    Console.Write(" {0} generated...", Path.GetFileName(args[1]));
                 }
 
                 if (noOfChanges == 0)
@@ -56,37 +69,47 @@ namespace UpdateLanguageFiles
             catch (Exception ex)
             {
                 Console.WriteLine();
-                Console.WriteLine("UpdateLanguageFiles - " + ex.Message);
+                Console.WriteLine(myName + ": " + ex.Message);
+
                 return 2;
             }
         }
 
         private static string FindVersionNumber()
         {
-            var fileName = @"src\Properties\AssemblyInfo.cs.template";
+            var fileName = Path.Combine("src", "Properties", "AssemblyInfo.cs.template");
             if (!File.Exists(fileName))
-                fileName = @"..\src\Properties\AssemblyInfo.cs.template";
+                fileName = Path.Combine("..", fileName);
             if (!File.Exists(fileName))
-                fileName = @"..\..\src\Properties\AssemblyInfo.cs.template";
+                fileName = Path.Combine("..", fileName);
             if (!File.Exists(fileName))
-                fileName = @"..\..\..\src\Properties\AssemblyInfo.cs.template";
+                fileName = Path.Combine("..", fileName);
             if (!File.Exists(fileName))
-                fileName = @"..\..\..\..\src\Properties\AssemblyInfo.cs.template";
+                fileName = Path.Combine("..", fileName);
             if (!File.Exists(fileName))
-                fileName = @"..\..\..\..\..\src\Properties\AssemblyInfo.cs.template";
+                fileName = Path.Combine("..", fileName);
+
+            string warning;
 
             if (File.Exists(fileName))
             {
-                string text = File.ReadAllText(fileName);
-                string tag = "[assembly: AssemblyVersion(\"";
-                int start = text.IndexOf(tag);
-                if (start > 0)
+                var text = File.ReadAllText(fileName);
+                var pattern = @"\[assembly: AssemblyVersion\(""(\d+\.\d+\.\d+)\.\[REVNO]""\)]";
+                var version = System.Text.RegularExpressions.Regex.Match(text, pattern);
+                if (version.Success)
                 {
-                    var arr = text.Substring(start + tag.Length, 8).Split('.');
-                    if (arr.Length > 2)
-                        return string.Format("{0}.{1}.{2}", arr[0], arr[1], arr[2]);
+                    return version.Groups[1].Value;
                 }
+                warning = "No valid AssemblyVersion in template file '" + Path.GetFullPath(fileName) + "'.";
             }
+            else
+            {
+                warning = "Template file '" + Path.GetFileName(fileName) + "' not found.";
+            }
+            Console.WriteLine();
+            Console.WriteLine("WARNING: " + warning);
+            Console.Write(workInProgress);
+
             return "unknown";
         }
 

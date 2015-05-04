@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -52,7 +53,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string text = p.Text;
                 text = text.Replace("<i>", "@Italic@");
                 text = text.Replace("</i>", "@Italic@");
-                text = Utilities.RemoveHtmlTags(text, true);
+                text = HtmlUtil.RemoveHtmlTags(text, true);
                 if (Utilities.CountTagInText(Environment.NewLine, text) > 1)
                     text = Utilities.AutoBreakLineMoreThanTwoLines(text, Configuration.Settings.General.SubtitleLineMaximumLength, string.Empty);
                 text = text.Replace(Environment.NewLine, Environment.NewLine + "\t\t\t\t");

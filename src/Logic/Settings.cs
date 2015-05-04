@@ -159,6 +159,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string ChangeCasingChoice { get; set; }
         public bool UseNoLineBreakAfter { get; set; }
         public string NoLineBreakAfterEnglish { get; set; }
+        public List<string> FindHistory { get; set; }
 
         public ToolsSettings()
         {
@@ -217,6 +218,7 @@ namespace Nikse.SubtitleEdit.Logic
             ExportCustomTemplates = "SubRipÆÆ{number}\r\n{start} --> {end}\r\n{text}\r\n\r\nÆhh:mm:ss,zzzÆ[Do not modify]ÆæMicroDVDÆÆ{{start}}{{end}}{text}\r\nÆffÆ||Æ";
             UseNoLineBreakAfter = false;
             NoLineBreakAfterEnglish = " Mrs.; Ms.; Mr.; Dr.; a; an; the; my; my own; your; his; our; their; it's; is; are;'s; 're; would;'ll;'ve;'d; will; that; which; who; whom; whose; whichever; whoever; wherever; each; either; every; all; both; few; many; sevaral; all; any; most; been; been doing; none; some; my own; your own; his own; her own; our own; their own; I; she; he; as per; as regards; into; onto; than; where as; abaft; aboard; about; above; across; afore; after; against; along; alongside; amid; amidst; among; amongst; anenst; apropos; apud; around; as; aside; astride; at; athwart; atop; barring; before; behind; below; beneath; beside; besides; between; betwixt; beyond; but; by; circa; ca; concerning; despite; down; during; except; excluding; following; for; forenenst; from; given; in; including; inside; into; lest; like; minus; modulo; near; next; of; off; on; onto; opposite; out; outside; over; pace; past; per; plus; pro; qua; regarding; round; sans; save; since; than; through; thru; throughout; thruout; till; to; toward; towards; under; underneath; unlike; until; unto; up; upon; versus; vs; via; vice; with; within; without; considering; respecting; one; two; another; three; our; five; six; seven; eight; nine; ten; eleven; twelve; thirteen; fourteen; fifteen; sixteen; seventeen; eighteen; nineteen; twenty; thirty; forty; fifty; sixty; seventy; eighty; ninety; hundred; thousand; million; billion; trillion; while; however; what; zero; little; enough; after; although; and; as; if; though; although; because; before; both; but; even; how; than; nor; or; only; unless; until; yet; was; were";
+            FindHistory = new List<string>();
             ImportTextLineBreak = "|";
         }
 
@@ -467,7 +469,7 @@ namespace Nikse.SubtitleEdit.Logic
         public int SubtitleLineMaximumLength { get; set; }
         public int SubtitleMinimumDisplayMilliseconds { get; set; }
         public int SubtitleMaximumDisplayMilliseconds { get; set; }
-        public int MininumMillisecondsBetweenLines { get; set; }
+        public int MinimumMillisecondsBetweenLines { get; set; }
         public int SetStartEndHumanDelay { get; set; }
         public bool AutoWrapLineWhileTyping { get; set; }
         public double SubtitleMaximumCharactersPerSeconds { get; set; }
@@ -567,7 +569,7 @@ namespace Nikse.SubtitleEdit.Logic
             SubtitleLineMaximumLength = 43;
             SubtitleMinimumDisplayMilliseconds = 1000;
             SubtitleMaximumDisplayMilliseconds = 8 * 1000;
-            MininumMillisecondsBetweenLines = 24;
+            MinimumMillisecondsBetweenLines = 24;
             SetStartEndHumanDelay = 100;
             AutoWrapLineWhileTyping = false;
             SubtitleMaximumCharactersPerSeconds = 25.0;
@@ -647,7 +649,7 @@ namespace Nikse.SubtitleEdit.Logic
         public bool WaveformMouseWheelScrollUpIsForward { get; set; }
         public bool GenerateSpectrogram { get; set; }
         public string SpectrogramAppearance { get; set; }
-        public int WaveformMininumSampleRate { get; set; }
+        public int WaveformMinimumSampleRate { get; set; }
         public double WaveformSeeksSilenceDurationSeconds { get; set; }
         public int WaveformSeeksSilenceMaxVolume { get; set; }
 
@@ -673,7 +675,7 @@ namespace Nikse.SubtitleEdit.Logic
             WaveformDoubleClickOnNonParagraphAction = string.Empty;
             WaveformMouseWheelScrollUpIsForward = true;
             SpectrogramAppearance = "OneColorGradient";
-            WaveformMininumSampleRate = 126;
+            WaveformMinimumSampleRate = 126;
             WaveformSeeksSilenceDurationSeconds = 0.3;
             WaveformSeeksSilenceMaxVolume = 10;
         }
@@ -745,7 +747,7 @@ namespace Nikse.SubtitleEdit.Logic
         public NetworkSettings()
         {
             UserName = string.Empty;
-            SessionKey = "DemoSession"; // TODO - leave blank or use guid
+            SessionKey = "DemoSession"; // TODO: Leave blank or use guid
             WebServiceUrl = "http://www.nikse.dk/se/SeService.asmx";
             PollIntervalSeconds = 5;
         }
@@ -820,6 +822,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainListViewToggleDashes { get; set; }
         public string MainListViewAlignment { get; set; }
         public string MainListViewCopyText { get; set; }
+        public string MainListViewCopyTextFromOriginalToCurrent { get; set; }
         public string MainListViewAutoDuration { get; set; }
         public string MainListViewColumnDeleteText { get; set; }
         public string MainListViewColumnInsertText { get; set; }
@@ -832,6 +835,7 @@ namespace Nikse.SubtitleEdit.Logic
         public string MainTextBoxMoveFirstWordFromNextUp { get; set; }
         public string MainTextBoxSelectionToLower { get; set; }
         public string MainTextBoxSelectionToUpper { get; set; }
+        public string MainTextBoxToggleAutoDuration { get; set; }
         public string MainCreateInsertSubAtVideoPos { get; set; }
         public string MainCreatePlayFromJustBefore { get; set; }
         public string MainCreateSetStart { get; set; }
@@ -936,6 +940,7 @@ namespace Nikse.SubtitleEdit.Logic
             MainToolsAutoDuration = string.Empty;
             MainTextBoxSelectionToLower = "Control+U";
             MainTextBoxSelectionToUpper = "Control+Shift+U";
+            MainTextBoxToggleAutoDuration = string.Empty;
             MainToolsBeamer = "Control+Shift+Alt+B";
             MainCreateInsertSubAtVideoPos = string.Empty;
             MainCreatePlayFromJustBefore = string.Empty;
@@ -1313,9 +1318,11 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SubtitleMaximumDisplayMilliseconds");
             if (subNode != null)
                 settings.General.SubtitleMaximumDisplayMilliseconds = Convert.ToInt32(subNode.InnerText);
-            subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
+            subNode = node.SelectSingleNode("MinimumMillisecondsBetweenLines");
+            if (subNode == null) // TODO: Remove in 3.5
+                subNode = node.SelectSingleNode("MininumMillisecondsBetweenLines");
             if (subNode != null)
-                settings.General.MininumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
+                settings.General.MinimumMillisecondsBetweenLines = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("SetStartEndHumanDelay");
             if (subNode != null)
                 settings.General.SetStartEndHumanDelay = Convert.ToInt32(subNode.InnerText);
@@ -1754,6 +1761,17 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("NoLineBreakAfterEnglish");
             if (subNode != null)
                 settings.Tools.NoLineBreakAfterEnglish = subNode.InnerText.Replace("  ", " ");
+            subNode = node.SelectSingleNode("FindHistory");
+            if (subNode != null)
+            {
+                foreach (XmlNode findItem in subNode.ChildNodes)
+                {
+                    if (findItem.Name == "Text")
+                    {
+                        settings.Tools.FindHistory.Add(findItem.InnerText);
+                    }
+                }
+            }
 
             settings.SubtitleSettings = new SubtitleSettings();
             node = doc.DocumentElement.SelectSingleNode("SubtitleSettings");
@@ -2048,9 +2066,11 @@ namespace Nikse.SubtitleEdit.Logic
             subNode = node.SelectSingleNode("SpectrogramAppearance");
             if (subNode != null)
                 settings.VideoControls.SpectrogramAppearance = subNode.InnerText;
-            subNode = node.SelectSingleNode("WaveformMininumSampleRate");
+            subNode = node.SelectSingleNode("WaveformMinimumSampleRate");
+            if (subNode == null) // TODO: Remove in 3.5
+                subNode = node.SelectSingleNode("WaveformMininumSampleRate");
             if (subNode != null)
-                settings.VideoControls.WaveformMininumSampleRate = Convert.ToInt32(subNode.InnerText);
+                settings.VideoControls.WaveformMinimumSampleRate = Convert.ToInt32(subNode.InnerText);
             subNode = node.SelectSingleNode("WaveformSeeksSilenceDurationSeconds");
             if (subNode != null)
                 settings.VideoControls.WaveformSeeksSilenceDurationSeconds = Convert.ToDouble(subNode.InnerText, CultureInfo.InvariantCulture);
@@ -2371,6 +2391,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainListViewCopyText");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewCopyText = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainListViewCopyTextFromOriginalToCurrent");
+                if (subNode != null)
+                    settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainListViewAutoDuration");
                 if (subNode != null)
                     settings.Shortcuts.MainListViewAutoDuration = subNode.InnerText;
@@ -2410,6 +2433,9 @@ namespace Nikse.SubtitleEdit.Logic
                 subNode = node.SelectSingleNode("MainTextBoxSelectionToUpper");
                 if (subNode != null)
                     settings.Shortcuts.MainTextBoxSelectionToUpper = subNode.InnerText;
+                subNode = node.SelectSingleNode("MainTextBoxToggleAutoDuration");
+                if (subNode != null)
+                    settings.Shortcuts.MainTextBoxToggleAutoDuration = subNode.InnerText;
                 subNode = node.SelectSingleNode("MainCreateInsertSubAtVideoPos");
                 if (subNode != null)
                     settings.Shortcuts.MainCreateInsertSubAtVideoPos = subNode.InnerText;
@@ -2681,7 +2707,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("SubtitleLineMaximumLength", settings.General.SubtitleLineMaximumLength.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMinimumDisplayMilliseconds", settings.General.SubtitleMinimumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SubtitleMaximumDisplayMilliseconds", settings.General.SubtitleMaximumDisplayMilliseconds.ToString(CultureInfo.InvariantCulture));
-                textWriter.WriteElementString("MininumMillisecondsBetweenLines", settings.General.MininumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("MinimumMillisecondsBetweenLines", settings.General.MinimumMillisecondsBetweenLines.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("SetStartEndHumanDelay", settings.General.SetStartEndHumanDelay.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("AutoWrapLineWhileTyping", settings.General.AutoWrapLineWhileTyping.ToString());
                 textWriter.WriteElementString("SubtitleMaximumCharactersPerSeconds", settings.General.SubtitleMaximumCharactersPerSeconds.ToString(CultureInfo.InvariantCulture));
@@ -2831,7 +2857,20 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("ChangeCasingChoice", settings.Tools.ChangeCasingChoice);
                 textWriter.WriteElementString("UseNoLineBreakAfter", settings.Tools.UseNoLineBreakAfter.ToString());
                 textWriter.WriteElementString("NoLineBreakAfterEnglish", settings.Tools.NoLineBreakAfterEnglish);
-
+                if (settings.Tools.FindHistory != null && settings.Tools.FindHistory.Count > 0)
+                {
+                    const int maximumFindHistoryItems = 10;
+                    textWriter.WriteStartElement("FindHistory", "");
+                    for (int index = 0; index < settings.Tools.FindHistory.Count; index++)
+                    {
+                        if (index < maximumFindHistoryItems)
+                        {
+                            var text = settings.Tools.FindHistory[index];
+                            textWriter.WriteElementString("Text", text);
+                        }
+                    }
+                    textWriter.WriteEndElement();
+                }
                 textWriter.WriteEndElement();
 
                 textWriter.WriteStartElement("SubtitleSettings", "");
@@ -2938,7 +2977,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("WaveformMouseWheelScrollUpIsForward", settings.VideoControls.WaveformMouseWheelScrollUpIsForward.ToString());
                 textWriter.WriteElementString("GenerateSpectrogram", settings.VideoControls.GenerateSpectrogram.ToString());
                 textWriter.WriteElementString("SpectrogramAppearance", settings.VideoControls.SpectrogramAppearance);
-                textWriter.WriteElementString("WaveformMininumSampleRate", settings.VideoControls.WaveformMininumSampleRate.ToString(CultureInfo.InvariantCulture));
+                textWriter.WriteElementString("WaveformMinimumSampleRate", settings.VideoControls.WaveformMinimumSampleRate.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceDurationSeconds", settings.VideoControls.WaveformSeeksSilenceDurationSeconds.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteElementString("WaveformSeeksSilenceMaxVolume", settings.VideoControls.WaveformSeeksSilenceMaxVolume.ToString(CultureInfo.InvariantCulture));
                 textWriter.WriteEndElement();
@@ -3056,6 +3095,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("MainListViewToggleDashes", settings.Shortcuts.MainListViewToggleDashes);
                 textWriter.WriteElementString("MainListViewAlignment", settings.Shortcuts.MainListViewAlignment);
                 textWriter.WriteElementString("MainListViewCopyText", settings.Shortcuts.MainListViewCopyText);
+                textWriter.WriteElementString("MainListViewCopyTextFromOriginalToCurrent", settings.Shortcuts.MainListViewCopyTextFromOriginalToCurrent);
                 textWriter.WriteElementString("MainListViewAutoDuration", settings.Shortcuts.MainListViewAutoDuration);
                 textWriter.WriteElementString("MainListViewColumnDeleteText", settings.Shortcuts.MainListViewColumnDeleteText);
                 textWriter.WriteElementString("MainListViewColumnInsertText", settings.Shortcuts.MainListViewColumnInsertText);
@@ -3069,6 +3109,7 @@ namespace Nikse.SubtitleEdit.Logic
                 textWriter.WriteElementString("MainTextBoxMoveFirstWordFromNextUp", settings.Shortcuts.MainTextBoxMoveFirstWordFromNextUp);
                 textWriter.WriteElementString("MainTextBoxSelectionToLower", settings.Shortcuts.MainTextBoxSelectionToLower);
                 textWriter.WriteElementString("MainTextBoxSelectionToUpper", settings.Shortcuts.MainTextBoxSelectionToUpper);
+                textWriter.WriteElementString("MainTextBoxToggleAutoDuration", settings.Shortcuts.MainTextBoxToggleAutoDuration);
                 textWriter.WriteElementString("MainCreateInsertSubAtVideoPos", settings.Shortcuts.MainCreateInsertSubAtVideoPos);
                 textWriter.WriteElementString("MainCreatePlayFromJustBefore", settings.Shortcuts.MainCreatePlayFromJustBefore);
                 textWriter.WriteElementString("MainCreateSetStart", settings.Shortcuts.MainCreateSetStart);

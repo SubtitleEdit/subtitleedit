@@ -146,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     Paragraph next = subtitle.Paragraphs[i + 1];
                     if (p.EndTime.TotalMilliseconds > next.StartTime.TotalMilliseconds)
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 }
             }
 

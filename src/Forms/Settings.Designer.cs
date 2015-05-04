@@ -218,6 +218,7 @@
             this.labelVerifyButton = new System.Windows.Forms.Label();
             this.tabPageWordLists = new System.Windows.Forms.TabPage();
             this.groupBoxWordLists = new System.Windows.Forms.GroupBox();
+            this.linkLabelOpenDictionaryFolder = new System.Windows.Forms.LinkLabel();
             this.groupBoxOcrFixList = new System.Windows.Forms.GroupBox();
             this.textBoxOcrFixValue = new System.Windows.Forms.TextBox();
             this.buttonRemoveOcrFix = new System.Windows.Forms.Button();
@@ -1755,6 +1756,7 @@
             this.textBoxVlcPath.Name = "textBoxVlcPath";
             this.textBoxVlcPath.Size = new System.Drawing.Size(390, 21);
             this.textBoxVlcPath.TabIndex = 25;
+            this.textBoxVlcPath.MouseLeave += new System.EventHandler(this.textBoxVlcPath_MouseLeave);
             // 
             // labelVlcPath
             // 
@@ -2500,6 +2502,7 @@
             // 
             // groupBoxWordLists
             // 
+            this.groupBoxWordLists.Controls.Add(this.linkLabelOpenDictionaryFolder);
             this.groupBoxWordLists.Controls.Add(this.groupBoxOcrFixList);
             this.groupBoxWordLists.Controls.Add(this.groupBoxUserWordList);
             this.groupBoxWordLists.Controls.Add(this.groupBoxWordListLocation);
@@ -2512,6 +2515,17 @@
             this.groupBoxWordLists.TabIndex = 2;
             this.groupBoxWordLists.TabStop = false;
             this.groupBoxWordLists.Text = "Word lists";
+            // 
+            // linkLabelOpenDictionaryFolder
+            // 
+            this.linkLabelOpenDictionaryFolder.AutoSize = true;
+            this.linkLabelOpenDictionaryFolder.Location = new System.Drawing.Point(7, 409);
+            this.linkLabelOpenDictionaryFolder.Name = "linkLabelOpenDictionaryFolder";
+            this.linkLabelOpenDictionaryFolder.Size = new System.Drawing.Size(126, 13);
+            this.linkLabelOpenDictionaryFolder.TabIndex = 29;
+            this.linkLabelOpenDictionaryFolder.TabStop = true;
+            this.linkLabelOpenDictionaryFolder.Text = "Open \'Dictionaries\' folder";
+            this.linkLabelOpenDictionaryFolder.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelOpenDictionaryFolder_LinkClicked);
             // 
             // groupBoxOcrFixList
             // 
@@ -2633,7 +2647,7 @@
             this.groupBoxWordListLocation.Controls.Add(this.textBoxNamesEtcOnline);
             this.groupBoxWordListLocation.Location = new System.Drawing.Point(6, 316);
             this.groupBoxWordListLocation.Name = "groupBoxWordListLocation";
-            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 110);
+            this.groupBoxWordListLocation.Size = new System.Drawing.Size(797, 82);
             this.groupBoxWordListLocation.TabIndex = 8;
             this.groupBoxWordListLocation.TabStop = false;
             this.groupBoxWordListLocation.Text = "Location";
@@ -3711,5 +3725,6 @@
         private System.Windows.Forms.Label labelWaveformTextSize;
         private System.Windows.Forms.CheckBox checkBoxWaveformTextBold;
         private System.Windows.Forms.ComboBox comboBoxWaveformTextSize;
+        private System.Windows.Forms.LinkLabel linkLabelOpenDictionaryFolder;
     }
 }

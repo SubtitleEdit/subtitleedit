@@ -4,15 +4,13 @@ using Nikse.SubtitleEdit.Logic.Dictionaries;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Nikse.SubtitleEdit.Forms
 {
     public sealed partial class ChangeCasing : PositionAndSizeForm
     {
-        private static readonly Regex AloneI = new Regex(@"\bi\b", RegexOptions.Compiled);
+
         private int _noOfLinesChanged;
 
         public ChangeCasing()
@@ -82,33 +80,28 @@ namespace Nikse.SubtitleEdit.Forms
                 p.Text = FixCasing(p.Text, lastLine, namesEtc);
 
                 // fix casing of English alone i to I
-                if (radioButtonNormal.Checked && language.StartsWith("en") && p.Text.Contains('i'))
+                if (radioButtonNormal.Checked && language.StartsWith("en", StringComparison.Ordinal))
                 {
-                    Match match = AloneI.Match(p.Text);
-                    while (match.Success)
-                    {
-                        if (p.Text[match.Index] == 'i')
-                        {
-                            string prev = string.Empty;
-                            string next = string.Empty;
-                            if (match.Index > 0)
-                                prev = p.Text[match.Index - 1].ToString(CultureInfo.InvariantCulture);
-                            if (match.Index + 1 < p.Text.Length)
-                                next = p.Text[match.Index + 1].ToString(CultureInfo.InvariantCulture);
-                            if (prev != ">" && next != ">")
-                            {
-                                string oldText = p.Text;
-                                p.Text = p.Text.Substring(0, match.Index) + "I";
-                                if (match.Index + 1 < oldText.Length)
-                                    p.Text += oldText.Substring(match.Index + 1);
-                            }
-                        }
-                        match = match.NextMatch();
-                    }
+                    p.Text = FixEnglishAloneILowerToUpper(p.Text);
                 }
 
                 lastLine = p.Text;
             }
+        }
+
+        public static string FixEnglishAloneILowerToUpper(string text)
+        {
+            for (var indexOfI = text.IndexOf('i'); indexOfI >= 0; indexOfI = text.IndexOf('i', indexOfI + 1))
+            {
+                if (indexOfI == 0 || " >¡¿♪♫([".Contains(text[indexOfI - 1]))
+                {
+                    if (indexOfI + 1 == text.Length || " <!?.:;,♪♫)]".Contains(text[indexOfI + 1]))
+                    {
+                        text = text.Remove(indexOfI, 1).Insert(indexOfI, "I");
+                    }
+                }
+            }
+            return text;
         }
 
         private string FixCasing(string text, string lastLine, List<string> namesEtc)
@@ -137,14 +130,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var st = new StripableText(text);
                 text = st.Pre + st.StrippedText.ToUpper() + st.Post;
-                text = text.Replace("<I>", "<i>");
-                text = text.Replace("</I>", "</i>");
-                text = text.Replace("<B>", "<b>");
-                text = text.Replace("</B>", "</b>");
-                text = text.Replace("<U>", "<u>");
-                text = text.Replace("<U>", "</u>");
-                text = text.Replace("<FONT COLOR>", "<font color>");
-                text = text.Replace("</FONT>", "</font>");
+                text = HtmlUtil.FixUpperTags(text); // tags inside text
             }
             else if (radioButtonLowercase.Checked)
             {
@@ -172,6 +158,13 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonLowercase.Checked)
                 Configuration.Settings.Tools.ChangeCasingChoice = "Lowercase";
             DialogResult = DialogResult.OK;
+        }
+
+        private void RadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            var isNormalCasing = sender == radioButtonNormal;
+            checkBoxFixNames.Enabled = isNormalCasing;
+            checkBoxOnlyAllUpper.Enabled = isNormalCasing;
         }
 
     }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -44,7 +45,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 index++;
                 //00:18:02:  (斉藤)失礼な大人って！  (悠子)何言ってんのあんた？
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, "  ");
                 sb.AppendLine(string.Format("{0}  {1}", EncodeTimeCode(p.StartTime), text));
                 sb.AppendLine();
@@ -107,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 Paragraph current = subtitle.Paragraphs[i];
                 Paragraph next = subtitle.GetParagraphOrDefault(i + 1);
                 if (next != null)
-                    current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                    current.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 else
                     current.EndTime.TotalMilliseconds = current.StartTime.TotalMilliseconds + Utilities.GetOptimalDisplayMilliseconds(current.Text);
 

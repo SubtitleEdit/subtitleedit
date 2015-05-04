@@ -38,7 +38,7 @@ namespace Nikse.SubtitleEdit.Forms
             _subtitle = subtitle;
             _index = index;
 
-            LanguageStructure.ChangeCasing language = Configuration.Settings.Language.ChangeCasing;
+            LanguageStructure.Beamer language = Configuration.Settings.Language.Beamer;
             Text = language.Title;
             groupBoxImageSettings.Text = Configuration.Settings.Language.ExportPngXml.ImageSettings;
             labelSubtitleFont.Text = Configuration.Settings.Language.ExportPngXml.FontFamily;
@@ -207,7 +207,7 @@ namespace Nikse.SubtitleEdit.Forms
             SizeF textSize = g.MeasureString("Hj!", font);
             var lineHeight = (textSize.Height * 0.64f);
 
-            textSize = g.MeasureString(Utilities.RemoveHtmlTags(text), font);
+            textSize = g.MeasureString(HtmlUtil.RemoveHtmlTags(text), font);
             g.Dispose();
             bmp.Dispose();
             int sizeX = (int)(textSize.Width * 0.8) + 40;
@@ -220,7 +220,7 @@ namespace Nikse.SubtitleEdit.Forms
             g = Graphics.FromImage(bmp);
 
             var lefts = new List<float>();
-            foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (var line in HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic, HtmlUtil.TagFont).SplitToLines())
             {
                 if (subtitleAlignLeft)
                     lefts.Add(5);
@@ -288,7 +288,7 @@ namespace Nikse.SubtitleEdit.Forms
                     sb = new StringBuilder();
 
                     int endIndex = text.Substring(i).IndexOf('>');
-                    if (endIndex == -1)
+                    if (endIndex < 0)
                     {
                         i += 9999;
                     }
@@ -557,7 +557,7 @@ namespace Nikse.SubtitleEdit.Forms
                 timer1.Stop();
                 Cursor.Show();
                 FormBorderStyle = FormBorderStyle.FixedDialog;
-                BackColor = Control.DefaultBackColor;
+                BackColor = DefaultBackColor;
                 WindowState = FormWindowState.Normal;
                 _showIndex = -2;
                 _fullscreen = false;

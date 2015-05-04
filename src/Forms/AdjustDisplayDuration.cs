@@ -15,7 +15,7 @@ namespace Nikse.SubtitleEdit.Forms
                 if (radioButtonPercent.Checked)
                     return comboBoxPercent.Text;
                 if (radioButtonAutoRecalculate.Checked)
-                    return radioButtonAutoRecalculate.Text + ", " + labelMaxCharsPerSecond.Text + ": " + numericUpDownMaxCharsSec.Value; //TODO: Make language string with string.Format
+                    return radioButtonAutoRecalculate.Text + ", " + labelMaxCharsPerSecond.Text + ": " + numericUpDownMaxCharsSec.Value; // TODO: Make language string with string.Format
                 return comboBoxSeconds.Text;
             }
         }
@@ -150,31 +150,5 @@ namespace Nikse.SubtitleEdit.Forms
         {
             FixEnabled();
         }
-
-        private void radioButtonradioButtonAutoRecalculate_CheckedChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelMaxCharsPerSecond_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void labelNote_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void numericUpDownMaxCharsSec_ValueChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void AdjustDisplayDuration_Load(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

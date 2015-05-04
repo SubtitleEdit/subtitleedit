@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.IO;
 using Nikse.SubtitleEdit.Logic.VobSub;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -1072,6 +1073,48 @@ namespace Nikse.SubtitleEdit.Logic
             for (int y = 0; y < Height; y++)
             {
                 SetPixel(Width - 1, y, Color.Transparent);
+            }
+        }
+
+        public void SaveAsTarga(string fileName)
+        {
+            // TGA header (18-byte fixed header)
+            byte[] header =
+             {
+                 0, // ID length (1 bytes)
+                 0, // no color map (1 bytes)
+                 2, // uncompressed, true color (1 bytes)
+                 0, 0,  // Color map First Entry Index
+                 0, 0, //  Color map Length
+                 0, // Color map Entry Size
+                 0, 0, 0, 0, // x and y origin
+                 (byte)(Width & 0x00FF),
+                 (byte)((Width & 0xFF00) >> 8),
+                 (byte)(Height & 0x00FF),
+                 (byte)((Height & 0xFF00) >> 8),
+                 32, // pixel depth - 32=32 bit bitmap
+                 0 //  Image Descriptor
+             };
+
+            var pixels = new byte[_bitmapData.Length];
+            int offsetDest = 0;
+            for (int y = Height-1; y >= 0; y--) // takes lines from bottom lines to top (mirrowed horizontally)
+            {
+                for (int x = 0; x < Width; x++)
+                {
+                    var c = GetPixel(x, y);
+                    pixels[offsetDest] = c.B;
+                    pixels[offsetDest + 1] = c.G;
+                    pixels[offsetDest + 2] = c.R;
+                    pixels[offsetDest + 3] = c.A;
+                    offsetDest += 4;
+                }
+            }
+
+            using (var fileStream = File.Create(fileName))
+            {
+                fileStream.Write(header, 0, header.Length);
+                fileStream.Write(pixels, 0, pixels.Length);
             }
         }
 

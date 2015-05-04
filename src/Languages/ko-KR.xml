@@ -2,7 +2,7 @@
 <Language Name="한국어">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>☞ 한글화: 도움돌 (domddol@gmail.com)</TranslatedBy>
     <CultureName>ko-KR</CultureName>
     <HelpFile />
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>컨트롤 - {0}</ControlsWindowTitle>
     <Advanced>고급</Advanced>
     <Style>스타일</Style>
+    <StyleLanguage>스타일 / 언어</StyleLanguage>
+    <Character>문자</Character>
     <Class>클래스</Class>
     <GeneralText>일반</GeneralText>
     <LineNumber>줄 번호</LineNumber>
@@ -80,8 +82,7 @@ Subtitle Edit는 GNU 정책을 따르는 무료 소프트웨어입니다.
 C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
 최신 버전은 홈페이지(www.nikse.dk)를 방문하시기 바랍니다.
 귀하의 의견은 아래 이메일 주소로 접수되며 언제나 환영합니다.
-이메일 주소: mailto:nikse.dk@gmail.com
-   </AboutText1>
+이메일 주소: mailto:nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>이름/기타 목록에 단어 추가</Title>
@@ -108,6 +109,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ExtractingSeconds>추출 시간: {0:0.0} 초</ExtractingSeconds>
     <ExtractingMinutes>추출 시간: {0}.{1:00} 분</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>파형 데이터 일괄 생성</Title>
+    <ExtractingAudio>오디오 추출 중...</ExtractingAudio>
+    <Calculating>계산 중...</Calculating>
+    <Done>완료</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>표시시간 조정</Title>
     <AdjustVia>※ 사용자가 선택한 방식으로 표시시간을 조정합니다.</AdjustVia>
@@ -149,7 +156,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Convert>변환</Convert>
     <NothingToConvert>변환할 것이 없습니다!</NothingToConvert>
     <PleaseChooseOutputFolder>출력 폴더를 선택하십시오!</PleaseChooseOutputFolder>
-    <Converted>변환됐습니다!</Converted>
+    <NotConverted>실패함</NotConverted>
+    <Converted>변환됨</Converted>
     <ConvertedX>({0}) 변환 완료!</ConvertedX>
     <Settings>설정</Settings>
     <SplitLongLines>긴 줄 분할</SplitLongLines>
@@ -159,6 +167,15 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Recursive>하위 폴더 포함</Recursive>
     <SetMinMsBetweenSubtitles>자막 사이의 분과 밀리초 설정</SetMinMsBetweenSubtitles>
     <PlainText>일반 텍스트</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>필터</Filter>
+    <FilterSkipped>필터에서 제외</FilterSkipped>
+    <FilterSrtNoUtf8BOM>UTF-8에서 BOM 표식 없는 subRip(.srt) 파일</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>한 자막 당 두 개 이상의 줄</FilterMoreThanTwoLines>
+    <FilterContains>텍스트 포함...</FilterContains>
+    <FixCommonErrorsErrorX>일반적인 오류 수정: {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>다중 바꾸기: {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>자동 조정: {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>프로젝터</Title>
@@ -192,8 +209,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>* 비율로 속도 조정</Title>
     <Info>비율로 자막 속도를 변경합니다</Info>
     <Custom>사용자 지정</Custom>
-    <ToDropFrame>To drop frame</ToDropFrame>
-    <FromDropFrame>From drop frame</FromDropFrame>
+    <ToDropFrame>드롭 프레임까지</ToDropFrame>
+    <FromDropFrame>드롭 프레임에서</FromDropFrame>
   </ChangeSpeedInPercent>
   <CheckForUpdates>
     <Title>* 업데이트 확인</Title>
@@ -280,7 +297,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <GapToNext>다음 줄과의 시간 간격</GapToNext>
     <BridgeGapsSmallerThanXPart1>- 다음보다 작은 간격 메움:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>(밀리초)</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>- 줄 사이의 최소 밀리초:</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>- 줄 사이의 최소 밀리초:</MinMillisecondsBetweenLines>
     <ProlongEndTime>이전 텍스트로 시간 간격 메움</ProlongEndTime>
     <DivideEven>텍스트로 시간 간격을 공유</DivideEven>
   </DurationsBridgeGaps>
@@ -405,10 +422,15 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Right>오른쪽</Right>
     <Center>가운데</Center>
     <BottomMargin>하단 여백</BottomMargin>
+    <LeftRightMargin>좌/우 여백</LeftRightMargin>
     <SaveBluRraySupAs>블루레이 자막 (sup) 파일로 저장</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub 파일로 저장</SaveVobSubAs>
-    <SaveFabImageScriptAs>Fab 이미지 스크립트로 저장</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>FAB 이미지 스크립트 파일 이름 선택</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>DVD Studio Pro STL로 저장</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Digital Cinema Interop 파일 이름 선택</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Premier EDL 파일 이름 선택</SavePremiereEdlAs>
+    <SaveFcpAs>Final Cut Pro xml 파일 이름 선택</SaveFcpAs>
+    <SaveDostAs>DoStudio dost 파일 이름 선택</SaveDostAs>
     <SomeLinesWereTooLongX>너무 긴 줄: {0}</SomeLinesWereTooLongX>
     <LineHeight>줄높이</LineHeight>
     <BoxSingleLine>상자 - 한 줄</BoxSingleLine>
@@ -676,6 +698,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <FileName>파일 이름</FileName>
     <Join>등록</Join>
     <TotalNumberOfLinesX>총 라인 수: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>주의: 파일이 올바른 타임코드를 가지고 있어야 합니다.</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -733,6 +756,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <Redo>다시 실행</Redo>
         <ShowUndoHistory>히스토리 보기 (되돌리기용)</ShowUndoHistory>
         <InsertUnicodeSymbol>유니코드 기호 입력</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>유니코드 제어 문자 삽입...</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>왼쪽에서 오른쪽으로 표시 (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>오른쪽에서 왼쪽으로 표시 (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>왼쪽에서 오른쪽으로 임베드 시작 (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>오른쪽에서 왼쪽으로 임베드 시작 (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>왼쪽에서 오른쪽으로 오버라이드 시작 (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>오른쪽에서 왼쪽으로 오버라이드 시작 (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>찾기(&amp;F)</Find>
         <FindNext>다음 찾기(&amp;N)</FindNext>
         <Replace>바꾸기(&amp;R)</Replace>
@@ -791,6 +821,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <CloseVideo>비디오 파일 닫기</CloseVideo>
         <ImportSceneChanges>장면 전환 가져오기...</ImportSceneChanges>
         <RemoveSceneChanges>장면 전환 제거</RemoveSceneChanges>
+        <WaveformBatchGenerate>파형 일괄 생성...</WaveformBatchGenerate>
         <ShowHideVideo>비디오 표시 | 숨김</ShowHideVideo>
         <ShowHideWaveform>오디오 표시 | 숨김</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>파형 및 스펙트로그램 표시 | 숨김</ShowHideWaveformAndSpectrogram>
@@ -862,6 +893,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
         <TimedTextStyles>시간 제한 텍스트 스타일...</TimedTextStyles>
         <TimedTextSetLanguage>시간 제한 텍스트 - 언어 설정</TimedTextSetLanguage>
         <SamiSetStyle>SAMI - 클래스 설정</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - 문자 설정</NuendoSetStyle>
         <Cut>잘라내기</Cut>
         <Copy>복사</Copy>
         <Paste>붙여넣기</Paste>
@@ -1107,6 +1139,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MatroskaFiles>Matroska 파일</MatroskaFiles>
     <NoSubtitlesFound>자막이 없습니다!</NoSubtitlesFound>
     <NotAValidMatroskaFileX>유효한 Matroska 파일이 없습니다: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Blu-ray sup 파일에 어떠한 자막도 들어 있지 않거나 오류입니다 - 다시 추출하십시오.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Matroska 파일의 구문을 분석하는 중...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>전송 스트림 파일의 구문을 분석하는 중... 잠시 기다려 주십시오!</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Matroska 파일에서 자막을 가져오기 전</BeforeImportFromMatroskaFile>
@@ -1165,6 +1198,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <BeforeMergeShortLines>짧은 줄 병합 전</BeforeMergeShortLines>
     <BeforeSplitLongLines>긴 줄 분할 전</BeforeSplitLongLines>
     <MergedShortLinesX>병합된 자막 줄: {0}개</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>작은 시간 간격 메우기 전</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>자막 사이의 최소 간격 수정 전</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>자막 사이의 최소 간격 수정: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>일반 텍스트 파일 가져오기 전</BeforeImportText>
@@ -1227,6 +1261,12 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ErrorLoadZip>이 파일은 압축된 .zip 파일 같습니다. Subtitle Edit는 압축된 파일을 열 수 없습니다.</ErrorLoadZip>
     <ErrorLoadPng>이 파일은 PNG 이미지 파일 같습니다. Subtitle Edit는 PNG 파일을 열 수 없습니다.</ErrorLoadPng>
     <ErrorLoadSrr>이 파일은 ReScene.srr 파일인 것 같습니다 - 자막 파일이 아닙니다.</ErrorLoadSrr>
+    <ErrorLoadTorrent>이 파일은 비트토렌트 파일인 것 같습니다 - 자막 파일은 아닙니다.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>암호화된 VobSub 콘텐츠는 지원되지 않습니다.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Blu-ray sup 파일은 여기서 지원되지 않습니다.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>DVD sup 파일은 여기서 지원되지 않습니다.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>VobSub 파일은 여기서 지원되지 않습니다.</NoSupportHereVobSub>
+    <NoSupportHereDivx>DivX 파일은 여기서 지원되지 않습니다.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
     <Title>MATROSKA 파일 안에 있는 자막 선택하기</Title>
@@ -1284,8 +1324,8 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <EndsWith>다음 텍스트로 끝나는 줄</EndsWith>
     <NoContains>다음 텍스트가 없는(無) 줄</NoContains>
     <RegEx>정규 표현식</RegEx>
-    <UnequalLines>다른 줄</UnequalLines>
-    <EqualLines>같은 줄</EqualLines>
+    <UnequalLines>홀수 라인</UnequalLines>
+    <EqualLines>짝수 라인</EqualLines>
   </ModifySelection>
   <MultipleReplace>
     <Title>다중 바꾸기</Title>
@@ -1296,7 +1336,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <RegularExpression>정규 표현식</RegularExpression>
     <LinesFoundX>발견된 줄: {0}</LinesFoundX>
     <Delete>삭제</Delete>
-    <Add>추가</Add>
+    <Add>추가(&amp;A)</Add>
     <Update>업데이트(&amp;U)</Update>
     <Enabled>사용</Enabled>
     <SearchType>검색 유형</SearchType>
@@ -1305,7 +1345,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Export>내보내기</Export>
     <ImportRulesTitle>* 바꾸기 규칙 가져오기</ImportRulesTitle>
     <ExportRulesTitle>* 바꾸기 규칙 내보내기</ExportRulesTitle>
-    <Rules>규칙</Rules>
+    <Rules>찾기 및 바꾸기 규칙</Rules>
     <MoveToTop>맨 위로 이동</MoveToTop>
     <MoveToBottom>맨 아래로 이동</MoveToBottom>
   </MultipleReplace>
@@ -1528,6 +1568,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <WaveformSelectedColor>선택된 색상</WaveformSelectedColor>
     <WaveformBackgroundColor>배경 색상</WaveformBackgroundColor>
     <WaveformTextColor>텍스트 색상</WaveformTextColor>
+    <WaveformTextFontSize>텍스트 글꼴 크기</WaveformTextFontSize>
     <WaveformAndSpectrogramsFolderEmpty>파형 및 스펙트로그램 폴더 비우기</WaveformAndSpectrogramsFolderEmpty>
     <WaveformAndSpectrogramsFolderInfo>파형 및 스펙트로그램 폴더에 {0}개의 파일이 있음 ({1:0.00} MB)</WaveformAndSpectrogramsFolderInfo>
     <Spectrogram>스펙트로그램</Spectrogram>
@@ -1609,6 +1650,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <ToggleDialogDashes>대화의 대시('-') 전환</ToggleDialogDashes>
     <Alignment>정렬 (선택한 줄)</Alignment>
     <CopyTextOnly>클립 보드에 텍스트 복사 (선택한 줄)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>원본 텍스트를 현재 줄에 복사</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>자동 표시시간 (선택한 줄)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>줄의 좌우 처음/끝 문자를 반대로</ReverseStartAndEndingForRTL>
     <VerticalZoom>세로 확대</VerticalZoom>
@@ -1663,6 +1705,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <MainTextBoxMoveFirstWordFromNextUp>다음 줄의 첫 단어를 위로 이동</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>선택한 영역 소문자로...</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>선택한 영역 대문자로...</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>자동 표시시간</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>자동 줄바꿈</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>줄바꿈 제거</MainTextBoxUnbreak>
     <MainFileSaveAll>모두 저장</MainFileSaveAll>
@@ -1796,6 +1839,7 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <CharactersPerSecondMinimum>문자/초 - 최소: {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>문자/초 - 최대: {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>문자/초 - 평균: {0:0.000}</CharactersPerSecondAverage>
+    <Export>내보내기...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>* Advanced Sub Station Alpha(.ass)의 속성</Title>
@@ -1967,12 +2011,13 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <NoMatch>&lt;일치 항목 없음&gt;</NoMatch>
     <AutoTransparentBackground>투명한 배경</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>현재 이미지에 대한 일치 항목 비교 검사...</InspectCompareMatchesForCurrentImage>
-    <EditLastAdditions>마지막 이미지 추가 편집...</EditLastAdditions>
+    <EditLastAdditions>마지막 이미지 추가 비교 편집...</EditLastAdditions>
+    <SetUnitalicFactor>기울임꼴 인자 설정...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub의 이미지 자막을 텍스트로...</Title>
-    <ShrinkSelection>선택 영역 축소</ShrinkSelection>
-    <ExpandSelection>선택 영역 확대</ExpandSelection>
+    <ShrinkSelection>선택 영역 축소(&amp;D)</ShrinkSelection>
+    <ExpandSelection>선택 영역 확대(&amp;E)</ExpandSelection>
     <SubtitleImage>이미지 자막</SubtitleImage>
     <Characters>문자:</Characters>
     <CharactersAsText>문자 입력</CharactersAsText>
@@ -1994,6 +2039,10 @@ C# 코드는 https://github.com/SubtitleEdit/subtitleedit 에 있습니다.
     <Title>새 폴더</Title>
     <Message>새 문자 데이터베이스 폴더의 이름</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>기울임꼴 인자 설정</Title>
+    <Description>텍스트가 기울임이 없어질 때까지 값을 조정하십시오! 원본 이미지가 기울임꼴(이탤릭체)이어야 합니다.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>파형을 추가하려면 여기를 클릭하십시오!</ClickToAddWaveform>
     <ClickToAddWaveformAndSpectrogram>파형 및 스펙트로그램을 추가하려면 여기를 클릭하십시오.</ClickToAddWaveformAndSpectrogram>

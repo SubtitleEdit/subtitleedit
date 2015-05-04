@@ -1,3 +1,4 @@
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -93,7 +94,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
 
                 XmlNode param = video.SelectSingleNode("video/param");
-                param.Attributes["value"].InnerText = Utilities.RemoveHtmlTags(p.Text);
+                param.Attributes["value"].InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
 
                 videoNode.AppendChild(generatorNode);
                 number++;

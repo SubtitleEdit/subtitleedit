@@ -63,7 +63,7 @@ Sony,Sony DVD/UMD,1:85,16x9
                 string text = p.Text;
                 text = text.Replace("<i>", "#");
                 text = text.Replace("</i>", "#");
-                text = Utilities.RemoveHtmlTags(text);
+                text = HtmlUtil.RemoveHtmlTags(text);
                 if (text.StartsWith("{\\an8}"))
                     text = text.Remove(0, 6) + "@+";
                 if (text.StartsWith("{\\an5}"))

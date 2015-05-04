@@ -2,7 +2,7 @@
 <Language Name="Hungarian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Fordító: ZityiSoft Team (http://szoftverforditasok.hu)</TranslatedBy>
     <CultureName>hu-HU</CultureName>
     <HelpFile />
@@ -278,7 +278,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Hézag a következőre másodpercben</GapToNext>
     <BridgeGapsSmallerThanXPart1>A következőnél kisebb hézagok áthidalása:</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milliszekundum</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. ezredmásodperc a sorok között</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. ezredmásodperc a sorok között</MinMillisecondsBetweenLines>
     <ProlongEndTime>Previous text takes all gap time</ProlongEndTime>
     <DivideEven>Texts divides gap time</DivideEven>
   </DurationsBridgeGaps>

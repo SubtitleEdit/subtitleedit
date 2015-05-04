@@ -2,7 +2,7 @@
 <Language Name="Slovenian">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Prevedel: Hawk</TranslatedBy>
     <CultureName>sl-SI</CultureName>
     <HelpFile />
@@ -288,7 +288,7 @@ E-pošta: hdhawkhd@gmail.com</AboutText1>
     <GapToNext>Poveži na naslednjega v sekundah</GapToNext>
     <BridgeGapsSmallerThanXPart1>Poveži intervale manjše od</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisekunde</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisekund med vrsticami</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisekund med vrsticami</MinMillisecondsBetweenLines>
     <ProlongEndTime>Prejšnje besedilo prevzame ves čas intervala</ProlongEndTime>
     <DivideEven>Besedilo deli čase intervala</DivideEven>
   </DurationsBridgeGaps>
@@ -1327,7 +1327,7 @@ popravlja enak podnapis (sodelovanje)</Information>
     <Title>Prični mrežno sejo</Title>
     <ConnectionTo>Povezujem z {0}...</ConnectionTo>
     <Information>Prični novo sejo, kjer lahko več uporabnikov
- popravlja en podnapis (sodelovanje)</Information>
+popravlja en podnapis (sodelovanje)</Information>
     <Start>Začni</Start>
   </NetworkStart>
   <OpenVideoDvd>

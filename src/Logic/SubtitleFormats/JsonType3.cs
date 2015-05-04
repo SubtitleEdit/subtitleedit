@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -58,11 +59,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (string s in lines)
                 sb.Append(s);
             int startIndex = sb.ToString().IndexOf("[{\"duration", StringComparison.Ordinal);
-            if (startIndex == -1)
+            if (startIndex < 0)
                 return;
 
             string text = sb.ToString().Substring(startIndex);
-            foreach (string line in text.Replace("},{", Environment.NewLine).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in text.Replace("},{", Environment.NewLine).SplitToLines())
             {
                 string s = line.Trim() + "}";
                 string start = Json.ReadTag(s, "startTime");

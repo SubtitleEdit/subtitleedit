@@ -1,5 +1,6 @@
-using System.IO;
+﻿using System.IO;
 using System.Xml;
+using System.Text;
 using Nikse.SubtitleEdit.Logic;
 
 // !!! THIS FILE IS AUTO-GENERATED!!!
@@ -14,137 +15,29 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static Language CustomDeserializeLanguage(string fileName)
         {
-            string name = string.Empty;
+            var name = new StringBuilder(100, 1000);
             var stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             var language = new Language();
-            language.General = new LanguageStructure.General();
-            language.About = new LanguageStructure.About();
-            language.AddToNames = new LanguageStructure.AddToNames();
-            language.AddToOcrReplaceList = new LanguageStructure.AddToOcrReplaceList();
-            language.AddToUserDictionary = new LanguageStructure.AddToUserDictionary();
-            language.AddWaveform = new LanguageStructure.AddWaveform();
-            language.AdjustDisplayDuration = new LanguageStructure.AdjustDisplayDuration();
-            language.ApplyDurationLimits = new LanguageStructure.ApplyDurationLimits();
-            language.AutoBreakUnbreakLines = new LanguageStructure.AutoBreakUnbreakLines();
-            language.BatchConvert = new LanguageStructure.BatchConvert();
-            language.Beamer = new LanguageStructure.Beamer();
-            language.ChangeCasing = new LanguageStructure.ChangeCasing();
-            language.ChangeCasingNames = new LanguageStructure.ChangeCasingNames();
-            language.ChangeFrameRate = new LanguageStructure.ChangeFrameRate();
-            language.ChangeSpeedInPercent = new LanguageStructure.ChangeSpeedInPercent();
-            language.CheckForUpdates = new LanguageStructure.CheckForUpdates();
-            language.ChooseAudioTrack = new LanguageStructure.ChooseAudioTrack();
-            language.ChooseEncoding = new LanguageStructure.ChooseEncoding();
-            language.ChooseLanguage = new LanguageStructure.ChooseLanguage();
-            language.ColorChooser = new LanguageStructure.ColorChooser();
-            language.ColumnPaste = new LanguageStructure.ColumnPaste();
-            language.CompareSubtitles = new LanguageStructure.CompareSubtitles();
-            language.DCinemaProperties = new LanguageStructure.DCinemaProperties();
-            language.DurationsBridgeGaps = new LanguageStructure.DurationsBridgeGaps();
-            language.DvdSubRip = new LanguageStructure.DvdSubRip();
-            language.DvdSubRipChooseLanguage = new LanguageStructure.DvdSubRipChooseLanguage();
-            language.EbuSaveOptions = new LanguageStructure.EbuSaveOptions();
-            language.EffectKaraoke = new LanguageStructure.EffectKaraoke();
-            language.EffectTypewriter = new LanguageStructure.EffectTypewriter();
-            language.ExportCustomText = new LanguageStructure.ExportCustomText();
-            language.ExportCustomTextFormat = new LanguageStructure.ExportCustomTextFormat();
-            language.ExportPngXml = new LanguageStructure.ExportPngXml();
-            language.ExportText = new LanguageStructure.ExportText();
-            language.ExtractDateTimeInfo = new LanguageStructure.ExtractDateTimeInfo();
-            language.FindDialog = new LanguageStructure.FindDialog();
-            language.FindSubtitleLine = new LanguageStructure.FindSubtitleLine();
-            language.FixCommonErrors = new LanguageStructure.FixCommonErrors();
-            language.GetDictionaries = new LanguageStructure.GetDictionaries();
-            language.GetTesseractDictionaries = new LanguageStructure.GetTesseractDictionaries();
-            language.GoogleTranslate = new LanguageStructure.GoogleTranslate();
-            language.GoogleOrMicrosoftTranslate = new LanguageStructure.GoogleOrMicrosoftTranslate();
-            language.GoToLine = new LanguageStructure.GoToLine();
-            language.ImportImages = new LanguageStructure.ImportImages();
-            language.ImportSceneChanges = new LanguageStructure.ImportSceneChanges();
-            language.ImportText = new LanguageStructure.ImportText();
-            language.Interjections = new LanguageStructure.Interjections();
-            language.JoinSubtitles = new LanguageStructure.JoinSubtitles();
-            language.Main = new LanguageStructure.Main();
-            language.Main.Menu = new LanguageStructure.Main.MainMenu();
-            language.Main.Menu.File = new LanguageStructure.Main.MainMenu.FileMenu();
-            language.Main.Menu.Edit = new LanguageStructure.Main.MainMenu.EditMenu();
-            language.Main.Menu.Tools = new LanguageStructure.Main.MainMenu.ToolsMenu();
-            language.Main.Menu.Video = new LanguageStructure.Main.MainMenu.VideoMenu();
-            language.Main.Menu.SpellCheck = new LanguageStructure.Main.MainMenu.SpellCheckMenu();
-            language.Main.Menu.Synchronization = new LanguageStructure.Main.MainMenu.SynchronizationkMenu();
-            language.Main.Menu.AutoTranslate = new LanguageStructure.Main.MainMenu.AutoTranslateMenu();
-            language.Main.Menu.Options = new LanguageStructure.Main.MainMenu.OptionsMenu();
-            language.Main.Menu.Networking = new LanguageStructure.Main.MainMenu.NetworkingMenu();
-            language.Main.Menu.Help = new LanguageStructure.Main.MainMenu.HelpMenu();
-            language.Main.Menu.ToolBar = new LanguageStructure.Main.MainMenu.ToolBarMenu();
-            language.Main.Menu.ContextMenu = new LanguageStructure.Main.MainMenu.ListViewContextMenu();
-            language.Main.Controls = new LanguageStructure.Main.MainControls();
-            language.Main.VideoControls = new LanguageStructure.Main.MainVideoControls();
-            language.MatroskaSubtitleChooser = new LanguageStructure.MatroskaSubtitleChooser();
-            language.MeasurementConverter = new LanguageStructure.MeasurementConverter();
-            language.MergeDoubleLines = new LanguageStructure.MergeDoubleLines();
-            language.MergedShortLines = new LanguageStructure.MergeShortLines();
-            language.MergeTextWithSameTimeCodes = new LanguageStructure.MergeTextWithSameTimeCodes();
-            language.ModifySelection = new LanguageStructure.ModifySelection();
-            language.MultipleReplace = new LanguageStructure.MultipleReplace();
-            language.NetworkChat = new LanguageStructure.NetworkChat();
-            language.NetworkJoin = new LanguageStructure.NetworkJoin();
-            language.NetworkLogAndInfo = new LanguageStructure.NetworkLogAndInfo();
-            language.NetworkStart = new LanguageStructure.NetworkStart();
-            language.OpenVideoDvd = new LanguageStructure.OpenVideoDvd();
-            language.PluginsGet = new LanguageStructure.PluginsGet();
-            language.RegularExpressionContextMenu = new LanguageStructure.RegularExpressionContextMenu();
-            language.RemoveTextFromHearImpaired = new LanguageStructure.RemoveTextFromHearImpaired();
-            language.ReplaceDialog = new LanguageStructure.ReplaceDialog();
-            language.RestoreAutoBackup = new LanguageStructure.RestoreAutoBackup();
-            language.SeekSilence = new LanguageStructure.SeekSilence();
-            language.SetMinimumDisplayTimeBetweenParagraphs = new LanguageStructure.SetMinimumDisplayTimeBetweenParagraphs();
-            language.SetSyncPoint = new LanguageStructure.SetSyncPoint();
-            language.Settings = new LanguageStructure.Settings();
-            language.SetVideoOffset = new LanguageStructure.SetVideoOffset();
-            language.ShowEarlierLater = new LanguageStructure.ShowEarlierLater();
-            language.ShowHistory = new LanguageStructure.ShowHistory();
-            language.SpellCheck = new LanguageStructure.SpellCheck();
-            language.Split = new LanguageStructure.Split();
-            language.SplitLongLines = new LanguageStructure.SplitLongLines();
-            language.SplitSubtitle = new LanguageStructure.SplitSubtitle();
-            language.StartNumberingFrom = new LanguageStructure.StartNumberingFrom();
-            language.Statistics = new LanguageStructure.Statistics();
-            language.SubStationAlphaProperties = new LanguageStructure.SubStationAlphaProperties();
-            language.SubStationAlphaStyles = new LanguageStructure.SubStationAlphaStyles();
-            language.PointSync = new LanguageStructure.PointSync();
-            language.TransportStreamSubtitleChooser = new LanguageStructure.TransportStreamSubtitleChooser();
-            language.UnknownSubtitle = new LanguageStructure.UnknownSubtitle();
-            language.VisualSync = new LanguageStructure.VisualSync();
-            language.VobSubEditCharacters = new LanguageStructure.VobSubEditCharacters();
-            language.VobSubOcr = new LanguageStructure.VobSubOcr();
-            language.VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter();
-            language.VobSubOcrCharacterInspect = new LanguageStructure.VobSubOcrCharacterInspect();
-            language.VobSubOcrNewFolder = new LanguageStructure.VobSubOcrNewFolder();
-            language.Waveform = new LanguageStructure.Waveform();
-            language.WaveformGenerateTimeCodes = new LanguageStructure.WaveformGenerateTimeCodes();
-            language.WebVttNewVoice = new LanguageStructure.WebVttNewVoice();
 
-            using (XmlReader reader = XmlReader.Create(stream))
+            using (XmlReader reader = XmlReader.Create(stream, new XmlReaderSettings {
+                   IgnoreWhitespace = true, IgnoreProcessingInstructions = true, IgnoreComments = true,
+                   DtdProcessing = DtdProcessing.Ignore, CheckCharacters = false, CloseInput = true }))
             {
                 while (reader.Read())
                 {
                     if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if ((name.Length > 0 || string.CompareOrdinal(reader.Name, "Language") != 0) && !reader.IsEmptyElement)
-                            name = (name + "/" + reader.Name).TrimStart('/');
+                        if (!reader.IsEmptyElement && reader.Depth > 0)
+                            name.Append('/').Append(reader.Name);
                     }
                     else if (reader.NodeType == XmlNodeType.EndElement)
                     {
-                        int idx = name.LastIndexOf("/", System.StringComparison.Ordinal);
-                        if (idx > 0)
-                            name = name.Remove(idx);
-                        else
-                            name = string.Empty;
+                        if (name.Length > 0)
+                            name.Length -= reader.Name.Length + 1;
                     }
                     else if (reader.NodeType == XmlNodeType.Text)
                     {
-                        SetValue(language, reader, name);
+                        SetValue(language, reader, name.ToString(1, name.Length - 1));
                     }
                 }
             }
@@ -350,6 +243,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "General/Style":
                     language.General.Style = reader.Value;
                     break;
+                case "General/StyleLanguage":
+                    language.General.StyleLanguage = reader.Value;
+                    break;
+                case "General/Character":
+                    language.General.Character = reader.Value;
+                    break;
                 case "General/Class":
                     language.General.Class = reader.Value;
                     break;
@@ -424,6 +323,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AddWaveform/ExtractingMinutes":
                     language.AddWaveform.ExtractingMinutes = reader.Value;
+                    break;
+                case "AddWaveformBatch/Title":
+                    language.AddWaveformBatch.Title = reader.Value;
+                    break;
+                case "AddWaveformBatch/ExtractingAudio":
+                    language.AddWaveformBatch.ExtractingAudio = reader.Value;
+                    break;
+                case "AddWaveformBatch/Calculating":
+                    language.AddWaveformBatch.Calculating = reader.Value;
+                    break;
+                case "AddWaveformBatch/Done":
+                    language.AddWaveformBatch.Done = reader.Value;
                     break;
                 case "AdjustDisplayDuration/Title":
                     language.AdjustDisplayDuration.Title = reader.Value;
@@ -527,6 +438,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "BatchConvert/PleaseChooseOutputFolder":
                     language.BatchConvert.PleaseChooseOutputFolder = reader.Value;
                     break;
+                case "BatchConvert/NotConverted":
+                    language.BatchConvert.NotConverted = reader.Value;
+                    break;
                 case "BatchConvert/Converted":
                     language.BatchConvert.Converted = reader.Value;
                     break;
@@ -556,6 +470,33 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "BatchConvert/PlainText":
                     language.BatchConvert.PlainText = reader.Value;
+                    break;
+                case "BatchConvert/Ocr":
+                    language.BatchConvert.Ocr = reader.Value;
+                    break;
+                case "BatchConvert/Filter":
+                    language.BatchConvert.Filter = reader.Value;
+                    break;
+                case "BatchConvert/FilterSkipped":
+                    language.BatchConvert.FilterSkipped = reader.Value;
+                    break;
+                case "BatchConvert/FilterSrtNoUtf8BOM":
+                    language.BatchConvert.FilterSrtNoUtf8BOM = reader.Value;
+                    break;
+                case "BatchConvert/FilterMoreThanTwoLines":
+                    language.BatchConvert.FilterMoreThanTwoLines = reader.Value;
+                    break;
+                case "BatchConvert/FilterContains":
+                    language.BatchConvert.FilterContains = reader.Value;
+                    break;
+                case "BatchConvert/FixCommonErrorsErrorX":
+                    language.BatchConvert.FixCommonErrorsErrorX = reader.Value;
+                    break;
+                case "BatchConvert/MultipleReplaceErrorX":
+                    language.BatchConvert.MultipleReplaceErrorX = reader.Value;
+                    break;
+                case "BatchConvert/AutoBalanceErrorX":
+                    language.BatchConvert.AutoBalanceErrorX = reader.Value;
                     break;
                 case "Beamer/Title":
                     language.Beamer.Title = reader.Value;
@@ -836,8 +777,8 @@ namespace Nikse.SubtitleEdit.Logic
                 case "DurationsBridgeGaps/BridgeGapsSmallerThanXPart2":
                     language.DurationsBridgeGaps.BridgeGapsSmallerThanXPart2 = reader.Value;
                     break;
-                case "DurationsBridgeGaps/MinMsBetweenLines":
-                    language.DurationsBridgeGaps.MinMsBetweenLines = reader.Value;
+                case "DurationsBridgeGaps/MinMillisecondsBetweenLines":
+                    language.DurationsBridgeGaps.MinMillisecondsBetweenLines = reader.Value;
                     break;
                 case "DurationsBridgeGaps/ProlongEndTime":
                     language.DurationsBridgeGaps.ProlongEndTime = reader.Value;
@@ -1163,6 +1104,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/BottomMargin":
                     language.ExportPngXml.BottomMargin = reader.Value;
                     break;
+                case "ExportPngXml/LeftRightMargin":
+                    language.ExportPngXml.LeftRightMargin = reader.Value;
+                    break;
                 case "ExportPngXml/SaveBluRraySupAs":
                     language.ExportPngXml.SaveBluRraySupAs = reader.Value;
                     break;
@@ -1174,6 +1118,18 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "ExportPngXml/SaveDvdStudioProStlAs":
                     language.ExportPngXml.SaveDvdStudioProStlAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveDigitalCinemaInteropAs":
+                    language.ExportPngXml.SaveDigitalCinemaInteropAs = reader.Value;
+                    break;
+                case "ExportPngXml/SavePremiereEdlAs":
+                    language.ExportPngXml.SavePremiereEdlAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveFcpAs":
+                    language.ExportPngXml.SaveFcpAs = reader.Value;
+                    break;
+                case "ExportPngXml/SaveDostAs":
+                    language.ExportPngXml.SaveDostAs = reader.Value;
                     break;
                 case "ExportPngXml/SomeLinesWereTooLongX":
                     language.ExportPngXml.SomeLinesWereTooLongX = reader.Value;
@@ -1189,6 +1145,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "ExportPngXml/Forced":
                     language.ExportPngXml.Forced = reader.Value;
+                    break;
+                case "ExportPngXml/ChooseBackgroundColor":
+                    language.ExportPngXml.ChooseBackgroundColor = reader.Value;
                     break;
                 case "ExportText/Title":
                     language.ExportText.Title = reader.Value;
@@ -1889,6 +1848,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "JoinSubtitles/TotalNumberOfLinesX":
                     language.JoinSubtitles.TotalNumberOfLinesX = reader.Value;
                     break;
+                case "JoinSubtitles/Note":
+                    language.JoinSubtitles.Note = reader.Value;
+                    break;
                 case "Main/SaveChangesToUntitled":
                     language.Main.SaveChangesToUntitled = reader.Value;
                     break;
@@ -2279,6 +2241,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/NotAValidMatroskaFileX":
                     language.Main.NotAValidMatroskaFileX = reader.Value;
                     break;
+                case "Main/BlurayNotSubtitlesFound":
+                    language.Main.BlurayNotSubtitlesFound = reader.Value;
+                    break;
                 case "Main/ParsingMatroskaFile":
                     language.Main.ParsingMatroskaFile = reader.Value;
                     break;
@@ -2446,6 +2411,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/MergedShortLinesX":
                     language.Main.MergedShortLinesX = reader.Value;
+                    break;
+                case "Main/BeforeDurationsBridgeGap":
+                    language.Main.BeforeDurationsBridgeGap = reader.Value;
                     break;
                 case "Main/BeforeSetMinimumDisplayTimeBetweenParagraphs":
                     language.Main.BeforeSetMinimumDisplayTimeBetweenParagraphs = reader.Value;
@@ -2630,6 +2598,24 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Main/ErrorLoadSrr":
                     language.Main.ErrorLoadSrr = reader.Value;
                     break;
+                case "Main/ErrorLoadTorrent":
+                    language.Main.ErrorLoadTorrent = reader.Value;
+                    break;
+                case "Main/NoSupportEncryptedVobSub":
+                    language.Main.NoSupportEncryptedVobSub = reader.Value;
+                    break;
+                case "Main/NoSupportHereBluRaySup":
+                    language.Main.NoSupportHereBluRaySup = reader.Value;
+                    break;
+                case "Main/NoSupportHereDvdSup":
+                    language.Main.NoSupportHereDvdSup = reader.Value;
+                    break;
+                case "Main/NoSupportHereVobSub":
+                    language.Main.NoSupportHereVobSub = reader.Value;
+                    break;
+                case "Main/NoSupportHereDivx":
+                    language.Main.NoSupportHereDivx = reader.Value;
+                    break;
                 case "Main/Menu/File/Title":
                     language.Main.Menu.File.Title = reader.Value;
                     break;
@@ -2782,6 +2768,27 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Edit/InsertUnicodeSymbol":
                     language.Main.Menu.Edit.InsertUnicodeSymbol = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharacters":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharacters = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersLRM":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersLRM = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersRLM":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersRLM = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersLRE":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersLRE = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersRLE":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersRLE = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersLRO":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersLRO = reader.Value;
+                    break;
+                case "Main/Menu/Edit/InsertUnicodeControlCharactersRLO":
+                    language.Main.Menu.Edit.InsertUnicodeControlCharactersRLO = reader.Value;
                     break;
                 case "Main/Menu/Edit/Find":
                     language.Main.Menu.Edit.Find = reader.Value;
@@ -2944,6 +2951,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/Video/RemoveSceneChanges":
                     language.Main.Menu.Video.RemoveSceneChanges = reader.Value;
+                    break;
+                case "Main/Menu/Video/WaveformBatchGenerate":
+                    language.Main.Menu.Video.WaveformBatchGenerate = reader.Value;
                     break;
                 case "Main/Menu/Video/ShowHideVideo":
                     language.Main.Menu.Video.ShowHideVideo = reader.Value;
@@ -3109,6 +3119,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Main/Menu/ContextMenu/SamiSetStyle":
                     language.Main.Menu.ContextMenu.SamiSetStyle = reader.Value;
+                    break;
+                case "Main/Menu/ContextMenu/NuendoSetStyle":
+                    language.Main.Menu.ContextMenu.NuendoSetStyle = reader.Value;
                     break;
                 case "Main/Menu/ContextMenu/Cut":
                     language.Main.Menu.ContextMenu.Cut = reader.Value;
@@ -4430,6 +4443,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "Settings/CopyTextOnly":
                     language.Settings.CopyTextOnly = reader.Value;
                     break;
+                case "Settings/CopyTextOnlyFromOriginalToCurrent":
+                    language.Settings.CopyTextOnlyFromOriginalToCurrent = reader.Value;
+                    break;
                 case "Settings/AutoDurationSelectedLines":
                     language.Settings.AutoDurationSelectedLines = reader.Value;
                     break;
@@ -4591,6 +4607,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Settings/MainTextBoxSelectionToUpper":
                     language.Settings.MainTextBoxSelectionToUpper = reader.Value;
+                    break;
+                case "Settings/MainTextBoxToggleAutoDuration":
+                    language.Settings.MainTextBoxToggleAutoDuration = reader.Value;
                     break;
                 case "Settings/MainTextBoxAutoBreak":
                     language.Settings.MainTextBoxAutoBreak = reader.Value;
@@ -4936,6 +4955,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "Statistics/CharactersPerSecondAverage":
                     language.Statistics.CharactersPerSecondAverage = reader.Value;
+                    break;
+                case "Statistics/Export":
+                    language.Statistics.Export = reader.Value;
                     break;
                 case "SubStationAlphaProperties/Title":
                     language.SubStationAlphaProperties.Title = reader.Value;
@@ -5402,6 +5424,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/EditLastAdditions":
                     language.VobSubOcr.EditLastAdditions = reader.Value;
                     break;
+                case "VobSubOcr/SetUnitalicFactor":
+                    language.VobSubOcr.SetUnitalicFactor = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;
@@ -5458,6 +5483,12 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "VobSubOcrNewFolder/Message":
                     language.VobSubOcrNewFolder.Message = reader.Value;
+                    break;
+                case "VobSubOcrSetItalicFactor/Title":
+                    language.VobSubOcrSetItalicFactor.Title = reader.Value;
+                    break;
+                case "VobSubOcrSetItalicFactor/Description":
+                    language.VobSubOcrSetItalicFactor.Description = reader.Value;
                     break;
                 case "Waveform/ClickToAddWaveform":
                     language.Waveform.ClickToAddWaveform = reader.Value;

@@ -2,7 +2,7 @@
 <Language Name="Turkish">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Çevirmen: mailto:kipekcioglu@gmail.com</TranslatedBy>
     <CultureName>tr-TR</CultureName>
     <HelpFile />
@@ -282,7 +282,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Sonraki boşluklar</GapToNext>
     <BridgeGapsSmallerThanXPart1>daha küçük boşluk köprüle</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>mili saniyeler</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Satırlar arasında minimum milisaniye</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Satırlar arasında minimum milisaniye</MinMillisecondsBetweenLines>
     <ProlongEndTime>Bir önceki metin tüm boşlukları alır</ProlongEndTime>
     <DivideEven>Metinler arası boşluk süresi</DivideEven>
   </DurationsBridgeGaps>
@@ -993,7 +993,7 @@ E-posta: mailto:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Saved original subtitle {0}</SavedOriginalSubtitleX>
     <FileOnDiskModified>file on disk modified</FileOnDiskModified>
     <OverwriteModifiedFile>Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Sadece okunabilir {0} dosya kaydedilemedi. </FileXIsReadOnly>
+    <FileXIsReadOnly>Sadece okunabilir {0} dosya kaydedilemedi.</FileXIsReadOnly>
     <UnableToSaveSubtitleX>Unable to save subtitle file {0}</UnableToSaveSubtitleX>
     <BeforeNew>Yeniden önce</BeforeNew>
     <New>Yeni</New>
@@ -1172,7 +1172,7 @@ Continue?</SubtitleAppendPrompt>
     <BeforeSetStartTimeAndOffsetTheRest>Başlangıç zamanı ayarlamadan önce</BeforeSetStartTimeAndOffsetTheRest>
     <BeforeSetEndTimeAndOffsetTheRest>Bitiş zamanı ayarlamadan önce</BeforeSetEndTimeAndOffsetTheRest>
     <BeforeSetEndAndVideoPosition>Görüntü pozisyonunda bitiş zamanı ayarlamadn önce</BeforeSetEndAndVideoPosition>
-    <ContinueWithCurrentSpellCheck>Geçerli hece kontrolü </ContinueWithCurrentSpellCheck>
+    <ContinueWithCurrentSpellCheck>Geçerli hece kontrolü</ContinueWithCurrentSpellCheck>
     <CharactersPerSecond>Krktr/san: {0:0.00}</CharactersPerSecond>
     <GetFrameRateFromVideoFile>Video dosyasından kare hızı al</GetFrameRateFromVideoFile>
     <NetworkMessage>Yeni mesaj: {0} ({1}): {2}</NetworkMessage>
@@ -1643,8 +1643,7 @@ Yeni oturum başlatın.</Information>
     <SwitchOriginalAndTranslation>Orijinal ve çeviri arasında geçiş yap</SwitchOriginalAndTranslation>
     <MergeOriginalAndTranslation>Orijinali ve çeviriyi birleştir</MergeOriginalAndTranslation>
     <ShortcutIsAlreadyDefinedX>Zaten tanımlanan kısayol:
-{0}
-</ShortcutIsAlreadyDefinedX>
+{0}</ShortcutIsAlreadyDefinedX>
     <ToggleTranslationAndOriginalInPreviews>Toggle translation and original in video/audio preview</ToggleTranslationAndOriginalInPreviews>
     <ListViewColumnDelete>Sütun, metni sil</ListViewColumnDelete>
     <ListViewColumnInsert>Sütun, metin ekle</ListViewColumnInsert>
@@ -1909,7 +1908,7 @@ Değişiklikler saklansın mı?</KeepChangesMessage>
     <Image>Görüntü</Image>
   </VobSubEditCharacters>
   <VobSubOcr>
-    <Title> VobSub (sub/idx) altyazı aktar</Title>
+    <Title>VobSub (sub/idx) altyazı aktar</Title>
     <TitleBluRay>Blu-ray (.sup) altyazı aktar</TitleBluRay>
     <OcrMethod>OCR method</OcrMethod>
     <OcrViaModi>OCR via Microsoft Office Document Imaging (MODI). Requires Microsoft Office</OcrViaModi>

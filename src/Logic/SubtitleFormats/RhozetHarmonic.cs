@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -65,7 +66,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             XmlNode paragraph = xml.CreateElement("Data");
 
             XmlAttribute charSize = xml.CreateAttribute("CharSize");
-            charSize.InnerText = Utilities.RemoveHtmlTags("0.2");
+            charSize.InnerText = HtmlUtil.RemoveHtmlTags("0.2");
             paragraph.Attributes.Append(charSize);
 
             XmlAttribute posX = xml.CreateAttribute("PosX");
@@ -123,7 +124,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(end);
 
                 XmlAttribute text = xml.CreateAttribute("Title");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
                 paragraph.Attributes.Append(text);
 
                 xml.DocumentElement.AppendChild(paragraph);

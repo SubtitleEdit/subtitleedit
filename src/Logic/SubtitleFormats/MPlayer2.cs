@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public override string ToText(Subtitle subtitle, string title)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 sb.Append('[');
@@ -85,7 +85,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 sb.Append(((int)(p.EndTime.TotalMilliseconds / 100)));
                 sb.Append(']');
 
-                string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = p.Text.SplitToLines();
                 int count = 0;
                 bool italicOn = false;
                 foreach (string line in parts)
@@ -101,7 +101,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                     if (line.Contains("</i>"))
                         italicOn = false;
-                    sb.Append(Utilities.RemoveHtmlTags(line));
+                    sb.Append(HtmlUtil.RemoveHtmlTags(line));
                     count++;
                 }
                 sb.AppendLine();
@@ -121,12 +121,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     try
                     {
-
-                        int textIndex = s.LastIndexOf(']') + 1;
+                        int textIndex = s.IndexOf(']') + 1;
+                        textIndex = s.IndexOf(']', textIndex) + 1;
                         if (textIndex < s.Length)
                         {
                             string text = s.Substring(textIndex);
-                            if (text.StartsWith('/') && (Utilities.CountTagInText(text, "|") == 0 || text.Contains("|/")))
+                            if (text.StartsWith('/') && (Utilities.CountTagInText(text, '|') == 0 || text.Contains("|/")))
                                 text = "<i>" + text.TrimStart('/').Replace("|/", Environment.NewLine) + "</i>";
                             else if (text.StartsWith('/') && text.Contains('|') && !text.Contains("|/"))
                                 text = "<i>" + text.TrimStart('/').Replace("|", "</i>" + Environment.NewLine);

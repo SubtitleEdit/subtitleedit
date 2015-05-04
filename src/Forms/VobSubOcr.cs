@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Forms
         private List<ImageCompareAddition> _lastAdditions = new List<ImageCompareAddition>();
         private VobSubOcrCharacter _vobSubOcrCharacter = new VobSubOcrCharacter();
 
-        //        List<NOcrChar> _nocrChars = null;
+        //List<NOcrChar> _nocrChars = null;
         private NOcrDb _nOcrDb;
         private VobSubOcrNOcrCharacter _vobSubOcrNOcrCharacter = new VobSubOcrNOcrCharacter();
         private int _nocrLastLowercaseHeight = -1;
@@ -313,8 +313,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelTesseractLanguage.Text = language.Language;
             labelImageDatabase.Text = language.ImageDatabase;
             labelNoOfPixelsIsSpace.Text = language.NoOfPixelsIsSpace;
-            if (!string.IsNullOrEmpty(language.MaxErrorPercent)) //TODO: Remove in SE 3.4
-                labelMaxErrorPercent.Text = language.MaxErrorPercent;
+            labelMaxErrorPercent.Text = language.MaxErrorPercent;
             buttonNewCharacterDatabase.Text = language.New;
             buttonEditCharacterDatabase.Text = language.Edit;
             buttonStartOcr.Text = language.StartOcr;
@@ -346,13 +345,10 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxPromptForUnknownWords.Checked = Configuration.Settings.VobSubOcr.PromptForUnknownWords;
             checkBoxGuessUnknownWords.Checked = Configuration.Settings.VobSubOcr.GuessUnknownWords;
 
-            if (!string.IsNullOrEmpty(language.TransportStream))
-            {
-                groupBoxTransportStream.Text = language.TransportStream;
-                checkBoxTransportStreamGrayscale.Text = language.TransportStreamGrayscale;
-                checkBoxTransportStreamGetColorAndSplit.Text = language.TransportStreamGetColor;
-                checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
-            }
+            groupBoxTransportStream.Text = language.TransportStream;
+            checkBoxTransportStreamGrayscale.Text = language.TransportStreamGrayscale;
+            checkBoxTransportStreamGetColorAndSplit.Text = language.TransportStreamGetColor;
+            checkBoxTransportStreamGetColorAndSplit.Left = checkBoxTransportStreamGrayscale.Left + checkBoxTransportStreamGrayscale.Width + 9;
 
             groupBoxOcrAutoFix.Text = language.OcrAutoCorrectionSpellChecking;
             checkBoxGuessUnknownWords.Text = language.TryToGuessUnkownWords;
@@ -373,7 +369,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelFixesMade.Text = string.Empty;
             labelFixesMade.Left = checkBoxAutoFixCommonErrors.Left + checkBoxAutoFixCommonErrors.Width;
 
-            labelDictionaryLoaded.Text = string.Format(Configuration.Settings.Language.VobSubOcr.DictionaryX, string.Empty);
+            labelDictionaryLoaded.Text = string.Format(language.DictionaryX, string.Empty);
             comboBoxDictionaries.Left = labelDictionaryLoaded.Left + labelDictionaryLoaded.Width;
 
             groupBoxImageCompareMethod.Text = string.Empty; // language.OcrViaImageCompare;
@@ -391,10 +387,9 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxOcrMethod.Items.Add(language.OcrViaTesseract);
             comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare);
             comboBoxOcrMethod.Items.Add(language.OcrViaModi);
-            if (!string.IsNullOrEmpty(language.OcrViaNOCR) && Configuration.Settings.General.ShowBetaStuff)
-                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
-            if (!string.IsNullOrEmpty(language.OcrViaNOCR) && Configuration.Settings.General.ShowBetaStuff)
+            if (Configuration.Settings.General.ShowBetaStuff)
             {
+                comboBoxOcrMethod.Items.Add(language.OcrViaNOCR);
                 comboBoxOcrMethod.Items.Add(language.OcrViaImageCompare + " NEW! ");
                 comboBoxOcrMethod.SelectedIndex = 4;
             }
@@ -415,8 +410,6 @@ namespace Nikse.SubtitleEdit.Forms
             normalToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Normal;
             italicToolStripMenuItem.Text = Configuration.Settings.Language.General.Italic;
             importTextWithMatchingTimeCodesToolStripMenuItem.Text = language.ImportTextWithMatchingTimeCodes;
-            if (string.IsNullOrEmpty(language.ImportTextWithMatchingTimeCodes))
-                importTextWithMatchingTimeCodesToolStripMenuItem.Visible = false;
             importNewTimeCodesToolStripMenuItem.Text = language.ImportNewTimeCodes;
             saveImageAsToolStripMenuItem.Text = language.SaveSubtitleImageAs;
             toolStripMenuItemImageSaveAs.Text = language.SaveSubtitleImageAs;
@@ -424,6 +417,7 @@ namespace Nikse.SubtitleEdit.Forms
             inspectImageCompareMatchesForCurrentImageToolStripMenuItem.Text = language.InspectCompareMatchesForCurrentImage;
             EditLastAdditionsToolStripMenuItem.Text = language.EditLastAdditions;
             checkBoxRightToLeft.Checked = Configuration.Settings.VobSubOcr.RightToLeft;
+            toolStripMenuItemSetUnItalicFactor.Text = language.SetUnitalicFactor;
             deleteToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Delete;
 
             toolStripMenuItemExport.Text = Configuration.Settings.Language.Main.Menu.File.Export;
@@ -471,8 +465,6 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxEmphasis1Transparent.Left = pictureBoxEmphasis1.Left + pictureBoxEmphasis1.Width + 3;
             pictureBoxEmphasis2.Left = checkBoxEmphasis1Transparent.Left + checkBoxEmphasis1Transparent.Width + 8;
             checkBoxEmphasis2Transparent.Left = pictureBoxEmphasis2.Left + pictureBoxEmphasis2.Width + 3;
-
-            buttonGetTesseractDictionaries.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.GetTesseractDictionaries.Title);
 
             try
             {
@@ -1286,7 +1278,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 if (index >= 0 && index < _bdnXmlSubtitle.Paragraphs.Count)
                 {
-                    string[] fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var fileNames = _bdnXmlSubtitle.Paragraphs[index].Text.SplitToLines();
                     var bitmaps = new List<Bitmap>();
                     int maxWidth = 0;
                     int totalHeight = 0;
@@ -3930,7 +3922,7 @@ namespace Nikse.SubtitleEdit.Forms
                 line = threadText;
             }
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4125,7 +4117,7 @@ namespace Nikse.SubtitleEdit.Forms
             line = GetStringWithItalicTags(matches);
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -4624,7 +4616,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             if (checkBoxAutoFixCommonErrors.Checked && _ocrFixEngine != null)
-                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: add abbreviations list
+                line = _ocrFixEngine.FixOcrErrorsViaHardcodedRules(line, _lastLine, null); // TODO: Add abbreviations list
 
             if (checkBoxRightToLeft.Checked)
                 line = ReverseNumberStrings(line);
@@ -5794,7 +5786,7 @@ namespace Nikse.SubtitleEdit.Forms
                 textWithOutFixes = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 6"); // 6 = Assume a single uniform block of text.
             }
 
-            if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
+            if ((!textWithOutFixes.Contains(Environment.NewLine) || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
                 && (textWithOutFixes.Length < 17 || bitmap.Height < 50))
             {
                 string psm = Tesseract3DoOcrViaExe(bitmap, _languageId, "-psm 7"); // 7 = Treat the image as a single text line.
@@ -5849,7 +5841,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             // Sometimes Tesseract has problems with small fonts - it helps to make the image larger
             if (HtmlUtil.RemoveOpenCloseTags(textWithOutFixes, HtmlUtil.TagItalic).Replace("@", string.Empty).Replace("%", string.Empty).Replace("|", string.Empty).Trim().Length < 3
-                || Utilities.CountTagInText("\n", textWithOutFixes) > 2)
+                || Utilities.CountTagInText(textWithOutFixes, '\n') > 2)
             {
                 string rs = TesseractResizeAndRetry(bitmap);
                 textWithOutFixes = rs;
@@ -5943,8 +5935,8 @@ namespace Nikse.SubtitleEdit.Forms
                             (!oneColorText.Contains('9') || line.Contains('9')) &&
                             (!oneColorText.Contains('•') || line.Contains('•')) &&
                             (!oneColorText.Contains(')') || line.Contains(')')) &&
-                            Utilities.CountTagInText(oneColorText, "(") < 2 && Utilities.CountTagInText(oneColorText, ")") < 2 &&
-                            Utilities.CountTagInText(oneColorText, Environment.NewLine) < 3)
+                            Utilities.CountTagInText(oneColorText, '(') < 2 && Utilities.CountTagInText(oneColorText, ')') < 2 &&
+                            Utilities.GetNumberOfLines(oneColorText) < 4)
                         {
                             int modiCorrectWords;
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(oneColorText, out modiCorrectWords);
@@ -6016,19 +6008,19 @@ namespace Nikse.SubtitleEdit.Forms
                             if (!ok)
                                 ok = wordsNotFound == modiWordsNotFound && line.StartsWith("<i>") && line.EndsWith("</i>");
 
-                            if (ok && Utilities.CountTagInText(unItalicText, "/") > Utilities.CountTagInText(line, "/") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '/') > Utilities.CountTagInText(line, '/') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "\\") > Utilities.CountTagInText(line, "\\"))
+                            if (ok && Utilities.CountTagInText(unItalicText, '\\') > Utilities.CountTagInText(line, '\\'))
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, ")") > Utilities.CountTagInText(line, ")") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, ')') > Utilities.CountTagInText(line, ')') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "(") > Utilities.CountTagInText(line, "(") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '(') > Utilities.CountTagInText(line, '(') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "$") > Utilities.CountTagInText(line, "$") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '$') > Utilities.CountTagInText(line, '$') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "€") > Utilities.CountTagInText(line, "€") + 1)
+                            if (ok && Utilities.CountTagInText(unItalicText, '€') > Utilities.CountTagInText(line, '€') + 1)
                                 ok = false;
-                            if (ok && Utilities.CountTagInText(unItalicText, "•") > Utilities.CountTagInText(line, "•"))
+                            if (ok && Utilities.CountTagInText(unItalicText, '•') > Utilities.CountTagInText(line, '•'))
                                 ok = false;
 
                             if (ok)
@@ -6051,7 +6043,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[1] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6059,7 +6051,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J' ") || line.StartsWith("J“ ") || line.StartsWith("J* ") || line.StartsWith("♪ ")) && unItalicText.Length > 3 && HtmlUtil.RemoveOpenCloseTags(unItalicText, HtmlUtil.TagItalic)[2] == ' ')
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6067,7 +6059,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.StartsWith("J'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6075,7 +6067,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("S "))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6083,7 +6075,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if ((line.StartsWith("J` ") || line.StartsWith("J“ ") || line.StartsWith("J' ") || line.StartsWith("J* ")) && unItalicText.StartsWith("<i>S</i> "))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 8).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6091,7 +6083,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.StartsWith(";'") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 2).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6099,7 +6091,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.StartsWith(",{*") && (line.StartsWith('♪') || textWithOutFixes.StartsWith('♪') || textWithOutFixes.StartsWith("<i>♪") || unItalicText.EndsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = "♪ " + unItalicText.Remove(0, 3).TrimStart();
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6108,7 +6100,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     if (unItalicText.EndsWith("J'") && (line.EndsWith('♪') || textWithOutFixes.EndsWith('♪') || textWithOutFixes.EndsWith("♪</i>") || unItalicText.StartsWith('♪')))
                                     {
                                         bool ita = unItalicText.StartsWith("<i>") && unItalicText.EndsWith("</i>");
-                                        unItalicText = Utilities.RemoveHtmlTags(unItalicText);
+                                        unItalicText = HtmlUtil.RemoveHtmlTags(unItalicText);
                                         unItalicText = unItalicText.Remove(unItalicText.Length - 3, 2).TrimEnd() + " ♪";
                                         if (ita)
                                             unItalicText = "<i>" + unItalicText + "</i>";
@@ -6318,8 +6310,8 @@ namespace Nikse.SubtitleEdit.Forms
                             (!modiText.Contains('9') || line.Contains('9')) &&
                             (!modiText.Contains('•') || line.Contains('•')) &&
                             (!modiText.Contains(')') || line.Contains(')')) &&
-                            Utilities.CountTagInText(modiText, "(") < 2 && Utilities.CountTagInText(modiText, ")") < 2 &&
-                            Utilities.CountTagInText(modiText, Environment.NewLine) < 3)
+                            Utilities.CountTagInText(modiText, '(') < 2 && Utilities.CountTagInText(modiText, ')') < 2 &&
+                            Utilities.GetNumberOfLines(modiText) < 4)
                         {
                             int modiWordsNotFound = _ocrFixEngine.CountUnknownWordsViaDictionary(modiText, out correctWords);
                             //if (modiWordsNotFound > 0)
@@ -6355,7 +6347,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //check Tesseract... find an other way to do this...
-                //string tmp = Utilities.RemoveHtmlTags(line).Trim();
+                //string tmp = HtmlUtil.RemoveHtmlTags(line).Trim();
                 //if (!tmp.TrimEnd().EndsWith("..."))
                 //{
                 //    tmp = tmp.TrimEnd('.').TrimEnd();
@@ -6363,7 +6355,7 @@ namespace Nikse.SubtitleEdit.Forms
                 //    {
                 //        if (_nocrChars == null)
                 //            _nocrChars = LoadNOcrForTesseract("Nikse.SubtitleEdit.Resources.nOCR_TesseractHelper.xml.zip");
-                //        string text = Utilities.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
+                //        string text = HtmlUtil.RemoveHtmlTags(NocrFastCheck(bitmap).TrimEnd());
                 //        string post = string.Empty;
                 //        if (line.EndsWith("</i>"))
                 //        {
@@ -6748,8 +6740,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static void FixVerticalScrollBars(TextBox tb)
         {
-            var lineCount = Utilities.CountTagInText(tb.Text, Environment.NewLine) + 1;
-            if (lineCount > 5)
+            if (Utilities.GetNumberOfLines(tb.Text) > 5)
                 tb.ScrollBars = ScrollBars.Vertical;
             else
                 tb.ScrollBars = ScrollBars.None;
@@ -7151,7 +7142,7 @@ namespace Nikse.SubtitleEdit.Forms
                     Paragraph p = _subtitle.GetParagraphOrDefault(item.Index);
                     if (p != null)
                     {
-                        p.Text = Utilities.RemoveHtmlTags(p.Text);
+                        p.Text = HtmlUtil.RemoveHtmlTags(p.Text);
                         subtitleListView1.SetText(item.Index, p.Text);
                         if (item.Index == _selectedIndex)
                             textBoxCurrentText.Text = p.Text;

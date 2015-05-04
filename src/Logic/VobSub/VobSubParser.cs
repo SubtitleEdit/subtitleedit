@@ -131,7 +131,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
 
             float ticksPerMillisecond = 90.000F;
             if (!IsPal)
-                ticksPerMillisecond = 90.090F; // TODO; What should this be for NTSC?
+                ticksPerMillisecond = 90.090F; // TODO: What should this be for NTSC?
 
             // get unique streamIds
             var uniqueStreamIds = new List<int>();

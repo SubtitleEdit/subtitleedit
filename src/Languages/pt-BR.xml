@@ -2,7 +2,7 @@
 <Language Name="Brazilian Portuguese">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Tradução (Português do Brasil): Igor Rückert</TranslatedBy>
     <CultureName>pt-BR</CultureName>
     <HelpFile />
@@ -282,7 +282,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>No próximo intervalo</GapToNext>
     <BridgeGapsSmallerThanXPart1>Ligar intervalos menores que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Mín. milisegundos entre linhas</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Mín. milisegundos entre linhas</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texto anterior assume todo o intervalo</ProlongEndTime>
     <DivideEven>Texto divide o intervalo</DivideEven>
   </DurationsBridgeGaps>
@@ -331,8 +331,8 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <SubtitleListReferenceCode>Código de referência da lista da legenda</SubtitleListReferenceCode>
     <CountryOfOrigin>País de origem</CountryOfOrigin>
     <RevisionNumber>Número da revisão</RevisionNumber>
-    <MaxNoOfDisplayableChars> Nº máx. caracteres por linha</MaxNoOfDisplayableChars>
-    <MaxNumberOfDisplayableRows> Nº máx. linhas</MaxNumberOfDisplayableRows>
+    <MaxNoOfDisplayableChars>Nº máx. caracteres por linha</MaxNoOfDisplayableChars>
+    <MaxNumberOfDisplayableRows>Nº máx. linhas</MaxNumberOfDisplayableRows>
     <DiskSequenceNumber>Número de sequência do disco</DiskSequenceNumber>
     <TotalNumberOfDisks>Número total de discos</TotalNumberOfDisks>
     <Import>Importar...</Import>
@@ -1325,7 +1325,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <Title>Iniciar sessão de rede</Title>
     <ConnectionTo>Conectando a {0}...</ConnectionTo>
     <Information>Começar nova sesão onde várias pessoas
- podem editar o mesmo arquivo de legenda (colaboração)</Information>
+podem editar o mesmo arquivo de legenda (colaboração)</Information>
     <Start>Início</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1545,7 +1545,7 @@ possam editar o mesmo arquivo de legenda (colaboração)</Information>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
     <Testing123>Testando 123...</Testing123>
     <Language>Idioma</Language>
-    <NamesIgnoreLists>Nomes a serem ignorarados (caso sensitivo)</NamesIgnoreLists>
+    <NamesIgnoreLists>Nomes a serem ignorados (caso sensitivo)</NamesIgnoreLists>
     <AddNameEtc>Adicionar nome</AddNameEtc>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>

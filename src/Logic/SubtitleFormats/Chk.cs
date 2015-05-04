@@ -10,17 +10,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     /// </summary>
     public class Chk : SubtitleFormat
     {
-        private Encoding _codePage = Encoding.GetEncoding(850);
-        private string _languageId = "DEN"; // English
+        private readonly Encoding _codePage = Encoding.GetEncoding(850);
+        // private string _languageId = "DEN"; // English
 
         public override string Extension
         {
             get { return ".chk"; }
         }
 
+        public const string NameOfFormat = "CHK";
+
         public override string Name
         {
-            get { return "CHK"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -62,7 +64,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         private Paragraph ReadParagraph(byte[] buffer, int index)
         {
-            if (buffer[index] == 1) // text
+            if (buffer[index] == 1 && _timeCodeQueue.Count > 0) // text
             {
                 var sb = new StringBuilder();
                 int skipCount = 0;
@@ -100,13 +102,17 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     p = new Paragraph();
                 p.Number = buffer[index + 3] * 256 + buffer[index + 4]; // Subtitle number
                 p.Text = sb.ToString();
-                if (p.Number == 0 && p.Text.StartsWith("LANG:", StringComparison.Ordinal) && p.Text.Length > 8)
-                {
-                    _languageId = p.Text.Substring(5, 3);
-                }
+                //if (p.Number == 0 && p.Text.StartsWith("LANG:", StringComparison.Ordinal) && p.Text.Length > 8)
+                //{
+                //    _languageId = p.Text.Substring(5, 3);
+                //}
                 return p;
             }
-            else if (buffer[index] == 0x0a)
+            if (buffer[index] == 0x0a && _timeCodeQueue.Count > 0)
+            {
+                // ?
+            }
+            else if (buffer[index] == 0x09 && _timeCodeQueue.Count > 0)
             {
                 // ?
             }
@@ -138,6 +144,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (end - start > 0)
                     text = _codePage.GetString(buffer, start, end - start);
             }
+            if (text.Length > 4 && text[0] == 0x1f && text[1] == 'R' && text[4] == '.' && "0123456789".Contains(text[2]) && "0123456789".Contains(text[3]))
+            {
+                text = text.Remove(0, 5);
+            }
+
 
             // special language codes...
             text = text.Replace("ÔA", "Á");
@@ -176,6 +187,70 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace("õI", "Î");
             text = text.Replace("õU", "Û");
 
+            return ApplyFont(text);
+        }
+
+        private static string ApplyFont(string text)
+        {
+            var sb = new StringBuilder();
+            string post = string.Empty;
+            int i = 0;
+            while (i < text.Length)
+            {
+                if (text[i] == 01 && i < text.Length - 4 && text[i + 1] == 0x1D && text[i + 2] == 07)
+                {
+                    if (post != string.Empty)
+                        sb.Append("</font>");
+                    sb.Append("<font color=\"Red\">");
+                    post = "<font>";
+                    i += 2;
+                }
+                else if (text[i] == 01 && i < text.Length - 4 && text[i + 1] == 06)
+                {
+                    if (post != string.Empty)
+                        sb.Append("</font>");
+                    sb.Append("<font color=\"Cyan\">");
+                    post = "<font>";
+                    i++;
+                }
+                else if (text[i] == 2)
+                {
+                    if (post != string.Empty)
+                        sb.Append("</font>");
+                    sb.Append("<font color=\"Green\">");
+                    post = "<font>";
+                }
+                else if (text[i] == 3)
+                {
+                    if (post != string.Empty)
+                        sb.Append("</font>");
+                    sb.Append("<font color=\"Yellow\">");
+                    post = "<font>";
+                }
+                else if (text[i] == 6)
+                {
+                    if (post != string.Empty)
+                        sb.Append("</font>");
+                    sb.Append("<font color=\"Cyan\">");
+                    post = "<font>";
+                }
+                else if (text[i] == 7)
+                {
+                    if (post != string.Empty)
+                        sb.Append("</font>");
+                    sb.Append("<font color=\"Red\">");
+                    post = "<font>";
+                }
+                else
+                {
+                    sb.Append(text[i]);
+                }
+                i++;
+            }
+
+            text = sb + post;
+            if (HtmlUtil.RemoveHtmlTags(text).Trim().Length == 0)
+                return string.Empty;
             return text;
         }
 

@@ -273,11 +273,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //font tags
                 if (header.DisplayStandardCode == "0") // Open subtitling
                 {
-                    TextField = Utilities.RemoveHtmlTags(TextField, true);
+                    TextField = HtmlUtil.RemoveHtmlTags(TextField, true);
                 }
                 else // teletext
                 {
-                    string[] lines = TextField.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = TextField.SplitToLines();
                     var sb = new StringBuilder();
                     string veryFirstColor = null;
                     foreach (string line in lines)
@@ -325,7 +325,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             sb.Append(prefix);
                         sb.AppendLine(s);
                     }
-                    TextField = Utilities.RemoveHtmlTags(sb.ToString()).TrimEnd();
+                    TextField = HtmlUtil.RemoveHtmlTags(sb.ToString()).TrimEnd();
                 }
 
                 // newline
@@ -574,7 +574,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             if (!string.IsNullOrEmpty(fileName) && File.Exists(fileName))
             {
                 var fi = new FileInfo(fileName);
-                if (fi.Length > 1024 + 128 && fi.Length < 1024000) // not too small or too big
+                if (fi.Length >= 1024 + 128 && fi.Length < 1024000) // not too small or too big
                 {
                     try
                     {

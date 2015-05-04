@@ -52,7 +52,7 @@ namespace Nikse.SubtitleEdit.Forms
                 _networkSession.SendChatMessage(textBoxChat.Text.Trim());
                 AddChatMessage(_networkSession.CurrentUser, textBoxChat.Text.Trim());
                 listViewChat.EnsureVisible(listViewChat.Items.Count - 1);
-                _networkSession.ChatLog.Add(new NikseWebServiceSession.ChatEntry() { User = _networkSession.CurrentUser, Message = textBoxChat.Text.Trim() });
+                _networkSession.ChatLog.Add(new NikseWebServiceSession.ChatEntry { User = _networkSession.CurrentUser, Message = textBoxChat.Text.Trim() });
             }
             textBoxChat.Text = string.Empty;
             textBoxChat.Focus();

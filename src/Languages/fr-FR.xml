@@ -2,7 +2,7 @@
 <Language Name="Français">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Traduction française par JM GBT</TranslatedBy>
     <CultureName>fr-FR</CultureName>
     <HelpFile />
@@ -28,7 +28,7 @@
     <NumberSymbol>#</NumberSymbol>
     <Number>Numéro</Number>
     <Text>Texte</Text>
-    <HourMinutesSecondsMilliseconds>heure:min:sec:ms</HourMinutesSecondsMilliseconds>
+    <HourMinutesSecondsMilliseconds>heure:min:sec:msec</HourMinutesSecondsMilliseconds>
     <Bold>Gras</Bold>
     <Italic>Italique</Italic>
     <Underline>Souligner</Underline>
@@ -65,6 +65,8 @@
     <ControlsWindowTitle>Contrôles - {0}</ControlsWindowTitle>
     <Advanced>Avancé</Advanced>
     <Style>Style</Style>
+    <StyleLanguage>Style / Langue</StyleLanguage>
+    <Character>Personnage</Character>
     <Class>Catégorie</Class>
     <GeneralText>Texte général</GeneralText>
     <LineNumber>ligne#</LineNumber>
@@ -98,9 +100,9 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Description>Un mot :</Description>
   </AddToUserDictionary>
   <AddWaveform>
-    <Title>Générer forme à partir des données</Title>
+    <Title>Générer forme d'onde à partir des données</Title>
     <SourceVideoFile>Fichier vidéo source:</SourceVideoFile>
-    <GenerateWaveformData>Générer forme à partir des données</GenerateWaveformData>
+    <GenerateWaveformData>Générer forme d'onde à partir des données</GenerateWaveformData>
     <PleaseWait>Ceci peut prendre quelques minutes - Veuillez patienter...</PleaseWait>
     <VlcMediaPlayerNotFoundTitle>VLC media player introuvable</VlcMediaPlayerNotFoundTitle>
     <VlcMediaPlayerNotFound>Subtitle Edit a besoin de VLC media player 1.1.x ou supérieur pour extraire les données audio</VlcMediaPlayerNotFound>
@@ -110,6 +112,12 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
     <ExtractingMinutes>Extraction audio: {0}:{1:00} secondes</ExtractingMinutes>
   </AddWaveform>
+  <AddWaveformBatch>
+    <Title>Générer par lots des formes d'onde sonores</Title>
+    <ExtractingAudio>Extraction audio...</ExtractingAudio>
+    <Calculating>Calculer...</Calculating>
+    <Done>&amp;Annuler</Done>
+  </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajuster les durées</Title>
     <AdjustVia>Ajuster selon</AdjustVia>
@@ -151,8 +159,9 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Convert>Convertir</Convert>
     <NothingToConvert>Rien à convertir !</NothingToConvert>
     <PleaseChooseOutputFolder>Sélectionner le dossier de sortie</PleaseChooseOutputFolder>
-    <Converted>Convertir</Converted>
-    <ConvertedX>Convertir ({0})</ConvertedX>
+    <NotConverted>Echoué</NotConverted>
+    <Converted>Converti</Converted>
+    <ConvertedX>Converti ({0})</ConvertedX>
     <Settings>Configuration</Settings>
     <SplitLongLines>Diviser les longues lignes</SplitLongLines>
     <AutoBalance>Equilibrer les lignes automatiquement</AutoBalance>
@@ -161,6 +170,15 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Recursive>Inclus les sous-dossiers</Recursive>
     <SetMinMsBetweenSubtitles>Définir mini millisec. entre les sous-titres</SetMinMsBetweenSubtitles>
     <PlainText>Texte brut</PlainText>
+    <Ocr>OCR...</Ocr>
+    <Filter>Filtre</Filter>
+    <FilterSkipped>Filtré</FilterSkipped>
+    <FilterSrtNoUtf8BOM>Fichiers SRT sans indicateur d'ordre des octets</FilterSrtNoUtf8BOM>
+    <FilterMoreThanTwoLines>Sous-titres à plus de deux lignes</FilterMoreThanTwoLines>
+    <FilterContains>Texte contenant...</FilterContains>
+    <FixCommonErrorsErrorX>Corriger erreurs fréquentes : {0}</FixCommonErrorsErrorX>
+    <MultipleReplaceErrorX>Remplacements multiples : {0}</MultipleReplaceErrorX>
+    <AutoBalanceErrorX>Balance automatique : {0}</AutoBalanceErrorX>
   </BatchConvert>
   <Beamer>
     <Title>Sous-titre spectateur</Title>
@@ -282,7 +300,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Ecart prochain en secondes</GapToNext>
     <BridgeGapsSmallerThanXPart1>Combler les espaces plus petits que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisecondes</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Minimum de millisecondes entre les lignes</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Minimum de millisecondes entre les lignes</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texte précédent prend tous le temps de l'espace</ProlongEndTime>
     <DivideEven>Textes partages le temps de l'espace</DivideEven>
   </DurationsBridgeGaps>
@@ -407,10 +425,15 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <Right>Droit</Right>
     <Center>Centre</Center>
     <BottomMargin>Marge inférieure</BottomMargin>
+    <LeftRightMargin>Marges latérales</LeftRightMargin>
     <SaveBluRraySupAs>Enregistrer en tant que Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Enregistrer en tant que VobSub</SaveVobSubAs>
     <SaveFabImageScriptAs>Enregistrer en tant FabImage Script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Enregistrer en tant DVD Studio Pro Stl</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Enregistrer en tant Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Enregistrer en tant Premiere Edl</SavePremiereEdlAs>
+    <SaveFcpAs>Enregistrer en tant Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Enregistrer en tant DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Certaines lignes sont trop longues:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Hauteur de ligne</LineHeight>
@@ -678,6 +701,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <FileName>Nom</FileName>
     <Join>Créer</Join>
     <TotalNumberOfLinesX>Nombre total de lignes: {0:#,###,###}</TotalNumberOfLinesX>
+    <Note>Note : Il faut ajuster les timecodes avant de fusionner les sous-titres</Note>
   </JoinSubtitles>
   <Main>
     <Menu>
@@ -735,6 +759,13 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <Redo>Rétablir</Redo>
         <ShowUndoHistory>Afficher &amp;historique (pour annulation)</ShowUndoHistory>
         <InsertUnicodeSymbol>&amp;Insérer un symbole unicode</InsertUnicodeSymbol>
+        <InsertUnicodeControlCharacters>Insérer caractères de contrôle Unicode</InsertUnicodeControlCharacters>
+        <InsertUnicodeControlCharactersLRM>Marque gauche-à-droite (LRM)</InsertUnicodeControlCharactersLRM>
+        <InsertUnicodeControlCharactersRLM>Marque droite-à-gauche (RLM)</InsertUnicodeControlCharactersRLM>
+        <InsertUnicodeControlCharactersLRE>Enchâssement gauche-à-droite (LRE)</InsertUnicodeControlCharactersLRE>
+        <InsertUnicodeControlCharactersRLE>Enchâssement droite-à-gauche (RLE)</InsertUnicodeControlCharactersRLE>
+        <InsertUnicodeControlCharactersLRO>Forçage gauche-à-droite (LRO)</InsertUnicodeControlCharactersLRO>
+        <InsertUnicodeControlCharactersRLO>Forçage droite-à-gauche (RLO)</InsertUnicodeControlCharactersRLO>
         <Find>Re&amp;chercher</Find>
         <FindNext>Rechercher &amp;suivant</FindNext>
         <Replace>&amp;Remplacer</Replace>
@@ -793,6 +824,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <CloseVideo>Fermer fichier vidéo</CloseVideo>
         <ImportSceneChanges>Importer changements de scène...</ImportSceneChanges>
         <RemoveSceneChanges>Supprimer changements de scène...</RemoveSceneChanges>
+        <WaveformBatchGenerate>Générer par lots des formes d'onde sonores</WaveformBatchGenerate>
         <ShowHideVideo>Afficher/Masquer vidéo</ShowHideVideo>
         <ShowHideWaveform>Afficher/Masquer diagramme sonore</ShowHideWaveform>
         <ShowHideWaveformAndSpectrogram>Afficher/Masquer les formes d'onde et spectrogramme</ShowHideWaveformAndSpectrogram>
@@ -864,6 +896,7 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
         <TimedTextStyles>Timed Text - styles...</TimedTextStyles>
         <TimedTextSetLanguage>Timed Text - Configurer langue</TimedTextSetLanguage>
         <SamiSetStyle>Sami - Configurer style</SamiSetStyle>
+        <NuendoSetStyle>Nuendo - Configurer personnage</NuendoSetStyle>
         <Cut>Couper</Cut>
         <Copy>Copier</Copy>
         <Paste>Coller</Paste>
@@ -956,8 +989,8 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
       <SearchTextOnline>Chercher texte en ligne</SearchTextOnline>
       <GoogleTranslate>Traduction Google</GoogleTranslate>
       <GoogleIt>Google</GoogleIt>
-      <SecondsBackShort>&lt;&lt; s</SecondsBackShort>
-      <SecondsForwardShort>s &gt;&gt;</SecondsForwardShort>
+      <SecondsBackShort>&lt;&lt; sec</SecondsBackShort>
+      <SecondsForwardShort>sec &gt;&gt;</SecondsForwardShort>
       <VideoPosition>Position vidéo:</VideoPosition>
       <TranslateTip>&lt;alt+flèche haut/bas&gt; pour avancer/reculer d'un sous-titre</TranslateTip>
       <CreateTip>&lt;ctrl+flèche gauche/droite&gt;</CreateTip>
@@ -1105,6 +1138,8 @@ Poursuivre ?</SubtitleAppendPrompt>
     <MatroskaFiles>Fichiers Matroska</MatroskaFiles>
     <NoSubtitlesFound>Aucun sous-titre trouvé</NoSubtitlesFound>
     <NotAValidMatroskaFileX>Ce n'est pas un fichier Matroska valide: {0}</NotAValidMatroskaFileX>
+    <BlurayNotSubtitlesFound>Ce fichier Blu-ray sup ne contient pas de sous-titres ou contient des erreurs :
+- tente de répéter le démultiplexage.</BlurayNotSubtitlesFound>
     <ParsingMatroskaFile>Analyse du fichier Matroska. Patientez...</ParsingMatroskaFile>
     <ParsingTransportStreamFile>Analyse du fichier de flux de transport. Veuillez patienter...</ParsingTransportStreamFile>
     <BeforeImportFromMatroskaFile>Avant l'importation de sous-titres du fichier Matroska</BeforeImportFromMatroskaFile>
@@ -1161,6 +1196,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <BeforeMergeShortLines>Avant de fusionner les lignes courtes</BeforeMergeShortLines>
     <BeforeSplitLongLines>Avant de couper les lignes longues</BeforeSplitLongLines>
     <MergedShortLinesX>Nombre de lignes fusionnées: {0}</MergedShortLinesX>
+    <BeforeDurationsBridgeGap>Avant de combler les petits écarts entre les durées</BeforeDurationsBridgeGap>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Avant la mise au minimum du temps d'affichage entre les paragraphes</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Nombre de lignes avec le temps mini. d'affichage entre les paragraphes changé: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
     <BeforeImportText>Avant d'importer le fichier texte</BeforeImportText>
@@ -1217,7 +1253,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <BeforeMergeLinesWithSameText>Avant de fusionner les lignes avec le même texte</BeforeMergeLinesWithSameText>
     <ImportTimeCodesDifferentNumberOfLinesWarning>Le timecode du sous-titre importé a un nombre différent de lignes ({0}) par rapport à l'actuel ({1}).
 
- Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
+Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
     <ParsingTransportStream>Analyse des flux de transport - s'il vous plaît patienter...</ParsingTransportStream>
     <ErrorLoadIdx>Subtitle Edit ne peut pas lire les fichiers .idx :
 - Ils font partie de paires de fichiers idx/sub (également appelés VobSub).
@@ -1230,10 +1266,16 @@ Poursuivre ?</SubtitleAppendPrompt>
 - Subtitle Edit ne peut pas ouvrir les fichiers PNG.</ErrorLoadPng>
     <ErrorLoadSrr>Ce fichier semble être des métadonnées d'archives ReScene .SRR :
 - Ce n’est pas un fichier de sous-titres.</ErrorLoadSrr>
+    <ErrorLoadTorrent>Ce fichier semble être un fichier BitTorrent :
+- Ce n’est pas un fichier de sous-titres.</ErrorLoadTorrent>
+    <NoSupportEncryptedVobSub>Il n'y a pas de support des sous-titres VobSub chiffrées.</NoSupportEncryptedVobSub>
+    <NoSupportHereBluRaySup>Des fichiers Blu-ray sup ne sont pas supporter ici.</NoSupportHereBluRaySup>
+    <NoSupportHereDvdSup>Des fichiers DVD sup ne sont pas supporter ici.</NoSupportHereDvdSup>
+    <NoSupportHereVobSub>Des fichiers VobSub ne sont pas supporter ici.</NoSupportHereVobSub>
+    <NoSupportHereDivx>Des fichiers DivX ne sont pas supporter ici.</NoSupportHereDivx>
   </Main>
   <MatroskaSubtitleChooser>
-    <Title>Choisir les sous-titres du fichier Matroska
-</Title>
+    <Title>Choisir les sous-titres du fichier Matroska</Title>
     <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
     <TrackXLanguageYTypeZ>Piste {0} - {1} - langue: {2} - type: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
@@ -1309,7 +1351,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <Export>Exporter...</Export>
     <ImportRulesTitle>Règle(s) importation</ImportRulesTitle>
     <ExportRulesTitle>Règle(s) exportation</ExportRulesTitle>
-    <Rules>Règles d'exportation</Rules>
+    <Rules>Règles de remplacement</Rules>
     <MoveToTop>Tout en haut</MoveToTop>
     <MoveToBottom>Tout en bas</MoveToBottom>
   </MultipleReplace>
@@ -1320,8 +1362,7 @@ Poursuivre ?</SubtitleAppendPrompt>
   <NetworkJoin>
     <Title>Rejoindre une session réseau</Title>
     <Information>Joignez-vous à la session actuelle, où plusieurs personnes
- peuvent modifier le même fichier de sous-titres (collaboration)
-</Information>
+peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Join>Rejoindre</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1332,8 +1373,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <Title>Démarrer une session réseau</Title>
     <ConnectionTo>Connexion à {0}...</ConnectionTo>
     <Information>Démarrer une nouvelle session, où plusieurs personnes
- peuvent modifier le même fichier de sous-titres (collaboration)
-</Information>
+peuvent modifier le même fichier de sous-titres (collaboration)</Information>
     <Start>Démarrer</Start>
   </NetworkStart>
   <OpenVideoDvd>
@@ -1434,10 +1474,10 @@ Poursuivre ?</SubtitleAppendPrompt>
   <SetSyncPoint>
     <Title>Définir point de synchronisation à la ligne {0}</Title>
     <SyncPointTimeCode>Sync. le code de temps</SyncPointTimeCode>
-    <ThreeSecondsBack>&lt;&lt; 3 s</ThreeSecondsBack>
-    <HalfASecondBack>&lt;&lt; ½ s</HalfASecondBack>
-    <HalfASecondForward>½ s &gt;&gt;</HalfASecondForward>
-    <ThreeSecondsForward>3 s &gt;&gt;</ThreeSecondsForward>
+    <ThreeSecondsBack>&lt;&lt; 3 sec</ThreeSecondsBack>
+    <HalfASecondBack>&lt;&lt; ½ sec</HalfASecondBack>
+    <HalfASecondForward>½ sec &gt;&gt;</HalfASecondForward>
+    <ThreeSecondsForward>3 sec &gt;&gt;</ThreeSecondsForward>
   </SetSyncPoint>
   <Settings>
     <Title>Configuration</Title>
@@ -1616,6 +1656,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <ToggleDialogDashes>Activer/Désactiver le son</ToggleDialogDashes>
     <Alignment>Aligner (lignes sélectionnées)</Alignment>
     <CopyTextOnly>Copier du texte dans le presse-papier (lignes sélectionnées)</CopyTextOnly>
+    <CopyTextOnlyFromOriginalToCurrent>Copier le texte original dans le sous-titre courant</CopyTextOnlyFromOriginalToCurrent>
     <AutoDurationSelectedLines>Durée automatique (lignes sélectionnées)</AutoDurationSelectedLines>
     <ReverseStartAndEndingForRTL>Rétablir RTL Start/Stop</ReverseStartAndEndingForRTL>
     <VerticalZoom>Zoom vertical avant</VerticalZoom>
@@ -1671,6 +1712,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <MainTextBoxMoveFirstWordFromNextUp>Déplacer le premier mot dans la ligne du sous-titre précédent</MainTextBoxMoveFirstWordFromNextUp>
     <MainTextBoxSelectionToLower>Sélectionner minuscules</MainTextBoxSelectionToLower>
     <MainTextBoxSelectionToUpper>Sélectionner majuscules</MainTextBoxSelectionToUpper>
+    <MainTextBoxToggleAutoDuration>Basculer durée automatique</MainTextBoxToggleAutoDuration>
     <MainTextBoxAutoBreak>Division de texte automatique</MainTextBoxAutoBreak>
     <MainTextBoxUnbreak>Fusionner texte</MainTextBoxUnbreak>
     <MainFileSaveAll>Tout enregistrer</MainFileSaveAll>
@@ -1804,6 +1846,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <CharactersPerSecondMinimum>Caractères/sec - minimum : {0:0.000}</CharactersPerSecondMinimum>
     <CharactersPerSecondMaximum>Caractères/sec - maximum : {0:0.000}</CharactersPerSecondMaximum>
     <CharactersPerSecondAverage>Caractères/sec - moyen : {0:0.000}</CharactersPerSecondAverage>
+    <Export>Exporter...</Export>
   </Statistics>
   <SubStationAlphaProperties>
     <Title>Propriétés Advanced SubStation Alpha</Title>
@@ -1897,9 +1940,9 @@ Poursuivre ?</SubtitleAppendPrompt>
     <StartScene>Scène initiale</StartScene>
     <EndScene>Scène finale</EndScene>
     <Synchronize>Synchroniser</Synchronize>
-    <HalfASecondBack>&lt; ½ s</HalfASecondBack>
-    <ThreeSecondsBack>&lt; 3 s</ThreeSecondsBack>
-    <PlayXSecondsAndBack>Lire {0} s puis retour</PlayXSecondsAndBack>
+    <HalfASecondBack>&lt; ½ sec</HalfASecondBack>
+    <ThreeSecondsBack>&lt; 3 sec</ThreeSecondsBack>
+    <PlayXSecondsAndBack>Lire {0} sec puis retour</PlayXSecondsAndBack>
     <FindText>Rechercher texte</FindText>
     <GoToSubPosition>Aller sous-position</GoToSubPosition>
     <KeepChangesTitle>Conserver les modifications ?</KeepChangesTitle>
@@ -1975,6 +2018,7 @@ Poursuivre ?</SubtitleAppendPrompt>
     <AutoTransparentBackground>Fond transparent auto.</AutoTransparentBackground>
     <InspectCompareMatchesForCurrentImage>Comparer avec l'image actuelle...</InspectCompareMatchesForCurrentImage>
     <EditLastAdditions>Modifier derniers ajouts d'image...</EditLastAdditions>
+    <SetUnitalicFactor>Définir facteur non italique...</SetUnitalicFactor>
   </VobSubOcr>
   <VobSubOcrCharacter>
     <Title>VobSub - Conversion manuelle d'images en texte</Title>
@@ -2001,9 +2045,13 @@ Poursuivre ?</SubtitleAppendPrompt>
     <Title>Nouvelle Base de données</Title>
     <Message>Nom de la DB d'images :</Message>
   </VobSubOcrNewFolder>
+  <VobSubOcrSetItalicFactor>
+    <Title>Définir facteur non italique</Title>
+    <Description>Ramène l'angle d'inclinaison des caractères italiques à zero. Il faut que l'image de référence est italiqué.</Description>
+  </VobSubOcrSetItalicFactor>
   <Waveform>
     <ClickToAddWaveform>Cliquer pour ajouter une forme sonore</ClickToAddWaveform>
-    <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter waveform/spectrogram</ClickToAddWaveformAndSpectrogram>
+    <ClickToAddWaveformAndSpectrogram>Cliquer pour ajouter onde/spectrogramme</ClickToAddWaveformAndSpectrogram>
     <Seconds>secondes</Seconds>
     <ZoomIn>Zoom avant</ZoomIn>
     <ZoomOut>Zoom arrière</ZoomOut>

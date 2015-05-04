@@ -2,7 +2,7 @@
 <Language Name="Italiano">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Traduzione Italiana SilverDrake (giurdi@katamail.com)</TranslatedBy>
     <CultureName>it-IT</CultureName>
     <HelpFile />
@@ -282,7 +282,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Spazio vuoto al successivo</GapToNext>
     <BridgeGapsSmallerThanXPart1>Riempi spazi vuoti più piccoli di</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>millisecondi</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Millisec. min. tra le linee</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Millisec. min. tra le linee</MinMillisecondsBetweenLines>
     <ProlongEndTime>Il testo precedente prende tutto il tempo di vuoto</ProlongEndTime>
     <DivideEven>I testi si suddividono il tempo vuoto</DivideEven>
   </DurationsBridgeGaps>
@@ -611,8 +611,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <To>A:</To>
     <Translate>Traduci</Translate>
     <PleaseWait>Attendere... ci potrebbe volere un po' di tempo</PleaseWait>
-    <PoweredByGoogleTranslate>Servizio traduzione di Google
-</PoweredByGoogleTranslate>
+    <PoweredByGoogleTranslate>Servizio traduzione di Google</PoweredByGoogleTranslate>
     <PoweredByMicrosoftTranslate>Servizio traduzione di Microsoft</PoweredByMicrosoftTranslate>
   </GoogleTranslate>
   <GoogleOrMicrosoftTranslate>
@@ -1380,7 +1379,7 @@ modificare lo stesso file di sottotitolo (collaborazione)</Information>
     <Brackets>'{' e '}'</Brackets>
     <Parentheses>'(' e ')'</Parentheses>
     <QuestionMarks>'?' e '?'</QuestionMarks>
-    <And> e</And>
+    <And>e</And>
     <RemoveTextBeforeColon>Elimina il testo prima dei due punti (':')</RemoveTextBeforeColon>
     <OnlyIfTextIsUppercase>Solo se il testo è MAIUSCOLO</OnlyIfTextIsUppercase>
     <OnlyIfInSeparateLine>Solo se è in una linea separata</OnlyIfInSeparateLine>

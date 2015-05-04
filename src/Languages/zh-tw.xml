@@ -2,7 +2,7 @@
 <Language Name="繁體中文">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>翻譯: BAWAN【增補：風逸蘭】</TranslatedBy>
     <CultureName>zh-TW</CultureName>
     <HelpFile />
@@ -278,7 +278,7 @@ C# 原始碼可從 https://github.com/SubtitleEdit/subtitleedit 取得。
     <GapToNext>與下一行的間隔時間 (秒)</GapToNext>
     <BridgeGapsSmallerThanXPart1>橋接時間小於</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>毫秒的間隔</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>各行之間最小毫秒數</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>各行之間最小毫秒數</MinMillisecondsBetweenLines>
     <ProlongEndTime>&gt;間隔時間分配給上一行文字</ProlongEndTime>
     <DivideEven>間隔時間均分給前後兩行文字</DivideEven>
   </DurationsBridgeGaps>

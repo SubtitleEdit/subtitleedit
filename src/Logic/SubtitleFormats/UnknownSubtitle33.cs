@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
@@ -47,7 +48,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             int count2 = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                 if (lines.Length > 0)
                 {
                     sb.AppendLine(string.Format(paragraphWriteFormat, EncodeTimeCode(p.StartTime), count.ToString().PadLeft(2, ' '), lines[0]));

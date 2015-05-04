@@ -102,7 +102,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 //string text = p.Text.Replace("<i>", "@iSTART__").Replace("</i>", "@iEND__");
                 string text = p.Text.Replace(Environment.NewLine, "\n").Replace("\n", "@iNEWLINE__");
-                text = Utilities.RemoveHtmlTags(text);
+                text = HtmlUtil.RemoveHtmlTags(text);
                 paragraph.InnerText = text;
                 paragraph.InnerXml = paragraph.InnerXml.Replace("@iNEWLINE__", "<br />");
                 //paragraph.InnerXml = paragraph.InnerXml.Replace("@iSTART__", "<i>").Replace("@iEND__", "</i>");
@@ -237,7 +237,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     {
                         //string end = node.Attributes["end"].InnerText;
                         double dBegin, dEnd;
-                        if (!start.Contains(':') && Utilities.CountTagInText(start, ".") == 1 && !start.Contains(':') && Utilities.CountTagInText(start, ".") == 1 &&
+                        if (!start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 && !start.Contains(':') && Utilities.CountTagInText(start, '.') == 1 &&
                             double.TryParse(start, out dBegin) && double.TryParse(end, out dEnd))
                         {
                             subtitle.Paragraphs.Add(new Paragraph(text, dBegin * 1000.0, dEnd * 1000.0));

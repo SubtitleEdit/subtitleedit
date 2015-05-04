@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class Statistics
+    sealed partial class Statistics
     {
         /// <summary>
         /// Required designer variable.
@@ -36,6 +36,7 @@
             this.labelMostUsedWords = new System.Windows.Forms.Label();
             this.textBoxMostUsedLines = new System.Windows.Forms.TextBox();
             this.textBoxMostUsedWords = new System.Windows.Forms.TextBox();
+            this.buttonExport = new System.Windows.Forms.Button();
             this.groupBoxGeneral.SuspendLayout();
             this.groupBoxMostUsed.SuspendLayout();
             this.SuspendLayout();
@@ -47,7 +48,7 @@
             this.buttonOK.Location = new System.Drawing.Point(642, 632);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
-            this.buttonOK.TabIndex = 2;
+            this.buttonOK.TabIndex = 3;
             this.buttonOK.Text = "&OK";
             this.buttonOK.UseVisualStyleBackColor = true;
             this.buttonOK.Click += new System.EventHandler(this.buttonOK_Click);
@@ -74,7 +75,7 @@
             this.textBoxGeneral.Name = "textBoxGeneral";
             this.textBoxGeneral.ReadOnly = true;
             this.textBoxGeneral.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxGeneral.Size = new System.Drawing.Size(693, 351);
+            this.textBoxGeneral.Size = new System.Drawing.Size(694, 351);
             this.textBoxGeneral.TabIndex = 0;
             // 
             // groupBoxMostUsed
@@ -99,7 +100,7 @@
             this.labelMostUsedLines.Location = new System.Drawing.Point(329, 27);
             this.labelMostUsedLines.Name = "labelMostUsedLines";
             this.labelMostUsedLines.Size = new System.Drawing.Size(80, 13);
-            this.labelMostUsedLines.TabIndex = 6;
+            this.labelMostUsedLines.TabIndex = 2;
             this.labelMostUsedLines.Text = "Most used lines";
             // 
             // labelMostUsedWords
@@ -108,7 +109,7 @@
             this.labelMostUsedWords.Location = new System.Drawing.Point(6, 27);
             this.labelMostUsedWords.Name = "labelMostUsedWords";
             this.labelMostUsedWords.Size = new System.Drawing.Size(87, 13);
-            this.labelMostUsedWords.TabIndex = 5;
+            this.labelMostUsedWords.TabIndex = 0;
             this.labelMostUsedWords.Text = "Most used words";
             // 
             // textBoxMostUsedLines
@@ -121,26 +122,38 @@
             this.textBoxMostUsedLines.Name = "textBoxMostUsedLines";
             this.textBoxMostUsedLines.ReadOnly = true;
             this.textBoxMostUsedLines.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.textBoxMostUsedLines.Size = new System.Drawing.Size(367, 183);
-            this.textBoxMostUsedLines.TabIndex = 1;
+            this.textBoxMostUsedLines.Size = new System.Drawing.Size(371, 183);
+            this.textBoxMostUsedLines.TabIndex = 3;
             // 
             // textBoxMostUsedWords
             // 
             this.textBoxMostUsedWords.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBoxMostUsedWords.Location = new System.Drawing.Point(6, 43);
+            this.textBoxMostUsedWords.Location = new System.Drawing.Point(9, 43);
             this.textBoxMostUsedWords.Multiline = true;
             this.textBoxMostUsedWords.Name = "textBoxMostUsedWords";
             this.textBoxMostUsedWords.ReadOnly = true;
             this.textBoxMostUsedWords.ScrollBars = System.Windows.Forms.ScrollBars.Both;
             this.textBoxMostUsedWords.Size = new System.Drawing.Size(320, 183);
-            this.textBoxMostUsedWords.TabIndex = 0;
+            this.textBoxMostUsedWords.TabIndex = 1;
+            // 
+            // buttonExport
+            // 
+            this.buttonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonExport.Location = new System.Drawing.Point(532, 632);
+            this.buttonExport.Name = "buttonExport";
+            this.buttonExport.Size = new System.Drawing.Size(104, 21);
+            this.buttonExport.TabIndex = 2;
+            this.buttonExport.Text = "Export";
+            this.buttonExport.UseVisualStyleBackColor = true;
+            this.buttonExport.Click += new System.EventHandler(this.buttonExport_Click);
             // 
             // Statistics
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(732, 665);
+            this.Controls.Add(this.buttonExport);
             this.Controls.Add(this.groupBoxMostUsed);
             this.Controls.Add(this.groupBoxGeneral);
             this.Controls.Add(this.buttonOK);
@@ -172,5 +185,6 @@
         private System.Windows.Forms.TextBox textBoxMostUsedLines;
         private System.Windows.Forms.Label labelMostUsedLines;
         private System.Windows.Forms.Label labelMostUsedWords;
+        private System.Windows.Forms.Button buttonExport;
     }
 }

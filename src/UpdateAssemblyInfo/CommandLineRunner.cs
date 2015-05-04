@@ -29,7 +29,7 @@ namespace UpdateAssemblyInfo
             p.BeginOutputReadLine(); // Async reading of output to prevent deadlock
             if (p.WaitForExit(5000))
             {
-                return true;
+                return p.ExitCode == 0;
             }
             return false;
         }

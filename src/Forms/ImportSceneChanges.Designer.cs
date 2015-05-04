@@ -1,4 +1,4 @@
-namespace Nikse.SubtitleEdit.Forms
+﻿namespace Nikse.SubtitleEdit.Forms
 {
     partial class ImportSceneChanges
     {

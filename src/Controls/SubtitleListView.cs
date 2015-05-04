@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Controls
 {
@@ -263,7 +264,7 @@ namespace Nikse.SubtitleEdit.Controls
                         {
                             e.Graphics.FillRectangle(Brushes.LightBlue, rect);
                         }
-                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);                       
+                        TextRenderer.DrawText(e.Graphics, e.Item.SubItems[e.ColumnIndex].Text, _subtitleFont, new Point(e.Bounds.Left + 3, e.Bounds.Top + 2), e.Item.ForeColor, TextFormatFlags.NoPrefix);
                     }
                 }
                 else
@@ -563,8 +564,8 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxColorLongLines)
                 {
                     int noOfLines = paragraph.Text.Split(Environment.NewLine[0]).Length;
-                    string s = Utilities.RemoveHtmlTags(paragraph.Text, true);
-                    foreach (string line in s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                    string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true);
+                    foreach (string line in s.SplitToLines())
                     {
                         if (line.Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                         {
@@ -588,7 +589,7 @@ namespace Nikse.SubtitleEdit.Controls
                 if (_settings.Tools.ListViewSyntaxMoreThanXLines &&
                     item.SubItems[ColumnIndexText].BackColor != Configuration.Settings.Tools.ListViewSyntaxErrorColor)
                 {
-                    int newLines = paragraph.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries).Length;
+                    int newLines = paragraph.Text.SplitToLines().Length;
                     if (newLines > Configuration.Settings.Tools.ListViewSyntaxMoreThanXLinesX)
                         item.SubItems[ColumnIndexText].BackColor = Configuration.Settings.Tools.ListViewSyntaxErrorColor;
                 }

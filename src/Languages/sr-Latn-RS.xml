@@ -2,7 +2,7 @@
 <Language Name="Srpski">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Prevod: Misa Forger</TranslatedBy>
     <CultureName>sr-Latn-RS</CultureName>
     <HelpFile />
@@ -1009,7 +1009,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <NetworkInsert>Linija je ubačena: {0} ({1}): popis – {2}, tekst – {3}</NetworkInsert>
     <NetworkDelete>Linija je obrisana: {0} ({1}): popis – {2}</NetworkDelete>
     <NetworkNewUser>pristupi sesiji {0} ({1}).</NetworkNewUser>
-    <NetworkByeUser> napusti sesiju {0} ({1}).</NetworkByeUser>
+    <NetworkByeUser>napusti sesiju {0} ({1}).</NetworkByeUser>
     <NetworkUnableToConnectToServer>Nije moguće povezivanje sa serverom: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Korisnik/Radnja</UserAndAction>
     <NetworkMode>Umreženo</NetworkMode>
@@ -1080,7 +1080,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
   <NetworkJoin>
     <Title>Mrežna sesija</Title>
     <Information>Ovde možete da se pridružite postojećoj sesiji u kojoj
-    možete da uređujete određeni prevod s drugim ljudima.</Information>
+možete da uređujete određeni prevod s drugim ljudima.</Information>
     <Join>&amp;Poveži me</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -1091,7 +1091,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <Title>Mrežna sesija</Title>
     <ConnectionTo>Povezujem se na {0}...</ConnectionTo>
     <Information>Ovde možete da napravite sesiju u kojoj ćete moći da uređujete
-    određeni prevod s drugim ljudima.</Information>
+određeni prevod s drugim ljudima.</Information>
     <Start>&amp;Započni</Start>
   </NetworkStart>
   <PluginsGet>
@@ -1574,7 +1574,7 @@ koji bi trebao da bude usklađen sa Video datotekom.
     <KeepChangesTitle>Čuvanje izmena</KeepChangesTitle>
     <KeepChangesMessage>Izmenili ste prevod koristeći Vizuelno usklađivanje.
 
-    Želite li da sačuvate izmene?</KeepChangesMessage>
+Želite li da sačuvate izmene?</KeepChangesMessage>
     <SynchronizationDone>Usklađivanje je završeno.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Početna scena mora biti pre završne!</StartSceneMustComeBeforeEndScene>
     <Tip>Koristite 'Ctrl' i levu ili desnu strelicu da pomerite 100 ms unazad ili unapred.</Tip>

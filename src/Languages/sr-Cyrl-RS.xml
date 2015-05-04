@@ -881,7 +881,7 @@
   <NetworkJoin>
     <Title>Мрежна сесија</Title>
     <Information>Овде можете да се придружите постојећој сесији у којој
-    можете да уређујете одређени титл с другим људима.</Information>
+можете да уређујете одређени титл с другим људима.</Information>
     <Join>&amp;Повежи ме</Join>
   </NetworkJoin>
   <NetworkLogAndInfo>
@@ -892,7 +892,7 @@
     <Title>Мрежна сесија</Title>
     <ConnectionTo>Повезујем се на {0}...</ConnectionTo>
     <Information>Овде можете да направите сесију у којој ћете моћи да уређујете
-    одређени титл с другим људима.</Information>
+одређени титл с другим људима.</Information>
     <Start>&amp;Започни</Start>
   </NetworkStart>
   <RemoveTextFromHearImpaired>
@@ -1164,7 +1164,7 @@
     <KeepChangesTitle>Чување измена</KeepChangesTitle>
     <KeepChangesMessage>Изменили сте титл користећи Визуелно усклађивање.
 
-    Желите ли да сачувате измене?</KeepChangesMessage>
+Желите ли да сачувате измене?</KeepChangesMessage>
     <SynchronizationDone>Усклађивање је завршено.</SynchronizationDone>
     <StartSceneMustComeBeforeEndScene>Почетна сцена мора бити пре завршне!</StartSceneMustComeBeforeEndScene>
     <Tip>Користите ктрл и леву или десну стрелицу да померите 100 мс уназад или унапред.</Tip>

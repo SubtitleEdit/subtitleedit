@@ -251,7 +251,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             catch
             {
-                // TODO: Avoid catching all exceptions.
+                // TODO: Avoid catching all exceptions
             }
             finally
             {

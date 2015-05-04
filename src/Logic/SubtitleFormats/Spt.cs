@@ -13,9 +13,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".spt"; }
         }
 
+        public const string NameOfFormat = "spt";
+
         public override string Name
         {
-            get { return "spt"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -58,10 +60,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             WriteTimeCode();
 
             string text = p.Text;
-            if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
+            if (Utilities.GetNumberOfLines(text) > 2)
                 text = Utilities.AutoBreakLine(p.Text);
 
-            string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.SplitToLines();
             int textLengthFirstLine = 0;
             int textLengthSecondLine = 0;
             if (lines.Length > 0)

@@ -52,9 +52,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     else
                         (_quartzFilgraphManager as IBasicAudio).Volume = (value - 100) * 35;
                 }
-                catch
-                {
-                }
+                catch { }
             }
         }
 
@@ -205,14 +203,11 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 info.TotalMilliseconds = iMediaPosition.Duration * 1000;
                 info.TotalSeconds = iMediaPosition.Duration;
                 info.TotalFrames = info.TotalSeconds * info.FramesPerSecond;
-                info.VideoCodec = string.Empty; // TODO... get real codec names from quartzFilgraphManager.FilterCollection;
+                info.VideoCodec = string.Empty; // TODO: Get real codec names from quartzFilgraphManager.FilterCollection;
 
                 Marshal.ReleaseComObject(quartzFilgraphManager);
             }
-            catch
-            {
-
-            }
+            catch { }
             return info;
         }
 
@@ -235,9 +230,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 {
                     OnVideoLoaded.Invoke(_quartzFilgraphManager, new EventArgs());
                 }
-                catch
-                {
-                }
+                catch { }
             }
             _videoEndTimer = null;
         }
@@ -293,9 +286,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                 if (_quartzVideo != null)
                     _quartzVideo.Owner = -1;
             }
-            catch
-            {
-            }
+            catch { }
 
             if (_quartzFilgraphManager != null)
             {
@@ -305,9 +296,7 @@ namespace Nikse.SubtitleEdit.Logic.VideoPlayers
                     Marshal.ReleaseComObject(_quartzFilgraphManager);
                     _quartzFilgraphManager = null;
                 }
-                catch
-                {
-                }
+                catch { }
             }
             _quartzVideo = null;
         }

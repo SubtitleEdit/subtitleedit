@@ -17,9 +17,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".ssa"; }
         }
 
+        public const string NameOfFormat = "Sub Station Alpha";
+
         public override string Name
         {
-            get { return "Sub Station Alpha"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -293,31 +295,6 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
             }
         }
 
-        private static string FormatTag(ref string text, int start, string fontTag, string tag, string endSign, string ssaTagName, string endSsaTag)
-        {
-            if (fontTag.Contains(tag))
-            {
-                int fontStart = fontTag.IndexOf(tag, StringComparison.Ordinal);
-                int fontEnd = fontTag.IndexOf(endSign, fontStart + tag.Length, StringComparison.Ordinal);
-                if (fontEnd > 0)
-                {
-                    string subTag = fontTag.Substring(fontStart + tag.Length, fontEnd - (fontStart + tag.Length));
-                    if (tag.Contains("color"))
-                    {
-                        subTag = subTag.Replace("#", string.Empty);
-
-                        // switch from rrggbb to bbggrr
-                        if (subTag.Length >= 6)
-                            subTag = subTag.Remove(subTag.Length - 6) + subTag.Substring(subTag.Length - 2, 2) + subTag.Substring(subTag.Length - 4, 2) + subTag.Substring(subTag.Length - 6, 2);
-                    }
-                    fontTag = fontTag.Remove(fontStart, fontEnd - fontStart + 1);
-                    if (start < text.Length)
-                        text = text.Insert(start, @"{\" + ssaTagName + subTag + endSsaTag);
-                }
-            }
-            return fontTag;
-        }
-
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             _errorCount = 0;
@@ -386,9 +363,10 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
                         string name = string.Empty;
 
                         string[] splittedLine;
-
                         if (s.StartsWith("dialog:", StringComparison.Ordinal))
-                            splittedLine = line.Substring(10).Split(',');
+                            splittedLine = line.Remove(0, 7).Split(',');
+                        else if (s.StartsWith("dialogue:", StringComparison.Ordinal))
+                            splittedLine = line.Remove(0, 9).Split(',');
                         else
                             splittedLine = line.Split(',');
 
@@ -414,11 +392,13 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
                         try
                         {
-                            var p = new Paragraph();
+                            var p = new Paragraph
+                            {
+                                StartTime = GetTimeCodeFromString(start),
+                                EndTime = GetTimeCodeFromString(end),
+                                Text = AdvancedSubStationAlpha.GetFormattedText(text)
+                            };
 
-                            p.StartTime = GetTimeCodeFromString(start);
-                            p.EndTime = GetTimeCodeFromString(end);
-                            p.Text = AdvancedSubStationAlpha.GetFormattedText(text);
                             if (!string.IsNullOrEmpty(style))
                                 p.Extra = style;
                             if (!string.IsNullOrEmpty(effect))
@@ -456,7 +436,7 @@ Format: Marked, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
         public override void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
         {
-            if (newFormat != null && newFormat.Name == new AdvancedSubStationAlpha().Name)
+            if (newFormat != null && newFormat.Name == AdvancedSubStationAlpha.NameOfFormat)
             {
                 // do we need any conversion?
             }

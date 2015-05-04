@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Xml;
@@ -56,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.Attributes.Append(duration);
 
                 XmlNode text = xml.CreateElement("Text");
-                text.InnerText = Utilities.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\\n");
+                text.InnerText = HtmlUtil.RemoveHtmlTags(p.Text).Replace(Environment.NewLine, "\\n");
                 paragraph.AppendChild(text);
 
                 xml.DocumentElement.AppendChild(paragraph);

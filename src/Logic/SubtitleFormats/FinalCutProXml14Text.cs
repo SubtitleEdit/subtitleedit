@@ -1,3 +1,4 @@
+﻿using Nikse.SubtitleEdit.Core;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -82,7 +83,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 XmlNode video = xml.CreateElement("video");
                 var trimmedTitle = new StringBuilder();
-                foreach (var ch in Utilities.RemoveHtmlTags(p.Text, true))
+                foreach (var ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                 {
                     if ("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".Contains(ch.ToString(CultureInfo.InvariantCulture)))
                         trimmedTitle.Append(ch.ToString(CultureInfo.InvariantCulture));
@@ -107,7 +108,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     generatorNode.Attributes["start"].Value = Convert.ToInt64(p.StartTime.TotalSeconds * 2400000) + "/2400000s";
 
                 XmlNode param = video.SelectSingleNode("title/text/text-style");
-                param.InnerText = Utilities.RemoveHtmlTags(p.Text);
+                param.InnerText = HtmlUtil.RemoveHtmlTags(p.Text);
 
                 videoNode.AppendChild(generatorNode);
                 number++;

@@ -219,7 +219,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     // remove styles for display text (except italic)
                     string text = RemoveSubStationAlphaFormatting(p.Text);
 
-                    string[] lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = text.SplitToLines();
                     int vPos = 1 + lines.Length * 7;
                     int vPosFactor = (int)Math.Round(fontSize / 7.4);
                     if (alignVTop)
@@ -304,7 +304,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         i += 7;
                                     }
 
-                                    fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                    fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
                                     txt = new StringBuilder();
                                 }
@@ -347,7 +347,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                         i += 4;
                                     }
 
-                                    fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                    fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                     html.Append(fontNode.OuterXml);
                                     txt = new StringBuilder();
                                 }
@@ -378,7 +378,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                     fontNode.Attributes.Append(italic);
                                 }
 
-                                fontNode.InnerText = Utilities.RemoveHtmlTags(txt.ToString());
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(txt.ToString());
                                 html.Append(fontNode.OuterXml);
                             }
                             else if (html.Length > 0 && html.ToString().StartsWith("<dcst:Font "))
@@ -412,7 +412,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                                 italic.InnerText = "yes";
                                 fontNode.Attributes.Append(italic);
 
-                                fontNode.InnerText = Utilities.RemoveHtmlTags(line);
+                                fontNode.InnerText = HtmlUtil.RemoveHtmlTags(line);
                                 html.Append(fontNode.OuterXml);
                             }
                         }

@@ -28,44 +28,52 @@ namespace Nikse.SubtitleEdit.Logic
             OriginalText = text;
 
             Pre = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[0]))
+            if (text.Length > 0 && ("<{" + stripStartCharacters).Contains(text[0]))//!Utilities.AllLettersAndNumbers.Contains(text[0]))
             {
-                for (int i = 0; i < 5; i++)
+                int beginLength;
+                do
                 {
+                    beginLength = text.Length;
+
                     while (text.Length > 0 && stripStartCharacters.Contains(text[0]))
                     {
                         Pre += text[0];
-                        text = text.Substring(1);
+                        text = text.Remove(0, 1);
                     }
 
                     // ASS/SSA codes like {\an9}
-
-                    if (text.StartsWith("{\\", StringComparison.Ordinal))
+                    int endIndex = text.IndexOf('}');
+                    if (endIndex > 0 && text.StartsWith("{\\", StringComparison.Ordinal))
                     {
-                        int endIndex = text.IndexOf('}');
-                        if (endIndex > 0 && (!text.Contains('{') || text.IndexOf('{') > endIndex))
+                        int nextStartIndex = text.IndexOf('{', 2);
+                        if (nextStartIndex == -1 || nextStartIndex > endIndex)
                         {
-                            int index = text.IndexOf('}') + 1;
-                            Pre += text.Substring(0, index);
-                            text = text.Substring(index);
+                            endIndex++;
+                            Pre += text.Substring(0, endIndex);
+                            text = text.Remove(0, endIndex);
                         }
                     }
 
                     // tags like <i> or <font face="Segoe Print" color="#ff0000">
-                    if (text.StartsWith('<') && text.IndexOf('>') < (text.Length - 7))
+                    endIndex = text.IndexOf('>');
+                    if (text.StartsWith('<') && endIndex >= 2)
                     {
-                        int index = text.IndexOf('>') + 1;
-                        Pre += text.Substring(0, index);
-                        text = text.Substring(index);
+                        endIndex++;
+                        Pre += text.Substring(0, endIndex);
+                        text = text.Remove(0, endIndex);
                     }
                 }
+                while (text.Length < beginLength);
             }
 
             Post = string.Empty;
-            if (text.Length > 0 && !Utilities.AllLettersAndNumbers.Contains(text[text.Length - 1]))
+            if (text.Length > 0 && (">" + stripEndCharacters).Contains(text[text.Length - 1]))
             {
-                for (int i = 0; i < 5; i++)
+                int beginLength;
+                do
                 {
+                    beginLength = text.Length;
+
                     while (text.Length > 0 && stripEndCharacters.Contains(text[text.Length - 1]))
                     {
                         Post = text[text.Length - 1] + Post;
@@ -91,6 +99,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                     }
                 }
+                while (text.Length < beginLength);
             }
 
             StrippedText = text;
@@ -128,6 +137,9 @@ namespace Nikse.SubtitleEdit.Logic
                     bool startOk = (start == 0) || (lower[start - 1] == ' ') || (lower[start - 1] == '-') ||
                                    (lower[start - 1] == '"') || (lower[start - 1] == '\'') || (lower[start - 1] == '>') ||
                                    Environment.NewLine.EndsWith(lower[start - 1]);
+
+                    if (startOk && string.CompareOrdinal(name, "Don") == 0 && lower.Substring(start).StartsWith("don't"))
+                        startOk = false;
 
                     if (startOk)
                     {
@@ -176,7 +188,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             if (checkLastLine)
             {
-                string s = Utilities.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
+                string s = HtmlUtil.RemoveHtmlTags(lastLine).TrimEnd().TrimEnd('\"').TrimEnd();
 
                 bool startWithUppercase = string.IsNullOrEmpty(s) ||
                                           s.EndsWith('.') ||
@@ -202,19 +214,10 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (makeUppercaseAfterBreak &&
-                (StrippedText.Contains('.') ||
-                StrippedText.Contains('!') ||
-                StrippedText.Contains('?') ||
-                StrippedText.Contains(':') ||
-                StrippedText.Contains(';') ||
-                StrippedText.Contains(')') ||
-                StrippedText.Contains(']') ||
-                StrippedText.Contains('}') ||
-                StrippedText.Contains('(') ||
-                StrippedText.Contains('[') ||
-                StrippedText.Contains('{')))
+            if (makeUppercaseAfterBreak && StrippedText.IndexOfAny(new[] { '.', '!', '?', ':', ';', ')', ']', '}', '(', '[', '{' }) >= 0)
             {
+                const string breakAfterChars = @".!?:;)]}([{";
+
                 var sb = new StringBuilder();
                 bool lastWasBreak = false;
                 for (int i = 0; i < StrippedText.Length; i++)
@@ -241,7 +244,7 @@ namespace Nikse.SubtitleEdit.Logic
                         }
                         else
                         {
-                            if (@".!?:;)]}([{".Contains(s))
+                            if (breakAfterChars.Contains(s))
                             {
                                 sb.Append(s);
                             }
@@ -255,11 +258,12 @@ namespace Nikse.SubtitleEdit.Logic
                     else
                     {
                         sb.Append(s);
-                        if (@".!?:;)]}([{".Contains(s))
+                        if (breakAfterChars.Contains(s))
                         {
-                            if (s == ']' && sb.ToString().IndexOf('[') > 1)
+                            var idx = sb.ToString().IndexOf('[');
+                            if (s == ']' && idx > 1)
                             { // I [Motor roaring] love you!
-                                string temp = sb.ToString().Substring(0, sb.ToString().IndexOf('[') - 1).Trim();
+                                string temp = sb.ToString(0, idx - 1).Trim();
                                 if (temp.Length > 0 && !Utilities.LowercaseLetters.Contains(temp[temp.Length - 1]))
                                     lastWasBreak = true;
                             }

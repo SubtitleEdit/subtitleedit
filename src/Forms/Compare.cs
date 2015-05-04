@@ -30,12 +30,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonNextDifference.Text = Configuration.Settings.Language.CompareSubtitles.NextDifference;
             checkBoxShowOnlyDifferences.Text = Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences;
             checkBoxIgnoreLineBreaks.Text = Configuration.Settings.Language.CompareSubtitles.IgnoreLineBreaks;
-            checkBoxIgnoreLineBreaks.Visible = !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.ShowOnlyDifferences); // TODO: Remove in SE 3.4
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText))
-                checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
-            else
-                checkBoxOnlyListDifferencesInText.Visible = false;
+            checkBoxOnlyListDifferencesInText.Text = Configuration.Settings.Language.CompareSubtitles.OnlyLookForDifferencesInText;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            copyTextToolStripMenuItem.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
+            copyTextToolStripMenuItem1.Text = Configuration.Settings.Language.Main.Menu.ContextMenu.Copy;
             subtitleListView1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             subtitleListView2.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);
@@ -45,8 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
+            var graphics = CreateGraphics();
+            var textSize = graphics.MeasureString(buttonOK.Text, Font);
             if (textSize.Height > buttonOK.Height - 4)
             {
                 subtitleListView1.InitializeTimestampColumnWidths(this);
@@ -136,7 +134,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cavena890.IsMine(null, openFileDialog1.FileName))
                     {
                         cavena890.LoadSubtitle(_subtitle1, null, openFileDialog1.FileName);
-                        format = cavena890;
                     }
                 }
                 subtitleListView1.Fill(_subtitle1);
@@ -179,7 +176,6 @@ namespace Nikse.SubtitleEdit.Forms
                     if (cavena890.IsMine(null, openFileDialog1.FileName))
                     {
                         cavena890.LoadSubtitle(_subtitle2, null, openFileDialog1.FileName);
-                        format = cavena890;
                     }
                 }
 
@@ -227,7 +223,7 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
                                     break;
                                 }
-                                else if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
+                                if (GetColumnsEqualExceptNumber(p1, sub2.GetParagraphOrDefault(index + i)) > 1)
                                 {
                                     for (int j = 0; j < i; j++)
                                     {
@@ -380,10 +376,10 @@ namespace Nikse.SubtitleEdit.Forms
             }
             else
             {
-                if (wordsChanged != totalWords && wordsChanged > 0 && !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged))
+                if (wordsChanged != totalWords && wordsChanged > 0)
                 {
                     string formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentChanged;
-                    if (GetBreakToLetter() && !string.IsNullOrEmpty(Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged))
+                    if (GetBreakToLetter())
                         formatString = Configuration.Settings.Language.CompareSubtitles.XNumberOfDifferenceAndPercentLettersChanged;
 
                     labelStatus.Text = string.Format(formatString, _differences.Count, wordsChanged * 100 / totalWords);
@@ -735,7 +731,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void Timer1Tick(object sender, EventArgs e)
         {
             char activeListView;
-            var p = PointToClient(Control.MousePosition);
+            var p = PointToClient(MousePosition);
             if (p.X >= subtitleListView1.Left && p.X <= subtitleListView1.Left + subtitleListView1.Width + 2)
                 activeListView = 'L';
             else if (p.X >= subtitleListView2.Left && p.X <= subtitleListView2.Left + subtitleListView2.Width + 2)
@@ -892,6 +888,28 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_subtitle2.Paragraphs.Count > 0)
                     CompareSubtitles();
             }
+        }
+
+        private void copyTextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CopyTextToClipboard(richTextBox1);
+        }
+
+        private void copyTextToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            CopyTextToClipboard(richTextBox2);
+        }
+
+        private static void CopyTextToClipboard(RichTextBox sender)
+        {
+            if (sender.Text.Trim().Length == 0)
+                return;
+            if (sender.SelectedText.Length > 0)
+            {
+                Clipboard.SetText(sender.SelectedText);
+                return;
+            }
+            Clipboard.SetText(sender.Text);
         }
     }
 }

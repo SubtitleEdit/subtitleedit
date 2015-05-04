@@ -1,4 +1,5 @@
-﻿using Nikse.SubtitleEdit.Logic;
+﻿using Nikse.SubtitleEdit.Core;
+using Nikse.SubtitleEdit.Logic;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -46,13 +47,10 @@ namespace Nikse.SubtitleEdit.Forms
                 subtitle.Renumber(subtitle.Paragraphs[0].Number);
 
             Text = Configuration.Settings.Language.MergeDoubleLines.Title;
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.MergeDoubleLines.MaxMillisecondsBetweenLines)) //TODO: Remove in SE 3.3.4
-            {
-                labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergeDoubleLines.MaxMillisecondsBetweenLines;
-                checkBoxIncludeIncrementing.Text = Configuration.Settings.Language.MergeDoubleLines.IncludeIncrementing;
-                numericUpDownMaxMillisecondsBetweenLines.Left = labelMaxMillisecondsBetweenLines.Left + labelMaxMillisecondsBetweenLines.Width + 3;
-                checkBoxIncludeIncrementing.Left = numericUpDownMaxMillisecondsBetweenLines.Left + numericUpDownMaxMillisecondsBetweenLines.Width + 10;
-            }
+            labelMaxMillisecondsBetweenLines.Text = Configuration.Settings.Language.MergeDoubleLines.MaxMillisecondsBetweenLines;
+            checkBoxIncludeIncrementing.Text = Configuration.Settings.Language.MergeDoubleLines.IncludeIncrementing;
+            numericUpDownMaxMillisecondsBetweenLines.Left = labelMaxMillisecondsBetweenLines.Left + labelMaxMillisecondsBetweenLines.Width + 3;
+            checkBoxIncludeIncrementing.Left = numericUpDownMaxMillisecondsBetweenLines.Left + numericUpDownMaxMillisecondsBetweenLines.Width + 10;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
@@ -229,8 +227,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (p.Text != null && next.Text != null)
             {
-                string s = Utilities.RemoveHtmlTags(p.Text.Trim());
-                string s2 = Utilities.RemoveHtmlTags(next.Text.Trim());
+                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+                string s2 = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
                 return s == s2;
             }
             return false;
@@ -246,8 +244,8 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (p.Text != null && next.Text != null)
             {
-                string s = Utilities.RemoveHtmlTags(p.Text.Trim());
-                string s2 = Utilities.RemoveHtmlTags(next.Text.Trim());
+                string s = HtmlUtil.RemoveHtmlTags(p.Text.Trim());
+                string s2 = HtmlUtil.RemoveHtmlTags(next.Text.Trim());
                 if (!string.IsNullOrEmpty(s) && s2.Length > 0 && s2.StartsWith(s))
                     return true;
             }

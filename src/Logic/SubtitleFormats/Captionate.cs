@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -13,9 +14,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".xml"; }
         }
 
+        public const string NameOfFormat = "Captionate";
+
         public override string Name
         {
-            get { return "Captionate"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -87,7 +90,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 paragraph.AppendChild(tracks);
 
                 XmlNode track0 = xml.CreateElement("track0");
-                track0.InnerText = Utilities.RemoveHtmlTags(p.Text, true);
+                track0.InnerText = HtmlUtil.RemoveHtmlTags(p.Text, true);
                 track0.InnerXml = track0.InnerXml.Replace(Environment.NewLine, "<br />");
                 tracks.AppendChild(track0);
             }
@@ -143,7 +146,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (node.SelectSingleNode("tracks/track0") != null)
                         {
                             string text = node.SelectSingleNode("tracks/track0").InnerText;
-                            text = Utilities.RemoveHtmlTags(text);
+                            text = HtmlUtil.RemoveHtmlTags(text);
                             text = text.Replace("<br>", Environment.NewLine).Replace("<br />", Environment.NewLine).Replace("<BR>", Environment.NewLine);
                             p = new Paragraph(text, startMilliseconds, startMilliseconds + 3000);
                             if (!string.IsNullOrWhiteSpace(text))

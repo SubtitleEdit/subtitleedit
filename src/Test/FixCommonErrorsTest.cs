@@ -6,6 +6,7 @@ using Nikse.SubtitleEdit.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Forms;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
+using Nikse.SubtitleEdit.Core;
 
 namespace Test
 {
@@ -205,6 +206,23 @@ namespace Test
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, source);
             }
         }
+
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void MergeShortLinesHearingImpaired()
+        {
+            string input = "[engine roaring]" + Environment.NewLine + "[cluck]";
+            string input2 = "<i>engine roaring</i>" + Environment.NewLine + "cluck";
+            string expected = input;
+            string expected2 = input2;
+
+            var result = FixCommonErrorsHelper.FixShortLines(input);
+            var result2 = FixCommonErrorsHelper.FixShortLines(input2);
+            Assert.AreEqual(result, expected); Assert.AreEqual(result2, expected2.Replace(Environment.NewLine, " "));
+        }
+
+
 
         #endregion Merge short lines
 
@@ -707,7 +725,6 @@ namespace Test
         #region Fix unneeded spaces
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpaces1()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -718,16 +735,19 @@ namespace Test
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces2()
         {
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, " To be, or not to be!");
                 target.FixUnneededSpaces();
-                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, " To be, or not to be!");
+                var expected = "To be, or not to be!";
+                Assert.AreEqual(expected, target.Subtitle.Paragraphs[0].Text);
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces3()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -738,6 +758,7 @@ namespace Test
             }
         }
 
+        [TestMethod]
         public void FixUnneededSpaces4()
         {
             using (var target = GetFixCommonErrorsLib())
@@ -761,7 +782,48 @@ namespace Test
             }
         }
 
+        [TestMethod]
+        public void FixUneededSpaces6()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                const string expected = "Foo bar.";
+                InitializeFixCommonErrorsLine(target, "Foo \t\tbar.");
+                target.FixUnneededSpaces();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, expected);
+            }
+        }
+
         #endregion Fix unneeded spaces
+
+        #region Fix EmptyLines
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEmptyLinesTest1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<i>\r\nHello world!\r\n</i>");
+                target.FixEmptyLines();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>Hello world!</i>");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEmptyLinesTest2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                InitializeFixCommonErrorsLine(target, "<font color=\"#000000\">\r\nHello world!\r\n</font>");
+                target.FixEmptyLines();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color=\"#000000\">Hello world!</font>");
+            }
+        }
+
+
+        #endregion
 
         #region Start with uppercase after paragraph
 
@@ -1149,6 +1211,77 @@ namespace Test
             Assert.AreEqual(result, "<i>Kurt: true but bad.</i>");
         }
 
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartItalic5()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("WOMAN 2: <i>...24 hours a day at BabyC.</i>");
+            Assert.AreEqual(result, "WOMAN 2: <i>24 hours a day at BabyC.</i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartFont1()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<font color=\"#000000\">... true but bad.</font>");
+            Assert.AreEqual(result, "<font color=\"#000000\">true but bad.</font>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartFont2()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<font color=\"#000000\"><i>Kurt: ... true but bad.</i></font>");
+            Assert.AreEqual(result, "<font color=\"#000000\"><i>Kurt: true but bad.</i></font>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartFont3()
+        {
+            var result = FixCommonErrorsHelper.FixEllipsesStartHelper("<i><font color=\"#000000\">Kurt: ...true but bad.</font></i>");
+            Assert.AreEqual(result, "<i><font color=\"#000000\">Kurt: true but bad.</font></i>");
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartQuote()
+        {
+            var actual = "\"...Foobar\"";
+            const string expected = "\"Foobar\"";
+            actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartQuote2()
+        {
+            var actual = "\"... Foobar\"";
+            const string expected = "\"Foobar\"";
+            actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartQuote3()
+        {
+            var actual = "\" . . . Foobar\"";
+            const string expected = "\"Foobar\"";
+            actual = FixCommonErrorsHelper.FixEllipsesStartHelper(actual);
+            Assert.AreEqual(actual, expected);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixEllipsesStartDontChange()
+        {
+            const string input = "- I...";
+            string actual = FixCommonErrorsHelper.FixEllipsesStartHelper(input);
+            Assert.AreEqual(actual, input);
+        }
+
         #endregion Ellipses start
 
         #region FixDoubleGreater
@@ -1157,20 +1290,20 @@ namespace Test
         [DeploymentItem("SubtitleEdit.exe")]
         public void FixDoubleGreaterThanTest2()
         {
-            string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
-            string input2 = "<b>>>Hello world!</b>\r\n<i>>>Hello</i>";
-            string input3 = "<u>>>Hello world!</u>\r\n<b>>>Hello</b>";
-            string input4 = "<font color=\"#008040\">>>Hello world!</font>\r\n<font color=\"#008040\">>>Hello</font>";
+            const string input1 = "<i>>>Hello world!</i>\r\n<i>>>Hello</i>";
+            const string input2 = "<b>>>Hello world!</b>\r\n<i>>>Hello</i>";
+            const string input3 = "<u>>>Hello world!</u>\r\n<b>>>Hello</b>";
+            const string input4 = "<font color=\"#008040\">>>Hello world!</font>\r\n<font color=\"#008040\">>>Hello</font>";
 
             const string expected1 = "<i>Hello world!</i>\r\n<i>Hello</i>";
             const string expected2 = "<b>Hello world!</b>\r\n<i>Hello</i>";
             const string expected3 = "<u>Hello world!</u>\r\n<b>Hello</b>";
             const string expected4 = "<font color=\"#008040\">Hello world!</font>\r\n<font color=\"#008040\">Hello</font>";
 
-            string[] lines1 = input1.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines2 = input2.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines3 = input3.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-            string[] lines4 = input4.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines1 = input1.SplitToLines();
+            var lines2 = input2.SplitToLines();
+            var lines3 = input3.SplitToLines();
+            var lines4 = input4.SplitToLines();
 
             for (int i = 0; i < lines1.Length; i++)
             {
@@ -1255,5 +1388,34 @@ namespace Test
 
         #endregion Fix dialogs on one line
 
+        #region FixDoubleDash
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDoubleDashTest1()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                // <font color="#000000"> and <font>
+                InitializeFixCommonErrorsLine(target, "<font color=\"#000000\">-- Mm-hmm.</font>");
+                target.FixDoubleDash();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color=\"#000000\">...Mm-hmm.</font>");
+            }
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixDoubleDashTest2()
+        {
+            using (var target = GetFixCommonErrorsLib())
+            {
+                // <font color="#000000"> and <font>
+                InitializeFixCommonErrorsLine(target, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">-- foobar</font>");
+                target.FixDoubleDash();
+                Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<b>Mm-hmm.</b>\r\n<font color=\"#000000\">...foobar</font>");
+            }
+        }
+
+        #endregion
     }
 }

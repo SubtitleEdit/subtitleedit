@@ -1,7 +1,9 @@
-﻿using Nikse.SubtitleEdit.Core;
+﻿using System.Windows.Forms.VisualStyles;
+using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.BluRaySup;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,18 +42,18 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                     Console.WriteLine();
                     Console.WriteLine("- Supported formats (input only):");
-                    Console.WriteLine("    " + new CapMakerPlus().FriendlyName);
-                    Console.WriteLine("    " + new Captionate().FriendlyName);
-                    Console.WriteLine("    " + new Cavena890().FriendlyName);
-                    Console.WriteLine("    " + new CheetahCaption().FriendlyName);
-                    Console.WriteLine("    " + new Chk().FriendlyName);
+                    Console.WriteLine("    " + CapMakerPlus.NameOfFormat);
+                    Console.WriteLine("    " + Captionate.NameOfFormat);
+                    Console.WriteLine("    " + Cavena890.NameOfFormat);
+                    Console.WriteLine("    " + CheetahCaption.NameOfFormat);
+                    Console.WriteLine("    " + Chk.NameOfFormat);
                     Console.WriteLine("    Matroska (.mkv)");
                     Console.WriteLine("    Matroska subtitle (.mks)");
-                    Console.WriteLine("    " + new NciCaption().FriendlyName);
-                    Console.WriteLine("    " + new AvidStl().FriendlyName);
-                    Console.WriteLine("    " + new Pac().FriendlyName);
-                    Console.WriteLine("    " + new Spt().FriendlyName);
-                    Console.WriteLine("    " + new Ultech130().FriendlyName);
+                    Console.WriteLine("    " + NciCaption.NameOfFormat);
+                    Console.WriteLine("    " + AvidStl.NameOfFormat);
+                    Console.WriteLine("    " + Pac.NameOfFormat);
+                    Console.WriteLine("    " + Spt.NameOfFormat);
+                    Console.WriteLine("    " + Ultech130.NameOfFormat);
                 }
 
                 Console.WriteLine();
@@ -66,19 +68,11 @@ namespace Nikse.SubtitleEdit.Logic
             int errors = 0;
             try
             {
-                int max = args.Length;
-
                 string pattern = args[2];
                 string toFormat = args[3];
-                string offset = string.Empty;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/offset:", StringComparison.OrdinalIgnoreCase))
-                        offset = args[idx].ToLower();
+                string offset = GetArgument(args, "/offset:");
 
-                string fps = string.Empty;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/fps:", StringComparison.OrdinalIgnoreCase))
-                        fps = args[idx].ToLower();
+                var fps = GetArgument(args, "/fps:");
                 if (fps.Length > 6)
                 {
                     fps = fps.Remove(0, 5).Replace(",", ".").Trim();
@@ -89,11 +83,8 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                string targetFps = string.Empty;
+                var targetFps = GetArgument(args, "/targetfps:");
                 double? targetFrameRate = null;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/targetfps:", StringComparison.OrdinalIgnoreCase))
-                        targetFps = args[idx].ToLower();
                 if (targetFps.Length > 12)
                 {
                     targetFps = targetFps.Remove(0, 11).Replace(",", ".").Trim();
@@ -104,10 +95,7 @@ namespace Nikse.SubtitleEdit.Logic
                     }
                 }
 
-                string targetEncodingName = string.Empty;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/encoding:", StringComparison.OrdinalIgnoreCase))
-                        targetEncodingName = args[idx].ToLower();
+                var targetEncodingName = GetArgument(args, "/encoding:"); ;
                 var targetEncoding = Encoding.UTF8;
                 try
                 {
@@ -124,10 +112,7 @@ namespace Nikse.SubtitleEdit.Logic
                     targetEncoding = Encoding.UTF8;
                 }
 
-                string outputFolder = string.Empty;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/outputfolder:", StringComparison.OrdinalIgnoreCase))
-                        outputFolder = args[idx].ToLower();
+                var outputFolder = GetArgument(args, "/outputfolder:"); ;
                 if (outputFolder.Length > "/outputFolder:".Length)
                 {
                     outputFolder = outputFolder.Remove(0, "/outputFolder:".Length);
@@ -135,10 +120,7 @@ namespace Nikse.SubtitleEdit.Logic
                         outputFolder = string.Empty;
                 }
 
-                string inputFolder = Directory.GetCurrentDirectory();
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/inputFolder:", StringComparison.OrdinalIgnoreCase))
-                        inputFolder = args[idx].ToLower();
+                var inputFolder = GetArgument(args, "/inputFolder:", Directory.GetCurrentDirectory());
                 if (inputFolder.Length > "/inputFolder:".Length)
                 {
                     inputFolder = inputFolder.Remove(0, "/inputFolder:".Length);
@@ -146,17 +128,27 @@ namespace Nikse.SubtitleEdit.Logic
                         inputFolder = Directory.GetCurrentDirectory();
                 }
 
-                string pacCodePage = string.Empty;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].StartsWith("/pac-codepage:", StringComparison.OrdinalIgnoreCase))
-                        pacCodePage = args[idx].ToLower();
+                var pacCodePage = GetArgument(args, "/pac-codepage:");
                 if (pacCodePage.Length > "/pac-codepage:".Length)
+                {
                     pacCodePage = pacCodePage.Remove(0, "/pac-codepage:".Length);
+                    if (string.Compare("Latin", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "0";
+                    else if (string.Compare("Greek", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "1";
+                    else if (string.Compare("Czech", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "2";
+                    else if (string.Compare("Arabic", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "3";
+                    else if (string.Compare("Hebrew", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "4";
+                    else if (string.Compare("Encoding", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "5";
+                    else if (string.Compare("Cyrillic", pacCodePage, StringComparison.OrdinalIgnoreCase) == 0)
+                        pacCodePage = "6";
+                }
 
-                bool overwrite = false;
-                for (int idx = 4; idx < max; idx++)
-                    if (args.Length > idx && args[idx].Equals("/overwrite", StringComparison.OrdinalIgnoreCase))
-                        overwrite = true;
+                bool overwrite = GetArgument(args, "/overwrite", string.Empty).Equals("/overwrite");
 
                 string[] files;
                 string inputDirectory = Directory.GetCurrentDirectory();
@@ -187,7 +179,9 @@ namespace Nikse.SubtitleEdit.Logic
                     count++;
 
                     if (!string.IsNullOrEmpty(inputFolder) && File.Exists(Path.Combine(inputFolder, fileName)))
+                    {
                         fileName = Path.Combine(inputFolder, fileName);
+                    }
 
                     if (File.Exists(fileName))
                     {
@@ -224,8 +218,8 @@ namespace Nikse.SubtitleEdit.Logic
 
                                                 if (format.GetType() == typeof(AdvancedSubStationAlpha) || format.GetType() == typeof(SubStationAlpha))
                                                 {
-                                                    if (toFormat.ToLower() != new AdvancedSubStationAlpha().Name.ToLower().Replace(" ", string.Empty) &&
-                                                        toFormat.ToLower() != new SubStationAlpha().Name.ToLower().Replace(" ", string.Empty))
+                                                    if (toFormat.ToLower() != AdvancedSubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty) &&
+                                                        toFormat.ToLower() != SubStationAlpha.NameOfFormat.ToLower().Replace(" ", string.Empty))
                                                     {
 
                                                         foreach (SubtitleFormat sf in formats)
@@ -249,6 +243,19 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
 
+                        if (FileUtil.IsBluRaySup(fileName))
+                        {
+                            Console.WriteLine("Found Blu-Ray subtitle format");
+                            ConvertBluRaySubtitle(fileName, toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate);
+                            done = true;
+                        }
+                        if (!done && FileUtil.IsVobSub(fileName))
+                        {
+                            Console.WriteLine("Found VobSub subtitle format");
+                            ConvertVobSubSubtitle(fileName, toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, overwrite, pacCodePage, targetFrameRate);
+                            done = true;
+                        }
+
                         var fi = new FileInfo(fileName);
                         if (fi.Length < 10 * 1024 * 1024 && !done) // max 10 mb
                         {
@@ -270,6 +277,12 @@ namespace Nikse.SubtitleEdit.Logic
                                 if (pac.IsMine(null, fileName))
                                 {
                                     pac.BatchMode = true;
+
+                                    if (!string.IsNullOrEmpty(pacCodePage) && Utilities.IsInteger(pacCodePage))
+                                        pac.CodePage = int.Parse(pacCodePage);
+                                    else
+                                        pac.CodePage = -1;
+
                                     pac.LoadSubtitle(sub, null, fileName);
                                     format = pac;
                                 }
@@ -424,13 +437,86 @@ namespace Nikse.SubtitleEdit.Logic
                 Environment.Exit(1);
         }
 
+        private static void ConvertBluRaySubtitle(string fileName, string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, bool overwrite, string pacCodePage, double? targetFrameRate)
+        {
+            SubtitleFormat format = Utilities.GetSubtitleFormatByFriendlyName(toFormat) ?? new SubRip();
+
+            var log = new StringBuilder();
+            Console.WriteLine("Loading subtitles from file \"{0}\"", fileName);
+            var bluRaySubtitles = BluRaySupParser.ParseBluRaySup(fileName, log);
+            Subtitle sub;
+            using (var vobSubOcr = new VobSubOcr())
+            {
+                Console.WriteLine("Using OCR to extract subtitles");
+                vobSubOcr.FileName = Path.GetFileName(fileName);
+                vobSubOcr.InitializeBatch(bluRaySubtitles, Configuration.Settings.VobSubOcr, fileName);
+                sub = vobSubOcr.SubtitleFromOcr;
+                Console.WriteLine("Extracted subtitles from file \"{0}\"", fileName);
+            }
+
+            if (sub != null)
+            {
+                Console.WriteLine("Converted subtitle");
+                BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate);
+            }
+        }
+
+        private static void ConvertVobSubSubtitle(string fileName, string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, bool overwrite, string pacCodePage, double? targetFrameRate)
+        {
+            var format = Utilities.GetSubtitleFormatByFriendlyName(toFormat) ?? new SubRip();
+
+            Console.WriteLine("Loading subtitles from file \"{0}\"", fileName);
+            Subtitle sub;
+            using (var vobSubOcr = new VobSubOcr())
+            {
+                Console.WriteLine("Using OCR to extract subtitles");
+                vobSubOcr.InitializeBatch(fileName, Configuration.Settings.VobSubOcr);
+                sub = vobSubOcr.SubtitleFromOcr;
+                Console.WriteLine("Extracted subtitles from file \"{0}\"", fileName);
+            }
+
+            if (sub != null)
+            {
+                Console.WriteLine("Converted subtitle");
+                BatchConvertSave(toFormat, offset, targetEncoding, outputFolder, count, ref converted, ref errors, formats, fileName, sub, format, overwrite, pacCodePage, targetFrameRate);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets a argument from the command line
+        /// </summary>
+        /// <param name="commandLineArguments">All arguments from the command line</param>
+        /// <param name="requestedArgumentName">The name of the argument that is requested</param>
+        private static string GetArgument(string[] commandLineArguments, string requestedArgumentName)
+        {
+            return GetArgument(commandLineArguments, requestedArgumentName, string.Empty);
+        }
+
+        /// <summary>
+        /// Gets a argument from the command line
+        /// </summary>
+        /// <param name="commandLineArguments">All arguments from the command line</param>
+        /// <param name="requestedArgumentName">The name of the argument that is requested</param>
+        /// <param name="defaultValue">The default value, if the parameter could not be found</param>
+        private static string GetArgument(string[] commandLineArguments, string requestedArgumentName, string defaultValue)
+        {
+            var result = defaultValue;
+            for (int i = 4; i < commandLineArguments.Length; i++)
+            {
+                if (commandLineArguments.Length > i && commandLineArguments[i].StartsWith(requestedArgumentName, StringComparison.OrdinalIgnoreCase))
+                {
+                    result = commandLineArguments[i].ToLower();
+                }
+            }
+            return result;
+        }
+
         internal static bool BatchConvertSave(string toFormat, string offset, Encoding targetEncoding, string outputFolder, int count, ref int converted, ref int errors, IList<SubtitleFormat> formats, string fileName, Subtitle sub, SubtitleFormat format, bool overwrite, string pacCodePage, double? targetFrameRate)
         {
             double oldFrameRate = Configuration.Settings.General.CurrentFrameRate;
-
             try
             {
-
                 // adjust offset
                 if (!string.IsNullOrEmpty(offset) && (offset.StartsWith("/offset:") || offset.StartsWith("offset:")))
                 {
@@ -528,6 +614,7 @@ namespace Nikse.SubtitleEdit.Logic
                             }
                         }
                         Console.WriteLine(" done.");
+                        break;
                     }
                 }
                 if (!targetFormatFound)

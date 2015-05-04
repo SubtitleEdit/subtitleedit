@@ -66,6 +66,9 @@
             this.buttonChooseFolder = new System.Windows.Forms.Button();
             this.textBoxOutputFolder = new System.Windows.Forms.TextBox();
             this.groupBoxInput = new System.Windows.Forms.GroupBox();
+            this.textBoxFilter = new System.Windows.Forms.TextBox();
+            this.labelFilter = new System.Windows.Forms.Label();
+            this.comboBoxFilter = new System.Windows.Forms.ComboBox();
             this.checkBoxScanFolderRecursive = new System.Windows.Forms.CheckBox();
             this.buttonSearchFolder = new System.Windows.Forms.Button();
             this.buttonInputBrowse = new System.Windows.Forms.Button();
@@ -141,7 +144,7 @@
             // checkBoxSplitLongLines
             // 
             this.checkBoxSplitLongLines.AutoSize = true;
-            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(16, 145);
+            this.checkBoxSplitLongLines.Location = new System.Drawing.Point(15, 145);
             this.checkBoxSplitLongLines.Name = "checkBoxSplitLongLines";
             this.checkBoxSplitLongLines.Size = new System.Drawing.Size(93, 17);
             this.checkBoxSplitLongLines.TabIndex = 8;
@@ -162,9 +165,9 @@
             // checkBoxSetMinimumDisplayTimeBetweenSubs
             // 
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.AutoSize = true;
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(16, 191);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Location = new System.Drawing.Point(15, 191);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Name = "checkBoxSetMinimumDisplayTimeBetweenSubs";
-            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(190, 17);
+            this.checkBoxSetMinimumDisplayTimeBetweenSubs.Size = new System.Drawing.Size(208, 17);
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.TabIndex = 9;
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.Text = "Set min. milliseconds between subtitles";
             this.checkBoxSetMinimumDisplayTimeBetweenSubs.UseVisualStyleBackColor = true;
@@ -172,7 +175,7 @@
             // checkBoxAutoBalance
             // 
             this.checkBoxAutoBalance.AutoSize = true;
-            this.checkBoxAutoBalance.Location = new System.Drawing.Point(16, 168);
+            this.checkBoxAutoBalance.Location = new System.Drawing.Point(15, 168);
             this.checkBoxAutoBalance.Name = "checkBoxAutoBalance";
             this.checkBoxAutoBalance.Size = new System.Drawing.Size(113, 17);
             this.checkBoxAutoBalance.TabIndex = 8;
@@ -193,7 +196,7 @@
             // checkBoxMultipleReplace
             // 
             this.checkBoxMultipleReplace.AutoSize = true;
-            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(16, 122);
+            this.checkBoxMultipleReplace.Location = new System.Drawing.Point(15, 122);
             this.checkBoxMultipleReplace.Name = "checkBoxMultipleReplace";
             this.checkBoxMultipleReplace.Size = new System.Drawing.Size(100, 17);
             this.checkBoxMultipleReplace.TabIndex = 6;
@@ -203,7 +206,7 @@
             // checkBoxFixCommonErrors
             // 
             this.checkBoxFixCommonErrors.AutoSize = true;
-            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(16, 97);
+            this.checkBoxFixCommonErrors.Location = new System.Drawing.Point(15, 97);
             this.checkBoxFixCommonErrors.Name = "checkBoxFixCommonErrors";
             this.checkBoxFixCommonErrors.Size = new System.Drawing.Size(111, 17);
             this.checkBoxFixCommonErrors.TabIndex = 4;
@@ -318,14 +321,14 @@
             this.labelHourMinSecMilliSecond.AutoSize = true;
             this.labelHourMinSecMilliSecond.Location = new System.Drawing.Point(6, 20);
             this.labelHourMinSecMilliSecond.Name = "labelHourMinSecMilliSecond";
-            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(107, 13);
+            this.labelHourMinSecMilliSecond.Size = new System.Drawing.Size(90, 13);
             this.labelHourMinSecMilliSecond.TabIndex = 0;
             this.labelHourMinSecMilliSecond.Text = "Hours:min:sec.ms";
             // 
             // checkBoxFixCasing
             // 
             this.checkBoxFixCasing.AutoSize = true;
-            this.checkBoxFixCasing.Location = new System.Drawing.Point(16, 47);
+            this.checkBoxFixCasing.Location = new System.Drawing.Point(15, 47);
             this.checkBoxFixCasing.Name = "checkBoxFixCasing";
             this.checkBoxFixCasing.Size = new System.Drawing.Size(95, 17);
             this.checkBoxFixCasing.TabIndex = 1;
@@ -335,7 +338,7 @@
             // checkBoxRemoveTextForHI
             // 
             this.checkBoxRemoveTextForHI.AutoSize = true;
-            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(16, 72);
+            this.checkBoxRemoveTextForHI.Location = new System.Drawing.Point(15, 72);
             this.checkBoxRemoveTextForHI.Name = "checkBoxRemoveTextForHI";
             this.checkBoxRemoveTextForHI.Size = new System.Drawing.Size(115, 17);
             this.checkBoxRemoveTextForHI.TabIndex = 2;
@@ -345,7 +348,7 @@
             // checkBoxRemoveFormatting
             // 
             this.checkBoxRemoveFormatting.AutoSize = true;
-            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(16, 22);
+            this.checkBoxRemoveFormatting.Location = new System.Drawing.Point(15, 22);
             this.checkBoxRemoveFormatting.Name = "checkBoxRemoveFormatting";
             this.checkBoxRemoveFormatting.Size = new System.Drawing.Size(115, 17);
             this.checkBoxRemoveFormatting.TabIndex = 0;
@@ -413,7 +416,7 @@
             this.checkBoxOverwrite.AutoSize = true;
             this.checkBoxOverwrite.Location = new System.Drawing.Point(13, 97);
             this.checkBoxOverwrite.Name = "checkBoxOverwrite";
-            this.checkBoxOverwrite.Size = new System.Drawing.Size(130, 17);
+            this.checkBoxOverwrite.Size = new System.Drawing.Size(125, 17);
             this.checkBoxOverwrite.TabIndex = 5;
             this.checkBoxOverwrite.Text = "Overwrite exiting files";
             this.checkBoxOverwrite.UseVisualStyleBackColor = true;
@@ -486,6 +489,9 @@
             this.groupBoxInput.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBoxInput.Controls.Add(this.textBoxFilter);
+            this.groupBoxInput.Controls.Add(this.labelFilter);
+            this.groupBoxInput.Controls.Add(this.comboBoxFilter);
             this.groupBoxInput.Controls.Add(this.checkBoxScanFolderRecursive);
             this.groupBoxInput.Controls.Add(this.buttonSearchFolder);
             this.groupBoxInput.Controls.Add(this.buttonInputBrowse);
@@ -497,6 +503,40 @@
             this.groupBoxInput.TabIndex = 0;
             this.groupBoxInput.TabStop = false;
             this.groupBoxInput.Text = "Input";
+            // 
+            // textBoxFilter
+            // 
+            this.textBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.textBoxFilter.Location = new System.Drawing.Point(422, 269);
+            this.textBoxFilter.Name = "textBoxFilter";
+            this.textBoxFilter.Size = new System.Drawing.Size(158, 20);
+            this.textBoxFilter.TabIndex = 13;
+            // 
+            // labelFilter
+            // 
+            this.labelFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.labelFilter.AutoSize = true;
+            this.labelFilter.Location = new System.Drawing.Point(11, 272);
+            this.labelFilter.Name = "labelFilter";
+            this.labelFilter.Size = new System.Drawing.Size(29, 13);
+            this.labelFilter.TabIndex = 11;
+            this.labelFilter.Text = "Filter";
+            // 
+            // comboBoxFilter
+            // 
+            this.comboBoxFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.comboBoxFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxFilter.FormattingEnabled = true;
+            this.comboBoxFilter.Items.AddRange(new object[] {
+            "All files",
+            "SubRip .srt files without BOM header",
+            "Files with subtitle with more than two lines",
+            "Files that contains..."});
+            this.comboBoxFilter.Location = new System.Drawing.Point(81, 269);
+            this.comboBoxFilter.Name = "comboBoxFilter";
+            this.comboBoxFilter.Size = new System.Drawing.Size(335, 21);
+            this.comboBoxFilter.TabIndex = 12;
+            this.comboBoxFilter.SelectedIndexChanged += new System.EventHandler(this.comboBoxFilter_SelectedIndexChanged);
             // 
             // checkBoxScanFolderRecursive
             // 
@@ -558,7 +598,7 @@
             this.listViewInputFiles.HideSelection = false;
             this.listViewInputFiles.Location = new System.Drawing.Point(6, 41);
             this.listViewInputFiles.Name = "listViewInputFiles";
-            this.listViewInputFiles.Size = new System.Drawing.Size(978, 249);
+            this.listViewInputFiles.Size = new System.Drawing.Size(978, 222);
             this.listViewInputFiles.TabIndex = 2;
             this.listViewInputFiles.UseCompatibleStateImageBehavior = false;
             this.listViewInputFiles.View = System.Windows.Forms.View.Details;
@@ -722,6 +762,9 @@
         private System.Windows.Forms.CheckBox checkBoxScanFolderRecursive;
         private System.Windows.Forms.Button buttonRemoveTextForHiSettings;
         private System.Windows.Forms.CheckBox checkBoxSplitLongLines;
+        private System.Windows.Forms.Label labelFilter;
+        private System.Windows.Forms.ComboBox comboBoxFilter;
+        private System.Windows.Forms.TextBox textBoxFilter;
 
     }
 }

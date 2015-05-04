@@ -1,5 +1,6 @@
 ﻿using Nikse.SubtitleEdit.Logic;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -47,24 +48,18 @@ namespace Nikse.SubtitleEdit.Forms
             _encodeParamters = Configuration.Settings.General.VlcWaveTranscodeSettings;
         }
 
-        private void buttonRipWave_Click(object sender, EventArgs e)
+        public static Process GetCommandLineProcess(string inputVideoFile, int audioTrackNumber, string outWaveFile, string encodeParamters, out string encoderName)
         {
-            buttonRipWave.Enabled = false;
-            _cancel = false;
-            bool runningOnWindows = false;
-            SourceVideoFileName = labelVideoFileName.Text;
-            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
-            string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
-            //string parameters = "\"" + SourceVideoFileName + "\" -I dummy -vvv --no-sout-video --audio-track=" + _audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=2,ab=128,samplerate=24000}:std{access=file,mux=wav,dst=" + targetFile + "}\" vlc://quit";
+            encoderName = "VLC";
+            string parameters = "\"" + inputVideoFile + "\" -I dummy -vvv --no-sout-video --audio-track=" + audioTrackNumber + " --sout=\"#transcode{acodec=s16l,channels=1,ab=128}:std{access=file,mux=wav,dst=" + outWaveFile + "}\" vlc://quit";
             string exeFilePath;
             if (Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac())
             {
                 exeFilePath = "cvlc";
-                parameters = "-vvv --no-sout-video --audio-track=" + _audioTrackNumber + " --sout '#transcode{" + _encodeParamters + "}:std{mux=wav,access=file,dst=" + targetFile + "}' \"" + SourceVideoFileName + "\" vlc://quit";
+                parameters = "-vvv --no-sout-video --audio-track=" + audioTrackNumber + " --sout '#transcode{" + encodeParamters + "}:std{mux=wav,access=file,dst=" + outWaveFile + "}' \"" + inputVideoFile + "\" vlc://quit";
             }
             else // windows
             {
-                runningOnWindows = true;
                 exeFilePath = Logic.VideoPlayers.LibVlcDynamic.GetVlcPath("vlc.exe");
                 if (!File.Exists(exeFilePath))
                 {
@@ -74,24 +69,15 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-
-                        if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                            Environment.NewLine +
-                                            Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                           Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
-                        {
-                            Process.Start("http://www.videolan.org/");
-                        }
-                        buttonRipWave.Enabled = true;
-                        return;
+                        throw new DllNotFoundException("NO_VLC");
                     }
                 }
             }
 
-            labelInfo.Text = "VLC";
             if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
             {
-                const string FFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
+                encoderName = "FFMPEG";
+                const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
                 //-ar 44100 indicates the sampling frequency.
@@ -100,14 +86,40 @@ namespace Nikse.SubtitleEdit.Forms
                 //-ac 2 means 2 channels
 
                 exeFilePath = Configuration.Settings.General.FFmpegLocation;
-                parameters = string.Format(FFmpegWaveTranscodeSettings, SourceVideoFileName, targetFile);
-                labelInfo.Text = "FFmpeg";
+                parameters = string.Format(fFmpegWaveTranscodeSettings, inputVideoFile, outWaveFile);
             }
+            return new Process { StartInfo = new ProcessStartInfo(exeFilePath, parameters) { WindowStyle = ProcessWindowStyle.Hidden } };
+        }
+
+        private void buttonRipWave_Click(object sender, EventArgs e)
+        {
+            buttonRipWave.Enabled = false;
+            _cancel = false;
+            bool runningOnWindows = !(Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac());
+            SourceVideoFileName = labelVideoFileName.Text;
+            string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
 
             labelPleaseWait.Visible = true;
-            var process = new Process();
-            process.StartInfo = new ProcessStartInfo(exeFilePath, parameters);
-            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            Process process;
+            try
+            {
+                string encoderName;
+                process = GetCommandLineProcess(SourceVideoFileName, _audioTrackNumber, targetFile, _encodeParamters, out encoderName);
+                labelInfo.Text = encoderName;
+            }
+            catch (DllNotFoundException)
+            {
+                if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
+                                                           Environment.NewLine +
+                                                           Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                                          Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    Process.Start("http://www.videolan.org/");
+                }
+                buttonRipWave.Enabled = true;
+                return;
+            }
+
             process.Start();
             progressBar1.Style = ProgressBarStyle.Marquee;
             progressBar1.Visible = true;
@@ -181,7 +193,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 MessageBox.Show("Could not find extracted wave file! This feature requires VLC media player 1.1.x or newer (" + (IntPtr.Size * 8) + " -bit)." + Environment.NewLine
                                 + Environment.NewLine +
-                                "Command line: " + exeFilePath + " " + parameters);
+                                "Command line: " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
@@ -194,7 +206,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 MessageBox.Show("Sorry! VLC/FFmpeg was unable to extract audio to wave file via this command line:" + Environment.NewLine +
                                 Environment.NewLine +
-                                "Command line: " + exeFilePath + " " + parameters + Environment.NewLine +
+                                "Command line: " + process.StartInfo.FileName + " " + process.StartInfo.Arguments + Environment.NewLine +
                                 Environment.NewLine +
                                 "Note: Do check free disk space.");
                 labelPleaseWait.Visible = false;
@@ -211,14 +223,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ReadWaveFile(string targetFile, int delayInMilliseconds)
         {
+            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
+            Refresh();
+
             var waveFile = new WavePeakGenerator(targetFile);
 
-            int sampleRate = Configuration.Settings.VideoControls.WaveformMininumSampleRate; // Normally 128
+            int sampleRate = Configuration.Settings.VideoControls.WaveformMinimumSampleRate; // Normally 128
             while (waveFile.Header.SampleRate % sampleRate != 0 && sampleRate < 5000)
                 sampleRate++; // old sample-rate / new sample-rate must have rest = 0
 
-            labelProgress.Text = Configuration.Settings.Language.AddWaveform.GeneratingPeakFile;
-            Refresh();
             waveFile.GeneratePeakSamples(sampleRate, delayInMilliseconds); // samples per second - SampleRate
 
             if (Configuration.Settings.VideoControls.GenerateSpectrogram)
@@ -228,10 +241,10 @@ namespace Nikse.SubtitleEdit.Forms
                 Directory.CreateDirectory(_spectrogramDirectory);
                 SpectrogramBitmaps = waveFile.GenerateFourierData(256, _spectrogramDirectory, delayInMilliseconds); // image height = nfft / 2
             }
-            labelPleaseWait.Visible = false;
-
             WavePeak = waveFile;
             waveFile.Close();
+
+            labelPleaseWait.Visible = false;
         }
 
         private void AddWareForm_Shown(object sender, EventArgs e)
@@ -279,7 +292,7 @@ namespace Nikse.SubtitleEdit.Forms
                 { // Choose for number of audio tracks in mp4 files
                     try
                     {
-                        var mp4 = new Logic.Mp4.MP4Parser(labelVideoFileName.Text);
+                        var mp4 = new MP4Parser(labelVideoFileName.Text);
                         var tracks = mp4.GetAudioTracks();
                         int i = 0;
                         foreach (var track in tracks)

@@ -35,6 +35,12 @@ namespace Nikse.SubtitleEdit.Forms
 
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
+            listViewFixes.Resize += delegate
+            {
+                var width = (listViewFixes.Width - (listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width)) / 2;
+                listViewFixes.Columns[2].Width = width;
+                listViewFixes.Columns[3].Width = width;
+            };
             FixLargeFonts();
         }
 
@@ -90,7 +96,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string name = item.SubItems[1].Text;
 
-                    string textNoTags = Utilities.RemoveHtmlTags(text);
+                    string textNoTags = HtmlUtil.RemoveHtmlTags(text);
                     if (textNoTags != textNoTags.ToUpper())
                     {
                         if (item.Checked && text != null && text.Contains(name, StringComparison.OrdinalIgnoreCase) && name.Length > 1 && name != name.ToLower())
@@ -134,22 +140,18 @@ namespace Nikse.SubtitleEdit.Forms
             // Will contains both one word names and multi names
             var namesEtcList = namesList.GetAllNames();
 
-            if (language.StartsWith("en"))
+            if (language.StartsWith("en", StringComparison.Ordinal))
             {
-                if (namesEtcList.Contains("Black"))
-                    namesEtcList.Remove("Black");
-                if (namesEtcList.Contains("Bill"))
-                    namesEtcList.Remove("Bill");
-                if (namesEtcList.Contains("Long"))
-                    namesEtcList.Remove("Long");
-                if (namesEtcList.Contains("Don"))
-                    namesEtcList.Remove("Don");
+                namesEtcList.Remove("Black");
+                namesEtcList.Remove("Bill");
+                namesEtcList.Remove("Long");
+                namesEtcList.Remove("Don");
             }
 
             var sb = new StringBuilder();
             foreach (Paragraph p in _subtitle.Paragraphs)
                 sb.AppendLine(p.Text);
-            string text = Utilities.RemoveHtmlTags(sb.ToString());
+            string text = HtmlUtil.RemoveHtmlTags(sb.ToString());
             string textToLower = text.ToLower();
             foreach (string name in namesEtcList)
             {

@@ -29,7 +29,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             labelStatus.Text = string.Empty;
             _header = subtitle.Header;
             _format = format;
-            _isSubStationAlpha = _format.FriendlyName == new SubStationAlpha().FriendlyName;
+            _isSubStationAlpha = _format.FriendlyName == SubStationAlpha.NameOfFormat;
             if (_header == null || !_header.Contains("style:", StringComparison.OrdinalIgnoreCase))
                 ResetHeader();
 
@@ -80,7 +80,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             radioButtonOpaqueBox.Text = l.OpaqueBox;
             buttonImport.Text = l.Import;
             buttonExport.Text = l.Export;
-            buttonExport.Visible = !string.IsNullOrEmpty(l.Export);
             buttonCopy.Text = l.Copy;
             buttonAdd.Text = l.New;
             buttonRemove.Text = l.Remove;
@@ -136,7 +135,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             using (Graphics g = Graphics.FromImage(bmp))
             {
-
                 // Draw background
                 const int rectangleSize = 9;
                 for (int y = 0; y < bmp.Height; y += rectangleSize)
@@ -327,7 +325,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             foreach (var line in _header.Split(Utilities.NewLineChars, StringSplitOptions.None))
             {
                 string s = line.Trim().ToLower();
-                if (s.StartsWith("format:"))
+                if (s.StartsWith("format:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -343,7 +341,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     }
                     sb.AppendLine(line);
                 }
-                else if (s.Replace(" ", string.Empty).StartsWith("style:"))
+                else if (s.Replace(" ", string.Empty).StartsWith("style:", StringComparison.Ordinal))
                 {
                     if (line.Length > 10)
                     {
@@ -403,9 +401,8 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Replace(Environment.NewLine, "\n").Split('\n');
             var lines = new List<string>();
-            foreach (string line in lineArray)
+            foreach (string line in text.SplitToLines())
                 lines.Add(line);
             format.LoadSubtitle(sub, lines, string.Empty);
             _header = sub.Header;
@@ -1124,12 +1121,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             openFileDialogImport.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                openFileDialogImport.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                openFileDialogImport.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                openFileDialogImport.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
@@ -1184,8 +1181,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                             SetControlsFromStyle(style);
                             listViewStyles_SelectedIndexChanged(null, null);
 
-                            if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
-                                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, style.Name, openFileDialogImport.FileName);
+                            labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY, style.Name, openFileDialogImport.FileName);
                             timerClearStatus.Start();
                         }
                     }
@@ -1211,12 +1207,12 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             saveFileDialogStyle.InitialDirectory = Configuration.DataDirectory;
             if (_isSubStationAlpha)
             {
-                saveFileDialogStyle.Filter = new SubStationAlpha().Name + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.Filter = SubStationAlpha.NameOfFormat + "|*.ssa|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ssa";
             }
             else
             {
-                saveFileDialogStyle.Filter = new AdvancedSubStationAlpha().Name + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
+                saveFileDialogStyle.Filter = AdvancedSubStationAlpha.NameOfFormat + "|*.ass|" + Configuration.Settings.Language.General.AllFiles + "|*.*";
                 saveFileDialogStyle.FileName = "my_styles.ass";
             }
 
@@ -1301,8 +1297,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
                     File.WriteAllText(saveFileDialogStyle.FileName, content, Encoding.UTF8);
                 }
             }
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.SubStationAlphaStyles.StyleXImportedFromFileY)) // TODO: Remove in 3.4
-                labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleName, saveFileDialogStyle.FileName);
+            labelStatus.Text = string.Format(Configuration.Settings.Language.SubStationAlphaStyles.StyleXExportedToFileY, styleName, saveFileDialogStyle.FileName);
             timerClearStatus.Start();
         }
 

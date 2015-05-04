@@ -2,7 +2,7 @@
 <Language Name="Español">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>Traducido por Marcelo1ar, correcciones por walterh78</TranslatedBy>
     <CultureName>es-AR</CultureName>
     <HelpFile>http://www.nikse.dk/SubtitleEdit/HelpEs</HelpFile>
@@ -257,7 +257,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GapToNext>Brecha para el siguiente en segundos</GapToNext>
     <BridgeGapsSmallerThanXPart1>Brechas puente más pequeño que</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>milisegundos</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>Min. milisegundos entre líneas</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>Min. milisegundos entre líneas</MinMillisecondsBetweenLines>
     <ProlongEndTime>Texto anterior se lleva todo el tiempo brecha</ProlongEndTime>
     <DivideEven>Textos divide el tiempo brecha</DivideEven>
   </DurationsBridgeGaps>
@@ -1269,7 +1269,7 @@ pueden editar el mismo archivo de subtítulo (colaboración)</Information>
     <Title>Iniciar sesión de red</Title>
     <ConnectionTo>Conectando a {0}...</ConnectionTo>
     <Information>Comenzar una nueva sesión en la que varias personas
- puede editar el mismo archivo de subtítulo (colaboración)</Information>
+puede editar el mismo archivo de subtítulo (colaboración)</Information>
     <Start>Inicio</Start>
   </NetworkStart>
   <OpenVideoDvd>

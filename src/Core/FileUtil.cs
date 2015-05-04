@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic.TransportStream;
 using Nikse.SubtitleEdit.Logic.VobSub;
@@ -105,13 +106,13 @@ namespace Nikse.SubtitleEdit.Core
                 if (count != buffer.Length)
                     return false;
                 return buffer[0] == 137
-                       && buffer[1] == 80
-                       && buffer[2] == 78
-                       && buffer[3] == 71
-                       && buffer[4] == 13
-                       && buffer[5] == 10
-                       && buffer[6] == 26
-                       && buffer[7] == 10;
+                    && buffer[1] == 80
+                    && buffer[2] == 78
+                    && buffer[3] == 71
+                    && buffer[4] == 13
+                    && buffer[5] == 10
+                    && buffer[6] == 26
+                    && buffer[7] == 10;
             }
         }
 
@@ -124,8 +125,18 @@ namespace Nikse.SubtitleEdit.Core
                 if (count != buffer.Length)
                     return false;
                 return buffer[0] == 0x69
-                       && buffer[1] == 0x69
-                       && buffer[2] == 0x69;
+                    && buffer[1] == 0x69
+                    && buffer[2] == 0x69;
+            }
+        }
+
+        public static bool IsTorrentFile(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[11];
+                fs.Read(buffer, 0, buffer.Length);
+                return Encoding.ASCII.GetString(buffer, 0, buffer.Length) == "d8:announce";
             }
         }
 
@@ -134,7 +145,7 @@ namespace Nikse.SubtitleEdit.Core
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[2];
-                fs.Read(buffer, 0, 2);
+                fs.Read(buffer, 0, buffer.Length);
                 return buffer[0] == 0x50  // P
                     && buffer[1] == 0x47; // G
             }
@@ -182,7 +193,7 @@ namespace Nikse.SubtitleEdit.Core
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
                 var buffer = new byte[4];
-                fs.Read(buffer, 0, 4);
+                fs.Read(buffer, 0, buffer.Length);
                 return VobSubParser.IsMpeg2PackHeader(buffer)
                     || VobSubParser.IsPrivateStream1(buffer, 0);
             }
@@ -269,6 +280,16 @@ namespace Nikse.SubtitleEdit.Core
                 }
             }
             return false;
+        }
+
+        public static bool HasUtf8Bom(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                var buffer = new byte[3];
+                fs.Read(buffer, 0, buffer.Length);
+                return buffer[0] == 0xef && buffer[1] == 0xbb && buffer[2] == 0xbf;
+            }
         }
 
     }

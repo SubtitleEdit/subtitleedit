@@ -2,7 +2,7 @@
 <Language Name="ไทย">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
+    <Version>3.4.6</Version>
     <TranslatedBy>ภาษาไทยโดย Bonfelder</TranslatedBy>
     <CultureName>th-TH</CultureName>
     <HelpFile />
@@ -40,7 +40,7 @@
     <FrameRateX>เฟรมเรต: {0:0.0###}</FrameRateX>
     <TotalFramesX>จำนวนเฟรมรวม: {0:#,##0.##}</TotalFramesX>
     <VideoEncodingX>รหัสภาษาวิดีโอ: {0}</VideoEncodingX>
-    <SingleLineLengths>ความยาวบรรทัด: </SingleLineLengths>
+    <SingleLineLengths>ความยาวบรรทัด:</SingleLineLengths>
     <TotalLengthX>ความยาวรวม: {0}</TotalLengthX>
     <TotalLengthXSplitLine>ความยาวรวม: {0} (แยกบรรทัด!)</TotalLengthXSplitLine>
     <SplitLine>แยกบรรทัด!</SplitLine>
@@ -282,7 +282,7 @@
     <GapToNext>ช่องว่างก่อนถึงเวลาถัดไปเป็นวินาที</GapToNext>
     <BridgeGapsSmallerThanXPart1>รวมช่องว่างที่น้อยกว่า</BridgeGapsSmallerThanXPart1>
     <BridgeGapsSmallerThanXPart2>มิลลิวินาที</BridgeGapsSmallerThanXPart2>
-    <MinMsBetweenLines>มิลลิวินาทีน้อยสุดระหว่างบรรทัด</MinMsBetweenLines>
+    <MinMillisecondsBetweenLines>มิลลิวินาทีน้อยสุดระหว่างบรรทัด</MinMillisecondsBetweenLines>
     <ProlongEndTime>ข้อความก่อนหน้าครอบคลุมช่องว่างหมดแล้ว</ProlongEndTime>
     <DivideEven>ข้อความแบ่งช่องว่างออกจากกัน</DivideEven>
   </DurationsBridgeGaps>
@@ -312,7 +312,7 @@
     <Title>เลือกภาษา</Title>
     <ChooseLanguageStreamId>เลือกภาษา (stream-id)</ChooseLanguageStreamId>
     <UnknownLanguage>ภาษาที่ไม่รู้จัก</UnknownLanguage>
-    <SubtitleImageXofYAndWidthXHeight>อิมเมจซับไตเติ้ล {0}/{1} - {2}x{3} </SubtitleImageXofYAndWidthXHeight>
+    <SubtitleImageXofYAndWidthXHeight>อิมเมจซับไตเติ้ล {0}/{1} - {2}x{3}</SubtitleImageXofYAndWidthXHeight>
     <SubtitleImage>อิมเมจซับไตเติ้ล</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
@@ -561,8 +561,8 @@
     <ApplyFixes>นำข้อแก้ไขที่เลือกไปใช้</ApplyFixes>
     <AutoBreak>แทรก &amp;br อัตโนมัติ</AutoBreak>
     <Unbreak>&amp;ไม่แยก</Unbreak>
-    <FixDoubleDash>แก้ '--' -&gt; '...' </FixDoubleDash>
-    <FixDoubleGreaterThan>ลบ &gt; </FixDoubleGreaterThan>
+    <FixDoubleDash>แก้ '--' -&gt; '...'</FixDoubleDash>
+    <FixDoubleGreaterThan>ลบ &gt;</FixDoubleGreaterThan>
     <FixEllipsesStart>ลบที่ขึ้นต้นด้วย '...'</FixEllipsesStart>
     <FixMissingOpenBracket>แก้ [ ที่หายไปในบรรทัด</FixMissingOpenBracket>
     <FixMusicNotation>แทนที่สัญลักษณ์ดนตรี (e.g. âTª) ด้วยสัญลักษณ์ที่ชอบ</FixMusicNotation>
@@ -587,7 +587,7 @@
     <OpenOpenOfficeWiki>รายการของ Open Office Wiki Dictionaries</OpenOpenOfficeWiki>
     <GetAllDictionaries>โหลดพจนานุกรมทั้งหมด</GetAllDictionaries>
     <ChooseLanguageAndClickDownload>เลือกภาษาของคุณและคลิกดาวน์โหลด</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>เปิดโฟลเดอร์ 'Dictionaries' </OpenDictionariesFolder>
+    <OpenDictionariesFolder>เปิดโฟลเดอร์ 'Dictionaries'</OpenDictionariesFolder>
     <Download>ดาวน์โหลด</Download>
     <XDownloaded>{0} ถูกดาวน์โหลดและติดตั้งแล้ว</XDownloaded>
   </GetDictionaries>
@@ -597,7 +597,7 @@
     <DownloadFailed>ดาวน์โหลดผิดพลาด!</DownloadFailed>
     <GetDictionariesHere>โหลดพจนานุกรมที่นี่:</GetDictionariesHere>
     <ChooseLanguageAndClickDownload>เลือกภาษาของคุณและคลิกดาวน์โหลด</ChooseLanguageAndClickDownload>
-    <OpenDictionariesFolder>เปิดโฟลเดอร์ 'Dictionaries' </OpenDictionariesFolder>
+    <OpenDictionariesFolder>เปิดโฟลเดอร์ 'Dictionaries'</OpenDictionariesFolder>
     <Download>ดาวน์โหลด</Download>
     <XDownloaded>{0} ถูกดาวน์โหลดและติดตั้งแล้ว</XDownloaded>
   </GetTesseractDictionaries>
@@ -993,7 +993,7 @@
     <OverwriteModifiedFile>เขียนทับไฟล์ {0} ที่ถูกแก้เมื่อ {1} {2}{3} ด้วยไฟล์ปัจจุบันที่โหลดจากดิสก์เมื่อ {4} {5} หรือไม่</OverwriteModifiedFile>
     <FileXIsReadOnly>บันทึกไม่ได้ ไฟล์ {0} อ่านได้อย่างเดียว</FileXIsReadOnly>
     <UnableToSaveSubtitleX>ไม่สามารถบันทึกไฟล์ซับไตเติ้ล {0}
- ซับไตเติ้ลอาจว่างเปล่า - ลองบันทึกใหม่ถ้าแน่ใจว่าซับไตเติ้ลถูกต้อง!</UnableToSaveSubtitleX>
+ซับไตเติ้ลอาจว่างเปล่า - ลองบันทึกใหม่ถ้าแน่ใจว่าซับไตเติ้ลถูกต้อง!</UnableToSaveSubtitleX>
     <BeforeNew>ก่อนสร้าง</BeforeNew>
     <New>สร้าง</New>
     <BeforeConvertingToX>ก่อนแปลงเป็น {0}</BeforeConvertingToX>

@@ -11,7 +11,6 @@ using System.Xml;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-
     public sealed partial class GoogleTranslate : PositionAndSizeForm
     {
         private Subtitle _subtitle;
@@ -201,7 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int index = 0;
                 foreach (Paragraph p in _subtitle.Paragraphs)
                 {
-                    string text = string.Format("{1} {0} |", p.Text.Replace("|", NewlineString), SplitterString);
+                    string text = string.Format("{1} {0} |", p.Text, SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
@@ -317,7 +316,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string TranslateTextViaApi(string input, string languagePair)
         {
-            //            string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
+            //string googleApiKey = "ABQIAAAA4j5cWwa3lDH0RkZceh7PjBTDmNAghl5kWSyuukQ0wtoJG8nFBxRPlalq-gAvbeCXMCkmrysqjXV1Gw";
             string googleApiKey = Configuration.Settings.Tools.GoogleApiKey;
 
             input = input.Replace(Environment.NewLine, NewlineString);
@@ -487,14 +486,12 @@ namespace Nikse.SubtitleEdit.Forms
 
         private static string[] GetMsLocales()
         {
-            string[] locales = { "ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
-            return locales;
+            return new[] { "ar", "bg", "zh-CHS", "zh-CHT", "cs", "da", "nl", "en", "et", "fi", "fr", "de", "el", "ht", "he", "hu", "id", "it", "ja", "ko", "lv", "lt", "no", "pl", "pt", "ro", "ru", "sk", "sl", "es", "sv", "th", "tr", "uk", "vi" };
         }
 
         private static string[] GetMsNames()
         {
-            string[] names = { "Arabic", "Bulgarian", "Chinese Simplified", "Chinese Traditional", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French", "German", "Greek", "Haitian Creole", "Hebrew", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Latvian", "Lithuanian", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Spanish", "Swedish", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
-            return names;
+            return new[] { "Arabic", "Bulgarian", "Chinese Simplified", "Chinese Traditional", "Czech", "Danish", "Dutch", "English", "Estonian", "Finnish", "French", "German", "Greek", "Haitian Creole", "Hebrew", "Hungarian", "Indonesian", "Italian", "Japanese", "Korean", "Latvian", "Lithuanian", "Norwegian", "Polish", "Portuguese", "Romanian", "Russian", "Slovak", "Slovenian", "Spanish", "Swedish", "Thai", "Turkish", "Ukrainian", "Vietnamese" };
         }
 
         public static void FillComboWithGoogleLanguages(ComboBox comboBox)
@@ -579,7 +576,8 @@ namespace Nikse.SubtitleEdit.Forms
             //            comboBox.Items.Add(new ComboBoxItem("SANSKRIT" , "sa"));
             comboBox.Items.Add(new ComboBoxItem("SERBIAN", "sr"));
             //            comboBox.Items.Add(new ComboBoxItem("SINDHI" , "sd"));
-            //            comboBox.Items.Add(new ComboBoxItem("SINHALESE" , "si"));
+            comboBox.Items.Add(new ComboBoxItem("SESOTHO", "st"));
+            comboBox.Items.Add(new ComboBoxItem("SINHALA", "si"));
             comboBox.Items.Add(new ComboBoxItem("SLOVAK", "sk"));
             comboBox.Items.Add(new ComboBoxItem("SLOVENIAN", "sl"));
             comboBox.Items.Add(new ComboBoxItem("SOMALI", "so"));
@@ -595,7 +593,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
             comboBox.Items.Add(new ComboBoxItem("UKRAINIAN", "uk"));
             comboBox.Items.Add(new ComboBoxItem("URDU", "ur"));
-            //            comboBox.Items.Add(new ComboBoxItem("UZBEK" , "uz"));
+            comboBox.Items.Add(new ComboBoxItem("UZBEK" , "uz"));
             //            comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
             comboBox.Items.Add(new ComboBoxItem("VIETNAMESE", "vi"));
             comboBox.Items.Add(new ComboBoxItem("WELSH", "cy"));

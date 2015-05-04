@@ -47,8 +47,8 @@ namespace Nikse.SubtitleEdit.Forms
         private const int IndexAloneLowercaseIToUppercaseIEnglish = 27;
         private const int IndexRemoveSpaceBetweenNumbers = 28;
         private const int IndexDialogsOnOneLine = 29;
-        private const int IndexDanishLetterI = 30;
-        private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
+        //private const int IndexDanishLetterI = 30;
+        //private const int IndexFixSpanishInvertedQuestionAndExclamationMarks = 31;
         private int _turkishAnsiIndex = -1;
         private int _danishLetterIIndex = -1;
         private int _spanishInvertedQuestionAndExclamationMarksIndex = -1;
@@ -67,7 +67,7 @@ namespace Nikse.SubtitleEdit.Forms
         private static readonly Regex UrlOrg = new Regex(@"\w\.org\b", RegexOptions.Compiled);
 
         private static readonly Regex ReAfterLowercaseLetter = new Regex(@"[a-zæøåäöéùáàìéóúñüéíóúñü]I", RegexOptions.Compiled);
-        private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùàìéóúñüéíóúñü]", RegexOptions.Compiled);
+        private static readonly Regex ReBeforeLowercaseLetter = new Regex(@"I[a-zæøåäöéùáàìéóúñüéíóúñü]", RegexOptions.Compiled);
 
         private static readonly Regex RemoveSpaceBetweenNumbersRegEx = new Regex(@"\d \d", RegexOptions.Compiled);
 
@@ -146,6 +146,7 @@ namespace Nikse.SubtitleEdit.Forms
         private readonly StringBuilder _appliedLog = new StringBuilder();
         private int _numberOfImportantLogMessages;
         private List<int> _deleteIndices = new List<int>();
+        private HashSet<string> _notAllowedFixes;
 
         public Subtitle FixedSubtitle
         {
@@ -189,7 +190,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxStep1.Text = string.Empty;
             buttonBack.Visible = false;
             buttonNextFinish.Visible = false;
-            buttonCancel.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = _languageGeneral.Ok;
         }
 
         public string Language
@@ -360,71 +361,58 @@ namespace Nikse.SubtitleEdit.Forms
             FixCommonErrorsSettings ce = Configuration.Settings.CommonErrors;
             _fixActions = new List<FixItem>
             {
-                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, new Action (FixEmptyLines), ce.EmptyLinesTicked),
-                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, new Action(FixOverlappingDisplayTimes), ce.OverlappingDisplayTimeTicked),
-                new FixItem(_language.FixShortDisplayTimes, string.Empty, new Action(FixShortDisplayTimes), ce.TooShortDisplayTimeTicked),
-                new FixItem(_language.FixLongDisplayTimes, string.Empty, new Action(FixLongDisplayTimes), ce.TooLongDisplayTimeTicked),
-                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, new Action(FixInvalidItalicTags), ce.InvalidItalicTagsTicked),
-                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, new Action(FixUnneededSpaces), ce.UnneededSpacesTicked),
-                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, new Action(FixUnneededPeriods), ce.UnneededPeriodsTicked),
-                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, new Action(FixMissingSpaces), ce.MissingSpacesTicked),
-                new FixItem(_language.BreakLongLines, string.Empty, new Action(FixLongLines), ce.BreakLongLinesTicked),
-                new FixItem(_language.RemoveLineBreaks, string.Empty, new Action(FixShortLines), ce.MergeShortLinesTicked),
-                new FixItem(_language.RemoveLineBreaksAll, string.Empty, new Action(FixShortLinesAll), ce.MergeShortLinesAllTicked),
-                new FixItem(_language.FixDoubleApostrophes, string.Empty, new Action(FixDoubleApostrophes), ce.DoubleApostropheToQuoteTicked),
-                new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, new Action(FixMusicNotation), ce.FixMusicNotationTicked),
-                new FixItem(_language.AddPeriods, string.Empty, new Action(FixMissingPeriodsAtEndOfLine), ce.AddPeriodAfterParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, new Action(FixStartWithUppercaseLetterAfterParagraph), ce.StartWithUppercaseLetterAfterParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, new Action(FixStartWithUppercaseLetterAfterPeriodInsideParagraph), ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
-                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, new Action(FixStartWithUppercaseLetterAfterColon), ce.StartWithUppercaseLetterAfterColonTicked),
-                new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, new Action(AddMissingQuotes), ce.AddMissingQuotesTicked),
-                new FixItem(_language.FixHyphens, string.Empty, new Action(FixHyphens), ce.FixHyphensTicked),
-                new FixItem(_language.FixHyphensAdd, string.Empty, new Action(FixHyphensAdd), ce.FixHyphensAddTicked),
-                new FixItem(_language.Fix3PlusLines, string.Empty, new Action(Fix3PlusLines), ce.Fix3PlusLinesTicked),
-                new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, new Action(FixDoubleDash), ce.FixDoubleDashTicked),
-                new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, new Action(FixDoubleGreaterThan), ce.FixDoubleGreaterThanTicked),
-                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, new Action(FixEllipsesStart), ce.FixEllipsesStartTicked),
-                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, new Action(FixMissingOpenBracket), ce.FixMissingOpenBracketTicked)
+                new FixItem(_language.RemovedEmptyLinesUnsedLineBreaks, string.Empty, FixEmptyLines, ce.EmptyLinesTicked),
+                new FixItem(_language.FixOverlappingDisplayTimes, string.Empty, FixOverlappingDisplayTimes, ce.OverlappingDisplayTimeTicked),
+                new FixItem(_language.FixShortDisplayTimes, string.Empty, FixShortDisplayTimes, ce.TooShortDisplayTimeTicked),
+                new FixItem(_language.FixLongDisplayTimes, string.Empty, FixLongDisplayTimes, ce.TooLongDisplayTimeTicked),
+                new FixItem(_language.FixInvalidItalicTags, _language.FixInvalidItalicTagsExample, FixInvalidItalicTags, ce.InvalidItalicTagsTicked),
+                new FixItem(_language.RemoveUnneededSpaces, _language.RemoveUnneededSpacesExample, FixUnneededSpaces, ce.UnneededSpacesTicked),
+                new FixItem(_language.RemoveUnneededPeriods, _language.RemoveUnneededPeriodsExample, FixUnneededPeriods, ce.UnneededPeriodsTicked),
+                new FixItem(_language.FixMissingSpaces, _language.FixMissingSpacesExample, FixMissingSpaces, ce.MissingSpacesTicked),
+                new FixItem(_language.BreakLongLines, string.Empty, FixLongLines, ce.BreakLongLinesTicked),
+                new FixItem(_language.RemoveLineBreaks, string.Empty, FixShortLines, ce.MergeShortLinesTicked),
+                new FixItem(_language.RemoveLineBreaksAll, string.Empty, FixShortLinesAll, ce.MergeShortLinesAllTicked),
+                new FixItem(_language.FixDoubleApostrophes, string.Empty, FixDoubleApostrophes, ce.DoubleApostropheToQuoteTicked),
+                new FixItem(_language.FixMusicNotation, _language.FixMusicNotationExample, FixMusicNotation, ce.FixMusicNotationTicked),
+                new FixItem(_language.AddPeriods, string.Empty, FixMissingPeriodsAtEndOfLine, ce.AddPeriodAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterParagraph, string.Empty, FixStartWithUppercaseLetterAfterParagraph, ce.StartWithUppercaseLetterAfterParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, FixStartWithUppercaseLetterAfterPeriodInsideParagraph, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
+                new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, FixStartWithUppercaseLetterAfterColon, ce.StartWithUppercaseLetterAfterColonTicked),
+                new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, AddMissingQuotes, ce.AddMissingQuotesTicked),
+                new FixItem(_language.FixHyphens, string.Empty, FixHyphens, ce.FixHyphensTicked),
+                new FixItem(_language.FixHyphensAdd, string.Empty, FixHyphensAdd, ce.FixHyphensAddTicked),
+                new FixItem(_language.Fix3PlusLines, string.Empty, Fix3PlusLines, ce.Fix3PlusLinesTicked),
+                new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, FixDoubleDash, ce.FixDoubleDashTicked),
+                new FixItem(_language.FixDoubleGreaterThan, _language.FixDoubleGreaterThanExample, FixDoubleGreaterThan, ce.FixDoubleGreaterThanTicked),
+                new FixItem(_language.FixEllipsesStart, _language.FixEllipsesStartExample, FixEllipsesStart, ce.FixEllipsesStartTicked),
+                new FixItem(_language.FixMissingOpenBracket, _language.FixMissingOpenBracketExample, FixMissingOpenBracket, ce.FixMissingOpenBracketTicked),
+                new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked),
+                new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, FixUppercaseIInsideWords, ce.UppercaseIInsideLowercaseWordTicked),
+                new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, FixAloneLowercaseIToUppercaseI, ce.AloneLowercaseIToUppercaseIEnglishTicked),
+                new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, RemoveSpaceBetweenNumbers, ce.RemoveSpaceBetweenNumberTicked),
+                new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, DialogsOnOneLine, ce.FixDialogsOnOneLineTicked)
             };
-
-            if (string.IsNullOrEmpty(_language.FixOcrErrorExample))
-                _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, "D0n't -> Don't", delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
-            else
-                _fixActions.Add(new FixItem(_language.FixCommonOcrErrors, _language.FixOcrErrorExample, delegate { FixOcrErrorsViaReplaceList(threeLetterIsoLanguageName); }, ce.FixOcrErrorsViaReplaceListTicked));
-
-            _fixActions.Add(new FixItem(_language.FixUppercaseIInsindeLowercaseWords, _language.FixUppercaseIInsindeLowercaseWordsExample, new Action(FixUppercaseIInsideWords), ce.UppercaseIInsideLowercaseWordTicked));
-            _fixActions.Add(new FixItem(_language.FixLowercaseIToUppercaseI, _language.FixLowercaseIToUppercaseIExample, new Action(FixAloneLowercaseIToUppercaseI), ce.AloneLowercaseIToUppercaseIEnglishTicked));
-
-            if (string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample))
-                _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, "1 100 -> 1100", new Action(RemoveSpaceBetweenNumbers), ce.RemoveSpaceBetweenNumberTicked));
-            else
-                _fixActions.Add(new FixItem(_language.RemoveSpaceBetweenNumber, _language.FixSpaceBetweenNumbersExample, new Action(RemoveSpaceBetweenNumbers), ce.RemoveSpaceBetweenNumberTicked));
-
-            if (string.IsNullOrEmpty(_language.FixSpaceBetweenNumbersExample))
-                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, "Hi John! - Hi Ida! -> Hi John!" + Configuration.Settings.General.ListViewLineSeparatorString + "- Hi Ida!", new Action(DialogsOnOneLine), ce.FixDialogsOnOneLineTicked));
-            else
-                _fixActions.Add(new FixItem(_language.FixDialogsOnOneLine, _language.FixDialogsOneLineExample, new Action(DialogsOnOneLine), ce.FixDialogsOnOneLineTicked));
 
             if (Language == "tr")
             {
                 _turkishAnsiIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixTurkishAnsi, "Ý > İ, Ð > Ğ, Þ > Ş, ý > ı, ð > ğ, þ > ş", new Action(TurkishAnsiToUnicode), ce.TurkishAnsiTicked));
+                _fixActions.Add(new FixItem(_language.FixTurkishAnsi, "Ý > İ, Ð > Ğ, Þ > Ş, ý > ı, ð > ğ, þ > ş", TurkishAnsiToUnicode, ce.TurkishAnsiTicked));
             }
 
             if (Language == "da")
             {
                 _danishLetterIIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", new Action(FixDanishLetterI), ce.DanishLetterITicked));
+                _fixActions.Add(new FixItem(_language.FixDanishLetterI, "Jeg synes i er søde. -> Jeg synes I er søde.", FixDanishLetterI, ce.DanishLetterITicked));
             }
 
             if (Language == "es")
             {
                 _spanishInvertedQuestionAndExclamationMarksIndex = _fixActions.Count;
-                _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", new Action(FixSpanishInvertedQuestionAndExclamationMarks), ce.SpanishInvertedQuestionAndExclamationMarksTicked));
+                _fixActions.Add(new FixItem(_language.FixSpanishInvertedQuestionAndExclamationMarks, "Hablas bien castellano? -> ¿Hablas bien castellano?", FixSpanishInvertedQuestionAndExclamationMarks, ce.SpanishInvertedQuestionAndExclamationMarksTicked));
             }
 
             listView1.Items.Clear();
-            foreach (FixItem fi in _fixActions)
+            foreach (var fi in _fixActions)
                 AddFixActionItemToListView(fi);
         }
 
@@ -441,18 +429,18 @@ namespace Nikse.SubtitleEdit.Forms
             Text = _language.Title;
             groupBoxStep1.Text = _language.Step1;
             groupBox2.Text = _language.Step2;
-            listView1.Columns[0].Text = Configuration.Settings.Language.General.Apply;
+            listView1.Columns[0].Text = _languageGeneral.Apply;
             listView1.Columns[1].Text = _language.WhatToFix;
             listView1.Columns[2].Text = _language.Example;
             buttonSelectAll.Text = _language.SelectAll;
             buttonInverseSelection.Text = _language.InverseSelection;
             tabControl1.TabPages[0].Text = _language.Fixes;
             tabControl1.TabPages[1].Text = _language.Log;
-            listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
-            listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
+            listViewFixes.Columns[0].Text = _languageGeneral.Apply;
+            listViewFixes.Columns[1].Text = _languageGeneral.LineNumber;
             listViewFixes.Columns[2].Text = _language.Function;
-            listViewFixes.Columns[3].Text = Configuration.Settings.Language.General.Before;
-            listViewFixes.Columns[4].Text = Configuration.Settings.Language.General.After;
+            listViewFixes.Columns[3].Text = _languageGeneral.Before;
+            listViewFixes.Columns[4].Text = _languageGeneral.After;
             buttonNextFinish.Text = _language.Next;
             buttonBack.Text = _language.Back;
             buttonCancel.Text = _languageGeneral.Cancel;
@@ -526,17 +514,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         public bool AllowFix(Paragraph p, string action)
         {
-            //if (!buttonBack.Enabled)
             if (_onlyListFixes || _batchMode)
                 return true;
 
-            string ln = p.Number.ToString(CultureInfo.InvariantCulture);
-            foreach (ListViewItem item in listViewFixes.Items)
-            {
-                if (item.SubItems[1].Text == ln && item.SubItems[2].Text == action)
-                    return item.Checked;
-            }
-            return false;
+            return !_notAllowedFixes.Contains(p.Number.ToString(CultureInfo.InvariantCulture) + "|" + action);
         }
 
         public void ShowStatus(string message)
@@ -567,7 +548,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void FixEmptyLines()
+        public void FixEmptyLines()
         {
             string fixAction0 = _language.RemovedEmptyLine;
             string fixAction1 = _language.RemovedEmptyLineAtTop;
@@ -586,23 +567,71 @@ namespace Nikse.SubtitleEdit.Forms
                 if (!string.IsNullOrEmpty(p.Text))
                 {
                     string text = p.Text.Trim(' ');
-                    if (text.StartsWith(Environment.NewLine))
+                    var oldText = text;
+                    var pre = string.Empty;
+                    var post = string.Empty;
+
+                    while (text.LineStartsWithHtmlTag(true, true))
                     {
-                        if (AllowFix(p, fixAction1))
+                        // Three length tag
+                        if (text[2] == '>')
                         {
-                            p.Text = text.TrimStart(Utilities.NewLineChars);
-                            emptyLinesRemoved++;
-                            AddFixToListView(p, fixAction1, text, p.Text);
+                            pre += text.Substring(0, 3);
+                            text = text.Remove(0, 3);
+                        }
+                        else // <font ...>
+                        {
+                            var closeIdx = text.IndexOf('>');
+                            if (closeIdx <= 2)
+                                break;
+                            else
+                            {
+                                pre += text.Substring(0, closeIdx + 1);
+                                text = text.Remove(0, closeIdx + 1);
+                            }
                         }
                     }
-                    if (text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                    while (text.LineEndsWithHtmlTag(true, true))
                     {
-                        if (AllowFix(p, fixAction2))
+                        var len = text.Length;
+
+                        // Three length tag
+                        if (text[len - 4] == '<')
                         {
-                            p.Text = text.TrimEnd(Utilities.NewLineChars);
-                            emptyLinesRemoved++;
-                            AddFixToListView(p, fixAction2, text, p.Text);
+                            post = text.Substring(text.Length - 4) + post;
+                            text = text.Remove(text.Length - 4);
                         }
+                        else // </font>
+                        {
+                            post = text.Substring(text.Length - 7) + post;
+                            text = text.Remove(text.Length - 7);
+                        }
+                    }
+
+                    if (AllowFix(p, fixAction1) && text.StartsWith(Environment.NewLine))
+                    {
+                        if (pre.Length > 0)
+                            text = pre + text.TrimStart(Utilities.NewLineChars);
+                        else
+                            text = text.TrimStart(Utilities.NewLineChars);
+                        p.Text = text;
+                        emptyLinesRemoved++;
+                        AddFixToListView(p, fixAction1, oldText, p.Text);
+                    }
+                    else
+                    {
+                        text = pre + text;
+                    }
+
+                    if (AllowFix(p, fixAction2) && text.EndsWith(Environment.NewLine, StringComparison.Ordinal))
+                    {
+                        if (post.Length > 0)
+                            text = text.TrimEnd(Utilities.NewLineChars) + post;
+                        else
+                            text = text.TrimEnd(Utilities.NewLineChars);
+                        p.Text = text;
+                        emptyLinesRemoved++;
+                        AddFixToListView(p, fixAction2, oldText, p.Text);
                     }
                 }
             }
@@ -611,15 +640,13 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = Subtitle.Paragraphs.Count - 1; i >= 0; i--)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (string.IsNullOrEmpty(p.Text))
+                var text = HtmlUtil.RemoveHtmlTags(p.Text).Trim();
+                if (AllowFix(p, fixAction0) && string.IsNullOrEmpty(text))
                 {
-                    if (AllowFix(p, fixAction0))
-                    {
-                        Subtitle.Paragraphs.RemoveAt(i);
-                        emptyLinesRemoved++;
-                        AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", _language.RemovedEmptyLine));
-                        _deleteIndices.Add(i);
-                    }
+                    Subtitle.Paragraphs.RemoveAt(i);
+                    emptyLinesRemoved++;
+                    AddFixToListView(p, fixAction0, p.Text, string.Format("[{0}]", _language.RemovedEmptyLine));
+                    _deleteIndices.Add(i);
                 }
             }
 
@@ -736,7 +763,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 }
                             }
                         }
-                        //                        prev.EndTime.TotalMilliseconds--;
+                        //prev.EndTime.TotalMilliseconds--;
                     }
                     else if (prevOptimalDisplayTime <= (p.StartTime.TotalMilliseconds - prev.StartTime.TotalMilliseconds))
                     {
@@ -823,12 +850,12 @@ namespace Nikse.SubtitleEdit.Forms
                             prev.Text = prev.Text.Replace(Environment.NewLine, " ");
                             p.Text = p.Text.Replace(Environment.NewLine, " ");
 
-                            string stripped = Utilities.RemoveHtmlTags(prev.Text).TrimStart();
-                            if (!stripped.StartsWith("- "))
+                            string stripped = HtmlUtil.RemoveHtmlTags(prev.Text).TrimStart();
+                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
                                 prev.Text = "- " + prev.Text.TrimStart();
 
-                            stripped = Utilities.RemoveHtmlTags(p.Text).TrimStart();
-                            if (!stripped.StartsWith("- "))
+                            stripped = HtmlUtil.RemoveHtmlTags(p.Text).TrimStart();
+                            if (!stripped.StartsWith("- ", StringComparison.Ordinal))
                                 p.Text = "- " + p.Text.TrimStart();
 
                             prev.Text = prev.Text.Trim() + Environment.NewLine + p.Text;
@@ -896,8 +923,8 @@ namespace Nikse.SubtitleEdit.Forms
                         if (AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
-                            if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
-                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            if (next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                                p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
@@ -935,50 +962,46 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-
                     // Start current subtitle earlier (max 50 ms)
                     else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             diffMs < 50 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines))
+                             diffMs < 50 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
                     {
                         noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
                     }
-
                     // Make current subtitle duration longer + move next subtitle
                     else if (diffMs < 1000 &&
                              Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime &&
                              p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             (nextNext == null || next.EndTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MininumMillisecondsBetweenLines * 2 < nextNext.StartTime.TotalMilliseconds))
+                             (nextNext == null || next.EndTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines * 2 < nextNext.StartTime.TotalMilliseconds))
                     {
                         if (AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
                             p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds;
                             var nextDurationMs = next.Duration.TotalMilliseconds;
-                            next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            next.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             next.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds + nextDurationMs;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-
                     // Make next subtitle duration shorter +  make current subtitle duration longer
                     else if (diffMs < 1000 &&
-                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && Utilities.GetCharactersPerSecond(new Paragraph(next.Text, p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines, next.EndTime.TotalMilliseconds)) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (AllowFix(p, fixAction))
                         {
                             string oldCurrent = p.ToString();
-                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MininumMillisecondsBetweenLines;
-                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                            next.StartTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + temp.Duration.TotalMilliseconds + Configuration.Settings.General.MinimumMillisecondsBetweenLines;
+                            p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                             noOfShortDisplayTimes++;
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-
                     // Make next-next subtitle duration shorter + move next + make current subtitle duration longer
                     else if (diffMs < 500 &&
                              Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && nextNext != null &&
-                             Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MininumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
+                             Utilities.GetCharactersPerSecond(new Paragraph(nextNext.Text, nextNext.StartTime.TotalMilliseconds + diffMs + Configuration.Settings.General.MinimumMillisecondsBetweenLines, nextNext.EndTime.TotalMilliseconds - (diffMs))) < Configuration.Settings.General.SubtitleMaximumCharactersPerSeconds)
                     {
                         if (AllowFix(p, fixAction))
                         {
@@ -991,10 +1014,9 @@ namespace Nikse.SubtitleEdit.Forms
                             AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                         }
                     }
-
                     // Start current subtitle earlier (max 200 ms)
                     else if (Configuration.Settings.Tools.FixShortDisplayTimesAllowMoveStartTime && p.StartTime.TotalMilliseconds > Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds &&
-                             diffMs < 200 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines))
+                             diffMs < 200 && (prev == null || prev.EndTime.TotalMilliseconds < p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines))
                     {
                         noOfShortDisplayTimes = MoveStartTime(fixAction, noOfShortDisplayTimes, p, temp, next);
                     }
@@ -1017,8 +1039,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (AllowFix(p, fixAction))
             {
                 string oldCurrent = p.ToString();
-                if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
-                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                if (next != null && next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines > p.EndTime.TotalMilliseconds)
+                    p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                 p.StartTime.TotalMilliseconds = p.EndTime.TotalMilliseconds - temp.Duration.TotalMilliseconds;
                 noOfShortDisplayTimes++;
                 AddFixToListView(p, fixAction, oldCurrent, p.ToString());
@@ -1035,16 +1057,16 @@ namespace Nikse.SubtitleEdit.Forms
             listViewFixes.BeginUpdate();
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
-                var text = Subtitle.Paragraphs[i].Text;
-                if (text.Contains('<'))
+                if (AllowFix(Subtitle.Paragraphs[i], fixAction))
                 {
-                    text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
-                    string oldText = text;
-
-                    text = Utilities.FixInvalidItalicTags(text);
-                    if (text != oldText)
+                    var text = Subtitle.Paragraphs[i].Text;
+                    if (text.Contains('<'))
                     {
-                        if (AllowFix(Subtitle.Paragraphs[i], fixAction))
+                        text = text.Replace(beginTag.ToUpper(), beginTag).Replace(endTag.ToUpper(), endTag);
+                        string oldText = text;
+
+                        text = Utilities.FixInvalidItalicTags(text);
+                        if (text != oldText)
                         {
                             Subtitle.Paragraphs[i].Text = text;
                             noOfInvalidHtmlTags++;
@@ -1073,26 +1095,22 @@ namespace Nikse.SubtitleEdit.Forms
                 if (maxDisplayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     maxDisplayTime = Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
                 double displayTime = p.Duration.TotalMilliseconds;
-                if (displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
+
+                bool allowFix = AllowFix(p, fixAction);
+                if (allowFix && displayTime > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldCurrent = p.ToString();
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
-                        noOfLongDisplayTimes++;
-                        AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                    }
+                    string oldCurrent = p.ToString();
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds;
+                    noOfLongDisplayTimes++;
+                    AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                 }
-                else if (maxDisplayTime < displayTime)
+                else if (allowFix && maxDisplayTime < displayTime)
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldCurrent = p.ToString();
-                        displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
-                        p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + displayTime;
-                        noOfLongDisplayTimes++;
-                        AddFixToListView(p, fixAction, oldCurrent, p.ToString());
-                    }
+                    string oldCurrent = p.ToString();
+                    displayTime = Utilities.GetOptimalDisplayMilliseconds(p.Text);
+                    p.EndTime.TotalMilliseconds = p.StartTime.TotalMilliseconds + displayTime;
+                    noOfLongDisplayTimes++;
+                    AddFixToListView(p, fixAction, oldCurrent, p.ToString());
                 }
             }
             if (noOfLongDisplayTimes > 0)
@@ -1109,31 +1127,28 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string[] lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = p.Text.SplitToLines();
                 bool tooLong = false;
                 foreach (string line in lines)
                 {
-                    if (Utilities.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (HtmlUtil.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
                     }
                 }
-                if (tooLong)
+                if (AllowFix(p, fixAction) && tooLong)
                 {
-                    if (AllowFix(p, fixAction))
+                    string oldText = p.Text;
+                    p.Text = Utilities.AutoBreakLine(p.Text, Language);
+                    if (oldText != p.Text)
                     {
-                        string oldText = p.Text;
-                        p.Text = Utilities.AutoBreakLine(p.Text, Language);
-                        if (oldText != p.Text)
-                        {
-                            noOfLongLines++;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        else
-                        {
-                            LogStatus(fixAction, string.Format(_language.UnableToFixTextXY, i + 1, p));
-                            _totalErrors++;
-                        }
+                        noOfLongLines++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                    else
+                    {
+                        LogStatus(fixAction, string.Format(_language.UnableToFixTextXY, i + 1, p));
+                        _totalErrors++;
                     }
                 }
             }
@@ -1148,33 +1163,13 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-
-                string s = Utilities.RemoveHtmlTags(p.Text);
-                if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
+                string oldText = p.Text;
+                var text = FixCommonErrorsHelper.FixShortLines(p.Text);
+                if (AllowFix(p, fixAction) && oldText != text)
                 {
-                    s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
-                    s = s.TrimStart('-');
-                    if (!s.Contains('.') &&
-                        !s.Contains('?') &&
-                        !s.Contains('!') &&
-                        !s.Contains(':') &&
-                        !s.Contains(';') &&
-                        !s.Contains('-') &&
-                        !s.Contains('♪') &&
-                        !s.Contains('♫') &&
-                        p.Text != p.Text.ToUpper())
-                    {
-                        if (AllowFix(p, fixAction))
-                        {
-                            s = p.Text.Replace(Environment.NewLine, " ");
-                            s = s.Replace("  ", " ");
-
-                            string oldCurrent = p.Text;
-                            p.Text = s;
-                            noOfShortLines++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.Text);
-                        }
-                    }
+                    p.Text = text;
+                    noOfShortLines++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             if (noOfShortLines > 0)
@@ -1192,19 +1187,16 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[i];
 
-                string s = Utilities.RemoveHtmlTags(p.Text);
+                string s = HtmlUtil.RemoveHtmlTags(p.Text);
                 if (s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan && p.Text.Contains(Environment.NewLine))
                 {
                     s = Utilities.AutoBreakLine(p.Text, Language);
-                    if (s != p.Text)
+                    if (AllowFix(p, fixAction) && s != p.Text)
                     {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldCurrent = p.Text;
-                            p.Text = s;
-                            noOfShortLines++;
-                            AddFixToListView(p, fixAction, oldCurrent, p.Text);
-                        }
+                        string oldCurrent = p.Text;
+                        p.Text = s;
+                        noOfShortLines++;
+                        AddFixToListView(p, fixAction, oldCurrent, p.Text);
                     }
                 }
             }
@@ -1217,34 +1209,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void FixUnneededSpaces()
         {
-            const string char160 = " "; // Convert.ToChar(160).ToString()
-
             string fixAction = _language.UnneededSpace;
             int doubleSpaces = 0;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string oldText = p.Text;
-
-                p.Text = Utilities.RemoveUnneededSpaces(p.Text, Language);
-
-                if (p.Text.Length != oldText.Length && Utilities.CountTagInText(p.Text, " ") != Utilities.CountTagInText(oldText, " ") + Utilities.CountTagInText(oldText, char160))
+                if (AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
+                    var oldText = p.Text;
+                    var text = Utilities.RemoveUnneededSpaces(p.Text, Language);
+                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t')) < ((Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t'))))
                     {
                         doubleSpaces++;
+                        p.Text = text;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
                 }
-                else
-                {
-                    p.Text = oldText;
-                }
-
             }
             if (doubleSpaces > 0)
             {
@@ -1256,77 +1236,52 @@ namespace Nikse.SubtitleEdit.Forms
         public void FixUnneededPeriods()
         {
             string fixAction = _language.UnneededPeriod;
-            int unneededPeriods = 0;
+            int unneededPeriodsFixed = 0;
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (p.Text.Contains("!." + Environment.NewLine))
+                var oldText = p.Text;
+                if (AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
+                    if (p.Text.Contains("!." + Environment.NewLine))
                     {
-                        string oldText = p.Text;
                         p.Text = p.Text.Replace("!." + Environment.NewLine, "!" + Environment.NewLine);
-                        unneededPeriods++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        unneededPeriodsFixed++;
                     }
-                }
-                if (p.Text.Contains("?." + Environment.NewLine))
-                {
-                    if (AllowFix(p, fixAction))
+                    if (p.Text.Contains("?." + Environment.NewLine))
                     {
-                        string oldText = p.Text;
                         p.Text = p.Text.Replace("?." + Environment.NewLine, "?" + Environment.NewLine);
-                        unneededPeriods++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        unneededPeriodsFixed++;
                     }
-                }
-                if (p.Text.EndsWith("!.", StringComparison.Ordinal))
-                {
-                    if (AllowFix(p, fixAction))
+                    if (p.Text.EndsWith("!.", StringComparison.Ordinal))
                     {
-                        string oldText = p.Text;
                         p.Text = p.Text.TrimEnd('.');
-                        unneededPeriods++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        unneededPeriodsFixed++;
                     }
-                }
-                if (p.Text.EndsWith("?.", StringComparison.Ordinal))
-                {
-                    if (AllowFix(p, fixAction))
+                    if (p.Text.EndsWith("?.", StringComparison.Ordinal))
                     {
-                        string oldText = p.Text;
                         p.Text = p.Text.TrimEnd('.');
-                        unneededPeriods++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        unneededPeriodsFixed++;
                     }
-                }
-
-                if (p.Text.Contains("!. "))
-                {
-                    if (AllowFix(p, fixAction))
+                    if (p.Text.Contains("!. "))
                     {
-                        string oldText = p.Text;
                         p.Text = p.Text.Replace("!. ", "! ");
-                        unneededPeriods++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        unneededPeriodsFixed++;
                     }
-                }
-                if (p.Text.Contains("?. "))
-                {
-                    if (AllowFix(p, fixAction))
+                    if (p.Text.Contains("?. "))
                     {
-                        string oldText = p.Text;
                         p.Text = p.Text.Replace("?. ", "? ");
-                        unneededPeriods++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
+                        unneededPeriodsFixed++;
                     }
-                }
 
+                    if (p.Text != oldText)
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                }
             }
-            if (unneededPeriods > 0)
+            if (unneededPeriodsFixed > 0)
             {
-                _totalFixes += unneededPeriods;
-                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriods));
+                _totalFixes += unneededPeriodsFixed;
+                LogStatus(_language.RemoveUnneededPeriods, string.Format(_language.XUnneededPeriodsRemoved, unneededPeriodsFixed));
             }
         }
 
@@ -1341,144 +1296,122 @@ namespace Nikse.SubtitleEdit.Forms
 
                 // missing space after comma ","
                 Match match = FixMissingSpacesReComma.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
+
+                    if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι", StringComparison.Ordinal) || p.Text.Substring(match.Index).StartsWith("ο,τι", StringComparison.Ordinal)))
+                        doFix = false;
+
+                    if (doFix && AllowFix(p, fixAction))
                     {
-                        bool doFix = !@"""”<.".Contains(p.Text[match.Index + 2]);
-
-                        if (doFix && languageCode == "el" && (p.Text.Substring(match.Index).StartsWith("ό,τι") || p.Text.Substring(match.Index).StartsWith("ο,τι")))
-                            doFix = false;
-
-                        if (doFix && AllowFix(p, fixAction))
-                        {
-                            missingSpaces++;
-                            string oldText = p.Text;
-                            p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        match = match.NextMatch();
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + ", " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    match = match.NextMatch();
                 }
+
+                bool allowFix = AllowFix(p, fixAction);
 
                 // missing space after "?"
                 match = FixMissingSpacesReQuestionMark.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        if (!@"""<".Contains(p.Text[match.Index + 2]))
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                missingSpaces++;
-                                string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
-                        }
-                        match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "? " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    match = FixMissingSpacesReQuestionMark.Match(p.Text, match.Index + 1);
                 }
 
                 // missing space after "!"
                 match = FixMissingSpacesReExclamation.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
                     {
-                        if (!@"""<".Contains(p.Text[match.Index + 2]))
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                missingSpaces++;
-                                string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
-                        }
-                        match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + "! " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    match = FixMissingSpacesReExclamation.Match(p.Text, match.Index + 1);
                 }
 
                 // missing space after ":"
                 match = FixMissingSpacesReColon.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    int start = match.Index;
+                    start -= 4;
+                    if (start < 0)
+                        start = 0;
+                    int indexOfStartCodeTag = p.Text.IndexOf('{', start);
+                    int indexOfEndCodeTag = p.Text.IndexOf('}', start);
+                    if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
                     {
-                        int start = match.Index;
-                        start -= 4;
-                        if (start < 0)
-                            start = 0;
-                        int indexOfStartCodeTag = p.Text.IndexOf('{', start);
-                        int indexOfEndCodeTag = p.Text.IndexOf('}', start);
-                        if (indexOfStartCodeTag >= 0 && indexOfEndCodeTag >= 0 && indexOfStartCodeTag < match.Index)
-                        {
-                            // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
-                        }
-                        else if (!@"""<".Contains(p.Text[match.Index + 2]))
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                missingSpaces++;
-                                string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
-                        }
-                        match = FixMissingSpacesReColon.Match(p.Text, match.Index + 1);
+                        // we are inside a tag: like indexOfEndCodeTag "{y:i}Is this italic?"
                     }
+                    else if (allowFix && !@"""<".Contains(p.Text[match.Index + 2]))
+                    {
+                        missingSpaces++;
+                        string oldText = p.Text;
+                        p.Text = p.Text.Replace(match.Value, match.Value[0] + ": " + match.Value[match.Value.Length - 1]);
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                    match = FixMissingSpacesReColon.Match(p.Text, match.Index + 1);
                 }
 
                 // missing space after period "."
                 match = FixMissingSpacesRePeriod.Match(p.Text);
-                if (match.Success)
+                while (match.Success)
                 {
-                    while (match.Success)
+                    if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
+                        !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
+                        !UrlCom.IsMatch(p.Text) &&
+                        !UrlNet.IsMatch(p.Text) &&
+                        !UrlOrg.IsMatch(p.Text)) // urls are skipped
                     {
-                        if (!p.Text.Contains("www.", StringComparison.OrdinalIgnoreCase) &&
-                            !p.Text.Contains("http://", StringComparison.OrdinalIgnoreCase) &&
-                            !UrlCom.IsMatch(p.Text) &&
-                            !UrlNet.IsMatch(p.Text) &&
-                            !UrlOrg.IsMatch(p.Text)) // urls are skipped
+                        bool isMatchAbbreviation = false;
+
+                        string word = GetWordFromIndex(p.Text, match.Index);
+                        if (Utilities.CountTagInText(word, '.') > 1)
+                            isMatchAbbreviation = true;
+
+                        if (!isMatchAbbreviation && word.Contains('@')) // skip emails
+                            isMatchAbbreviation = true;
+
+                        if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
+                            isMatchAbbreviation = true;
+
+                        if (!isMatchAbbreviation && AllowFix(p, fixAction))
                         {
-                            bool isMatchAbbreviation = false;
-
-                            string word = GetWordFromIndex(p.Text, match.Index);
-                            if (Utilities.CountTagInText(word, '.') > 1)
-                                isMatchAbbreviation = true;
-
-                            if (!isMatchAbbreviation && word.Contains('@')) // skip emails
-                                isMatchAbbreviation = true;
-
-                            if (match.Value.Equals("h.d", StringComparison.OrdinalIgnoreCase) && match.Index > 0 && p.Text.Substring(match.Index - 1, 4).Equals("ph.d", StringComparison.OrdinalIgnoreCase))
-                                isMatchAbbreviation = true;
-
-                            if (!isMatchAbbreviation && AllowFix(p, fixAction))
-                            {
-                                missingSpaces++;
-                                string oldText = p.Text;
-                                p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
+                            missingSpaces++;
+                            string oldText = p.Text;
+                            p.Text = p.Text.Replace(match.Value, match.Value.Replace(".", ". "));
+                            AddFixToListView(p, fixAction, oldText, p.Text);
                         }
-                        match = match.NextMatch();
                     }
+                    match = match.NextMatch();
                 }
 
                 if (!p.Text.StartsWith("--", StringComparison.Ordinal))
                 {
-                    string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var arr = p.Text.SplitToLines();
                     if (arr.Length == 2 && arr[0].Length > 1 && arr[1].Length > 1)
                     {
                         if (arr[0][0] == '-' && arr[0][1] != ' ')
                             arr[0] = arr[0].Insert(1, " ");
-                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-") && arr[0][4] != ' ')
+                        if (arr[0].Length > 6 && arr[0].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[0][4] != ' ')
                             arr[0] = arr[0].Insert(4, " ");
                         if (arr[1][0] == '-' && arr[1][1] != ' ' && arr[1][1] != '-')
                             arr[1] = arr[1].Insert(1, " ");
-                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-") && arr[1][4] != ' ')
+                        if (arr[1].Length > 6 && arr[1].StartsWith("<i>-", StringComparison.OrdinalIgnoreCase) && arr[1][4] != ' ')
                             arr[1] = arr[1].Insert(4, " ");
                         string newText = arr[0] + Environment.NewLine + arr[1];
                         if (newText != p.Text && AllowFix(p, fixAction))
@@ -1492,7 +1425,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
                 //fix missing spaces before/after quotes - Get a"get out of jail free"card. -> Get a "get out of jail free" card.
-                if (Utilities.CountTagInText(p.Text, "\"") == 2)
+                if (Utilities.CountTagInText(p.Text, '"') == 2)
                 {
                     int start = p.Text.IndexOf('"');
                     int end = p.Text.LastIndexOf('"');
@@ -1501,9 +1434,10 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         string newText = p.Text;
                         int indexOfFontTag = newText.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
-                        if (start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
+                        bool isAfterAssTag = newText.Contains("{\\") && start > 0 && newText[start - 1] == '}';
+                        if (!isAfterAssTag && start > 0 && !(Environment.NewLine + @" >[(♪♫¿").Contains(p.Text[start - 1]))
                         {
-                            if (indexOfFontTag == -1 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
+                            if (indexOfFontTag < 0 || start > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
                                 newText = newText.Insert(start, " ");
                                 end++;
@@ -1511,7 +1445,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         if (end < newText.Length - 2 && !(Environment.NewLine + @" <,.!?:;])♪♫¿").Contains(p.Text[end + 1]))
                         {
-                            if (indexOfFontTag == -1 || end > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
+                            if (indexOfFontTag < 0 || end > newText.IndexOf('>', indexOfFontTag)) // font tags can contain "
                             {
                                 newText = newText.Insert(end + 1, " ");
                             }
@@ -1683,7 +1617,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 Paragraph p = Subtitle.Paragraphs[i];
 
-                if (Utilities.CountTagInText(p.Text, "\"") == 1)
+                if (Utilities.CountTagInText(p.Text, '"') == 1)
                 {
                     Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                     if (next != null)
@@ -1693,7 +1627,7 @@ namespace Nikse.SubtitleEdit.Forms
                             next = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (next.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
                                  next.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(next.Text, "\"") == 2)
+                                 Utilities.CountTagInText(next.Text, '"') == 2)
                             next = null; // seems to have valid quotes, so no spanning
                     }
 
@@ -1705,18 +1639,18 @@ namespace Nikse.SubtitleEdit.Forms
                             prev = null; // cannot be quote spanning several lines of more than 1.5 seconds between lines!
                         else if (prev.Text.Replace("<i>", string.Empty).TrimStart().TrimStart('-').TrimStart().StartsWith('"') &&
                                  prev.Text.Replace("</i>", string.Empty).TrimEnd().EndsWith('"') &&
-                                 Utilities.CountTagInText(prev.Text, "\"") == 2)
+                                 Utilities.CountTagInText(prev.Text, '"') == 2)
                             prev = null; // seems to have valid quotes, so no spanning
                     }
 
                     string oldText = p.Text;
-                    string[] lines = Utilities.RemoveHtmlTags(p.Text).Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    var lines = HtmlUtil.RemoveHtmlTags(p.Text).SplitToLines();
                     if (lines.Length == 2 && lines[0].TrimStart().StartsWith('-') && lines[1].TrimStart().StartsWith('-'))
                     { // dialog
-                        lines = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        lines = p.Text.SplitToLines();
                         string line = lines[0].Trim();
 
-                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
+                        if (line.Length > 5 && line.TrimStart().StartsWith("- \"", StringComparison.Ordinal) && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
                         {
                             p.Text = p.Text.Trim().Replace(" " + Environment.NewLine, Environment.NewLine);
                             p.Text = p.Text.Replace(Environment.NewLine, "\"" + Environment.NewLine);
@@ -1742,7 +1676,7 @@ namespace Nikse.SubtitleEdit.Forms
                         else if (lines[1].Contains('"'))
                         {
                             line = lines[1].Trim();
-                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"") && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
+                            if (line.Length > 5 && line.TrimStart().StartsWith("- \"", StringComparison.Ordinal) && (line.EndsWith('.') || line.EndsWith('!') || line.EndsWith('?')))
                             {
                                 p.Text = p.Text.Trim() + "\"";
                             }
@@ -1772,7 +1706,7 @@ namespace Nikse.SubtitleEdit.Forms
                             if (next == null || !next.Text.Contains('"'))
                                 p.Text += "\"";
                         }
-                        else if (p.Text.StartsWith("<i>\"") && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                        else if (p.Text.StartsWith("<i>\"", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
                         {
                             if (next == null || !next.Text.Contains('"'))
                                 p.Text = p.Text.Replace("</i>", "\"</i>");
@@ -1782,23 +1716,23 @@ namespace Nikse.SubtitleEdit.Forms
                             if (prev == null || !prev.Text.Contains('"'))
                                 p.Text = "\"" + p.Text;
                         }
-                        else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.CountTagInText(p.Text, Environment.NewLine) == 1)
+                        else if (p.Text.Contains(Environment.NewLine + "\"") && Utilities.GetNumberOfLines(p.Text) == 2)
                         {
                             if (next == null || !next.Text.Contains('"'))
                                 p.Text = p.Text + "\"";
                         }
                         else if ((p.Text.Contains(Environment.NewLine + "\"") || p.Text.Contains(Environment.NewLine + "-\"") || p.Text.Contains(Environment.NewLine + "- \"")) &&
-                                 Utilities.CountTagInText(p.Text, Environment.NewLine) == 1 && p.Text.Length > 3)
+                                 Utilities.GetNumberOfLines(p.Text) == 2 && p.Text.Length > 3)
                         {
                             if (next == null || !next.Text.Contains('"'))
                             {
-                                if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
+                                if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "</i>") == 1)
                                     p.Text = p.Text.Replace("</i>", "\"</i>");
                                 else
                                     p.Text = p.Text + "\"";
                             }
                         }
-                        else if (p.Text.StartsWith("<i>") && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "<i>") == 1)
+                        else if (p.Text.StartsWith("<i>", StringComparison.Ordinal) && p.Text.EndsWith("</i>", StringComparison.Ordinal) && Utilities.CountTagInText(p.Text, "<i>") == 1)
                         {
                             if (prev == null || !prev.Text.Contains('"'))
                                 p.Text = p.Text.Replace("<i>", "<i>\"");
@@ -1838,11 +1772,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 }
             }
-            if (noOfFixes > 0)
-            {
-                _totalFixes += noOfFixes;
-                LogStatus(fixAction, string.Format(_language.XMissingQuotesAdded, noOfFixes));
-            }
+            UpdateFixStatus(noOfFixes, fixAction, _language.XMissingQuotesAdded);
         }
 
         private static string GetWholeWord(string text, int index)
@@ -1975,11 +1905,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 //isLineContinuation = p.Text.Length > 0 && Utilities.GetLetters(true, true, false).Contains(p.Text[p.Text.Length - 1].ToString());
             }
-            if (uppercaseIsInsideLowercaseWords > 0)
-            {
-                _totalFixes += uppercaseIsInsideLowercaseWords;
-                LogStatus(_language.FixUppercaseIInsindeLowercaseWords, string.Format(_language.XUppercaseIsFoundInsideLowercaseWords, uppercaseIsInsideLowercaseWords));
-            }
+            UpdateFixStatus(uppercaseIsInsideLowercaseWords, _language.FixUppercaseIInsindeLowercaseWords, _language.XUppercaseIsFoundInsideLowercaseWords);
         }
 
         public void FixDoubleApostrophes()
@@ -2001,11 +1927,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixDoubleApostrophes, string.Format(_language.XDoubleApostrophesFixed, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixDoubleApostrophes, _language.XDoubleApostrophesFixed);
         }
 
         public void FixMissingPeriodsAtEndOfLine()
@@ -2018,8 +1940,8 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph next = Subtitle.GetParagraphOrDefault(i + 1);
                 string nextText = string.Empty;
                 if (next != null)
-                    nextText = Utilities.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
-                string tempNoHtml = Utilities.RemoveHtmlTags(p.Text).TrimEnd();
+                    nextText = HtmlUtil.RemoveHtmlTags(next.Text).TrimStart('-', '"', '„').TrimStart();
+                string tempNoHtml = HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd();
 
                 if (IsOneLineUrl(p.Text) || p.Text.Contains('♪') || p.Text.Contains('♫') || p.Text.EndsWith('\''))
                 {
@@ -2032,41 +1954,36 @@ namespace Nikse.SubtitleEdit.Forms
                     !@",.!?:;>-])♪♫…".Contains(tempNoHtml[tempNoHtml.Length - 1]))
                 {
                     string tempTrimmed = tempNoHtml.TrimEnd().TrimEnd('\'', '"', '“', '”').TrimEnd();
-                    if (tempTrimmed.Length > 0 && !@")]*#¶.!?".Contains(tempTrimmed[tempTrimmed.Length - 1]))
+                    if (tempTrimmed.Length > 0 && !@")]*#¶.!?".Contains(tempTrimmed[tempTrimmed.Length - 1]) && p.Text != p.Text.ToUpper())
                     {
-                        if (p.Text != p.Text.ToUpper())
+                        //don't end the sentence if the next word is an I word as they're always capped.
+                        if (!next.Text.StartsWith("I ", StringComparison.Ordinal) && !next.Text.StartsWith("I'", StringComparison.Ordinal))
                         {
-                            //don't end the sentence if the next word is an I word as they're always capped.
-                            if (!next.Text.StartsWith("I ") && !next.Text.StartsWith("I'"))
+                            //test to see if the first word of the next line is a name
+                            if (!IsName(next.Text.Split(new[] { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' })[0]) && AllowFix(p, fixAction))
                             {
-                                //test to see if the first word of the next line is a name
-                                if (!IsName(next.Text.Split(new[] { ' ', '.', ',', '-', '?', '!', ':', ';', '"', '(', ')', '[', ']', '{', '}', '|', '<', '>', '/', '+', '\r', '\n' })[0]))
+                                string oldText = p.Text;
+                                if (p.Text.EndsWith('>'))
                                 {
-                                    if (AllowFix(p, fixAction))
-                                    {
-                                        string oldText = p.Text;
-                                        if (p.Text.EndsWith('>'))
-                                        {
-                                            int lastLessThan = p.Text.LastIndexOf('<');
-                                            if (lastLessThan > 0)
-                                                p.Text = p.Text.Insert(lastLessThan, ".");
-                                        }
-                                        else
-                                        {
-                                            if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
-                                                p.Text = p.Text.TrimEnd('“') + ".“";
-                                            else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
-                                                p.Text = p.Text.TrimEnd('"') + ".\"";
-                                            else
-                                                p.Text += ".";
-                                        }
-                                        if (p.Text != oldText)
-                                        {
-                                            missigPeriodsAtEndOfLine++;
-                                            AddFixToListView(p, fixAction, oldText, p.Text);
-                                        }
-                                    }
+                                    int lastLessThan = p.Text.LastIndexOf('<');
+                                    if (lastLessThan > 0)
+                                        p.Text = p.Text.Insert(lastLessThan, ".");
                                 }
+                                else
+                                {
+                                    if (p.Text.EndsWith('“') && tempNoHtml.StartsWith('„'))
+                                        p.Text = p.Text.TrimEnd('“') + ".“";
+                                    else if (p.Text.EndsWith('"') && tempNoHtml.StartsWith('"'))
+                                        p.Text = p.Text.TrimEnd('"') + ".\"";
+                                    else
+                                        p.Text += ".";
+                                }
+                                if (p.Text != oldText)
+                                {
+                                    missigPeriodsAtEndOfLine++;
+                                    AddFixToListView(p, fixAction, oldText, p.Text);
+                                }
+
                             }
                         }
                     }
@@ -2102,42 +2019,31 @@ namespace Nikse.SubtitleEdit.Forms
                 if (p.Text.Length > 4)
                 {
                     int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine == -1)
+                    if (indexOfNewLine < 0)
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine == -1)
+                    if (indexOfNewLine < 0)
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine == -1)
+                    if (indexOfNewLine < 0)
                         indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 3, StringComparison.Ordinal);
-                    if (indexOfNewLine > 0)
+                    if (indexOfNewLine > 0 && Configuration.Settings.General.UppercaseLetters.Contains(char.ToUpper(p.Text[indexOfNewLine - 1])) && AllowFix(p, fixAction))
                     {
-                        if (Configuration.Settings.General.UppercaseLetters.Contains(char.ToUpper(p.Text[indexOfNewLine - 1])))
-                        {
-                            if (AllowFix(p, fixAction))
-                            {
-                                string oldText = p.Text;
+                        string oldText = p.Text;
 
-                                string text = p.Text.Substring(0, indexOfNewLine);
-                                var st = new StripableText(text);
-                                if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
-                                    p.Text = p.Text.Insert(indexOfNewLine, "?");
-                                else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡
-                                    p.Text = p.Text.Insert(indexOfNewLine, "!");
-                                else
-                                    p.Text = p.Text.Insert(indexOfNewLine, ".");
+                        string text = p.Text.Substring(0, indexOfNewLine);
+                        var st = new StripableText(text);
+                        if (st.Pre.TrimEnd().EndsWith('¿')) // Spanish ¿
+                            p.Text = p.Text.Insert(indexOfNewLine, "?");
+                        else if (st.Pre.TrimEnd().EndsWith('¡')) // Spanish ¡
+                            p.Text = p.Text.Insert(indexOfNewLine, "!");
+                        else
+                            p.Text = p.Text.Insert(indexOfNewLine, ".");
 
-                                missigPeriodsAtEndOfLine++;
-                                AddFixToListView(p, fixAction, oldText, p.Text);
-                            }
-                        }
+                        missigPeriodsAtEndOfLine++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
-
-            if (missigPeriodsAtEndOfLine > 0)
-            {
-                _totalFixes += missigPeriodsAtEndOfLine;
-                LogStatus(_language.AddPeriods, string.Format(_language.XPeriodsAdded, missigPeriodsAtEndOfLine));
-            }
+            UpdateFixStatus(missigPeriodsAtEndOfLine, _language.AddPeriods, _language.XPeriodsAdded);
         }
 
         private static bool IsOneLineUrl(string s)
@@ -2208,26 +2114,15 @@ namespace Nikse.SubtitleEdit.Forms
                 string oldText = p.Text;
                 string fixedText = FixStartWithUppercaseLetterAfterParagraph(p, prev, _encoding, Language);
 
-                if (oldText != fixedText)
+                if (oldText != fixedText && AllowFix(p, fixAction))
                 {
                     p.Text = fixedText;
-                    if (AllowFix(p, fixAction))
-                    {
-                        fixedStartWithUppercaseLetterAfterParagraphTicked++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
-                    else
-                    {
-                        p.Text = oldText;
-                    }
+                    fixedStartWithUppercaseLetterAfterParagraphTicked++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             listViewFixes.EndUpdate();
-            if (fixedStartWithUppercaseLetterAfterParagraphTicked > 0)
-            {
-                _totalFixes += fixedStartWithUppercaseLetterAfterParagraphTicked;
-                LogStatus(_language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
-            }
+            UpdateFixStatus(fixedStartWithUppercaseLetterAfterParagraphTicked, _language.StartWithUppercaseLetterAfterParagraph, fixedStartWithUppercaseLetterAfterParagraphTicked.ToString(CultureInfo.InvariantCulture));
         }
 
         public static string FixStartWithUppercaseLetterAfterParagraph(Paragraph p, Paragraph prev, Encoding encoding, string language)
@@ -2236,22 +2131,22 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string text = p.Text;
                 string pre = string.Empty;
-                if (text.Length > 4 && text.StartsWith("<i> "))
+                if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
                 {
                     pre = "<i> ";
                     text = text.Substring(4);
                 }
-                if (text.Length > 3 && text.StartsWith("<i>"))
+                if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
                 {
                     pre = "<i>";
                     text = text.Substring(3);
                 }
-                if (text.Length > 4 && text.StartsWith("<I> "))
+                if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
                 {
                     pre = "<I> ";
                     text = text.Substring(4);
                 }
-                if (text.Length > 3 && text.StartsWith("<I>"))
+                if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
                 {
                     pre = "<I>";
                     text = text.Substring(3);
@@ -2281,12 +2176,12 @@ namespace Nikse.SubtitleEdit.Forms
 
                 string prevText = " .";
                 if (prev != null)
-                    prevText = Utilities.RemoveHtmlTags(prev.Text);
+                    prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
 
-                bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
+                bool isPrevEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
                 if (prevText == " .")
                     isPrevEndOfLine = true;
-                if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
+                if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                     (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                     !char.IsDigit(firstLetter) &&
                     isPrevEndOfLine)
@@ -2300,9 +2195,9 @@ namespace Nikse.SubtitleEdit.Forms
                     {
                         if (IsTurkishLittleI(firstLetter, encoding, language))
                             p.Text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                        else if (language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                      text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                      text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
+                        else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ", StringComparison.Ordinal) || text.StartsWith("lnterested") ||
+                                                      text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
+                                                      text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
                             p.Text = pre + "I" + text.Substring(1);
                         else
                             p.Text = pre + char.ToUpper(firstLetter) + text.Substring(1);
@@ -2312,27 +2207,27 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (p.Text != null && p.Text.Contains(Environment.NewLine))
             {
-                string[] arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+                var arr = p.Text.SplitToLines();
                 if (arr.Length == 2 && arr[1].Length > 1)
                 {
                     string text = arr[1];
                     string pre = string.Empty;
-                    if (text.Length > 4 && text.StartsWith("<i> "))
+                    if (text.Length > 4 && text.StartsWith("<i> ", StringComparison.Ordinal))
                     {
                         pre = "<i> ";
                         text = text.Substring(4);
                     }
-                    if (text.Length > 3 && text.StartsWith("<i>"))
+                    if (text.Length > 3 && text.StartsWith("<i>", StringComparison.Ordinal))
                     {
                         pre = "<i>";
                         text = text.Substring(3);
                     }
-                    if (text.Length > 4 && text.StartsWith("<I> "))
+                    if (text.Length > 4 && text.StartsWith("<I> ", StringComparison.Ordinal))
                     {
                         pre = "<I> ";
                         text = text.Substring(4);
                     }
-                    if (text.Length > 3 && text.StartsWith("<I>"))
+                    if (text.Length > 3 && text.StartsWith("<I>", StringComparison.Ordinal))
                     {
                         pre = "<I>";
                         text = text.Substring(3);
@@ -2359,9 +2254,9 @@ namespace Nikse.SubtitleEdit.Forms
                     }
 
                     char firstLetter = text[0];
-                    string prevText = Utilities.RemoveHtmlTags(arr[0]);
-                    bool isPrevEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
-                    if ((!text.StartsWith("www.") && !text.StartsWith("http:") && !text.StartsWith("https:")) &&
+                    string prevText = HtmlUtil.RemoveHtmlTags(arr[0]);
+                    bool isPrevEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
+                    if ((!text.StartsWith("www.", StringComparison.Ordinal) && !text.StartsWith("http:", StringComparison.Ordinal) && !text.StartsWith("https:", StringComparison.Ordinal)) &&
                         (char.IsLower(firstLetter) || IsTurkishLittleI(firstLetter, encoding, language)) &&
                         !prevText.EndsWith("...", StringComparison.Ordinal) &&
                         isPrevEndOfLine)
@@ -2375,9 +2270,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             if (IsTurkishLittleI(firstLetter, encoding, language))
                                 text = pre + GetTurkishUppercaseLetter(firstLetter, encoding) + text.Substring(1);
-                            else if (language == "en" && (text.StartsWith("l ") || text.StartsWith("l-I") || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
-                                                     text.StartsWith("lsn't ") || text.StartsWith("ldiot") || text.StartsWith("ln") || text.StartsWith("lm") ||
-                                                     text.StartsWith("ls") || text.StartsWith("lt") || text.StartsWith("lf ") || text.StartsWith("lc") || text.StartsWith("l'm ")) || text.StartsWith("l am ")) // l > I
+                            else if (language == "en" && (text.StartsWith("l ", StringComparison.Ordinal) || text.StartsWith("l-I", StringComparison.Ordinal) || text.StartsWith("ls ") || text.StartsWith("lnterested") ||
+                                                     text.StartsWith("lsn't ", StringComparison.Ordinal) || text.StartsWith("ldiot", StringComparison.Ordinal) || text.StartsWith("ln", StringComparison.Ordinal) || text.StartsWith("lm", StringComparison.Ordinal) ||
+                                                     text.StartsWith("ls", StringComparison.Ordinal) || text.StartsWith("lt", StringComparison.Ordinal) || text.StartsWith("lf ", StringComparison.Ordinal) || text.StartsWith("lc", StringComparison.Ordinal) || text.StartsWith("l'm ", StringComparison.Ordinal)) || text.StartsWith("l am ", StringComparison.Ordinal)) // l > I
                                 text = pre + "I" + text.Substring(1);
                             else
                                 text = pre + char.ToUpper(firstLetter) + text.Substring(1);
@@ -2385,31 +2280,31 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                     }
 
-                    arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
-                    if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-")) &&
-                        (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-")) &&
+                    arr = p.Text.SplitToLines();
+                    if ((arr[0].StartsWith('-') || arr[0].StartsWith("<i>-", StringComparison.Ordinal)) &&
+                        (arr[1].StartsWith('-') || arr[1].StartsWith("<i>-", StringComparison.Ordinal)) &&
                         !arr[0].StartsWith("--", StringComparison.Ordinal) && !arr[0].StartsWith("<i>--", StringComparison.Ordinal) &&
                         !arr[1].StartsWith("--", StringComparison.Ordinal) && !arr[1].StartsWith("<i>--", StringComparison.Ordinal))
                     {
-                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ") && arr[1].Length > 6)
+                        if (isPrevEndOfLine && arr[1].StartsWith("<i>- ", StringComparison.Ordinal) && arr[1].Length > 6)
                         {
                             p.Text = arr[0] + Environment.NewLine + "<i>- " + char.ToUpper(arr[1][5]) + arr[1].Remove(0, 6);
                         }
-                        else if (isPrevEndOfLine && arr[1].StartsWith("- ") && arr[1].Length > 3)
+                        else if (isPrevEndOfLine && arr[1].StartsWith("- ", StringComparison.Ordinal) && arr[1].Length > 3)
                         {
                             p.Text = arr[0] + Environment.NewLine + "- " + char.ToUpper(arr[1][2]) + arr[1].Remove(0, 3);
                         }
-                        arr = p.Text.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+                        arr = p.Text.SplitToLines();
 
                         prevText = " .";
                         if (prev != null && p.StartTime.TotalMilliseconds - 10000 < prev.EndTime.TotalMilliseconds)
-                            prevText = Utilities.RemoveHtmlTags(prev.Text);
-                        bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPrevoiusTextEndOfParagraph(prevText);
-                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ") && arr[0].Length > 6)
+                            prevText = HtmlUtil.RemoveHtmlTags(prev.Text);
+                        bool isPrevLineEndOfLine = FixCommonErrorsHelper.IsPreviousTextEndOfParagraph(prevText);
+                        if (isPrevLineEndOfLine && arr[0].StartsWith("<i>- ", StringComparison.Ordinal) && arr[0].Length > 6)
                         {
                             p.Text = "<i>- " + char.ToUpper(arr[0][5]) + arr[0].Remove(0, 6) + Environment.NewLine + arr[1];
                         }
-                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ") && arr[0].Length > 3)
+                        else if (isPrevLineEndOfLine && arr[0].StartsWith("- ", StringComparison.Ordinal) && arr[0].Length > 3)
                         {
                             p.Text = "- " + char.ToUpper(arr[0][2]) + arr[0].Remove(0, 3) + Environment.NewLine + arr[1];
                         }
@@ -2421,37 +2316,37 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 int len = 0;
                 int indexOfNewLine = p.Text.IndexOf(Environment.NewLine + " -", 1, StringComparison.Ordinal);
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "- <i> ♪", 1, StringComparison.Ordinal);
                     len = "- <i> ♪".Length;
                 }
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "-", 1, StringComparison.Ordinal);
                     len = "-".Length;
                 }
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i>-", 1, StringComparison.Ordinal);
                     len = "<i>-".Length;
                 }
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "<i> -", 1, StringComparison.Ordinal);
                     len = "<i> -".Length;
                 }
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ -", 1, StringComparison.Ordinal);
                     len = "♪ -".Length;
                 }
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i> -", 1, StringComparison.Ordinal);
                     len = "♪ <i> -".Length;
                 }
-                if (indexOfNewLine == -1)
+                if (indexOfNewLine < 0)
                 {
                     indexOfNewLine = p.Text.IndexOf(Environment.NewLine + "♪ <i>-", 1, StringComparison.Ordinal);
                     len = "♪ <i>-".Length;
@@ -2589,7 +2484,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                 if (last != null)
                 {
-                    string lastText = Utilities.RemoveHtmlTags(last.Text);
+                    string lastText = HtmlUtil.RemoveHtmlTags(last.Text);
                     if (lastText.EndsWith(':') || lastText.EndsWith(';'))
                     {
                         var st = new StripableText(p.Text);
@@ -2610,16 +2505,17 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         else if (lastWasColon)
                         {
+                            var startFromJ = p.Text.Substring(j);
                             if (skipCount > 0)
                                 skipCount--;
-                            else if (p.Text.Substring(j).StartsWith("<i>"))
+                            else if (startFromJ.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                                 skipCount = 2;
-                            else if (p.Text.Substring(j).StartsWith("<b>"))
+                            else if (startFromJ.StartsWith("<b>", StringComparison.OrdinalIgnoreCase))
                                 skipCount = 2;
-                            else if (p.Text.Substring(j).StartsWith("<u>"))
+                            else if (startFromJ.StartsWith("<u>", StringComparison.OrdinalIgnoreCase))
                                 skipCount = 2;
-                            else if (p.Text.Substring(j).StartsWith("<font ") && p.Text.Substring(j).Contains('>'))
-                                skipCount = p.Text.Substring(j).IndexOf('>') - p.Text.Substring(j).IndexOf("<font ", StringComparison.Ordinal);
+                            else if (startFromJ.StartsWith("<font ", StringComparison.OrdinalIgnoreCase) && p.Text.Substring(j).Contains('>'))
+                                skipCount = startFromJ.IndexOf('>') - startFromJ.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
                             else if (IsTurkishLittleI(s, _encoding, Language))
                             {
                                 p.Text = p.Text.Remove(j, 1).Insert(j, GetTurkishUppercaseLetter(s, _encoding).ToString(CultureInfo.InvariantCulture));
@@ -2689,17 +2585,14 @@ namespace Nikse.SubtitleEdit.Forms
                     var p = Subtitle.Paragraphs[i];
                     string text = ocrFixEngine.FixOcrErrors(p.Text, i, lastLine, false, OcrFixEngine.AutoGuessLevel.Cautious);
                     lastLine = text;
-                    if (p.Text != text)
+                    if (AllowFix(p, fixAction) && p.Text != text)
                     {
-                        if (AllowFix(p, fixAction))
-                        {
-                            string oldText = p.Text;
-                            p.Text = text;
-                            noOfFixes++;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
-                        Application.DoEvents();
+                        string oldText = p.Text;
+                        p.Text = text;
+                        noOfFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
+                    Application.DoEvents();
                 }
                 if (noOfFixes > 0)
                 {
@@ -2723,11 +2616,11 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     string temp = text.Substring(match.Index + 2);
                     if (temp != "1/2" &&
-                        !temp.StartsWith("1/2 ") &&
-                        !temp.StartsWith("1/2.") &&
-                        !temp.StartsWith("1/2!") &&
-                        !temp.StartsWith("1/2?") &&
-                        !temp.StartsWith("1/2<"))
+                        !temp.StartsWith("1/2 ", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2.", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2!", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2?", StringComparison.Ordinal) &&
+                        !temp.StartsWith("1/2<", StringComparison.Ordinal))
                     {
                         text = text.Remove(match.Index + 1, 1);
                     }
@@ -2735,15 +2628,12 @@ namespace Nikse.SubtitleEdit.Forms
                         match = RemoveSpaceBetweenNumbersRegEx.Match(text, match.Index + 2);
                     counter++;
                 }
-                if (p.Text != text)
+                if (AllowFix(p, fixAction) && p.Text != text)
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        string oldText = p.Text;
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    string oldText = p.Text;
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
             if (noOfFixes > 0)
@@ -2763,22 +2653,14 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = Subtitle.Paragraphs[i];
                 string oldText = p.Text;
                 var text = FixCommonErrorsHelper.FixDialogsOnOneLine(oldText, language);
-                if (oldText != text)
+                if (oldText != text && AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
-
             }
-            if (noOfFixes > 0)
-            {
-                _totalFixes += noOfFixes;
-                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixDialogsOnOneLine, noOfFixes));
-            }
+            UpdateFixStatus(noOfFixes, _language.FixCommonOcrErrors, _language.FixDialogsOneLineExample);
         }
 
         private void TurkishAnsiToUnicode()
@@ -2796,21 +2678,14 @@ namespace Nikse.SubtitleEdit.Forms
                 text = text.Replace("ý", "ı");
                 text = text.Replace("ð", "ğ");
                 text = text.Replace("þ", "ş");
-                if (oldText != text)
+                if (oldText != text && AllowFix(p, fixAction))
                 {
-                    if (AllowFix(p, fixAction))
-                    {
-                        p.Text = text;
-                        noOfFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    p.Text = text;
+                    noOfFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (noOfFixes > 0)
-            {
-                _totalFixes += noOfFixes;
-                LogStatus(_language.FixCommonOcrErrors, string.Format(_language.FixTurkishAnsi, noOfFixes));
-            }
+            UpdateFixStatus(noOfFixes, _language.FixCommonOcrErrors, _language.FixTurkishAnsi);
         }
 
         private void FixAloneLowercaseIToUppercaseI()
@@ -2820,27 +2695,20 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-
                 string oldText = p.Text;
                 string s = p.Text;
                 if (s.Contains('i'))
                 {
                     s = FixAloneLowercaseIToUppercaseLine(FixAloneLowercaseIToUppercaseIre, oldText, s, 'i');
-
                     if (s != oldText && AllowFix(p, fixAction))
                     {
                         p.Text = s;
                         iFixes++;
                         AddFixToListView(p, fixAction, oldText, p.Text);
                     }
-
                 }
             }
-            if (iFixes > 0)
-            {
-                _totalFixes += iFixes;
-                LogStatus(_language.FixLowercaseIToUppercaseI, string.Format(_language.XIsChangedToUppercase, iFixes));
-            }
+            UpdateFixStatus(iFixes, _language.FixLowercaseIToUppercaseI, _language.XIsChangedToUppercase);
         }
 
         public static string FixAloneLowercaseIToUppercaseLine(Regex re, string oldText, string s, char target)
@@ -2850,8 +2718,10 @@ namespace Nikse.SubtitleEdit.Forms
                 s = s.Replace(">" + target + "</", ">I</");
             if (s.Contains(">" + target + " "))
                 s = s.Replace(">" + target + " ", ">I ");
-            if (s.Contains(">" + target + "" + Environment.NewLine))
-                s = s.Replace(">" + target + "" + Environment.NewLine, ">I" + Environment.NewLine);
+            if (s.Contains(">" + target + "\u200B" + Environment.NewLine)) // Zero Width Space
+                s = s.Replace(">" + target + "\u200B" + Environment.NewLine, ">I" + Environment.NewLine);
+            if (s.Contains(">" + target + "\uFEFF" + Environment.NewLine)) // Zero Width No-Break Space
+                s = s.Replace(">" + target + "\uFEFF" + Environment.NewLine, ">I" + Environment.NewLine);
 
             // reg-ex
             Match match = re.Match(s);
@@ -2910,21 +2780,19 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 var p = Subtitle.Paragraphs[i];
-                string oldText = p.Text;
-                string text = FixCommonErrorsHelper.FixHyphensRemove(Subtitle, i);
-
-                if (text != oldText && AllowFix(p, fixAction))
+                if (AllowFix(p, fixAction))
                 {
-                    p.Text = text;
-                    iFixes++;
-                    AddFixToListView(p, fixAction, oldText, p.Text);
+                    string oldText = p.Text;
+                    string text = FixCommonErrorsHelper.FixHyphensRemove(Subtitle, i);
+                    if (text != oldText)
+                    {
+                        p.Text = text;
+                        iFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
                 }
             }
-            if (iFixes > 0)
-            {
-                _totalFixes += iFixes;
-                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
-            }
+            UpdateFixStatus(iFixes, _language.FixHyphens, _language.XHyphensFixed);
         }
 
         public void FixHyphensAdd()
@@ -2934,21 +2802,27 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 var p = Subtitle.Paragraphs[i];
-                string oldText = p.Text;
-                string text = FixCommonErrorsHelper.FixHyphensAdd(Subtitle, i, Language);
-
-                if (text != oldText && AllowFix(p, fixAction))
+                if (AllowFix(p, fixAction))
                 {
-                    p.Text = text;
-                    iFixes++;
-                    AddFixToListView(p, fixAction, oldText, p.Text);
+                    string oldText = p.Text;
+                    string text = FixCommonErrorsHelper.FixHyphensAdd(Subtitle, i, Language);
+                    if (text != oldText)
+                    {
+                        p.Text = text;
+                        iFixes++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
                 }
-
             }
-            if (iFixes > 0)
+            UpdateFixStatus(iFixes, _language.FixHyphen, _language.XHyphensFixed);
+        }
+
+        private void UpdateFixStatus(int fixes, string message, string xMessage)
+        {
+            if (fixes > 0)
             {
-                _totalFixes += iFixes;
-                LogStatus(_language.FixHyphens, string.Format(_language.XHyphensFixed, iFixes));
+                _totalFixes += fixes;
+                LogStatus(message, string.Format(xMessage, fixes));
             }
         }
 
@@ -2959,26 +2833,15 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string text = p.Text;
-
-                if (Utilities.CountTagInText(text, Environment.NewLine) > 1)
+                if (Utilities.GetNumberOfLines(p.Text) > 2 && AllowFix(p, fixAction))
                 {
                     string oldText = p.Text;
-                    text = Utilities.AutoBreakLine(text);
-
-                    if (AllowFix(p, fixAction))
-                    {
-                        p.Text = text;
-                        iFixes++;
-                        AddFixToListView(p, fixAction, oldText, p.Text);
-                    }
+                    p.Text = Utilities.AutoBreakLine(p.Text);
+                    iFixes++;
+                    AddFixToListView(p, fixAction, oldText, p.Text);
                 }
             }
-            if (iFixes > 0)
-            {
-                _totalFixes += iFixes;
-                LogStatus(_language.Fix3PlusLines, string.Format(_language.X3PlusLinesFixed, iFixes));
-            }
+            UpdateFixStatus(iFixes, _language.Fix3PlusLines, _language.X3PlusLinesFixed);
         }
 
         public void FixMusicNotation()
@@ -2988,38 +2851,27 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-
-                string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                string oldText = p.Text;
-
-                string newText = p.Text;
-                string noTagsText = Utilities.RemoveHtmlTags(newText);
-                foreach (string musicSymbol in musicSymbols)
+                if (AllowFix(p, fixAction))
                 {
-                    newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                    newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
-                    noTagsText = noTagsText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
-                }
+                    string[] musicSymbols = Configuration.Settings.Tools.MusicSymbolToReplace.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    var oldText = p.Text;
+                    var newText = oldText;
 
-                if (!newText.Equals(oldText))
-                {
-                    if (!noTagsText.Equals(Utilities.RemoveHtmlTags(oldText)))
+                    foreach (string musicSymbol in musicSymbols)
                     {
-                        if (AllowFix(p, fixAction))
-                        {
-                            p.Text = newText;
-                            fixCount++;
-                            AddFixToListView(p, fixAction, oldText, p.Text);
-                        }
+                        newText = newText.Replace(musicSymbol, Configuration.Settings.Tools.MusicSymbol);
+                        newText = newText.Replace(musicSymbol.ToUpper(), Configuration.Settings.Tools.MusicSymbol);
+                    }
+                    var noTagsText = HtmlUtil.RemoveHtmlTags(newText);
+                    if (newText != oldText && noTagsText != HtmlUtil.RemoveHtmlTags(oldText))
+                    {
+                        p.Text = newText;
+                        fixCount++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixMusicNotation, string.Format(_language.XFixMusicNotation, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixMusicNotation, _language.XFixMusicNotation);
         }
 
         public void FixDoubleDash()
@@ -3029,68 +2881,69 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                string text = p.Text;
-                string oldText = p.Text;
-
-                while (text.Contains("---"))
+                if (AllowFix(p, fixAction))
                 {
-                    text = text.Replace("---", "--");
-                }
+                    string text = p.Text;
+                    string oldText = p.Text;
 
-                if (text.Contains("--"))
-                {
-                    text = text.Replace("--", "... ");
-                    text = text.Replace("...  ", "... ");
-                    text = text.Replace(" ...", "...");
-                    text = text.TrimEnd();
-                    text = text.Replace("... " + Environment.NewLine, "..." + Environment.NewLine);
-                    text = text.Replace("... </", "...</"); // </i>, </font>...
-                    text = text.Replace("... ?", "...?");
-                    text = text.Replace("... !", "...!");
-                    if (text.StartsWith("... "))
-                        text = text.Remove(3, 1);
-                    if (text.StartsWith("<i>... "))
-                        text = text.Remove(6, 1);
-                    if (text.StartsWith("<font>... "))
-                        text = text.Remove("<font>... ".Length - 1, 1);
-                    if (text.StartsWith("<b>... "))
-                        text = text.Remove("<b>... ".Length - 1, 1);
-                }
-                //if (text.EndsWith('-'))
-                //{
-                //    text = text.Substring(0, text.Length - 1) + "...";
-                //    text = text.Replace(" ...", "...");
-                //}
-                //if (text.EndsWith("-</i>"))
-                //{
-                //    text = text.Replace("-</i>", "...</i>");
-                //    text = text.Replace(" ...", "...");
-                //}
+                    while (text.Contains("---", StringComparison.Ordinal))
+                    {
+                        text = text.Replace("---", "--");
+                    }
 
-                if (p.Text.StartsWith('—'))
-                {
-                    text = text.Remove(0, 1);
-                    text = text.Insert(0, "...");
-                }
-                if (p.Text.EndsWith('—'))
-                {
-                    text = text.Substring(0, text.Length - 1) + "...";
-                    text = text.Replace(" ...", "...");
-                }
+                    if (text.Contains("--", StringComparison.Ordinal))
+                    {
+                        text = text.Replace("--", "... ");
+                        text = text.Replace("...  ", "... ");
+                        text = text.Replace(" ...", "...");
+                        text = text.TrimEnd();
+                        text = text.Replace("... " + Environment.NewLine, "..." + Environment.NewLine);
+                        text = text.Replace("... </", "...</"); // </i>, </font>...
+                        text = text.Replace("... ?", "...?");
+                        text = text.Replace("... !", "...!");
 
-                if (text != oldText && AllowFix(p, fixAction))
-                {
-                    p.Text = text;
-                    fixCount++;
-                    AddFixToListView(p, fixAction, oldText, p.Text);
-                }
+                        if (text.IndexOf(Environment.NewLine, StringComparison.Ordinal) > 1)
+                        {
+                            var lines = text.SplitToLines();
+                            for (int k = 0; k < lines.Length; k++)
+                                lines[k] = FixCommonErrorsHelper.RemoveSpacesBeginLineAfterEllipses(lines[k]);
+                            text = string.Join(Environment.NewLine, lines);
+                        }
+                        else
+                        {
+                            text = FixCommonErrorsHelper.RemoveSpacesBeginLineAfterEllipses(text);
+                        }
+                    }
+                    //if (text.EndsWith('-'))
+                    //{
+                    //    text = text.Substring(0, text.Length - 1) + "...";
+                    //    text = text.Replace(" ...", "...");
+                    //}
+                    //if (text.EndsWith("-</i>"))
+                    //{
+                    //    text = text.Replace("-</i>", "...</i>");
+                    //    text = text.Replace(" ...", "...");
+                    //}
 
+                    if (text.StartsWith('—') && text.Length > 1)
+                    {
+                        text = text.Substring(1).Insert(0, "...");
+                    }
+                    if (text.EndsWith('—') && text.Length > 1)
+                    {
+                        text = text.Substring(0, text.Length - 1) + "...";
+                        text = text.Replace(" ...", "...");
+                    }
+
+                    if (text != oldText)
+                    {
+                        p.Text = text;
+                        fixCount++;
+                        AddFixToListView(p, fixAction, oldText, p.Text);
+                    }
+                }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixDoubleDash, string.Format(_language.XFixDoubleDash, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixDoubleDash, _language.XFixDoubleDash);
         }
 
         public void FixDoubleGreaterThan()
@@ -3100,41 +2953,40 @@ namespace Nikse.SubtitleEdit.Forms
             for (int i = 0; i < Subtitle.Paragraphs.Count; i++)
             {
                 Paragraph p = Subtitle.Paragraphs[i];
-                if (!p.Text.Contains(">>", StringComparison.Ordinal))
-                    continue;
-                var text = p.Text;
-                var oldText = text;
-                if (!text.Contains(Environment.NewLine))
+                if (AllowFix(p, fixAction))
                 {
-                    text = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(text);
-                    if (oldText != text && AllowFix(p, fixAction))
+                    if (!p.Text.Contains(">>", StringComparison.Ordinal))
+                        continue;
+                    var text = p.Text;
+                    var oldText = text;
+                    if (!text.Contains(Environment.NewLine))
                     {
-                        fixCount++;
-                        p.Text = text;
-                        AddFixToListView(p, fixAction, oldText, text);
+                        text = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(text);
+                        if (oldText != text)
+                        {
+                            fixCount++;
+                            p.Text = text;
+                            AddFixToListView(p, fixAction, oldText, text);
+                        }
                     }
-                }
-                else
-                {
-                    var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
-                    for (int k = 0; k < lines.Length; k++)
+                    else
                     {
-                        lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
-                    }
-                    text = string.Join(Environment.NewLine, lines);
-                    if (oldText != text && AllowFix(p, fixAction))
-                    {
-                        fixCount++;
-                        p.Text = text;
-                        AddFixToListView(p, fixAction, oldText, text);
+                        var lines = text.SplitToLines();
+                        for (int k = 0; k < lines.Length; k++)
+                        {
+                            lines[k] = FixCommonErrorsHelper.FixDoubleGreaterThanHelper(lines[k]);
+                        }
+                        text = string.Join(Environment.NewLine, lines);
+                        if (oldText != text)
+                        {
+                            fixCount++;
+                            p.Text = text;
+                            AddFixToListView(p, fixAction, oldText, text);
+                        }
                     }
                 }
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixDoubleGreaterThan, string.Format(_language.XFixDoubleGreaterThan, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixDoubleGreaterThan, _language.XFixDoubleGreaterThan);
         }
 
         public void FixEllipsesStart()
@@ -3161,7 +3013,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else
                     {
-                        var lines = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                        var lines = text.SplitToLines();
                         var fixedParagraph = string.Empty;
                         for (int k = 0; k < lines.Length; k++)
                         {
@@ -3181,11 +3033,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
             listViewFixes.EndUpdate();
             listViewFixes.Refresh();
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixEllipsesStart, string.Format(_language.XFixEllipsesStart, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixEllipsesStart, _language.XFixEllipsesStart);
         }
 
         private static string FixMissingOpenBracket(string text, string openB)
@@ -3195,7 +3043,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (text.Contains(" " + closeB))
                 openB = openB + " ";
-
             do
             {
                 if (text.Length > 1 && text.StartsWith('-'))
@@ -3206,7 +3053,7 @@ namespace Nikse.SubtitleEdit.Forms
                     else
                         text = text.Substring(1);
                 }
-                if (text.Length > 3 && text.StartsWith("<i>"))
+                if (text.Length > 3 && text.StartsWith("<i>", StringComparison.OrdinalIgnoreCase))
                 {
                     pre += "<i>";
                     if (text[3] == ' ')
@@ -3225,7 +3072,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     text = text.TrimStart(' ');
                 }
-            } while (text.StartsWith("<i>") || text.StartsWith('-'));
+            } while (text.StartsWith("<i>", StringComparison.Ordinal) || text.StartsWith('-'));
 
             text = pre + openB + text;
             return text;
@@ -3245,7 +3092,7 @@ namespace Nikse.SubtitleEdit.Forms
                     string oldText = p.Text;
                     var openIdx = p.Text.IndexOf('(');
                     var closeIdx = p.Text.IndexOf(')');
-                    if ((closeIdx > -1 && closeIdx < openIdx) || (closeIdx > -1 && openIdx == -1))
+                    if (closeIdx >= 0 && (closeIdx < openIdx || openIdx < 0))
                     {
                         p.Text = FixMissingOpenBracket(p.Text, "(");
                         hit = true;
@@ -3253,7 +3100,7 @@ namespace Nikse.SubtitleEdit.Forms
 
                     openIdx = p.Text.IndexOf('[');
                     closeIdx = p.Text.IndexOf(']');
-                    if ((closeIdx > -1 && closeIdx < openIdx) || (closeIdx > -1 && openIdx == -1))
+                    if (closeIdx >= 0 && (closeIdx < openIdx || openIdx < 0))
                     {
                         p.Text = FixMissingOpenBracket(p.Text, "[");
                         hit = true;
@@ -3266,12 +3113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
             }
-
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixMissingOpenBracket, string.Format(_language.XFixMissingOpenBracket, fixCount));
-            }
+            UpdateFixStatus(fixCount, _language.FixMissingOpenBracket, _language.XFixMissingOpenBracket);
         }
 
         private static Regex MyRegEx(string inputRegex)
@@ -3988,11 +3830,7 @@ namespace Nikse.SubtitleEdit.Forms
                 }
 
             }
-            if (fixCount > 0)
-            {
-                _totalFixes += fixCount;
-                LogStatus(_language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
-            }
+            UpdateFixStatus(fixCount, _language.FixSpanishInvertedQuestionAndExclamationMarks, fixCount.ToString(CultureInfo.InvariantCulture));
         }
 
         private void FixSpanishInvertedLetter(char mark, string inverseMark, Paragraph p, Paragraph last, ref bool wasLastLineClosed, string fixAction, ref int fixCount)
@@ -4004,8 +3842,8 @@ namespace Nikse.SubtitleEdit.Forms
                     skip = true;
 
                 if (!skip && Utilities.CountTagInText(p.Text, mark) == Utilities.CountTagInText(p.Text, inverseMark) &&
-                    Utilities.RemoveHtmlTags(p.Text).TrimStart(inverseMark[0]).Contains(inverseMark) == false &&
-                    Utilities.RemoveHtmlTags(p.Text).TrimEnd(mark).Contains(mark) == false)
+                    HtmlUtil.RemoveHtmlTags(p.Text).TrimStart(inverseMark[0]).Contains(inverseMark) == false &&
+                    HtmlUtil.RemoveHtmlTags(p.Text).TrimEnd(mark).Contains(mark) == false)
                 {
                     skip = true;
                 }
@@ -4021,7 +3859,7 @@ namespace Nikse.SubtitleEdit.Forms
                     while (markIndex > 0 && startIndex < p.Text.Length)
                     {
                         int inverseMarkIndex = p.Text.IndexOf(inverseMark, startIndex, StringComparison.Ordinal);
-                        if (wasLastLineClosed && (inverseMarkIndex == -1 || inverseMarkIndex > markIndex))
+                        if (wasLastLineClosed && (inverseMarkIndex < 0 || inverseMarkIndex > markIndex))
                         {
                             if (AllowFix(p, fixAction))
                             {
@@ -4074,11 +3912,11 @@ namespace Nikse.SubtitleEdit.Forms
                                     }
 
                                     var st = new StripableText(part);
-                                    if (j == 0 && mark == '!' && st.Pre == "¿" && Utilities.CountTagInText(p.Text, mark) == 1 && Utilities.RemoveHtmlTags(p.Text).EndsWith(mark))
+                                    if (j == 0 && mark == '!' && st.Pre == "¿" && Utilities.CountTagInText(p.Text, mark) == 1 && HtmlUtil.RemoveHtmlTags(p.Text).EndsWith(mark))
                                     {
                                         p.Text = inverseMark + p.Text;
                                     }
-                                    else if (j == 0 && mark == '?' && st.Pre == "¡" && Utilities.CountTagInText(p.Text, mark) == 1 && Utilities.RemoveHtmlTags(p.Text).EndsWith(mark))
+                                    else if (j == 0 && mark == '?' && st.Pre == "¡" && Utilities.CountTagInText(p.Text, mark) == 1 && HtmlUtil.RemoveHtmlTags(p.Text).EndsWith(mark))
                                     {
                                         p.Text = inverseMark + p.Text;
                                     }
@@ -4343,7 +4181,7 @@ namespace Nikse.SubtitleEdit.Forms
             string htmlFileName = Path.GetTempFileName() + ".html";
             var sb = new StringBuilder();
             sb.Append("<html><head><meta charset='utf-8'><title>Subtitle Edit - Fix common errors preview</title><style>body,p,td {font-size:90%; font-family:Tahoma;} td {border:1px solid black;padding:5px} table {border-collapse: collapse;}</style></head><body><table><tbody>");
-            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", Configuration.Settings.Language.General.LineNumber, _language.Function, Configuration.Settings.Language.General.Before, Configuration.Settings.Language.General.After));
+            sb.AppendLine(string.Format("<tr><td style='font-weight:bold'>{0}</td><td style='font-weight:bold'>{1}</td><td style='font-weight:bold'>{2}</td><td style='font-weight:bold'>{3}</td></tr>", _languageGeneral.LineNumber, _language.Function, _languageGeneral.Before, _languageGeneral.After));
             foreach (ListViewItem item in listViewFixes.Items)
             {
                 if (item.Checked)
@@ -4533,11 +4371,11 @@ namespace Nikse.SubtitleEdit.Forms
             ce.FixOcrErrorsViaReplaceListTicked = listView1.Items[IndexFixOcrErrorsViaReplaceList].Checked;
             ce.RemoveSpaceBetweenNumberTicked = listView1.Items[IndexRemoveSpaceBetweenNumbers].Checked;
             ce.FixDialogsOnOneLineTicked = listView1.Items[IndexDialogsOnOneLine].Checked;
-            if (_danishLetterIIndex > -1)
+            if (_danishLetterIIndex >= 0)
                 ce.DanishLetterITicked = listView1.Items[_danishLetterIIndex].Checked;
-            if (_turkishAnsiIndex > -1)
+            if (_turkishAnsiIndex >= 0)
                 ce.TurkishAnsiTicked = listView1.Items[_turkishAnsiIndex].Checked;
-            if (_spanishInvertedQuestionAndExclamationMarksIndex > -1)
+            if (_spanishInvertedQuestionAndExclamationMarksIndex >= 0)
                 ce.SpanishInvertedQuestionAndExclamationMarksTicked = listView1.Items[_spanishInvertedQuestionAndExclamationMarksIndex].Checked;
 
             Configuration.Settings.Save();
@@ -4783,7 +4621,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLine.Left = labelTextLineLengths.Left + labelTextLineLengths.Width - 6;
             Utilities.GetLineLengths(labelSingleLine, text);
 
-            string s = Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
+            string s = HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, " ");
             buttonSplitLine.Visible = false;
             if (s.Length < Configuration.Settings.General.SubtitleLineMaximumLength * 1.9)
             {
@@ -4825,6 +4663,17 @@ namespace Nikse.SubtitleEdit.Forms
             int firstSelectedIndex = 0;
             if (subtitleListView1.SelectedItems.Count > 0)
                 firstSelectedIndex = subtitleListView1.SelectedItems[0].Index;
+
+            _notAllowedFixes = new HashSet<string>();
+            foreach (ListViewItem item in listViewFixes.Items)
+            {
+                if (!item.Checked)
+                {
+                    string key = item.SubItems[1].Text + "|" + item.SubItems[2].Text;
+                    if (!_notAllowedFixes.Contains(key))
+                        _notAllowedFixes.Add(key);
+                }
+            }
 
             _numberOfImportantLogMessages = 0;
             _onlyListFixes = false;
@@ -5125,7 +4974,7 @@ namespace Nikse.SubtitleEdit.Forms
                 var newParagraph = new Paragraph();
 
                 string oldText = currentParagraph.Text;
-                string[] lines = currentParagraph.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = currentParagraph.Text.SplitToLines();
                 if (lines.Length == 2 && (lines[0].EndsWith('.') || lines[0].EndsWith('!') || lines[0].EndsWith('?')))
                 {
                     currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
@@ -5134,7 +4983,7 @@ namespace Nikse.SubtitleEdit.Forms
                 else
                 {
                     string s = Utilities.AutoBreakLine(currentParagraph.Text, 5, Configuration.Settings.Tools.MergeLinesShorterThan, Language);
-                    lines = s.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                    lines = s.SplitToLines();
                     if (lines.Length == 2)
                     {
                         currentParagraph.Text = Utilities.AutoBreakLine(lines[0], Language);
@@ -5142,7 +4991,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                 }
 
-                double startFactor = (double)Utilities.RemoveHtmlTags(currentParagraph.Text).Length / Utilities.RemoveHtmlTags(oldText).Length;
+                double startFactor = (double)HtmlUtil.RemoveHtmlTags(currentParagraph.Text).Length / HtmlUtil.RemoveHtmlTags(oldText).Length;
                 if (startFactor < 0.20)
                     startFactor = 0.20;
                 if (startFactor > 0.80)

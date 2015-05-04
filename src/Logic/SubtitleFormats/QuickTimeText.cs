@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nikse.SubtitleEdit.Core;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -48,13 +49,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             foreach (Paragraph p in subtitle.Paragraphs)
             {
                 //[00:00:07.12]
-                //d’être perdu dans un brouillard de pensées, 
+                //d’être perdu dans un brouillard de pensées,
                 //[00:00:17.06] (this line is optional!)
                 //              (blank line optional too)
                 //[00:00:26.26]
                 //tout le temps,
                 //[00:00:35.08]
-                sb.AppendLine(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime) + Environment.NewLine, Utilities.RemoveHtmlTags(p.Text) + Environment.NewLine, EncodeTimeCode(p.EndTime) + Environment.NewLine));
+                sb.AppendLine(string.Format("{0}{1}{2}", EncodeTimeCode(p.StartTime) + Environment.NewLine, HtmlUtil.RemoveHtmlTags(p.Text) + Environment.NewLine, EncodeTimeCode(p.EndTime) + Environment.NewLine));
                 index++;
             }
             return sb.ToString();
@@ -69,7 +70,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         public override void LoadSubtitle(Subtitle subtitle, List<string> lines, string fileName)
         {
             //[00:00:07.12]
-            //d’être perdu dans un brouillard de pensées, 
+            //d’être perdu dans un brouillard de pensées,
             //[00:00:17.06] (this line is optional!)
             //              (blank line optional too)
             //[00:00:26.26]

@@ -116,7 +116,7 @@
             this.labelInfo.Text = "label1";
             this.labelInfo.TextAlign = System.Drawing.ContentAlignment.TopRight;
             // 
-            // AddWareForm
+            // AddWaveform
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -133,7 +133,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "AddWareForm";
+            this.Name = "AddWaveform";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

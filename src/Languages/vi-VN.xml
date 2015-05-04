@@ -2,12 +2,10 @@
 <Language Name="Viet Nam">
   <General>
     <Title>Subtitle Edit</Title>
-    <Version>3.4.5</Version>
-    <TranslatedBy>
-    Dịch qua Tiếng Việt bởi by everytime
-    Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
-    Cảm ơn rất nhiều
-    </TranslatedBy>
+    <Version>3.4.6</Version>
+    <TranslatedBy>Dịch qua Tiếng Việt bởi by everytime
+Mọi góp ý về bản dịch vui lòng gửi thư tới hộp thư: handes1990@gmail.com
+Cảm ơn rất nhiều</TranslatedBy>
     <CultureName>vn-VN</CultureName>
     <HelpFile />
     <Ok>&amp;Đồng ý</Ok>
@@ -77,8 +75,7 @@
   </General>
   <About>
     <Title>Giới thiệu về Subtitle Edit</Title>
-    <AboutText1>
-Subtitle Edit là phần mềm mã nguồn mở miễn phí theo giấy phép của GNUic.
+    <AboutText1>Subtitle Edit là phần mềm mã nguồn mở miễn phí theo giấy phép của GNUic.
 
 Bạn có thể phân phối, sửa đổi và sử dụng một cách tự do.
 
@@ -88,7 +85,7 @@ Ghé thăm www.nikse.dk thường xuyên để biết thêm thông tin và tải
 
 Rất hân hạnh được chào đón.
 
-  Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
+Hộp thư: Gửi thư tới: nikse.dk@gmail.com</AboutText1>
   </About>
   <AddToNames>
     <Title>Thêm tên tập tin/danh sách...</Title>
@@ -122,8 +119,7 @@ Rất hân hạnh được chào đón.
     <Percent>Phần trăm</Percent>
     <Recalculate>Tính toán lại</Recalculate>
     <AddSeconds>Thêm số giây</AddSeconds>
-    <SetAsPercent>Xác nhận giới hạn %
-</SetAsPercent>
+    <SetAsPercent>Xác nhận giới hạn %</SetAsPercent>
     <Note>Lưu ý: Thời gian hiển thị không trùng lên thời gian của văn bản tiếp theo</Note>
     <PleaseSelectAValueFromTheDropDownList>Vui lòng chọn giá trị từ danh sách xổ xuống</PleaseSelectAValueFromTheDropDownList>
     <PleaseChoose> -Vui lòng chọn- </PleaseChoose>
@@ -152,7 +148,7 @@ Rất hân hạnh được chào đón.
     <ConvertOptions>Cài đặt cách chuyển đổi</ConvertOptions>
     <AutoBreakLongLines>Tự động - ngắt các dòng dài</AutoBreakLongLines>
     <FixItalics>Sữa lỗi chữ in nghiêng</FixItalics>
-    <RemoveFormatting> Gỡ định dạng thẻ</RemoveFormatting>
+    <RemoveFormatting>Gỡ định dạng thẻ</RemoveFormatting>
     <RemoveTextForHI>Gỡ bỏ văn bản của HI</RemoveTextForHI>
     <RedoCasing>Quay lại cách hiển thị trước</RedoCasing>
     <Convert>Chuyển đổi</Convert>
@@ -272,7 +268,7 @@ Rất hân hạnh được chào đón.
     <SubtitleImage>Hình ảnh phụ đề</SubtitleImage>
   </DvdSubRipChooseLanguage>
   <EbuSaveOptions>
-    <Title> Lưu tùy chọn EBU</Title>
+    <Title>Lưu tùy chọn EBU</Title>
     <GeneralSubtitleInformation>Thông tin phụ đề</GeneralSubtitleInformation>
     <CodePageNumber>Mã hóa số trang</CodePageNumber>
     <DiskFormatCode>Mã hóa định dạng đĩa</DiskFormatCode>
@@ -297,8 +293,7 @@ Rất hân hạnh được chào đón.
     <ErrorsX>Lỗi: {0}</ErrorsX>
     <MaxLengthError>Số dòng {0} vượt quá chiều dài tối đa ({1}) bởi {2}: {3}</MaxLengthError>
     <TextUnchangedPresentation>Trình bày không thay đổi</TextUnchangedPresentation>
-    <TextLeftJustifiedText>Chứng minh văn bản bên trái
-</TextLeftJustifiedText>
+    <TextLeftJustifiedText>Chứng minh văn bản bên trái</TextLeftJustifiedText>
     <TextCenteredText>Văn bản ở giữa</TextCenteredText>
     <TextRightJustifiedText>Chứng minh văn bản bên phải</TextRightJustifiedText>
   </EbuSaveOptions>
@@ -346,13 +341,13 @@ Rất hân hạnh được chào đón.
     <MergeAllLines>Gộp tất cả các dòng</MergeAllLines>
     <UnbreakLines>Ngắt ở dòng</UnbreakLines>
     <RemoveStyling>Gỡ bỏ phong cách</RemoveStyling>
-    <ShowLineNumbers> Hiện dòng số</ShowLineNumbers>
+    <ShowLineNumbers>Hiện dòng số</ShowLineNumbers>
     <AddNewLineAfterLineNumber>Thêm dòng mới sau dòng số</AddNewLineAfterLineNumber>
     <ShowTimeCode>Mã hóa hiển thị thời gian</ShowTimeCode>
     <AddNewLineAfterTimeCode>Thêm dòng mới sau khi mã hóa thời gian</AddNewLineAfterTimeCode>
     <AddNewLineAfterTexts>Thêm dòng mới sau văn bản</AddNewLineAfterTexts>
     <AddNewLineBetweenSubtitles>Thêm dòng mới giữa các phụ đề</AddNewLineBetweenSubtitles>
-    <TimeCodeFormat> Mã hóa định dạng thời gian</TimeCodeFormat>
+    <TimeCodeFormat>Mã hóa định dạng thời gian</TimeCodeFormat>
     <Srt>srt</Srt>
     <Milliseconds>Milli giây</Milliseconds>
     <HHMMSSFF>HH:. MM: SS: FF</HHMMSSFF>
@@ -448,7 +443,7 @@ Rất hân hạnh được chào đón.
     <RemoveUnneededPeriodsExample>Hey you!. -&gt; Hey you!</RemoveUnneededPeriodsExample>
     <FixMissingSpacesExample>Hey.You. -&gt; Hey. You.</FixMissingSpacesExample>
     <FixUppercaseIInsindeLowercaseWordsExample>The earth is fIat. -&gt; The earth is flat.</FixUppercaseIInsindeLowercaseWordsExample>
-    <FixLowercaseIToUppercaseIExample> What do i care . -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
+    <FixLowercaseIToUppercaseIExample>What do i care . -&gt; What do I care.</FixLowercaseIToUppercaseIExample>
     <StartTimeLaterThanEndTime>Số văn bản {0}: Thời gian bắt đầu ở sau thời gian kết thúc: {4} {1} -&gt; {2} {3}</StartTimeLaterThanEndTime>
     <UnableToFixStartTimeLaterThanEndTime>Không thể sửa lỗi văn bản số {0}: Thời gian bắt đầu ở sau thời gian kết thúc: {1}</UnableToFixStartTimeLaterThanEndTime>
     <XFixedToYZ>{0} Sửa lỗi tới: {1} {2}</XFixedToYZ>
@@ -598,7 +593,7 @@ Rất hân hạnh được chào đón.
         <ExportCapMakerPlus>CapMaker Plus...</ExportCapMakerPlus>
         <ExportCaptionsInc>Chú thích Inc ..</ExportCaptionsInc>
         <ExportCheetahCap>Cheetah CAP...</ExportCheetahCap>
-        <ExportUltech130> Chú thích Ultech130...</ExportUltech130>
+        <ExportUltech130>Chú thích Ultech130...</ExportUltech130>
         <Exit>Th&amp;oát</Exit>
       </File>
       <Edit>
@@ -704,7 +699,7 @@ Rất hân hạnh được chào đón.
         <SaveAs>Lưu với tên</SaveAs>
         <Find>Tìm</Find>
         <Replace>Thay thế</Replace>
-        <VisualSync> Đồng bộ khi xem</VisualSync>
+        <VisualSync>Đồng bộ khi xem</VisualSync>
         <SpellCheck>Kiểm tra chính tả</SpellCheck>
         <Settings>Cài đặt</Settings>
         <Help>Trợ giúp</Help>
@@ -963,7 +958,7 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <BeforeCreateAdjustLines>Trước khi tạo/chỉnh dòng</BeforeCreateAdjustLines>
     <OpenAnsiSubtitle>Mở phụ đề...</OpenAnsiSubtitle>
     <BeforeChangeCasing>Trước khi thay đổi cách hiển thị</BeforeChangeCasing>
-    <CasingCompleteMessageNoNames> Hiển thị số dòng được thay đổi: {0}/{1}</CasingCompleteMessageNoNames>
+    <CasingCompleteMessageNoNames>Hiển thị số dòng được thay đổi: {0}/{1}</CasingCompleteMessageNoNames>
     <CasingCompleteMessageOnlyNames>Hiển thị số dòng với tên thay đổi: {0}/{1}</CasingCompleteMessageOnlyNames>
     <CasingCompleteMessage>Hiển thị số dòng được thay đổi: {0}/{1}, thay đổi cách hiển thị tên: {2}</CasingCompleteMessage>
     <BeforeChangeFrameRate>Trước khi thay đổi tỷ lệ khung hình</BeforeChangeFrameRate>
@@ -999,13 +994,13 @@ Bạn có muốn bắt đầu từ phía trên cùng của tài liệu và tiế
     <NameXNotAddedToNamesEtcList>Tên '{0}' KHÔNG thêm được vào tên tập tin/danh sách</NameXNotAddedToNamesEtcList>
     <WordXAddedToUserDic>Từ '{0}' đã được thêm vào từ điển người dùng</WordXAddedToUserDic>
     <WordXNotAddedToUserDic>Từ '{0}' KHÔNG thêm được vào từ điển người dùng</WordXNotAddedToUserDic>
-    <OcrReplacePairXAdded> Các orc thay thế cặp danh sách '{0} -&gt; {1}' đã được thêm vào danh sách thay thế orc</OcrReplacePairXAdded>
-    <OcrReplacePairXNotAdded> Các orc thay thế cặp danh sách '{0} -&gt; {1}' KHÔNG được thêm vào danh sách thay thế orc</OcrReplacePairXNotAdded>
+    <OcrReplacePairXAdded>Các orc thay thế cặp danh sách '{0} -&gt; {1}' đã được thêm vào danh sách thay thế orc</OcrReplacePairXAdded>
+    <OcrReplacePairXNotAdded>Các orc thay thế cặp danh sách '{0} -&gt; {1}' KHÔNG được thêm vào danh sách thay thế orc</OcrReplacePairXNotAdded>
     <XLinesSelected>{0} dòng được lựa chọn</XLinesSelected>
     <UnicodeMusicSymbolsAnsiWarning>Phụ đề chứa các ghi chú âm nhạc unicode. Sử dụng mã hóa tập tin ANSI để lưu sẽ bị mất. Tiếp tục với lưu?</UnicodeMusicSymbolsAnsiWarning>
     <NegativeTimeWarning>Phụ đề chứa mã hóa thời gian âm. Tiếp tục lưu?</NegativeTimeWarning>
     <BeforeMergeShortLines>Trước khi gộp các dòng quá ngắn</BeforeMergeShortLines>
-    <BeforeSplitLongLines> Trước khi chia các dòng quá dài</BeforeSplitLongLines>
+    <BeforeSplitLongLines>Trước khi chia các dòng quá dài</BeforeSplitLongLines>
     <MergedShortLinesX>Số dòng sáp nhập: {0}</MergedShortLinesX>
     <BeforeSetMinimumDisplayTimeBetweenParagraphs>Trước khi thiết lập hiển thị thời gian tối thiểu giữa các đoạn</BeforeSetMinimumDisplayTimeBetweenParagraphs>
     <XMinimumDisplayTimeBetweenParagraphsChanged>Số dòng với hiển thị thời gian tối thiểu giữa các đoạn thay đổi: {0}</XMinimumDisplayTimeBetweenParagraphsChanged>
@@ -1268,7 +1263,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <DefaultVolume>Âm lượng mặc định</DefaultVolume>
     <VolumeNotes>0 là không có âm thanh, 100 là âm lượng cao nhất</VolumeNotes>
     <PreviewFontSize>Xem trước kích thước phông chữ</PreviewFontSize>
-    <MainWindowVideoControls> Cửa sổ chính điều khiển video</MainWindowVideoControls>
+    <MainWindowVideoControls>Cửa sổ chính điều khiển video</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Tự chọn để tìm văn bản và URL</CustomSearchTextAndUrl>
     <WaveformAppearance>Xuất hiện dạng sóng</WaveformAppearance>
     <WaveformGridColor>Dạng lưới màu</WaveformGridColor>
@@ -1357,8 +1352,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <GoForward100Milliseconds>100 ms phía trước</GoForward100Milliseconds>
     <GoBack500Milliseconds>500 ms trở lại</GoBack500Milliseconds>
     <GoForward500Milliseconds>500 ms phía trước</GoForward500Milliseconds>
-    <TogglePlayPause>Kích hoạt Phát/Tạm dừng
-</TogglePlayPause>
+    <TogglePlayPause>Kích hoạt Phát/Tạm dừng</TogglePlayPause>
     <Pause>Tạm dừng</Pause>
     <Fullscreen>Toàn màn hình</Fullscreen>
     <CustomSearch1>Dịch, tùy chọn tìm kiếm 1</CustomSearch1>
@@ -1480,7 +1474,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <Title>Thống kê</Title>
     <TitleWithFileName>Thống kê - {0}</TitleWithFileName>
     <GeneralStatistics>Thống kê chung</GeneralStatistics>
-    <MostUsed> Dòng sử dụng nhiều nhất...</MostUsed>
+    <MostUsed>Dòng sử dụng nhiều nhất...</MostUsed>
     <MostUsedLines>DÙng tất cả các từ được sử dụng nhiều nhất</MostUsedLines>
     <MostUsedWords>Từ được sử dụng nhiều nhất</MostUsedWords>
     <NothingFound>Không tìm thấy gì</NothingFound>
@@ -1573,7 +1567,7 @@ có thể chỉnh sửa trong cùng một tập tin phụ đề (hợp tác vớ
     <SyncHelp>Thiết lập ít nhất hai thời điểm đồng bộ để thực hiện đồng bộ hóa thô</SyncHelp>
     <SetSyncPoint>Thiết lập thời điểm đồng bộ</SetSyncPoint>
     <RemoveSyncPoint>Gỡ bỏ thời điểm đồng bộ</RemoveSyncPoint>
-    <SyncPointsX> Đồng bộ chỉ: {0}</SyncPointsX>
+    <SyncPointsX>Đồng bộ chỉ: {0}</SyncPointsX>
     <Info>Khi đồng bộ một thời điểm sẽ điều chỉnh vị trí, tốc độ sẽ nhanh hơn khi đồng bộ hai hay nhiều hơn</Info>
     <ApplySync>Áp dụng</ApplySync>
   </PointSync>

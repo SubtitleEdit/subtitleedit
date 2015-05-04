@@ -57,7 +57,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         private static string RemoveIllegalSpacesAndFixEmptyCodes(string line)
         {
             int index = line.IndexOf('}');
-            if (index >= 0 && index < line.Length)
+            if (index >= 0 && index + 1 < line.Length)
             {
                 index = line.IndexOf('}', index + 1);
                 if (index >= 0 && index + 1 < line.Length)
@@ -93,7 +93,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 //{y:b} is italics for single line
                 //{Y:b} is italics for both lines
 
-                string[] parts = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var parts = p.Text.SplitToLines();
                 int count = 0;
                 bool italicOn = false;
                 bool boldOn = false;
@@ -240,11 +240,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (s.Contains("</u>"))
                         underlineOn = false;
 
-                    lineSb.Append(Utilities.RemoveHtmlTags(pre + line));
+                    lineSb.Append(HtmlUtil.RemoveHtmlTags(pre + line));
                     count++;
                 }
                 string text = lineSb.ToString();
-                int noOfLines = Utilities.CountTagInText(text, "|") + 1;
+                int noOfLines = Utilities.CountTagInText(text, '|') + 1;
                 if (Utilities.CountTagInText(text, "{y:i}") == noOfLines && text.StartsWith("{y:i}"))
                     text = "{Y:i}" + text.Replace("{y:i}", string.Empty);
                 else if (Utilities.CountTagInText(text, "{y:b}") == noOfLines && text.StartsWith("{y:b}"))
@@ -271,7 +271,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (Utilities.CountTagInText(text, "{y:u}") == 1 && noOfLines == 1)
                     text = text.Replace("{y:u}", "{Y:u}");
 
-                sb.AppendLine(Utilities.RemoveHtmlTags(text));
+                sb.AppendLine(HtmlUtil.RemoveHtmlTags(text));
             }
             return sb.ToString().Trim();
         }

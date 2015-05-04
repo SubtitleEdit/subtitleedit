@@ -1,4 +1,4 @@
-namespace MultiLanguage
+﻿namespace MultiLanguage
 {
 
     public enum tagMLSTR_FLAGS

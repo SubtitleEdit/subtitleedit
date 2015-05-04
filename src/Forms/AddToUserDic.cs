@@ -71,7 +71,7 @@ namespace Nikse.SubtitleEdit.Forms
         internal void Initialize(string hunspellName, string text)
         {
             if (!string.IsNullOrEmpty(text))
-                textBoxAddName.Text = text.Trim().TrimEnd('.').TrimEnd('!').TrimEnd('?');
+                textBoxAddName.Text = text.Trim().TrimEnd('.', '!', '?');
 
             comboBoxDictionaries.Items.Clear();
             foreach (string name in Utilities.GetDictionaryLanguages())

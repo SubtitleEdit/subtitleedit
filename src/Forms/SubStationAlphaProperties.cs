@@ -20,7 +20,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
             _subtitle = subtitle;
-            _isSubStationAlpha = format.FriendlyName == new SubStationAlpha().FriendlyName;
+            _isSubStationAlpha = format.FriendlyName == SubStationAlpha.NameOfFormat;
             _videoFileName = videoFileName;
 
             var l = Configuration.Settings.Language.SubStationAlphaProperties;
@@ -46,7 +46,7 @@ namespace Nikse.SubtitleEdit.Forms
                 SubStationAlpha ssa = new SubStationAlpha();
                 var sub = new Subtitle();
                 var lines = new List<string>();
-                foreach (string line in subtitle.ToText(ssa).Replace(Environment.NewLine, "\n").Split('\n'))
+                foreach (string line in subtitle.ToText(ssa).SplitToLines())
                     lines.Add(line);
                 string title = "Untitled";
                 if (!string.IsNullOrEmpty(subtitleFileName))
@@ -59,9 +59,9 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (header != null)
             {
-                foreach (string line in header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string line in header.SplitToLines())
                 {
-                    string s = line.ToLower().Trim();
+                    string s = line.ToLowerInvariant().Trim();
                     if (s.StartsWith("title:"))
                     {
                         textBoxTitle.Text = s.Remove(0, 6).Trim();
@@ -113,7 +113,7 @@ namespace Nikse.SubtitleEdit.Forms
                     }
                     else if (s.StartsWith("scaledborderandshadow:"))
                     {
-                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes", StringComparison.OrdinalIgnoreCase);
+                        checkBoxScaleBorderAndShadow.Checked = s.Remove(0, 22).Trim().Equals("yes");
                     }
                 }
             }
@@ -165,9 +165,8 @@ namespace Nikse.SubtitleEdit.Forms
                 format = new AdvancedSubStationAlpha();
             var sub = new Subtitle();
             string text = format.ToText(sub, string.Empty);
-            string[] lineArray = text.Split(Utilities.NewLineChars);
             var lines = new List<string>();
-            foreach (string line in lineArray)
+            foreach (string line in text.SplitToLines())
                 lines.Add(line);
             format.LoadSubtitle(sub, lines, string.Empty);
             return sub.Header.Trim();
@@ -213,7 +212,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool scriptInfoOn = false;
             var sb = new StringBuilder();
             bool found = false;
-            foreach (string line in _subtitle.Header.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            foreach (string line in _subtitle.Header.SplitToLines())
             {
                 if (line.StartsWith("[script info]", StringComparison.OrdinalIgnoreCase))
                 {
@@ -223,6 +222,8 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (!found && scriptInfoOn && !remove)
                         sb.AppendLine(tag + ": " + text);
+                    sb = new StringBuilder(sb.ToString().TrimEnd());
+                    sb.AppendLine();
                     sb.AppendLine();
                     scriptInfoOn = false;
                 }

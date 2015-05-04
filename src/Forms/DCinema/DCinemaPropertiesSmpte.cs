@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Globalization;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
@@ -19,10 +19,8 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
             labelLanguage.Text = l.Language;
             labelIssueDate.Text = l.IssueDate;
             labelEditRate.Text = l.EditRate;
-            if (!string.IsNullOrEmpty(l.TimeCodeRate)) //TODO: Remove in SE 3.4
-                labelTimeCodeRate.Text = l.TimeCodeRate;
-            if (!string.IsNullOrEmpty(l.StartTime)) //TODO: Remove in SE 3.4
-                labelStartTime.Text = l.StartTime;
+            labelTimeCodeRate.Text = l.TimeCodeRate;
+            labelStartTime.Text = l.StartTime;
             groupBoxFont.Text = l.Font;
             labelFontId.Text = l.FontId;
             labelFontUri.Text = l.FontUri;
@@ -73,9 +71,9 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     comboBoxFontEffect.SelectedIndex = 0;
                 panelFontEffectColor.BackColor = ss.CurrentDCinemaFontEffectColor;
                 numericUpDownFontSize.Value = ss.CurrentDCinemaFontSize;
-                if (numericUpDownTopBottomMargin.Minimum <= Configuration.Settings.SubtitleSettings.DCinemaBottomMargin &&
-                    numericUpDownTopBottomMargin.Maximum >= Configuration.Settings.SubtitleSettings.DCinemaBottomMargin)
-                    numericUpDownTopBottomMargin.Value = Configuration.Settings.SubtitleSettings.DCinemaBottomMargin;
+                if (numericUpDownTopBottomMargin.Minimum <= ss.DCinemaBottomMargin &&
+                    numericUpDownTopBottomMargin.Maximum >= ss.DCinemaBottomMargin)
+                    numericUpDownTopBottomMargin.Value = ss.DCinemaBottomMargin;
                 else
                     numericUpDownTopBottomMargin.Value = 8;
 
@@ -137,7 +135,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                 ss.CurrentDCinemaFontEffect = string.Empty;
             ss.CurrentDCinemaFontEffectColor = panelFontEffectColor.BackColor;
             ss.CurrentDCinemaFontSize = (int)numericUpDownFontSize.Value;
-            Configuration.Settings.SubtitleSettings.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
+            ss.DCinemaBottomMargin = (int)numericUpDownTopBottomMargin.Value;
 
             DialogResult = DialogResult.OK;
         }

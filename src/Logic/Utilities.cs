@@ -1,8 +1,10 @@
 ﻿using Nikse.SubtitleEdit.Controls;
 using Nikse.SubtitleEdit.Core;
 using Nikse.SubtitleEdit.Forms;
+using Nikse.SubtitleEdit.Logic.ContainerFormats;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Matroska;
+using Nikse.SubtitleEdit.Logic.ContainerFormats.Mp4;
 using Nikse.SubtitleEdit.Logic.SubtitleFormats;
-using Nikse.SubtitleEdit.Logic.VideoFormats.Matroska;
 using Nikse.SubtitleEdit.Logic.VideoPlayers;
 using System;
 using System.Collections.Generic;
@@ -131,7 +133,7 @@ namespace Nikse.SubtitleEdit.Logic
 
             try
             {
-                var mp4Parser = new Mp4.MP4Parser(fileName);
+                var mp4Parser = new MP4Parser(fileName);
                 if (mp4Parser.Moov != null && mp4Parser.VideoResolution.X > 0)
                 {
                     info.Width = mp4Parser.VideoResolution.X;
@@ -166,7 +168,7 @@ namespace Nikse.SubtitleEdit.Logic
                 sb.Append(extension);
                 i++;
             }
-            if (includeAudioFiles && !string.IsNullOrEmpty(Configuration.Settings.Language.General.AudioFiles))
+            if (includeAudioFiles)
             {
                 sb.Append('|');
                 sb.Append(Configuration.Settings.Language.General.AudioFiles);
@@ -181,9 +183,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static bool IsInteger(string s)
         {
             int i;
-            if (int.TryParse(s, out i))
-                return true;
-            return false;
+            return int.TryParse(s, out i);
         }
 
         public static SubtitleFormat GetSubtitleFormatByFriendlyName(string friendlyName)
@@ -338,20 +338,21 @@ namespace Nikse.SubtitleEdit.Logic
 
         private static bool IsPartOfNumber(string s, int position)
         {
-            if (string.IsNullOrWhiteSpace(s))
+            if (string.IsNullOrWhiteSpace(s) || position + 1 >= s.Length)
                 return false;
 
-            if (position + 2 > s.Length)
-                return false;
-
-            if (@",.".Contains(s[position]))
+            if (position > 0 && @",.".Contains(s[position]))
             {
-                if (position > 0 && position < s.Length - 1)
-                {
-                    return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
-                }
+                return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
             }
             return false;
+        }
+
+        public static bool IsBetweenNumbers(string s, int position)
+        {
+            if (string.IsNullOrEmpty(s) || position < 1 || position + 2 > s.Length)
+                return false;
+            return char.IsDigit(s[position - 1]) && char.IsDigit(s[position + 1]);
         }
 
         public static string AutoBreakLine(string text, string language)
@@ -367,8 +368,10 @@ namespace Nikse.SubtitleEdit.Logic
         private static bool CanBreak(string s, int index, string language)
         {
             char nextChar = ' ';
-            if (index < s.Length)
+            if (index >= 0 && index < s.Length)
                 nextChar = s[index];
+            else
+                return false;
             if (!"\r\n\t ".Contains(nextChar))
                 return false;
 
@@ -436,18 +439,11 @@ namespace Nikse.SubtitleEdit.Logic
 
             string s = AutoBreakLine(text, 0, 0, language);
 
-            var arr = s.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var arr = s.SplitToLines();
             if ((arr.Length < 2 && arr[0].Length <= maximumLineLength) || (arr[0].Length <= maximumLineLength && arr[1].Length <= maximumLineLength))
                 return s;
 
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
-            s = s.Replace(Environment.NewLine, " ");
-            s = s.Replace("   ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
+            s = RemoveLineBreaks(s);
 
             var htmlTags = new Dictionary<int, string>();
             var sb = new StringBuilder();
@@ -508,7 +504,9 @@ namespace Nikse.SubtitleEdit.Logic
                         s = ReInsertHtmlTags(s, htmlTags);
                         s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
                         s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
-                        s = s.Replace(Environment.NewLine + "</i>", "<i>" + Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+                        s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
                         s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
                         return s.TrimEnd();
                     }
@@ -525,14 +523,11 @@ namespace Nikse.SubtitleEdit.Logic
             int currentCount = 0;
             foreach (string word in words)
             {
-                if (currentCount + word.Length + 3 > average)
+                if (currentCount + word.Length + 3 > average && currentIdx < count)
                 {
-                    if (currentIdx < count)
-                    {
-                        list.Add(currentCount);
-                        currentIdx++;
-                        currentCount = 0;
-                    }
+                    list.Add(currentCount);
+                    currentIdx++;
+                    currentCount = 0;
                 }
                 currentCount += word.Length + 1;
             }
@@ -549,40 +544,30 @@ namespace Nikse.SubtitleEdit.Logic
                 return text;
 
             // do not autobreak dialogs
-            if (text.Contains('-') && text.Contains(Environment.NewLine))
+            if (text.Contains('-') && text.Contains(Environment.NewLine, StringComparison.Ordinal))
             {
-                string dialogS = RemoveHtmlTags(text);
-                var arr = dialogS.Replace(Environment.NewLine, "\n").Split('\n');
-                if (arr.Length == 2)
+                var noTagLines = HtmlUtil.RemoveHtmlTags(text).SplitToLines();
+                if (noTagLines.Length == 2)
                 {
-                    string arr0 = arr[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
-                    if (arr0.StartsWith('-') && arr[1].TrimStart().StartsWith('-') && (arr0.EndsWith('.') || arr0.EndsWith('!') || arr0.EndsWith('?') || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–')))
+                    var arr0 = noTagLines[0].Trim().TrimEnd('"').TrimEnd('\'').TrimEnd();
+                    if (arr0.StartsWith('-') && noTagLines[1].TrimStart().StartsWith('-') && arr0.Length > 1 && ".?!)]".Contains(arr0[arr0.Length - 1]) || arr0.EndsWith("--", StringComparison.Ordinal) || arr0.EndsWith('–'))
                         return text;
                 }
             }
 
-            string s = text;
-            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
-            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
-            s = s.Replace(Environment.NewLine, " ");
-            s = s.Replace("   ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
-            s = s.Replace("  ", " ");
+            string s = RemoveLineBreaks(text);
+            string noTagText = HtmlUtil.RemoveHtmlTags(s, true);
 
-            string temp = RemoveHtmlTags(s, true);
-
-            if (temp.Length < mergeLinesShorterThan)
+            if (noTagText.Length < mergeLinesShorterThan)
             {
-                string[] lines = text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var lines = text.SplitToLines();
                 if (lines.Length > 1)
                 {
                     bool isDialog = true;
                     foreach (string line in lines)
                     {
-                        string cleanLine = RemoveHtmlTags(line).Trim();
-                        isDialog = isDialog && (cleanLine.StartsWith('-') || cleanLine.StartsWith('—'));
+                        string noTagLine = HtmlUtil.RemoveHtmlTags(line).Trim();
+                        isDialog = isDialog && (noTagLine.StartsWith('-') || noTagLine.StartsWith('—'));
                     }
                     if (isDialog)
                     {
@@ -631,7 +616,7 @@ namespace Nikse.SubtitleEdit.Logic
             int mid = s.Length / 2;
 
             // try to find " - " with uppercase letter after (dialog)
-            if (splitPos == -1 && s.Contains(" - "))
+            if (s.Contains(" - "))
             {
                 for (int j = 0; j <= (maximumLength / 2) + 5; j++)
                 {
@@ -668,7 +653,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (splitPos == maximumLength + 1 && s[maximumLength] != ' ') // only allow space for last char (as it does not count)
                 splitPos = -1;
 
-            if (splitPos == -1)
+            if (splitPos < 0)
             {
                 for (int j = 0; j < 15; j++)
                 {
@@ -705,7 +690,7 @@ namespace Nikse.SubtitleEdit.Logic
                 splitPos = -1;
             }
 
-            if (splitPos == -1)
+            if (splitPos < 0)
             {
                 for (int j = 0; j < 25; j++)
                 {
@@ -737,7 +722,7 @@ namespace Nikse.SubtitleEdit.Logic
                 }
             }
 
-            if (splitPos == -1)
+            if (splitPos < 0)
             {
                 splitPos = mid;
                 s = s.Insert(mid - 1, Environment.NewLine);
@@ -753,6 +738,25 @@ namespace Nikse.SubtitleEdit.Logic
             s = s.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             return s.TrimEnd();
+        }
+
+        internal static string RemoveLineBreaks(string s)
+        {
+            s = HtmlUtil.FixUpperTags(s);
+            s = s.Replace(Environment.NewLine + "</i>", "</i>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</b>", "</b>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</u>", "</u>" + Environment.NewLine);
+            s = s.Replace(Environment.NewLine + "</font>", "</font>" + Environment.NewLine);
+            s = s.Replace("</i> " + Environment.NewLine + "<i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + " <i>", " ");
+            s = s.Replace("</i>" + Environment.NewLine + "<i>", " ");
+            s = s.Replace(Environment.NewLine, " ");
+            s = s.Replace(" </i>", "</i> ");
+            s = s.Replace(" </b>", "</b> ");
+            s = s.Replace(" </u>", "</u> ");
+            s = s.Replace(" </font>", "</font> ");
+            s = s.FixExtraSpaces();
+            return s.Trim();
         }
 
         private static string ReInsertHtmlTags(string s, Dictionary<int, string> htmlTags)
@@ -820,33 +824,6 @@ namespace Nikse.SubtitleEdit.Logic
             }
         }
 
-        public static string RemoveHtmlTags(string s)
-        {
-            if (s == null)
-                return null;
-
-            if (!s.Contains('<'))
-                return s;
-
-            if (s.Contains("< ", StringComparison.Ordinal))
-                s = FixInvalidItalicTags(s);
-
-            return HtmlUtil.RemoveOpenCloseTags(s, HtmlUtil.TagItalic, HtmlUtil.TagBold, HtmlUtil.TagUnderline, HtmlUtil.TagParagraph, HtmlUtil.TagFont, HtmlUtil.TagCyrillicI);
-        }
-
-        public static string RemoveHtmlTags(string s, bool alsoSsaTags)
-        {
-            if (s == null)
-                return null;
-
-            s = RemoveHtmlTags(s);
-
-            if (alsoSsaTags)
-                s = RemoveSsaTags(s);
-
-            return s;
-        }
-
         public static string RemoveSsaTags(string s)
         {
             int k = s.IndexOf('{');
@@ -859,11 +836,11 @@ namespace Nikse.SubtitleEdit.Logic
                     if (s.Length > 1 && s.Length > k)
                         k = s.IndexOf('{', k);
                     else
-                        k = -1;
+                        break;
                 }
                 else
                 {
-                    k = -1;
+                    break;
                 }
             }
             return s;
@@ -920,7 +897,7 @@ namespace Nikse.SubtitleEdit.Logic
                         { // keep utf-8 encoding if it's default
                             encoding = Encoding.UTF8;
                         }
-                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLower().Replace("'", "\"").Contains("encoding=\"utf-8\""))
+                        else if (couldBeUtf8 && fileName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase) && Encoding.Default.GetString(buffer).ToLower().Replace('\'', '"').Contains("encoding=\"utf-8\""))
                         { // keep utf-8 encoding for xml files with utf-8 in header (without any utf-8 encoded characters, but with only allowed utf-8 characters)
                             encoding = Encoding.UTF8;
                         }
@@ -1087,7 +1064,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         try
                         {
-                            var ci = new CultureInfo(name.Replace("_", "-"));
+                            var ci = new CultureInfo(name.Replace('_', '-'));
                             name = ci.DisplayName + " [" + name + "]";
                         }
                         catch (Exception exception)
@@ -1112,7 +1089,7 @@ namespace Nikse.SubtitleEdit.Logic
             double optimalCharactersPerSecond = charactersPerSecond;
             if (optimalCharactersPerSecond < 2 || optimalCharactersPerSecond > 100)
                 optimalCharactersPerSecond = 14.7;
-            double duration = (RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
+            double duration = (HtmlUtil.RemoveHtmlTags(text, true).Length / optimalCharactersPerSecond) * 1000.0;
 
             if (duration < Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds)
                 duration = Configuration.Settings.General.SubtitleMinimumDisplayMilliseconds;
@@ -1147,63 +1124,48 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string AutoDetectGoogleLanguage(Encoding encoding)
         {
-            if (encoding.CodePage == 860)
-                return "pt"; // Portuguese
-            if (encoding.CodePage == 949)
-                return "ko"; // Korean
-            if (encoding.CodePage == 950)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 1253)
-                return "el"; // Greek
-            if (encoding.CodePage == 1254)
-                return "tr"; // Turkish
-            if (encoding.CodePage == 1255)
-                return "he"; // Hebrew
-            if (encoding.CodePage == 1256)
-                return "ar"; // Arabic
-            if (encoding.CodePage == 1258)
-                return "vi"; // Vietnamese
-            if (encoding.CodePage == 1361)
-                return "ko"; // Korean
-            if (encoding.CodePage == 10001)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 20000)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 20002)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 20932)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 20936)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 20949)
-                return "ko"; // Korean
-            if (encoding.CodePage == 28596)
-                return "ar"; // Arabic
-            if (encoding.CodePage == 28597)
-                return "el"; // Greek
-            if (encoding.CodePage == 28598)
-                return "he"; // Hebrew
-            if (encoding.CodePage == 28599)
-                return "tr"; // Turkish
-            if (encoding.CodePage == 50220)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 50221)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 50222)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 50225)
-                return "ko"; // Korean
-            if (encoding.CodePage == 51932)
-                return "ja"; // Japanese
-            if (encoding.CodePage == 51936)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 51949)
-                return "ko"; // Korean
-            if (encoding.CodePage == 52936)
-                return "zh"; // Chinese
-            if (encoding.CodePage == 54936)
-                return "zh"; // Chinese
-            return null;
+            switch (encoding.CodePage)
+            {
+                case 860:
+                    return "pt"; // Portuguese
+                case 28599:
+                case 1254:
+                    return "tr"; // Turkish
+                case 28598:
+                case 1255:
+                    return "he"; // Hebrew
+                case 28596:
+                case 1256:
+                    return "ar"; // Arabic
+                case 1258:
+                    return "vi"; // Vietnamese
+                case 949:
+                case 1361:
+                case 20949:
+                case 51949:
+                case 50225:
+                    return "ko"; // Korean
+                case 1253:
+                case 28597:
+                    return "el"; // Greek
+                case 50220:
+                case 50221:
+                case 50222:
+                case 51932:
+                case 20932:
+                case 10001:
+                    return "ja"; // Japanese
+                case 20000:
+                case 20002:
+                case 20936:
+                case 950:
+                case 52936:
+                case 54936:
+                case 51936:
+                    return "zh"; // Chinese
+                default:
+                    return null;
+            }
         }
 
         public static string AutoDetectGoogleLanguage(string text, int bestCount)
@@ -1605,11 +1567,11 @@ namespace Nikse.SubtitleEdit.Logic
         public static int GetMaxLineLength(string text)
         {
             int maxLength = 0;
-            foreach (string line in text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries))
+            text = HtmlUtil.RemoveHtmlTags(text, true);
+            foreach (string line in text.SplitToLines())
             {
-                string s = RemoveHtmlTags(line, true);
-                if (s.Length > maxLength)
-                    maxLength = s.Length;
+                if (line.Length > maxLength)
+                    maxLength = line.Length;
             }
             return maxLength;
         }
@@ -1619,10 +1581,10 @@ namespace Nikse.SubtitleEdit.Logic
             if (paragraph.Duration.TotalMilliseconds < 1)
                 return 999;
 
-            const string zeroWhiteSpace = "\u200B";
+            const string zeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
 
-            string s = RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWhiteSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
+            string s = HtmlUtil.RemoveHtmlTags(paragraph.Text, true).Replace(Environment.NewLine, string.Empty).Replace(zeroWidthSpace, string.Empty).Replace(zeroWidthNoBreakSpace, string.Empty);
             return s.Length / paragraph.Duration.TotalSeconds;
         }
 
@@ -1856,7 +1818,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static void GetLineLengths(Label label, string text)
         {
             label.ForeColor = Color.Black;
-            var lines = Utilities.RemoveHtmlTags(text, true).Replace(Environment.NewLine, "\n").Split('\n');
+            var lines = HtmlUtil.RemoveHtmlTags(text, true).SplitToLines();
 
             const int max = 3;
 
@@ -2145,9 +2107,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if ((index + 1) == text.Length)
+                index = index + tag.Length;
+                if (index >= text.Length)
                     return count;
-                index = text.IndexOf(tag, index + 1, StringComparison.Ordinal);
+                index = text.IndexOf(tag, index, StringComparison.Ordinal);
             }
             return count;
         }
@@ -2208,14 +2171,11 @@ namespace Nikse.SubtitleEdit.Logic
             int noOfLines = CountTagInText(text, Environment.NewLine) + 1;
             if (italicBeginTagCount + italicEndTagCount > 0)
             {
-                if (italicBeginTagCount == 1 && italicEndTagCount == 1)
+                if (italicBeginTagCount == 1 && italicEndTagCount == 1 && text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
                 {
-                    if (text.IndexOf(beginTag, StringComparison.Ordinal) > text.IndexOf(endTag, StringComparison.Ordinal))
-                    {
-                        text = text.Replace(beginTag, "___________@");
-                        text = text.Replace(endTag, beginTag);
-                        text = text.Replace("___________@", endTag);
-                    }
+                    text = text.Replace(beginTag, "___________@");
+                    text = text.Replace(endTag, beginTag);
+                    text = text.Replace("___________@", endTag);
                 }
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 0)
@@ -2250,7 +2210,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 if (italicBeginTagCount == 2 && italicEndTagCount == 1)
                 {
-                    var lines = text.Replace(Environment.NewLine, "\n").Split('\n');
+                    var lines = text.SplitToLines();
                     if (lines.Length == 2 && lines[0].StartsWith("<i>", StringComparison.Ordinal) && lines[0].EndsWith("</i>", StringComparison.Ordinal) &&
                         lines[1].StartsWith("<i>", StringComparison.Ordinal))
                     {
@@ -2323,7 +2283,7 @@ namespace Nikse.SubtitleEdit.Logic
 
                 // - foo.</i>
                 // - bar.</i>
-                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine) && text.EndsWith(endTag, StringComparison.Ordinal))
+                if (italicBeginTagCount == 0 && italicEndTagCount == 2 && text.Contains(endTag + Environment.NewLine, StringComparison.Ordinal) && text.EndsWith(endTag, StringComparison.Ordinal))
                 {
                     text = text.Replace(endTag, string.Empty);
                     text = beginTag + text + endTag;
@@ -2364,12 +2324,52 @@ namespace Nikse.SubtitleEdit.Logic
 
                         if (StartsAndEndsWithTag(firstLine, beginTag, endTag) && StartsAndEndsWithTag(secondLine, beginTag, endTag))
                         {
-                            text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty);
+                            text = text.Replace(beginTag, String.Empty).Replace(endTag, String.Empty).Trim();
                             text = beginTag + text + endTag;
+                        }
+                    }
+
+                    //FALCONE:<i> I didn't think</i><br /><i>it was going to be you,</i>
+                    var colIdx = text.IndexOf(':');
+                    if (colIdx > -1 && Utilities.CountTagInText(text, "<i>") + Utilities.CountTagInText(text, "</i>") == 4 && text.Length > colIdx + 1 && !char.IsDigit(text[colIdx + 1]))
+                    {
+                        var firstLine = text.Substring(0, index);
+                        var secondLine = text.Substring(index).TrimStart();
+
+                        var secIdxCol = secondLine.IndexOf(':');
+                        if (secIdxCol < 0 || !IsBetweenNumbers(secondLine, secIdxCol))
+                        {
+                            var idx = firstLine.IndexOf(':');
+                            if (idx > 1)
+                            {
+                                var pre = text.Substring(0, idx + 1).TrimStart();
+                                text = text.Remove(0, idx + 1);
+                                text = FixInvalidItalicTags(text).Trim();
+                                if (text.StartsWith("<i> ", StringComparison.OrdinalIgnoreCase))
+                                    text = RemoveSpaceBeforeAfterTag(text, "<i>");
+                                text = pre + " " + text;
+                            }
                         }
                     }
                 }
 
+                //<i>- You think they're they gone?<i>
+                //<i>- That can't be.</i>
+                if ((italicBeginTagCount == 3 && italicEndTagCount == 1) && CountTagInText(text, Environment.NewLine) == 1)
+                {
+                    var newLineIdx = text.IndexOf(Environment.NewLine, StringComparison.Ordinal);
+                    var firstLine = text.Substring(0, newLineIdx).Trim();
+                    var secondLine = text.Substring(newLineIdx).Trim();
+
+                    if (StartsAndEndsWithTag(firstLine, beginTag, beginTag) && StartsAndEndsWithTag(secondLine, beginTag, endTag) ||
+                        StartsAndEndsWithTag(secondLine, beginTag, beginTag) && StartsAndEndsWithTag(firstLine, beginTag, endTag))
+                    {
+                        text = text.Replace("<i>", string.Empty);
+                        text = text.Replace("</i>", string.Empty);
+                        text = text.Replace("  ", " ").Trim();
+                        text = "<i>" + text + "</i>";
+                    }
+                }
                 text = text.Replace("<i></i>", string.Empty);
                 text = text.Replace("<i> </i>", string.Empty);
                 text = text.Replace("<i>  </i>", string.Empty);
@@ -2445,13 +2445,13 @@ namespace Nikse.SubtitleEdit.Logic
         {
             // pre-process for + sign space formatting since System.Uri doesn't handle it
             // plus literals are encoded as %2b normally so this should be safe
-            text = text.Replace("+", " ");
+            text = text.Replace('+', ' ');
             return Uri.UnescapeDataString(text);
         }
 
         public static void CheckAutoWrap(TextBox textBox, KeyEventArgs e, int numberOfNewLines)
         {
-            int length = RemoveHtmlTags(textBox.Text).Length;
+            int length = HtmlUtil.RemoveHtmlTags(textBox.Text).Length;
             if (e.Modifiers == Keys.None && e.KeyCode != Keys.Enter && numberOfNewLines < 1 && length > Configuration.Settings.General.SubtitleLineMaximumLength)
             {
                 if (Configuration.Settings.General.AutoWrapLineWhileTyping) // only if auto-break-setting is true
@@ -2519,7 +2519,7 @@ namespace Nikse.SubtitleEdit.Logic
         public static string FixEnglishTextInRightToLeftLanguage(string text, string reverseChars)
         {
             var sb = new StringBuilder();
-            string[] lines = text.Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var lines = text.SplitToLines();
             foreach (string line in lines)
             {
                 string s = line.Trim();
@@ -2565,129 +2565,129 @@ namespace Nikse.SubtitleEdit.Logic
         public static string ToSuperscript(string text)
         {
             var sb = new StringBuilder();
-            var superscript = new List<string>{
-                                                "⁰",
-                                                "¹",
-                                                "²",
-                                                "³",
-                                                "⁴",
-                                                "⁵",
-                                                "⁶",
-                                                "⁷",
-                                                "⁸",
-                                                "⁹",
-                                                "⁺",
-                                                "⁻",
-                                                "⁼",
-                                                "⁽",
-                                                "⁾",
-                                                "ᵃ",
-                                                "ᵇ",
-                                                "ᶜ",
-                                                "ᵈ",
-                                                "ᵉ",
-                                                "ᶠ",
-                                                "ᵍ",
-                                                "ʰ",
-                                                "ⁱ",
-                                                "ʲ",
-                                                "ᵏ",
-                                                "ˡ",
-                                                "ᵐ",
-                                                "ⁿ",
-                                                "ᵒ",
-                                                "ᵖ",
-                                                "ʳ",
-                                                "ˢ",
-                                                "ᵗ",
-                                                "ᵘ",
-                                                "ᵛ",
-                                                "ʷ",
-                                                "ˣ",
-                                                "ʸ",
-                                                "ᶻ",
-                                                "ᴬ",
-                                                "ᴮ",
-                                                "ᴰ",
-                                                "ᴱ",
-                                                "ᴳ",
-                                                "ᴴ",
-                                                "ᴵ",
-                                                "ᴶ",
-                                                "ᴷ",
-                                                "ᴸ",
-                                                "ᴹ",
-                                                "ᴺ",
-                                                "ᴼ",
-                                                "ᴾ",
-                                                "ᴿ",
-                                                "ᵀ",
-                                                "ᵁ",
-                                                "ᵂ",
+            var superscript = new List<char>{
+                                              '⁰',
+                                              '¹',
+                                              '²',
+                                              '³',
+                                              '⁴',
+                                              '⁵',
+                                              '⁶',
+                                              '⁷',
+                                              '⁸',
+                                              '⁹',
+                                              '⁺',
+                                              '⁻',
+                                              '⁼',
+                                              '⁽',
+                                              '⁾',
+                                              'ᵃ',
+                                              'ᵇ',
+                                              'ᶜ',
+                                              'ᵈ',
+                                              'ᵉ',
+                                              'ᶠ',
+                                              'ᵍ',
+                                              'ʰ',
+                                              'ⁱ',
+                                              'ʲ',
+                                              'ᵏ',
+                                              'ˡ',
+                                              'ᵐ',
+                                              'ⁿ',
+                                              'ᵒ',
+                                              'ᵖ',
+                                              'ʳ',
+                                              'ˢ',
+                                              'ᵗ',
+                                              'ᵘ',
+                                              'ᵛ',
+                                              'ʷ',
+                                              'ˣ',
+                                              'ʸ',
+                                              'ᶻ',
+                                              'ᴬ',
+                                              'ᴮ',
+                                              'ᴰ',
+                                              'ᴱ',
+                                              'ᴳ',
+                                              'ᴴ',
+                                              'ᴵ',
+                                              'ᴶ',
+                                              'ᴷ',
+                                              'ᴸ',
+                                              'ᴹ',
+                                              'ᴺ',
+                                              'ᴼ',
+                                              'ᴾ',
+                                              'ᴿ',
+                                              'ᵀ',
+                                              'ᵁ',
+                                              'ᵂ'
                                             };
-            var normal = new List<string>{
-                                                "0", // "⁰"
-                                                "1", // "¹"
-                                                "2", // "²"
-                                                "3", // "³"
-                                                "4", // "⁴"
-                                                "5", // "⁵"
-                                                "6", // "⁶"
-                                                "7", // "⁷"
-                                                "8", // "⁸"
-                                                "9", // "⁹"
-                                                "+", // "⁺"
-                                                "-", // "⁻"
-                                                "=", // "⁼"
-                                                "(", // "⁽"
-                                                ")", // "⁾"
-                                                "a", // "ᵃ"
-                                                "b", // "ᵇ"
-                                                "c", // "ᶜ"
-                                                "d", // "ᵈ"
-                                                "e", // "ᵉ"
-                                                "f", // "ᶠ"
-                                                "g", // "ᵍ"
-                                                "h", // "ʰ"
-                                                "i", // "ⁱ"
-                                                "j", // "ʲ"
-                                                "k", // "ᵏ"
-                                                "l", // "ˡ"
-                                                "m", // "ᵐ"
-                                                "n", // "ⁿ"
-                                                "o", // "ᵒ"
-                                                "p", // "ᵖ"
-                                                "r", // "ʳ"
-                                                "s", // "ˢ"
-                                                "t", // "ᵗ"
-                                                "u", // "ᵘ"
-                                                "v", // "ᵛ"
-                                                "w", // "ʷ"
-                                                "x", // "ˣ"
-                                                "y", // "ʸ"
-                                                "z", // "ᶻ"
-                                                "A", // "ᴬ"
-                                                "B", // "ᴮ"
-                                                "D", // "ᴰ"
-                                                "E", // "ᴱ"
-                                                "G", // "ᴳ"
-                                                "H", // "ᴴ"
-                                                "I", // "ᴵ"
-                                                "J", // "ᴶ"
-                                                "K", // "ᴷ"
-                                                "L", // "ᴸ"
-                                                "M", // "ᴹ"
-                                                "N", // "ᴺ"
-                                                "O", // "ᴼ"
-                                                "P", // "ᴾ"
-                                                "R", // "ᴿ"
-                                                "T", // "ᵀ"
-                                                "U", // "ᵁ"
-                                                "W", // "ᵂ"
+            var normal = new List<char>{
+                                         '0', // "⁰"
+                                         '1', // "¹"
+                                         '2', // "²"
+                                         '3', // "³"
+                                         '4', // "⁴"
+                                         '5', // "⁵"
+                                         '6', // "⁶"
+                                         '7', // "⁷"
+                                         '8', // "⁸"
+                                         '9', // "⁹"
+                                         '+', // "⁺"
+                                         '-', // "⁻"
+                                         '=', // "⁼"
+                                         '(', // "⁽"
+                                         ')', // "⁾"
+                                         'a', // "ᵃ"
+                                         'b', // "ᵇ"
+                                         'c', // "ᶜ"
+                                         'd', // "ᵈ"
+                                         'e', // "ᵉ"
+                                         'f', // "ᶠ"
+                                         'g', // "ᵍ"
+                                         'h', // "ʰ"
+                                         'i', // "ⁱ"
+                                         'j', // "ʲ"
+                                         'k', // "ᵏ"
+                                         'l', // "ˡ"
+                                         'm', // "ᵐ"
+                                         'n', // "ⁿ"
+                                         'o', // "ᵒ"
+                                         'p', // "ᵖ"
+                                         'r', // "ʳ"
+                                         's', // "ˢ"
+                                         't', // "ᵗ"
+                                         'u', // "ᵘ"
+                                         'v', // "ᵛ"
+                                         'w', // "ʷ"
+                                         'x', // "ˣ"
+                                         'y', // "ʸ"
+                                         'z', // "ᶻ"
+                                         'A', // "ᴬ"
+                                         'B', // "ᴮ"
+                                         'D', // "ᴰ"
+                                         'E', // "ᴱ"
+                                         'G', // "ᴳ"
+                                         'H', // "ᴴ"
+                                         'I', // "ᴵ"
+                                         'J', // "ᴶ"
+                                         'K', // "ᴷ"
+                                         'L', // "ᴸ"
+                                         'M', // "ᴹ"
+                                         'N', // "ᴺ"
+                                         'O', // "ᴼ"
+                                         'P', // "ᴾ"
+                                         'R', // "ᴿ"
+                                         'T', // "ᵀ"
+                                         'U', // "ᵁ"
+                                         'W', // "ᵂ"
                                             };
             for (int i = 0; i < text.Length; i++)
             {
-                string s = text.Substring(i, 1);
+                char s = text[i];
                 int index = normal.IndexOf(s);
                 if (index >= 0)
                     sb.Append(superscript[index]);
@@ -2700,61 +2700,60 @@ namespace Nikse.SubtitleEdit.Logic
         public static string ToSubscript(string text)
         {
             var sb = new StringBuilder();
-            var subcript = new List<string>{
-                                                "₀",
-                                                "₁",
-                                                "₂",
-                                                "₃",
-                                                "₄",
-                                                "₅",
-                                                "₆",
-                                                "₇",
-                                                "₈",
-                                                "₉",
-                                                "₊",
-                                                "₋",
-                                                "₌",
-                                                "₍",
-                                                "₎",
-                                                "ₐ",
-                                                "ₑ",
-                                                "ᵢ",
-                                                "ₒ",
-                                                "ᵣ",
-                                                "ᵤ",
-                                                "ᵥ",
-                                                "ₓ",
+            var subcript = new List<char>{
+                                           '₀',
+                                           '₁',
+                                           '₂',
+                                           '₃',
+                                           '₄',
+                                           '₅',
+                                           '₆',
+                                           '₇',
+                                           '₈',
+                                           '₉',
+                                           '₊',
+                                           '₋',
+                                           '₌',
+                                           '₍',
+                                           '₎',
+                                           'ₐ',
+                                           'ₑ',
+                                           'ᵢ',
+                                           'ₒ',
+                                           'ᵣ',
+                                           'ᵤ',
+                                           'ᵥ',
+                                           'ₓ',
                                             };
-            var normal = new List<string>
+            var normal = new List<char>
                              {
-                                                "0",  // "₀"
-                                                "1",  // "₁"
-                                                "2",  // "₂"
-                                                "3",  // "₃"
-                                                "4",  // "₄"
-                                                "5",  // "₅"
-                                                "6",  // "₆"
-                                                "7",  // "₇"
-                                                "8",  // "₈"
-                                                "9",  // "₉"
-                                                "+",  // "₊"
-                                                "-",  // "₋"
-                                                "=",  // "₌"
-                                                "(",  // "₍"
-                                                ")",  // "₎"
-                                                "a",  // "ₐ"
-                                                "e",  // "ₑ"
-                                                "i",  // "ᵢ"
-                                                "o",  // "ₒ"
-                                                "r",  // "ᵣ"
-                                                "u",  // "ᵤ"
-                                                "v",  // "ᵥ"
-                                                "x",  // "ₓ"
-
+                               '0',  // "₀"
+                               '1',  // "₁"
+                               '2',  // "₂"
+                               '3',  // "₃"
+                               '4',  // "₄"
+                               '5',  // "₅"
+                               '6',  // "₆"
+                               '7',  // "₇"
+                               '8',  // "₈"
+                               '9',  // "₉"
+                               '+',  // "₊"
+                               '-',  // "₋"
+                               '=',  // "₌"
+                               '(',  // "₍"
+                               ')',  // "₎"
+                               'a',  // "ₐ"
+                               'e',  // "ₑ"
+                               'i',  // "ᵢ"
+                               'o',  // "ₒ"
+                               'r',  // "ᵣ"
+                               'u',  // "ᵤ"
+                               'v',  // "ᵥ"
+                               'x',  // "ₓ"
                              };
             for (int i = 0; i < text.Length; i++)
             {
-                string s = text.Substring(i, 1);
+                char s = text[i];
                 int index = normal.IndexOf(s);
                 if (index >= 0)
                     sb.Append(subcript[index]);
@@ -2817,7 +2816,6 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string[] SplitForChangedCalc(string s, bool ignoreLineBreaks, bool breakToLetters)
         {
-
             const string endChars = "!?.:;,#%$£";
             var list = new List<string>();
 
@@ -2965,26 +2963,24 @@ namespace Nikse.SubtitleEdit.Logic
         /// <returns>text with unneeded spaces removed</returns>
         public static string RemoveUnneededSpaces(string text, string language)
         {
-            const string zeroWhiteSpace = "\u200B";
+            const string zeroWidthSpace = "\u200B";
             const string zeroWidthNoBreakSpace = "\uFEFF";
             const string noBreakSpace = "\u00A0";
-            const string char160 = " "; // Convert.ToChar(160).ToString()
+            const string operatingSystemCommand = "\u009D";
 
             text = text.Trim();
 
-            text = text.Replace(zeroWhiteSpace, string.Empty);
+            text = text.Replace(zeroWidthSpace, string.Empty);
             text = text.Replace(zeroWidthNoBreakSpace, string.Empty);
-            text = text.Replace(noBreakSpace, string.Empty);
-            text = text.Replace(char160, " ");
+            text = text.Replace(noBreakSpace, " ");
+            text = text.Replace(operatingSystemCommand, string.Empty);
+            text = text.Replace('\t', ' ');
 
-            text = text.Replace("", string.Empty); // some kind of hidden space!!!
             while (text.Contains("  "))
                 text = text.Replace("  ", " ");
 
-            if (text.Contains(" " + Environment.NewLine, StringComparison.Ordinal))
-                text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
-            if (text.Contains(Environment.NewLine + " ", StringComparison.Ordinal))
-                text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
+            text = text.Replace(" " + Environment.NewLine, Environment.NewLine);
+            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
             if (text.EndsWith(' '))
                 text = text.TrimEnd(' ');
@@ -3032,7 +3028,7 @@ namespace Nikse.SubtitleEdit.Logic
                 text = text.Replace(" ,", ",");
 
             if (text.EndsWith(" .", StringComparison.Ordinal))
-                text = text.Substring(0, text.Length - " .".Length) + ".";
+                text = text.Remove(text.Length - 2, 1);
 
             if (text.EndsWith(" \"", StringComparison.Ordinal))
                 text = text.Remove(text.Length - 2, 1);
@@ -3058,39 +3054,29 @@ namespace Nikse.SubtitleEdit.Logic
             while (text.Contains("¡ "))
                 text = text.Replace("¡ ", "¡");
 
-            if (text.Contains("! </i>" + Environment.NewLine))
-                text = text.Replace("! </i>" + Environment.NewLine, "!</i>" + Environment.NewLine);
+            // Italic
+            if (text.Contains("<i>", StringComparison.OrdinalIgnoreCase) && text.Contains("</i>", StringComparison.OrdinalIgnoreCase))
+                text = RemoveSpaceBeforeAfterTag(text, "<i>");
 
-            if (text.Contains("? </i>" + Environment.NewLine))
-                text = text.Replace("? </i>" + Environment.NewLine, "?</i>" + Environment.NewLine);
+            // Bold
+            if (text.Contains("<b>", StringComparison.OrdinalIgnoreCase) && text.Contains("</b>", StringComparison.OrdinalIgnoreCase))
+                text = RemoveSpaceBeforeAfterTag(text, "<b>");
 
-            if (text.EndsWith(" </i>", StringComparison.Ordinal))
-                text = text.Substring(0, text.Length - " </i>".Length) + "</i>";
+            // Underline
+            if (text.Contains("<u>", StringComparison.OrdinalIgnoreCase) && text.Contains("</u>", StringComparison.OrdinalIgnoreCase))
+                text = RemoveSpaceBeforeAfterTag(text, "<u>");
 
-            if (text.Contains(" </i>" + Environment.NewLine))
-                text = text.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-
-            if (text.EndsWith(" </I>", StringComparison.Ordinal))
-                text = text.Substring(0, text.Length - " </I>".Length) + "</I>";
-
-            if (text.Contains(" </I>" + Environment.NewLine))
-                text = text.Replace(" </I>" + Environment.NewLine, "</I>" + Environment.NewLine);
-
-            if (text.StartsWith("<i> ", StringComparison.Ordinal))
-                text = "<i>" + text.Substring("<i> ".Length);
-
-            if (text.Contains(Environment.NewLine + "<i> "))
-
-                text = text.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
-
-            text = text.Trim();
-            text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
-            if (text.StartsWith("<I> ", StringComparison.Ordinal))
-                text = "<I>" + text.Substring("<I> ".Length);
-
-            if (text.Contains(Environment.NewLine + "<I> "))
-                text = text.Replace(Environment.NewLine + "<I> ", Environment.NewLine + "<I>");
-
+            // Font
+            if (text.Contains("<font ", StringComparison.OrdinalIgnoreCase))
+            {
+                var idx = text.IndexOf("<font ", StringComparison.OrdinalIgnoreCase);
+                var endIdx = text.IndexOf('>', idx + 6);
+                if (endIdx > idx && endIdx < text.Length - 8)
+                {
+                    var color = text.Substring(idx, (endIdx - idx) + 1).ToLower();
+                    text = RemoveSpaceBeforeAfterTag(text, color);
+                }
+            }
             text = text.Trim();
             text = text.Replace(Environment.NewLine + " ", Environment.NewLine);
 
@@ -3142,17 +3128,17 @@ namespace Nikse.SubtitleEdit.Logic
                     if (idx + 1 < text.Length && idx != -1)
                         idx = text.IndexOf("- ", idx + 1, StringComparison.Ordinal);
                     else
-                        idx = -1;
+                        break;
                 }
             }
 
-            if (Utilities.CountTagInText(text, "\"") == 2 && text.Contains(" \" "))
+            if (CountTagInText(text, '"') == 2 && text.Contains(" \" "))
             {
                 int idx = text.IndexOf(" \" ", StringComparison.Ordinal);
                 int idxp = text.IndexOf('"');
 
                 //"Foo " bar.
-                if ((idxp > -1 && idxp < idx) & Utilities.AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
+                if ((idxp >= 0 && idxp < idx) && AllLettersAndNumbers.Contains(text[idx - 1]) && !" \r\n".Contains(text[idxp + 1]))
                 {
                     text = text.Remove(idx, 1);
                 }
@@ -3160,9 +3146,9 @@ namespace Nikse.SubtitleEdit.Logic
                 //" Foo " bar.
                 idx = text.IndexOf(" \" ", StringComparison.Ordinal);
                 idxp = text.IndexOf('"');
-                if (idxp > -1 && idx > idxp)
+                if (idxp >= 0 && idx > idxp)
                 {
-                    if (text[idxp + 1] == ' ' && Utilities.AllLettersAndNumbers.Contains(text[idxp + 2]))
+                    if (text[idxp + 1] == ' ' && AllLettersAndNumbers.Contains(text[idxp + 2]))
                     {
                         text = text.Remove(idxp + 1, 1);
                         idx--;
@@ -3170,6 +3156,62 @@ namespace Nikse.SubtitleEdit.Logic
                     text = text.Remove(idx, 1);
                 }
             }
+            return text;
+        }
+
+        private static string RemoveSpaceBeforeAfterTag(string text, string openTag)
+        {
+            text = HtmlUtil.FixUpperTags(text);
+            var closeTag = string.Empty;
+            switch (openTag)
+            {
+                case "<i>":
+                    closeTag = "</i>";
+                    break;
+                case "<b>":
+                    closeTag = "</b>";
+                    break;
+                case "<u>":
+                    closeTag = "</u>";
+                    break;
+            }
+
+            if (closeTag.Length == 0 && openTag.Contains("<font ", StringComparison.Ordinal))
+                closeTag = "</font>";
+
+            // Open tags
+            var open1 = openTag + " ";
+            var open2 = Environment.NewLine + openTag + " ";
+
+            // Closing tags
+            var close1 = "! " + closeTag + Environment.NewLine;
+            var close2 = "? " + closeTag + Environment.NewLine;
+            var close3 = " " + closeTag;
+            var close4 = " " + closeTag + Environment.NewLine;
+
+            if (text.Contains(close1, StringComparison.Ordinal))
+                text = text.Replace(close1, "!" + closeTag + Environment.NewLine);
+
+            if (text.Contains(close2, StringComparison.Ordinal))
+                text = text.Replace(close2, "?" + closeTag + Environment.NewLine);
+
+            if (text.EndsWith(close3, StringComparison.Ordinal))
+                text = text.Substring(0, text.Length - close3.Length) + closeTag;
+
+            if (text.Contains(close4))
+                text = text.Replace(close4, closeTag + Environment.NewLine);
+
+            // e.g: ! </i><br>Foobar
+            if (text.StartsWith(open1, StringComparison.Ordinal))
+                text = openTag + text.Substring(open1.Length);
+
+            if (text.Contains(open2, StringComparison.Ordinal))
+                text = text.Replace(open2, Environment.NewLine + openTag);
+
+            text = text.Trim();
+            if (text.StartsWith(open1, StringComparison.Ordinal))
+                text = openTag + text.Substring(open1.Length);
+
             return text;
         }
 
@@ -3248,7 +3290,12 @@ namespace Nikse.SubtitleEdit.Logic
                             graphicsStarted = true;
                         }
                     }
-                    subtitle.Header = header.ToString();
+                    subtitle.Header = header.ToString().TrimEnd();
+                    if (!subtitle.Header.Contains("[events]", StringComparison.OrdinalIgnoreCase))
+                    {
+                        subtitle.Header += Environment.NewLine + Environment.NewLine + "[Events]" + Environment.NewLine;
+                    }
+
                 }
             }
             else
@@ -3328,7 +3375,7 @@ namespace Nikse.SubtitleEdit.Logic
                                    "Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text" + Environment.NewLine;
             }
             lines = new List<string>();
-            foreach (string l in subtitle.Header.Trim().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in subtitle.Header.Trim().SplitToLines())
                 lines.Add(l);
 
             const string timeCodeFormat = "{0}:{1:00}:{2:00}.{3:00}"; // h:mm:ss.cc
@@ -3369,7 +3416,7 @@ namespace Nikse.SubtitleEdit.Logic
                 lines.Add(cp.Text);
             }
 
-            foreach (string l in footer.ToString().Replace(Environment.NewLine, "\n").Split('\n'))
+            foreach (string l in footer.ToString().SplitToLines())
                 lines.Add(l);
 
             format.LoadSubtitle(subtitle, lines, fileName);

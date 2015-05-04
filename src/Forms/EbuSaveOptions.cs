@@ -4,6 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
+using Nikse.SubtitleEdit.Core;
 
 namespace Nikse.SubtitleEdit.Forms
 {
@@ -26,8 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             labelCodePageNumber.Text = language.CodePageNumber;
             labelDiskFormatCode.Text = language.DiskFormatCode;
-            if (!string.IsNullOrEmpty(language.DisplayStandardCode)) //TODO: Fix in 3.4
-                labelDisplayStandardCode.Text = language.DisplayStandardCode;
+            labelDisplayStandardCode.Text = language.DisplayStandardCode;
             labelCharacterCodeTable.Text = language.CharacterCodeTable;
             labelLanguageCode.Text = language.LanguageCode;
             labelOriginalProgramTitle.Text = language.OriginalProgramTitle;
@@ -96,10 +96,10 @@ namespace Nikse.SubtitleEdit.Forms
             int i = 1;
             foreach (Paragraph p in subtitle.Paragraphs)
             {
-                string[] arr = p.Text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+                var arr = p.Text.SplitToLines();
                 foreach (string line in arr)
                 {
-                    string s = Utilities.RemoveHtmlTags(line);
+                    string s = HtmlUtil.RemoveHtmlTags(line);
                     if (s.Length > numericUpDownMaxCharacters.Value)
                     {
                         sb.AppendLine(string.Format(Configuration.Settings.Language.EbuSaveOptions.MaxLengthError, i, numericUpDownMaxCharacters.Value, s.Length - numericUpDownMaxCharacters.Value, s));

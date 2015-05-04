@@ -5,7 +5,7 @@ using Nikse.SubtitleEdit.Logic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
-    public partial class VobSubOcrSetItalicFactor : Form
+    public sealed partial class VobSubOcrSetItalicFactor : Form
     {
         private Bitmap _bmp;
         private double _factor;
@@ -18,7 +18,11 @@ namespace Nikse.SubtitleEdit.Forms
             _factor = factor;
             numericUpDown1.Value = (decimal)factor;
 
+            Text = Configuration.Settings.Language.VobSubOcrSetItalicFactor.Title;
+            labelDescription.Text = Configuration.Settings.Language.VobSubOcrSetItalicFactor.Description;
             saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.VobSubOcr.SaveSubtitleImageAs;
+            buttonOK.Text = Configuration.Settings.Language.General.Ok;
+            buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -59,7 +63,7 @@ namespace Nikse.SubtitleEdit.Forms
             DialogResult result = saveFileDialog1.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                Bitmap bmp = (Bitmap)pictureBoxSubtitleImage.Image;
+                var bmp = (Bitmap)pictureBoxSubtitleImage.Image;
                 if (bmp == null)
                 {
                     MessageBox.Show("No image!");
@@ -82,7 +86,7 @@ namespace Nikse.SubtitleEdit.Forms
                     MessageBox.Show(exception.Message);
                 }
             }
-
         }
+
     }
 }

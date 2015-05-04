@@ -69,7 +69,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 if (i + 1 < subtitle.Paragraphs.Count)
                     next = subtitle.Paragraphs[i + 1];
 
-                string text = Utilities.RemoveHtmlTags(p.Text);
+                string text = HtmlUtil.RemoveHtmlTags(p.Text);
                 text = text.Replace(Environment.NewLine, " "); // text = text.Replace(Environment.NewLine, "|");
                 sb.AppendLine(string.Format("[{0:00}:{1:00}.{2:00}]{3}", p.StartTime.Hours * 60 + p.StartTime.Minutes, p.StartTime.Seconds, (int)Math.Round(p.StartTime.Milliseconds / 10.0), text));
 
@@ -199,7 +199,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     }
                     else
                     {
-                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MininumMillisecondsBetweenLines;
+                        p.EndTime.TotalMilliseconds = next.StartTime.TotalMilliseconds - Configuration.Settings.General.MinimumMillisecondsBetweenLines;
                     }
                     if (p.Duration.TotalMilliseconds > Configuration.Settings.General.SubtitleMaximumDisplayMilliseconds)
                     {

@@ -473,24 +473,37 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x27, //э
             0x28, //(
             0x29, //)
+            0x2b, //+
             0x2c, //,
             0x2d, //_
             0x2e, //ю
+            0x3a, //Ж
+            0x3b, //Ж
             0x3c, //>
             0x41, //Ф
             0x42, //И
             0x43, //C
             0x44, //В
             0x45, //У
-            0x46, //F
+            0x46, //A
+            0x47, //П
             0x48, //Р
             0x49, //Ш
             0x4a, //О
+            0x4b, //Л
+            0x4c, //Д
             0x4d, //Ь
             0x4e, //Т
+            0x4f, //Щ
+            0x50, //З
+            0x52, //К
             0x53, //Ы
+            0x54, //Е
+            0x55, //Г
+            0x56, //М
             0x57, //Ц
             0x58, //Ч
+            0x59, //Н
             0x5a, //Я
             0x5b, //х
             0x5d, //ъ
@@ -505,21 +518,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x67, //п
             0x68, //p
             0x69, //ш
+            0x6a, //о
+            0x6b, //л
             0x6c, //д
             0x6d, //ь
             0x6e, //т
-            0x6f, //э
+            0x6f, //щ
             0x70, //з
+            0x72, //к
             0x73, //ы
             0x74, //e
             0x75, //г
+            0x76, //м
             0x77, //ц
             0x78, //ч
             0x79, //н
             0x7a, //я
             0x7b, //Х
             0x7d, //Ъ
+            0x80, //Б
             0x81, //Ю
+            0x88, //Ј
+            0x8a, //Њ
+            0x8f, //Џ
             0x92, //ђ
             0x94, //,
             0x95, //-
@@ -530,6 +551,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0x9b, //ћ
             0x9d, //§
             0x9f, //џ
+            0xa2, //%
             0xac, //C
             0xad, //D
             0xae, //E
@@ -565,6 +587,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xcd, //i
             0xce, //j
             0xcf, //k
+            0xd0, // (blank)
             0xd1, //l
             0xd2, //m
             0xd3, //n
@@ -580,8 +603,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             0xdd, //э
             0xde, //ю
             0xdf, //z
+            0xe3, //ѐ
             0xe065, //ў
             0xe574, //ё
+            0xe252, //Ќ
             0xe272, //ќ
             0xe275, //ѓ
             0xe596, //ї
@@ -600,24 +625,37 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "э", //0x27
             "(", //0x28
             ")", //0x29
-            ",", //0x2c
+            "+", //0x2b
+            "б", //",", //0x2c
             "_", //0x2d
             "ю", //0x2e
+            "Ж", //0x3a
+            "Ж", //0x3b
             ">", //0x3c
             "Ф", //0x41
             "И", //0x42
             "C", //0x43
             "B", //0x44
             "У", //0x45
-            "F", //0x46
+            "A", //0x46
+            "П", //0x47
             "Р", //0x48
             "Ш", //0x49
             "О", //0x4a
+            "Л", //0x4b
+            "Д", //0x4c
             "Ь", //0x4d
             "Т", //0x4e
+            "Щ", //0x4f
+            "З", //0x50
+            "К", //0x52
             "Ы", //0x53
+            "Е", //0x54
+            "Г", //0x55
+            "М", //0x56
             "Ц", //0x57
             "Ч", //0x58
+            "Н", //0x59
             "Я", //0x5a
             "х", //0x5b
             "ъ", //0x5d
@@ -632,21 +670,29 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "п", //0x67
             "p", //0x68
             "ш", //0x69
+            "о", //0x6a
+            "л", //0x6b
             "д", //0x6c
             "ь", //0x6d
             "т", //0x6e
-            "э", //0x6f
+            "щ", //0x6f
             "з", //0x70
+            "к", //0x72
             "ы", //0x73
             "e", //0x74
             "г", //0x75
+            "м", //0x76
             "ц", //0x77
             "ч", //0x78
             "н", //0x79
             "я", //0x7a
             "Х", //0x7b
             "Ъ", //0x7d
+            "Б", //0x80
             "Ю", //0x81
+            "Ј", //0x88
+            "Њ", //0x8a
+            "Џ", //0x8f
             "ђ", //0x92
             ",", //0x94
             "-", //0x95
@@ -657,6 +703,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "њ", //0x9a
             "§", //0x9d
             "џ", //0x9f
+            "%", //0xa2
             "C", //0xac
             "D", //0xad
             "E", //0xae
@@ -692,6 +739,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "i", //0xcd
             "j", //0xce
             "k", //0xcf
+            "", //0xd0
             "l", //0xd1
             "m", //0xd2
             "n", //0xd3
@@ -707,8 +755,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             "э", //0xdd
             "ю", //0xde
             "z", //0xdf
+            "ѐ", //0xe3
             "ў", //0xe065
             "ё", //0xe574
+            "Ќ", //0xe252
             "ќ", //0xe272
             "ѓ", //0xe275
             "ї", //0xe596
@@ -736,9 +786,11 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             get { return ".pac"; }
         }
 
+        public const string NameOfFormat = "PAC (Screen Electronics)";
+
         public override string Name
         {
-            get { return "PAC (Screen Electronics)"; }
+            get { return NameOfFormat; }
         }
 
         public override bool IsTimeBased
@@ -855,16 +907,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             text = text.Replace("</I>", "</i>");
 
             if (Utilities.CountTagInText(text, "<i>") == 1 && text.StartsWith("<i>") && text.EndsWith("</i>"))
-                return "<" + Utilities.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
+                return "<" + HtmlUtil.RemoveHtmlTags(text).Replace(Environment.NewLine, Environment.NewLine + "<");
 
             var sb = new StringBuilder();
-            string[] parts = text.Split(Utilities.NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+            var parts = text.SplitToLines();
             foreach (string line in parts)
             {
                 string s = line.Trim();
                 if (Utilities.CountTagInText(s, "<i>") == 1 && s.StartsWith("<i>") && s.EndsWith("</i>"))
                 {
-                    sb.AppendLine("<" + Utilities.RemoveHtmlTags(s));
+                    sb.AppendLine("<" + HtmlUtil.RemoveHtmlTags(s));
                 }
                 else
                 {
@@ -1222,8 +1274,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         StringBuilder sb = new StringBuilder();
                         for (int i = 0; i < LatinLetters.Count; i++)
                             sb.Append(LatinLetters[i]);
-                        string latinLetters = sb + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\")";
-                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        string latinLetters = sb + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\"):;&";
+                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
                             if (!latinLetters.Contains(ch))
                                 allOk = false;
@@ -1235,9 +1287,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         _codePage = 1;
                         p = GetPacParagraph(ref index, buffer);
                         allOk = true;
-                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\")".Contains(ch))
+                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\"):;&".Contains(ch))
                                 allOk = false;
                         }
                         if (allOk)
@@ -1250,8 +1302,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         for (int i = 0; i < ArabicLetters.Count; i++)
                             sb.Append(ArabicLetters[i]);
-                        string arabicLetters = sb + "(1234567890, .!?-\r\n'\")";
-                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        string arabicLetters = sb + "(1234567890, .!?-\r\n'\"):;&";
+                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
                             if (!arabicLetters.Contains(ch))
                                 allOk = false;
@@ -1266,8 +1318,8 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         for (int i = 0; i < HebrewLetters.Count; i++)
                             sb.Append(HebrewLetters[i]);
-                        string hebrewLetters = sb + "(1234567890, .!?-\r\n'\")";
-                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        string hebrewLetters = sb + "(1234567890, .!?-\r\n'\"):;&";
+                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
                             if (!hebrewLetters.Contains(ch))
                                 allOk = false;
@@ -1282,10 +1334,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         sb = new StringBuilder();
                         for (int i = 0; i < CyrillicLetters.Count; i++)
                             sb.Append(CyrillicLetters[i]);
-                        string cyrillicLetters = sb + "(1234567890, .!?-\r\n'\")";
-                        foreach (char ch in Utilities.RemoveHtmlTags(p.Text, true))
+                        string cyrillicLetters = sb + "(1234567890, .!?-\r\n'\"):;&";
+                        foreach (char chCyrillic in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!cyrillicLetters.Contains(ch))
+                            if (!cyrillicLetters.Contains(chCyrillic))
                                 allOk = false;
                         }
                         if (allOk)

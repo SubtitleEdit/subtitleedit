@@ -46,6 +46,7 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private readonly int _screenWidth = 720;
         private readonly int _screenHeight = 480;
         private readonly int _bottomMargin = 15;
+        private readonly int _leftRightMargin = 15;
         private readonly int _languageStreamId;
         private Color _background = Color.Transparent;
         private Color _pattern = Color.White;
@@ -55,12 +56,13 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
         private readonly string _languageName = "English";
         private readonly string _languageNameShort = "en";
 
-        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntialiasing, string languageName, string languageNameShort)
+        public VobSubWriter(string subFileName, int screenWidth, int screenHeight, int bottomMargin, int leftRightMargin, int languageStreamId, Color pattern, Color emphasis1, bool useInnerAntialiasing, string languageName, string languageNameShort)
         {
             _subFileName = subFileName;
             _screenWidth = screenWidth;
             _screenHeight = screenHeight;
             _bottomMargin = bottomMargin;
+            _leftRightMargin = leftRightMargin;
             _languageStreamId = languageStreamId;
             _pattern = pattern;
             _emphasis1 = emphasis1;
@@ -295,11 +297,11 @@ namespace Nikse.SubtitleEdit.Logic.VobSub
             }
             if (alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.BottomLeft)
             {
-                startX = (ushort)_bottomMargin;
+                startX = (ushort)_leftRightMargin;
             }
             if (alignment == ContentAlignment.TopRight || alignment == ContentAlignment.MiddleRight || alignment == ContentAlignment.BottomRight)
             {
-                startX = (ushort)(_screenWidth - nbmp.Width - _bottomMargin);
+                startX = (ushort)(_screenWidth - nbmp.Width - _leftRightMargin);
             }
 
             ushort endX = (ushort)(startX + nbmp.Width - 1);

@@ -30,7 +30,7 @@ namespace Nikse.SubtitleEdit.Forms
     /// <summary>
     ///   Summary description for ColorChooser.
     /// </summary>
-    public class ColorChooser : Form
+    public sealed class ColorChooser : Form
     {
         /// <summary>
         ///   Required designer variable.
@@ -74,14 +74,11 @@ namespace Nikse.SubtitleEdit.Forms
         {
             InitializeComponent();
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ColorChooser.Title))
-            {
-                this.Text = Configuration.Settings.Language.ColorChooser.Title;
-                labelRed.Text = Configuration.Settings.Language.ColorChooser.Red;
-                labelGreen.Text = Configuration.Settings.Language.ColorChooser.Green;
-                labelBlue.Text = Configuration.Settings.Language.ColorChooser.Blue;
-                labelAlpha1.Text = Configuration.Settings.Language.ColorChooser.Alpha;
-            }
+            Text = Configuration.Settings.Language.ColorChooser.Title;
+            labelRed.Text = Configuration.Settings.Language.ColorChooser.Red;
+            labelGreen.Text = Configuration.Settings.Language.ColorChooser.Green;
+            labelBlue.Text = Configuration.Settings.Language.ColorChooser.Blue;
+            labelAlpha1.Text = Configuration.Settings.Language.ColorChooser.Alpha;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
         }

@@ -19,11 +19,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (listBoxTracks.SelectedIndex == -1 && listBoxTracks.Items.Count > 0)
                 listBoxTracks.SelectedIndex = 0;
 
-            if (!string.IsNullOrEmpty(Configuration.Settings.Language.ChooseAudioTrack.Title))
-            {
-                Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
-                labelDescr.Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
-            }
+            Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
+            labelDescr.Text = Configuration.Settings.Language.ChooseAudioTrack.Title;
         }
 
         public int SelectedTrack { get; set; }

@@ -267,9 +267,10 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
         /// <param name="bmp">Bitmap</param>
         /// <param name="fps">Frames per second</param>
         /// <param name="bottomMargin">Image bottom margin</param>
+        /// <param name="leftOrRightMargin">Image left/right margin</param>
         /// <param name="alignment">Alignment of image</param>
         /// <returns>Byte buffer containing the binary stream representation of one caption</returns>
-        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, ContentAlignment alignment)
+        public static byte[] CreateSupFrame(BluRaySupPicture pic, Bitmap bmp, double fps, int bottomMargin, int leftOrRightMargin, ContentAlignment alignment)
         {
             var bm = new NikseBitmap(bmp);
             var colorPalette = GetBitmapPalette(bm);
@@ -361,10 +362,6 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             size += (2 + palSize * 5) /* PDS */;
             size += rleBuf.Length;
 
-            int leftOrRightMargin = bottomMargin;
-            if (leftOrRightMargin > 20)
-                leftOrRightMargin = 20;
-
             switch (alignment)
             {
                 case ContentAlignment.BottomLeft:
@@ -436,9 +433,9 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             int imageDecodeTime = (bm.Width * bm.Height * 9 + 1599) / 1600;
             // write PCS start
             packetHeader[10] = 0x16;                                            // ID
-            int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime + imageDecodeTime); //            int dts = pic.StartTimeForWrite - windowInitTime; ????
+            int dts = pic.StartTimeForWrite - (frameInitTime + windowInitTime + imageDecodeTime); //int dts = pic.StartTimeForWrite - windowInitTime; ???
 
-            ToolBox.SetDWord(packetHeader, 2, pic.StartTimeForWrite);              // PTS
+            ToolBox.SetDWord(packetHeader, 2, pic.StartTimeForWrite);           // PTS
             ToolBox.SetDWord(packetHeader, 6, dts);                             // DTS
             ToolBox.SetWord(packetHeader, 11, headerPcsStart.Length);           // size
             for (int i = 0; i < packetHeader.Length; i++)
@@ -513,8 +510,8 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 int psize = bufSize;
                 if (psize > 0xffeb)
                     psize = 0xffeb;
-                packetHeader[10] = 0x15;                                            // ID (keep DTS & PTS)
-                ToolBox.SetWord(packetHeader, 11, headerOdsNext.Length + psize);    // size
+                packetHeader[10] = 0x15;                                         // ID (keep DTS & PTS)
+                ToolBox.SetWord(packetHeader, 11, headerOdsNext.Length + psize); // size
                 for (int i = 0; i < packetHeader.Length; i++)
                     buf[index++] = packetHeader[i];
                 for (int i = 0; i < headerOdsNext.Length; i++)
@@ -525,7 +522,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
             }
 
             // write END
-            packetHeader[10] = 0x80;                                      // ID
+            packetHeader[10] = 0x80;                                            // ID
             ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0) (keep PTS of ODS)
             ToolBox.SetWord(packetHeader, 11, 0);                               // size
             for (int i = 0; i < packetHeader.Length; i++)
@@ -561,7 +558,7 @@ namespace Nikse.SubtitleEdit.Logic.BluRaySup
                 buf[index++] = headerWds[i];
 
             // write END
-            packetHeader[10] = 0x80;                                      // ID
+            packetHeader[10] = 0x80;                                            // ID
             ToolBox.SetDWord(packetHeader, 2, dts);                             // PTS (DTS of end PCS)
             ToolBox.SetDWord(packetHeader, 6, 0);                               // DTS (0)
             ToolBox.SetWord(packetHeader, 11, 0);                               // size
