@@ -110,6 +110,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _cancelWordSpellCheck = true;
 
+        private bool  _clearLastFind;
+        private FindType _clearLastFindType = FindType.Normal;
+        private string _clearLastFindText = string.Empty;
+
         private Keys _mainGeneralGoToFirstSelectedLine = Keys.None;
         private Keys _mainGeneralGoToFirstEmptyLine = Keys.None;
         private Keys _mainGeneralMergeSelectedLines = Keys.None;
@@ -3798,7 +3802,18 @@ namespace Nikse.SubtitleEdit.Forms
                 selectedText = textBoxListViewText.SelectedText;
 
             if (selectedText.Length == 0 && _findHelper != null)
-                selectedText = _findHelper.FindText;
+            {
+                if (_clearLastFind)
+                {
+                    _clearLastFind = false;
+                    _findHelper.FindType = _clearLastFindType;
+                    selectedText = _clearLastFindText;
+                }
+                else
+                {
+                    selectedText = _findHelper.FindText;
+                }
+            }
 
             using (var findDialog = new FindDialog())
             {
@@ -11570,6 +11585,12 @@ namespace Nikse.SubtitleEdit.Forms
         private void FindDoubleWordsToolStripMenuItemClick(object sender, EventArgs e)
         {
             var regex = new Regex(@"\b(\w+)\s+\1\b");
+            _clearLastFind = true;
+            if (_findHelper != null)
+            {
+                _clearLastFindType = _findHelper.FindType;
+                _clearLastFindText = _findHelper.FindText;
+            }
             _findHelper = new FindReplaceDialogHelper(FindType.RegEx, string.Format(_language.DoubleWordsViaRegEx, regex), regex, string.Empty, 0, 0, _subtitleListViewIndex);
 
             ReloadFromSourceView();
