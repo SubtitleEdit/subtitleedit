@@ -22,6 +22,15 @@ namespace Nikse.SubtitleEdit.Forms
         private const string SplitterString = " == ";
         private const string NewlineString = " __ ";
 
+        private enum FormattingType
+        {
+            None,
+            Italic,
+            ItalicTwoLines
+        }
+
+        private FormattingType[] _formattingTypes;
+
         private Encoding _screenScrapingEncoding;
         public Encoding ScreenScrapingEncoding
         {
@@ -183,6 +192,8 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
+            _formattingTypes = new FormattingType[_subtitle.Paragraphs.Count];
+
             buttonOK.Enabled = false;
             buttonCancel.Enabled = false;
             _breakTranslation = false;
@@ -198,9 +209,26 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 var sb = new StringBuilder();
                 int index = 0;
-                foreach (Paragraph p in _subtitle.Paragraphs)
+                for (int i = 0; i < _subtitle.Paragraphs.Count; i++)
                 {
-                    string text = string.Format("{1} {0} |", p.Text, SplitterString);
+                    Paragraph p = _subtitle.Paragraphs[i];
+                    string text = p.Text.Trim();
+                    if (text.StartsWith("<i>") && text.EndsWith("</i>") && text.Contains("</i>" + Environment.NewLine + "<i>") && Utilities.GetNumberOfLines(text) == 2 && Utilities.CountTagInText(text, "<i>") == 1)
+                    {
+                        _formattingTypes[i] = FormattingType.ItalicTwoLines;
+                        text = HtmlUtil.RemoveOpenCloseTags(text, HtmlUtil.TagItalic);
+                    }
+                    else if (text.StartsWith("<i>") && text.EndsWith("</i>") && Utilities.CountTagInText(text, "<i>") == 1)
+                    {
+                        _formattingTypes[i] = FormattingType.Italic;
+                        text = text.Substring(3, text.Length - 7);
+                    }
+                    else
+                    {
+                        _formattingTypes[i] = FormattingType.None;
+                    }
+
+                    text = string.Format("{1} {0} |", text, SplitterString);
                     if (Utilities.UrlEncode(sb + text).Length >= textMaxSize)
                     {
                         FillTranslatedText(DoTranslate(sb.ToString()), start, index - 1);
@@ -273,7 +301,15 @@ namespace Nikse.SubtitleEdit.Forms
                         cleanText = cleanText.Remove(cleanText.Length - 5, 1);
                     cleanText = cleanText.Replace(Environment.NewLine + "<i> ", Environment.NewLine + "<i>");
                     cleanText = cleanText.Replace(" </i>" + Environment.NewLine, "</i>" + Environment.NewLine);
-                    _translatedSubtitle.Paragraphs[index].Text = cleanText;
+
+                    if (_formattingTypes[index] == FormattingType.ItalicTwoLines || _formattingTypes[index] == FormattingType.Italic)
+                    {
+                        _translatedSubtitle.Paragraphs[index].Text = "<i>" + cleanText + "</i>";
+                    }
+                    else
+                    {
+                        _translatedSubtitle.Paragraphs[index].Text = cleanText;
+                    }
                 }
                 index++;
             }
