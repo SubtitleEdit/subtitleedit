@@ -100,10 +100,9 @@ namespace Nikse.SubtitleEdit.Forms
             if (list.Count > 0)
                 first = list[0];
             list.Sort();
-            list.Reverse();
-            foreach (int i in list)
+            for (int i = list.Count - 1; i >= 0; i--)
             {
-                _noBreakAfterList.RemoveAt(i);
+                _noBreakAfterList.RemoveAt(list[i]);
             }
             ShowBreakAfterList(_noBreakAfterList);
             if (first >= _noBreakAfterList.Count)
