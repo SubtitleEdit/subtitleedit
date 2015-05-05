@@ -7,20 +7,20 @@ using System.Text;
 namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 {
     /// <summary>
-    /// PNS subtitle format 
+    /// PNS subtitle format
     ///
     ///00 00 + control bytes = 16 bytes
-    ///     
-    ///START-MIN                                
-    ///-----  
-    ///|  
+    ///
+    ///START-MIN
+    ///-----
+    ///|
     ///|           START-FRAME
-    ///|           --      
+    ///|           --
     ///|           |     END-MIN
-    ///|           |     -----  
+    ///|           |     -----
     ///|           |     |           END-FRAME
     ///|           |     |           --
-    ///|           |     |           | 
+    ///|           |     |           |
     ///|           |     |           |     TEXT-LENGTH
     ///|           |     |           |     --
     ///|           |     |           |     |
@@ -81,7 +81,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             var sub = new Subtitle();
                             LoadSubtitle(sub, null, fileName);
                             return sub.Paragraphs.Count > 0;
-                        }                        
+                        }
                     }
                 }
                 catch
@@ -119,7 +119,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 // pattern for control codes
                 if (buffer.Length > index + 20 &&
-                    buffer[index + 00] == 0 && 
+                    buffer[index + 00] == 0 &&
                     buffer[index + 01] == 0 &&
                     //buffer[index + 02] == 0 && // start min
                     //buffer[index + 03] == 0 &&
@@ -159,7 +159,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             }
             index++;
             return null;
-        }       
+        }
 
     }
 }
