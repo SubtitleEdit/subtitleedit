@@ -674,91 +674,53 @@ namespace Nikse.SubtitleEdit.Forms
                 reg = new Regex("\\bI'd "); // had or would???
                 s = reg.Replace(s, "I would ");
 
-                reg = new Regex("\\bIt's ");
-                s = reg.Replace(s, "It is ");
-                reg = new Regex("\\bit's ");
-                s = reg.Replace(s, "it is ");
+                reg = new Regex("\\b(I|i)t's ");
+                s = reg.Replace(s, "$1t is ");
 
-                reg = new Regex("\\bYou're ");
-                s = reg.Replace(s, "You are ");
-                reg = new Regex("\\byou're ");
-                s = reg.Replace(s, "You are ");
+                reg = new Regex("\\b(Y|y)ou're ");
+                s = reg.Replace(s, "$1ou are ");
 
-                reg = new Regex("\\bYou've ");
-                s = reg.Replace(s, "You have ");
-                reg = new Regex("\\byou've ");
-                s = reg.Replace(s, "you have ");
+                reg = new Regex("\\b(Y|y)ou've ");
+                s = reg.Replace(s, "$1ou have ");
 
-                reg = new Regex("\\bYou'll ");
-                s = reg.Replace(s, "You will ");
-                reg = new Regex("\\byou'll ");
-                s = reg.Replace(s, "you will ");
+                reg = new Regex("\\b(Y|y)ou'll ");
+                s = reg.Replace(s, "$1ou will ");
 
-                reg = new Regex("\\bYou'd "); // had or would???
-                s = reg.Replace(s, "You would ");
-                reg = new Regex("\\byou'd ");
-                s = reg.Replace(s, "you would ");
+                reg = new Regex("\\b(Y|y)ou'd "); // had or would???
+                s = reg.Replace(s, "$1ou would ");
 
-                reg = new Regex("\\bHe's ");
-                s = reg.Replace(s, "He is ");
-                reg = new Regex("\\bhe's ");
-                s = reg.Replace(s, "he is ");
+                reg = new Regex("\\b(H|h)e's ");
+                s = reg.Replace(s, "$1e is ");
 
-                reg = new Regex("\\bShe's ");
-                s = reg.Replace(s, "She is ");
-                reg = new Regex("\\bshe's ");
-                s = reg.Replace(s, "she is ");
+                reg = new Regex("\\b(S|s)he's ");
+                s = reg.Replace(s, "$1he is ");
 
-                reg = new Regex("\\bWe're ");
-                s = reg.Replace(s, "We are ");
-                reg = new Regex("\\bwe're ");
-                s = reg.Replace(s, "we are ");
+                reg = new Regex("\\b(W|w)e're ");
+                s = reg.Replace(s, "$1e are ");
 
                 reg = new Regex("\\bwon't ");
                 s = reg.Replace(s, "will not ");
 
-                reg = new Regex("\\bThey're ");
-                s = reg.Replace(s, "They are ");
-                reg = new Regex("\\bthey're ");
-                s = reg.Replace(s, "they are ");
+                reg = new Regex("\\b(T|t)hey're ");
+                s = reg.Replace(s, "$1hey are ");
 
-                reg = new Regex("\\bWho's ");
-                s = reg.Replace(s, "Who is ");
-                reg = new Regex("\\bwho's ");
-                s = reg.Replace(s, "who is ");
+                reg = new Regex("\\b(W|w)ho's ");
+                s = reg.Replace(s, "$1ho is ");
 
-                reg = new Regex("\\bThat's ");
-                s = reg.Replace(s, "That is ");
-                reg = new Regex("\\bthat's ");
-                s = reg.Replace(s, "that is ");
+                reg = new Regex("\\b(T|t)hat's ");
+                s = reg.Replace(s, "$1hat is ");
 
-                reg = new Regex("\\bWhat's ");
-                s = reg.Replace(s, "What is ");
-                reg = new Regex("\\bwhat's ");
-                s = reg.Replace(s, "what is ");
+                reg = new Regex("\\b(W|w)hat's ");
+                s = reg.Replace(s, "$1hat is ");
 
-                reg = new Regex("\\bWhere's ");
-                s = reg.Replace(s, "Where is ");
-                reg = new Regex("\\bwhere's ");
-                s = reg.Replace(s, "where is ");
+                reg = new Regex("\\b(W|w)here's ");
+                s = reg.Replace(s, "$1here is ");
 
-                reg = new Regex("\\bWho's ");
-                s = reg.Replace(s, "Who is ");
-                reg = new Regex("\\bwho's ");
-                s = reg.Replace(s, "who is ");
+                reg = new Regex("\\b(W|w)ho's ");
+                s = reg.Replace(s, "$1ho is ");
 
-                reg = new Regex(" 'Cause "); // \b (word boundry) does not workig with '
-                s = reg.Replace(s, " Because ");
-                reg = new Regex(" 'cause ");
-                s = reg.Replace(s, " because ");
-                reg = new Regex("\\r\\n'Cause ");
-                s = reg.Replace(s, "\r\nBecause ");
-                reg = new Regex("\\r\\n'cause ");
-                s = reg.Replace(s, "\r\nbecause ");
-                reg = new Regex(">'Cause ");
-                s = reg.Replace(s, ">Because ");
-                reg = new Regex(">'cause ");
-                s = reg.Replace(s, ">because ");
+                reg = new Regex("\\B'(C|c)ause "); // \b (word boundry) does not workig with '
+                s = reg.Replace(s, "$1ecause ");
             }
             return s;
         }
