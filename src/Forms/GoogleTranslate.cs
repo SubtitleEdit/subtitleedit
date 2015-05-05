@@ -266,19 +266,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FillTranslatedText(string translatedText, int start, int end)
         {
-            var lines = new List<string>();
-            foreach (string s in translatedText.Split(new[] { "|" }, StringSplitOptions.None))
-                lines.Add(s);
-
             int index = start;
-            foreach (string s in lines)
+            foreach (string s in translatedText.Split(new[] { "|" }, StringSplitOptions.None))
             {
                 if (index < _translatedSubtitle.Paragraphs.Count)
                 {
                     string cleanText = s.Replace("</p>", string.Empty).Trim();
                     int indexOfP = cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal);
                     if (indexOfP >= 0 && indexOfP < 4)
-                        cleanText = cleanText.Remove(0, cleanText.IndexOf(SplitterString.Trim(), StringComparison.Ordinal));
+                        cleanText = cleanText.Remove(0, indexOfP);
                     cleanText = cleanText.Replace(SplitterString.Trim(), string.Empty).Trim();
                     if (cleanText.Contains('\n') && !cleanText.Contains('\r'))
                         cleanText = cleanText.Replace("\n", Environment.NewLine);
@@ -629,7 +625,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBox.Items.Add(new ComboBoxItem("TURKISH", "tr"));
             comboBox.Items.Add(new ComboBoxItem("UKRAINIAN", "uk"));
             comboBox.Items.Add(new ComboBoxItem("URDU", "ur"));
-            comboBox.Items.Add(new ComboBoxItem("UZBEK" , "uz"));
+            comboBox.Items.Add(new ComboBoxItem("UZBEK", "uz"));
             //            comboBox.Items.Add(new ComboBoxItem("UIGHUR" , "ug"));
             comboBox.Items.Add(new ComboBoxItem("VIETNAMESE", "vi"));
             comboBox.Items.Add(new ComboBoxItem("WELSH", "cy"));
