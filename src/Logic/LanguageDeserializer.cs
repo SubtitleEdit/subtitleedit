@@ -1149,6 +1149,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/ChooseBackgroundColor":
                     language.ExportPngXml.ChooseBackgroundColor = reader.Value;
                     break;
+                case "ExportPngXml/SaveImageAs":
+                    language.ExportPngXml.SaveImageAs = reader.Value;
+                    break;
                 case "ExportText/Title":
                     language.ExportText.Title = reader.Value;
                     break;

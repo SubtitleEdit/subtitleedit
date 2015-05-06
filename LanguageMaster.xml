@@ -441,6 +441,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxMultiLine>Box - multi line</BoxMultiLine>
     <Forced>Forced</Forced>
     <ChooseBackgroundColor>Choose background color</ChooseBackgroundColor>
+    <SaveImageAs>Save image as...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Export text</Title>

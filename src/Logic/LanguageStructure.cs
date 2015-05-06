@@ -499,6 +499,7 @@
             public string BoxMultiLine { get; set; }
             public string Forced { get; set; }
             public string ChooseBackgroundColor { get; set; }
+            public string SaveImageAs { get; set; }
         }
 
         public class ExportText
