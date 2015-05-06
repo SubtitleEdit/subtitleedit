@@ -344,7 +344,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <OriginalProgramTitle>Izvorni naziv emisije</OriginalProgramTitle>
     <OriginalEpisodeTitle>Izvorni naslov epizode</OriginalEpisodeTitle>
     <TranslatedProgramTitle>Prevedeni naslov emisije</TranslatedProgramTitle>
-    <TranslatedEpisodeTitle>Prevedeni  naslov epizode</TranslatedEpisodeTitle>
+    <TranslatedEpisodeTitle>Prevedeni naslov epizode</TranslatedEpisodeTitle>
     <TranslatorsName>Ime prevoditelja</TranslatorsName>
     <SubtitleListReferenceCode>Popis titla referentni kod</SubtitleListReferenceCode>
     <CountryOfOrigin>Zemlja podrijetla</CountryOfOrigin>
@@ -590,7 +590,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <XFixEllipsesStart>Uklonjeno linija koje počinju s tri točke: {0}</XFixEllipsesStart>
     <XFixMissingOpenBracket>Ispravljeno nedostajućih uglatih zagrada: {0}</XFixMissingOpenBracket>
     <XFixMusicNotation>Ispravljeno glazbenih znakova: {0}</XFixMusicNotation>
-    <FixDoubleDashExample>Vidi-- pa to je Ivan! → Vidi… pa to je Ivan!<e/FixDoubleDashExample>
+    <FixDoubleDashExample>Vidi-- pa to je Ivan! → Vidi… pa to je Ivan!</FixDoubleDashExample>
     <FixDoubleGreaterThanExample>&gt;&gt; Ivana: Gdje si, prijateljice? → Ivana: Gdje si, prijateljice?</FixDoubleGreaterThanExample>
     <FixEllipsesStartExample>… a onda smo → a onda smo</FixEllipsesStartExample>
     <FixMissingOpenBracketExample>zveket] Pazi! → [zveket] Pazi!</FixMissingOpenBracketExample>
@@ -767,7 +767,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <MultipleReplace>&amp;Višestruka zamjena…</MultipleReplace>
         <GoToSubtitleNumber>&amp;Idi na liniju broj…</GoToSubtitleNumber>
         <RightToLeftMode>Zdesna na lijevo način</RightToLeftMode>
-        <FixTrlViaUnicodeControlCharacters>Popravi RTL  putem Unicode kontrolnih znakova (za odabrane linije)</FixTrlViaUnicodeControlCharacters>
+        <FixTrlViaUnicodeControlCharacters>Popravi RTL putem Unicode kontrolnih znakova (za odabrane linije)</FixTrlViaUnicodeControlCharacters>
         <ReverseRightToLeftStartEnd>Obrnuti RTL početak/kraj (za odabrane linije)</ReverseRightToLeftStartEnd>
         <ShowOriginalTextInAudioAndVideoPreview>Prikaži originalni tekst u audio/video pregledima</ShowOriginalTextInAudioAndVideoPreview>
         <ModifySelection>Promijeni izbor...</ModifySelection>
@@ -804,7 +804,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <Ascending>Silazno</Ascending>
         <Descending>Uzlazno</Descending>
         <MakeNewEmptyTranslationFromCurrentSubtitle>&amp;Napravi prazan prijevod iz tekućeg podnaslova</MakeNewEmptyTranslationFromCurrentSubtitle>
-        <BatchConvert>Serijsko (Batch)  konvertiranje...</BatchConvert>
+        <BatchConvert>Serijsko (Batch) konvertiranje...</BatchConvert>
         <GenerateTimeAsText>Generiraj vrijeme u tekst</GenerateTimeAsText>
         <MeasurementConverter>Konverter jedinica</MeasurementConverter>
         <SplitSubtitle>Raz&amp;dvoji podnaslov…</SplitSubtitle>
@@ -883,7 +883,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <ShowHideVideo>Prikaži/sakrij video snimak</ShowHideVideo>
       </ToolBar>
       <ContextMenu>
-        <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha -  stil</AdvancedSubStationAlphaSetStyle>
+        <AdvancedSubStationAlphaSetStyle>Napredna Sub Station Alpha - stil</AdvancedSubStationAlphaSetStyle>
         <SubStationAlphaSetStyle>SSA – Podešavanje stila</SubStationAlphaSetStyle>
         <SubStationAlphaStyles>Sub Station Alpha stilovi...</SubStationAlphaStyles>
         <AdvancedSubStationAlphaStyles>Napredne Sub Station Alpha stilovi...</AdvancedSubStationAlphaStyles>
@@ -916,7 +916,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <MergeSelectedLines>Spoji izabrane linije</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Spoji odabrane linije kao dijalog</MergeSelectedLinesAsDialog>
         <MergeWithLineBefore>Spoji s linijom prije</MergeWithLineBefore>
-        <MergeWithLineAfter>Spoji sa sljedećom linijom </MergeWithLineAfter>
+        <MergeWithLineAfter>Spoji sa sljedećom linijom</MergeWithLineAfter>
         <Normal>Ukloni oznake</Normal>
         <Underline>Podvuci</Underline>
         <Color>Promijeni boju…</Color>
@@ -1153,7 +1153,7 @@ koji bi trebao biti usklađen s video datotekom.
     <FrameRateChangedFromXToY>Broj sličica je promijenjen iz {0} u {1}.</FrameRateChangedFromXToY>
     <IdxFileNotFoundWarning>Nije pronađeno {0}. Ipak uvezi Vobsub podnaslov?</IdxFileNotFoundWarning>
     <InvalidVobSubHeader>Zaglavlje neispravno: {0}</InvalidVobSubHeader>
-    <OpenVobSubFile>Otvaranje Vobsub (sub/idx)  podnaslova</OpenVobSubFile>
+    <OpenVobSubFile>Otvaranje Vobsub (sub/idx) podnaslova</OpenVobSubFile>
     <VobSubFiles>Vobsub podnaslovi</VobSubFiles>
     <OpenBluRaySupFile>Otvaranje Blu-ray podnaslova</OpenBluRaySupFile>
     <BluRaySupFiles>Blu-ray podnaslovi</BluRaySupFiles>
@@ -1544,7 +1544,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <VlcBrowseToLabel>VLC put (potrebno samo ako se koristi prijenosna verzija VLC)</VlcBrowseToLabel>
     <ShowStopButton>&amp;Gumb za zaustavljanje</ShowStopButton>
     <ShowMuteButton>Pokaži gumb za isključivanje zvuka</ShowMuteButton>
-    <ShowFullscreenButton>Prikaži  gumb za puni ekran</ShowFullscreenButton>
+    <ShowFullscreenButton>Prikaži gumb za puni ekran</ShowFullscreenButton>
     <PreviewFontSize>Veličina fonta:</PreviewFontSize>
     <MainWindowVideoControls>Glavni prozor za upravljanje video datotekom</MainWindowVideoControls>
     <CustomSearchTextAndUrl>Adresa za pretragu riječi:</CustomSearchTextAndUrl>
@@ -1625,7 +1625,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idi na novi</CreateSetEndAddNewAndGoToNew>
     <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na slijedeći</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Postaviti kraj i idi na sljedeću</AdjustSetEndTimeAndGoToNext>
-    <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje  i idi na sljedeći</AdjustSetStartAutoDurationAndGoToNext>
+    <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje i idi na sljedeći</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i idite na sljedeći</AdjustSetEndNextStartAndGoToNext>
     <AdjustStartDownEndUpAndGoToNext>Tipka dolje = Start, Tipka gore = postavi kraj i idi na sljedeći</AdjustStartDownEndUpAndGoToNext>
     <AdjustSelected100MsForward>Premještanje odabrane linije 100 ms naprijed</AdjustSelected100MsForward>
@@ -1907,9 +1907,9 @@ određeni podnaslov s drugim ljudima.</Information>
     <Title>Točka usklađivanja</Title>
     <TitleViaOtherSubtitle>Točka usklađivanja iz drugog podnaslova</TitleViaOtherSubtitle>
     <SyncHelp>Postavite bar dvije točke da biste napravili grubu usklađenost.</SyncHelp>
-    <SetSyncPoint>Postavi  točku  usklađivanja</SetSyncPoint>
-    <RemoveSyncPoint>Ukloni  točku  usklađivanja</RemoveSyncPoint>
-    <SyncPointsX>Ukupno usklađenih  točaka: {0}</SyncPointsX>
+    <SetSyncPoint>Postavi točku usklađivanja</SetSyncPoint>
+    <RemoveSyncPoint>Ukloni točku usklađivanja</RemoveSyncPoint>
+    <SyncPointsX>Ukupno usklađenih točaka: {0}</SyncPointsX>
     <Info>Jedna točka usklađivanja prilagodiće položaj. Dvije ili više točaka utjecat će na položaj i brzinu.</Info>
     <ApplySync>&amp;Primjeni</ApplySync>
   </PointSync>
