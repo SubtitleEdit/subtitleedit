@@ -236,7 +236,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <PleaseSelectAnEncoding>Por favor, escolha um codificador</PleaseSelectAnEncoding>
   </ChooseEncoding>
   <ChooseLanguage>
-    <Title>Escolha o idioma</Title>
+    <Title>Escolher o idioma</Title>
     <Language>Idioma</Language>
   </ChooseLanguage>
   <ColorChooser>
@@ -248,7 +248,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
   </ColorChooser>
   <ColumnPaste>
     <Title>Colar coluna</Title>
-    <ChooseColumn>Escolher coluna</ChooseColumn>
+    <ChooseColumn>Escolha a coluna</ChooseColumn>
     <OverwriteShiftCellsDown>Substituir/Deslocar células para baixo</OverwriteShiftCellsDown>
     <Overwrite>Substituir</Overwrite>
     <ShiftCellsDown>Deslocar células para baixo</ShiftCellsDown>
@@ -430,13 +430,18 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Margem esq./dto.</LeftRightMargin>
     <SaveBluRraySupAs>Escolha o nome do ficheiro Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Escolha o nome do ficheiro VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Escolha o nome do ficheiro Blu-ray sup</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Escolha o nome do ficheiro FAB script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Escolha o nome do ficheiro DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Escolha o nome do ficheiro Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Escolha o nome do ficheiro Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>Escolha o nome do ficheiro Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Escolha o nome do ficheiro DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Linhas demasiado longas: {0}</SomeLinesWereTooLongX>
     <LineHeight>Altura da linha</LineHeight>
     <BoxSingleLine>Caixa - linha única</BoxSingleLine>
     <BoxMultiLine>Caixa - todas as linhas</BoxMultiLine>
     <Forced>Forçado</Forced>
+    <ChooseBackgroundColor>Escolha a cor do fundo</ChooseBackgroundColor>
   </ExportPngXml>
   <ExportText>
     <Title>Exportar texto</Title>
@@ -457,11 +462,11 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Srt>.srt</Srt>
     <Milliseconds>Milissegundos</Milliseconds>
     <HHMMSSFF>HH:MM:SS:FF</HHMMSSFF>
-    <TimeCodeSeparator>Separador dos tempos</TimeCodeSeparator>
+    <TimeCodeSeparator>Separador de tempos</TimeCodeSeparator>
   </ExportText>
   <ExtractDateTimeInfo>
     <Title>Criar tempos como texto</Title>
-    <OpenVideoFile>Escolher o ficheiro de vídeo para extrair informações de data / hora</OpenVideoFile>
+    <OpenVideoFile>Escolha o ficheiro de vídeo para extrair informações de data / hora</OpenVideoFile>
     <StartFrom>Iniciar a partir de</StartFrom>
     <DateTimeFormat>Formato Data/tempo</DateTimeFormat>
     <Example>Exemplo</Example>
@@ -471,12 +476,12 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Localizar</Title>
     <Find>Localizar</Find>
     <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas...</CaseSensitive>
+    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
   </FindDialog>
   <FindSubtitleLine>
     <Title>Localizar linha da legenda</Title>
-    <Find>&amp;Localizar</Find>
+    <Find>&amp;Localizar...</Find>
     <FindNext>Localizar &amp;seguinte</FindNext>
   </FindSubtitleLine>
   <FixCommonErrors>
@@ -651,7 +656,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <Title>Importar imagens</Title>
     <ImageFiles>Ficheiros de imagens</ImageFiles>
     <Input>Entrada</Input>
-    <InputDescription>Escolher ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
+    <InputDescription>Escolha os ficheiros de entrada (Selecionar ou arrastar-e-soltar)</InputDescription>
   </ImportImages>
   <ImportSceneChanges>
     <Title>Importar mudanças de cena</Title>
@@ -763,10 +768,10 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertUnicodeControlCharactersRLE>Início de incorporação da direita para a esquerda (RLE)</InsertUnicodeControlCharactersRLE>
         <InsertUnicodeControlCharactersLRO>Início de substituição da esquerda para a direita (LRO)</InsertUnicodeControlCharactersLRO>
         <InsertUnicodeControlCharactersRLO>Início de substituição da direita para a esquerda (RLO)</InsertUnicodeControlCharactersRLO>
-        <Find>&amp;Localizar</Find>
+        <Find>&amp;Localizar...</Find>
         <FindNext>Localizar &amp;seguinte</FindNext>
-        <Replace>&amp;Substituir</Replace>
-        <MultipleReplace>&amp;Substituição múltipla...</MultipleReplace>
+        <Replace>&amp;Substituir...</Replace>
+        <MultipleReplace>&amp;Substituição múltipla</MultipleReplace>
         <GoToSubtitleNumber>&amp;Ir para a linha número...</GoToSubtitleNumber>
         <RightToLeftMode>Modo Direita-para-esquerda</RightToLeftMode>
         <FixTrlViaUnicodeControlCharacters>Corrigir RTL via controle de caracteres Unicode (para linhas seleccionadas)</FixTrlViaUnicodeControlCharacters>
@@ -874,7 +879,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <Open>Abrir</Open>
         <Save>Guardar</Save>
         <SaveAs>Guardar como</SaveAs>
-        <Find>Procurar</Find>
+        <Find>Localizar</Find>
         <Replace>Substituir</Replace>
         <FixCommonErrors>Corrigir erros comuns</FixCommonErrors>
         <VisualSync>Sincronia visual</VisualSync>
@@ -904,7 +909,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <InsertFirstLine>Inserir linha</InsertFirstLine>
         <InsertBefore>Inserir antes</InsertBefore>
         <InsertAfter>Inserir depois</InsertAfter>
-        <InsertSubtitleAfter>Inserir legenda após esta linha...</InsertSubtitleAfter>
+        <InsertSubtitleAfter>Inserir legenda após esta linha</InsertSubtitleAfter>
         <CopyToClipboard>Copiar como texto para a área de transferência</CopyToClipboard>
         <Column>Coluna</Column>
         <ColumnDeleteText>Eliminar texto</ColumnDeleteText>
@@ -912,7 +917,7 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <ColumnInsertEmptyTextAndShiftCellsDown>Inserir linhas em branco e deslocar células para baixo</ColumnInsertEmptyTextAndShiftCellsDown>
         <ColumnInsertTextFromSubtitle>Inserir texto através da legenda...</ColumnInsertTextFromSubtitle>
         <ColumnImportTextAndShiftCellsDown>Importar texto e deslocar células para baixo</ColumnImportTextAndShiftCellsDown>
-        <ColumnPasteFromClipboard>Colar da área de transferência...</ColumnPasteFromClipboard>
+        <ColumnPasteFromClipboard>Colar da área de transferência</ColumnPasteFromClipboard>
         <ColumnCopyOriginalTextToCurrent>Copiar texto do original para o actual</ColumnCopyOriginalTextToCurrent>
         <Split>Dividir</Split>
         <MergeSelectedLines>Combinar as linhas seleccionadas</MergeSelectedLines>
@@ -921,22 +926,22 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
         <MergeWithLineAfter>Combinar com a linha seguinte</MergeWithLineAfter>
         <Normal>Normal</Normal>
         <Underline>Sublinhado</Underline>
-        <Color>Cor...</Color>
-        <FontName>Tipo de letra...</FontName>
-        <Alignment>Alinhamento...</Alignment>
-        <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas...</AutoBalanceSelectedLines>
-        <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas...</RemoveLineBreaksFromSelectedLines>
-        <TypewriterEffect>Efeito máquina de escrever...</TypewriterEffect>
-        <KaraokeEffect>Efeito Karaoke...</KaraokeEffect>
-        <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois...</ShowSelectedLinesEarlierLater>
-        <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas...</VisualSyncSelectedLines>
+        <Color>Cor</Color>
+        <FontName>Tipo de letra</FontName>
+        <Alignment>Alinhamento</Alignment>
+        <AutoBalanceSelectedLines>Auto-ajustar linhas seleccionadas</AutoBalanceSelectedLines>
+        <RemoveLineBreaksFromSelectedLines>Remover quebras de linha das linhas seleccionadas</RemoveLineBreaksFromSelectedLines>
+        <TypewriterEffect>Efeito máquina de escrever</TypewriterEffect>
+        <KaraokeEffect>Efeito Karaoke</KaraokeEffect>
+        <ShowSelectedLinesEarlierLater>Mostrar linhas seleccionadas antes/depois</ShowSelectedLinesEarlierLater>
+        <VisualSyncSelectedLines>Sincronia visual das linhas seleccionadas</VisualSyncSelectedLines>
         <GoogleAndMicrosoftTranslateSelectedLine>Google/Microsoft traduzir linha original</GoogleAndMicrosoftTranslateSelectedLine>
-        <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas...</GoogleTranslateSelectedLines>
-        <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas...</AdjustDisplayDurationForSelectedLines>
-        <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas...</FixCommonErrorsInSelectedLines>
-        <ChangeCasingForSelectedLines>Alterar maiúsculas das linhas seleccionadas...</ChangeCasingForSelectedLines>
+        <GoogleTranslateSelectedLines>Traduzir pelo Google as linhas seleccionadas</GoogleTranslateSelectedLines>
+        <AdjustDisplayDurationForSelectedLines>Ajustar duração das linhas seleccionadas</AdjustDisplayDurationForSelectedLines>
+        <FixCommonErrorsInSelectedLines>Corrigir erros comuns nas linhas seleccionadas</FixCommonErrorsInSelectedLines>
+        <ChangeCasingForSelectedLines>Alterar maiúsculas das linhas seleccionadas</ChangeCasingForSelectedLines>
         <SaveSelectedLines>Guardar linhas seleccionadas como...</SaveSelectedLines>
-        <WebVTTSetNewVoice>Definir nova voz...</WebVTTSetNewVoice>
+        <WebVTTSetNewVoice>Definir nova voz</WebVTTSetNewVoice>
         <WebVTTRemoveVoices>Remover vozes</WebVTTRemoveVoices>
       </ContextMenu>
     </Menu>
@@ -1327,14 +1332,14 @@ Deseja continuar?</SubtitleAppendPrompt>
   </ModifySelection>
   <MultipleReplace>
     <Title>Múltipla substituição</Title>
-    <FindWhat>Localizar</FindWhat>
-    <ReplaceWith>Substituir por</ReplaceWith>
+    <FindWhat>Localizar:</FindWhat>
+    <ReplaceWith>Substituir por:</ReplaceWith>
     <Normal>Normal</Normal>
-    <CaseSensitive>Respeitar maiúsculas/minúsculas...</CaseSensitive>
+    <CaseSensitive>Respeitar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>Expressão regular</RegularExpression>
     <LinesFoundX>Linhas encontradas: {0}</LinesFoundX>
     <Delete>Eliminar</Delete>
-    <Add>Adicionar</Add>
+    <Add>&amp;Adicionar</Add>
     <Update>&amp;Actualizar</Update>
     <Enabled>Activado</Enabled>
     <SearchType>Tipo de pesquisa</SearchType>
@@ -1343,7 +1348,7 @@ Deseja continuar?</SubtitleAppendPrompt>
     <Export>Exportar...</Export>
     <ImportRulesTitle>Importar regra(s) de substituição de...</ImportRulesTitle>
     <ExportRulesTitle>Exportar regra(s) de substituição para...</ExportRulesTitle>
-    <Rules>Regras de exportação</Rules>
+    <Rules>Localizar e substituir Regras de exportação</Rules>
     <MoveToTop>Mover para o inicio</MoveToTop>
     <MoveToBottom>Mover para o fim</MoveToBottom>
   </MultipleReplace>
@@ -1373,8 +1378,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <OpenDvdFrom>Abrir DVD apartir de...</OpenDvdFrom>
     <Disc>Disco</Disc>
     <Folder>Pasta</Folder>
-    <ChooseDrive>Escolher disco</ChooseDrive>
-    <ChooseFolder>Escolher pasta</ChooseFolder>
+    <ChooseDrive>Escolha o disco</ChooseDrive>
+    <ChooseFolder>Escolha a pasta</ChooseFolder>
   </OpenVideoDvd>
   <PluginsGet>
     <Title>Plugins</Title>
@@ -1432,9 +1437,9 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <Title>Substituir</Title>
     <FindWhat>Localizar:</FindWhat>
     <Normal>&amp;Normal</Normal>
-    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas...</CaseSensitive>
+    <CaseSensitive>&amp;Respeitar maiúsculas/minúsculas</CaseSensitive>
     <RegularExpression>E&amp;xpressão regular</RegularExpression>
-    <ReplaceWith>Substituir por</ReplaceWith>
+    <ReplaceWith>Substituir por:</ReplaceWith>
     <Find>&amp;Localizar</Find>
     <Replace>&amp;Substituir</Replace>
     <ReplaceAll>Substituir &amp;tudo</ReplaceAll>
@@ -1580,7 +1585,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformBrowseToVLC>Procurar por VLC portátil</WaveformBrowseToVLC>
     <SubStationAlphaStyle>Sub Station Alpha estilo (Avançado)</SubStationAlphaStyle>
     <ChooseFont>Tipo de letra</ChooseFont>
-    <ChooseColor>Escolher cor</ChooseColor>
+    <ChooseColor>Escolha a cor</ChooseColor>
     <SsaOutline>Contorno</SsaOutline>
     <SsaShadow>Sombra</SsaShadow>
     <SsaOpaqueBox>Caixa opaca</SsaOpaqueBox>
@@ -1902,7 +1907,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <RemoveAll>Remover tudo</RemoveAll>
     <ImportStyleFromFile>Importar estilo do ficheiro...</ImportStyleFromFile>
     <ExportStyleToFile>Exportar estilo para ficheiro... (adiciona o estilo se já existir o ficheiro)</ExportStyleToFile>
-    <ChooseStyle>Escolher estilo para importar</ChooseStyle>
+    <ChooseStyle>Escolha o estilo para importar</ChooseStyle>
     <StyleAlreadyExits>Estilo já existente: {0}</StyleAlreadyExits>
     <StyleXExportedToFileY>Estilo '{0}' exportado para o ficheiro '{1}'</StyleXExportedToFileY>
     <StyleXImportedFromFileY>Estilo '{0}' importado do ficheiro '{1}'</StyleXImportedFromFileY>
