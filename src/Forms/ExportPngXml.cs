@@ -94,7 +94,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             comboBoxImageFormat.SelectedIndex = 4;
             _subtitleColor = Configuration.Settings.Tools.ExportFontColor;
-            _borderColor = Configuration.Settings.Tools.ExportBorderColor;
+            _borderColor = Configuration.Settings.Tools.ExportBorderColor;            
             _previewTimer.Tick += previewTimer_Tick;
             _previewTimer.Interval = 100;
         }
@@ -2694,6 +2694,8 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelLineHeight.Text = Configuration.Settings.Language.ExportPngXml.LineHeight;
 
             linkLabelPreview.Text = Configuration.Settings.Language.General.Preview;
+
+            saveImageAsToolStripMenuItem.Text = Configuration.Settings.Language.ExportPngXml.SaveImageAs;
 
             SubtitleListView1InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             Utilities.InitializeSubtitleFont(subtitleListView1);

@@ -613,6 +613,7 @@ namespace Nikse.SubtitleEdit.Logic
                 BoxMultiLine = "Box - multi line",
                 Forced = "Forced",
                 ChooseBackgroundColor = "Choose background color",
+                SaveImageAs = "Save image as...",
             };
 
             ExportText = new LanguageStructure.ExportText
