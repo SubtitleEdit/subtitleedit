@@ -150,7 +150,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     new YouTubeTranscriptOneLine(),
                     new ZeroG(),
 
-                    //    new Idx(),
+                    // new Idx(),
                     new UnknownSubtitle1(),
                     new UnknownSubtitle2(),
                     new UnknownSubtitle3(),
