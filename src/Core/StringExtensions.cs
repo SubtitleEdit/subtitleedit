@@ -83,6 +83,11 @@ namespace Nikse.SubtitleEdit.Core
             return source.IndexOf(value, comparisonType) >= 0;
         }
 
+        public static bool ContainsAny(this string source, char[] value)
+        {
+            return source.IndexOfAny(value) >= 0;
+        }
+
         public static string[] SplitToLines(this string source)
         {
             return source.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
