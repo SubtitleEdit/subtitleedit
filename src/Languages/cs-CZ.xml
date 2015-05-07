@@ -428,14 +428,19 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Levý nebo pravý okraj</LeftRightMargin>
     <SaveBluRraySupAs>Vyberte název souboru Blu-ray sup</SaveBluRraySupAs>
     <SaveVobSubAs>Vyberte název souboru VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Vyberte název souboru Blu-ray sup</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Vyberte název souboru FAB image script</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vyberte název souboru DVD Studio Pro STL</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Vyberte název souboru Digital Cinema Interop</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Vyberte název souboru Premiere EDL</SavePremiereEdlAs>
+    <SaveFcpAs>Vyberte název souboru Final Cut Pro xml</SaveFcpAs>
+    <SaveDostAs>Vyberte název souboru DoStudio dost</SaveDostAs>
     <SomeLinesWereTooLongX>Některé řádky byly příliš dlouhé:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Výška řádku</LineHeight>
     <BoxSingleLine>Pole - jednořádkové</BoxSingleLine>
     <BoxMultiLine>Pole - víceřádkové</BoxMultiLine>
     <Forced>Vynucený</Forced>
+    <ChooseBackgroundColor>Zvolte barvu pozadí</ChooseBackgroundColor>
   </ExportPngXml>
   <ExportText>
     <Title>Exportovat text</Title>
@@ -1233,7 +1238,7 @@ Pokračovat?</SubtitleAppendPrompt>
     <SubtitleExported>Titulky byly exportovány</SubtitleExported>
     <LineNumberXErrorReadingFromSourceLineY>Řádek {0} - chyba čtení: {1}</LineNumberXErrorReadingFromSourceLineY>
     <LineNumberXErrorReadingTimeCodeFromSourceLineY>Řádek {0} - chyba čtení časového kódu: {1}</LineNumberXErrorReadingTimeCodeFromSourceLineY>
-    <LineNumberXExpectedNumberFromSourceLineY>Řádek {0} - očekáván titulek číslo: {1}</LineNumberXExpectedNumberFromSourceLineY>
+    <LineNumberXExpectedNumberFromSourceLineY>Řádek {0} - očekáváno čílo titulku: {1}</LineNumberXExpectedNumberFromSourceLineY>
     <BeforeGuessingTimeCodes>Před odhadem časových kódů</BeforeGuessingTimeCodes>
     <BeforeAutoDuration>Před automatickým trváním pro vybrané řádky</BeforeAutoDuration>
     <BeforeColumnPaste>Před vložením v sloupci</BeforeColumnPaste>
