@@ -440,6 +440,8 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <BoxSingleLine>Boîte unique</BoxSingleLine>
     <BoxMultiLine>Boîte multi-lignes</BoxMultiLine>
     <Forced>Forced</Forced>
+    <ChooseBackgroundColor>Choisir couleur de fond</ChooseBackgroundColor>
+    <SaveImageAs>Sauver image sous...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Exporter du texte</Title>
