@@ -440,6 +440,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxMultiLine>Meerlĳnig kader</BoxMultiLine>
     <Forced>Ingebakken</Forced>
     <ChooseBackgroundColor>Kies achtergrondkleur</ChooseBackgroundColor>
+    <SaveImageAs>Afbeelding opslaan als...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Tekst exporteren</Title>
