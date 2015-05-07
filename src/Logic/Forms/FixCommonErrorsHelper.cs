@@ -443,7 +443,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
         internal static string FixShortLines(string text)
         {
-            if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine, StringComparison.Ordinal))
+            if (string.IsNullOrWhiteSpace(text) || !text.Contains(Environment.NewLine))
                 return text;
 
             string s = HtmlUtil.RemoveHtmlTags(text, true);
