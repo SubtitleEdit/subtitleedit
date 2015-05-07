@@ -4357,7 +4357,7 @@ namespace Nikse.SubtitleEdit.Forms
         private void ReplaceViaRegularExpression()
         {
             var r = new Regex(_findHelper.FindText, RegexOptions.Multiline);
-            if (_findHelper.ReplaceText.Contains("$"))
+            if (_findHelper.ReplaceText.Contains('$'))
             {
                 string result = r.Replace(textBoxListViewText.Text, _findHelper.ReplaceText);
                 if (result != textBoxListViewText.Text)
@@ -4685,9 +4685,9 @@ namespace Nikse.SubtitleEdit.Forms
                         {
                             // we only update selected lines
                             int i = 0;
-                            List<int> deletes = new List<int>();
                             if (_networkSession != null)
                             {
+                                var deletes = new List<int>();
                                 _networkSession.TimerStop();
                                 foreach (int index in SubtitleListview1.SelectedIndices)
                                 {
@@ -4708,24 +4708,19 @@ namespace Nikse.SubtitleEdit.Forms
                             }
                             else
                             {
-                                foreach (int index in SubtitleListview1.SelectedIndices)
+                                for (int index = SubtitleListview1.SelectedIndices.Count - 1; index >= 0; index--)
                                 {
                                     var pOld = _subtitle.Paragraphs[index];
                                     var p = fixErrors.FixedSubtitle.GetParagraphOrDefaultById(pOld.ID);
                                     if (p == null)
                                     {
-                                        deletes.Add(index);
+                                        _subtitle.Paragraphs.RemoveAt(index);
                                     }
                                     else
                                     {
                                         _subtitle.Paragraphs[index] = p;
                                     }
                                     i++;
-                                }
-                                deletes.Reverse();
-                                foreach (int index in deletes)
-                                {
-                                    _subtitle.Paragraphs.RemoveAt(index);
                                 }
                             }
                             ShowStatus(_language.CommonErrorsFixedInSelectedLines);
@@ -4825,14 +4820,14 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             ReloadFromSourceView();
+            double lengthInSeconds = 0;
+            if (mediaPlayer.VideoPlayer != null)
+                lengthInSeconds = mediaPlayer.Duration;
 
             if (Configuration.Settings.Tools.SplitAdvanced)
             {
                 using (var split = new Split())
                 {
-                    double lengthInSeconds = 0;
-                    if (mediaPlayer.VideoPlayer != null)
-                        lengthInSeconds = mediaPlayer.Duration;
                     split.Initialize(_subtitle, _fileName, GetCurrentSubtitleFormat());
                     if (split.ShowDialog(this) == DialogResult.OK)
                     {
@@ -4849,9 +4844,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 using (var splitSubtitle = new SplitSubtitle())
                 {
-                    double lengthInSeconds = 0;
-                    if (mediaPlayer.VideoPlayer != null)
-                        lengthInSeconds = mediaPlayer.Duration;
                     splitSubtitle.Initialize(_subtitle, _fileName, GetCurrentSubtitleFormat(), GetCurrentEncoding(), lengthInSeconds);
                     if (splitSubtitle.ShowDialog(this) == DialogResult.OK)
                     {
@@ -9379,9 +9371,9 @@ namespace Nikse.SubtitleEdit.Forms
                         byte[] buffer = new byte[26];
                         f.Read(buffer, 0, 26);
 
-                        if (buffer[2]  == 0x3a && // :
-                            buffer[5]  == 0x3a && // :
-                            buffer[8]  == 0x2e && // .
+                        if (buffer[2] == 0x3a && // :
+                            buffer[5] == 0x3a && // :
+                            buffer[8] == 0x2e && // .
                             buffer[12] == 0x2d && // -
                             buffer[15] == 0x3a && // :
                             buffer[18] == 0x3a && // :
@@ -11357,7 +11349,7 @@ namespace Nikse.SubtitleEdit.Forms
                     var tmp = new Subtitle();
                     var format = new SubRip();
                     var list = new List<string>();
-                    foreach (string line in text.Replace(Environment.NewLine, "\n").Split('\n'))
+                    foreach (string line in text.SplitToLines())
                         list.Add(line);
                     format.LoadSubtitle(tmp, list, null);
                     if (SubtitleListview1.SelectedItems.Count == 1 && tmp.Paragraphs.Count > 0)
@@ -14646,8 +14638,9 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (string.IsNullOrEmpty(_fileName))
                     {
-                        saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
-                        openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                        var dirName = Path.GetDirectoryName(fileName);
+                        saveFileDialog1.InitialDirectory = dirName;
+                        openFileDialog1.InitialDirectory = dirName;
                     }
                     OpenVideo(fileName);
                 }
