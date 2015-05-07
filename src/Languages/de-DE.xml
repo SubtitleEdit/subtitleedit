@@ -439,6 +439,8 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <BoxSingleLine>Box - Einzeilig</BoxSingleLine>
     <BoxMultiLine>Box - Mehrzeilig</BoxMultiLine>
     <Forced>Erzwungen</Forced>
+    <ChooseBackgroundColor>Hintergrundfarbe wählen</ChooseBackgroundColor>
+    <SaveImageAs>Bild speichern als...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Text exportieren</Title>
