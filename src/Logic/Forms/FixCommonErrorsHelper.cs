@@ -449,9 +449,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             string s = HtmlUtil.RemoveHtmlTags(text, true);
             if (s.Contains(Environment.NewLine) && s.Replace(Environment.NewLine, " ").Replace("  ", " ").Length < Configuration.Settings.Tools.MergeLinesShorterThan)
             {
-                s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';');
-                s = s.TrimStart('-');
-                if (s.IndexOfAny(new[] { '.', '?', '!', ':', ';', '-', '♪', '♫' }) < 0 &&
+                s = s.TrimEnd().TrimEnd('.', '?', '!', ':', ';').TrimStart('-');
+                if (s.ContainsAny(new[] { '.', '?', '!', ':', ';', '-', '♪', '♫' }) &&
                     !(s.StartsWith('[') && s.Contains("]" + Environment.NewLine, StringComparison.Ordinal)) &&
                     !(s.StartsWith('(') && s.Contains(")" + Environment.NewLine, StringComparison.Ordinal)) &&
                     s != s.ToUpper())
