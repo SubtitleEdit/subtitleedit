@@ -324,7 +324,7 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Afbrudt af bruger</AbortedByUser>
     <ReadingSubtitleData>Læser undertekst data...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Ripper vob fil {1} af {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO type er '{0}' og ikke 'DVD video-VTS'. {1} Prøv en anden fil end {2}</WrongIfoType>
+    <WrongIfoType>IFO type er '{0}' og ikke 'DVDVIDEO-VTS'. {1} Prøv en anden fil end {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Vælg sprog</Title>
@@ -428,14 +428,20 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Venstre/højre margen</LeftRightMargin>
     <SaveBluRraySupAs>Vælg Blu-ray sup filnavn</SaveBluRraySupAs>
     <SaveVobSubAs>Vælg VobSub filnavn</SaveVobSubAs>
-    <SaveFabImageScriptAs>Vælg Blu-ray sup filnavn</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Vælg FAB image script filnavn</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Vælg DVD Studio Pro STL filnavn</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Vælg Digital Cinema Interop filnavn</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Vælg Premiere EDL filnavn</SavePremiereEdlAs>
+    <SaveFcpAs>Vælg Final Cut Pro xml filnavn</SaveFcpAs>
+    <SaveDostAs>Vælg DoStudio dost filnavn</SaveDostAs>
     <SomeLinesWereTooLongX>Nogle linjer var for lange:
 {0}</SomeLinesWereTooLongX>
     <LineHeight>Linje højde</LineHeight>
     <BoxSingleLine>Boks - enkelt linje</BoxSingleLine>
     <BoxMultiLine>Boks - multi linie</BoxMultiLine>
     <Forced>Forced</Forced>
+    <ChooseBackgroundColor>Vælg baggrundsfarve</ChooseBackgroundColor>
+    <SaveImageAs>Gem billede som...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Eksport tekst</Title>
