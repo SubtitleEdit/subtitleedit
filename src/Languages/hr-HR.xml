@@ -501,7 +501,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <FixInvalidItalicTags>Ispravi pogrešne oznake za kurziv</FixInvalidItalicTags>
     <RemoveUnneededSpaces>Ukloni nepotrebne razmake</RemoveUnneededSpaces>
     <RemoveUnneededPeriods>Ukloni nepotrebne točke</RemoveUnneededPeriods>
-    <FixMissingSpaces>Ukloni nepostojuće razmake</FixMissingSpaces>
+    <FixMissingSpaces>Ukloni nepostojeće razmake</FixMissingSpaces>
     <BreakLongLines>Razdvoji duge linije</BreakLongLines>
     <RemoveLineBreaks>Ukloni redove u kratkim tekstovima (samo jedna rečenica)</RemoveLineBreaks>
     <RemoveLineBreaksAll>Ukloni redove u kratkim tekstovima (sve osim dijaloga)</RemoveLineBreaksAll>
@@ -561,9 +561,9 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <XFixedToYZ>{0} je ispravljeno u: {1}{2}.</XFixedToYZ>
     <UnableToFixTextXY>Ne mogu ispraviti tekst pod brojem {0}: {1}.</UnableToFixTextXY>
     <XOverlappingTimestampsFixed>Ispravljeno preklapajućih linija: {0}</XOverlappingTimestampsFixed>
-    <XDisplayTimesProlonged>Produženo vrijemena prikaza: {0}</XDisplayTimesProlonged>
+    <XDisplayTimesProlonged>Produženo vrijeme prikaza: {0}</XDisplayTimesProlonged>
     <XInvalidHtmlTagsFixed>Ispravljeno pogrešnih oznaka: {0}</XInvalidHtmlTagsFixed>
-    <XDisplayTimesShortned>Skraćeno vrijemena prikaza: {0}</XDisplayTimesShortned>
+    <XDisplayTimesShortned>Skraćeno vrijeme prikaza: {0}</XDisplayTimesShortned>
     <XLinesUnbreaked>Rastavljeno linija: {0}</XLinesUnbreaked>
     <UnneededSpace>Nepotrebni razmaci</UnneededSpace>
     <XUnneededSpacesRemoved>Uklonjeno nepotrebnih razmaka: {0}</XUnneededSpacesRemoved>
@@ -681,7 +681,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <Fixed>Po&amp;desi:</Fixed>
     <Refresh>&amp;Osvježi</Refresh>
     <TextFiles>Tekstualne datoteke</TextFiles>
-    <PreviewLinesModifiedX>Pregled – izmjenjeno redova: {0}</PreviewLinesModifiedX>
+    <PreviewLinesModifiedX>Pregled – izmijenjeno redova: {0}</PreviewLinesModifiedX>
     <TimeCodes>Vremenski kodovi</TimeCodes>
   </ImportText>
   <Interjections>
@@ -1041,7 +1041,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <ReplaceContinueNotFound>Traženi predmet nije pronađen.
 Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceContinueNotFound>
     <ReplaceXContinue>Traženi predmet je zamijenjen {0} vrijeme (s).
-Želite li početi od vrha dokumenta i nastaviti pretražvanje i zamjenu?</ReplaceXContinue>
+Želite li početi od vrha dokumenta i nastaviti pretraživanje i zamjenu?</ReplaceXContinue>
     <ReplaceContinueTitle>Nastavi 'Zamijeni'?</ReplaceContinueTitle>
     <SearchingForXFromLineY>Potraži za '{0}' s linije broj {1}...</SearchingForXFromLineY>
     <XFoundAtLineNumberY>{0} su pronađene na liniji broj {1}.</XFoundAtLineNumberY>
@@ -1056,7 +1056,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <BeforeChangesMadeInSourceView>Napravljene izmjene u prikazu izvora</BeforeChangesMadeInSourceView>
     <UnableToParseSourceView>Nije moguće pristupiti izvornom prikazu teksta!</UnableToParseSourceView>
     <GoToLineNumberX>Prešao sam na liniju broj {0}.</GoToLineNumberX>
-    <CreateAdjustChangesApplied>Primjenjene su izmjene preko postavke „Napravi/prilagodi linije“</CreateAdjustChangesApplied>
+    <CreateAdjustChangesApplied>Primijenjene su izmjene preko postavke „Napravi/prilagodi linije“</CreateAdjustChangesApplied>
     <SelectedLines>izabrane linije</SelectedLines>
     <BeforeDisplayTimeAdjustment>Izmijenjeno vrijeme</BeforeDisplayTimeAdjustment>
     <DisplayTimeAdjustedX>Postavljeno je vrijeme prikaza: {0}</DisplayTimeAdjustedX>
@@ -1181,12 +1181,12 @@ koji bi trebao biti usklađen s video datotekom.
     <NumberOfLinesReplacedX>Broj linija sa zamijenjenim tekstom: {0}</NumberOfLinesReplacedX>
     <NameXAddedToNamesEtcList>Riječ „{0}“ je dodana u popis naziva/izuzetaka.</NameXAddedToNamesEtcList>
     <NameXNotAddedToNamesEtcList>Ne mogu dodati riječ „{0}“ u popis naziva/izuzetaka.</NameXNotAddedToNamesEtcList>
-    <WordXAddedToUserDic>Riječ '{0}' je dodana u korisnički riječnik</WordXAddedToUserDic>
-    <WordXNotAddedToUserDic>Ime '{0}' nije dodano u korisnički riječniki</WordXNotAddedToUserDic>
+    <WordXAddedToUserDic>Riječ '{0}' je dodana u korisnički rječnik</WordXAddedToUserDic>
+    <WordXNotAddedToUserDic>Ime '{0}' nije dodano u korisnički rječnik</WordXNotAddedToUserDic>
     <OcrReplacePairXAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' je dodan na popis OCR zamijeniti</OcrReplacePairXAdded>
     <OcrReplacePairXNotAdded>Popis OCR zamijeniti par '{0} -&gt; {1}' nije dodan na popis OCR zamijeniti</OcrReplacePairXNotAdded>
     <XLinesSelected>Izabrano linija: {0}</XLinesSelected>
-    <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremite u kodnom rasporedu ASCII, izgubićete ih. Želite li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
+    <UnicodeMusicSymbolsAnsiWarning>Podnaslov sadrži unicode glazbene note. Ako ih spremite u kodnom rasporedu ASCII, izgubit ćete ih. Želite li nastaviti?</UnicodeMusicSymbolsAnsiWarning>
     <UnicodeCharactersAnsiWarning>Podnaslovi sadrže Unicode znakove. Spremanje pomoću kodiranja ANSI datoteka će izgubiti njih. Nastaviti sa spremanjem?</UnicodeCharactersAnsiWarning>
     <NegativeTimeWarning>Podnaslov sadrži negativne vremenske odrednice. Želite li nastaviti?</NegativeTimeWarning>
     <BeforeMergeShortLines>Spojene kratke linije</BeforeMergeShortLines>
@@ -1218,7 +1218,7 @@ koji bi trebao biti usklađen s video datotekom.
     <UserAndAction>Korisnik/radnja</UserAndAction>
     <NetworkMode>Umreženo</NetworkMode>
     <XStartedSessionYAtZ>{0}: sesija „{1}“ je započeta u {2}.</XStartedSessionYAtZ>
-    <SpellChekingViaWordXLineYOfX>Provjera pravopisa pomoću worda {0} – linija {1}/{2}</SpellChekingViaWordXLineYOfX>
+    <SpellChekingViaWordXLineYOfX>Provjera pravopisa pomoću Worda {0} – linija {1}/{2}</SpellChekingViaWordXLineYOfX>
     <UnableToStartWord>Ne mogu pokrenuti word.</UnableToStartWord>
     <SpellCheckAbortedXCorrections>Provjera pravopisa je prekinuta. Izmijenjeno linija: {0}.</SpellCheckAbortedXCorrections>
     <SpellCheckCompletedXCorrections>Provjera pravopisa je završena. Izmijenjeno linija: {0}.</SpellCheckCompletedXCorrections>
@@ -1243,7 +1243,7 @@ koji bi trebao biti usklađen s video datotekom.
     <BeforeDisplaySubtitleJoin>Prije spajanja podnaslova</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Podnaslovi spojeni</SubtitlesJoined>
     <StatusLog>Status izvješća</StatusLog>
-    <XSceneChangesImported>{0}izmijenjenih scena uveženo</XSceneChangesImported>
+    <XSceneChangesImported>{0}izmijenjenih scena uvezeno</XSceneChangesImported>
     <PluginXExecuted>Dodataka '{0}' izvršeno</PluginXExecuted>
     <NotAValidXSubFile>Nevažeća XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Prije spajanja linije s istim tekstom</BeforeMergeLinesWithSameText>
@@ -1623,7 +1623,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <ShortcutIsNotValid>Prečac nije ispravan: {0}</ShortcutIsNotValid>
     <ToggleDockUndockOfVideoControls>Zakači/otkači video kontrole</ToggleDockUndockOfVideoControls>
     <CreateSetEndAddNewAndGoToNew>Postavite kraj, dodajte novi i idi na novi</CreateSetEndAddNewAndGoToNew>
-    <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na slijedeći</AdjustViaEndAutoStartAndGoToNext>
+    <AdjustViaEndAutoStartAndGoToNext>Prilagodi preko završnog položaja i prijeđi na sljedeći</AdjustViaEndAutoStartAndGoToNext>
     <AdjustSetEndTimeAndGoToNext>Postaviti kraj i idi na sljedeću</AdjustSetEndTimeAndGoToNext>
     <AdjustSetStartAutoDurationAndGoToNext>Postavit početak, auto trajanje i idi na sljedeći</AdjustSetStartAutoDurationAndGoToNext>
     <AdjustSetEndNextStartAndGoToNext>Kraj, započeti i idite na sljedeći</AdjustSetEndNextStartAndGoToNext>
@@ -1639,7 +1639,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <GoToPrevious>Idi na prethodnu liniju</GoToPrevious>
     <GoToCurrentSubtitleStart>Idi na trenutni početak linije</GoToCurrentSubtitleStart>
     <GoToCurrentSubtitleEnd>Idi na trenutni završetak linije</GoToCurrentSubtitleEnd>
-    <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova teksnog okvira</ToggleFocus>
+    <ToggleFocus>Prebacivanje fokusa između prikaza popisa i podnaslova tekstnog okvira</ToggleFocus>
     <ToggleDialogDashes>Prebaci dijaloške crtice</ToggleDialogDashes>
     <Alignment>Poravnanje (odabrane linije)</Alignment>
     <CopyTextOnly>Kopiranje teksta samo u međuspremnik (odabrane linije)</CopyTextOnly>
@@ -1677,7 +1677,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <SyntaxColorDurationIfTooLarge>Trajanje boje ako je predugo</SyntaxColorDurationIfTooLarge>
     <SyntaxColorTextIfTooLong>Boja teksta ako je predugo</SyntaxColorTextIfTooLong>
     <SyntaxColorTextMoreThanXLines>Boja teksta ako je više linija:</SyntaxColorTextMoreThanXLines>
-    <SyntaxColorOverlap>Preklapanje boje vremanskog koda</SyntaxColorOverlap>
+    <SyntaxColorOverlap>Preklapanje boje vremenskog koda</SyntaxColorOverlap>
     <SyntaxErrorColor>Pogreška boje</SyntaxErrorColor>
     <GoToFirstSelectedLine>Idi na prvu odabranu liniju</GoToFirstSelectedLine>
     <GoToNextEmptyLine>Idi na sljedeći prazni redak</GoToNextEmptyLine>
@@ -1816,7 +1816,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <NumberOfCharactersInTextOnly>Broj znakova u tekstu samo: {0: #, # # #, # # 0}</NumberOfCharactersInTextOnly>
     <TotalCharsPerSecond>Ukupno znakova / sekundi: {0:0.0} sekundi</TotalCharsPerSecond>
     <NumberOfItalicTags>Broj kurzivnih oznaka: {0}</NumberOfItalicTags>
-    <NumberOfBoldTags>Broj podebljanh oznaka: {0}</NumberOfBoldTags>
+    <NumberOfBoldTags>Broj podebljanih oznaka: {0}</NumberOfBoldTags>
     <NumberOfUnderlineTags>Broj podvučenih oznaka: {0}</NumberOfUnderlineTags>
     <NumberOfFontTags>Broj oznaka fonta : {0}</NumberOfFontTags>
     <NumberOfAlignmentTags>Broj poravnatih oznaka: {0}</NumberOfAlignmentTags>
@@ -1897,11 +1897,11 @@ određeni podnaslov s drugim ljudima.</Information>
     <Remove>Ukloni</Remove>
     <RemoveAll>Uklonite sve</RemoveAll>
     <ImportStyleFromFile>Uvezi stil iz datoteke...</ImportStyleFromFile>
-    <ExportStyleToFile>Izvezi stil u datoteku (dodaće stil iako već postoji</ExportStyleToFile>
+    <ExportStyleToFile>Izvezi stil u datoteku (dodat će stil iako već postoji</ExportStyleToFile>
     <ChooseStyle>Odaberite stil za uvoz</ChooseStyle>
     <StyleAlreadyExits>Stil već postoji: {0}</StyleAlreadyExits>
-    <StyleXExportedToFileY>Stil '{0}' izvežen u datoteku '{1}'</StyleXExportedToFileY>
-    <StyleXImportedFromFileY>Stil '{0}' uvežen iz datoteke '{1}'</StyleXImportedFromFileY>
+    <StyleXExportedToFileY>Stil '{0}' izvezen u datoteku '{1}'</StyleXExportedToFileY>
+    <StyleXImportedFromFileY>Stil '{0}' uvezen iz datoteke '{1}'</StyleXImportedFromFileY>
   </SubStationAlphaStyles>
   <PointSync>
     <Title>Točka usklađivanja</Title>
@@ -1910,7 +1910,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <SetSyncPoint>Postavi točku usklađivanja</SetSyncPoint>
     <RemoveSyncPoint>Ukloni točku usklađivanja</RemoveSyncPoint>
     <SyncPointsX>Ukupno usklađenih točaka: {0}</SyncPointsX>
-    <Info>Jedna točka usklađivanja prilagodiće položaj. Dvije ili više točaka utjecat će na položaj i brzinu.</Info>
+    <Info>Jedna točka usklađivanja prilagodit će položaj. Dvije ili više točaka utjecat će na položaj i brzinu.</Info>
     <ApplySync>&amp;Primjeni</ApplySync>
   </PointSync>
   <TransportStreamSubtitleChooser>
@@ -1979,7 +1979,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <SubtitleImageXofY>Slika podnaslova ({0} od {1})</SubtitleImageXofY>
     <ImagePalette>Paleta slika</ImagePalette>
     <UseCustomColors>Prilagođene &amp;boje</UseCustomColors>
-    <Transparent>Providnost</Transparent>
+    <Transparent>Prozirnost</Transparent>
     <TransparentMinAlpha>Min. alfa vrijednost (0 = transparentni, 255 = potpuno vidljivi)</TransparentMinAlpha>
     <TransportStream>Transportni protok</TransportStream>
     <TransportStreamGrayscale>Sivim tonovima</TransportStreamGrayscale>
@@ -1999,7 +1999,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <SaveAllSubtitleImagesWithHtml>Spremi sve slike s HTML popisom…</SaveAllSubtitleImagesWithHtml>
     <XImagesSavedInY>{0} slika je spremljena u {1}</XImagesSavedInY>
     <TryModiForUnknownWords>MS MODI prepoznavanje znakova za nepoznate riječi</TryModiForUnknownWords>
-    <DictionaryX>Riječnik: {0}</DictionaryX>
+    <DictionaryX>Rječnik: {0}</DictionaryX>
     <RightToLeft>&amp;Zdesna nalijevo</RightToLeft>
     <ShowOnlyForcedSubtitles>Pr&amp;ikaži samo forsirane podnaslove</ShowOnlyForcedSubtitles>
     <UseTimeCodesFromIdx>Koristi vremenske odrednice iz IDX datoteke</UseTimeCodesFromIdx>
@@ -2013,7 +2013,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <Title>Uredi sliku usporedbi baze podataka</Title>
     <ShrinkSelection>&amp;Skupi izbor</ShrinkSelection>
     <ExpandSelection>P&amp;roširi izbor</ExpandSelection>
-    <SubtitleImage>Slika podnaslovaa</SubtitleImage>
+    <SubtitleImage>Slika podnaslova</SubtitleImage>
     <Characters>Znak</Characters>
     <CharactersAsText>Znak na gore navedenoj slici:</CharactersAsText>
     <Italic>&amp;Kurziv</Italic>
