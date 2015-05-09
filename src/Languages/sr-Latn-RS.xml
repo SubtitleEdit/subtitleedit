@@ -722,8 +722,8 @@ E-pošta:mailto:nikse.dk@gmail.com</AboutText1>
         <Split>Razdvoji</Split>
         <MergeSelectedLines>Spoji izabrane linije</MergeSelectedLines>
         <MergeSelectedLinesAsDialog>Spoji odabrane linije kao dijalog</MergeSelectedLinesAsDialog>
-        <MergeWithLineBefore>Spoji s linijom iza</MergeWithLineBefore>
-        <MergeWithLineAfter>Spoji s linijom ispred</MergeWithLineAfter>
+        <MergeWithLineBefore>Spoji s linijom ispred</MergeWithLineBefore>
+        <MergeWithLineAfter>Spoji s linijom iza</MergeWithLineAfter>
         <Normal>Ukloni oznake</Normal>
         <Underline>Podvuci</Underline>
         <Color>Promeni boju...</Color>
