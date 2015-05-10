@@ -1015,7 +1015,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             {
                 text = text.Remove(start, (end - start) + 1);
                 if (start > 3 && start < text.Length - 1 &&
-                    text.Substring(0, start + 1).EndsWith(" :") &&
+                    text.Substring(0, start + 1).EndsWith(" :", StringComparison.Ordinal) &&
                     ".!?".Contains(text[start - 2]))
                 {
                     text = text.Remove(start - 1, 2);
@@ -1023,11 +1023,11 @@ namespace Nikse.SubtitleEdit.Logic.Forms
 
                 start = text.IndexOf(startTag, StringComparison.Ordinal);
                 if (start >= 0 && start < text.Length - 1)
-                    end = text.IndexOf(endTag, start, StringComparison.Ordinal);
+                    end = text.IndexOf(endTag, start + 1, StringComparison.Ordinal);
                 else
-                    end = -1;
+                    break;
             }
-            return text.Replace(" " + Environment.NewLine, Environment.NewLine).TrimEnd();
+            return text.FixExtraSpaces().TrimEnd();
         }
 
         public string RemoveLineIfAllUppercase(string text)
