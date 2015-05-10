@@ -1058,7 +1058,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<i>- Mm-hmm.</i>");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<i>Mm-hmm.</i>");
             }
         }
@@ -1070,7 +1070,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "<font color='red'>- Mm-hmm.</font>");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "<font color='red'>Mm-hmm.</font>");
             }
         }
@@ -1082,7 +1082,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Mm-hmm.");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Mm-hmm.");
             }
         }
@@ -1094,7 +1094,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- I-I never thought of that.");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "I-I never thought of that.");
             }
         }
@@ -1106,7 +1106,7 @@ namespace Test
             using (var target = GetFixCommonErrorsLib())
             {
                 InitializeFixCommonErrorsLine(target, "- Uh-huh.");
-                target.FixHyphens();
+                target.FixHyphensRemove();
                 Assert.AreEqual(target.Subtitle.Paragraphs[0].Text, "Uh-huh.");
             }
         }
