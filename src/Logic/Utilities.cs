@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Logic
             int count = 0;
             for (int i = 0; i < words.Length; i++)
             {
-                var regEx = new Regex("\\b" + words[i] + "\\b");
+                var regEx = new Regex("\\b" + words[i] + "\\b", RegexOptions.Compiled);
                 count += regEx.Matches(text).Count;
             }
             return count;
