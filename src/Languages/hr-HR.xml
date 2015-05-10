@@ -428,13 +428,19 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Lijeva/desna margina</LeftRightMargin>
     <SaveBluRraySupAs>Izaberite Blu-ray sup naziv</SaveBluRraySupAs>
     <SaveVobSubAs>Odaberite naziv datoteke VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Izaberite Blu-ray sup naziv</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Odaberite FAB image script naziv datoteke</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Odaberite DVD Studio Pro STL naziv datoteke</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Odaberite Digital Cinema Interop naziv datoteke</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Odaberite Premiere EDL naziv datoteke</SavePremiereEdlAs>
+    <SaveFcpAs>Odaberite Final Cut Pro xml naziv datoteke</SaveFcpAs>
+    <SaveDostAs>Odaberite DoStudio dost naziv datoteke</SaveDostAs>
     <SomeLinesWereTooLongX>Neke linije su preduge:{0}</SomeLinesWereTooLongX>
     <LineHeight>Visina Linije</LineHeight>
     <BoxSingleLine>Box - jedan redak</BoxSingleLine>
     <BoxMultiLine>Box - više linija</BoxMultiLine>
     <Forced>Prisilni</Forced>
+    <ChooseBackgroundColor>Izaberite boju pozadine</ChooseBackgroundColor>
+    <SaveImageAs>Spremi sliku kao...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Izvezi tekst</Title>
