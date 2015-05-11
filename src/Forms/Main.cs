@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _cancelWordSpellCheck = true;
 
-        private bool  _clearLastFind;
+        private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
         private string _clearLastFindText = string.Empty;
 
@@ -5987,13 +5987,10 @@ namespace Nikse.SubtitleEdit.Forms
                 SubtitleListview1.SelectedIndexChanged -= SubtitleListview1_SelectedIndexChanged;
                 MakeHistoryForUndo(string.Format(_language.BeforeAddingTagX, tag));
 
-                var indexes = new List<int>();
-                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
-                    indexes.Add(item.Index);
-
                 SubtitleListview1.BeginUpdate();
-                foreach (int i in indexes)
+                foreach (ListViewItem item in SubtitleListview1.SelectedItems)
                 {
+                    var i = item.Index;
                     if (_subtitleAlternate != null && Configuration.Settings.General.AllowEditOfOriginalSubtitle)
                     {
                         Paragraph original = Utilities.GetOriginalParagraph(i, _subtitle.Paragraphs[i], _subtitleAlternate.Paragraphs);
@@ -6007,7 +6004,7 @@ namespace Nikse.SubtitleEdit.Forms
                             else
                             {
                                 int indexOfEndBracket = original.Text.IndexOf('}');
-                                if (original.Text.StartsWith("{\\") && indexOfEndBracket > 1 && indexOfEndBracket < 6)
+                                if (original.Text.StartsWith("{\\", StringComparison.Ordinal) && indexOfEndBracket > 1 && indexOfEndBracket < 6)
                                     original.Text = string.Format("{2}<{0}>{1}</{0}>", tag, original.Text.Remove(0, indexOfEndBracket + 1), original.Text.Substring(0, indexOfEndBracket + 1));
                                 else
                                     original.Text = string.Format("<{0}>{1}</{0}>", tag, original.Text);
@@ -11202,11 +11199,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToggleDashes()
         {
-            int index = FirstSelectedIndex;
-            if (index >= 0)
+            if (FirstSelectedIndex >= 0)
             {
                 bool hasStartDash = false;
-                var p = _subtitle.Paragraphs[index];
+                var p = _subtitle.Paragraphs[FirstSelectedIndex];
                 var lines = p.Text.SplitToLines();
                 foreach (string line in lines)
                 {
@@ -14711,7 +14707,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string Sha256Hash(string value)
         {
-            System.Security.Cryptography.SHA256Managed hasher = new System.Security.Cryptography.SHA256Managed();
+            var hasher = new System.Security.Cryptography.SHA256Managed();
             byte[] bytes = Encoding.UTF8.GetBytes(value);
             byte[] hash = hasher.ComputeHash(bytes);
             return Convert.ToBase64String(hash, 0, hash.Length);
