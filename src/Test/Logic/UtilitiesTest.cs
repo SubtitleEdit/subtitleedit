@@ -195,6 +195,33 @@ namespace Test.Logic
 
         [TestMethod]
         [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesItalics3()
+        {
+            const string s1 = "I've actually got\r\nsome <i>really</i> great news.";
+            string s2 = Utilities.RemoveUnneededSpaces("I've actually got\r\nsome <i> really </i> great news.", "en");
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesItalics4()
+        {
+            const string s1 = "I've actually got\r\nsome <i>really</i> great <i>news</i>.";
+            string s2 = Utilities.RemoveUnneededSpaces("I've actually got\r\nsome <i> really </i> great <i> news </i>.", "en");
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
+        public void FixUnneededSpacesItalics5()
+        {
+            const string s1 = "I've actually got\r\nsome <i>really</i> great <i>news</i>";
+            string s2 = Utilities.RemoveUnneededSpaces("I've actually got\r\nsome <i> really </i> great <i> news </i>", "en");
+            Assert.AreEqual(s1, s2);
+        }
+
+        [TestMethod]
+        [DeploymentItem("SubtitleEdit.exe")]
         public void FixUnneededSpacesHyphen1()
         {
             const string s1 = "This is a low- budget job";

@@ -3212,6 +3212,23 @@ namespace Nikse.SubtitleEdit.Logic
             if (text.StartsWith(open1, StringComparison.Ordinal))
                 text = openTag + text.Substring(open1.Length);
 
+            // I've actually got
+            // some <i> really </i> great news.
+            var leftRightSpaceTag = " " + openTag + " ";
+            var idx = text.IndexOf(leftRightSpaceTag, StringComparison.Ordinal);
+            while (idx >= 0)
+            {
+                text = text.Remove(idx + leftRightSpaceTag.Length - 1, 1);
+                idx = text.IndexOf(leftRightSpaceTag, StringComparison.Ordinal);
+            }
+            leftRightSpaceTag = " " + closeTag;
+            idx = text.LastIndexOf(leftRightSpaceTag, StringComparison.Ordinal);
+            while (idx >= 0 && ((text.Length == idx + leftRightSpaceTag.Length) || (text.Length > idx + leftRightSpaceTag.Length && text[idx + leftRightSpaceTag.Length] == '.' || text[idx + leftRightSpaceTag.Length] == ' ' ||
+                text[idx + leftRightSpaceTag.Length] == '?' || text[idx + leftRightSpaceTag.Length] == '!')))
+            {
+                text = text.Remove(idx, 1);
+                idx = text.LastIndexOf(leftRightSpaceTag, idx, StringComparison.Ordinal);
+            }
             return text;
         }
 
