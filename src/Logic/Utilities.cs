@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Logic
             int count = 0;
             for (int i = 0; i < words.Length; i++)
             {
-                var regEx = new Regex("\\b" + words[i] + "\\b");
+                var regEx = new Regex("\\b" + words[i] + "\\b", (RegexOptions.CultureInvariant|RegexOptions.ExplicitCapture));
                 count += regEx.Matches(text).Count;
             }
             return count;
@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
             {
                 int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
-                int dutchCount = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                int dutchCount = GetCount(text, "van", "het", "een", "Het", "m(ij|ĳ)", "z(ij|ĳ)n");
                 if (norwegianCount < 2 && dutchCount < count)
                     return "da";
             }
@@ -1187,7 +1187,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
             {
                 int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                int dutchCount = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                int dutchCount = GetCount(text, "van", "het", "een", "Het", "m(ij|ĳ)", "z(ij|ĳ)n");
                 if (danishCount < 2 && dutchCount < count)
                     return "no";
             }
@@ -1218,7 +1218,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "de";
 
-            count = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+            count = GetCount(text, "van", "het", "een", "Het", "m(ij|ĳ)", "z(ij|ĳ)n");
             if (count > bestCount)
                 return "nl";
 
@@ -1426,7 +1426,7 @@ namespace Nikse.SubtitleEdit.Logic
                         if (count > bestCount)
                         {
                             int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                            int dutchCount = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                            int dutchCount = GetCount(text, "van", "het", "een", "Het", "m(ij|ĳ)", "z(ij|ĳ)n");
                             if (danishCount < 2 && dutchCount < count)
                                 languageName = shortName;
                         }
@@ -1505,7 +1505,7 @@ namespace Nikse.SubtitleEdit.Logic
                             languageName = shortName;
                         break;
                     case "nl_NL":
-                        count = GetCount(text, "van", "het", "een", "Het", "mij", "zijn");
+                        count = GetCount(text, "van", "het", "een", "Het", "m(ij|ĳ)", "z(ij|ĳ)n");
                         if (count > bestCount)
                             languageName = shortName;
                         break;
