@@ -1253,10 +1253,6 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "bg"; // Bulgarian
 
-            count = GetCount(text, "sam", "öto", "äto", "ovo", "vas", "što");
-            if (count > bestCount && GetCount(text, "htjeti ", "htjeti ", "htjeti ", "htjeti ", "htjeti ", "htjeti ") > 0)
-                return "hr"; // Croatia
-
             count = GetCount(text, "من", "هل", "لا", "فى", "لقد", "ما");
             if (count > bestCount)
             {
@@ -1280,9 +1276,19 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "he"; // Hebrew
 
-            count = GetCount(text, "sam", "što", "nije", "Šta", "ovde", "za");
+            count = GetCount(text, "sam", "što", "öto", "äto", "ovo", "vas", "nije", "Šta", "ovde", "za");
             if (count > bestCount)
+            {
+                int croatianCount = GetCount(text, "ubojstvo", "službeni", "nedjelja", "izražava", "svjetlo", "sigurno", "obitelj", "vijest", "svijet", "lijepa",
+                                                   "dijete", "cijeli", "smije", "smije", "ured", "otok", "opći", "križ", "htio", "gdje", "auto", "sat", "kći");
+                int serbianCount = GetCount(text, "ispoljava", "porodica", "ponaosob", "bukvalno", "ubistvo", "ubediti", "suštini", "komitet", "dejstvo",
+                                                  "uopšte", "štampa", "ostrvo", "naučni", "kiriju", "kćerke", "nauka", "ivica", "čovek", "lepa", "krst",
+                                                  "kola", "hteo", "drug", "dete", "celi", "sme", "sem", "gde", "čas");
+                if (croatianCount > serbianCount)
+                    return "hr"; // Croatian
+
                 return "sr"; // Serbian
+            }
 
             count = GetCount(text, "không", "tôi", "anh", "đó", "Tôi", "ông");
             if (count > bestCount)
@@ -1534,7 +1540,7 @@ namespace Nikse.SubtitleEdit.Logic
                                 languageName = shortName;
                         }
                         break;
-                    case "hr_HR": // Croatia
+                    case "hr_HR": // Croatian
                         count = GetCount(text, "sam", "öto", "äto", "ovo", "vas", "što");
                         if (count > bestCount)
                             languageName = shortName;
