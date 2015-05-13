@@ -3223,8 +3223,7 @@ namespace Nikse.SubtitleEdit.Logic
             }
             leftRightSpaceTag = " " + closeTag;
             idx = text.LastIndexOf(leftRightSpaceTag, StringComparison.Ordinal);
-            while (idx >= 0 && ((text.Length == idx + leftRightSpaceTag.Length) || (text.Length > idx + leftRightSpaceTag.Length && text[idx + leftRightSpaceTag.Length] == '.' || text[idx + leftRightSpaceTag.Length] == ' ' ||
-                text[idx + leftRightSpaceTag.Length] == '?' || text[idx + leftRightSpaceTag.Length] == '!')))
+            while (idx >= 0 && (text.Length == idx + leftRightSpaceTag.Length || " .?!,;:])-".Contains(text[idx + leftRightSpaceTag.Length])))
             {
                 text = text.Remove(idx, 1);
                 idx = text.LastIndexOf(leftRightSpaceTag, idx, StringComparison.Ordinal);
