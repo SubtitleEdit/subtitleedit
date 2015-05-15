@@ -2834,14 +2834,14 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
-                        word = new StringBuilder();
+                        word.Clear();
                         i += Environment.NewLine.Length;
                     }
                     else if (s.Substring(i).StartsWith(Environment.NewLine, StringComparison.Ordinal))
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
-                        word = new StringBuilder();
+                        word.Clear();
                         list.Add(Environment.NewLine);
                         i += Environment.NewLine.Length;
                     }
@@ -2849,7 +2849,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
-                        word = new StringBuilder();
+                        word.Clear();
                         i++;
                     }
                     else if (endChars.Contains(s[i]) && (word.Length == 0 || endChars.Contains(word[0])))
@@ -2861,7 +2861,7 @@ namespace Nikse.SubtitleEdit.Logic
                     {
                         if (word.Length > 0)
                             list.Add(word.ToString());
-                        word = new StringBuilder();
+                        word.Clear();
                         word.Append(s[i]);
                         i++;
                     }
