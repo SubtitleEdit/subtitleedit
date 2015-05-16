@@ -142,7 +142,7 @@ namespace Nikse.SubtitleEdit.Forms
                 int partSize = (int)(_subtitle.Paragraphs.Count / numericUpDownParts.Value);
                 for (int i = 0; i < numericUpDownParts.Value; i++)
                 {
-                    int noOfLines = (int)partSize;
+                    int noOfLines = partSize;
                     if (i == numericUpDownParts.Value - 1)
                         noOfLines = (int)(_subtitle.Paragraphs.Count - ((numericUpDownParts.Value - 1) * partSize));
 
