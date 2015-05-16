@@ -167,7 +167,6 @@ namespace Nikse.SubtitleEdit.Forms
             else if (radioButtonCharacters.Checked)
             {
                 int partSize = (int)(_totalNumberOfCharacters / numericUpDownParts.Value);
-                int nextLimit = partSize;
                 int currentSize = 0;
                 Subtitle temp = new Subtitle();
                 temp.Header = _subtitle.Header;
@@ -175,7 +174,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     Paragraph p = _subtitle.Paragraphs[i];
                     int size = p.Text.Length;
-                    if (currentSize + size > nextLimit + 4 && _parts.Count < numericUpDownParts.Value - 1)
+                    if (currentSize + size > partSize + 4 && _parts.Count < numericUpDownParts.Value - 1)
                     {
                         _parts.Add(temp);
                         ListViewItem lvi = new ListViewItem(string.Format("{0:#,###,###}", temp.Paragraphs.Count));
