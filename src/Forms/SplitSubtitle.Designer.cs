@@ -70,7 +70,7 @@
             this.buttonSplit.TabIndex = 17;
             this.buttonSplit.Text = "&Split";
             this.buttonSplit.UseVisualStyleBackColor = true;
-            this.buttonSplit.Click += new System.EventHandler(this.ButtonFixClick);
+            this.buttonSplit.Click += new System.EventHandler(this.ButtonSplitClick);
             // 
             // label1
             // 
