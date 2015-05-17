@@ -249,6 +249,7 @@ namespace Nikse.SubtitleEdit.Logic
                 Calculating = "Calculating...",
                 ExtractingAudio = "Extracting audio...",
                 Done = "Done",
+                Error = "Error",
             };
 
             AdjustDisplayDuration = new LanguageStructure.AdjustDisplayDuration
