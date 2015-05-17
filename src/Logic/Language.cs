@@ -230,6 +230,17 @@ namespace Nikse.SubtitleEdit.Logic
                 GeneratingSpectrogram = "Generating spectrogram...",
                 ExtractingSeconds = "Extracting audio: {0:0.0} seconds",
                 ExtractingMinutes = "Extracting audio: {0}.{1:00} minutes",
+                WaveFileNotFound = "Could not find extracted wave file!" + Environment.NewLine +
+                                   "This feature requires VLC media player 1.1.x or newer ({0}-bit)." + Environment.NewLine +
+                                   Environment.NewLine +
+                                   "Command line: {1} {2}",
+                WaveFileMalformed = "{0} was unable to extract audio data to wave file!" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Command line: {1} {2}" + Environment.NewLine +
+                                    Environment.NewLine +
+                                    "Note: Do check free disk space.",
+                LowDiskSpace = "LOW DISK SPACE!",
+                FreeDiskSpace = "{0} free",
             };
 
             AddWaveformBatch = new LanguageStructure.AddWaveformBatch
@@ -607,7 +618,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SavePremiereEdlAs = "Choose Premiere EDL file name",
                 SaveFcpAs = "Choose Final Cut Pro xml file name",
                 SaveDostAs = "Choose DoStudio dost file name",
-                SomeLinesWereTooLongX = "Some lines were too long:\r\n{0}",
+                SomeLinesWereTooLongX = "Some lines were too long:" + Environment.NewLine + "{0}",
                 LineHeight = "Line height",
                 BoxSingleLine = "Box - single line",
                 BoxMultiLine = "Box - multi line",
@@ -934,7 +945,7 @@ namespace Nikse.SubtitleEdit.Logic
                 SavedOriginalSubtitleX = "Saved original subtitle {0}",
                 FileOnDiskModified = "File on disk modified",
                 OverwriteModifiedFile = "Overwrite the file {0} modified at {1} {2}{3} with current file loaded from disk at {4} {5}?",
-                FileXIsReadOnly = "Cannot save {0}\r\n\r\nFile is read-only!",
+                FileXIsReadOnly = "Cannot save {0}" + Environment.NewLine + Environment.NewLine + "File is read-only!",
                 UnableToSaveSubtitleX = "Unable to save subtitle file {0}" + Environment.NewLine + "Subtitle seems to be empty - try to re-save if you're working on a valid subtitle!",
                 BeforeNew = "Before new",
                 New = "New",
