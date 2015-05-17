@@ -161,6 +161,8 @@ namespace Nikse.SubtitleEdit.Forms
 
                         tag += tagEnd > tagStart ? _paragraph.Text.Substring(tagStart, tagEnd - tagStart + 1) : _paragraph.Text.Substring(tagStart);
                         i += tag.Length;
+                        listTag.Remove(tag);
+                        tag = string.Empty;
                     }
 
                     startMilliseconds = index * stepsLength + totalMilliseconds;
