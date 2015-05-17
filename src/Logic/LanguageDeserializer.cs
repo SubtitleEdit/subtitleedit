@@ -348,6 +348,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AddWaveformBatch/Done":
                     language.AddWaveformBatch.Done = reader.Value;
                     break;
+                case "AddWaveformBatch/Error":
+                    language.AddWaveformBatch.Error = reader.Value;
+                    break;
                 case "AdjustDisplayDuration/Title":
                     language.AdjustDisplayDuration.Title = reader.Value;
                     break;

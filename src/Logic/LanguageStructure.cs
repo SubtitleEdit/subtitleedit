@@ -128,6 +128,7 @@
             public string ExtractingAudio { get; set; }
             public string Calculating { get; set; }
             public string Done { get; set; }
+            public string Error { get; set; }
         }
 
         public class AdjustDisplayDuration
