@@ -87,6 +87,7 @@ namespace Nikse.SubtitleEdit.Forms
             double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * 1000.0);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
+            double totalMilliseconds = _paragraph.StartTime.TotalMilliseconds;
             double startMilliseconds;
             double endMilliseconds;
             TimeCode start;
@@ -96,6 +97,7 @@ namespace Nikse.SubtitleEdit.Forms
             bool tagOn = false;
             string tag = string.Empty;
             int i = 0;
+            var listTag = new List<string>();
             while (i < _paragraph.Text.Length)
             {
                 if (tagOn)
@@ -111,7 +113,42 @@ namespace Nikse.SubtitleEdit.Forms
                 }
                 else
                 {
-                    text += tag + _paragraph.Text[i];
+                    if (tag.Length >= 3)
+                    {
+                        text += tag + _paragraph.Text[i];
+
+                        // Reverse tag
+                        if (tag.Length > 3)
+                        {
+                            // <i><b> <b><i>
+                            var reversed = string.Empty;
+                            while (tag.Length > 0)
+                            {
+                                var endIdx = tag.IndexOf('>') + 1;
+                                reversed = tag.Substring(0, endIdx) + reversed;
+                                tag = tag.Remove(0, endIdx);
+                            }
+                            tag = reversed;
+                        }
+                        listTag.Add(tag.Replace("<", "</"));
+                    }
+                    else
+                    {
+                        text += _paragraph.Text[i];
+                    }
+
+                    // Remove all closed
+                    foreach (var closetag in listTag)
+                    {
+                        text = text.Replace(closetag, string.Empty);
+                    }
+
+                    // Close all open tags
+                    foreach (var closeTag in listTag)
+                    {
+                        text = text + closeTag;
+                    }
+
                     tag = string.Empty;
 
                     //end tag
@@ -119,18 +156,15 @@ namespace Nikse.SubtitleEdit.Forms
                         _paragraph.Text[i + 1] == '<' &&
                         _paragraph.Text[i + 2] == '/')
                     {
-                        while (i < _paragraph.Text.Length && _paragraph.Text[i] != '>')
-                        {
-                            tag += _paragraph.Text[i];
-                            i++;
-                        }
-                        text += tag;
+                        var tagStart = i + 1;
+                        var tagEnd = _paragraph.Text.IndexOf('>', tagStart + 2);
+
+                        tag += tagEnd > tagStart ? _paragraph.Text.Substring(tagStart, tagEnd - tagStart + 1) : _paragraph.Text.Substring(tagStart);
+                        i += tag.Length;
                     }
 
-                    startMilliseconds = index * stepsLength;
-                    startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    endMilliseconds = ((index + 1) * stepsLength) - 1;
-                    endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
+                    startMilliseconds = index * stepsLength + totalMilliseconds;
+                    endMilliseconds = (index + 1) * stepsLength - 1 + totalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);
                     _animation.Add(new Paragraph(start, end, text));
