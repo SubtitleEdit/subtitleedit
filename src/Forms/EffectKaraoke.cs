@@ -229,6 +229,7 @@ namespace Nikse.SubtitleEdit.Forms
             double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * 1000.0);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
+            double totalMilliseconds = _paragraph.StartTime.TotalMilliseconds;
             double startMilliseconds;
             double endMilliseconds;
             TimeCode start;
@@ -263,11 +264,11 @@ namespace Nikse.SubtitleEdit.Forms
                         _paragraph.Text[i + 1] == '<' &&
                         _paragraph.Text[i + 2] == '/')
                     {
-                        while (i < _paragraph.Text.Length && _paragraph.Text[i] != '>')
-                        {
-                            tag += _paragraph.Text[i];
-                            i++;
-                        }
+                        var tagStart = i + 1;
+                        var tagEnd = _paragraph.Text.IndexOf('>', tagStart + 2);
+
+                        tag += tagEnd > tagStart ? _paragraph.Text.Substring(tagStart, tagEnd - tagStart + 1) : _paragraph.Text.Substring(tagStart);
+                        i += tag.Length;
                         text += tag;
                     }
 
@@ -275,10 +276,8 @@ namespace Nikse.SubtitleEdit.Forms
                     if (i + 1 < _paragraph.Text.Length)
                         tempText += _paragraph.Text.Substring(i + 1);
 
-                    startMilliseconds = index * stepsLength;
-                    startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                    endMilliseconds = ((index + 1) * stepsLength) - 1;
-                    endMilliseconds += _paragraph.StartTime.TotalMilliseconds;
+                    startMilliseconds = index * stepsLength + totalMilliseconds;
+                    endMilliseconds = ((index + 1) * stepsLength - 1) + totalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);
                     _animation.Add(new Paragraph(start, end, tempText));
@@ -290,8 +289,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (numericUpDownDelay.Value > 0)
             {
                 startMilliseconds = index * stepsLength;
-                startMilliseconds += _paragraph.StartTime.TotalMilliseconds;
-                endMilliseconds = _paragraph.EndTime.TotalMilliseconds;
+                startMilliseconds += totalMilliseconds;
+                endMilliseconds = totalMilliseconds;
                 start = new TimeCode(startMilliseconds);
                 end = new TimeCode(endMilliseconds);
                 _animation.Add(new Paragraph(start, end, startFontTag + _paragraph.Text + endFontTag));
