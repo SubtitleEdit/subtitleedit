@@ -32,7 +32,6 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 try
                 {
-
                     string s = Path.GetFileName(fileName);
                     string languageId = s.Substring(0, s.IndexOf('_'));
                     var ci = CultureInfo.GetCultureInfoByIetfLanguageTag(languageId);
@@ -94,15 +93,15 @@ namespace Nikse.SubtitleEdit.Forms
         private void buttonRemoveNameEtc_Click(object sender, EventArgs e)
         {
             int first = 0;
-            var list = new List<int>();
-            foreach (int i in listBoxNoBreakAfter.SelectedIndices)
-                list.Add(i);
-            if (list.Count > 0)
-                first = list[0];
-            list.Sort();
-            for (int i = list.Count - 1; i >= 0; i--)
+            var selectedCount = listBoxNoBreakAfter.SelectedIndices.Count;
+
+            if (selectedCount > 0)
             {
-                _noBreakAfterList.RemoveAt(list[i]);
+                first = listBoxNoBreakAfter.SelectedIndices[0];
+            }
+            for (int i = selectedCount - 1; i >= 0; i--)
+            {
+                _noBreakAfterList.RemoveAt(listBoxNoBreakAfter.SelectedIndices[i]);
             }
             ShowBreakAfterList(_noBreakAfterList);
             if (first >= _noBreakAfterList.Count)
