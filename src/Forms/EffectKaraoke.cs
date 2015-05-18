@@ -229,7 +229,8 @@ namespace Nikse.SubtitleEdit.Forms
             double duration = _paragraph.Duration.TotalMilliseconds - ((double)numericUpDownDelay.Value * 1000.0);
             double stepsLength = CalculateStepLength(_paragraph.Text, duration);
 
-            double totalMilliseconds = _paragraph.StartTime.TotalMilliseconds;
+            double startTotalMilliseconds = _paragraph.StartTime.TotalMilliseconds;
+            double endTotalMilliseconds = _paragraph.EndTime.TotalMilliseconds;
             double startMilliseconds;
             double endMilliseconds;
             TimeCode start;
@@ -270,14 +271,15 @@ namespace Nikse.SubtitleEdit.Forms
                         tag += tagEnd > tagStart ? _paragraph.Text.Substring(tagStart, tagEnd - tagStart + 1) : _paragraph.Text.Substring(tagStart);
                         i += tag.Length;
                         text += tag;
+                        tag = string.Empty;
                     }
 
                     string tempText = startFontTag + text + endFontTag;
                     if (i + 1 < _paragraph.Text.Length)
                         tempText += _paragraph.Text.Substring(i + 1);
 
-                    startMilliseconds = index * stepsLength + totalMilliseconds;
-                    endMilliseconds = ((index + 1) * stepsLength - 1) + totalMilliseconds;
+                    startMilliseconds = index * stepsLength + startTotalMilliseconds;
+                    endMilliseconds = ((index + 1) * stepsLength - 1) + startTotalMilliseconds;
                     start = new TimeCode(startMilliseconds);
                     end = new TimeCode(endMilliseconds);
                     _animation.Add(new Paragraph(start, end, tempText));
@@ -289,8 +291,8 @@ namespace Nikse.SubtitleEdit.Forms
             if (numericUpDownDelay.Value > 0)
             {
                 startMilliseconds = index * stepsLength;
-                startMilliseconds += totalMilliseconds;
-                endMilliseconds = totalMilliseconds;
+                startMilliseconds += startTotalMilliseconds;
+                endMilliseconds = endTotalMilliseconds;
                 start = new TimeCode(startMilliseconds);
                 end = new TimeCode(endMilliseconds);
                 _animation.Add(new Paragraph(start, end, startFontTag + _paragraph.Text + endFontTag));
