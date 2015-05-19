@@ -622,7 +622,7 @@ namespace Nikse.SubtitleEdit.Forms
                     richTextBox1.SelectionBackColor = Color.Red;
                 }
             }
-            else
+            else if (richTextBox2.Text.Length > richTextBox1.Text.Length)
             {
                 if (richTextBox2.Text.StartsWith(richTextBox1.Text))
                 {
