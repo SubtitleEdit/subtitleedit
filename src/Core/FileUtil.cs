@@ -71,10 +71,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var buffer = new byte[4];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count != buffer.Length)
+                if (fs.Length < 4)
                     return false;
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, buffer.Length);
                 return buffer[0] == 0x50  // P
                     && buffer[1] == 0x4B  // K
                     && buffer[2] == 0x03  // (ETX)
@@ -86,10 +86,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var buffer = new byte[4];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count != buffer.Length)
+                if (fs.Length < 4)
                     return false;
+                var buffer = new byte[4];
+                fs.Read(buffer, 0, buffer.Length);
                 return buffer[0] == 0x52  // R
                     && buffer[1] == 0x61  // a
                     && buffer[2] == 0x72  // r
@@ -101,10 +101,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var buffer = new byte[8];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count != buffer.Length)
+                if (fs.Length < 8)
                     return false;
+                var buffer = new byte[8];
+                fs.Read(buffer, 0, buffer.Length);
                 return buffer[0] == 137
                     && buffer[1] == 80
                     && buffer[2] == 78
@@ -120,10 +120,10 @@ namespace Nikse.SubtitleEdit.Core
         {
             using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             {
-                var buffer = new byte[3];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count != buffer.Length)
+                if (fs.Length < 3)
                     return false;
+                var buffer = new byte[3];
+                fs.Read(buffer, 0, buffer.Length);
                 return buffer[0] == 0x69
                     && buffer[1] == 0x69
                     && buffer[2] == 0x69;
@@ -157,10 +157,10 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var buffer = new byte[3761];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count != buffer.Length)
+                if (fs.Length < 0xEB1)
                     return false;
+                var buffer = new byte[3761];
+                fs.Read(buffer, 0, buffer.Length);
                 return buffer[0] == 0x47 && buffer[188] == 0x47 // 47hex (71 dec or 'G') == TS sync byte
                     || buffer[0] == 0x54 && buffer[1] == 0x46 && buffer[2] == 0x72 && buffer[3760] == 0x47; // Topfield REC TS file
             }
@@ -243,12 +243,12 @@ namespace Nikse.SubtitleEdit.Core
             try
             {
                 fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                var buffer = new byte[65536];
-                var count = fs.Read(buffer, 0, buffer.Length);
-                if (count < 100)
+                if (fs.Length < 100)
                     return false;
 
-                for (int i = 0; i < count - 11; i++)
+                var buffer = new byte[65536];
+                var count = fs.Read(buffer, 0, buffer.Length) - 11;
+                for (int i = 0; i < count; i++)
                 {
                     //Header Partition PackId = 06 0E 2B 34 02 05 01 01 0D 01 02
                     if (buffer[i + 00] == 0x06 &&
