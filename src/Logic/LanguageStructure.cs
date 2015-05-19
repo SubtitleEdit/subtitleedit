@@ -116,6 +116,10 @@
             public string GeneratingSpectrogram { get; set; }
             public string ExtractingSeconds { get; set; }
             public string ExtractingMinutes { get; set; }
+            public string WaveFileNotFound { get; set; }
+            public string WaveFileMalformed { get; set; }
+            public string LowDiskSpace { get; set; }
+            public string FreeDiskSpace { get; set; }
         }
 
         public class AddWaveformBatch
@@ -124,6 +128,7 @@
             public string ExtractingAudio { get; set; }
             public string Calculating { get; set; }
             public string Done { get; set; }
+            public string Error { get; set; }
         }
 
         public class AdjustDisplayDuration

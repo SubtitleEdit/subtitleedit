@@ -227,9 +227,9 @@ namespace Nikse.SubtitleEdit.Forms
                     catch (DllNotFoundException)
                     {
                         if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                                                   Environment.NewLine +
-                                                                   Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                                                  Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                            Environment.NewLine + Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                            Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
+                                            MessageBoxButtons.YesNo) == DialogResult.Yes)
                         {
                             Process.Start("http://www.videolan.org/");
                         }
@@ -306,7 +306,8 @@ namespace Nikse.SubtitleEdit.Forms
                 catch
                 {
                     IncrementAndShowProgress();
-                    item.SubItems[3].Text = "ERROR";
+
+                    item.SubItems[3].Text = Configuration.Settings.Language.AddWaveformBatch.Error;
                 }
                 index++;
             }
