@@ -1,4 +1,4 @@
-﻿;* Subtitle Edit - Installer script
+;* Subtitle Edit - Installer script
 ;*
 ;* Copyright (C) 2010-2015 XhmikosR
 ;*
@@ -31,7 +31,7 @@
 #endif
 
 
-#define app_copyright "Copyright © 2001-2015, Nikse"
+#define app_copyright "Copyright � 2001-2015, Nikse"
 ; If you don't define "localize", i.e. comment out the following line then no translations
 ; for SubtitleEdit or the installer itself will be included in the installer
 #define localize
@@ -157,43 +157,9 @@ Name: custom;             Description: {cm:types_custom}; Flags: iscustom
 
 
 [Components]
-Name: main;                     Description: Subtitle Edit {#app_ver}; Types: default custom; Flags: fixed
+Name: main;               Description: Subtitle Edit {#app_ver}; Types: default custom; Flags: fixed
 #ifdef localize
-Name: translations;             Description: {cm:comp_translations};    Types: default custom; Flags: disablenouninstallwarning
-Name: translations/ar_EG;       Description: "العربية";                 Types: default custom; Flags: disablenouninstallwarning
-Name: translations/bg_BG;       Description: "Български";               Types: default custom; Flags: disablenouninstallwarning
-Name: translations/ca_ES;       Description: "Català";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/cs_CZ;       Description: "Čeština";                 Types: default custom; Flags: disablenouninstallwarning
-Name: translations/da_DK;       Description: "Dansk";                   Types: default custom; Flags: disablenouninstallwarning
-Name: translations/de_DE;       Description: "Deutsch";                 Types: default custom; Flags: disablenouninstallwarning
-Name: translations/el_GR;       Description: "Ελληνικά";                Types: default custom; Flags: disablenouninstallwarning
-Name: translations/es_AR;       Description: "Español (Argentina)";     Types: default custom; Flags: disablenouninstallwarning
-Name: translations/es_ES;       Description: "Español (España)";        Types: default custom; Flags: disablenouninstallwarning
-Name: translations/es_MX;       Description: "Español (México)";        Types: default custom; Flags: disablenouninstallwarning
-Name: translations/eu_ES;       Description: "Euskara";                 Types: default custom; Flags: disablenouninstallwarning
-Name: translations/fa_IR;       Description: "فارسي";                   Types: default custom; Flags: disablenouninstallwarning
-Name: translations/fi_FI;       Description: "Suomi";                   Types: default custom; Flags: disablenouninstallwarning
-Name: translations/fr_FR;       Description: "Français";                Types: default custom; Flags: disablenouninstallwarning
-Name: translations/hr_HR;       Description: "Hrvatski";                Types: default custom; Flags: disablenouninstallwarning
-Name: translations/hu_HU;       Description: "Magyar";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/it_IT;       Description: "Italiano";                Types: default custom; Flags: disablenouninstallwarning
-Name: translations/ja_JP;       Description: "日本語";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/ko_KR;       Description: "한국어";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/nl_NL;       Description: "Nederlands";              Types: default custom; Flags: disablenouninstallwarning
-Name: translations/pl_PL;       Description: "Polski";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/pt_BR;       Description: "Português (Brasil)";      Types: default custom; Flags: disablenouninstallwarning
-Name: translations/pt_PT;       Description: "Português (Portugal)";    Types: default custom; Flags: disablenouninstallwarning
-Name: translations/ro_RO;       Description: "Română";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/ru_RU;       Description: "Русский";                 Types: default custom; Flags: disablenouninstallwarning
-Name: translations/sl_SI;       Description: "Slovenski";               Types: default custom; Flags: disablenouninstallwarning
-Name: translations/sr_Cyrl_RS;  Description: "Српски";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/sr_Latn_RS;  Description: "Srpski";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/sv_SE;       Description: "Svenska";                 Types: default custom; Flags: disablenouninstallwarning
-Name: translations/th_TH;       Description: "ไทย";                     Types: default custom; Flags: disablenouninstallwarning
-Name: translations/tr_TR;       Description: "Türkçe";                  Types: default custom; Flags: disablenouninstallwarning
-Name: translations/vi_VN;       Description: "Tiếng Việt";              Types: default custom; Flags: disablenouninstallwarning
-Name: translations/zh_CHS;      Description: "简体中文";                Types: default custom; Flags: disablenouninstallwarning
-Name: translations/zh_CHT;      Description: "繁體中文";                Types: default custom; Flags: disablenouninstallwarning
+Name: translations;       Description: {cm:comp_translations};   Types: default custom; Flags: disablenouninstallwarning
 #endif
 
 [Tasks]
@@ -255,40 +221,40 @@ Source: {#bindir}\Icons\VisualSync.png;            DestDir: {app}\Icons;        
 Source: {#bindir}\Icons\WaveformToggle.png;        DestDir: {app}\Icons;                              Flags: ignoreversion; Components: main
 
 #ifdef localize
-Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/ar_EG
-Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/bg_BG
-Source: {#bindir}\Languages\ca-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/ca_ES
-Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/cs_CZ
-Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/da_DK
-Source: {#bindir}\Languages\de-DE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/de_DE
-Source: {#bindir}\Languages\el-GR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/el_GR
-Source: {#bindir}\Languages\es-AR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/es_AR
-Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/es_ES
-Source: {#bindir}\Languages\es-MX.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/es_MX
-Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/eu_ES
-Source: {#bindir}\Languages\fa-IR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/fa_IR
-Source: {#bindir}\Languages\fi-FI.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/fi_FI
-Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/fr_FR
-Source: {#bindir}\Languages\hr-HR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/hr_HR
-Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/hu_HU
-Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/it_IT
-Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/ja_JP
-Source: {#bindir}\Languages\ko-KR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/ko_KR
-Source: {#bindir}\Languages\nl-NL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/nl_NL
-Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/pl_PL
-Source: {#bindir}\Languages\pt-BR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/pt_BR
-Source: {#bindir}\Languages\pt-PT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/pt_PT
-Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/ro_RO
-Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/ru_RU
-Source: {#bindir}\Languages\sl-SI.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/sl_SI
-Source: {#bindir}\Languages\sr-Cyrl-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/sr_Cyrl_RS
-Source: {#bindir}\Languages\sr-Latn-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/sr_Latn_RS
-Source: {#bindir}\Languages\sv-SE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/sv_SE
-Source: {#bindir}\Languages\th-TH.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/th_TH
-Source: {#bindir}\Languages\tr-TR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/tr_TR
-Source: {#bindir}\Languages\vi-VN.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/vi_VN
-Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/zh_CHS
-Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations/zh_CHT
+Source: {#bindir}\Languages\ar-EG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\bg-BG.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ca-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\cs-CZ.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\da-DK.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\de-DE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\el-GR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\es-AR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\es-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\es-MX.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\eu-ES.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\fa-IR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\fi-FI.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\fr-FR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\hr-HR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\hu-HU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\it-IT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ja-JP.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ko-KR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\nl-NL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\pl-PL.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\pt-BR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\pt-PT.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ro-RO.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\ru-RU.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\sl-SI.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\sr-Cyrl-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\sr-Latn-RS.xml;        DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\sv-SE.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\th-TH.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\tr-TR.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\vi-VN.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\zh-CHS.xml;            DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
+Source: {#bindir}\Languages\zh-tw.xml;             DestDir: {app}\Languages;                          Flags: ignoreversion; Components: translations
 #endif
 
 Source: {#bindir}\SubtitleEdit.exe;                DestDir: {app};                                    Flags: ignoreversion; Components: main
@@ -356,40 +322,40 @@ Type: files;      Name: {app}\Languages\sr-Cyrl-CS.xml
 Type: files;      Name: {app}\Languages\sr-Latn-CS.xml
 
 ; Remove the language files if it's an upgrade and the translations are not selected
-Type: files;      Name: {app}\Languages\ar-EG.xml;      Check: not IsComponentSelected('translations/ar_EG') and IsUpgrade()
-Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: not IsComponentSelected('translations/bg_BG') and IsUpgrade()
-Type: files;      Name: {app}\Languages\ca-ES.xml;      Check: not IsComponentSelected('translations/ca_ES') and IsUpgrade()
-Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: not IsComponentSelected('translations/cs_CZ') and IsUpgrade()
-Type: files;      Name: {app}\Languages\da-DK.xml;      Check: not IsComponentSelected('translations/da_DK') and IsUpgrade()
-Type: files;      Name: {app}\Languages\de-DE.xml;      Check: not IsComponentSelected('translations/de_DE') and IsUpgrade()
-Type: files;      Name: {app}\Languages\el-GR.xml;      Check: not IsComponentSelected('translations/el_GR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\es-AR.xml;      Check: not IsComponentSelected('translations/es_AR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\es-ES.xml;      Check: not IsComponentSelected('translations/es_ES') and IsUpgrade()
-Type: files;      Name: {app}\Languages\es-MX.xml;      Check: not IsComponentSelected('translations/es_MX') and IsUpgrade()
-Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: not IsComponentSelected('translations/eu_ES') and IsUpgrade()
-Type: files;      Name: {app}\Languages\fa-IR.xml;      Check: not IsComponentSelected('translations/fa_IR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\fi-FI.xml;      Check: not IsComponentSelected('translations/fi_FI') and IsUpgrade()
-Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: not IsComponentSelected('translations/fr_FR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\hr-HR.xml;      Check: not IsComponentSelected('translations/hr_HR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: not IsComponentSelected('translations/hu_HU') and IsUpgrade()
-Type: files;      Name: {app}\Languages\it-IT.xml;      Check: not IsComponentSelected('translations/it_IT') and IsUpgrade()
-Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: not IsComponentSelected('translations/ja_JP') and IsUpgrade()
-Type: files;      Name: {app}\Languages\ko-KR.xml;      Check: not IsComponentSelected('translations/ko_KR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\nl-NL.xml;      Check: not IsComponentSelected('translations/nl_NL') and IsUpgrade()
-Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: not IsComponentSelected('translations/pl_PL') and IsUpgrade()
-Type: files;      Name: {app}\Languages\pt-BR.xml;      Check: not IsComponentSelected('translations/pt_BR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\pt-PT.xml;      Check: not IsComponentSelected('translations/pt_PT') and IsUpgrade()
-Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: not IsComponentSelected('translations/ro_RO') and IsUpgrade()
-Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: not IsComponentSelected('translations/ru_RU') and IsUpgrade()
-Type: files;      Name: {app}\Languages\sl-SI.xml;      Check: not IsComponentSelected('translations/sl_SI') and IsUpgrade()
-Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: not IsComponentSelected('translations/sr_Cyrl_RS') and IsUpgrade()
-Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: not IsComponentSelected('translations/sr_Latn_RS') and IsUpgrade()
-Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: not IsComponentSelected('translations/sv_SE') and IsUpgrade()
-Type: files;      Name: {app}\Languages\th-TH.xml;      Check: not IsComponentSelected('translations/th_TH') and IsUpgrade()
-Type: files;      Name: {app}\Languages\tr-TR.xml;      Check: not IsComponentSelected('translations/tr_TR') and IsUpgrade()
-Type: files;      Name: {app}\Languages\vi-VN.xml;      Check: not IsComponentSelected('translations/vi_VN') and IsUpgrade()
-Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: not IsComponentSelected('translations/zh_CHS') and IsUpgrade()
-Type: files;      Name: {app}\Languages\zh-tw.xml;      Check: not IsComponentSelected('translations/zh_CHT') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ar-EG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\bg-BG.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ca-ES.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\cs-CZ.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\da-DK.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\de-DE.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\el-GR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\es-AR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\es-ES.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\es-MX.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\eu-ES.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\fa-IR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\fi-FI.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\fr-FR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\hr-HR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\hu-HU.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\it-IT.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ja-JP.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ko-KR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\nl-NL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\pl-PL.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\pt-BR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\pt-PT.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ro-RO.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\ru-RU.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sl-SI.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sr-Cyrl-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sr-Latn-RS.xml; Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\sv-SE.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\th-TH.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\tr-TR.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\vi-VN.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\zh-CHS.xml;     Check: not IsComponentSelected('translations') and IsUpgrade()
+Type: files;      Name: {app}\Languages\zh-tw.xml;      Check: not IsComponentSelected('translations') and IsUpgrade()
 Type: dirifempty; Name: {app}\Languages;                Check: not IsComponentSelected('translations') and IsUpgrade()
 #endif
 
