@@ -95,9 +95,17 @@ namespace Nikse.SubtitleEdit.Forms
         {
             buttonRipWave.Enabled = false;
             _cancel = false;
-            bool runningOnWindows = !(Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac());
             SourceVideoFileName = labelVideoFileName.Text;
             string targetFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".wav");
+            string targetDriveLetter = null;
+            if (!(Configuration.IsRunningOnLinux() || Configuration.IsRunningOnMac()))
+            {
+                var root = Path.GetPathRoot(targetFile);
+                if (root.Length > 1 && root[1] == ':')
+                {
+                    targetDriveLetter = root.Remove(1);
+                }
+            }
 
             labelPleaseWait.Visible = true;
             Process process;
@@ -153,11 +161,11 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                if (seconds > 1 && Convert.ToInt32(seconds) % 10 == 0 && runningOnWindows)
+                if (targetDriveLetter != null && seconds > 1 && Convert.ToInt32(seconds) % 10 == 0)
                 {
                     try
                     {
-                        var drive = new DriveInfo("c");
+                        var drive = new DriveInfo(targetDriveLetter);
                         if (drive.IsReady)
                         {
                             if (drive.AvailableFreeSpace < 50 * 1000000) // 50 mb
