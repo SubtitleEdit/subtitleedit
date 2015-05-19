@@ -7,7 +7,7 @@
     <CultureName>hr-HR</CultureName>
     <HelpFile />
     <Ok>&amp;OK</Ok>
-    <Cancel>&amp;Otkaži</Cancel>
+    <Cancel>Ot&amp;kaži</Cancel>
     <Apply>Primijeni</Apply>
     <None>Ništa</None>
     <All>Sve</All>
@@ -290,7 +290,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <FadeUpTime>Uzlazno do vremena</FadeUpTime>
     <FadeDownTime>Silazno do vremena</FadeDownTime>
     <ZPosition>Z-poziciju</ZPosition>
-    <ZPositionHelp>Pozitivni brojevi pomiču tekst dalje, negativni brojevi pomiču tekst bliže, ako je Z-pozicija nula onda je to  2D</ZPositionHelp>
+    <ZPositionHelp>Pozitivni brojevi pomiču tekst dalje, negativni brojevi pomiču tekst bliže, ako je Z-pozicija nula onda je to 2D</ZPositionHelp>
     <ChooseColor>Odaberi boju...</ChooseColor>
     <Generate>Generiraj</Generate>
   </DCinemaProperties>
@@ -324,7 +324,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Zaustavljeno od strane korisnika.</AbortedByUser>
     <ReadingSubtitleData>Učitavam Podnaslov</ReadingSubtitleData>
     <RippingVobFileXofYZ>Izvlačim VOB datoteke… ({1} od {2}): {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO je pogrešne vrste. {1}Izaberite drugu datoteku.</WrongIfoType>
+    <WrongIfoType>IFO je pogrešne vrste.{1}Izaberite drugu datoteku.</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Odabir jezika</Title>
@@ -428,13 +428,19 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <LeftRightMargin>Lijeva/desna margina</LeftRightMargin>
     <SaveBluRraySupAs>Izaberite Blu-ray sup naziv</SaveBluRraySupAs>
     <SaveVobSubAs>Odaberite naziv datoteke VobSub</SaveVobSubAs>
-    <SaveFabImageScriptAs>Izaberite Blu-ray sup naziv</SaveFabImageScriptAs>
+    <SaveFabImageScriptAs>Odaberite FAB image script naziv datoteke</SaveFabImageScriptAs>
     <SaveDvdStudioProStlAs>Odaberite DVD Studio Pro STL naziv datoteke</SaveDvdStudioProStlAs>
+    <SaveDigitalCinemaInteropAs>Odaberite Digital Cinema Interop naziv datoteke</SaveDigitalCinemaInteropAs>
+    <SavePremiereEdlAs>Odaberite Premiere EDL naziv datoteke</SavePremiereEdlAs>
+    <SaveFcpAs>Odaberite Final Cut Pro xml naziv datoteke</SaveFcpAs>
+    <SaveDostAs>Odaberite DoStudio dost naziv datoteke</SaveDostAs>
     <SomeLinesWereTooLongX>Neke linije su preduge:{0}</SomeLinesWereTooLongX>
     <LineHeight>Visina Linije</LineHeight>
     <BoxSingleLine>Box - jedan redak</BoxSingleLine>
     <BoxMultiLine>Box - više linija</BoxMultiLine>
     <Forced>Prisilni</Forced>
+    <ChooseBackgroundColor>Izaberite boju pozadine</ChooseBackgroundColor>
+    <SaveImageAs>Spremi sliku kao...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
     <Title>Izvezi tekst</Title>
@@ -599,7 +605,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <FixedOkXY>Ispravljeno – „{0}“ – {1}</FixedOkXY>
     <FixOcrErrorExample>D0n l't → Don l'-t</FixOcrErrorExample>
     <FixSpaceBetweenNumbersExample>1 100 → 1100</FixSpaceBetweenNumbersExample>
-    <FixDialogsOneLineExample>Pozdrav John! - Bok Ida! → Pozdrav John&lt;br /&gt;- Bok Ida!</FixDialogsOneLineExample>
+    <FixDialogsOneLineExample>Pozdrav John! - Bok Ida! → Pozdrav John!&lt;br /&gt;- Bok Ida!</FixDialogsOneLineExample>
   </FixCommonErrors>
   <GetDictionaries>
     <Title>Preuzimanje rječnika</Title>
@@ -689,7 +695,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
   </Interjections>
   <JoinSubtitles>
     <Title>Spoji podnaslove</Title>
-    <Information>Dodaj podnaslove za spajanje  (zgrabi i spusti također podržan)</Information>
+    <Information>Dodaj podnaslove za spajanje (zgrabi i spusti također podržan)</Information>
     <NumberOfLines>#Linije</NumberOfLines>
     <StartTime>Vrijeme početka</StartTime>
     <EndTime>Vrijeme završetka</EndTime>
@@ -843,7 +849,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
         <PointSyncViaOtherSubtitle>T&amp;očka usklađivanja iz drugog podnaslova…</PointSyncViaOtherSubtitle>
       </Synchronization>
       <AutoTranslate>
-        <Title>&amp;Automatsko prevođenje</Title>
+        <Title>Au&amp;tomatsko prevođenje</Title>
         <TranslatePoweredByGoogle>Prevedi s pomoću &amp;Googla…</TranslatePoweredByGoogle>
         <TranslatePoweredByMicrosoft>Prevedi s pomoću &amp;Microsofta…</TranslatePoweredByMicrosoft>
         <TranslateFromSwedishToDanish>&amp;Prevedi iz Švedskog u Danski…</TranslateFromSwedishToDanish>
@@ -1023,7 +1029,9 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <SavedOriginalSubtitleX>Izvorni podnaslov {0} je spremljen.</SavedOriginalSubtitleX>
     <FileOnDiskModified>Datoteka na disku je izmijenjena.</FileOnDiskModified>
     <OverwriteModifiedFile>Zamijeniti datoteku {0} koja je izmijenjena u {1} {2}{3} s učitanom datotekom u {4} {5}?</OverwriteModifiedFile>
-    <FileXIsReadOnly>Ne mogu spremiti {0}Datoteka samo za čitanje!</FileXIsReadOnly>
+    <FileXIsReadOnly>Ne mogu spremiti {0}
+
+Datoteka samo za čitanje!</FileXIsReadOnly>
     <UnableToSaveSubtitleX>{0} podnaslov nije spremljen.</UnableToSaveSubtitleX>
     <BeforeNew>Stvorena prazna stranica</BeforeNew>
     <New>Novo</New>
@@ -1212,7 +1220,7 @@ koji bi trebao biti usklađen s video datotekom.
     <NetworkUpdate>Linija je izmijenjena: {0} ({1}): popis – {2}, tekst – {3}</NetworkUpdate>
     <NetworkInsert>Linija je ubačena: {0} ({1}): popis – {2}, tekst – {3}</NetworkInsert>
     <NetworkDelete>Linija je obrisana: {0} ({1}): popis – {2}</NetworkDelete>
-    <NetworkNewUser>pristupi sesiji {0}  ({1}).</NetworkNewUser>
+    <NetworkNewUser>pristupi sesiji {0} ({1}).</NetworkNewUser>
     <NetworkByeUser>napusti sesiju {0} ({1}).</NetworkByeUser>
     <NetworkUnableToConnectToServer>Nije moguće povezivanje sa serverom: {0}</NetworkUnableToConnectToServer>
     <UserAndAction>Korisnik/radnja</UserAndAction>
@@ -1243,7 +1251,7 @@ koji bi trebao biti usklađen s video datotekom.
     <BeforeDisplaySubtitleJoin>Prije spajanja podnaslova</BeforeDisplaySubtitleJoin>
     <SubtitlesJoined>Podnaslovi spojeni</SubtitlesJoined>
     <StatusLog>Status izvješća</StatusLog>
-    <XSceneChangesImported>{0}izmijenjenih scena uvezeno</XSceneChangesImported>
+    <XSceneChangesImported>{0} izmijenjenih scena uvezeno</XSceneChangesImported>
     <PluginXExecuted>Dodataka '{0}' izvršeno</PluginXExecuted>
     <NotAValidXSubFile>Nevažeća XSub datoteka!</NotAValidXSubFile>
     <BeforeMergeLinesWithSameText>Prije spajanja linije s istim tekstom</BeforeMergeLinesWithSameText>
@@ -1534,7 +1542,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <DirectShow>DirectShow</DirectShow>
     <DirectShowDescription>quartz.dll u mapi „System32“</DirectShowDescription>
     <ManagedDirectX>Managed DirectX</ManagedDirectX>
-    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback —  .NET Managed code from DirectX</ManagedDirectXDescription>
+    <ManagedDirectXDescription>Microsoft.DirectX.AudioVideoPlayback — .NET Managed code from DirectX</ManagedDirectXDescription>
     <MpcHc>MPC-HC</MpcHc>
     <MpcHcDescription>Media Player Classic - Home Cinema</MpcHcDescription>
     <MPlayer>MPlayer</MPlayer>
@@ -1752,7 +1760,7 @@ određeni podnaslov s drugim ljudima.</Information>
     <AddXToNamesEtc>Dodaj „{0}“ u popis naziva/izuzetaka</AddXToNamesEtc>
     <AutoFixNames>&amp;Ispravi riječi gdje je samo veličina slova različita</AutoFixNames>
     <CheckOneLetterWords>Pitaj za nepoznato jedno slovo riječi</CheckOneLetterWords>
-    <TreatINQuoteAsING>Tretiraj završetak riječi ''in'' kao što je "ing" (samo na engleskom)</TreatINQuoteAsING>
+    <TreatINQuoteAsING>Tretiraj završetak riječi "in'" kao što je "ing" (samo na engleskom)</TreatINQuoteAsING>
     <ImageText>Tekst slike</ImageText>
     <SpellCheckCompleted>Provjera pravopisa je završena.</SpellCheckCompleted>
     <SpellCheckAborted>Provjera pravopisa je prekinuta.</SpellCheckAborted>
