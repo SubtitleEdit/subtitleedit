@@ -324,6 +324,18 @@ namespace Nikse.SubtitleEdit.Logic
                 case "AddWaveform/ExtractingMinutes":
                     language.AddWaveform.ExtractingMinutes = reader.Value;
                     break;
+                case "AddWaveform/WaveFileNotFound":
+                    language.AddWaveform.WaveFileNotFound = reader.Value;
+                    break;
+                case "AddWaveform/WaveFileMalformed":
+                    language.AddWaveform.WaveFileMalformed = reader.Value;
+                    break;
+                case "AddWaveform/LowDiskSpace":
+                    language.AddWaveform.LowDiskSpace = reader.Value;
+                    break;
+                case "AddWaveform/FreeDiskSpace":
+                    language.AddWaveform.FreeDiskSpace = reader.Value;
+                    break;
                 case "AddWaveformBatch/Title":
                     language.AddWaveformBatch.Title = reader.Value;
                     break;
@@ -335,6 +347,9 @@ namespace Nikse.SubtitleEdit.Logic
                     break;
                 case "AddWaveformBatch/Done":
                     language.AddWaveformBatch.Done = reader.Value;
+                    break;
+                case "AddWaveformBatch/Error":
+                    language.AddWaveformBatch.Error = reader.Value;
                     break;
                 case "AdjustDisplayDuration/Title":
                     language.AdjustDisplayDuration.Title = reader.Value;

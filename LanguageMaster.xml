@@ -111,12 +111,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generating spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extracting audio: {0:0.0} seconds</ExtractingSeconds>
     <ExtractingMinutes>Extracting audio: {0}.{1:00} minutes</ExtractingMinutes>
+    <WaveFileNotFound>Could not find extracted wave file!
+This feature requires VLC media player 1.1.x or newer ({0}-bit).
+
+Command line: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} was unable to extract audio data to wave file!
+
+Command line: {1} {2}
+
+Note: Do check free disk space.</WaveFileMalformed>
+    <LowDiskSpace>LOW DISK SPACE!</LowDiskSpace>
+    <FreeDiskSpace>{0} free</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch generate waveform data</Title>
     <ExtractingAudio>Extracting audio...</ExtractingAudio>
     <Calculating>Calculating...</Calculating>
     <Done>Done</Done>
+    <Error>Error</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Adjust durations</Title>

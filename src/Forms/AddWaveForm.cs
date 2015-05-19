@@ -76,7 +76,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (Configuration.Settings.General.UseFFmpegForWaveExtraction && File.Exists(Configuration.Settings.General.FFmpegLocation))
             {
-                encoderName = "FFMPEG";
+                encoderName = "FFmpeg";
                 const string fFmpegWaveTranscodeSettings = "-i \"{0}\" -vn -ar 24000 -ac 2 -ab 128 -vol 448 -f wav \"{1}\"";
                 //-i indicates the input
                 //-vn means no video ouput
@@ -108,19 +108,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
 
             labelPleaseWait.Visible = true;
+            string encoderName;
             Process process;
             try
             {
-                string encoderName;
                 process = GetCommandLineProcess(SourceVideoFileName, _audioTrackNumber, targetFile, _encodeParamters, out encoderName);
                 labelInfo.Text = encoderName;
             }
             catch (DllNotFoundException)
             {
                 if (MessageBox.Show(Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFound + Environment.NewLine +
-                                                           Environment.NewLine +
-                                                           Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
-                                                          Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle, MessageBoxButtons.YesNo) == DialogResult.Yes)
+                                    Environment.NewLine + Configuration.Settings.Language.AddWaveform.GoToVlcMediaPlayerHomePage,
+                                    Configuration.Settings.Language.AddWaveform.VlcMediaPlayerNotFoundTitle,
+                                    MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
                     Process.Start("http://www.videolan.org/");
                 }
@@ -171,11 +171,11 @@ namespace Nikse.SubtitleEdit.Forms
                             if (drive.AvailableFreeSpace < 50 * 1000000) // 50 mb
                             {
                                 labelInfo.ForeColor = Color.Red;
-                                labelInfo.Text = "LOW DISC SPACE!";
+                                labelInfo.Text = Configuration.Settings.Language.AddWaveform.LowDiskSpace;
                             }
                             else if (labelInfo.ForeColor == Color.Red)
                             {
-                                labelInfo.Text = Utilities.FormatBytesToDisplayFileSize(drive.AvailableFreeSpace) + " free";
+                                labelInfo.Text = string.Format(Configuration.Settings.Language.AddWaveform.FreeDiskSpace, Utilities.FormatBytesToDisplayFileSize(drive.AvailableFreeSpace));
                             }
                         }
                     }
@@ -190,7 +190,8 @@ namespace Nikse.SubtitleEdit.Forms
             progressBar1.Style = ProgressBarStyle.Blocks;
             process.Dispose();
 
-            if (!File.Exists(targetFile))
+            var targetFileInfo = new FileInfo(targetFile);
+            if (!targetFileInfo.Exists)
             {
                 if (_encodeParamters != RetryEncodeParameters)
                 {
@@ -199,9 +200,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                MessageBox.Show("Could not find extracted wave file! This feature requires VLC media player 1.1.x or newer (" + (IntPtr.Size * 8) + " -bit)." + Environment.NewLine
-                                + Environment.NewLine +
-                                "Command line: " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+                MessageBox.Show(string.Format(Configuration.Settings.Language.AddWaveform.WaveFileNotFound, IntPtr.Size * 8, process.StartInfo.FileName, process.StartInfo.Arguments));
 
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
@@ -209,14 +208,10 @@ namespace Nikse.SubtitleEdit.Forms
                 return;
             }
 
-            var fi = new FileInfo(targetFile);
-            if (fi.Length <= 200)
+            if (targetFileInfo.Length <= 200)
             {
-                MessageBox.Show("Sorry! VLC/FFmpeg was unable to extract audio to wave file via this command line:" + Environment.NewLine +
-                                Environment.NewLine +
-                                "Command line: " + process.StartInfo.FileName + " " + process.StartInfo.Arguments + Environment.NewLine +
-                                Environment.NewLine +
-                                "Note: Do check free disk space.");
+                MessageBox.Show(string.Format(Configuration.Settings.Language.AddWaveform.WaveFileMalformed, encoderName, process.StartInfo.FileName, process.StartInfo.Arguments));
+
                 labelPleaseWait.Visible = false;
                 labelProgress.Text = string.Empty;
                 buttonRipWave.Enabled = true;
