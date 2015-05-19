@@ -145,7 +145,8 @@ namespace Nikse.SubtitleEdit.Core
 
             while (s.Contains("  "))
                 s = s.Replace("  ", " ");
-            return s;
+            s = s.Replace(" " + Environment.NewLine, Environment.NewLine);
+            return s.Replace(Environment.NewLine + " ", Environment.NewLine);
         }
 
         public static bool ContainsLetter(this string s)
