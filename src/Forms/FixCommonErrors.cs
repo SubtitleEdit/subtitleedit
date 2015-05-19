@@ -379,7 +379,7 @@ namespace Nikse.SubtitleEdit.Forms
                 new FixItem(_language.StartWithUppercaseLetterAfterPeriodInsideParagraph, string.Empty, FixStartWithUppercaseLetterAfterPeriodInsideParagraph, ce.StartWithUppercaseLetterAfterPeriodInsideParagraphTicked),
                 new FixItem(_language.StartWithUppercaseLetterAfterColon, string.Empty, FixStartWithUppercaseLetterAfterColon, ce.StartWithUppercaseLetterAfterColonTicked),
                 new FixItem(_language.AddMissingQuotes, _language.AddMissingQuotesExample, AddMissingQuotes, ce.AddMissingQuotesTicked),
-                new FixItem(_language.FixHyphens, string.Empty, FixHyphens, ce.FixHyphensTicked),
+                new FixItem(_language.FixHyphens, string.Empty, FixHyphensRemove, ce.FixHyphensTicked),
                 new FixItem(_language.FixHyphensAdd, string.Empty, FixHyphensAdd, ce.FixHyphensAddTicked),
                 new FixItem(_language.Fix3PlusLines, string.Empty, Fix3PlusLines, ce.Fix3PlusLinesTicked),
                 new FixItem(_language.FixDoubleDash, _language.FixDoubleDashExample, FixDoubleDash, ce.FixDoubleDashTicked),
@@ -2773,7 +2773,7 @@ namespace Nikse.SubtitleEdit.Forms
             return s;
         }
 
-        public void FixHyphens()
+        public void FixHyphensRemove()
         {
             string fixAction = _language.FixHyphen;
             int iFixes = 0;
