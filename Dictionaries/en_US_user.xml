@@ -14,6 +14,7 @@
   <word>amnio</word>
   <word>antimony</word>
   <word>apologise</word>
+  <word>appetit</word>
   <word>appétit</word>
   <word>argon</word>
   <word>arsenic</word>
@@ -21,16 +22,20 @@
   <word>astatine</word>
   <word>autotrophs</word>
   <word>axe</word>
+  <word>baff</word>
+  <word>bam</word>
   <word>barium</word>
   <word>behaviour</word>
   <word>beheadings</word>
   <word>berkelium</word>
   <word>beryllium</word>
   <word>bismuth</word>
+  <word>bleads</word>
   <word>blonde</word>
   <word>blowjobs</word>
   <word>blushy</word>
   <word>bohrium</word>
+  <word>bon</word>
   <word>bona fide</word>
   <word>boneyard</word>
   <word>boron</word>
@@ -47,7 +52,11 @@
   <word>cahill's</word>
   <word>calcium</word>
   <word>californium</word>
+  <word>cameljockey</word>
+  <word>cannonballer</word>
+  <word>cannonballers</word>
   <word>carbon</word>
+  <word>car'll</word>
   <word>catalogue</word>
   <word>catalogued</word>
   <word>'cause</word>
@@ -64,6 +73,7 @@
   <word>collywobbles</word>
   <word>colonoscopy</word>
   <word>colours</word>
+  <word>consommé</word>
   <word>copernicium</word>
   <word>copper</word>
   <word>copperish</word>
@@ -76,6 +86,7 @@
   <word>darmstadtium</word>
   <word>darndest</word>
   <word>defendable</word>
+  <word>delirry</word>
   <word>dialogue</word>
   <word>dipshit</word>
   <word>disorderlies</word>
@@ -85,6 +96,7 @@
   <word>dubnium</word>
   <word>dysprosium</word>
   <word>einsteinium</word>
+  <word>el</word>
   <word>'em</word>
   <word>endeth</word>
   <word>episiotomy</word>
@@ -93,8 +105,11 @@
   <word>europium</word>
   <word>euros</word>
   <word>evaporite</word>
+  <word>everyone'd</word>
   <word>everything's</word>
   <word>extradural</word>
+  <word>f***</word>
+  <word>f******</word>
   <word>faggot</word>
   <word>fallin'</word>
   <word>favour</word>
@@ -109,11 +124,13 @@
   <word>fluorine</word>
   <word>flushin'</word>
   <word>flyer</word>
+  <word>foyt</word>
   <word>francium</word>
   <word>fuckable</word>
   <word>fundraiser</word>
   <word>gadolinium</word>
   <word>gallium</word>
+  <word>gangbang</word>
   <word>geez</word>
   <word>gemensheidt</word>
   <word>generationally</word>
@@ -124,6 +141,7 @@
   <word>goddamned</word>
   <word>golconda</word>
   <word>gold</word>
+  <word>goy</word>
   <word>guys'll</word>
   <word>hafnium</word>
   <word>hassium</word>
@@ -138,6 +156,7 @@
   <word>houseguests</word>
   <word>how'd</word>
   <word>how're</word>
+  <word>humour</word>
   <word>humvee</word>
   <word>hydrogen</word>
   <word>incontinentia</word>
@@ -158,9 +177,11 @@
   <word>krypton</word>
   <word>kuwabara-kun</word>
   <word>labelled</word>
+  <word>lamburgers</word>
   <word>lanthanum</word>
   <word>lawrencium</word>
   <word>lead</word>
+  <word>likea</word>
   <word>lithium</word>
   <word>loudmouth</word>
   <word>loupe</word>
@@ -173,12 +194,14 @@
   <word>men's</word>
   <word>mercury</word>
   <word>metres</word>
+  <word>midasize</word>
   <word>might've</word>
   <word>millennia</word>
   <word>mmm</word>
   <word>mmmmm</word>
   <word>mojo</word>
   <word>molybdenum</word>
+  <word>moonpie'll</word>
   <word>must've</word>
   <word>nah</word>
   <word>namaste</word>
@@ -191,6 +214,7 @@
   <word>neptunium</word>
   <word>neurobiologist</word>
   <word>nickel</word>
+  <word>niner</word>
   <word>niobium</word>
   <word>nitrogen</word>
   <word>nobelium</word>
@@ -199,6 +223,7 @@
   <word>ohh</word>
   <word>online</word>
   <word>or</word>
+  <word>orthodonture</word>
   <word>osmium</word>
   <word>other's</word>
   <word>oww</word>
@@ -206,8 +231,10 @@
   <word>oxygen</word>
   <word>p.m.</word>
   <word>palladium</word>
+  <word>palos</word>
   <word>paprikash</word>
   <word>parents'</word>
+  <word>petey</word>
   <word>phosphorus</word>
   <word>photoshopped</word>
   <word>platinum</word>
@@ -216,9 +243,12 @@
   <word>pneumothorax</word>
   <word>polenta</word>
   <word>polonium</word>
+  <word>porco</word>
+  <word>portofino</word>
   <word>postulator</word>
   <word>potassium</word>
   <word>praseodymium</word>
+  <word>proctology</word>
   <word>promethium</word>
   <word>protactinium</word>
   <word>purée</word>
@@ -226,10 +256,12 @@
   <word>radon</word>
   <word>realise</word>
   <word>realised</word>
+  <word>rearview</word>
   <word>rebar</word>
   <word>recalibrated</word>
   <word>recognise</word>
   <word>recognised</word>
+  <word>retune</word>
   <word>rhenium</word>
   <word>rhodium</word>
   <word>roentgenium</word>
@@ -242,7 +274,10 @@
   <word>samarium</word>
   <word>sayonara</word>
   <word>scandium</word>
+  <word>sceptics</word>
   <word>schlong</word>
+  <word>schmarthing</word>
+  <word>schweizer</word>
   <word>sci-fi</word>
   <word>seaborgium</word>
   <word>secret's</word>
@@ -272,6 +307,8 @@
   <word>sudoku</word>
   <word>sulfur</word>
   <word>sulphur</word>
+  <word>superslab</word>
+  <word>sweety</word>
   <word>synchronicity</word>
   <word>tantalum</word>
   <word>taxies</word>
@@ -299,6 +336,7 @@
   <word>tittie</word>
   <word>touché</word>
   <word>trifecta</word>
+  <word>truckin</word>
   <word>tungsten</word>
   <word>ununhexium</word>
   <word>ununoctium</word>
@@ -310,22 +348,29 @@
   <word>vaccinologist</word>
   <word>vanadium</word>
   <word>voila</word>
+  <word>volleyballer</word>
   <word>weirding</word>
+  <word>westport</word>
   <word>what'd</word>
   <word>what're</word>
   <word>when'd</word>
   <word>where'd</word>
   <word>where're</word>
   <word>which</word>
+  <word>whoah</word>
+  <word>whoever's</word>
   <word>why'd</word>
   <word>why's</word>
   <word>wizarding</word>
+  <word>woodchip</word>
   <word>worshipped</word>
   <word>worshipping</word>
   <word>xenon</word>
+  <word>years'll</word>
   <word>ytterbium</word>
   <word>yttrium</word>
   <word>yukina</word>
+  <word>zaika</word>
   <word>zinc</word>
   <word>zirconium</word>
 </words>
