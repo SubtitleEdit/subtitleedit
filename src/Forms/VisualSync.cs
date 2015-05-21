@@ -84,7 +84,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonOK.Text = _languageGeneral.Ok;
             buttonCancel.Text = _languageGeneral.Cancel;
             labelTip.Text = _language.Tip;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
             _timerHideSyncLabel.Tick += timerHideSyncLabel_Tick;
             _timerHideSyncLabel.Interval = 1000;
         }
@@ -92,17 +92,6 @@ namespace Nikse.SubtitleEdit.Forms
         private void timerHideSyncLabel_Tick(object sender, EventArgs e)
         {
             labelSyncDone.Text = string.Empty;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void GotoSubtitlePosition(VideoPlayerContainer mediaPlayer)
