@@ -71,7 +71,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             bool doRenum = false;
             _errors = new StringBuilder();
-            _lineNumber = 0;
 
             _paragraph = new Paragraph();
             _expecting = ExpectingLine.Number;
@@ -80,7 +79,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             subtitle.Paragraphs.Clear();
             for (int i = 0; i < lines.Count; i++)
             {
-                _lineNumber++;
                 string line = lines[i].TrimEnd();
                 line = line.Trim('\u007F'); // 127=delete acscii
 
