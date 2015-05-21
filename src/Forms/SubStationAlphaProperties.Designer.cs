@@ -399,6 +399,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.KeyPreview = true;
             this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "SubStationAlphaProperties";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
