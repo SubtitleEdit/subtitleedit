@@ -3435,5 +3435,21 @@ namespace Nikse.SubtitleEdit.Logic
             return lines;
         }
 
+        public static void FixLargeFonts(Control mainCtrl, params Control[] ctrls)
+        {
+            using (Graphics graphics = mainCtrl.CreateGraphics())
+            {
+                foreach (Control ctrl in ctrls)
+                {
+                    SizeF textSize = graphics.MeasureString(ctrl.Text, mainCtrl.Font);
+                    if (textSize.Height > ctrl.Height - 4)
+                    {
+                        int newButtonHeight = (int)(textSize.Height + 7.5);
+                        SetButtonHeight(mainCtrl, newButtonHeight, 1);
+                    }
+                }
+            }
+        }
+
     }
 }
