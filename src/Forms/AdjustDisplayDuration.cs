@@ -80,14 +80,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelNote.Left + labelNote.Width + 5 > Width)
                 Width = labelNote.Left + labelNote.Width + 5;
-
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void FormAdjustDisplayTime_KeyDown(object sender, KeyEventArgs e)

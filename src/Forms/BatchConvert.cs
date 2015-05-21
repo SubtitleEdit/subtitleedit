@@ -134,7 +134,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFrameRateTo.Items.Add(25.0);
             comboBoxFrameRateTo.Items.Add(29.97);
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
 
             _allFormats = new List<SubtitleFormat> { new Pac() };
             int selectedFormatIndex = 0;
@@ -203,17 +203,6 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxFilter.SelectedIndex = 0;
             comboBoxFilter.Left = labelFilter.Left + labelFilter.Width + 4;
             textBoxFilter.Left = comboBoxFilter.Left + comboBoxFilter.Width + 4;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void buttonChooseFolder_Click(object sender, EventArgs e)

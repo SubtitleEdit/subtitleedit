@@ -41,23 +41,12 @@ namespace Nikse.SubtitleEdit.Forms
                 listViewFixes.Columns[2].Width = width;
                 listViewFixes.Columns[3].Width = width;
             };
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public int LinesChanged
         {
             get { return _noOfLinesChanged; }
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ChangeCasingNames_KeyDown(object sender, KeyEventArgs e)
