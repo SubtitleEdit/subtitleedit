@@ -465,9 +465,7 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
                 {
                     Paragraph p = _paragraphs[i];
-                    string s = p.Text.Trim();
-
-                    if (s.Length == 0)
+                    if (p.Text.Trim().Length == 0)
                         _paragraphs.RemoveAt(i);
                 }
                 if (count != _paragraphs.Count)

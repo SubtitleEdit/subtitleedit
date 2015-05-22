@@ -785,7 +785,7 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     sb.Append(htmlTags[six]);
                 }
-                s = sb.ToString();
+                return sb.ToString();
             }
             return s;
         }
