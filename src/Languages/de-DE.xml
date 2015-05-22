@@ -111,12 +111,24 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Erzeuge Spektogramm...</GeneratingSpectrogram>
     <ExtractingSeconds>Extrahiere Audio: {0:0.0} Sekunden</ExtractingSeconds>
     <ExtractingMinutes>Extrahiere Audio: {0}.{1:00} Minuten</ExtractingMinutes>
+    <WaveFileNotFound>Wellenformdatei nicht gefunden!
+Diese Funktion erfordert VLC media player 1.1.x oder höher ({0}-bit).
+
+Befehlszeile: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} konnte die Wellenformdatei nicht erzeugen!
+
+Befehlszeile: {1} {2}
+
+Ist genügend Plattenspeicherplatz verfügbar?</WaveFileMalformed>
+    <LowDiskSpace>GERINGER PLATTENSPEICHERPLATZ</LowDiskSpace>
+    <FreeDiskSpace>{0} freier Plattenspeicherplatz</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Stapelgenerierung von Wellenformdaten</Title>
     <ExtractingAudio>Audio extrahieren...</ExtractingAudio>
     <Calculating>Berechnen...</Calculating>
     <Done>Fertig</Done>
+    <Error>Fehlgeschlagen</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Längen anpassen</Title>
@@ -324,7 +336,7 @@ E-Mail: mailto:nikse.dk@gmail.com</AboutText1>
     <AbortedByUser>Abgebrochen durch Benutzer</AbortedByUser>
     <ReadingSubtitleData>Lese Untertiteldaten...</ReadingSubtitleData>
     <RippingVobFileXofYZ>Verarbeite VOB Datei {1} von {2}: {0}</RippingVobFileXofYZ>
-    <WrongIfoType>IFO Typ ist '{0}' und nicht 'DVD VIDEO VTS'. {1}Eine andere Datei versuchen als {2}</WrongIfoType>
+    <WrongIfoType>IFO Typ ist '{0}' und nicht 'DVDVIDEO-VTS'.{1}Eine andere Datei versuchen als {2}</WrongIfoType>
   </DvdSubRip>
   <DvdSubRipChooseLanguage>
     <Title>Sprache auswählen</Title>
