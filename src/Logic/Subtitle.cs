@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < Paragraphs.Count - 1; i++)
             {
                 Paragraph p = Paragraphs[i];
-                Paragraph next = Paragraphs[i + 1];
+                Paragraph next = GetParagraphOrDefault(i + 1);
                 if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
                     p.EndFrame = next.StartFrame - 1;
             }
