@@ -110,7 +110,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private bool _cancelWordSpellCheck = true;
 
-        private bool  _clearLastFind;
+        private bool _clearLastFind;
         private FindType _clearLastFindType = FindType.Normal;
         private string _clearLastFindText = string.Empty;
 
@@ -2354,7 +2354,7 @@ namespace Nikse.SubtitleEdit.Forms
                     return;
                 }
 
-                // check for BitTorrent file
+                // check for Torrent file
                 if (format == null && fi.Length > 50 && FileUtil.IsTorrentFile(fileName))
                 {
                     MessageBox.Show(_language.ErrorLoadTorrent);
@@ -2383,7 +2383,7 @@ namespace Nikse.SubtitleEdit.Forms
                         }
                         var uknownFormatImporter = new UknownFormatImporter();
                         uknownFormatImporter.UseFrames = true;
-                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.Replace(Environment.NewLine, "\n").Replace("\r", "\n").Split('\n'));
+                        var genericParseSubtitle = uknownFormatImporter.AutoGuessImport(s.SplitToLines());
                         if (genericParseSubtitle.Paragraphs.Count > 1)
                         {
                             _subtitle = genericParseSubtitle;
