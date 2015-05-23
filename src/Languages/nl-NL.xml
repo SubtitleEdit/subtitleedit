@@ -111,12 +111,24 @@ E-mail: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Spectrogram genereren...</GeneratingSpectrogram>
     <ExtractingSeconds>Audio uitpakken: {0:0.0} seconden</ExtractingSeconds>
     <ExtractingMinutes>Audio uitpakken: {0} {1:00} minuten</ExtractingMinutes>
+    <WaveFileNotFound>De extractie van audiodata is mislukt!
+Deze functie vereist VLC media player 1.1.x of nieuwer ({0}-bit).
+
+Opdrachtregel: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>De extractie van audiodata met {0} is mislukt!
+
+Opdrachtregel: {1} {2}
+
+Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
+    <LowDiskSpace>ONVOLDOENDE VRĲE SCHĲFRUIMTE</LowDiskSpace>
+    <FreeDiskSpace>{0} beschikbaar</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Golfvormdata in batch genereren</Title>
     <ExtractingAudio>Audio uitpakken...</ExtractingAudio>
     <Calculating>Berekenen...</Calculating>
     <Done>Klaar</Done>
+    <Error>Mislukt</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Tĳdsduur aanpassen</Title>
