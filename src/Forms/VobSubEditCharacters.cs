@@ -68,7 +68,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDoubleSize.Text = Configuration.Settings.Language.VobSubEditCharacters.ImageDoubleSize;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void Refill(List<VobSubOcr.ImageCompareAddition> additions)
@@ -140,17 +140,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (listBoxFileNames.Items.Count > 0)
                 listBoxFileNames.SelectedIndex = 0;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void FillComboWithUniqueAndSortedTexts()

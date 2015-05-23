@@ -451,7 +451,7 @@ namespace Nikse.SubtitleEdit.Forms
             numericUpDownPixelsIsSpace.Left = labelNoOfPixelsIsSpace.Left + labelNoOfPixelsIsSpace.Width + 3;
             checkBoxRightToLeft.Left = numericUpDownPixelsIsSpace.Left;
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
             buttonEditCharacterDatabase.Top = buttonNewCharacterDatabase.Top + buttonNewCharacterDatabase.Height + 3;
 
             splitContainerBottom.Panel1MinSize = 400;
@@ -486,17 +486,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxDictionaries.Items.Add(name);
             }
             comboBoxDictionaries.SelectedIndexChanged += comboBoxDictionaries_SelectedIndexChanged;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         internal void InitializeBatch(string vobSubFileName, VobSubOcrSettings vobSubOcrSettings)

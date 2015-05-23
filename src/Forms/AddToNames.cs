@@ -29,14 +29,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelDescription.Left + labelDescription.Width + 5 > Width)
                 Width = labelDescription.Left + labelDescription.Width + 5;
-
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle, string text)
