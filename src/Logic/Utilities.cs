@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Logic
             int count = 0;
             for (int i = 0; i < words.Length; i++)
             {
-                var regEx = new Regex("\\b" + words[i] + "\\b", (RegexOptions.CultureInvariant|RegexOptions.ExplicitCapture));
+                var regEx = new Regex("\\b" + words[i] + "\\b", (RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture));
                 count += regEx.Matches(text).Count;
             }
             return count;
@@ -3433,6 +3433,19 @@ namespace Nikse.SubtitleEdit.Logic
                 idx = text.IndexOf('\n', idx + 1);
             }
             return lines;
+        }
+
+        public static void FixLargeFonts(Control mainCtrl, Control ctrl)
+        {
+            using (Graphics graphics = mainCtrl.CreateGraphics())
+            {
+                SizeF textSize = graphics.MeasureString(ctrl.Text, mainCtrl.Font);
+                if (textSize.Height > ctrl.Height - 4)
+                {
+                    int newButtonHeight = (int)(textSize.Height + 7.5);
+                    SetButtonHeight(mainCtrl, newButtonHeight, 1);
+                }
+            }
         }
 
     }

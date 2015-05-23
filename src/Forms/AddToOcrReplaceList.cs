@@ -17,18 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
             labelDescription.Text = Configuration.Settings.Language.AddToOcrReplaceList.Description;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
