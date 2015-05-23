@@ -9604,11 +9604,12 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string fileName = _dragAndDropFiles[0];
 
-                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
-                openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                var dirName = Path.GetDirectoryName(fileName);
+                saveFileDialog1.InitialDirectory = dirName;
+                openFileDialog1.InitialDirectory = dirName;
 
                 var fi = new FileInfo(fileName);
-                string ext = Path.GetExtension(fileName).ToLower();
+                string ext = fi.Extension.ToLowerInvariant();
 
                 if (ext == ".mkv")
                 {
@@ -11202,11 +11203,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ToggleDashes()
         {
-            int index = FirstSelectedIndex;
-            if (index >= 0)
+            if (FirstSelectedIndex >= 0)
             {
                 bool hasStartDash = false;
-                var p = _subtitle.Paragraphs[index];
+                var p = _subtitle.Paragraphs[FirstSelectedIndex];
                 var lines = p.Text.SplitToLines();
                 foreach (string line in lines)
                 {
@@ -14711,7 +14711,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public static string Sha256Hash(string value)
         {
-            System.Security.Cryptography.SHA256Managed hasher = new System.Security.Cryptography.SHA256Managed();
+            var hasher = new System.Security.Cryptography.SHA256Managed();
             byte[] bytes = Encoding.UTF8.GetBytes(value);
             byte[] hash = hasher.ComputeHash(bytes);
             return Convert.ToBase64String(hash, 0, hash.Length);
