@@ -12,7 +12,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     // The PAC format save the contents, time code, position, justification, and italicization of each subtitle. The choice of font is not saved.
     public class Pac : SubtitleFormat
     {
-        public static TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
+        public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
@@ -1270,75 +1270,91 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     if (count == 2)
                     {
                         _codePage = 0;
-                        bool allOk = true;
-                        StringBuilder sb = new StringBuilder();
-                        for (int i = 0; i < LatinLetters.Count; i++)
-                            sb.Append(LatinLetters[i]);
-                        string latinLetters = sb + "ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\"):;&";
+                        var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\"):;&");
+                        foreach (string s in LatinLetters)
+                            sb.Append(s);
+                        var codePageLetters = sb.ToString();
+                        var allOk = true;
                         foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!latinLetters.Contains(ch))
+                            if (!codePageLetters.Contains(ch))
+                            {
                                 allOk = false;
+                                break;
+                            }
                         }
                         if (allOk)
                             return 0; // Latin
 
-                        index = start;
                         _codePage = 1;
+                        index = start;
                         p = GetPacParagraph(ref index, buffer);
+                        codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\"):;&";
                         allOk = true;
                         foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!"AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\"):;&".Contains(ch))
+                            if (!codePageLetters.Contains(ch))
+                            {
                                 allOk = false;
+                                break;
+                            }
                         }
                         if (allOk)
                             return 1; // Greek
 
-                        index = start;
                         _codePage = 3;
+                        index = start;
                         p = GetPacParagraph(ref index, buffer);
+                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        foreach (string s in ArabicLetters)
+                            sb.Append(s);
+                        codePageLetters = sb.ToString();
                         allOk = true;
-                        sb = new StringBuilder();
-                        for (int i = 0; i < ArabicLetters.Count; i++)
-                            sb.Append(ArabicLetters[i]);
-                        string arabicLetters = sb + "(1234567890, .!?-\r\n'\"):;&";
                         foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!arabicLetters.Contains(ch))
+                            if (!codePageLetters.Contains(ch))
+                            {
                                 allOk = false;
+                                break;
+                            }
                         }
                         if (allOk)
                             return 3; // Arabic
 
-                        index = start;
                         _codePage = 4;
+                        index = start;
                         p = GetPacParagraph(ref index, buffer);
+                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        foreach (string s in HebrewLetters)
+                            sb.Append(s);
+                        codePageLetters = sb.ToString();
                         allOk = true;
-                        sb = new StringBuilder();
-                        for (int i = 0; i < HebrewLetters.Count; i++)
-                            sb.Append(HebrewLetters[i]);
-                        string hebrewLetters = sb + "(1234567890, .!?-\r\n'\"):;&";
                         foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!hebrewLetters.Contains(ch))
+                            if (!codePageLetters.Contains(ch))
+                            {
                                 allOk = false;
+                                break;
+                            }
                         }
                         if (allOk)
                             return 4; // Hebrew
 
-                        index = start;
                         _codePage = 4;
+                        index = start;
                         p = GetPacParagraph(ref index, buffer);
+                        sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
+                        foreach (string s in CyrillicLetters)
+                            sb.Append(s);
+                        codePageLetters = sb.ToString();
                         allOk = true;
-                        sb = new StringBuilder();
-                        for (int i = 0; i < CyrillicLetters.Count; i++)
-                            sb.Append(CyrillicLetters[i]);
-                        string cyrillicLetters = sb + "(1234567890, .!?-\r\n'\"):;&";
-                        foreach (char chCyrillic in HtmlUtil.RemoveHtmlTags(p.Text, true))
+                        foreach (char ch in HtmlUtil.RemoveHtmlTags(p.Text, true))
                         {
-                            if (!cyrillicLetters.Contains(chCyrillic))
+                            if (!codePageLetters.Contains(ch))
+                            {
                                 allOk = false;
+                                break;
+                            }
                         }
                         if (allOk)
                             return 6; // Cyrillic
@@ -1373,7 +1389,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 {
                     if (buffer[index] == 0xFF)
                     {
-                        textSample[textIndex++] = 32; // space
+                        if (textIndex < textSample.Length - 1)
+                            textSample[textIndex++] = 32; // ASCII 32 SP (Space)
+                        index++;
                     }
                     else if (buffer[index] == 0xFE)
                     {
@@ -1385,9 +1403,12 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         }
                         index += 3;
                     }
-                    if (textIndex < textSample.Length - 1)
-                        textSample[textIndex++] = buffer[index];
-                    index++;
+                    else
+                    {
+                        if (textIndex < textSample.Length - 1)
+                            textSample[textIndex++] = buffer[index];
+                        index++;
+                    }
                 }
                 previewBuffer = new byte[textIndex];
                 for (int i = 0; i < textIndex; i++)
@@ -1622,7 +1643,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             byte b = buffer[index];
 
-            if (b >= 0x30 && b <= 0x39) // numbers
+            if (b >= 0x30 && b <= 0x39) // decimal digits
                 return Encoding.ASCII.GetString(buffer, index, 1);
 
             int idx = CyrillicCodes.IndexOf(b);
