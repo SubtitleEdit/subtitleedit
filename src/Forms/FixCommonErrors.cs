@@ -462,7 +462,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
             labelDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width - 3;
-
             FixLargeFonts();
             listView1.Select();
         }

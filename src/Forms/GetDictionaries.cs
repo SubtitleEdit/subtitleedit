@@ -85,14 +85,7 @@ namespace Nikse.SubtitleEdit.Forms
         {
             if (labelDescription1.Left + labelDescription1.Width + 5 > Width)
                 Width = labelDescription1.Left + labelDescription1.Width + 5;
-
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void FormGetDictionaries_KeyDown(object sender, KeyEventArgs e)
