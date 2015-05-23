@@ -291,7 +291,7 @@ namespace Nikse.SubtitleEdit.Logic
             for (int i = 0; i < Paragraphs.Count - 1; i++)
             {
                 Paragraph p = Paragraphs[i];
-                Paragraph next = Paragraphs[i + 1];
+                Paragraph next = GetParagraphOrDefault(i + 1);
                 if (next != null && (p.EndFrame == next.StartFrame || p.EndFrame == next.StartFrame + 1))
                     p.EndFrame = next.StartFrame - 1;
             }
@@ -465,9 +465,7 @@ namespace Nikse.SubtitleEdit.Logic
                 for (int i = _paragraphs.Count - 1; i >= 0; i--)
                 {
                     Paragraph p = _paragraphs[i];
-                    string s = p.Text.Trim();
-
-                    if (s.Length == 0)
+                    if (string.IsNullOrWhiteSpace(p.Text))
                         _paragraphs.RemoveAt(i);
                 }
                 if (count != _paragraphs.Count)
