@@ -34,19 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             groupBoxPreview.Text = Configuration.Settings.Language.JoinSubtitles.Information;
             buttonJoin.Text = Configuration.Settings.Language.JoinSubtitles.Join;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)

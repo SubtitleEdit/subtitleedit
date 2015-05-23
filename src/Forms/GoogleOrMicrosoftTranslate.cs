@@ -27,18 +27,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonMicrosoft.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.MicrosoftTranslate;
             buttonTranslate.Text = Configuration.Settings.Language.GoogleOrMicrosoftTranslate.Translate;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private static void RemovedLanguagesNotInMicrosoftTranslate(ComboBox comboBox)
