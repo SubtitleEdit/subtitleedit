@@ -11,7 +11,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         //SUB[0 I 01:00:09:10>01:00:12:10]
         //SUB[0 N 01:00:09:10>01:00:12:10]
 
-        // Time code line can optionally contain "speaker" 
+        // Time code line can optionally contain "speaker"
         //SUB[0 N 01:02:02:03>01:02:03:06] VAL
         //e eu tenho maiô pra nadar?
 
