@@ -72,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             comboBoxLineBreak.Text = Configuration.Settings.Tools.ImportTextLineBreak;
 
             numericUpDownDurationFixed.Enabled = radioButtonDurationFixed.Checked;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
             _refreshTimer.Interval = 400;
             _refreshTimer.Tick += RefreshTimerTick;
         }
@@ -81,17 +81,6 @@ namespace Nikse.SubtitleEdit.Forms
         {
             _refreshTimer.Stop();
             GeneratePreviewReal();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void ButtonOpenTextClick(object sender, EventArgs e)
