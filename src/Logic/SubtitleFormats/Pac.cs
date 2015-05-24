@@ -1340,7 +1340,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         if (allOk)
                             return 4; // Hebrew
 
-                        _codePage = 4;
+                        _codePage = 6;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
                         sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
