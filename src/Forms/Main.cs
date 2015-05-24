@@ -1761,7 +1761,7 @@ namespace Nikse.SubtitleEdit.Forms
                                 SetEncoding(Configuration.Settings.General.DefaultEncoding);
                                 encoding = GetCurrentEncoding();
                                 var list = new List<string>();
-                                foreach (string line in subtitles[0].Replace(Environment.NewLine, "\r").Replace("\n", "\r").Split('\r'))
+                                foreach (string line in subtitles[0].SplitToLines())
                                 {
                                     list.Add(line);
                                 }
