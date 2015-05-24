@@ -111,12 +111,24 @@ Courriel : mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Création du spectrogram...</GeneratingSpectrogram>
     <ExtractingSeconds>Extraction audio: {0:0.0} secondes</ExtractingSeconds>
     <ExtractingMinutes>Extraction audio: {0}:{1:00} secondes</ExtractingMinutes>
+    <WaveFileNotFound>Fichier forme d'onde introuvable !
+L'extraction audio nécessite VLC media player 1.1.x ou supérieur ({0}-bit).
+
+Ligne de commande: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>Génération de forme d'onde par {0} n'a pas réussi !
+
+Ligne de commande: {1} {2}
+
+Note: Vérifiez l'espace disque disponible.</WaveFileMalformed>
+    <LowDiskSpace>ESPACE DISQUE FAIBLE</LowDiskSpace>
+    <FreeDiskSpace>{0} disponible</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Générer par lots des formes d'onde sonores</Title>
     <ExtractingAudio>Extraction audio...</ExtractingAudio>
     <Calculating>Calculer...</Calculating>
-    <Done>&amp;Annuler</Done>
+    <Done>Réussi</Done>
+    <Error>Echoué</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajuster les durées</Title>
