@@ -86,8 +86,8 @@ namespace Nikse.SubtitleEdit.Forms
             var mergedIndexes = new List<int>();
 
             NumberOfMerges = 0;
-            SubtitleListview1.Items.Clear();
             SubtitleListview1.BeginUpdate();
+            SubtitleListview1.Items.Clear();
             int count;
             _mergedSubtitle = MergeLineswithSameTextInSubtitle(_subtitle, mergedIndexes, out count, true, checkBoxIncludeIncrementing.Checked, true, (int)numericUpDownMaxMillisecondsBetweenLines.Value);
             NumberOfMerges = count;
