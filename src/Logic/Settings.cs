@@ -2861,13 +2861,13 @@ namespace Nikse.SubtitleEdit.Logic
                 {
                     const int maximumFindHistoryItems = 10;
                     textWriter.WriteStartElement("FindHistory", "");
-                    for (int index = 0; index < settings.Tools.FindHistory.Count; index++)
+                    int maxIndex = settings.Tools.FindHistory.Count;
+                    if (maxIndex > maximumFindHistoryItems)
+                        maxIndex = maximumFindHistoryItems;
+                    for (int index = 0; index < maxIndex; index++)
                     {
-                        if (index < maximumFindHistoryItems)
-                        {
-                            var text = settings.Tools.FindHistory[index];
-                            textWriter.WriteElementString("Text", text);
-                        }
+                        var text = settings.Tools.FindHistory[index];
+                        textWriter.WriteElementString("Text", text);
                     }
                     textWriter.WriteEndElement();
                 }
