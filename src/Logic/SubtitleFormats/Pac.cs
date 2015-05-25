@@ -14,6 +14,15 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
     {
         public static readonly TimeCode PacNullTime = new TimeCode(655, 35, 00, 0);
 
+        public const int CodePageLatin = 0;
+        public const int CodePageGreek = 1;
+        public const int CodePageLatinCzech = 2;
+        public const int CodePageArabic = 3;
+        public const int CodePageHebrew = 4;
+        public const int CodePageThai = 5;
+        public const int CodePageCyrillic = 6;
+        public const int CodePageChinese = 7;
+
         /// <summary>
         /// Contains Swedish, Danish, German, Spanish, and French letters
         /// </summary>
@@ -865,14 +874,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             Encoding encoding = GetEncoding(_codePage);
             byte[] textBuffer;
 
-            if (_codePage == 3)
+            if (_codePage == CodePageArabic)
                 textBuffer = GetArabicBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), alignment);
-            else if (_codePage == 4)
+            else if (_codePage == CodePageHebrew)
                 textBuffer = GetHebrewBytes(Utilities.FixEnglishTextInRightToLeftLanguage(text, "0123456789abcdefghijklmnopqrstuvwxyz"), alignment);
-            else if (_codePage == 0)
+            else if (_codePage == CodePageLatin)
                 textBuffer = GetLatinBytes(encoding, text, alignment);
-            else if (_codePage == 6)
+            else if (_codePage == CodePageCyrillic)
                 textBuffer = GetCyrillicBytes(text, alignment);
+            else if (_codePage == CodePageChinese)
+                textBuffer = GetChineseBig5Bytes(text, alignment);
             else
                 textBuffer = encoding.GetBytes(text);
 
@@ -1127,13 +1138,13 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                     sb.AppendLine();
                     index += 2;
                 }
-                else if (_codePage == 0)
+                else if (_codePage == CodePageLatin)
                     sb.Append(GetLatinString(GetEncoding(_codePage), buffer, ref index));
-                else if (_codePage == 3)
+                else if (_codePage == CodePageArabic)
                     sb.Append(GetArabicString(buffer, ref index));
-                else if (_codePage == 4)
+                else if (_codePage == CodePageHebrew)
                     sb.Append(GetHebrewString(buffer, ref index));
-                else if (_codePage == 6)
+                else if (_codePage == CodePageCyrillic)
                     sb.Append(GetCyrillicString(buffer, ref index));
                 else
                 {
@@ -1147,7 +1158,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             p.Text = sb.ToString();
             p.Text = p.Text.Replace("\0", string.Empty);
             p.Text = FixItalics(p.Text);
-            if (_codePage == 3)
+            if (_codePage == CodePageArabic)
                 p.Text = Utilities.FixEnglishTextInRightToLeftLanguage(p.Text, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
             if (verticalAlignment < 5)
@@ -1235,19 +1246,19 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
         {
             switch (codePage)
             {
-                case 0: // Latin
+                case CodePageLatin:
                     return Encoding.GetEncoding("iso-8859-1");
-                case 1: // Greek
+                case CodePageGreek:
                     return Encoding.GetEncoding("iso-8859-7");
-                case 2: // Latin Czech
+                case CodePageLatinCzech:
                     return Encoding.GetEncoding("iso-8859-2");
-                case 3: // Arabic
+                case CodePageArabic:
                     return Encoding.GetEncoding("iso-8859-6");
-                case 4: // Hebrew
+                case CodePageHebrew:
                     return Encoding.GetEncoding("iso-8859-8");
-                case 5: // Thai
+                case CodePageThai:
                     return Encoding.GetEncoding("windows-874");
-                case 6: // Cyrillic
+                case CodePageCyrillic:
                     return Encoding.GetEncoding("iso-8859-5");
                 default: return Encoding.Default;
             }
@@ -1260,7 +1271,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 byte[] buffer = FileUtil.ReadAllBytesShared(_fileName);
                 int index = 0;
                 int count = 0;
-                _codePage = 0;
+                _codePage = CodePageLatin;
                 while (index < buffer.Length)
                 {
                     int start = index;
@@ -1269,7 +1280,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                         count++;
                     if (count == 2)
                     {
-                        _codePage = 0;
+                        _codePage = CodePageLatin;
                         var sb = new StringBuilder("ABCDEFGHIJKLMNOPPQRSTUVWXYZÆØÅÄÖÜabcdefghijklmnopqrstuvwxyzæøäåü(1234567890, .!?-\r\n'\"):;&");
                         foreach (string s in LatinLetters)
                             sb.Append(s);
@@ -1284,9 +1295,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                         if (allOk)
-                            return 0; // Latin
+                            return CodePageLatin;
 
-                        _codePage = 1;
+                        _codePage = CodePageGreek;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
                         codePageLetters = "AαBβΓγΔδEϵεZζHηΘθIιKκΛλMμNνΞξOοΠπPρΣσςTτΥυΦϕφXχΨψΩω(1234567890, .!?-\r\n'\"):;&";
@@ -1300,9 +1311,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                         if (allOk)
-                            return 1; // Greek
+                            return CodePageGreek;
 
-                        _codePage = 3;
+                        _codePage = CodePageArabic;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
                         sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
@@ -1319,9 +1330,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                         if (allOk)
-                            return 3; // Arabic
+                            return CodePageArabic;
 
-                        _codePage = 4;
+                        _codePage = CodePageHebrew;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
                         sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
@@ -1338,9 +1349,9 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                         if (allOk)
-                            return 4; // Hebrew
+                            return CodePageHebrew;
 
-                        _codePage = 6;
+                        _codePage = CodePageCyrillic;
                         index = start;
                         p = GetPacParagraph(ref index, buffer);
                         sb = new StringBuilder("(1234567890, .!?-\r\n'\"):;&");
@@ -1357,16 +1368,16 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                             }
                         }
                         if (allOk)
-                            return 6; // Cyrillic
+                            return CodePageCyrillic;
 
-                        return 0; // Latin
+                        return CodePageLatin;
                     }
                 }
-                return 0; // Latin
+                return CodePageLatin;
             }
             catch
             {
-                return 0; // Latin
+                return CodePageLatin;
             }
         }
 
@@ -1578,6 +1589,55 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             for (int j = 0; j < i + extra; j++)
                 result[j] = buffer[j];
             return result;
+        }
+
+        private static byte[] GetChineseBig5Bytes(string text, byte alignment)
+        {
+            var result = new List<byte>();
+            bool firstLine = true;
+            foreach (var line in text.SplitToLines())
+            {
+                if (!firstLine)
+                {
+                    result.Add(0xfe);
+                    result.Add(alignment);
+                    result.Add(3);
+                }
+
+                if (OnlyAnsi(line))
+                {
+                    foreach (var b in GetLatinBytes(GetEncoding(0), line, alignment))
+                    {
+                        result.Add(b);
+                    }
+                }
+                else
+                {
+                    result.Add(0x1f); // ?
+                    result.Add(0x57); // W
+                    result.Add(0x31); // 1
+                    result.Add(0x36); // 6
+                    result.Add(0x2e); // ?
+
+                    foreach (var b in Encoding.GetEncoding(950).GetBytes(line))
+                    {
+                        result.Add(b);
+                    }
+                }
+                firstLine = false;
+            }
+            return result.ToArray();
+        }
+
+        private static bool OnlyAnsi(string line)
+        {
+            string latin = Utilities.AllLettersAndNumbers + " .!?/%:;=()#$'&\"";
+            foreach (char ch in line)
+            {
+                if (!latin.Contains(ch))
+                    return false;
+            }
+            return true;
         }
 
         public static string GetArabicString(byte[] buffer, ref int index)
