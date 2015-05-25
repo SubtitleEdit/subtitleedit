@@ -272,7 +272,8 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             insertDash = false;
                     }
 
-                    if (arr0.Length > 0 && arr1.Length > 1 && !(arr[0].EndsWith('.') || arr[0].EndsWith('!') || arr[0].EndsWith('?') || arr[0].EndsWith("</i>", StringComparison.Ordinal)) &&
+                    string tempArr0QuoteTrimmed = arr[0].TrimEnd('"');
+                    if (arr0.Length > 0 && arr1.Length > 1 && !(tempArr0QuoteTrimmed.EndsWith('.') || tempArr0QuoteTrimmed.EndsWith('!') || tempArr0QuoteTrimmed.EndsWith('?') || tempArr0QuoteTrimmed.EndsWith("</i>", StringComparison.Ordinal)) &&
                         !(new StripableText(arr[1]).Pre.Contains('-')))
                     {
                         insertDash = false;
