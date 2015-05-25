@@ -1,5 +1,34 @@
 ﻿Subtitle Edit Changelog
 
+3.4.7 BETA (xth July 2015)
+* NEW:
+   * Added (some) read support for PNS files
+* IMPROVED:
+   * PAC now supports write of Chinese
+   * Updated Czech translation - thx Trottel
+   * Updated Portuguese translation - thx moob
+   * Updated Hungarian translation - thx Jozo
+   * Updated Korean translation - thx domddol
+   * Updated Finnish translation - thx Teijo S.
+   * Updated Basque translation - thx Xabier
+   * Updated Romanian translation - thx Mircea
+   * Updated Brazil translation - thx Igor
+   * Updated Croatian translation - thx diomed
+   * Portuguese (Brazilian) spell check dictionary updated to v2.1.2 - thx ivandrofly
+   * Added drag'n'drop support in waveform batch generate - thx ThiefMaster
+   * Persistent find history - thx vmb
+* FIXED:
+   * Fixed multiple blank lines added after editing SSA/ASS properties
+   * Fix in "Change casing" regarding "don't" - thx Chamallow
+   * Fixed possible crash when importing vobsub in mkv files
+   * Fixed extra space after remove text for HI - thx ivandrofly/sbraz 
+   * Minor fix for "Unknown subtitle format 42" - thx Carles
+   * Minor fix for italic in auto-translate - thx Shahrukh
+   * Fixed bug in "Remove text for HI" regarding italic/interjections - thx Thunderbolt8
+   * Export to images: Some fixes for alignment + full frame
+   * Don't load video when canceling mkv import - thx Andreas
+   * Avoid crash in "Plugins" (due to culture specific decimal separator) - thx marb99
+
 3.4.6 (29th March 2015)
 * NEW:
    * Added new subtitle formats (Sami YouTube and more)
