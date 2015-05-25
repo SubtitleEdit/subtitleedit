@@ -1166,7 +1166,6 @@ namespace Test.Logic.Forms
         }
 
         [TestMethod]
-        [DeploymentItem("SubtitleEdit.exe")]
         public void RemoveTextSpeakerWithColonPlusLineWithHyphenAlsoRemoveInterjections()
         {
             RemoveTextForHI target = GetRemoveTextForHiLib();
@@ -1176,6 +1175,34 @@ namespace Test.Logic.Forms
             string text = "WOMAN: <i>Mr. Sportello?</i>" + Environment.NewLine + "- Mm-hm.";
             string expected = "<i>Mr. Sportello?</i>";
             string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextQuotesInFirstLine()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveTextBeforeColon = true;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            string text = "- \"My father doesn't want me to be him.\"" + Environment.NewLine + "EAMES: Exactly.";
+            string expected = "- \"My father doesn't want me to be him.\"" + Environment.NewLine + "- Exactly.";
+            string actual = target.RemoveTextFromHearImpaired(text);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void RemoveTextQuotesInFirstLine2()
+        {
+            RemoveTextForHI target = GetRemoveTextForHiLib();
+            target.Settings.RemoveIfAllUppercase = false;
+            target.Settings.RemoveInterjections = true;
+            target.Settings.OnlyIfInSeparateLine = false;
+            target.Settings.RemoveTextBeforeColonOnlyUppercase = false;
+            target.Settings.ColonSeparateLine = false;
+            string text = "- \"Ballpark.\"" + Environment.NewLine + "-Hmm.";
+            const string expected = "\"Ballpark.\"";
+            string actual = target.RemoveInterjections(text);
             Assert.AreEqual(expected, actual);
         }
 
