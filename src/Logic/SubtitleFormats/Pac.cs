@@ -1606,7 +1606,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
                 if (OnlyAnsi(line))
                 {
-                    foreach (var b in GetLatinBytes(GetEncoding(0), line, alignment))
+                    foreach (var b in GetLatinBytes(GetEncoding(CodePageLatin), line, alignment))
                     {
                         result.Add(b);
                     }
