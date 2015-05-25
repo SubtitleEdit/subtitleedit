@@ -1278,8 +1278,9 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "sam", "što", "öto", "äto", "ovo", "vas", "nije", "Šta", "ovde", "za");
             if (count > bestCount)
             {
-                int croatianCount = GetCount(text, "ubojstvo", "službeni", "nedjelja", "izražava", "svjetlo", "sigurno", "obitelj", "vijest", "svijet", "lijepa",
-                                                   "dijete", "cijeli", "smije", "smije", "ured", "otok", "opći", "križ", "htio", "gdje", "auto", "sat", "kći");
+                int croatianCount = GetCount(text, "sigurnošću", "ubojstvo", "službeni", "nedjelja", "izražava", "dogodilo", "svjetlo", "sigurno", "shvaćam",
+                                                   "obitelj", "vijest", "svijet", "sjećam", "lijepa", "dijete", "cijeli", "bijeli", "smije", "smije", "ured",
+                                                   "otok", "opći", "križ", "htio", "gdje", "auto", "sat", "kći");
                 int serbianCount = GetCount(text, "ispoljava", "porodica", "ponaosob", "bukvalno", "ubistvo", "ubediti", "suštini", "komitet", "dejstvo",
                                                   "uopšte", "štampa", "ostrvo", "naučni", "kiriju", "kćerke", "nauka", "ivica", "čovek", "lepa", "krst",
                                                   "kola", "hteo", "drug", "dete", "celi", "sme", "sem", "gde", "čas");
