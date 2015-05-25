@@ -1,6 +1,6 @@
 ﻿namespace Nikse.SubtitleEdit.Forms
 {
-    partial class PacEncoding
+    sealed partial class PacEncoding
     {
         /// <summary>
         /// Required designer variable.
@@ -47,7 +47,8 @@
             "Arabic",
             "Hebrew",
             "Thai",
-            "Cyrillic"});
+            "Cyrillic",
+            "Chinese Traditional (Big5)"});
             this.comboBoxCodePage.Location = new System.Drawing.Point(12, 37);
             this.comboBoxCodePage.Name = "comboBoxCodePage";
             this.comboBoxCodePage.Size = new System.Drawing.Size(203, 21);
