@@ -20,14 +20,17 @@
 * FIXED:
    * Fixed multiple blank lines added after editing SSA/ASS properties
    * Fix in "Change casing" regarding "don't" - thx Chamallow
+   * Fixed missing last blank "Sami" end tag - thx domddol 
    * Fixed possible crash when importing vobsub in mkv files
    * Fixed extra space after remove text for HI - thx ivandrofly/sbraz 
    * Minor fix for "Unknown subtitle format 42" - thx Carles
    * Minor fix for italic in auto-translate - thx Shahrukh
    * Fixed bug in "Remove text for HI" regarding italic/interjections - thx Thunderbolt8
+   * Fixed bug in "Remove text for HI" regarding quotes - thx Thunderbolt8
    * Export to images: Some fixes for alignment + full frame
    * Don't load video when canceling mkv import - thx Andreas
    * Avoid crash in "Plugins" (due to culture specific decimal separator) - thx marb99
+
 
 3.4.6 (29th March 2015)
 * NEW:
