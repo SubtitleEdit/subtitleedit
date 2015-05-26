@@ -599,6 +599,7 @@ namespace Nikse.SubtitleEdit.Logic
                 ShadowWidth = "Shadow width",
                 Transparency = "Alpha",
                 ImageFormat = "Image format",
+                FullFrameImage = "Full frame image",
                 ExportAllLines = "Export all lines...",
                 FontColor = "Font color",
                 FontFamily = "Font family",

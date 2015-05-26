@@ -2642,6 +2642,7 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
             labelSubtitleFontSize.Text = Configuration.Settings.Language.ExportPngXml.FontSize;
             labelResolution.Text = Configuration.Settings.Language.ExportPngXml.VideoResolution;
             buttonColor.Text = Configuration.Settings.Language.ExportPngXml.FontColor;
+            checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             checkBoxSimpleRender.Text = Configuration.Settings.Language.ExportPngXml.SimpleRendering;
             checkBoxTransAntiAliase.Text = Configuration.Settings.Language.ExportPngXml.AntiAliasingWithTransparency;
 
@@ -2664,13 +2665,12 @@ $DROP=[DROPVALUE]" + Environment.NewLine + Environment.NewLine +
 
             comboBox3D.Left = label3D.Left + label3D.Width + 3;
 
-            checkBoxBold.Text = Configuration.Settings.Language.General.Bold;
             buttonBorderColor.Text = Configuration.Settings.Language.ExportPngXml.BorderColor;
-
             //labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderWidth;
             labelBorderWidth.Text = Configuration.Settings.Language.ExportPngXml.BorderStyle;
-
             labelImageFormat.Text = Configuration.Settings.Language.ExportPngXml.ImageFormat;
+            checkBoxFullFrameImage.Text = Configuration.Settings.Language.ExportPngXml.FullFrameImage;
+
             buttonExport.Text = Configuration.Settings.Language.ExportPngXml.ExportAllLines;
             buttonCancel.Text = Configuration.Settings.Language.General.Ok;
             labelLanguage.Text = Configuration.Settings.Language.ChooseLanguage.Language;
