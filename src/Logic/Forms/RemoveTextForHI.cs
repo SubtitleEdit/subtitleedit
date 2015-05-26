@@ -55,10 +55,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
                             s = RemoveStartEndTags(s);
                             newText = newText.Substring(0, i + 1) + pre + " " + s;
                             newText = newText.Replace("<i></i>", string.Empty);
-                            newText = newText.Replace("<i> </i>", " ");
-                            newText = newText.Replace("  ", " ");
-                            newText = newText.Replace("  ", " ");
-                            newText = newText.Replace(" " + Environment.NewLine, Environment.NewLine);
+                            newText = newText.Replace("<i> </i>", " ").FixExtraSpaces();
                         }
                     }
                 }
@@ -1039,7 +1036,7 @@ namespace Nikse.SubtitleEdit.Logic.Forms
             var sb = new StringBuilder();
             foreach (var line in lines)
             {
-                var lineNoHtml = HtmlUtil.RemoveHtmlTags(line);
+                var lineNoHtml = HtmlUtil.RemoveHtmlTags(line, true);
                 var tmp = lineNoHtml.TrimEnd('.', '!', '?', ':').Trim();
                 if (lineNoHtml == lineNoHtml.ToUpper())
                 {
