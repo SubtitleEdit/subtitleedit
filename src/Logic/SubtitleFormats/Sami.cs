@@ -179,7 +179,7 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
                 string currentClass = languageTag;
                 if (useExtra && !string.IsNullOrEmpty(p.Extra))
                     currentClass = p.Extra;
-                if (next == null || Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
+                if (next != null && Math.Abs(next.StartTime.TotalMilliseconds - p.EndTime.TotalMilliseconds) < 1)
                     sb.AppendLine(string.Format(paragraphWriteFormatOpen, p.StartTime.TotalMilliseconds, text, currentClass));
                 else
                     sb.AppendLine(string.Format(paragraphWriteFormat, p.StartTime.TotalMilliseconds, p.EndTime.TotalMilliseconds, text, currentClass));
