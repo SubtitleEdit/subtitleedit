@@ -423,6 +423,7 @@ Note: Do check free disk space.</WaveFileMalformed>
     <ShadowWidth>Shadow width</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Image format</ImageFormat>
+    <FullFrameImage>Full frame image</FullFrameImage>
     <SimpleRendering>Simple rendering</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing with transparency</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>

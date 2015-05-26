@@ -1077,6 +1077,9 @@ namespace Nikse.SubtitleEdit.Logic
                 case "ExportPngXml/ImageFormat":
                     language.ExportPngXml.ImageFormat = reader.Value;
                     break;
+                case "ExportPngXml/FullFrameImage":
+                    language.ExportPngXml.FullFrameImage = reader.Value;
+                    break;
                 case "ExportPngXml/SimpleRendering":
                     language.ExportPngXml.SimpleRendering = reader.Value;
                     break;

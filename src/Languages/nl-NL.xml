@@ -423,6 +423,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <ShadowWidth>Schaduwbreedte</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Beeldformaat</ImageFormat>
+    <FullFrameImage>Volledig beeld</FullFrameImage>
     <SimpleRendering>Eenvoudige weergave</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing met transparantie</AntiAliasingWithTransparency>
     <Text3D>3D teksten</Text3D>
@@ -437,7 +438,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <Right>Rechts</Right>
     <Center>Midden</Center>
     <BottomMargin>Ondermarge</BottomMargin>
-    <LeftRightMargin>Linker- en rechtermarge</LeftRightMargin>
+    <LeftRightMargin>Zĳmarge</LeftRightMargin>
     <SaveBluRraySupAs>Blu-ray sup-bestand kiezen</SaveBluRraySupAs>
     <SaveVobSubAs>VobSub-bestand kiezen</SaveVobSubAs>
     <SaveFabImageScriptAs>FAB image script-bestand kiezen</SaveFabImageScriptAs>
@@ -451,7 +452,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <BoxSingleLine>Enkellĳnig kader</BoxSingleLine>
     <BoxMultiLine>Meerlĳnig kader</BoxMultiLine>
     <Forced>Ingebakken</Forced>
-    <ChooseBackgroundColor>Kies achtergrondkleur</ChooseBackgroundColor>
+    <ChooseBackgroundColor>Achtergrondkleur kiezen</ChooseBackgroundColor>
     <SaveImageAs>Afbeelding opslaan als...</SaveImageAs>
   </ExportPngXml>
   <ExportText>
@@ -636,7 +637,7 @@ Is er voldoende beschikbare ruimte op de harde schĳf?</WaveFileMalformed>
     <DescriptionLine1>Download Tesseract OCR-woordenboeken</DescriptionLine1>
     <DownloadFailed>Download mislukt!</DownloadFailed>
     <GetDictionariesHere>Haal woordenboeken hier:</GetDictionariesHere>
-    <ChooseLanguageAndClickDownload>Kies uw taal en klik Download</ChooseLanguageAndClickDownload>
+    <ChooseLanguageAndClickDownload>Kies uw taal en klik op Download</ChooseLanguageAndClickDownload>
     <OpenDictionariesFolder>Open woordenboekenmap</OpenDictionariesFolder>
     <Download>Download</Download>
     <XDownloaded>{0} is gedownload en geïnstalleerd</XDownloaded>
