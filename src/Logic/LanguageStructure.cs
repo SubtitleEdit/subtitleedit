@@ -475,6 +475,7 @@
             public string ShadowWidth { get; set; }
             public string Transparency { get; set; }
             public string ImageFormat { get; set; }
+            public string FullFrameImage { get; set; }
             public string SimpleRendering { get; set; }
             public string AntiAliasingWithTransparency { get; set; }
             public string Text3D { get; set; }
