@@ -787,7 +787,6 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
             {
                 _codePage = value;
             }
-
         }
 
         public override string Extension
