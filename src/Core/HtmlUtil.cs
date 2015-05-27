@@ -354,31 +354,21 @@ namespace Nikse.SubtitleEdit.Core
             return encoded.ToString();
         }
 
-        public static string RemoveHtmlTags(string s)
+        public static string RemoveHtmlTags(string s, bool alsoSsaTags = false)
         {
-            if (s == null)
-                return null;
+            if (s == null || s.Length < 3)
+                return s;
 
-            if (s.Length < 3 || s.IndexOf('<') < 0)
+            if (alsoSsaTags)
+                s = Utilities.RemoveSsaTags(s);
+
+            if (s.IndexOf('<') < 0)
                 return s;
 
             if (s.IndexOf("< ", StringComparison.Ordinal) >= 0)
                 s = Utilities.FixInvalidItalicTags(s);
 
             return RemoveOpenCloseTags(s, TagItalic, TagBold, TagUnderline, TagParagraph, TagFont, TagCyrillicI);
-        }
-
-        public static string RemoveHtmlTags(string s, bool alsoSsaTags)
-        {
-            if (s == null)
-                return null;
-
-            s = RemoveHtmlTags(s);
-
-            if (alsoSsaTags)
-                s = Utilities.RemoveSsaTags(s);
-
-            return s;
         }
 
         public static bool IsUrl(string text)
