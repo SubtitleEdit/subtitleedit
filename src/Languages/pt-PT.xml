@@ -113,12 +113,24 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>A gerar o espectrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>A extrair o áudio: {0:0.0} segundos</ExtractingSeconds>
     <ExtractingMinutes>A extrair o áudio: {0}.{1:00} minutos</ExtractingMinutes>
+    <WaveFileNotFound>Não é possível encontrar o ficheiro wav que foi extraído!
+É necessário o VLC media player 1.1.x ({0}-bit) ou superior para executar esta operação.
+
+Linha de comando: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} não foi possível extrair os dados do áudio para o ficheiro wave!
+
+Linha de comando: {1} {2}
+
+Nota: Verifique o espaço em disco.</WaveFileMalformed>
+    <LowDiskSpace>INSUFICIENTE ESPAÇO EM DISCO!</LowDiskSpace>
+    <FreeDiskSpace>{0} livre</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Gerar pacote de dados de forma de onda</Title>
     <ExtractingAudio>A extrair o áudio...</ExtractingAudio>
     <Calculating>A calcular...</Calculating>
     <Done>Concluído</Done>
+    <Error>Erro</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Ajustar duração</Title>
@@ -406,8 +418,8 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <BorderColor>Cor da borda</BorderColor>
     <BorderWidth>Tamanho da borda</BorderWidth>
     <BorderStyle>Estilo da borda</BorderStyle>
-    <BorderStyleOneBox>Caixa opaca</BorderStyleOneBox>
-    <BorderStyleBoxForEachLine>Tudo em Caixa opaca</BorderStyleBoxForEachLine>
+    <BorderStyleOneBox>Caixa por linha</BorderStyleOneBox>
+    <BorderStyleBoxForEachLine>Caixa por diálogo</BorderStyleBoxForEachLine>
     <BorderStyleNormalWidthX>Normal, largura={0}</BorderStyleNormalWidthX>
     <ShadowColor>Cor da sombra</ShadowColor>
     <ShadowWidth>Largura da sombra</ShadowWidth>
@@ -1451,7 +1463,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <DateAndTime>Data e hora</DateAndTime>
     <FileName>Nome do ficheiro</FileName>
     <Extension>Extensão</Extension>
-    <NoBackedUpFilesFound>Não foram encontrados cópias de segurança!</NoBackedUpFilesFound>
+    <NoBackedUpFilesFound>Não foram encontradas cópias de segurança!</NoBackedUpFilesFound>
   </RestoreAutoBackup>
   <SeekSilence>
     <Title>Localizar silêncio no áudio</Title>
@@ -1564,8 +1576,8 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformShowGridLines>Mostrar linhas na grelha</WaveformShowGridLines>
     <ReverseMouseWheelScrollDirection>Inverter direcção da roda do rato</ReverseMouseWheelScrollDirection>
     <WaveformAllowOverlap>Permitir sobreposição (ao mover / redimensionar)</WaveformAllowOverlap>
-    <WaveformFocusMouseEnter>Evidenciar na entrada do cursor do rato</WaveformFocusMouseEnter>
-    <WaveformListViewFocusMouseEnter>Também evidenciar a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
+    <WaveformFocusMouseEnter>Destacar a entrada do cursor do rato</WaveformFocusMouseEnter>
+    <WaveformListViewFocusMouseEnter>Destacar também a lista de visualização na entrada do cursor do rato</WaveformListViewFocusMouseEnter>
     <WaveformBorderHitMs1>O acerto da marca da borda deve estar dentro</WaveformBorderHitMs1>
     <WaveformBorderHitMs2>milissegundos</WaveformBorderHitMs2>
     <WaveformColor>Cor</WaveformColor>
@@ -1597,7 +1609,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <AddWord>Adicionar palavra</AddWord>
     <Remove>Remover</Remove>
     <AddPair>Adicionar par</AddPair>
-    <UserWordList>Lista de palavras do usuário</UserWordList>
+    <UserWordList>Lista de palavras do utilizador</UserWordList>
     <OcrFixList>Lista de correcções OCR</OcrFixList>
     <Location>Localização</Location>
     <UseOnlineNamesEtc>Usar lista de nomes XML online</UseOnlineNamesEtc>
@@ -1664,7 +1676,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <WaveformAddTextHere>Adicionar texto aqui (para nova selecção)</WaveformAddTextHere>
     <WaveformPlayNewSelection>Reproduzir a nova selecção</WaveformPlayNewSelection>
     <WaveformPlayFirstSelectedSubtitle>Reproduzir a partir da primeira legenda selecionada</WaveformPlayFirstSelectedSubtitle>
-    <WaveformFocusListView>Evidenciar a lista de visualização</WaveformFocusListView>
+    <WaveformFocusListView>Destacar a lista de visualização</WaveformFocusListView>
     <GoBack1Frame>Um fotograma para atrás</GoBack1Frame>
     <GoForward1Frame>Um fotograma para a frente</GoForward1Frame>
     <GoBack100Milliseconds>100 ms atrás</GoBack100Milliseconds>
@@ -1702,7 +1714,7 @@ editar o mesmo ficheiro de legenda (colaboração)</Information>
     <ListViewColumnDelete>Coluna, eliminar texto</ListViewColumnDelete>
     <ListViewColumnInsert>Coluna, inserir texto</ListViewColumnInsert>
     <ListViewColumnPaste>Coluna, colar</ListViewColumnPaste>
-    <ListViewFocusWaveform>Evidenciar forma de onda/espectrograma</ListViewFocusWaveform>
+    <ListViewFocusWaveform>Destacar a forma de onda/espectrograma</ListViewFocusWaveform>
     <ListViewGoToNextError>Ir para o próximo erro</ListViewGoToNextError>
     <ShowBeamer>Iniciar a legenda em ecrã inteiro</ShowBeamer>
     <MainTextBoxMoveLastWordDown>Mover a última palavra para baixo para a próxima linha de legendas</MainTextBoxMoveLastWordDown>
@@ -2056,7 +2068,7 @@ Manter as alterações?</KeepChangesMessage>
     <ZoomOut>Diminuir</ZoomOut>
     <AddParagraphHere>Adicionar texto aqui</AddParagraphHere>
     <AddParagraphHereAndPasteText>Adicionar texto da área de tranferência aqui</AddParagraphHereAndPasteText>
-    <FocusTextBox>Evidenciar a caixa de texto</FocusTextBox>
+    <FocusTextBox>Destacar a caixa de texto</FocusTextBox>
     <DeleteParagraph>Eliminar texto</DeleteParagraph>
     <Split>Dividir</Split>
     <SplitAtCursor>Dividir na posição do cursor</SplitAtCursor>
