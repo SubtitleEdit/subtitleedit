@@ -37,18 +37,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(subtitleListView1);
             subtitleListView1.AutoSizeAllColumns(this);
             buttonFindTextEnd.Text = Configuration.Settings.Language.VisualSync.FindText;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonSetSyncPoint.Text, Font);
-            if (textSize.Height > buttonSetSyncPoint.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonSetSyncPoint);
         }
 
         public TimeSpan SynchronizationPoint

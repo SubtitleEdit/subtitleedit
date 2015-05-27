@@ -20,21 +20,11 @@ namespace Nikse.SubtitleEdit.Forms
 
             this.Text = title;
             labelText.Text = text;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
+
             int width = Math.Max(checkBoxDoNotDisplayAgain.Width, labelText.Width);
             this.Width = width + buttonOK.Width + 75;
             this.Height = labelText.Top + labelText.Height + buttonOK.Height + titleBarHeight + 40;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void SpellCheckCompleted_KeyDown(object sender, KeyEventArgs e)

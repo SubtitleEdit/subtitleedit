@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             buttonReplacesSelectAll.Text = Configuration.Settings.Language.FixCommonErrors.SelectAll;
             buttonReplacesInverseSelection.Text = Configuration.Settings.Language.FixCommonErrors.InverseSelection;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
             splitContainer1.Panel1MinSize = 200;
             splitContainer1.Panel2MinSize = 200;
 
@@ -89,17 +89,6 @@ namespace Nikse.SubtitleEdit.Forms
 
             radioButtonCaseSensitive.Left = radioButtonNormal.Left + radioButtonNormal.Width + 40;
             radioButtonRegEx.Left = radioButtonCaseSensitive.Left + radioButtonCaseSensitive.Width + 40;
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         public void Initialize(Subtitle subtitle)

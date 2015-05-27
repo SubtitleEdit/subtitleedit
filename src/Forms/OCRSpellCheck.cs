@@ -57,18 +57,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonAddToNames.Text = Configuration.Settings.Language.SpellCheck.AddToNamesAndIgnoreList;
             buttonChangeAllWholeText.Text = Configuration.Settings.Language.SpellCheck.ChangeAll;
             buttonGoogleIt.Text = Configuration.Settings.Language.Main.VideoControls.GoogleIt;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonAddToNames.Text, this.Font);
-            if (textSize.Height > buttonAddToNames.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonAddToNames);
         }
 
         private void ButtonAbortClick(object sender, EventArgs e)

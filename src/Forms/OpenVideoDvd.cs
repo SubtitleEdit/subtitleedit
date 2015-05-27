@@ -22,22 +22,11 @@ namespace Nikse.SubtitleEdit.Forms
             labelChooseDrive.Text = Configuration.Settings.Language.OpenVideoDvd.ChooseDrive;
             labelChooseFolder.Text = Configuration.Settings.Language.OpenVideoDvd.ChooseFolder;
             PanelDrive.Enabled = false;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
             radioButtonDisc_CheckedChanged(null, null);
 
             PanelFolder.Left = PanelDrive.Left;
             PanelFolder.Top = PanelDrive.Top;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void buttonCancel_Click(object sender, EventArgs e)
