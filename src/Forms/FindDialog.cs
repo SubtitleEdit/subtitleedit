@@ -22,21 +22,11 @@ namespace Nikse.SubtitleEdit.Forms
             radioButtonCaseSensitive.Text = Configuration.Settings.Language.FindDialog.CaseSensitive;
             radioButtonRegEx.Text = Configuration.Settings.Language.FindDialog.RegularExpression;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
 
-        private void FixLargeFonts()
-        {
-            if (radioButtonRegEx.Left + radioButtonRegEx.Width + 5 > Width)
-                Width = radioButtonRegEx.Left + radioButtonRegEx.Width + 5;
+            if (Width < radioButtonRegEx.Right + 5)
+                Width = radioButtonRegEx.Right + 5;
 
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private FindType GetFindType()

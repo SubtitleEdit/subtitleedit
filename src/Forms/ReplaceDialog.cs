@@ -29,21 +29,10 @@ namespace Nikse.SubtitleEdit.Forms
             buttonReplace.Text = Configuration.Settings.Language.ReplaceDialog.Replace;
             buttonReplaceAll.Text = Configuration.Settings.Language.ReplaceDialog.ReplaceAll;
 
-            FixLargeFonts();
-        }
+            if (Width < radioButtonRegEx.Right + 5)
+                Width = radioButtonRegEx.Right + 5;
 
-        private void FixLargeFonts()
-        {
-            if (radioButtonRegEx.Left + radioButtonRegEx.Width + 5 > Width)
-                Width = radioButtonRegEx.Left + radioButtonRegEx.Width + 5;
-
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonReplace.Text, this.Font);
-            if (textSize.Height > buttonReplace.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonReplace);
         }
 
         public bool ReplaceAll { get; set; }

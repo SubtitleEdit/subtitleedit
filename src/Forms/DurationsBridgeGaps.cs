@@ -17,7 +17,7 @@ namespace Nikse.SubtitleEdit.Forms
         public DurationsBridgeGaps(Subtitle subtitle)
         {
             InitializeComponent();
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             Text = Configuration.Settings.Language.DurationsBridgeGaps.Title;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
@@ -50,17 +50,6 @@ namespace Nikse.SubtitleEdit.Forms
                 numericUpDownMinMsBetweenLines.Value = Configuration.Settings.General.MinimumMillisecondsBetweenLines;
 
             GeneratePreview();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
