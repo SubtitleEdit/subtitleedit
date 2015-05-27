@@ -2671,12 +2671,12 @@ namespace Nikse.SubtitleEdit.Forms
                 Paragraph p = Subtitle.Paragraphs[i];
                 string text = p.Text;
                 string oldText = text;
-                text = text.Replace("Ý", "İ");
-                text = text.Replace("Ð", "Ğ");
-                text = text.Replace("Þ", "Ş");
-                text = text.Replace("ý", "ı");
-                text = text.Replace("ð", "ğ");
-                text = text.Replace("þ", "ş");
+                text = text.Replace('Ý', 'İ');
+                text = text.Replace('Ð', 'Ğ');
+                text = text.Replace('Þ', 'Ş');
+                text = text.Replace('ý', 'ı');
+                text = text.Replace('ð', 'ğ');
+                text = text.Replace('þ', 'ş');
                 if (oldText != text && AllowFix(p, fixAction))
                 {
                     p.Text = text;
