@@ -45,9 +45,13 @@
             this.labelLineContinuationBeginEnd = new System.Windows.Forms.Label();
             this.comboBoxLineContinuationEnd = new System.Windows.Forms.ComboBox();
             this.SubtitleListview1 = new Nikse.SubtitleEdit.Controls.SubtitleListView();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxNarrator = new System.Windows.Forms.CheckBox();
+            this.checkBoxDialogue = new System.Windows.Forms.CheckBox();
             this.groupBoxLinesFound.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSingleLineMaxCharacters)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineMaxCharacters)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBoxLinesFound
@@ -57,7 +61,7 @@
             this.groupBoxLinesFound.Controls.Add(this.listViewFixes);
             this.groupBoxLinesFound.Location = new System.Drawing.Point(12, 64);
             this.groupBoxLinesFound.Name = "groupBoxLinesFound";
-            this.groupBoxLinesFound.Size = new System.Drawing.Size(750, 200);
+            this.groupBoxLinesFound.Size = new System.Drawing.Size(845, 200);
             this.groupBoxLinesFound.TabIndex = 4;
             this.groupBoxLinesFound.TabStop = false;
             this.groupBoxLinesFound.Text = "Lines that will be split";
@@ -74,7 +78,7 @@
             this.listViewFixes.FullRowSelect = true;
             this.listViewFixes.Location = new System.Drawing.Point(6, 23);
             this.listViewFixes.Name = "listViewFixes";
-            this.listViewFixes.Size = new System.Drawing.Size(738, 171);
+            this.listViewFixes.Size = new System.Drawing.Size(833, 171);
             this.listViewFixes.TabIndex = 0;
             this.listViewFixes.UseCompatibleStateImageBehavior = false;
             this.listViewFixes.View = System.Windows.Forms.View.Details;
@@ -97,7 +101,7 @@
             // 
             // numericUpDownSingleLineMaxCharacters
             // 
-            this.numericUpDownSingleLineMaxCharacters.Location = new System.Drawing.Point(28, 33);
+            this.numericUpDownSingleLineMaxCharacters.Location = new System.Drawing.Point(28, 34);
             this.numericUpDownSingleLineMaxCharacters.Maximum = new decimal(new int[] {
             200,
             0,
@@ -121,7 +125,7 @@
             // labelLineMaxLength
             // 
             this.labelLineMaxLength.AutoSize = true;
-            this.labelLineMaxLength.Location = new System.Drawing.Point(240, 16);
+            this.labelLineMaxLength.Location = new System.Drawing.Point(222, 16);
             this.labelLineMaxLength.Name = "labelLineMaxLength";
             this.labelLineMaxLength.Size = new System.Drawing.Size(105, 13);
             this.labelLineMaxLength.TabIndex = 43;
@@ -140,7 +144,7 @@
             // 
             this.buttonOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonOK.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonOK.Location = new System.Drawing.Point(606, 581);
+            this.buttonOK.Location = new System.Drawing.Point(701, 581);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 21);
             this.buttonOK.TabIndex = 6;
@@ -153,7 +157,7 @@
             this.buttonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.ImeMode = System.Windows.Forms.ImeMode.NoControl;
-            this.buttonCancel.Location = new System.Drawing.Point(687, 581);
+            this.buttonCancel.Location = new System.Drawing.Point(782, 581);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 21);
             this.buttonCancel.TabIndex = 7;
@@ -163,7 +167,7 @@
             // 
             // numericUpDownLineMaxCharacters
             // 
-            this.numericUpDownLineMaxCharacters.Location = new System.Drawing.Point(243, 33);
+            this.numericUpDownLineMaxCharacters.Location = new System.Drawing.Point(225, 34);
             this.numericUpDownLineMaxCharacters.Maximum = new decimal(new int[] {
             200,
             0,
@@ -215,7 +219,7 @@
             "",
             "- ",
             "..."});
-            this.comboBoxLineContinuationBegin.Location = new System.Drawing.Point(478, 33);
+            this.comboBoxLineContinuationBegin.Location = new System.Drawing.Point(382, 33);
             this.comboBoxLineContinuationBegin.Name = "comboBoxLineContinuationBegin";
             this.comboBoxLineContinuationBegin.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationBegin.TabIndex = 2;
@@ -224,7 +228,7 @@
             // labelLineContinuationBeginEnd
             // 
             this.labelLineContinuationBeginEnd.AutoSize = true;
-            this.labelLineContinuationBeginEnd.Location = new System.Drawing.Point(475, 16);
+            this.labelLineContinuationBeginEnd.Location = new System.Drawing.Point(379, 16);
             this.labelLineContinuationBeginEnd.Name = "labelLineContinuationBeginEnd";
             this.labelLineContinuationBeginEnd.Size = new System.Drawing.Size(173, 13);
             this.labelLineContinuationBeginEnd.TabIndex = 48;
@@ -237,7 +241,7 @@
             "",
             " -",
             "..."});
-            this.comboBoxLineContinuationEnd.Location = new System.Drawing.Point(564, 33);
+            this.comboBoxLineContinuationEnd.Location = new System.Drawing.Point(468, 33);
             this.comboBoxLineContinuationEnd.Name = "comboBoxLineContinuationEnd";
             this.comboBoxLineContinuationEnd.Size = new System.Drawing.Size(80, 21);
             this.comboBoxLineContinuationEnd.TabIndex = 3;
@@ -258,7 +262,7 @@
             this.SubtitleListview1.Location = new System.Drawing.Point(12, 270);
             this.SubtitleListview1.Name = "SubtitleListview1";
             this.SubtitleListview1.OwnerDraw = true;
-            this.SubtitleListview1.Size = new System.Drawing.Size(750, 301);
+            this.SubtitleListview1.Size = new System.Drawing.Size(845, 301);
             this.SubtitleListview1.SubtitleFontBold = false;
             this.SubtitleListview1.SubtitleFontName = "Tahoma";
             this.SubtitleListview1.SubtitleFontSize = 8;
@@ -267,11 +271,45 @@
             this.SubtitleListview1.UseSyntaxColoring = true;
             this.SubtitleListview1.View = System.Windows.Forms.View.Details;
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxNarrator);
+            this.groupBox1.Controls.Add(this.checkBoxDialogue);
+            this.groupBox1.Location = new System.Drawing.Point(582, 16);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(269, 42);
+            this.groupBox1.TabIndex = 49;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Ignore:";
+            // 
+            // checkBoxNarrator
+            // 
+            this.checkBoxNarrator.AutoSize = true;
+            this.checkBoxNarrator.Location = new System.Drawing.Point(119, 17);
+            this.checkBoxNarrator.Name = "checkBoxNarrator";
+            this.checkBoxNarrator.Size = new System.Drawing.Size(64, 17);
+            this.checkBoxNarrator.TabIndex = 1;
+            this.checkBoxNarrator.Text = "Narrator";
+            this.checkBoxNarrator.UseVisualStyleBackColor = true;
+            this.checkBoxNarrator.Click += new System.EventHandler(this.checkBoxNarrator_Click);
+            // 
+            // checkBoxDialogue
+            // 
+            this.checkBoxDialogue.AutoSize = true;
+            this.checkBoxDialogue.Location = new System.Drawing.Point(19, 17);
+            this.checkBoxDialogue.Name = "checkBoxDialogue";
+            this.checkBoxDialogue.Size = new System.Drawing.Size(68, 17);
+            this.checkBoxDialogue.TabIndex = 0;
+            this.checkBoxDialogue.Text = "Dialogue";
+            this.checkBoxDialogue.UseVisualStyleBackColor = true;
+            this.checkBoxDialogue.Click += new System.EventHandler(this.checkBoxNarrator_Click);
+            // 
             // SplitLongLines
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(774, 614);
+            this.ClientSize = new System.Drawing.Size(869, 614);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.comboBoxLineContinuationEnd);
             this.Controls.Add(this.labelLineContinuationBeginEnd);
             this.Controls.Add(this.comboBoxLineContinuationBegin);
@@ -296,6 +334,8 @@
             this.groupBoxLinesFound.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownSingleLineMaxCharacters)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLineMaxCharacters)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -320,5 +360,8 @@
         private System.Windows.Forms.ComboBox comboBoxLineContinuationBegin;
         private System.Windows.Forms.Label labelLineContinuationBeginEnd;
         private System.Windows.Forms.ComboBox comboBoxLineContinuationEnd;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxDialogue;
+        private System.Windows.Forms.CheckBox checkBoxNarrator;
     }
 }

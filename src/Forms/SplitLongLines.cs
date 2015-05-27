@@ -43,6 +43,8 @@ namespace Nikse.SubtitleEdit.Forms
             labelSingleLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.SingleLineMaximumLength;
             labelLineMaxLength.Text = Configuration.Settings.Language.SplitLongLines.LineMaximumLength;
             labelLineContinuationBeginEnd.Text = Configuration.Settings.Language.SplitLongLines.LineContinuationBeginEndStrings;
+            checkBoxNarrator.Text = Configuration.Settings.Language.SplitLongLines.Narrator;
+            checkBoxDialogue.Text = Configuration.Settings.Language.SplitLongLines.Dialogue;
 
             listViewFixes.Columns[0].Text = Configuration.Settings.Language.General.Apply;
             listViewFixes.Columns[1].Text = Configuration.Settings.Language.General.LineNumber;
@@ -157,7 +159,7 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 bool added = false;
                 var p = subtitle.GetParagraphOrDefault(i);
-                if (p != null && p.Text != null)
+                if (p != null && p.Text != null && !CheckConstraints(p.Text))
                 {
                     string oldText = HtmlUtil.RemoveHtmlTags(p.Text);
                     if (SplitLongLinesHelper.QualifiesForSplit(p.Text, singleLineMaxCharacters, totalLineMaxCharacters) && IsFixAllowed(p))
@@ -307,7 +309,34 @@ namespace Nikse.SubtitleEdit.Forms
             return splittedSubtitle;
         }
 
+        private bool CheckConstraints(string text)
+        {
+            if (text == null || text.Trim().Length == 0)
+                return false;
+            var noTagText = HtmlUtil.RemoveHtmlTags(text).Trim();
+            if (checkBoxDialogue.Checked && noTagText.Contains(Environment.NewLine))
+            {
+                var firstLine = noTagText.Substring(0, noTagText.IndexOf(Environment.NewLine)).TrimEnd();
+                if (noTagText[0] == '-' && noTagText.Contains(Environment.NewLine + "-", StringComparison.Ordinal) && "?.!)]".Contains(firstLine[firstLine.Length - 1]))
+                    return true;
+            }
+            if (checkBoxNarrator.Checked && noTagText.IndexOf(':') > 0)
+            {
+                var idx = noTagText.IndexOf(':');
+                if (idx + 1 < noTagText.Length && !Utilities.IsBetweenNumbers(noTagText, idx))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void NumericUpDownMaxCharactersValueChanged(object sender, EventArgs e)
+        {
+            DoReload();
+        }
+
+        private void DoReload()
         {
             Cursor = Cursors.WaitCursor;
             GeneratePreview(true);
@@ -367,5 +396,9 @@ namespace Nikse.SubtitleEdit.Forms
             Cursor = Cursors.Default;
         }
 
+        private void checkBoxNarrator_Click(object sender, EventArgs e)
+        {
+            DoReload();
+        }
     }
 }

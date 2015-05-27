@@ -1800,6 +1800,8 @@ can edit in same subtitle file (collaboration)</Information>
     <SingleLineMaximumLength>Single line maximum length</SingleLineMaximumLength>
     <LineMaximumLength>Line maximum length</LineMaximumLength>
     <LineContinuationBeginEndStrings>Line continuation begin/end strings</LineContinuationBeginEndStrings>
+    <Narrator>Narrator</Narrator>
+    <Dialogue>Dialogue</Dialogue>
     <NumberOfSplits>Number of splits: {0}</NumberOfSplits>
     <LongestSingleLineIsXAtY>Longest single line length is {0} at line {1}</LongestSingleLineIsXAtY>
     <LongestLineIsXAtY>Longest total line length is {0} at line {1}</LongestLineIsXAtY>

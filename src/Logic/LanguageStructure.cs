@@ -1975,6 +1975,8 @@
             public string SingleLineMaximumLength { get; set; }
             public string LineMaximumLength { get; set; }
             public string LineContinuationBeginEndStrings { get; set; }
+            public string Narrator { get; set; }
+            public string Dialogue { get; set; }
             public string NumberOfSplits { get; set; }
             public string LongestSingleLineIsXAtY { get; set; }
             public string LongestLineIsXAtY { get; set; }
