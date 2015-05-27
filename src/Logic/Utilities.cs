@@ -2059,12 +2059,12 @@ namespace Nikse.SubtitleEdit.Logic
         public static string GetRegExGroup(string regEx)
         {
             int start = regEx.IndexOf("(?<", StringComparison.Ordinal);
-            if (start >= 0 && regEx.IndexOf(')') > start)
+            if (start >= 0 && regEx.IndexOf(')', start + 3) > start)
             {
+                start += 3;
                 int end = regEx.IndexOf('>', start);
                 if (end > start)
                 {
-                    start += 3;
                     return regEx.Substring(start, end - start);
                 }
             }
@@ -2120,9 +2120,10 @@ namespace Nikse.SubtitleEdit.Logic
             while (index >= 0)
             {
                 count++;
-                if ((index + 1) == text.Length)
+                index++;
+                if (index == text.Length)
                     return count;
-                index = text.IndexOf(tag, index + 1);
+                index = text.IndexOf(tag, index);
             }
             return count;
         }

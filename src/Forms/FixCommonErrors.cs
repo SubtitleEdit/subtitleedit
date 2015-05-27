@@ -1130,9 +1130,10 @@ namespace Nikse.SubtitleEdit.Forms
                 bool tooLong = false;
                 foreach (string line in lines)
                 {
-                    if (HtmlUtil.RemoveHtmlTags(line).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
+                    if (HtmlUtil.RemoveHtmlTags(line, true).Length > Configuration.Settings.General.SubtitleLineMaximumLength)
                     {
                         tooLong = true;
+                        break;
                     }
                 }
                 if (AllowFix(p, fixAction) && tooLong)
@@ -1217,7 +1218,7 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     var oldText = p.Text;
                     var text = Utilities.RemoveUnneededSpaces(p.Text, Language);
-                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t')) < ((Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t'))))
+                    if (text.Length != oldText.Length && (Utilities.CountTagInText(text, ' ') + Utilities.CountTagInText(text, '\t')) < (Utilities.CountTagInText(oldText, ' ') + Utilities.CountTagInText(oldText, '\u00A0') + Utilities.CountTagInText(oldText, '\t')))
                     {
                         doubleSpaces++;
                         p.Text = text;
