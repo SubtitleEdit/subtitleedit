@@ -271,23 +271,18 @@ namespace Nikse.SubtitleEdit.Forms
 
         protected override void OnLoad(EventArgs e)
         {
-            Graphics g = this.CreateGraphics();
-            try
+            using (var graphics = CreateGraphics())
             {
                 // avoid weird looking layout for high DPI
-                if (g.DpiX > 120)
+                if (graphics.DpiX > 120)
                 {
-                    Font = new Font(Font.FontFamily, (float)(Font.Size * g.DpiX / 96.0));
+                    Font = new Font(Font.FontFamily, (float)(Font.Size * graphics.DpiX / 96.0));
 
-                    numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width + 15;
-                    numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
+                    numericUpDownDuration.Left = timeUpDownStartTime.Right + 15;
+                    numericUpDownDuration.Width += 5;
                     labelDuration.Left = numericUpDownDuration.Left - 3;
                     labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
                 }
-            }
-            finally
-            {
-                g.Dispose();
             }
 
             base.OnLoad(e);
@@ -12946,60 +12941,62 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonPlayPrevious.Text, Font);
-            if (textSize.Height > buttonPlayPrevious.Height - 4)
+            using (var graphics = CreateGraphics())
             {
-                int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                var textSize = graphics.MeasureString(buttonPlayPrevious.Text, Font);
+                if (textSize.Height > buttonPlayPrevious.Height - 4)
+                {
+                    int newButtonHeight = 22; //(int)(textSize.Height + 7 + 0.5);
+                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
 
-                // List view
-                SubtitleListview1.InitializeTimestampColumnWidths(this);
-                const int adjustUp = 8;
-                SubtitleListview1.Height = SubtitleListview1.Height - adjustUp;
-                groupBoxEdit.Top = groupBoxEdit.Top - adjustUp;
-                groupBoxEdit.Height = groupBoxEdit.Height + adjustUp;
-                numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
-                numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
-                labelDuration.Left = numericUpDownDuration.Left - 3;
-                labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
+                    // List view
+                    SubtitleListview1.InitializeTimestampColumnWidths(this);
+                    const int adjustUp = 8;
+                    SubtitleListview1.Height = SubtitleListview1.Height - adjustUp;
+                    groupBoxEdit.Top = groupBoxEdit.Top - adjustUp;
+                    groupBoxEdit.Height = groupBoxEdit.Height + adjustUp;
+                    numericUpDownDuration.Left = timeUpDownStartTime.Left + timeUpDownStartTime.Width;
+                    numericUpDownDuration.Width = numericUpDownDuration.Width + 5;
+                    labelDuration.Left = numericUpDownDuration.Left - 3;
+                    labelAutoDuration.Left = labelDuration.Left - (labelAutoDuration.Width - 5);
 
-                // Video controls - Create
-                timeUpDownVideoPosition.Left = labelVideoPosition.Left + labelVideoPosition.Width;
-                int buttonWidth = labelVideoPosition.Width + timeUpDownVideoPosition.Width;
-                buttonInsertNewText.Width = buttonWidth;
-                buttonBeforeText.Width = buttonWidth;
-                buttonGotoSub.Width = buttonWidth;
-                buttonSetStartTime.Width = buttonWidth;
-                buttonSetEnd.Width = buttonWidth;
-                int FKeyLeft = buttonInsertNewText.Left + buttonInsertNewText.Width;
-                labelCreateF9.Left = FKeyLeft;
-                labelCreateF10.Left = FKeyLeft;
-                labelCreateF11.Left = FKeyLeft;
-                labelCreateF12.Left = FKeyLeft;
-                buttonForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward1.Width;
-                numericUpDownSec1.Width = buttonInsertNewText.Width - (numericUpDownSec1.Left + buttonForward1.Width);
-                buttonForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward2.Width;
-                numericUpDownSec2.Width = buttonInsertNewText.Width - (numericUpDownSec2.Left + buttonForward2.Width);
+                    // Video controls - Create
+                    timeUpDownVideoPosition.Left = labelVideoPosition.Left + labelVideoPosition.Width;
+                    int buttonWidth = labelVideoPosition.Width + timeUpDownVideoPosition.Width;
+                    buttonInsertNewText.Width = buttonWidth;
+                    buttonBeforeText.Width = buttonWidth;
+                    buttonGotoSub.Width = buttonWidth;
+                    buttonSetStartTime.Width = buttonWidth;
+                    buttonSetEnd.Width = buttonWidth;
+                    int FKeyLeft = buttonInsertNewText.Left + buttonInsertNewText.Width;
+                    labelCreateF9.Left = FKeyLeft;
+                    labelCreateF10.Left = FKeyLeft;
+                    labelCreateF11.Left = FKeyLeft;
+                    labelCreateF12.Left = FKeyLeft;
+                    buttonForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward1.Width;
+                    numericUpDownSec1.Width = buttonInsertNewText.Width - (numericUpDownSec1.Left + buttonForward1.Width);
+                    buttonForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonForward2.Width;
+                    numericUpDownSec2.Width = buttonInsertNewText.Width - (numericUpDownSec2.Left + buttonForward2.Width);
 
-                // Video controls - Adjust
-                timeUpDownVideoPositionAdjust.Left = labelVideoPosition2.Left + labelVideoPosition2.Width;
-                buttonSetStartAndOffsetRest.Width = buttonWidth;
-                buttonSetEndAndGoToNext.Width = buttonWidth;
-                buttonAdjustSetStartTime.Width = buttonWidth;
-                buttonAdjustSetEndTime.Width = buttonWidth;
-                buttonAdjustPlayBefore.Width = buttonWidth;
-                buttonAdjustGoToPosAndPause.Width = buttonWidth;
-                labelAdjustF9.Left = FKeyLeft;
-                labelAdjustF10.Left = FKeyLeft;
-                labelAdjustF11.Left = FKeyLeft;
-                labelAdjustF12.Left = FKeyLeft;
-                buttonAdjustSecForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward1.Width;
-                numericUpDownSecAdjust1.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward1.Width);
-                buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
-                numericUpDownSecAdjust2.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward2.Width);
+                    // Video controls - Adjust
+                    timeUpDownVideoPositionAdjust.Left = labelVideoPosition2.Left + labelVideoPosition2.Width;
+                    buttonSetStartAndOffsetRest.Width = buttonWidth;
+                    buttonSetEndAndGoToNext.Width = buttonWidth;
+                    buttonAdjustSetStartTime.Width = buttonWidth;
+                    buttonAdjustSetEndTime.Width = buttonWidth;
+                    buttonAdjustPlayBefore.Width = buttonWidth;
+                    buttonAdjustGoToPosAndPause.Width = buttonWidth;
+                    labelAdjustF9.Left = FKeyLeft;
+                    labelAdjustF10.Left = FKeyLeft;
+                    labelAdjustF11.Left = FKeyLeft;
+                    labelAdjustF12.Left = FKeyLeft;
+                    buttonAdjustSecForward1.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward1.Width;
+                    numericUpDownSecAdjust1.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward1.Width);
+                    buttonAdjustSecForward2.Left = buttonInsertNewText.Left + buttonInsertNewText.Width - buttonAdjustSecForward2.Width;
+                    numericUpDownSecAdjust2.Width = buttonInsertNewText.Width - (numericUpDownSecAdjust2.Left + buttonAdjustSecForward2.Width);
 
-                tabControl1_SelectedIndexChanged(null, null);
+                    tabControl1_SelectedIndexChanged(null, null);
+                }
             }
         }
 
