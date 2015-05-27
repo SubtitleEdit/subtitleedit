@@ -1798,7 +1798,20 @@ namespace Nikse.SubtitleEdit.Forms
         {
             string language = GetCurrentWordListLanguage();
             string text = textBoxNameEtc.Text.Trim();
-            if (!string.IsNullOrEmpty(language) && text.Length > 1 && !_wordListNamesEtc.Contains(text))
+            const string mboxTitle = "Invalid Name";
+            if (text.Length <= 1)
+            {
+                MessageBox.Show("Name length must be greater than 1 character", mboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            else if (Utilities.IsInteger(text))
+            {
+                MessageBox.Show(string.Format("Number: {0} can't be added as Name", text), mboxTitle, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var idx = Contains(text);
+            if (!string.IsNullOrEmpty(language) && idx == -1)
             {
                 var namesList = new NamesList(Configuration.DictionariesFolder, language, Configuration.Settings.WordLists.UseOnlineNamesEtc, Configuration.Settings.WordLists.NamesEtcUrl);
                 namesList.Add(text);
@@ -1810,19 +1823,38 @@ namespace Nikse.SubtitleEdit.Forms
                 {
                     if (listBoxNamesEtc.Items[i].ToString() == text)
                     {
-                        listBoxNamesEtc.SelectedIndex = i;
-                        int top = i - 5;
-                        if (top < 0)
-                            top = 0;
-                        listBoxNamesEtc.TopIndex = top;
+                        SelectIndex(i);
                         break;
                     }
                 }
             }
-            else
+            else if (idx >= 0)
             {
                 MessageBox.Show(Configuration.Settings.Language.Settings.WordAlreadyExists);
+                textBoxNameEtc.Focus();
+                SelectIndex(idx);
             }
+        }
+
+        private void SelectIndex(int idx)
+        {
+            listBoxNamesEtc.SelectedIndex = idx;
+            idx -= 5;
+            listBoxNamesEtc.TopIndex = idx < 0 ? 0 : idx;
+        }
+
+        private int Contains(string text)
+        {
+            if (_wordListNamesEtc == null || _wordListNamesEtc.Count == 0)
+                return -2;
+
+            var comparer = EqualityComparer<string>.Default;
+            for (int i = 0; i < _wordListNamesEtc.Count; i++)
+            {
+                if (comparer.Equals(_wordListNamesEtc[i], text))
+                    return i;
+            }
+            return -1;
         }
 
         private void ListBoxNamesEtcSelectedIndexChanged(object sender, EventArgs e)
