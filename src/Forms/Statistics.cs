@@ -45,7 +45,7 @@ https://github.com/SubtitleEdit/subtitleedit
             labelMostUsedLines.Text = _l.MostUsedLines;
             buttonExport.Text = _l.Export;
             buttonOK.Text = Configuration.Settings.Language.General.Ok;
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             CalculateGeneralStatistics();
             {
@@ -155,16 +155,6 @@ https://github.com/SubtitleEdit/subtitleedit
             _general = sb.ToString().Trim();
         }
 
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
-        }
         private void Statistics_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Escape)

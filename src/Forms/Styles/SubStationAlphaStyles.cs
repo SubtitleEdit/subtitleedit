@@ -99,7 +99,7 @@ namespace Nikse.SubtitleEdit.Forms.Styles
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
 
             InitializeListView();
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonCancel);
 
             comboBoxFontName.Left = labelFontName.Left + labelFontName.Width + 10;
             numericUpDownFontSize.Left = labelFontSize.Left + labelFontSize.Width + 10;
@@ -239,17 +239,6 @@ namespace Nikse.SubtitleEdit.Forms.Styles
 
             }
             pictureBoxPreview.Image = bmp;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         private void InitializeListView()

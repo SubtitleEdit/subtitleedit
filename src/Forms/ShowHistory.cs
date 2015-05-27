@@ -23,18 +23,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCompareHistory.Text = Configuration.Settings.Language.ShowHistory.CompareHistoryItems;
             buttonRollback.Text = Configuration.Settings.Language.ShowHistory.Rollback;
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonRollback.Text, this.Font);
-            if (textSize.Height > buttonRollback.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonRollback);
         }
 
         public int SelectedIndex

@@ -13,18 +13,7 @@ namespace Nikse.SubtitleEdit.Forms
         public VideoError()
         {
             InitializeComponent();
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonCancel.Text, this.Font);
-            if (textSize.Height > buttonCancel.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         public static bool Is64BitOS
@@ -33,7 +22,7 @@ namespace Nikse.SubtitleEdit.Forms
             //get { return (Environment.GetEnvironmentVariable("ProgramFiles(x86)") != null); }
         }
 
-        public void Initialize(string fileName, VideoInfo videInfo, Exception exception)
+        public void Initialize(string fileName, VideoInfo videoInfo, Exception exception)
         {
             bool isWindowsXpOrVista = Environment.OSVersion.Version.Major < 7;
 
@@ -55,9 +44,9 @@ namespace Nikse.SubtitleEdit.Forms
                 sb.AppendLine();
             }
 
-            if (videInfo != null && !string.IsNullOrEmpty(videInfo.VideoCodec))
+            if (videoInfo != null && !string.IsNullOrEmpty(videoInfo.VideoCodec))
             {
-                sb.AppendLine(string.Format("The file {0} is encoded with {1}!", Path.GetFileName(fileName), videInfo.VideoCodec.Replace('\0', ' ')));
+                sb.AppendLine(string.Format("The file {0} is encoded with {1}!", Path.GetFileName(fileName), videoInfo.VideoCodec.Replace('\0', ' ')));
                 sb.AppendLine("");
             }
 
