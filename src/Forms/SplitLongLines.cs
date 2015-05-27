@@ -25,18 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
         public SplitLongLines()
         {
             InitializeComponent();
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         private void SplitLongLines_KeyDown(object sender, KeyEventArgs e)
