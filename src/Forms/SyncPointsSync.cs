@@ -61,18 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.InitializeSubtitleFont(subtitleListView2);
             SubtitleListview1.AutoSizeAllColumns(this);
             subtitleListView2.AutoSizeAllColumns(this);
-            FixLargeFonts();
-        }
-
-        private void FixLargeFonts()
-        {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
+            Utilities.FixLargeFonts(this, buttonOK);
         }
 
         public void Initialize(Subtitle subtitle, string subtitleFileName, string videoFileName, int audioTrackNumber)
