@@ -25,7 +25,7 @@ namespace Nikse.SubtitleEdit.Forms
             buttonCancel.Text = Configuration.Settings.Language.General.Cancel;
             SubtitleListview1.InitializeLanguage(Configuration.Settings.Language.General, Configuration.Settings);
             SubtitleListview1.InitializeTimestampColumnWidths(this);
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             groupBoxFrameInfo.Text = Configuration.Settings.Language.SetMinimumDisplayTimeBetweenParagraphs.FrameInfo;
             comboBoxFrameRate.Items.Add((23.976).ToString());
@@ -48,17 +48,6 @@ namespace Nikse.SubtitleEdit.Forms
                 comboBoxFrameRate.SelectedIndex = 5;
             else
                 comboBoxFrameRate.SelectedIndex = 3;
-        }
-
-        private void FixLargeFonts()
-        {
-            Graphics graphics = this.CreateGraphics();
-            SizeF textSize = graphics.MeasureString(buttonOK.Text, this.Font);
-            if (textSize.Height > buttonOK.Height - 4)
-            {
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
-            }
         }
 
         public Subtitle FixedSubtitle
