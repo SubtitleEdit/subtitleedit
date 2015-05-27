@@ -125,7 +125,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             try
                             {
-                                name = name.Replace("_", "-");
+                                name = name.Replace('_', '-');
                                 if (name.Length > 5)
                                     name = name.Substring(0, 5);
                                 var ci = new CultureInfo(name);
@@ -163,7 +163,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
                         {
                             try
                             {
-                                name = name.Replace("_", "-");
+                                name = name.Replace('_', '-');
                                 if (name.Length > 5)
                                     name = name.Substring(0, 5);
                                 var ci = new CultureInfo(name);
@@ -355,7 +355,7 @@ namespace Nikse.SubtitleEdit.Logic.Ocr
             {
                 text = text.Replace("ﬁ", "fi"); // fb01
                 text = text.Replace("ﬂ", "fl"); // fb02
-                text = text.Replace("ν", "v"); // NOTE: first 'v' is a special unicode character!!!!
+                text = text.Replace('ν', 'v'); // NOTE: first 'v' is a special unicode character!!!!
             }
 
             text = ReplaceWordsBeforeLineFixes(text);
