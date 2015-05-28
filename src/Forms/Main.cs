@@ -9599,8 +9599,9 @@ namespace Nikse.SubtitleEdit.Forms
             {
                 string fileName = _dragAndDropFiles[0];
 
-                saveFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
-                openFileDialog1.InitialDirectory = Path.GetDirectoryName(fileName);
+                var dirName = Path.GetDirectoryName(fileName);
+                saveFileDialog1.InitialDirectory = dirName;
+                openFileDialog1.InitialDirectory = dirName;
 
                 var fi = new FileInfo(fileName);
                 string ext = Path.GetExtension(fileName).ToLower();
