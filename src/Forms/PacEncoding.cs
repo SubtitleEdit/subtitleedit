@@ -77,7 +77,6 @@ namespace Nikse.SubtitleEdit.Forms
                         textBoxPreview.Text = sb.ToString();
                 }
             }
-
         }
 
         private void buttonOK_Click(object sender, EventArgs e)

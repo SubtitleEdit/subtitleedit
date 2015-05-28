@@ -111,9 +111,14 @@ Email: mailto:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generazione spettrogramma...</GeneratingSpectrogram>
     <ExtractingSeconds>Estrazione audio: {0:0.0} secondi</ExtractingSeconds>
     <ExtractingMinutes>Estrazione audio: {0}.{1:00} minuti</ExtractingMinutes>
-    <WaveFileNotFound>Impossibile trovare il file wave estratto! Questa caratteristica richiede VLC media player 1.1.x o successivo ({0}-bit). Linea di comando: {1} {2}</WaveFileNotFound>
-    <WaveFileMalformed>{0} non ha potuto estrarre i dati audio nel file wave! Linea di comando: {1} {2}
- 
+    <WaveFileNotFound>Impossibile trovare il file wave estratto!
+Questa caratteristica richiede VLC media player 1.1.x o successivo ({0}-bit).
+
+Linea di comando: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} non ha potuto estrarre i dati audio nel file wave!
+
+Linea di comando: {1} {2}
+
 Nota: Controlla lo spazio libero sul disco.</WaveFileMalformed>
     <LowDiskSpace>SPAZIO SU DISCO INSUFFICIENTE!</LowDiskSpace>
     <FreeDiskSpace>{0} liberi</FreeDiskSpace>
