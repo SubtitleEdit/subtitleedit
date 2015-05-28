@@ -43,14 +43,16 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonOK.Text, Font);
-            if (textSize.Height > buttonOK.Height - 4)
+            using (var graphics = CreateGraphics())
             {
-                subtitleListView1.InitializeTimestampColumnWidths(this);
-                subtitleListView2.InitializeTimestampColumnWidths(this);
-                int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                var textSize = graphics.MeasureString(buttonOK.Text, Font);
+                if (textSize.Height > buttonOK.Height - 4)
+                {
+                    subtitleListView1.InitializeTimestampColumnWidths(this);
+                    subtitleListView2.InitializeTimestampColumnWidths(this);
+                    int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                }
             }
         }
 

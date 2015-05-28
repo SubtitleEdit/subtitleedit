@@ -468,13 +468,15 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FixLargeFonts()
         {
-            var graphics = CreateGraphics();
-            var textSize = graphics.MeasureString(buttonCancel.Text, Font);
-            if (textSize.Height > buttonCancel.Height - 4)
+            using (var graphics = CreateGraphics())
             {
-                subtitleListView1.InitializeTimestampColumnWidths(this);
-                var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                var textSize = graphics.MeasureString(buttonCancel.Text, Font);
+                if (textSize.Height > buttonCancel.Height - 4)
+                {
+                    subtitleListView1.InitializeTimestampColumnWidths(this);
+                    var newButtonHeight = (int)(textSize.Height + 7 + 0.5);
+                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
+                }
             }
         }
 
@@ -4922,26 +4924,26 @@ namespace Nikse.SubtitleEdit.Forms
 
         public void ListViewFixesAutoSizeAllColumns()
         {
-            Graphics graphics = CreateGraphics();
+            using (var graphics = CreateGraphics())
+            {
+                var timestampSizeF = graphics.MeasureString(listViewFixes.Columns[0].Text, Font); // Apply
+                var width = (int)(timestampSizeF.Width + 12);
+                listViewFixes.Columns[0].Width = width;
 
-            SizeF timestampSizeF = graphics.MeasureString(listViewFixes.Columns[0].Text, Font); // Apply
-            var width = (int)(timestampSizeF.Width + 12);
-            listViewFixes.Columns[0].Width = width;
+                timestampSizeF = graphics.MeasureString(listViewFixes.Columns[1].Text, Font); // line#
+                width = (int)(timestampSizeF.Width + 12);
+                listViewFixes.Columns[1].Width = width;
 
-            timestampSizeF = graphics.MeasureString(listViewFixes.Columns[1].Text, Font); // line#
-            width = (int)(timestampSizeF.Width + 12);
-            listViewFixes.Columns[1].Width = width;
+                timestampSizeF = graphics.MeasureString("Auto break all lines and even more stuff", Font); // Function
+                width = (int)(timestampSizeF.Width + 12);
+                listViewFixes.Columns[2].Width = width;
 
-            timestampSizeF = graphics.MeasureString("Auto break all lines and even more stuff", Font); // Function
-            width = (int)(timestampSizeF.Width + 12);
-            listViewFixes.Columns[2].Width = width;
-
-            int length = listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width + listViewFixes.Columns[2].Width;
-            int lengthAvailable = Width - length;
-            width = (lengthAvailable - 10) / 2;
-            listViewFixes.Columns[3].Width = width; // before
-            listViewFixes.Columns[4].Width = width; // after
-            graphics.Dispose();
+                int length = listViewFixes.Columns[0].Width + listViewFixes.Columns[1].Width + listViewFixes.Columns[2].Width;
+                int lengthAvailable = Width - length;
+                width = (lengthAvailable - 10) / 2;
+                listViewFixes.Columns[3].Width = width; // before
+                listViewFixes.Columns[4].Width = width; // after
+            }
         }
 
         private void FixCommonErrorsShown(object sender, EventArgs e)
