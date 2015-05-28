@@ -425,7 +425,8 @@ Nota: Verifique o espaço em disco.</WaveFileMalformed>
     <ShadowWidth>Largura da sombra</ShadowWidth>
     <Transparency>Transparência</Transparency>
     <ImageFormat>Formato de Imagem</ImageFormat>
-    <SimpleRendering>Renderização simples</SimpleRendering>
+    <FullFrameImage>Fotograma completo</FullFrameImage>
+    <SimpleRendering>Processamento simples</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing com transparência</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
     <SideBySide3D>Lado-a-lado parcial</SideBySide3D>
