@@ -2129,6 +2129,9 @@ namespace Nikse.SubtitleEdit.Logic
 
         public static string FixInvalidItalicTags(string text)
         {
+            if (text == null || !text.Contains('<'))
+                return text;
+
             const string beginTag = "<i>";
             const string endTag = "</i>";
 
