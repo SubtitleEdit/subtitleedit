@@ -2089,7 +2089,7 @@ namespace Nikse.SubtitleEdit.Logic
                 foreach (Control subControl in control.Controls)
                 {
                     if (subControl.HasChildren)
-                        SetButtonHeight(subControl, newHeight, level++);
+                        SetButtonHeight(subControl, newHeight, level + 1);
                     else if (subControl is Button)
                         subControl.Height = newHeight;
                 }
