@@ -400,7 +400,7 @@ namespace Nikse.SubtitleEdit.Core
             return IsUrl(arr[0]);
         }
 
-        internal static string FixUpperTags(string text)
+        public static string FixUpperTags(string text)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
