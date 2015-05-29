@@ -10,7 +10,7 @@ namespace Nikse.SubtitleEdit.Logic
     {
         public string Pre { get; set; }
         public string Post { get; set; }
-        public string StrippedText { get; set; }
+        public string StrippedText { get; private set; }
         public string OriginalText { get; private set; }
 
         public string MergedString
