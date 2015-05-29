@@ -111,12 +111,24 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <GeneratingSpectrogram>Generiranje spektrograma...</GeneratingSpectrogram>
     <ExtractingSeconds>Vađenje zvuka: {0:0.0} sekundi</ExtractingSeconds>
     <ExtractingMinutes>Vađenje zvuka. {0} {01:00} min</ExtractingMinutes>
+    <WaveFileNotFound>Ne mogu naći izvučenu wave datoteku!
+Ova mogućnost zahtjeva VLC media player 1.1.x ili noviji ({0}-bit).
+
+Command line: {1} {2}</WaveFileNotFound>
+    <WaveFileMalformed>{0} nije uspio izvući audio podatke u wave datoteku!
+
+Command line: {1} {2}
+
+Napomena: Provjeri slobodan prostor prostor na disku.</WaveFileMalformed>
+    <LowDiskSpace>JAKO MALO PROSTORA NA DISKU!</LowDiskSpace>
+    <FreeDiskSpace>{0} slobodno</FreeDiskSpace>
   </AddWaveform>
   <AddWaveformBatch>
     <Title>Batch stvaranje valnih oblika podataka</Title>
     <ExtractingAudio>Vađenje zvuka...</ExtractingAudio>
     <Calculating>Izračun...</Calculating>
     <Done>Gotovo</Done>
+    <Error>Greška</Error>
   </AddWaveformBatch>
   <AdjustDisplayDuration>
     <Title>Prilagođavanje trajanja</Title>
@@ -411,6 +423,7 @@ E-pošta:nikse.dk@gmail.com</AboutText1>
     <ShadowWidth>Širina sjene</ShadowWidth>
     <Transparency>Alpha</Transparency>
     <ImageFormat>Format slike</ImageFormat>
+    <FullFrameImage>Slika video ekrana</FullFrameImage>
     <SimpleRendering>Jednostavno renderiranje</SimpleRendering>
     <AntiAliasingWithTransparency>Anti-aliasing s transparentnosti</AntiAliasingWithTransparency>
     <Text3D>3D</Text3D>
