@@ -78,7 +78,7 @@ namespace Nikse.SubtitleEdit.Forms.DCinema
                     numericUpDownTopBottomMargin.Value = 8;
 
             }
-            FixLargeFonts(buttonCancel);
+            Utilities.FixLargeFonts(this, buttonCancel);
         }
 
         private void buttonFontColor_Click(object sender, EventArgs e)
