@@ -3771,11 +3771,17 @@ namespace Nikse.SubtitleEdit.Logic
                 case "RegularExpressionContextMenu/AnyDigit":
                     language.RegularExpressionContextMenu.AnyDigit = reader.Value;
                     break;
+                case "RegularExpressionContextMenu/NonDigit":
+                    language.RegularExpressionContextMenu.NonDigit = reader.Value;
+                    break;
                 case "RegularExpressionContextMenu/AnyCharacter":
                     language.RegularExpressionContextMenu.AnyCharacter = reader.Value;
                     break;
                 case "RegularExpressionContextMenu/AnyWhitespace":
                     language.RegularExpressionContextMenu.AnyWhitespace = reader.Value;
+                    break;
+                case "RegularExpressionContextMenu/NonSpaceCharacter":
+                    language.RegularExpressionContextMenu.NonSpaceCharacter = reader.Value;
                     break;
                 case "RegularExpressionContextMenu/ZeroOrMore":
                     language.RegularExpressionContextMenu.ZeroOrMore = reader.Value;
