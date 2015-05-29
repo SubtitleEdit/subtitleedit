@@ -961,7 +961,7 @@
     <RegEx find="(del)(ić|ića|iće|ićem|ići|ićima)" replaceWith="djel$2" />
     <RegEx find="([dD])(eli)\b(m|š|mo|te|li|le|la|ti)" replaceWith="$1ijel$3" />
     <RegEx find="([dD])(jeli)\b(m|š|mo|te|li|le|la|ti)" replaceWith="$1ijel$3" />
-    <RegEx find="(delikvent)(a|e|i|u|ima|om|na|no|ni|nim|nom|noj|ica|ici     |icu|ice|cija|ciji|ciju|cije|cijama)*" replaceWith="delinkvent$2" />
+    <RegEx find="(delikvent)(a|e|i|u|ima|om|na|no|ni|nim|nom|noj|ica|ici|icu|ice|cija|ciji|ciju|cije|cijama)*" replaceWith="delinkvent$2" />
     <RegEx find="([dD])(eluje)(m|š|mo|te|mo)*" replaceWith="$1jeluje$3" />
     <RegEx find="([dD])(ete)(tom|tov|tovog|tovu|tove)" replaceWith="$1jete$3" />
     <RegEx find="([dD])(ec)(a|i|o|u|e|om)*" replaceWith="$1jec$3" />
