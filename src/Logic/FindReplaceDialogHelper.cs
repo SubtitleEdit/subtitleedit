@@ -153,8 +153,10 @@ namespace Nikse.SubtitleEdit.Logic
             cm.MenuItems.Add(l.NonWordBoundary, delegate { textBox.SelectedText = "\\B"; });
             cm.MenuItems.Add(l.NewLine, delegate { textBox.SelectedText = "\\r\\n"; });
             cm.MenuItems.Add(l.AnyDigit, delegate { textBox.SelectedText = "\\d"; });
+            cm.MenuItems.Add(l.NonDigit, delegate { textBox.SelectedText = "\\D"; });
             cm.MenuItems.Add(l.AnyCharacter, delegate { textBox.SelectedText = "."; });
             cm.MenuItems.Add(l.AnyWhitespace, delegate { textBox.SelectedText = "\\s"; });
+            cm.MenuItems.Add(l.NonSpaceCharacter, delegate { textBox.SelectedText = "\\S"; });
             cm.MenuItems.Add(l.ZeroOrMore, delegate { textBox.SelectedText = "*"; });
             cm.MenuItems.Add(l.OneOrMore, delegate { textBox.SelectedText = "+"; });
             cm.MenuItems.Add(l.InCharacterGroup, delegate { textBox.SelectedText = "[test]"; });
@@ -170,8 +172,10 @@ namespace Nikse.SubtitleEdit.Logic
             cm.MenuItems.Add(l.NonWordBoundary, delegate { comboBox.SelectedText = "\\B"; });
             cm.MenuItems.Add(l.NewLine, delegate { comboBox.SelectedText = "\\r\\n"; });
             cm.MenuItems.Add(l.AnyDigit, delegate { comboBox.SelectedText = "\\d"; });
+            cm.MenuItems.Add(l.NonDigit, delegate { comboBox.SelectedText = "\\D"; });
             cm.MenuItems.Add(l.AnyCharacter, delegate { comboBox.SelectedText = "."; });
             cm.MenuItems.Add(l.AnyWhitespace, delegate { comboBox.SelectedText = "\\s"; });
+            cm.MenuItems.Add(l.NonSpaceCharacter, delegate { comboBox.SelectedText = "\\S"; });
             cm.MenuItems.Add(l.ZeroOrMore, delegate { comboBox.SelectedText = "*"; });
             cm.MenuItems.Add(l.OneOrMore, delegate { comboBox.SelectedText = "+"; });
             cm.MenuItems.Add(l.InCharacterGroup, delegate { comboBox.SelectedText = "[test]"; });
