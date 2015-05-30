@@ -1421,8 +1421,10 @@ can edit in same subtitle file (collaboration)</Information>
     <NewLine>New line (\r\n)</NewLine>
     <NewLineShort>New line (\n)</NewLineShort>
     <AnyDigit>Any digit (\d)</AnyDigit>
+    <NonDigit>Non digit (\D)</NonDigit>
     <AnyCharacter>Any character (.)</AnyCharacter>
     <AnyWhitespace>Any whitespace (\s)</AnyWhitespace>
+    <NonSpaceCharacter>Non space character (\S)</NonSpaceCharacter>
     <ZeroOrMore>Zero or more (*)</ZeroOrMore>
     <OneOrMore>One or more (+)</OneOrMore>
     <InCharacterGroup>In character group ([test])</InCharacterGroup>
