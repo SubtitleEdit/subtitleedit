@@ -790,7 +790,7 @@ namespace Nikse.SubtitleEdit.Forms
             checkBoxSyntaxOverlap.Text = language.SyntaxColorOverlap;
             buttonListViewSyntaxColorError.Text = language.SyntaxErrorColor;
 
-            FixLargeFonts();
+            Utilities.FixLargeFonts(this, buttonOK);
 
             checkBoxShortcutsControl.Left = labelShortcut.Left + labelShortcut.Width + 9;
             checkBoxShortcutsAlt.Left = checkBoxShortcutsControl.Left + checkBoxShortcutsControl.Width + 9;
@@ -810,21 +810,6 @@ namespace Nikse.SubtitleEdit.Forms
             if (string.IsNullOrEmpty(shortcut))
                 shortcut = Configuration.Settings.Language.General.None;
             return string.Format(" [{0}]", shortcut);
-        }
-
-        private void FixLargeFonts()
-        {
-            using (var graphics = CreateGraphics())
-            {
-                var textSize = graphics.MeasureString(buttonOK.Text, Font);
-                if (textSize.Height > buttonOK.Height - 4)
-                {
-                    int newButtonHeight = (int)(textSize.Height + 7 + 0.5);
-                    Utilities.SetButtonHeight(this, newButtonHeight, 1);
-                    Utilities.SetButtonHeight(groupBoxSsaStyle, newButtonHeight, 2);
-                    Utilities.SetButtonHeight(groupBoxWaveformAppearence, newButtonHeight, 1);
-                }
-            }
         }
 
         private void InitializeWaveformsAndSpectrogramsFolderEmpty(LanguageStructure.Settings language)
