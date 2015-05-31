@@ -293,6 +293,7 @@ namespace Nikse.SubtitleEdit.Forms
             try
             {
                 InitializeComponent();
+                Icon = Nikse.SubtitleEdit.Properties.Resources.SubtitleEditFormIcon;
 
                 textBoxListViewTextAlternate.Visible = false;
                 labelAlternateText.Visible = false;
