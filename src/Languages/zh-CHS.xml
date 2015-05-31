@@ -1226,7 +1226,7 @@ C# 源代码可从 https://github.com/SubtitleEdit/subtitleedit 获得。
   <MatroskaSubtitleChooser>
     <Title>从 Matroska 文件选择字幕</Title>
     <PleaseChoose>找到多个字幕 - 请选择</PleaseChoose>
-    <TrackXLanguageYTypeZ>曲目 {0}-{1} - 语言: {2} - 类型: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>曲目 {0} - {1} - 语言: {2} - 类型: {3}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>度量转换器</Title>

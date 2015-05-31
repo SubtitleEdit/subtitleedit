@@ -34,6 +34,7 @@ namespace Nikse.SubtitleEdit.Forms
             foreach (var info in subtitleInfoList)
             {
                 string s = string.Format(Configuration.Settings.Language.MatroskaSubtitleChooser.TrackXLanguageYTypeZ, info.TrackNumber, info.Name, info.Language, info.CodecId);
+                s = s.Replace("-  -", "-"); // hack to handle empty "info.Name"
                 listBox1.Items.Add(s);
             }
             listBox1.SelectedIndex = 0;
