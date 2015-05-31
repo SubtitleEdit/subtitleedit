@@ -4,7 +4,6 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Nikse.SubtitleEdit.Logic;
 using Nikse.SubtitleEdit.Logic.Enums;
-using System.Collections.Generic;
 
 namespace Nikse.SubtitleEdit.Forms
 {
