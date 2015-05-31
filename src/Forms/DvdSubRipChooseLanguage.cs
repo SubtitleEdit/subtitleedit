@@ -172,15 +172,17 @@ namespace Nikse.SubtitleEdit.Forms
                 subs.Add((x as SubListBoxItem).SubPack);
             }
 
-            var formSubOcr = new VobSubOcr();
-            formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
-            var subtitle = formSubOcr.ReadyVobSubRip();
-            formSubOcr.Dispose();
+            using (var formSubOcr = new VobSubOcr())
+            {
+                formSubOcr.InitializeQuick(subs, _palette, Configuration.Settings.VobSubOcr, SelectedLanguageString);
+                var subtitle = formSubOcr.ReadyVobSubRip();
 
-            var exportBdnXmlPng = new ExportPngXml();
-            exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
-            exportBdnXmlPng.ShowDialog(this);
-            exportBdnXmlPng.Dispose();
+                using (var exportBdnXmlPng = new ExportPngXml())
+                {
+                    exportBdnXmlPng.InitializeFromVobSubOcr(subtitle, new Logic.SubtitleFormats.SubRip(), "VOBSUB", "DVD", formSubOcr, SelectedLanguageString);
+                    exportBdnXmlPng.ShowDialog(this);
+                }
+            }
         }
 
     }
