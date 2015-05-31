@@ -103,7 +103,7 @@ namespace Nikse.SubtitleEdit.Forms
             for (int index = 0; index < _subtitle.Paragraphs.Count; index++)
             {
                 Paragraph p = _subtitle.Paragraphs[index];
-                _removeTextForHILib.WarningIndex = index -1;
+                _removeTextForHILib.WarningIndex = index - 1;
                 string newText = _removeTextForHILib.RemoveTextFromHearImpaired(p.Text);
                 if (p.Text.Replace(" ", string.Empty) != newText.Replace(" ", string.Empty))
                 {
@@ -225,9 +225,10 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void FormRemoveTextForHearImpaired_Resize(object sender, EventArgs e)
         {
-            int availableWidth = listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20);
-            columnHeaderBefore.Width = availableWidth / 2;
-            columnHeaderAfter.Width = availableWidth / 2;
+            int availableWidth = (listViewFixes.Width - (columnHeaderApply.Width + columnHeaderLine.Width + 20)) / 2;
+
+            columnHeaderBefore.Width = availableWidth;
+            columnHeaderAfter.Width = availableWidth;
         }
 
         private void checkBoxRemoveTextBeforeColon_CheckedChanged(object sender, EventArgs e)
