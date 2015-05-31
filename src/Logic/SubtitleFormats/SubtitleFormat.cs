@@ -301,7 +301,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public int ErrorCount
         {
-            get { return _errorCount; }
+            get
+            {
+                return _errorCount;
+            }
         }
 
         abstract public bool IsMine(List<string> lines, string fileName);
@@ -312,7 +315,10 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public bool IsVobSubIndexFile
         {
-            get { return string.CompareOrdinal(Extension, ".idx") == 0; }
+            get
+            {
+                return string.CompareOrdinal(Extension, ".idx") == 0;
+            }
         }
 
         public virtual void RemoveNativeFormatting(Subtitle subtitle, SubtitleFormat newFormat)
@@ -363,35 +369,21 @@ namespace Nikse.SubtitleEdit.Logic.SubtitleFormats
 
         public bool BatchMode { get; set; }
 
-        public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration)
+        public static string ToUtf8XmlString(XmlDocument xml, bool omitXmlDeclaration = false)
         {
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Encoding = new UnicodeEncoding(false, false); // no BOM in a .NET string
-            settings.Indent = true;
-            settings.OmitXmlDeclaration = omitXmlDeclaration;
-
-            StringWriter textWriter = null;
-            try
+            var settings = new XmlWriterSettings
             {
-                textWriter = new StringWriter();
-                var xmlWriter = XmlWriter.Create(textWriter, settings);
+                Indent = true,
+                OmitXmlDeclaration = omitXmlDeclaration,
+            };
+            var result = new StringBuilder();
+
+            using (var xmlWriter = XmlWriter.Create(result, settings))
+            {
                 xml.Save(xmlWriter);
-                xmlWriter.Flush();
-                return textWriter.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
             }
-            finally
-            {
-                if (textWriter != null)
-                {
-                    textWriter.Dispose();
-                    textWriter = null;
-                }
-            }
-        }
 
-        public static string ToUtf8XmlString(XmlDocument xml)
-        {
-            return ToUtf8XmlString(xml, false);
+            return result.ToString().Replace(" encoding=\"utf-16\"", " encoding=\"utf-8\"").Trim();
         }
 
         public virtual bool IsTextBased
