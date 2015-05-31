@@ -292,5 +292,29 @@ namespace Nikse.SubtitleEdit.Core
             }
         }
 
+        public static bool IsSubtitleFileAllBinaryZeroes(string fileName)
+        {
+            using (var fs = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                if (fs.Length < 10)
+                    return false; // too short to be a proper subtitle file
+
+                int numberOfBytes = 1;
+                var buffer = new byte[1024];
+                while (numberOfBytes > 0)
+                {
+                    numberOfBytes = fs.Read(buffer, 0, buffer.Length);
+                    for (int i = 0; i < numberOfBytes; i++)
+                    {
+                        if (buffer[i] > 0)
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+            return true;
+        }
+
     }
 }
