@@ -1105,7 +1105,7 @@ namespace Nikse.SubtitleEdit.Logic
             int count = 0;
             for (int i = 0; i < words.Length; i++)
             {
-                var regEx = new Regex("\\b" + words[i] + "\\b", (RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture));
+                var regEx = new Regex("\\b" + words[i] + "\\b", (RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture | RegexOptions.IgnoreCase));
                 count += regEx.Matches(text).Count;
             }
             return count;
@@ -1178,7 +1178,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
             {
                 int norwegianCount = GetCount(text, "ut", "deg", "meg", "merkelig", "mye", "spørre");
-                int dutchCount = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+                int dutchCount = GetCount(text, "van", "een", "het", "m(ij|ĳ)", "z(ij|ĳ)n");
                 if (norwegianCount < 2 && dutchCount < count)
                     return "da";
             }
@@ -1187,7 +1187,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
             {
                 int danishCount = GetCount(text, "siger", "dig", "mig", "mærkelig", "tilbage", "spørge");
-                int dutchCount = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+                int dutchCount = GetCount(text, "van", "een", "het", "m(ij|ĳ)", "z(ij|ĳ)n");
                 if (danishCount < 2 && dutchCount < count)
                     return "no";
             }
@@ -1199,12 +1199,12 @@ namespace Nikse.SubtitleEdit.Logic
             count = GetCount(text, "el", "bien", "Vamos", "Hola", "casa", "con");
             if (count > bestCount)
             {
-                int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
+                int frenchCount = GetCount(text, "(c')?est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
                 if (frenchCount < 2)
                     return "es";
             }
 
-            count = GetCount(text, "un", "vous", "avec", "pas", "ce", "une");
+            count = GetCount(text, "où", "une?", "vous", "avec", "pas", "ce", "ça", "nous");
             if (count > bestCount)
             {
                 int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
@@ -1218,7 +1218,7 @@ namespace Nikse.SubtitleEdit.Logic
             if (count > bestCount)
                 return "de";
 
-            count = GetCount(text, "van", "een", "[Hh]et", "m(ij|ĳ)", "z(ij|ĳ)n");
+            count = GetCount(text, "van", "een", "het", "m(ij|ĳ)", "z(ij|ĳ)n");
             if (count > bestCount)
                 return "nl";
 
@@ -1230,13 +1230,13 @@ namespace Nikse.SubtitleEdit.Logic
                                    "giorno", "faccio", "davvero", "negativo", "essere", "vuole", "sensitivo", "venire");
             if (count > bestCount)
             {
-                int frenchCount = GetCount(text, "[Cc]'est", "pas", "vous", "pour", "suis", "Pourquoi", "maison", "souviens", "quelque"); // not spanish words
+                int frenchCount = GetCount(text, "(c')?est", "pas", "vous", "pour", "suis", "pourquoi", "maison", "souviens", "quelque"); // not spanish words
                 int spanishCount = GetCount(text, "Hola", "nada", "Vamos", "pasa", "los", "como"); // not french words
                 if (frenchCount < 2 && spanishCount < 2)
                     return "it";
             }
 
-            count = GetCount(text, "não", "Não", "Estás", "Então", "isso", "com");
+            count = GetCount(text, "não", "est(ás|ão)", "então", "você", "minha", "agora", "isso", "com", "el[ae]", "quan[dt]o");
             if (count > bestCount)
                 return "pt"; // Portuguese
 
