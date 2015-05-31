@@ -43,7 +43,7 @@
             this.textBoxFind.Name = "textBoxFind";
             this.textBoxFind.Size = new System.Drawing.Size(189, 21);
             this.textBoxFind.TabIndex = 0;
-            this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFindKeyDown);
+            this.textBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.TextBoxFind_KeyDown);
             // 
             // buttonFind
             // 
@@ -53,7 +53,7 @@
             this.buttonFind.TabIndex = 1;
             this.buttonFind.Text = "Find";
             this.buttonFind.UseVisualStyleBackColor = true;
-            this.buttonFind.Click += new System.EventHandler(this.ButtonFindClick);
+            this.buttonFind.Click += new System.EventHandler(this.ButtonFind_Click);
             // 
             // buttonCancel
             // 
@@ -76,7 +76,7 @@
             this.radioButtonNormal.TabStop = true;
             this.radioButtonNormal.Text = "Normal";
             this.radioButtonNormal.UseVisualStyleBackColor = true;
-            this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
+            this.radioButtonNormal.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // radioButtonCaseSensitive
             // 
@@ -87,7 +87,7 @@
             this.radioButtonCaseSensitive.TabIndex = 7;
             this.radioButtonCaseSensitive.Text = "Case sensitive";
             this.radioButtonCaseSensitive.UseVisualStyleBackColor = true;
-            this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
+            this.radioButtonCaseSensitive.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // radioButtonRegEx
             // 
@@ -98,7 +98,7 @@
             this.radioButtonRegEx.TabIndex = 9;
             this.radioButtonRegEx.Text = "RegEx";
             this.radioButtonRegEx.UseVisualStyleBackColor = true;
-            this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButtonCheckedChanged);
+            this.radioButtonRegEx.CheckedChanged += new System.EventHandler(this.RadioButton_CheckedChanged);
             // 
             // comboBoxFind
             // 
@@ -107,7 +107,7 @@
             this.comboBoxFind.Name = "comboBoxFind";
             this.comboBoxFind.Size = new System.Drawing.Size(189, 21);
             this.comboBoxFind.TabIndex = 0;
-            this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.comboBoxFind_KeyDown);
+            this.comboBoxFind.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComboBoxFind_KeyDown);
             // 
             // FindDialog
             // 

@@ -28,13 +28,25 @@ namespace Nikse.SubtitleEdit.Forms
             Utilities.FixLargeFonts(this, buttonCancel);
         }
 
-        private FindType GetFindType()
+        private FindType FindType
         {
-            if (radioButtonNormal.Checked)
-                return FindType.Normal;
-            if (radioButtonCaseSensitive.Checked)
-                return FindType.CaseSensitive;
-            return FindType.RegEx;
+            get
+            {
+                if (radioButtonNormal.Checked)
+                    return FindType.Normal;
+                if (radioButtonCaseSensitive.Checked)
+                    return FindType.CaseSensitive;
+                return FindType.RegEx;
+            }
+            set
+            {
+                if (value == FindType.CaseSensitive)
+                    radioButtonCaseSensitive.Checked = true;
+                if (value == FindType.Normal)
+                    radioButtonNormal.Checked = true;
+                if (value == FindType.RegEx)
+                    radioButtonRegEx.Checked = true;
+            }
         }
 
         private string FindText
@@ -49,7 +61,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         public FindReplaceDialogHelper GetFindDialogHelper(int startLineIndex)
         {
-            return new FindReplaceDialogHelper(GetFindType(), FindText, _regEx, string.Empty, 200, 300, startLineIndex);
+            return new FindReplaceDialogHelper(FindType, FindText, _regEx, string.Empty, 200, 300, startLineIndex);
         }
 
         private void FormFindDialog_KeyDown(object sender, KeyEventArgs e)
@@ -60,7 +72,7 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void ButtonFindClick(object sender, EventArgs e)
+        private void ButtonFind_Click(object sender, EventArgs e)
         {
             string searchText = FindText;
             textBoxFind.Text = searchText;
@@ -92,19 +104,19 @@ namespace Nikse.SubtitleEdit.Forms
             }
         }
 
-        private void TextBoxFindKeyDown(object sender, KeyEventArgs e)
+        private void TextBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                ButtonFindClick(null, null);
+                ButtonFind_Click(null, null);
         }
 
-        private void comboBoxFind_KeyDown(object sender, KeyEventArgs e)
+        private void ComboBoxFind_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
-                ButtonFindClick(null, null);
+                ButtonFind_Click(null, null);
         }
 
-        private void RadioButtonCheckedChanged(object sender, EventArgs e)
+        private void RadioButton_CheckedChanged(object sender, EventArgs e)
         {
             if (sender == radioButtonRegEx)
             {
@@ -151,12 +163,7 @@ namespace Nikse.SubtitleEdit.Forms
 
             if (findHelper != null)
             {
-                if (findHelper.FindType == FindType.RegEx)
-                    radioButtonRegEx.Checked = true;
-                else if (findHelper.FindType == FindType.CaseSensitive)
-                    radioButtonCaseSensitive.Checked = true;
-                else
-                    radioButtonNormal.Checked = true;
+                FindType = findHelper.FindType;
             }
         }
 
