@@ -5454,6 +5454,12 @@ namespace Nikse.SubtitleEdit.Logic
                 case "VobSubOcr/SetUnitalicFactor":
                     language.VobSubOcr.SetUnitalicFactor = reader.Value;
                     break;
+                case "VobSubOcr/DiscardTitle":
+                    language.VobSubOcr.DiscardTitle = reader.Value;
+                    break;
+                case "VobSubOcr/DiscardText":
+                    language.VobSubOcr.DiscardText = reader.Value;
+                    break;
                 case "VobSubOcrCharacter/Title":
                     language.VobSubOcrCharacter.Title = reader.Value;
                     break;

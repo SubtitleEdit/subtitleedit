@@ -291,6 +291,9 @@ namespace Nikse.SubtitleEdit.Forms
         private int _tesseractAsyncIndex;
         private BackgroundWorker _tesseractThread;
 
+        private DateTime _windowStartTime = DateTime.Now;
+        private int _linesOcred = 0;
+
         public static void SetDoubleBuffered(Control c)
         {
             //Taxes: Remote Desktop Connection and painting http://blogs.msdn.com/oldnewthing/archive/2006/01/03/508694.aspx
@@ -1275,6 +1278,19 @@ namespace Nikse.SubtitleEdit.Forms
                     foreach (string fn in fileNames)
                     {
                         string fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn);
+                        if (!File.Exists(fullFileName))
+                        {
+                            // fix AVISubDetector lines
+                            int idxOfIEquals = fn.IndexOf("i=", StringComparison.OrdinalIgnoreCase);
+                            if (idxOfIEquals >= 0)
+                            {
+                                int idxOfSpace = fn.IndexOf(' ', idxOfIEquals);
+                                if (idxOfSpace > 0)
+                                {
+                                    fullFileName = Path.Combine(Path.GetDirectoryName(_bdnFileName), fn.Remove(0, idxOfSpace).Trim());
+                                }
+                            }
+                        }
                         if (File.Exists(fullFileName))
                         {
                             try
@@ -4950,6 +4966,7 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void ButtonOkClick(object sender, EventArgs e)
         {
+            _linesOcred = 0; // don't ask about discard changes
             if (_dvbSubtitles != null && checkBoxTransportStreamGetColorAndSplit.Checked)
                 MergeDvbForEachSubImage();
 
@@ -5537,6 +5554,8 @@ namespace Nikse.SubtitleEdit.Forms
                 if (_dvbSubColor != Color.Transparent)
                     text = "<font color=\"" + ColorTranslator.ToHtml(_dvbSubColor) + "\">" + text + "</font>";
             }
+
+            _linesOcred++;
 
             if (_abort)
             {
@@ -7788,8 +7807,40 @@ namespace Nikse.SubtitleEdit.Forms
             subtitleListView1.SelectIndexAndEnsureVisible(0);
         }
 
+        private bool HasChangesBeenMade()
+        {
+            var secondsSinceOcrWindowOpened = DateTime.Now.Subtract(_windowStartTime).TotalSeconds;
+            if (_subtitle != null && _subtitle.Paragraphs.Count > 10 && secondsSinceOcrWindowOpened > 10)
+            {
+                int numberOfLinesWithText = 0;
+                foreach (var p in _subtitle.Paragraphs)
+                {
+                    if (p != null && !string.IsNullOrWhiteSpace(p.Text))
+                    {
+                        numberOfLinesWithText++;
+                    }
+                }
+
+                // ocr'ed more than 10 lines - or perhaps manually translated more than 10 lines in at least 30 seconds
+                if (_linesOcred > 10 || (numberOfLinesWithText > 10 && secondsSinceOcrWindowOpened > 30))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private void VobSubOcr_FormClosing(object sender, FormClosingEventArgs e)
         {
+            if (HasChangesBeenMade())
+            {
+                if (MessageBox.Show(Configuration.Settings.Language.VobSubOcr.DiscardText, Configuration.Settings.Language.VobSubOcr.DiscardTitle, MessageBoxButtons.YesNo) == DialogResult.No)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
             _icThreadsStop = true;
             _abort = true;
             _nocrThreadsStop = true;

@@ -2345,6 +2345,8 @@ Keep changes?",
                 InspectCompareMatchesForCurrentImage = "Inspect compare matches for current image...",
                 EditLastAdditions = "Edit last image compare additions...",
                 SetUnitalicFactor = "Set un-italic factor...",
+                DiscardTitle = "Discard changes made in OCR?",
+                DiscardText = "Do you want to discard changes made in current OCR session?",
             };
 
             VobSubOcrCharacter = new LanguageStructure.VobSubOcrCharacter

@@ -2227,6 +2227,8 @@
             public string InspectCompareMatchesForCurrentImage { get; set; }
             public string EditLastAdditions { get; set; }
             public string SetUnitalicFactor { get; set; }
+            public string DiscardTitle { get; set; }
+            public string DiscardText { get; set; }
         }
 
         public class VobSubOcrCharacter
