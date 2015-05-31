@@ -1278,8 +1278,22 @@ namespace Nikse.SubtitleEdit.Forms
 
         private void BatchConvert_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.KeyCode == Keys.Escape)
+            if (!_converting)
+            {
+                if (e.KeyCode == Keys.Escape)
+                {
+                    Close();
+                }
+                else if (e.KeyData == (Keys.Control | Keys.O)) // Open file/s
+                {
+                    buttonInputBrowse_Click(null, EventArgs.Empty);
+                }
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
                 _abort = true;
+                e.SuppressKeyPress = true;
+            }
         }
 
         private void buttonRemoveTextForHiSettings_Click(object sender, EventArgs e)
