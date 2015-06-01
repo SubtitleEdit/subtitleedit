@@ -1291,7 +1291,7 @@ Continuer ?</ImportTimeCodesDifferentNumberOfLinesWarning>
   <MatroskaSubtitleChooser>
     <Title>Choisir les sous-titres du fichier Matroska</Title>
     <PleaseChoose>Plus d'un sous-titre trouvé - choisir svp</PleaseChoose>
-    <TrackXLanguageYTypeZ>Piste {0} - {1} - langue: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Piste {0} - langue: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertisseur de mesure</Title>

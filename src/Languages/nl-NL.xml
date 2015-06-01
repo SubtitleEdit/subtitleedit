@@ -1285,7 +1285,7 @@ Verder gaan?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Ondertitel uit Matroska-bestand kiezen</Title>
     <PleaseChoose>Meer dan één ondertitel gevonden - kies a.u.b.</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spoor {0} - {1} - taal: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spoor {0} - taal: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Maateenheden omrekenen</Title>

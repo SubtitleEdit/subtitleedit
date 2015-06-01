@@ -1273,7 +1273,7 @@ Fortsæt?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Vælg undertekst fra Matroska fil</Title>
     <PleaseChoose>Mere end en undertekst fundet - så vælg</PleaseChoose>
-    <TrackXLanguageYTypeZ>Spor {0} - {1} - sprog: {2} - type: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Spor {0} - sprog: {1} - type: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Enhedskonverter</Title>

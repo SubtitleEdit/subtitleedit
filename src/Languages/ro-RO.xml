@@ -1277,7 +1277,7 @@ Continui?</SubtitleAppendPrompt>
   <MatroskaSubtitleChooser>
     <Title>Alegere subtitrare din fișier Matroska</Title>
     <PleaseChoose>Sunt mai multe subtitrări: te rog, alege una</PleaseChoose>
-    <TrackXLanguageYTypeZ>Pistă audio {0} - {1} - limbă: {2} - tip: {3}</TrackXLanguageYTypeZ>
+    <TrackXLanguageYTypeZ>Pistă audio {0} - limbă: {1} - tip: {2}</TrackXLanguageYTypeZ>
   </MatroskaSubtitleChooser>
   <MeasurementConverter>
     <Title>Convertor de măsură</Title>

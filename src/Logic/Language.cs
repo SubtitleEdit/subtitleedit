@@ -1527,7 +1527,7 @@ namespace Nikse.SubtitleEdit.Logic
             {
                 Title = "Choose subtitle from Matroska file",
                 PleaseChoose = "More than one subtitle found - please choose",
-                TrackXLanguageYTypeZ = "Track {0} - {1} - language: {2} - type: {3}",
+                TrackXLanguageYTypeZ = "Track {0} - language: {1} - type: {2}",
             };
 
             MeasurementConverter = new LanguageStructure.MeasurementConverter
